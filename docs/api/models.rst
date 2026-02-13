@@ -71,6 +71,11 @@ Users
     .. automethod:: typing
         :async-with:
 
+.. attributetable:: PrimaryGuild
+
+.. autoclass:: PrimaryGuild()
+    :members:
+
 Messages
 --------
 
@@ -82,6 +87,16 @@ Messages
 .. attributetable:: Message
 
 .. autoclass:: Message()
+    :members:
+
+.. attributetable:: MessageSnapshot
+
+.. autoclass:: MessageSnapshot()
+    :members:
+
+.. attributetable:: ForwardedMessage
+
+.. autoclass:: ForwardedMessage()
     :members:
 
 .. attributetable:: DeletedReferencedMessage
@@ -224,6 +239,11 @@ Role
 .. attributetable:: RoleColours
 
 .. autoclass:: RoleColours
+    :members:
+
+.. attributetable:: GuildRoleCounts
+
+.. autoclass:: GuildRoleCounts()
     :members:
 
 Scheduled Event
@@ -378,7 +398,7 @@ Interactions
 .. autoclass:: InteractionCallback()
     :members:
 
-Message Components
+UI Components
 ------------------
 
 .. attributetable:: Component
@@ -442,6 +462,17 @@ Message Components
 .. attributetable:: Container
 
 .. autoclass:: Container()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Label
+
+.. autoclass:: Label()
+    :members:
+
+.. attributetable:: FileUpload
+
+.. autoclass:: FileUpload()
     :members:
     :inherited-members:
 

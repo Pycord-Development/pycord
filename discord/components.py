@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -34,6 +34,7 @@ from .enums import (
     ChannelType,
     ComponentType,
     InputTextStyle,
+    SelectDefaultValueType,
     SeparatorSpacingSize,
     try_enum,
 )
@@ -42,18 +43,20 @@ from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, find, get_slots
 
 if TYPE_CHECKING:
+    from . import abc
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
-    from .types.components import BaseComponent as BaseComponentPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
     from .types.components import ContainerComponent as ContainerComponentPayload
     from .types.components import FileComponent as FileComponentPayload
+    from .types.components import FileUploadComponent as FileUploadComponentPayload
     from .types.components import InputText as InputTextComponentPayload
     from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
     from .types.components import SectionComponent as SectionComponentPayload
+    from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
     from .types.components import SeparatorComponent as SeparatorComponentPayload
@@ -78,6 +81,8 @@ __all__ = (
     "Separator",
     "Container",
     "Label",
+    "SelectDefaultValue",
+    "FileUpload",
 )
 
 C = TypeVar("C", bound="Component")
@@ -129,7 +134,7 @@ class Component:
             try:
                 value = kwargs[slot]
             except KeyError:
-                pass
+                setattr(self, slot, None)
             else:
                 setattr(self, slot, value)
         return self
@@ -173,7 +178,7 @@ class ActionRow(Component):
 
     @property
     def width(self):
-        """Return the sum of the children's widths."""
+        """Returns the sum of the item's widths."""
         t = 0
         for item in self.children:
             t += 1 if item.type is ComponentType.button else 5
@@ -188,6 +193,10 @@ class ActionRow(Component):
 
     def walk_components(self) -> Iterator[Component]:
         yield from self.children
+
+    @property
+    def components(self) -> list[Component]:
+        return self.children
 
     def get_component(self, id: str | int) -> Component | None:
         """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
@@ -263,7 +272,7 @@ class InputText(Component):
         self.id: int | None = data.get("id")
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
-        self.label: str = data.get("label", None)
+        self.label: str | None = data.get("label", None)
         self.placeholder: str | None = data.get("placeholder", None)
         self.min_length: int | None = data.get("min_length", None)
         self.max_length: int | None = data.get("max_length", None)
@@ -275,7 +284,6 @@ class InputText(Component):
             "type": 4,
             "id": self.id,
             "style": self.style.value,
-            "label": self.label,
         }
         if self.custom_id:
             payload["custom_id"] = self.custom_id
@@ -294,6 +302,9 @@ class InputText(Component):
 
         if self.value:
             payload["value"] = self.value
+
+        if self.label:
+            payload["label"] = self.label
 
         return payload  # type: ignore
 
@@ -437,6 +448,7 @@ class SelectMenu(Component):
         "channel_types",
         "disabled",
         "required",
+        "default_values",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -457,6 +469,9 @@ class SelectMenu(Component):
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
         self.required: bool | None = data.get("required")
+        self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(
+            data.get("default_values")
+        )
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -476,8 +491,185 @@ class SelectMenu(Component):
             payload["placeholder"] = self.placeholder
         if self.required is not None:
             payload["required"] = self.required
+        if self.type is not ComponentType.string_select:
+            payload["default_values"] = [dv.to_dict() for dv in self.default_values]
 
         return payload
+
+
+class SelectDefaultValue:
+    r"""Represents a :class:`discord.SelectMenu`\s default value.
+
+    This is only applicable to selects of type other than :attr:`ComponentType.string_select`.
+
+    .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    object: :class:`abc.Snowflake`
+        The model type this select default value is based of.
+
+        Below, is a table defining the model instance type and the default value type it will be mapped:
+
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | Model Type                        | Default Value Type                                                       |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above |
+        +-----------------------------------+--------------------------------------------------------------------------+
+
+        If you pass a model that is not defined in the table, ``TypeError`` will be raised.
+
+        .. note::
+
+            The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,
+            :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change
+            based of the new channel types Discord adds.
+
+    id: :class:`int`
+        The ID of the default value. This cannot be used with ``object``.
+    type: :class:`SelectDefaultValueType`
+        The default value type. This cannot be used with ``object``.
+
+    Raises
+    ------
+    TypeError
+        You did not provide any parameter, you provided all parameters, or you provided ``id`` but not ``type``.
+    """
+
+    __slots__ = ("id", "type")
+
+    @overload
+    def __init__(
+        self,
+        object: abc.Snowflake,
+        /,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        /,
+        *,
+        id: int,
+        type: SelectDefaultValueType,
+    ) -> None: ...
+
+    def __init__(
+        self,
+        object: abc.Snowflake = MISSING,
+        /,
+        *,
+        id: int = MISSING,
+        type: SelectDefaultValueType = MISSING,
+    ) -> None:
+        self.id: int = id
+        self.type: SelectDefaultValueType = type
+        if object is not MISSING:
+            if any(p is not MISSING for p in (id, type)):
+                raise TypeError("you cannot pass id or type when passing object")
+            self._handle_model(object, inst=self)
+        elif id is not MISSING and type is not MISSING:
+            self.id = id
+            self.type = type
+        else:
+            raise TypeError("you must provide an object model, or an id and type")
+
+    def __repr__(self) -> str:
+        return f"<SelectDefaultValue id={self.id} type={self.type}>"
+
+    @classmethod
+    def _from_data(
+        cls, default_values: list[SelectDefaultValuePayload] | None
+    ) -> list[SelectDefaultValue]:
+        if not default_values:
+            return []
+        return [
+            cls(id=int(d["id"]), type=try_enum(SelectDefaultValueType, d["type"]))
+            for d in default_values
+        ]
+
+    @classmethod
+    def _handle_model(
+        cls,
+        model: abc.Snowflake,
+        select_type: ComponentType | None = None,
+        inst: SelectDefaultValue | None = None,
+    ) -> SelectDefaultValue:
+        # preventing >circular imports<
+        from discord import Member, Object, Role, User, abc
+        from discord.user import _UserTag
+
+        instances_mapping: dict[
+            type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]
+        ] = {
+            Role: (
+                (ComponentType.role_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.role,
+            ),
+            User: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            Member: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            _UserTag: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            abc.GuildChannel: (
+                (ComponentType.channel_select,),
+                SelectDefaultValueType.channel,
+            ),
+        }
+
+        obj_id = model.id
+        obj_type = model.__class__
+
+        if isinstance(model, Object):
+            obj_type = model.type
+
+        sel_types = None
+        def_type = None
+
+        for typ, (st, dt) in instances_mapping.items():
+            if issubclass(obj_type, typ):
+                sel_types = st
+                def_type = dt
+                break
+
+        if sel_types is None or def_type is None:
+            raise TypeError(
+                f"{obj_type.__name__} is not a valid instance for a select default value"
+            )
+
+        # we can't actually check select types when not in a select context
+        if select_type is not None and select_type not in sel_types:
+            raise TypeError(
+                f"{model.__class__.__name__} objects can not be set as a default value for {select_type.value} selects",
+            )
+
+        if inst is None:
+            return cls(id=obj_id, type=def_type)
+        else:
+            inst.id = obj_id
+            inst.type = def_type
+            return inst
+
+    def to_dict(self) -> SelectDefaultValuePayload:
+        return {
+            "id": self.id,
+            "type": self.type.value,
+        }
 
 
 class SelectOption:
@@ -754,7 +946,6 @@ class UnfurledMediaItem(AssetMixin):
 
     @classmethod
     def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
-
         r = cls(data.get("url"))
         r.proxy_url = data.get("proxy_url")
         r.height = data.get("height")
@@ -1121,7 +1312,7 @@ class Label(Component):
     ``component`` may only be:
 
     - :class:`InputText`
-    - :class:`SelectMenu` (string)
+    - :class:`SelectMenu`
 
     This inherits from :class:`Component`.
 
@@ -1163,6 +1354,71 @@ class Label(Component):
         yield from [self.component]
 
 
+class FileUpload(Component):
+    """Represents an File Upload component from the Discord Bot UI Kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.FileUpload` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    custom_id: Optional[:class:`str`]
+        The custom ID of the file upload field that gets received during an interaction.
+    min_values: Optional[:class:`int`]
+        The minimum number of files that must be uploaded.
+    max_values: Optional[:class:`int`]
+        The maximum number of files that can be uploaded.
+    required: Optional[:class:`bool`]
+        Whether the file upload field is required or not. Defaults to `True`.
+    id: Optional[:class:`int`]
+        The file upload's ID.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "type",
+        "custom_id",
+        "min_values",
+        "max_values",
+        "required",
+        "id",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2)
+
+    def __init__(self, data: FileUploadComponentPayload):
+        self.type = ComponentType.file_upload
+        self.id: int | None = data.get("id")
+        self.custom_id = data["custom_id"]
+        self.min_values: int | None = data.get("min_values", None)
+        self.max_values: int | None = data.get("max_values", None)
+        self.required: bool = data.get("required", True)
+
+    def to_dict(self) -> FileUploadComponentPayload:
+        payload = {
+            "type": 19,
+            "custom_id": self.custom_id,
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+
+        if self.min_values is not None:
+            payload["min_values"] = self.min_values
+
+        if self.max_values is not None:
+            payload["max_values"] = self.max_values
+
+        if not self.required:
+            payload["required"] = self.required
+
+        return payload  # type: ignore
+
+
 COMPONENT_MAPPINGS = {
     1: ActionRow,
     2: Button,
@@ -1180,6 +1436,7 @@ COMPONENT_MAPPINGS = {
     14: Separator,
     17: Container,
     18: Label,
+    19: FileUpload,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)

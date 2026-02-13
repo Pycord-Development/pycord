@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from __future__ import annotations
 
 from functools import partial
@@ -8,7 +32,7 @@ from ..components import _component_factory
 from ..enums import ComponentType
 from ..utils import find, get
 from .button import Button
-from .item import Item, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
 
@@ -18,30 +42,37 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..types.components import SectionComponent as SectionComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 S = TypeVar("S", bound="Section")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class Section(Item[V]):
+class Section(ViewItem[V]):
     """Represents a UI section. Sections must have 1-3 (inclusive) items and an accessory set.
 
     .. versionadded:: 2.7
 
     Parameters
     ----------
-    *items: :class:`Item`
+    *items: :class:`ViewItem`
         The initial items contained in this section, up to 3.
         Currently only supports :class:`~discord.ui.TextDisplay`.
         Sections must have at least 1 item before being sent.
-    accessory: Optional[:class:`Item`]
+    accessory: Optional[:class:`ViewItem`]
         The section's accessory. This is displayed in the top right of the section.
         Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
         Sections must have an accessory attached before being sent.
     id: Optional[:class:`int`]
         The section's ID.
+
+    Attributes
+    ----------
+    items: List[:class:`ViewItem`]
+        The list of items in this section.
+    accessory: :class:`ViewItem`
+        The section's accessory, displayed in the top right of the section.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -61,20 +92,19 @@ class Section(Item[V]):
 
         cls.__section_accessory_item__ = accessory
 
-    def __init__(self, *items: Item, accessory: Item = None, id: int | None = None):
+    def __init__(
+        self, *items: ViewItem, accessory: ViewItem = None, id: int | None = None
+    ):
         super().__init__()
 
-        self.items: list[Item] = []
-        self.accessory: Item | None = None
+        self.items: list[ViewItem] = []
+        self.accessory: ViewItem | None = None
 
-        self._underlying = SectionComponent._raw_construct(
-            type=ComponentType.section,
+        self._underlying = self._generate_underlying(
             id=id,
-            components=[],
-            accessory=None,
         )
         for func in self.__section_accessory_item__:
-            item: Item = func.__discord_ui_model_type__(
+            item: ViewItem = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
@@ -85,26 +115,40 @@ class Section(Item[V]):
         for i in items:
             self.add_item(i)
 
-    def _add_component_from_item(self, item: Item):
-        self._underlying.components.append(item._underlying)
+    def _add_component_from_item(self, item: ViewItem):
+        self.underlying.components.append(item.underlying)
 
-    def _set_components(self, items: list[Item]):
-        self._underlying.components.clear()
+    def _set_components(self, items: list[ViewItem]):
+        self.underlying.components.clear()
         for item in items:
             self._add_component_from_item(item)
 
-    def add_item(self, item: Item) -> Self:
+    def _generate_underlying(self, id: int | None = None) -> SectionComponent:
+        super()._generate_underlying(SectionComponent)
+        section = SectionComponent._raw_construct(
+            type=ComponentType.section,
+            id=id or self.id,
+            components=[],
+            accessory=None,
+        )
+        for i in self.items:
+            section.components.append(i._generate_underlying())
+        if self.accessory:
+            section.accessory = self.accessory._generate_underlying()
+        return section
+
+    def add_item(self, item: ViewItem) -> Self:
         """Adds an item to the section.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to add to the section.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            An :class:`ViewItem` was not passed.
         ValueError
             Maximum number of items has been exceeded (3).
         """
@@ -112,33 +156,37 @@ class Section(Item[V]):
         if len(self.items) >= 3:
             raise ValueError("maximum number of children exceeded")
 
-        if not isinstance(item, Item):
-            raise TypeError(f"expected Item not {item.__class__!r}")
+        if not isinstance(item, ViewItem):
+            raise TypeError(f"expected ViewItem not {item.__class__!r}")
 
         item.parent = self
         self.items.append(item)
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: Item | str | int) -> Self:
+    def remove_item(self, item: ViewItem | str | int) -> Self:
         """Removes an item from the section. If an :class:`int` or :class:`str` is passed,
         the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, item ``id``, or item ``custom_id`` to remove from the section.
         """
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            self.items.remove(item)
+            if item is self.accessory:
+                self.accessory = None
+            else:
+                self.items.remove(item)
+            item.parent = None
         except ValueError:
             pass
         return self
 
-    def get_item(self, id: int | str) -> Item | None:
+    def get_item(self, id: int | str) -> ViewItem | None:
         """Get an item from this section. Alias for `utils.get(section.walk_items(), ...)`.
         If an ``int`` is provided, it will be retrieved by ``id``, otherwise it will check the accessory's ``custom_id``.
 
@@ -149,7 +197,7 @@ class Section(Item[V]):
 
         Returns
         -------
-        Optional[:class:`Item`]
+        Optional[:class:`ViewItem`]
             The item with the matching ``id`` if it exists.
         """
         if not id:
@@ -183,29 +231,28 @@ class Section(Item[V]):
 
         return self.add_item(text)
 
-    def set_accessory(self, item: Item) -> Self:
+    def set_accessory(self, item: ViewItem) -> Self:
         """Set an item as the section's :attr:`accessory`.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to set as accessory.
             Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            An :class:`ViewItem` was not passed.
         """
 
-        if not isinstance(item, Item):
-            raise TypeError(f"expected Item not {item.__class__!r}")
-        if self.view:
-            item._view = self.view
+        if not isinstance(item, ViewItem):
+            raise TypeError(f"expected ViewItem not {item.__class__!r}")
+
         item.parent = self
 
         self.accessory = item
-        self._underlying.accessory = item._underlying
+        self.underlying.accessory = item._generate_underlying()
         return self
 
     def set_thumbnail(
@@ -234,26 +281,11 @@ class Section(Item[V]):
 
         return self.set_accessory(thumbnail)
 
-    @Item.view.setter
-    def view(self, value):
-        self._view = value
-        for item in self.walk_items():
-            item._view = value
-            item.parent = self
-
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
         Equivalent to the `Copy Text` option on Discord clients.
         """
         return "\n".join(t for i in self.items if (t := i.copy_text()))
-
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
-    def width(self) -> int:
-        return 5
 
     def is_dispatchable(self) -> bool:
         return self.accessory and self.accessory.is_dispatchable()
@@ -264,20 +296,20 @@ class Section(Item[V]):
         return self.accessory.is_persistent()
 
     def refresh_component(self, component: SectionComponent) -> None:
-        self._underlying = component
+        self.underlying = component
         for x, y in zip(self.items, component.components):
             x.refresh_component(y)
         if self.accessory and component.accessory:
             self.accessory.refresh_component(component.accessory)
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Disables all buttons and select menus in the section.
         At the moment, this only disables :attr:`accessory` if it is a button.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
@@ -287,14 +319,14 @@ class Section(Item[V]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Enables all buttons and select menus in the section.
         At the moment, this only enables :attr:`accessory` if it is a button.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():
@@ -304,7 +336,7 @@ class Section(Item[V]):
                 item.disabled = False
         return self
 
-    def walk_items(self) -> Iterator[Item]:
+    def walk_items(self) -> Iterator[ViewItem]:
         r = self.items
         if self.accessory:
             yield from r + [self.accessory]
@@ -312,10 +344,8 @@ class Section(Item[V]):
             yield from r
 
     def to_component_dict(self) -> SectionComponentPayload:
-        self._set_components(self.items)
-        if self.accessory:
-            self.set_accessory(self.accessory)
-        return self._underlying.to_dict()
+        self._underlying = self._generate_underlying()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[S], component: SectionComponent) -> S:

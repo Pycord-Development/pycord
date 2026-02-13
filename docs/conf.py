@@ -27,14 +27,11 @@ for i, line in enumerate(changelog_lines):
         changelog_lines[i] = "[version guarantees]: version_guarantees.rst\n"
         break
 
-CHANGELOG_TEXT = (
-    "".join(changelog_lines)
-    + """
+CHANGELOG_TEXT = "".join(changelog_lines) + """
 ## Older Versions
 
 A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
 """
-)
 
 
 # Only write if it's changed to avoid recompiling the docs
@@ -96,7 +93,7 @@ ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
 
 autodoc_member_order = "bysource"
-autodoc_typehints = "none"
+autodoc_typehints = "signature"
 # maybe consider this?
 # napoleon_attr_annotations = False
 
@@ -123,7 +120,7 @@ rst_prolog = """
 """
 
 # Add any paths that contain templates here, relative to this directory.
-# templates_path = ["_templates"]
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
 source_suffix = {
@@ -344,7 +341,18 @@ html_js_files = ["js/custom.js"]
 # html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+html_sidebars = {
+    "**": [
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/scroll-start.html",
+        "sidebar/navigation.html",
+        "sidebar/ethical-ads.html",
+        "sidebar/width-selector.html",
+        "sidebar/scroll-end.html",
+        "sidebar/variant-selector.html",
+    ]
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.

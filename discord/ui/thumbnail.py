@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypeVar
@@ -5,20 +29,20 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import UnfurledMediaItem, _component_factory
 from ..enums import ComponentType
-from .item import Item
+from .item import ViewItem
 
 __all__ = ("Thumbnail",)
 
 if TYPE_CHECKING:
     from ..types.components import ThumbnailComponent as ThumbnailComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 T = TypeVar("T", bound="Thumbnail")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class Thumbnail(Item[V]):
+class Thumbnail(ViewItem[V]):
     """Represents a UI Thumbnail.
 
     .. versionadded:: 2.7
@@ -54,52 +78,68 @@ class Thumbnail(Item[V]):
 
         media = UnfurledMediaItem(url)
 
-        self._underlying = ThumbnailComponent._raw_construct(
-            type=ComponentType.thumbnail,
+        self._underlying = self._generate_underlying(
             id=id,
             media=media,
             description=description,
             spoiler=spoiler,
         )
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
+    def _generate_underlying(
+        self,
+        media: UnfurledMediaItem | None = None,
+        description: str | None = None,
+        spoiler: bool | None = False,
+        id: int | None = None,
+    ) -> ThumbnailComponent:
+        super()._generate_underlying(ThumbnailComponent)
+        return ThumbnailComponent._raw_construct(
+            type=ComponentType.thumbnail,
+            id=id or self.id,
+            media=media or self.media,
+            description=description or self.description,
+            spoiler=spoiler if spoiler is not None else self.spoiler,
+        )
 
     @property
-    def width(self) -> int:
-        return 5
+    def media(self) -> UnfurledMediaItem:
+        """The thumbnail's unerlying media item."""
+        return self.underlying.media
+
+    @media.setter
+    def media(self, value: UnfurledMediaItem) -> None:
+        self.underlying.media = value
 
     @property
     def url(self) -> str:
         """The URL of this thumbnail's media. This can either be an arbitrary URL or an ``attachment://`` URL."""
-        return self._underlying.media and self._underlying.media.url
+        return self.underlying.media and self.underlying.media.url
 
     @url.setter
     def url(self, value: str) -> None:
-        self._underlying.media.url = value
+        self.underlying.media.url = value
 
     @property
     def description(self) -> str | None:
         """The thumbnail's description, up to 1024 characters."""
-        return self._underlying.description
+        return self.underlying.description
 
     @description.setter
     def description(self, description: str | None) -> None:
-        self._underlying.description = description
+        self.underlying.description = description
 
     @property
     def spoiler(self) -> bool:
         """Whether the thumbnail has the spoiler overlay. Defaults to ``False``."""
 
-        return self._underlying.spoiler
+        return self.underlying.spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
-        self._underlying.spoiler = spoiler
+        self.underlying.spoiler = spoiler
 
     def to_component_dict(self) -> ThumbnailComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[T], component: ThumbnailComponent) -> T:

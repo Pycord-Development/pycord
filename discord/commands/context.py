@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar, overload
 
 import discord.abc
 from discord.interactions import Interaction, InteractionMessage, InteractionResponse
@@ -38,15 +38,19 @@ if TYPE_CHECKING:
 
     import discord
 
-    from .. import Bot
+    from .. import AllowedMentions, Bot
     from ..client import ClientUser
     from ..cog import Cog
+    from ..embeds import Embed
+    from ..file import File
     from ..guild import Guild
     from ..interactions import InteractionChannel
     from ..member import Member
     from ..message import Message
     from ..permissions import Permissions
+    from ..poll import Poll
     from ..state import ConnectionState
+    from ..ui import BaseView
     from ..user import User
     from ..voice import VoiceClient
     from ..webhook import WebhookMessage
@@ -277,12 +281,39 @@ class ApplicationContext(discord.abc.Messageable):
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
         return self.interaction.response.send_modal
 
-    @property
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embed: Embed | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+    ) -> Interaction | WebhookMessage: ...
+
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+    ) -> Interaction | WebhookMessage: ...
+
     @discord.utils.copy_doc(Interaction.respond)
-    def respond(
-        self, *args, **kwargs
-    ) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
-        return self.interaction.respond
+    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
+        return await self.interaction.respond(*args, **kwargs)
 
     @property
     @discord.utils.copy_doc(InteractionResponse.send_message)

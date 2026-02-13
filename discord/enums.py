@@ -83,6 +83,7 @@ __all__ = (
     "ThreadArchiveDuration",
     "SubscriptionStatus",
     "SeparatorSpacingSize",
+    "SelectDefaultValueType",
 )
 
 
@@ -733,6 +734,8 @@ class ComponentType(Enum):
     separator = 14
     content_inventory_entry = 16
     container = 17
+    label = 18
+    file_upload = 19
 
     def __int__(self):
         return self.value
@@ -1118,6 +1121,14 @@ class SeparatorSpacingSize(Enum):
 
     def __int__(self):
         return self.value
+
+
+class SelectDefaultValueType(Enum):
+    """Represents the default value type of a select menu."""
+
+    channel = "channel"
+    role = "role"
+    user = "user"
 
 
 T = TypeVar("T")

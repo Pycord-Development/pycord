@@ -30,7 +30,15 @@ import logging
 import sys
 import traceback
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Sequence,
+    TypeVar,
+)
 
 import aiohttp
 
@@ -58,22 +66,30 @@ from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
 from .template import Template
 from .threads import Thread
-from .ui.view import View
+from .ui.view import BaseView
 from .user import ClientUser, User
-from .utils import MISSING
+from .utils import _D, _FETCHABLE, MISSING
 from .voice import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
-    from .channel import DMChannel
+    from .channel import (
+        CategoryChannel,
+        DMChannel,
+        ForumChannel,
+        StageChannel,
+        TextChannel,
+        VoiceChannel,
+    )
     from .interactions import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
     from .soundboard import SoundboardSound
-    from .ui.item import Item
+    from .threads import Thread, ThreadMember
+    from .ui.item import Item, ViewItem
     from .voice import VoiceProtocol
 
 __all__ = ("Client",)
@@ -545,19 +561,19 @@ class Client:
         traceback.print_exc()
 
     async def on_view_error(
-        self, error: Exception, item: Item, interaction: Interaction
+        self, error: Exception, item: ViewItem, interaction: Interaction
     ) -> None:
         """|coro|
 
         The default view error handler provided by the client.
 
-        This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
+        This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`.
 
         Parameters
         ----------
         error: :class:`Exception`
             The exception that was raised.
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item that the user interacted with.
         interaction: :class:`Interaction`
             The interaction that was received.
@@ -577,7 +593,7 @@ class Client:
         The default modal error handler provided by the client.
         The default implementation prints the traceback to stderr.
 
-        This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+        This only fires for a modal if you did not define its :func:`~discord.ui.BaseModal.on_error`.
 
         Parameters
         ----------
@@ -1146,7 +1162,12 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
-    async def get_or_fetch_user(self, id: int, /) -> User | None:
+    @utils.deprecated(
+        instead="Client.get_or_fetch(User, id)",
+        since="2.7",
+        removed="3.0",
+    )
+    async def get_or_fetch_user(self, id: int, /) -> User | None:  # TODO: Remove in 3.0
         """|coro|
 
         Looks up a user in the user cache or fetches if not found.
@@ -1162,7 +1183,49 @@ class Client:
             The user or ``None`` if not found.
         """
 
-        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
+        return await self.get_or_fetch(object_type=User, object_id=id, default=None)
+
+    async def get_or_fetch(
+        self: Client,
+        object_type: type[_FETCHABLE],
+        object_id: int | None,
+        default: _D = None,
+    ) -> _FETCHABLE | _D | None:
+        """
+        Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
+
+        Parameters
+        ----------
+        object_type: Type[:class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji`]
+            Type of object to fetch or get.
+
+        object_id: :class:`int` | :data:`None`
+            ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`.
+
+        default: Any | :data:`None`
+            A default to return instead of raising if fetch fails.
+
+        Returns
+        -------
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`
+            The object if found, or `default` if provided when not found.
+
+        Raises
+        ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
+        """
+        try:
+            return await utils.get_or_fetch(
+                obj=self,
+                object_type=object_type,
+                object_id=object_id,
+                default=default,
+            )
+        except (HTTPException, ValueError, InvalidData):
+            return default
 
     # listeners/waiters
 
@@ -1626,55 +1689,6 @@ class Client:
         data = await self.http.get_guild(guild_id, with_counts=with_counts)
         return Guild(data=data, state=self._connection)
 
-    async def create_guild(
-        self,
-        *,
-        name: str,
-        icon: bytes = MISSING,
-        code: str = MISSING,
-    ) -> Guild:
-        """|coro|
-
-        Creates a :class:`.Guild`.
-
-        Bot accounts in more than 10 guilds are not allowed to create guilds.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the guild.
-        icon: Optional[:class:`bytes`]
-            The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit`
-            for more details on what is expected.
-        code: :class:`str`
-            The code for a template to create the guild with.
-
-            .. versionadded:: 1.4
-
-        Returns
-        -------
-        :class:`.Guild`
-            The guild created. This is not the same guild that is
-            added to cache.
-
-        Raises
-        ------
-        :exc:`HTTPException`
-            Guild creation failed.
-        :exc:`InvalidArgument`
-            Invalid icon image format given. Must be PNG or JPG.
-        """
-        if icon is not MISSING:
-            icon_base64 = utils._bytes_to_base64_data(icon)
-        else:
-            icon_base64 = None
-
-        if code:
-            data = await self.http.create_from_template(code, name, icon_base64)
-        else:
-            data = await self.http.create_guild(name, icon_base64)
-        return Guild(data=data, state=self._connection)
-
     async def fetch_stage_instance(self, channel_id: int, /) -> StageInstance:
         """|coro|
 
@@ -2018,8 +2032,8 @@ class Client:
         data = await state.http.start_private_message(user.id)
         return state.add_dm_channel(data)
 
-    def add_view(self, view: View, *, message_id: int | None = None) -> None:
-        """Registers a :class:`~discord.ui.View` for persistent listening.
+    def add_view(self, view: BaseView, *, message_id: int | None = None) -> None:
+        """Registers a :class:`~discord.ui.BaseView` for persistent listening.
 
         This method should be used for when a view is comprised of components
         that last longer than the lifecycle of the program.
@@ -2028,7 +2042,7 @@ class Client:
 
         Parameters
         ----------
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             The view to register for dispatching.
         message_id: Optional[:class:`int`]
             The message ID that the view is attached to. This is currently used to
@@ -2044,8 +2058,8 @@ class Client:
             and all their components have an explicitly provided ``custom_id``.
         """
 
-        if not isinstance(view, View):
-            raise TypeError(f"expected an instance of View not {view.__class__!r}")
+        if not isinstance(view, BaseView):
+            raise TypeError(f"expected an instance of BaseView not {view.__class__!r}")
 
         if not view.is_persistent():
             raise ValueError(
@@ -2056,7 +2070,7 @@ class Client:
         self._connection.store_view(view, message_id)
 
     @property
-    def persistent_views(self) -> Sequence[View]:
+    def persistent_views(self) -> Sequence[BaseView]:
         """A sequence of persistent views added to the client.
 
         .. versionadded:: 2.0

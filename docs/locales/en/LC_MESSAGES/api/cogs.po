@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -96,10 +96,9 @@ msgstr ""
 
 #: 37ca252417a04d0f9a6d189f27bf99a5 discord.cog.Cog.walk_commands:6 of
 msgid ""
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Generator\\`\\\\"
 " "
-"\\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\,"
-" \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+"\\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\]`"
 msgstr ""
 
 #: 483845d65d544491a23375ed5d92e183 discord.cog.Cog.get_listeners:1 of
@@ -165,9 +164,13 @@ msgid ""
 msgstr ""
 
 #: 8540394b44384ceb81c96c63caa5c2d2 discord.cog.Cog.has_error_handler:1 of
-msgid ""
-"Checks whether the cog has an error handler. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Checks whether the cog has an error handler."
+msgstr ""
+
+#: bc04772b95eb445880b68aa35b50195a discord.cog.Cog.bot_check:11
+#: discord.cog.Cog.bot_check_once:11 discord.cog.Cog.cog_check:11
+#: discord.cog.Cog.has_error_handler:6 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
 #: d763221471154638916ac3d6956b3ae5 discord.cog.Cog.cog_unload:1 of
@@ -204,11 +207,6 @@ msgstr ""
 #: discord.cog.Cog.bot_check_once:8 discord.cog.Cog.cog_after_invoke:8
 #: discord.cog.Cog.cog_before_invoke:8 discord.cog.Cog.cog_check:8 of
 msgid "The invocation context."
-msgstr ""
-
-#: bc04772b95eb445880b68aa35b50195a discord.cog.Cog.bot_check:11
-#: discord.cog.Cog.bot_check_once:11 discord.cog.Cog.cog_check:11 of
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
 #: bbe43d3b5dd84335bd98b895da5c5d31 discord.cog.Cog.bot_check:1 of
@@ -328,4 +326,17 @@ msgstr ""
 #: discord.cog.CogMeta:74 f3c34e2053064a7e9f686c4a5656fbf9 of
 msgid "Optional[List[:class:`int`]]"
 msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+#~ " "
+#~ "\\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\,"
+#~ " \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Checks whether the cog has an "
+#~ "error handler. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
 
