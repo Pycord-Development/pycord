@@ -1399,6 +1399,15 @@ class SlashCommandGroup(ApplicationCommand):
     def command(
         self, cls: type[T] = SlashCommand, **kwargs
     ) -> Callable[[Callable], SlashCommand]:
+        """A shortcut decorator for adding a subcommand to this slash command group.
+
+        Returns
+        -------
+        Callable[..., :class:`SlashCommand`]
+            A decorator that converts the provided function into a :class:`.SlashCommand`,
+            adds it to this group, then returns it.
+        """
+
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
             self.add_command(command)
@@ -1414,7 +1423,7 @@ class SlashCommandGroup(ApplicationCommand):
         **kwargs,
     ) -> SlashCommandGroup:
         """
-        Creates a new subgroup for this SlashCommandGroup.
+        Creates a new subgroup under this slash command group.
 
         Parameters
         ----------
