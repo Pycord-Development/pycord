@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\n"
-"POT-Creation-Date: 2025-06-24 08:32-0000\n"
-"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -68,50 +68,50 @@ msgstr "An iterable to search through."
 msgid "Keyword arguments that denote attributes to search with."
 msgstr "Keyword arguments that denote attributes to search with."
 
-msgid "|coro|"
-msgstr "|coro|"
+msgid "Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API."
+msgstr "Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API."
 
-msgid "Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it. If the fetch also fails, an error will be raised."
-msgstr "Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it. If the fetch also fails, an error will be raised."
+msgid "The object to operate on."
+msgstr "The object to operate on."
 
-msgid "The object to use the get or fetch methods in"
-msgstr "The object to use the get or fetch methods in"
+msgid "Type of object to fetch or get."
+msgstr "Type of object to fetch or get."
 
-msgid "The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute."
-msgstr "The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute."
+msgid "ID of object to get."
+msgstr "ID of object to get."
 
-msgid "The ID of the object"
-msgstr "The ID of the object"
-
-msgid "The default value to return if the object is not found, instead of raising an error."
-msgstr "The default value to return if the object is not found, instead of raising an error."
+msgid "The value to return instead of raising if fetching fails."
+msgstr "The value to return instead of raising if fetching fails."
 
 msgid "Returns"
 msgstr "Retours"
 
-msgid "The object found or the default value."
-msgstr "The object found or the default value."
+msgid "The object if found, or `default` if provided when not found. Returns :data:`None` only if `object_id` is :data:`None` and no `default` is given."
+msgstr "The object if found, or `default` if provided when not found. Returns :data:`None` only if `object_id` is :data:`None` and no `default` is given."
+
+msgid ":class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | :class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | :class:`~discord.CategoryChannel` | :class:`~discord.Thread` | :class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role` | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | :class:`~discord.AppEmoji` | :data:`None`"
+msgstr ":class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | :class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | :class:`~discord.CategoryChannel` | :class:`~discord.Thread` | :class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role` | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | :class:`~discord.AppEmoji` | :data:`None`"
 
 msgid "Raises"
 msgstr "Raises"
 
-msgid "The object is missing a ``get_`` or ``fetch_`` method"
-msgstr "The object is missing a ``get_`` or ``fetch_`` method"
+msgid "Raised when required parameters are missing or invalid types are provided."
+msgstr "Raised when required parameters are missing or invalid types are provided."
 
-msgid "Invalid ID for the object"
-msgstr "Invalid ID for the object"
+msgid "Raised when an unsupported or incompatible object type is used."
+msgstr "Raised when an unsupported or incompatible object type is used."
 
-msgid "An error occurred fetching the object"
-msgstr "An error occurred fetching the object"
+msgid "Invalid ID for the object."
+msgstr "Invalid ID for the object."
 
-msgid "You do not have permission to fetch the object"
-msgstr "You do not have permission to fetch the object"
+msgid "An error occurred fetching the object."
+msgstr "An error occurred fetching the object."
 
-msgid "Getting a guild from a guild ID: ::"
-msgstr "Getting a guild from a guild ID: ::"
+msgid "You do not have permission to fetch the object."
+msgstr "You do not have permission to fetch the object."
 
-msgid "Getting a channel from the guild. If the channel is not found, return None: ::"
-msgstr "Getting a channel from the guild. If the channel is not found, return None: ::"
+msgid "Raised when the object resolves to a different guild."
+msgstr "Raised when the object resolves to a different guild."
 
 msgid "A helper function that returns the OAuth2 URL for inviting the bot into guilds."
 msgstr "A helper function that returns the OAuth2 URL for inviting the bot into guilds."
@@ -238,6 +238,9 @@ msgstr "The code."
 
 msgid "The template code."
 msgstr "The template code."
+
+msgid "|coro|"
+msgstr "|coro|"
 
 msgid "Sleep until a specified time."
 msgstr "Sleep until a specified time."
