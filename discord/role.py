@@ -211,7 +211,7 @@ class RoleTags:
         self._available_for_purchase: bool | None = _parse_tag_bool(
             data, "available_for_purchase"
         )
-        # here discord did things in a normal and logical way for once
+        # here discord did things in a normal and logical way for once so we don't have to use _parse_tag_bool
         self._is_guild_product_role: bool | None = data.get("is_guild_product_role")
 
     @cached_slot_property("_type")
