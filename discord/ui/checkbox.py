@@ -130,7 +130,7 @@ class Checkbox(ModalItem):
 
     @property
     def value(self) -> bool | None:
-        """Whether this checkbox was selected or not by the user."""
+        """Whether this checkbox was selected or not by the user. This will be ``None`` if the checkbox has not been submitted via a modal yet."""
         return self._value
 
     def to_component_dict(self) -> CheckboxComponentPayload:

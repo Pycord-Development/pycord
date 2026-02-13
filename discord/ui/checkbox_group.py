@@ -98,7 +98,7 @@ class CheckboxGroup(ModalItem):
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        self._selected_values: list[str] = []
+        self._selected_values: list[str] | None = None
 
         self._underlying: CheckboxGroupComponent = self._generate_underlying(
             custom_id=custom_id,
@@ -188,8 +188,8 @@ class CheckboxGroup(ModalItem):
         self.underlying.required = bool(value)
 
     @property
-    def values(self) -> list[str]:
-        """The values selected by the user."""
+    def values(self) -> list[str] | None:
+        """The values selected by the user. This will be ``None`` if the checkbox group has not been submitted in a modal yet."""
         return self._selected_values
 
     @property

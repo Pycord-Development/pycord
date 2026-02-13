@@ -89,7 +89,7 @@ class FileUpload(ModalItem):
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        self._attachments: list[Attachment] = []
+        self._attachments: list[Attachment] | None = None
 
         self._underlying: FileUploadComponent = self._generate_underlying(
             custom_id=custom_id,
@@ -176,8 +176,8 @@ class FileUpload(ModalItem):
         self.underlying.required = bool(value)
 
     @property
-    def values(self) -> list[Attachment]:
-        """The files that were uploaded to the field."""
+    def values(self) -> list[Attachment] | None:
+        """The files that were uploaded to the field. This will be ``None`` if the file upload has not been submitted via a modal yet."""
         return self._attachments
 
     def to_component_dict(self) -> FileUploadComponentPayload:
