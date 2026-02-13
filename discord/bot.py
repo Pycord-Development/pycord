@@ -68,7 +68,7 @@ from .utils import MISSING, async_all, find, get
 if TYPE_CHECKING:
     from .member import Member
 
-C = TypeVar("C", bound=ApplicationCommand)
+C = TypeVar("C", bound=MessageCommand | SlashCommand | UserCommand)
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar("CFT", bound=CoroFunc)
 
