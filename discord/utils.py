@@ -760,7 +760,7 @@ def _get_string_to_type_map() -> dict[str, type]:
 @functools.lru_cache(maxsize=1)
 def _get_getter_fetcher_map() -> dict[type, tuple[_Getter, _Fetcher]]:
     """Return a cached map of type names -> (getter, fetcher) functions."""
-    from discord import Guild, Member, Role, User, abc, emoji
+    from discord import Guild, Member, Role, Thread, User, abc, emoji
 
     base_map: dict[type, tuple[_Getter, _Fetcher]] = {
         Member: (
@@ -784,6 +784,10 @@ def _get_getter_fetcher_map() -> dict[type, tuple[_Getter, _Fetcher]]:
             lambda obj, oid: obj.fetch_emoji(oid),
         ),
         abc.GuildChannel: (
+            lambda obj, oid: obj.get_channel(oid),
+            lambda obj, oid: obj.fetch_channel(oid),
+        ),
+        Thread: (
             lambda obj, oid: obj.get_channel(oid),
             lambda obj, oid: obj.fetch_channel(oid),
         ),
