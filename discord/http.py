@@ -106,7 +106,7 @@ if TYPE_CHECKING:
 API_VERSION: int = 10
 
 
-async def json_or_text(
+async def parse_response(
     response: aiohttp.ClientResponse,
 ) -> dict[str, Any] | str | bytes:
     try:
@@ -314,7 +314,7 @@ class HTTPClient:
                         )
 
                         # even errors have text involved in them so this is safe to call
-                        data = await json_or_text(response)
+                        data = await parse_response(response)
 
                         # check if we have rate limit header information
                         remaining = response.headers.get("X-Ratelimit-Remaining")
