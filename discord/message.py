@@ -1792,7 +1792,7 @@ class Message(Hashable):
             this brings the embeds back if they were suppressed.
             Using this parameter requires :attr:`~.Permissions.manage_messages`.
 
-            .. deprecated: 2.8
+            .. deprecated:: 2.8
         suppress_embeds: :class:`bool`
             Whether to suppress embeds for the message. This removes
             all the embeds if set to ``True``. If set to ``False``
