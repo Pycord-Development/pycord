@@ -12,7 +12,11 @@ bot = discord.Bot(debug_guilds=[...])
 
 @bot.slash_command()
 @option("name", description="Enter your name")
-@option("gender", description="Choose your gender", choices=["Male", "Female", "Other"])
+@option(
+    "pokemon",
+    description="Choose your starter Pokémon",
+    choices=["Bulbasaur", "Squirtle", "Charmander", "Pikachu"],
+)
 @option(
     "age",
     description="Enter your age",
@@ -26,11 +30,11 @@ bot = discord.Bot(debug_guilds=[...])
 async def hello(
     ctx: discord.ApplicationContext,
     name: str,
-    gender: str,
+    pokemon: str,
     age: int,
 ):
     await ctx.respond(
-        f"Hello {name}! Your gender is {gender} and you are {age} years old."
+        f"Hello {name}! Your starter Pokémon is {pokemon} and you are {age} years old."
     )
 
 
