@@ -712,7 +712,7 @@ class FFmpegOpusAudio(FFmpegAudio):
     @staticmethod
     def _probe_codec_fallback(
         source, executable: str = "ffmpeg"
-    ) -> Tuple[Optional[str], Optional[int]]:
+    ) -> tuple[str | None, int | None]:
         args = [executable, "-hide_banner", "-i", source]
         proc = subprocess.Popen(
             args,
