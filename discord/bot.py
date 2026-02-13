@@ -966,8 +966,8 @@ class ApplicationCommandMixin(ABC):
         cls: Type[:class:`ApplicationCommand`]
             The factory class that will be used to create the command.
             By default, this is :class:`.SlashCommand`. Should a custom
-            class be provided, it must be similar enough to the interface
-            of :class:`SlashCommand`, :class:`MessageCommand` or :class:`UserCommand`.
+            class be provided, it must be a subclass of either
+            :class:`SlashCommand`, :class:`MessageCommand` or :class:`UserCommand`.
 
         Returns
         -------
