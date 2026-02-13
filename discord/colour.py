@@ -315,16 +315,43 @@ class Colour:
         return cls(0x99AAB5)
 
     @classmethod
-    @deprecated(
-        "Colour.dark_theme is deprecated since version 2.7.1 and will be removed in version 3.0. This is not relevant anymore since Discord provides the custom themes feature."
-    )
+    def light_theme(cls: type[Self]) -> Self:
+        """A factory method that returns a :class:`Colour` with a value of ``0xfbfbfb``.
+        This will appear transparent on Discord's light theme.
+
+        .. versionadded:: 2.8
+        """
+        return cls(0xFBFBFB)
+
+    @classmethod
+    def ash_theme(cls: type[Self]) -> Self:
+        """A factory method that returns a :class:`Colour` with a value of ``0x323339``.
+        This will appear transparent on Discord's ash theme.
+
+        .. versionadded:: 2.8
+        """
+        return cls(0x323339)
+
+    @classmethod
     def dark_theme(cls: type[Self]) -> Self:
-        """A factory method that returns a :class:`Colour` with a value of ``0x36393F``.
-        This will appear transparent on Discord's dark theme.
+        """A factory method that returns a :class:`Colour` with a value of ``0x1a1a1e``.
+        This will appear transparent on Discord's onyx theme.
 
         .. versionadded:: 1.5
+
+        .. versionchanged:: 2.8
+            Updated to match new Discord theme colour.
         """
-        return cls(0x36393F)
+        return cls(0x1A1A1E)
+
+    @classmethod
+    def onyx_theme(cls: type[Self]) -> Self:
+        """A factory method that returns a :class:`Colour` with a value of ``0x070709``.
+        This will appear transparent on Discord's onyx theme.
+
+        .. versionadded:: 2.8
+        """
+        return cls(0x070709)
 
     @classmethod
     def fuchsia(cls: type[Self]) -> Self:
@@ -352,7 +379,7 @@ class Colour:
 
     @classmethod
     @deprecated(
-        "Colour.embed_background is deprecated since version 2.7.1 and will be removed in version 3.0. This is not relevant anymore since Discord provides the custom themes feature."
+        "Colour.embed_background is deprecated since version 2.8 and will be removed in version 3.0. This is not relevant anymore since Discord provides the custom themes feature."
     )
     def embed_background(cls: type[Self], theme: str = "dark") -> Self:
         """A factory method that returns a :class:`Colour` corresponding to the
