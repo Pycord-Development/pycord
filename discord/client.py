@@ -595,7 +595,7 @@ class Client:
         The default modal error handler provided by the client.
         The default implementation prints the traceback to stderr.
 
-        This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+        This only fires for a modal if you did not define its :func:`~discord.ui.BaseModal.on_error`.
 
         Parameters
         ----------
