@@ -1,3 +1,5 @@
+from functools import partial
+
 import discord
 from discord.commands import option
 
@@ -194,6 +196,41 @@ async def autocomplete_basic_example(
     """
 
     await ctx.respond(f"You picked {color} as your color, and {animal} as your animal!")
+
+
+FRUITS = ["Apple", "Banana", "Orange"]
+VEGETABLES = ["Carrot", "Lettuce", "Potato"]
+
+
+async def food_autocomplete(
+    ctx: discord.AutocompleteContext, food_type: str
+) -> list[discord.OptionChoice]:
+    items = FRUITS if food_type == "fruit" else VEGETABLES
+    return [
+        discord.OptionChoice(name=item)
+        for item in items
+        if ctx.value.lower() in item.lower()
+    ]
+
+
+@bot.slash_command(name="fruit")
+@option(
+    "choice",
+    description="Pick a fruit",
+    autocomplete=partial(food_autocomplete, food_type="fruit"),
+)
+async def get_fruit(ctx: discord.ApplicationContext, choice: str):
+    await ctx.respond(f'You picked "{choice}"')
+
+
+@bot.slash_command(name="vegetable")
+@option(
+    "choice",
+    description="Pick a vegetable",
+    autocomplete=partial(food_autocomplete, food_type="vegetable"),
+)
+async def get_vegetable(ctx: discord.ApplicationContext, choice: str):
+    await ctx.respond(f'You picked "{choice}"')
 
 
 bot.run("TOKEN")

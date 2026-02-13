@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Abstract Base Classes"
 msgstr "Abstract Base Classes"
@@ -518,14 +518,17 @@ msgstr "All parameters are optional."
 msgid "Returns a context manager that allows you to type for an indefinite period of time."
 msgstr "Returns a context manager that allows you to type for an indefinite period of time."
 
-msgid "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
-msgstr "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgid "This is useful for denoting long computations in your bot."
+msgstr "This is useful for denoting long computations in your bot."
 
 msgid "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
 msgstr "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
 
 msgid "Example Usage: ::"
 msgstr "Example Usage: ::"
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 
 msgid "Sends a message to the destination with the content given."
 msgstr "Sends a message to the destination with the content given."
@@ -572,11 +575,11 @@ msgstr "Controls the mentions being processed in this message. If this is passed
 msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
 msgstr "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
 
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
-msgstr "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+msgstr "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
 
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
-msgstr "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgstr "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
 
 msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
 msgstr "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
@@ -653,20 +656,29 @@ msgstr "You do not have the permissions required to get a message."
 msgid "Retrieving the message failed."
 msgstr "Retrieving the message failed."
 
-msgid "Retrieves all messages that are currently pinned in the channel."
-msgstr "Retrieves all messages that are currently pinned in the channel."
+msgid "Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages."
+msgstr "Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages."
 
-msgid "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
-msgstr "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
+msgid "Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead."
+msgstr "Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead."
 
-msgid "The messages that are currently pinned."
-msgstr "The messages that are currently pinned."
+msgid "The number of pinned messages to retrieve. If ``None``, retrieves every pinned message in the channel."
+msgstr "The number of pinned messages to retrieve. If ``None``, retrieves every pinned message in the channel."
 
-msgid "List[:class:`~discord.Message`]"
-msgstr "List[:class:`~discord.Message`]"
+msgid "Retrieve messages pinned before this datetime. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve messages pinned before this datetime. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
 
-msgid "Retrieving the pinned messages failed."
-msgstr "Retrieving the pinned messages failed."
+msgid ":class:`~discord.MessagePin` -- The pinned message."
+msgstr ":class:`~discord.MessagePin` -- The pinned message."
+
+msgid "You do not have permissions to get pinned messages."
+msgstr "You do not have permissions to get pinned messages."
+
+msgid "The request to get pinned messages failed."
+msgstr "The request to get pinned messages failed."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MessagePinIterator\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MessagePinIterator\\``"
 
 msgid "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
 msgstr "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."

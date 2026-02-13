@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Generator: Crowdin\n"
 
 msgid "Client Objects"
 msgstr "Client Objects"
@@ -152,8 +152,8 @@ msgstr "The functions being listened to must be a :ref:`coroutine <coroutine>`."
 msgid "The function being listened to is not a coroutine."
 msgstr "The function being listened to is not a coroutine."
 
-msgid "The ``name`` (event name) does not start with 'on_'"
-msgstr "The ``name`` (event name) does not start with 'on_'"
+msgid "The ``name`` (event name) does not start with ``on_``."
+msgstr "The ``name`` (event name) does not start with ``on_``."
 
 msgid "Would print one and two in an unspecified order."
 msgstr "Would print one and two in an unspecified order."
@@ -227,8 +227,8 @@ msgstr "The name of the event to listen for. Defaults to ``func.__name__``."
 msgid "The ``func`` parameter is not a coroutine function."
 msgstr "The ``func`` parameter is not a coroutine function."
 
-msgid "Registers a :class:`~discord.ui.View` for persistent listening."
-msgstr "Registers a :class:`~discord.ui.View` for persistent listening."
+msgid "Registers a :class:`~discord.ui.BaseView` for persistent listening."
+msgstr "Registers a :class:`~discord.ui.BaseView` for persistent listening."
 
 msgid "This method should be used for when a view is comprised of components that last longer than the lifecycle of the program."
 msgstr "This method should be used for when a view is comprised of components that last longer than the lifecycle of the program."
@@ -419,36 +419,6 @@ msgstr "Any additional keyword arguments to pass to :class:`.SlashCommandGroup`.
 msgid "The slash command group that was created."
 msgstr "The slash command group that was created."
 
-msgid "Creates a :class:`.Guild`."
-msgstr "Creates a :class:`.Guild`."
-
-msgid "Bot accounts in more than 10 guilds are not allowed to create guilds."
-msgstr "Bot accounts in more than 10 guilds are not allowed to create guilds."
-
-msgid "The name of the guild."
-msgstr "The name of the guild."
-
-msgid "The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit` for more details on what is expected."
-msgstr "The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit` for more details on what is expected."
-
-msgid "The code for a template to create the guild with.  .. versionadded:: 1.4"
-msgstr "The code for a template to create the guild with.  .. versionadded:: 1.4"
-
-msgid "The code for a template to create the guild with."
-msgstr "The code for a template to create the guild with."
-
-msgid "The guild created. This is not the same guild that is added to cache."
-msgstr "The guild created. This is not the same guild that is added to cache."
-
-msgid ":class:`.Guild`"
-msgstr ":class:`.Guild`"
-
-msgid "Guild creation failed."
-msgstr "Guild creation failed."
-
-msgid "Invalid icon image format given. Must be PNG or JPG."
-msgstr "Invalid icon image format given. Must be PNG or JPG."
-
 msgid "Deletes the custom :class:`AppEmoji` from the application."
 msgstr "Deletes the custom :class:`AppEmoji` from the application."
 
@@ -575,6 +545,15 @@ msgstr "Invalid Channel ID."
 msgid "You do not have permission to fetch this channel."
 msgstr "You do not have permission to fetch this channel."
 
+msgid "Fetches the bot's default sounds."
+msgstr "Fetches the bot's default sounds."
+
+msgid "The bot's default sounds."
+msgstr "The bot's default sounds."
+
+msgid "List[:class:`.SoundboardSound`]"
+msgstr "List[:class:`.SoundboardSound`]"
+
 msgid "Retrieves a custom :class:`AppEmoji` from the application."
 msgstr "Retrieves a custom :class:`AppEmoji` from the application."
 
@@ -622,6 +601,9 @@ msgstr "Whether to include count information in the guild. This fills the :attr:
 
 msgid "The guild from the ID."
 msgstr "The guild from the ID."
+
+msgid ":class:`.Guild`"
+msgstr ":class:`.Guild`"
 
 msgid "You do not have access to the guild."
 msgstr "You do not have access to the guild."
@@ -851,11 +833,17 @@ msgstr "Just because you receive a :class:`.abc.GuildChannel` does not mean that
 msgid ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
 msgstr ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
 
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+
 msgid "Returns a generator with every :class:`.Member` the client can see."
 msgstr "Returns a generator with every :class:`.Member` the client can see."
 
 msgid ":class:`.Member` -- A member the client can see."
 msgstr ":class:`.Member` -- A member the client can see."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "Get an :class:`.ApplicationCommand` from the internal list of commands."
 msgstr "Get an :class:`.ApplicationCommand` from the internal list of commands."
@@ -986,6 +974,30 @@ msgstr "The returned message or ``None`` if not found."
 msgid "Optional[:class:`.Message`]"
 msgstr "Optional[:class:`.Message`]"
 
+msgid "Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API."
+msgstr "Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API."
+
+msgid "Type of object to fetch or get."
+msgstr "Type of object to fetch or get."
+
+msgid "ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`."
+msgstr "ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`."
+
+msgid "A default to return instead of raising if fetch fails."
+msgstr "A default to return instead of raising if fetch fails."
+
+msgid "The object if found, or `default` if provided when not found."
+msgstr "The object if found, or `default` if provided when not found."
+
+msgid ":class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`"
+msgstr ":class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`"
+
+msgid "Raised when required parameters are missing or invalid types are provided."
+msgstr "Raised when required parameters are missing or invalid types are provided."
+
+msgid "Raised when an unsupported or incompatible object type is used."
+msgstr "Raised when an unsupported or incompatible object type is used."
+
 msgid "Looks up a user in the user cache or fetches if not found."
 msgstr "Looks up a user in the user cache or fetches if not found."
 
@@ -1024,6 +1036,18 @@ msgstr "The poll or ``None`` if not found."
 
 msgid "Optional[:class:`.Poll`]"
 msgstr "Optional[:class:`.Poll`]"
+
+msgid "Gets a :class:`.Sound` from the bot's sound cache."
+msgstr "Gets a :class:`.Sound` from the bot's sound cache."
+
+msgid "The ID of the sound to get."
+msgstr "The ID of the sound to get."
+
+msgid "The sound with the given ID."
+msgstr "The sound with the given ID."
+
+msgid "Optional[:class:`.SoundboardSound`]"
+msgstr "Optional[:class:`.SoundboardSound`]"
 
 msgid "Returns a stage instance with the given stage channel ID."
 msgstr "Returns a stage instance with the given stage channel ID."
@@ -1097,8 +1121,8 @@ msgstr "Specifies if the client's internal cache is ready for use."
 msgid "Whether the WebSocket is currently rate limited."
 msgstr "Whether the WebSocket is currently rate limited."
 
-msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
+msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
 
 msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``."
 msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``."
@@ -1210,6 +1234,27 @@ msgstr "The default error handler provided by the client."
 
 msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
 msgstr "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
+
+msgid "The default modal error handler provided by the client. The default implementation prints the traceback to stderr."
+msgstr "The default modal error handler provided by the client. The default implementation prints the traceback to stderr."
+
+msgid "This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`."
+msgstr "This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`."
+
+msgid "The exception that was raised."
+msgstr "The exception that was raised."
+
+msgid "The interaction that was received."
+msgstr "The interaction that was received."
+
+msgid "The default view error handler provided by the client."
+msgstr "The default view error handler provided by the client."
+
+msgid "This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`."
+msgstr "This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`."
+
+msgid "The item that the user interacted with."
+msgstr "The item that the user interacted with."
 
 msgid "A sequence of persistent views added to the client."
 msgstr "A sequence of persistent views added to the client."
@@ -1355,6 +1400,9 @@ msgstr "Roughly Equivalent to: ::"
 msgid "This function must be the last function to call due to the fact that it is blocking. That means that registration of events or anything being called after this function call will not execute until it returns."
 msgstr "This function must be the last function to call due to the fact that it is blocking. That means that registration of events or anything being called after this function call will not execute until it returns."
 
+msgid "A list of all the sounds the bot can see."
+msgstr "A list of all the sounds the bot can see."
+
 msgid "A shorthand coroutine for :meth:`login` + :meth:`connect`."
 msgstr "A shorthand coroutine for :meth:`login` + :meth:`connect`."
 
@@ -1477,6 +1525,9 @@ msgstr "An iterator that recursively walks through all application commands and 
 
 msgid ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
 msgstr ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "This is similar to :class:`.Bot` except that it is inherited from :class:`discord.AutoShardedClient` instead."
 msgstr "This is similar to :class:`.Bot` except that it is inherited from :class:`discord.AutoShardedClient` instead."
@@ -1643,9 +1694,6 @@ msgstr "If the ``activity`` parameter is not of proper type."
 msgid "Whether the websocket is currently rate limited."
 msgstr "Whether the websocket is currently rate limited."
 
-msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
-msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
-
-msgid "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`."
+msgstr "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`."
 

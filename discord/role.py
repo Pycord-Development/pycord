@@ -28,6 +28,8 @@ from __future__ import annotations
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, TypeVar
 
+from typing_extensions import Self
+
 from .asset import Asset
 from .colour import Colour
 from .errors import InvalidArgument
@@ -37,15 +39,14 @@ from .permissions import Permissions
 from .utils import (
     MISSING,
     _bytes_to_base64_data,
+    _get_as_snowflake,
     cached_slot_property,
     deprecated,
     snowflake_time,
+    warn_deprecated,
 )
 
-__all__ = (
-    "RoleTags",
-    "Role",
-)
+__all__ = ("RoleTags", "Role", "RoleColours")
 
 if TYPE_CHECKING:
     import datetime
@@ -55,6 +56,7 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.guild import RolePositionUpdate
     from .types.role import Role as RolePayload
+    from .types.role import RoleColours as RoleColoursPayload
     from .types.role import RoleTags as RoleTagPayload
 
 
@@ -234,7 +236,7 @@ class RoleTags:
         if self._premium_subscriber is True:
             return RoleType.BOOSTER
 
-        # subscription roles
+        # Subscription roles
         if (
             self.integration_id is not None
             and self._premium_subscriber is None
@@ -244,7 +246,7 @@ class RoleTags:
                 return RoleType.PREMIUM_SUBSCRIPTION_TIER
             return RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER
 
-        # integration role (Twitch/YouTube)
+        # Integration role (Twitch/YouTube)
         if self.integration_id is not None:
             return RoleType.INTEGRATION
 
@@ -287,6 +289,96 @@ class RoleTags:
 
 
 R = TypeVar("R", bound="Role")
+
+
+class RoleColours:
+    """Represents a role's gradient colours.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    primary: :class:`Colour`
+        The primary colour of the role.
+    secondary: Optional[:class:`Colour`]
+        The secondary colour of the role.
+    tertiary: Optional[:class:`Colour`]
+        The tertiary colour of the role. At the moment, only `16761760` is allowed.
+    """
+
+    def __init__(
+        self,
+        primary: Colour,
+        secondary: Colour | None = None,
+        tertiary: Colour | None = None,
+    ):
+        """Initialises a :class:`RoleColours` object.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        primary: :class:`Colour`
+            The primary colour of the role.
+        secondary: Optional[:class:`Colour`]
+            The secondary colour of the role.
+        tertiary: Optional[:class:`Colour`]
+            The tertiary colour of the role.
+        """
+        self.primary: Colour = primary
+        self.secondary: Colour | None = secondary
+        self.tertiary: Colour | None = tertiary
+
+    @classmethod
+    def _from_payload(cls, data: RoleColoursPayload) -> Self:
+        primary = Colour(data["primary_color"])
+        secondary = (
+            Colour(data["secondary_color"]) if data.get("secondary_color") else None
+        )
+        tertiary = (
+            Colour(data["tertiary_color"]) if data.get("tertiary_color") else None
+        )
+        return cls(primary, secondary, tertiary)
+
+    def _to_dict(self) -> RoleColoursPayload:
+        """Converts the role colours to a dictionary."""
+        return {
+            "primary_color": self.primary.value,
+            "secondary_color": self.secondary.value if self.secondary else None,
+            "tertiary_color": self.tertiary.value if self.tertiary else None,
+        }  # type: ignore
+
+    @classmethod
+    def default(cls) -> RoleColours:
+        """Returns a default :class:`RoleColours` object with no colours set."""
+        return cls(Colour.default(), None, None)
+
+    @classmethod
+    def holographic(cls) -> RoleColours:
+        """Returns a :class:`RoleColours` that makes the role look holographic.
+
+        Currently holographic roles are only supported with colours 11127295, 16759788, and 16761760.
+        """
+        return cls(Colour(11127295), Colour(16759788), Colour(16761760))
+
+    @property
+    def is_holographic(self) -> bool:
+        """Whether the role is holographic.
+
+        Currently roles are holographic when colours are set to 11127295, 16759788, and 16761760.
+        """
+        return (
+            self.primary.value == 11127295
+            and self.secondary.value == 16759788
+            and self.tertiary.value == 16761760
+        )
+
+    def __repr__(self) -> str:
+        return (
+            f"<RoleColours primary={self.primary!r} "
+            f"secondary={self.secondary!r} "
+            f"tertiary={self.tertiary!r}>"
+        )
 
 
 class Role(Hashable):
@@ -368,6 +460,11 @@ class Role(Hashable):
         Extra attributes of the role.
 
         .. versionadded:: 2.6
+
+    colours: :class:`RoleColours`
+        The role's colours.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -375,6 +472,7 @@ class Role(Hashable):
         "name",
         "_permissions",
         "_colour",
+        "colours",
         "position",
         "managed",
         "mentionable",
@@ -440,6 +538,7 @@ class Role(Hashable):
         self._permissions: int = int(data.get("permissions", 0))
         self.position: int = data.get("position", 0)
         self._colour: int = data.get("color", 0)
+        self.colours: RoleColours = RoleColours._from_payload(data["colors"])
         self.hoist: bool = data.get("hoist", False)
         self.managed: bool = data.get("managed", False)
         self.mentionable: bool = data.get("mentionable", False)
@@ -483,15 +582,26 @@ class Role(Hashable):
         return self.tags is not None and self.tags.is_integration()
 
     def is_assignable(self) -> bool:
-        """Whether the role is able to be assigned or removed by the bot.
+        """Whether the role is able to be assigned or removed by the bot. This checks whether all of the following conditions are true:
+
+        - The role is not the guild's :attr:`Guild.default_role`
+
+        - The role is not managed
+
+        - The bot has the :attr:`~Permissions.manage_roles` permission
+
+        - The bot's top role is above this role
 
         .. versionadded:: 2.0
+        .. versionchanged:: 2.7.1
+            Added check for :attr:`~Permissions.manage_roles` permission
         """
         me = self.guild.me
         return (
             not self.is_default()
             and not self.managed
-            and (me.top_role > self or me.id == self.guild.owner_id)
+            and me.guild_permissions.manage_roles
+            and me.top_role > self
         )
 
     @deprecated("Role.type", "2.7")
@@ -520,14 +630,32 @@ class Role(Hashable):
         return Permissions(self._permissions)
 
     @property
+    @deprecated("colours.primary", "2.7")
     def colour(self) -> Colour:
-        """Returns the role colour. An alias exists under ``color``."""
-        return Colour(self._colour)
+        """Returns the role colour. Equivalent to :attr:`colours.primary`.
+        An alias exists under ``color``.
+
+        .. versionchanged:: 2.7
+        """
+        return self.colours.primary
 
     @property
+    @deprecated("colors.primary", "2.7")
     def color(self) -> Colour:
-        """Returns the role color. An alias exists under ``colour``."""
-        return self.colour
+        """Returns the role's primary color. Equivalent to :attr:`colors.primary`.
+        An alias exists under ``colour``.
+
+        .. versionchanged:: 2.7
+        """
+        return self.colours.primary
+
+    @property
+    def colors(self) -> RoleColours:
+        """Returns the role's colours. Equivalent to :attr:`colours`.
+
+        .. versionadded:: 2.7
+        """
+        return self.colours
 
     @property
     def created_at(self) -> datetime.datetime:
@@ -606,13 +734,16 @@ class Role(Hashable):
         permissions: Permissions = MISSING,
         colour: Colour | int = MISSING,
         color: Colour | int = MISSING,
+        colours: RoleColours = MISSING,
+        colors: RoleColours = MISSING,
+        holographic: bool = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         position: int = MISSING,
         reason: str | None = MISSING,
         icon: bytes | None = MISSING,
         unicode_emoji: str | None = MISSING,
-    ) -> Role | None:
+    ) -> Role:
         """|coro|
 
         Edits the role.
@@ -677,8 +808,25 @@ class Role(Hashable):
         if color is not MISSING:
             colour = color
 
+        if colors is not MISSING:
+            colours = colors
+
         if colour is not MISSING:
-            payload["color"] = colour if isinstance(colour, int) else colour.value
+            warn_deprecated("colour", "colours", "2.7")
+            if isinstance(colour, int):
+                colour = Colour(colour)
+            colours = RoleColours(primary=colour)
+        if holographic:
+            colours = RoleColours.holographic()
+        if colours is not MISSING:
+            if not isinstance(colours, RoleColours):
+                raise InvalidArgument("colours must be a RoleColours object")
+            if "ENHANCED_ROLE_COLORS" not in self.guild.features:
+                colours.secondary = None
+                colours.tertiary = None
+
+            payload["colors"] = colours._to_dict()
+
         if name is not MISSING:
             payload["name"] = name
 

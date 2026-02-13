@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
@@ -127,7 +127,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         - ``name:id``
         - ``<:name:id>``
 
-        If the format does not match then it is assumed to be a unicode emoji.
+        If the format does not match then it is assumed to be a Unicode emoji block, either as Unicode characters or as a Discord alias (``:smile:``).
 
         .. versionadded:: 2.0
 
@@ -141,6 +141,11 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
+        if unicode_emoji := utils.EMOJIS_MAP.get(
+            value.removeprefix(":").removesuffix(":")
+        ):
+            return cls(name=unicode_emoji, id=None, animated=False)
+
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
             groups = match.groupdict()
@@ -240,8 +245,18 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         if self.is_unicode_emoji():
             return ""
 
-        fmt = "gif" if self.animated else "png"
-        return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
+        url = f"{Asset.BASE}/emojis/{self.id}.{self.extension}"
+        if self.animated:
+            url += "?animated=true"
+        return url
+
+    @property
+    def extension(self) -> Literal["webp", "png"]:
+        """Return the file extension of the emoji.
+
+        .. versionadded:: 2.7.1
+        """
+        return "webp" if self.animated else "png"
 
     async def read(self) -> bytes:
         if self.is_unicode_emoji():

@@ -207,7 +207,7 @@ class AutoModTriggerMetadata:
     +-----------------------------+--------------------------------------------------------------------------------+
 
     Each attribute has limits that may change based on the trigger type.
-    See `here <https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata-field-limits>`_
+    See `here <https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata-field-limits>`__
     for information on attribute limits.
 
     .. versionadded:: 2.0
@@ -416,12 +416,12 @@ class AutoModRule(Hashable):
     def __str__(self) -> str:
         return self.name
 
-    @cached_property
+    @property
     def guild(self) -> Guild | None:
         """The guild this rule belongs to."""
         return self._state._get_guild(self.guild_id)
 
-    @cached_property
+    @property
     def creator(self) -> Member | None:
         """The member who created this rule."""
         if self.guild is None:

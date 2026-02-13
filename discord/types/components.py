@@ -33,17 +33,24 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4]
+ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
+SeparatorSpacingSize = Literal[1, 2]
+SelectDefaultValueType = Literal["channel", "role", "user"]
 
 
-class ActionRow(TypedDict):
+class BaseComponent(TypedDict):
+    type: ComponentType
+    id: NotRequired[int]
+
+
+class ActionRow(BaseComponent):
     type: Literal[1]
-    components: list[Component]
+    components: list[ButtonComponent | InputText | SelectMenu]
 
 
-class ButtonComponent(TypedDict):
+class ButtonComponent(BaseComponent):
     custom_id: NotRequired[str]
     url: NotRequired[str]
     disabled: NotRequired[bool]
@@ -54,7 +61,7 @@ class ButtonComponent(TypedDict):
     sku_id: Snowflake
 
 
-class InputText(TypedDict):
+class InputText(BaseComponent):
     min_length: NotRequired[int]
     max_length: NotRequired[int]
     required: NotRequired[bool]
@@ -63,7 +70,7 @@ class InputText(TypedDict):
     type: Literal[4]
     style: InputTextStyle
     custom_id: str
-    label: str
+    label: NotRequired[str]
 
 
 class SelectOption(TypedDict):
@@ -74,7 +81,12 @@ class SelectOption(TypedDict):
     default: bool
 
 
-class SelectMenu(TypedDict):
+class SelectDefaultValue(TypedDict):
+    id: Snowflake
+    type: SelectDefaultValueType
+
+
+class SelectMenu(BaseComponent):
     placeholder: NotRequired[str]
     min_values: NotRequired[int]
     max_values: NotRequired[int]
@@ -83,6 +95,95 @@ class SelectMenu(TypedDict):
     options: NotRequired[list[SelectOption]]
     type: Literal[3, 5, 6, 7, 8]
     custom_id: str
+    required: NotRequired[bool]
+    default_values: NotRequired[list[SelectDefaultValue]]
 
 
-Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
+class TextDisplayComponent(BaseComponent):
+    type: Literal[10]
+    content: str
+
+
+class SectionComponent(BaseComponent):
+    type: Literal[9]
+    components: list[TextDisplayComponent]
+    accessory: NotRequired[ThumbnailComponent | ButtonComponent]
+
+
+class UnfurledMediaItem(TypedDict):
+    url: str
+    proxy_url: str
+    height: NotRequired[int | None]
+    width: NotRequired[int | None]
+    content_type: NotRequired[str]
+    flags: NotRequired[int]
+    attachment_id: NotRequired[Snowflake]
+
+
+class ThumbnailComponent(BaseComponent):
+    type: Literal[11]
+    media: UnfurledMediaItem
+    description: NotRequired[str]
+    spoiler: NotRequired[bool]
+
+
+class MediaGalleryItem(TypedDict):
+    media: UnfurledMediaItem
+    description: NotRequired[str]
+    spoiler: NotRequired[bool]
+
+
+class MediaGalleryComponent(BaseComponent):
+    type: Literal[12]
+    items: list[MediaGalleryItem]
+
+
+class FileComponent(BaseComponent):
+    type: Literal[13]
+    file: UnfurledMediaItem
+    spoiler: NotRequired[bool]
+    name: str
+    size: int
+
+
+class SeparatorComponent(BaseComponent):
+    type: Literal[14]
+    divider: NotRequired[bool]
+    spacing: NotRequired[SeparatorSpacingSize]
+
+
+class ContainerComponent(BaseComponent):
+    type: Literal[17]
+    accent_color: NotRequired[int]
+    spoiler: NotRequired[bool]
+    components: list[AllowedContainerComponents]
+
+
+class LabelComponent(BaseComponent):
+    type: Literal[18]
+    label: str
+    description: NotRequired[str]
+    component: SelectMenu | InputText | FileUploadComponent
+
+
+class FileUploadComponent(BaseComponent):
+    type: Literal[19]
+    custom_id: str
+    max_values: NotRequired[int]
+    min_values: NotRequired[int]
+    required: NotRequired[bool]
+
+
+Component = Union[
+    ActionRow, ButtonComponent, SelectMenu, InputText, FileUploadComponent
+]
+
+
+AllowedContainerComponents = Union[
+    ActionRow,
+    TextDisplayComponent,
+    MediaGalleryComponent,
+    FileComponent,
+    SeparatorComponent,
+    SectionComponent,
+]

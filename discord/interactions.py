@@ -26,7 +26,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, Any, Coroutine, Union
+import datetime
+from typing import TYPE_CHECKING, Any, Coroutine, Union, overload
 
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
@@ -60,6 +61,7 @@ __all__ = (
     "MessageInteraction",
     "InteractionMetadata",
     "AuthorizingIntegrationOwners",
+    "InteractionCallback",
 )
 
 if TYPE_CHECKING:
@@ -75,18 +77,19 @@ if TYPE_CHECKING:
         VoiceChannel,
     )
     from .client import Client
-    from .commands import OptionChoice
+    from .commands import ApplicationCommand, OptionChoice
     from .embeds import Embed
     from .mentions import AllowedMentions
     from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
-    from .types.interactions import InteractionData
+    from .types.interactions import InteractionCallback as InteractionCallbackPayload
+    from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
-    from .ui.modal import Modal
-    from .ui.view import View
+    from .ui.modal import BaseModal
+    from .ui.view import BaseView
 
     InteractionChannel = Union[
         VoiceChannel,
@@ -152,6 +155,27 @@ class Interaction:
         The context in which this command was executed.
 
         .. versionadded:: 2.6
+    callback: Optional[:class:`InteractionCallback`]
+        The callback of the interaction. Contains information about the status of the interaction response.
+        Will be `None` until the interaction is responded to.
+
+        .. versionadded:: 2.7
+    command: Optional[:class:`ApplicationCommand`]
+        The command that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    view: Optional[:class:`BaseView`]
+        The view that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    modal: Optional[:class:`BaseModal`]
+        The modal that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    attachment_size_limit: :class:`int`
+        The attachment size limit.
+
+        .. versionadded:: 2.7
     """
 
     __slots__: tuple[str, ...] = (
@@ -172,6 +196,12 @@ class Interaction:
         "entitlements",
         "context",
         "authorizing_integration_owners",
+        "callback",
+        "command",
+        "view",
+        "modal",
+        "attachment_size_limit",
+        "_raw_data",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -191,9 +221,11 @@ class Interaction:
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
+        self.callback: InteractionCallback | None = None
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
+        self._raw_data: InteractionPayload = data
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
         self.data: InteractionData | None = data.get("data")
@@ -223,6 +255,11 @@ class Interaction:
             if "context" in data
             else None
         )
+
+        self.command: ApplicationCommand | None = None
+        self.view: BaseView | None = None
+        self.modal: BaseModal | None = None
+        self.attachment_size_limit: int = data.get("attachment_size_limit")
 
         self.message: Message | None = None
         self.channel = None
@@ -263,6 +300,7 @@ class Interaction:
 
         channel = data.get("channel")
         data_ch_type: int | None = channel.get("type") if channel else None
+        factory: Any | None = None
 
         if data_ch_type is not None:
             factory, ch_type = _threaded_channel_factory(data_ch_type)
@@ -271,6 +309,11 @@ class Interaction:
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
+            if self.channel is None and factory is not None:
+                self.channel = factory(
+                    state=self._state, data=channel, guild=self.guild
+                )
+
         if self.channel is None and self.channel_id is not None:
             ch_type = (
                 ChannelType.text if self.guild_id is not None else ChannelType.private
@@ -299,6 +342,11 @@ class Interaction:
         if self._guild:
             return self._guild
         return self._state and self._state._get_guild(self.guild_id)
+
+    @property
+    def created_at(self) -> datetime.datetime:
+        """Returns the interaction's creation time in UTC."""
+        return utils.snowflake_time(self.id)
 
     def is_command(self) -> bool:
         """Indicates whether the interaction is an application command."""
@@ -356,12 +404,7 @@ class Interaction:
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
         """Returns the followup webhook for followup interactions."""
-        payload = {
-            "id": self.application_id,
-            "type": 3,
-            "token": self.token,
-        }
-        return Webhook.from_state(data=payload, state=self._state)
+        return Webhook.from_interaction(interaction=self)
 
     def is_guild_authorised(self) -> bool:
         """:class:`bool`: Checks if the interaction is guild authorised.
@@ -432,10 +475,11 @@ class Interaction:
         if self._original_response is not None:
             return self._original_response
 
-        # TODO: fix later to not raise?
         channel = self.channel
         if channel is None:
-            raise ClientException("Channel for message could not be resolved")
+            raise ClientException(
+                "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+            )
 
         adapter = async_context.get()
         http = self._state.http
@@ -478,7 +522,7 @@ class Interaction:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool = False,
@@ -513,7 +557,7 @@ class Interaction:
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -553,6 +597,8 @@ class Interaction:
             previous_allowed_mentions=previous_mentions,
             suppress=suppress,
         )
+        if view and self.message:
+            self._state.prevent_view_updates_for(self.message.id)
         adapter = async_context.get()
         http = self._state.http
         data = await adapter.edit_original_interaction_response(
@@ -569,9 +615,13 @@ class Interaction:
         # The message channel types should always match
         state = _InteractionMessageState(self, self._state)
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
-        if view and not view.is_finished():
+        if view:
+            if not view.is_finished():
+                view.refresh(message.components)
+                if view.is_dispatchable():
+                    self._state.store_view(view, message.id)
+
             view.message = message
-            self._state.store_view(view, message.id)
 
         if delete_after is not None:
             await self.delete_original_response(delay=delete_after)
@@ -649,11 +699,74 @@ class Interaction:
         """
         return await self.delete_original_response(**kwargs)
 
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embed: Embed | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+    ) -> Interaction | WebhookMessage: ...
+
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+    ) -> Interaction | WebhookMessage: ...
+
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
         """|coro|
 
         Sends either a response or a message using the followup webhook determined by whether the interaction
         has been responded to or not.
+
+        Parameters
+        ----------
+        content: Optional[:class:`str`]
+            The content of the message to send.
+        embeds: List[:class:`Embed`]
+            A list of embeds to send with the content. Maximum of 10. This cannot
+            be mixed with the ``embed`` parameter.
+        embed: :class:`Embed`
+            The rich embed for the content to send. This cannot be mixed with
+            ``embeds`` parameter.
+        tts: :class:`bool`
+            Indicates if the message should be sent using text-to-speech.
+        view: :class:`discord.ui.BaseView`
+            The view to send with the message.
+        ephemeral: :class:`bool`
+            Indicates if the message should only be visible to the user who started the interaction.
+            If a view is sent with an ephemeral message, and it has no timeout set then the timeout
+            is set to 15 minutes.
+        allowed_mentions: :class:`AllowedMentions`
+            Controls the mentions being processed in this message.
+            See :meth:`.abc.Messageable.send` for more information.
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
+        file: :class:`File`
+            The file to upload.
+        files: List[:class:`File`]
+            A list of files to upload. Must be a maximum of 10.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -825,18 +938,21 @@ class InteractionResponse:
         if defer_type:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=defer_type,
-                    data=data,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=defer_type,
+                        data=data,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                    )
                 )
             )
             self._responded = True
+            await self._process_callback_response(callback_response)
 
     async def pong(self) -> None:
         """|coro|
@@ -859,32 +975,55 @@ class InteractionResponse:
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    type=InteractionResponseType.pong.value,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        type=InteractionResponseType.pong.value,
+                    )
                 )
             )
             self._responded = True
+            await self._process_callback_response(callback_response)
+
+    async def _process_callback_response(
+        self, callback_response: InteractionCallbackResponse
+    ):
+        if callback_response.get("resource", {}).get("message"):
+            # TODO: fix later to not raise?
+            channel = self._parent.channel
+            if channel is None:
+                raise ClientException(
+                    "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+                )
+            state = _InteractionMessageState(self._parent, self._parent._state)
+            message = InteractionMessage(
+                state=state,
+                channel=channel,
+                data=callback_response["resource"]["message"],
+            )  # type: ignore
+            self._parent._original_response = message
+
+        self._parent.callback = InteractionCallback(callback_response["interaction"])
 
     async def send_message(
         self,
         content: Any | None = None,
         *,
-        embed: Embed = None,
-        embeds: list[Embed] = None,
-        view: View = None,
+        embed: Embed | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
         tts: bool = False,
         ephemeral: bool = False,
-        allowed_mentions: AllowedMentions = None,
-        file: File = None,
-        files: list[File] = None,
-        poll: Poll = None,
-        delete_after: float = None,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
     ) -> Interaction:
         """|coro|
 
@@ -902,7 +1041,7 @@ class InteractionResponse:
             ``embeds`` parameter.
         tts: :class:`bool`
             Indicates if the message should be sent using text-to-speech.
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             The view to send with the message.
         ephemeral: :class:`bool`
             Indicates if the message should only be visible to the user who started the interaction.
@@ -933,7 +1072,7 @@ class InteractionResponse:
         HTTPException
             Sending the message failed.
         TypeError
-            You specified both ``embed`` and ``embeds``.
+            You specified both ``embed`` and ``embeds``, or sent content or embeds with V2 components.
         ValueError
             The length of ``embeds`` was invalid.
         InteractionResponded
@@ -962,8 +1101,14 @@ class InteractionResponse:
 
         flags = MessageFlags(ephemeral=ephemeral)
 
-        if view is not None:
+        if view:
             payload["components"] = view.to_components()
+            if view.is_components_v2():
+                if embeds or content:
+                    raise TypeError(
+                        "cannot send embeds or content with a view using v2 component logic"
+                    )
+                flags.is_components_v2 = True
 
         if poll is not None:
             payload["poll"] = poll.to_dict()
@@ -1007,16 +1152,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.channel_message.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.channel_message.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
@@ -1024,14 +1171,19 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view is not None:
-            if ephemeral and view.timeout is None:
-                view.timeout = 15 * 60.0
-
-            view.parent = self._parent
-            self._parent._state.store_view(view)
-
         self._responded = True
+        await self._process_callback_response(callback_response)
+        if view:
+            view.parent = self._parent
+            if not view.is_finished():
+                if ephemeral and view.timeout is None:
+                    view.timeout = 15 * 60.0
+
+                if view.is_dispatchable():
+                    self._parent._state.store_view(view)
+
+            view.message = await self._parent.original_response()
+
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
         return self._parent
@@ -1045,7 +1197,7 @@ class InteractionResponse:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
@@ -1072,7 +1224,7 @@ class InteractionResponse:
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -1108,6 +1260,8 @@ class InteractionResponse:
         if parent.type not in (InteractionType.component, InteractionType.modal_submit):
             return
 
+        is_cv2 = None
+
         payload = {}
         if content is not MISSING:
             payload["content"] = None if content is None else str(content)
@@ -1125,6 +1279,8 @@ class InteractionResponse:
         if view is not MISSING:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
+            if view and view.is_components_v2():
+                is_cv2 = True
 
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument(
@@ -1151,9 +1307,12 @@ class InteractionResponse:
                 # we keep previous attachments when adding new files
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
-        if suppress is not MISSING:
-            flags = MessageFlags._from_value(self._parent.message.flags.value)
-            flags.suppress_embeds = suppress
+        if suppress is not MISSING or is_cv2:
+            flags = MessageFlags._from_value(msg.flags.value)
+            if is_cv2:
+                flags.is_components_v2 = True
+            if suppress is not MISSING:
+                flags.suppress_embeds = suppress
             payload["flags"] = flags.value
 
         if allowed_mentions is None:
@@ -1171,16 +1330,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.message_update.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.message_update.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
@@ -1188,11 +1349,13 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view and not view.is_finished():
-            view.message = msg
-            state.store_view(view, message_id)
-
         self._responded = True
+        await self._process_callback_response(callback_response)
+        if view:
+            if not view.is_finished():
+                state.store_view(view, message_id)
+            view.message = msg or await parent.original_response()
+
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
 
@@ -1228,7 +1391,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1241,15 +1404,16 @@ class InteractionResponse:
         )
 
         self._responded = True
+        await self._process_callback_response(callback_response)
 
-    async def send_modal(self, modal: Modal) -> Interaction:
+    async def send_modal(self, modal: BaseModal) -> Interaction:
         """|coro|
         Responds to this interaction by sending a modal dialog.
         This cannot be used to respond to another modal dialog submission.
 
         Parameters
         ----------
-        modal: :class:`discord.ui.Modal`
+        modal: :class:`discord.ui.BaseModal`
             The modal dialog to display to the user.
 
         Raises
@@ -1267,7 +1431,7 @@ class InteractionResponse:
         payload = modal.to_dict()
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1279,6 +1443,7 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        await self._process_callback_response(callback_response)
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
@@ -1306,7 +1471,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1317,9 +1482,10 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        await self._process_callback_response(callback_response)
         return self._parent
 
-    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> None:
+    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> Any:
         """|coro|
 
         Wraps a response and makes sure that it's locked while executing.
@@ -1329,16 +1495,24 @@ class InteractionResponse:
         coro: Coroutine[Any]
             The coroutine to wrap.
 
+        Returns
+        -------
+        Any
+            The result of the coroutine.
+
         Raises
         ------
         InteractionResponded
             This interaction has already been responded to before.
+
+        .. versionchanged:: 2.7
+            Return the result of the coroutine
         """
         async with self._response_lock:
             if self.is_done():
                 coro.close()  # cleanup un-awaited coroutine
                 raise InteractionResponded(self._parent)
-            await coro
+            return await coro
 
 
 class _InteractionMessageState:
@@ -1388,7 +1562,7 @@ class InteractionMessage(Message):
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
@@ -1417,7 +1591,7 @@ class InteractionMessage(Message):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -1662,3 +1836,36 @@ class AuthorizingIntegrationOwners:
         if not self.guild_id:
             return None
         return self._state._get_guild(self.guild_id)
+
+
+class InteractionCallback:
+    """Information about the status of the interaction response.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(self, data: InteractionCallbackPayload):
+        self._response_message_loading: bool = data.get(
+            "response_message_loading", False
+        )
+        self._response_message_ephemeral: bool = data.get(
+            "response_message_ephemeral", False
+        )
+
+    def __repr__(self):
+        return (
+            f"<InteractionCallback "
+            f"_response_message_loading={self._response_message_loading} "
+            f"_response_message_ephemeral={self._response_message_ephemeral}>"
+        )
+
+    def is_loading(self) -> bool:
+        """Indicates whether the response message is in a loading state."""
+        return self._response_message_loading
+
+    def is_ephemeral(self) -> bool:
+        """Indicates whether the response message is ephemeral.
+
+        This might be useful for determining if the message was forced to be ephemeral.
+        """
+        return self._response_message_ephemeral

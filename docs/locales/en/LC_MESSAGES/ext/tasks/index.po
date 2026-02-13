@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../ext/tasks/index.rst:4 59da74174e4c4214b076a3810bb95fe7
 msgid "discord.ext.tasks"
@@ -88,10 +88,8 @@ msgstr ""
 
 #: ../../ext/tasks/index.rst 0430760556bc454eb496f803a14cbe47
 #: 224eb1ea4d464d899b6db853b26a2846 4652ba98dd17419892fcd50a56a420d0
-#: 6c4c3d6ae0cf4dd3bf9a90b9939d1d43 6f12894246604c7eab1521c1bd45ca57
-#: 761a207eac3447b899de047d9e5ebf7b 7b563966d82a4f03b7d409731c7032b5
-#: 91965bac6d654b3e8109e274bdc46bfd bef7bd65f8fd40808f7c4a269ed9d7c9
-#: cabe2bc452c248be884063fac80d1ad0 eda2eba72cd74d40a81fb96a622558f1
+#: 6f12894246604c7eab1521c1bd45ca57 91965bac6d654b3e8109e274bdc46bfd
+#: bef7bd65f8fd40808f7c4a269ed9d7c9 eda2eba72cd74d40a81fb96a622558f1
 msgid "Parameters"
 msgstr ""
 
@@ -119,8 +117,7 @@ msgstr ""
 
 #: ../../ext/tasks/index.rst 27b88dc7486040678f313ebaed311309
 #: 4f0346fd2f594d87bc6a71fc5f3aaf36 88dd06b54a304b18aaafa8828477df67
-#: 95e660541beb4b44a8764bd93c54a94e a6b9eae8aff44f3ca7bd392a1f0ef0a0
-#: e37d85d7fd3a46cfb5ba0faec8cc2057 eb4160d3b1904ad7b6fb4a90b73082a8
+#: a6b9eae8aff44f3ca7bd392a1f0ef0a0 e37d85d7fd3a46cfb5ba0faec8cc2057
 msgid "Raises"
 msgstr ""
 
@@ -131,12 +128,9 @@ msgid "The function was not a coroutine."
 msgstr ""
 
 #: ../../ext/tasks/index.rst 07d97a21eac140af8f4d536dcb062e2e
-#: 0da50f3c0c5e4d7bb6fb2b2b8a3138a3 33d39f515aa24c48a28b1f3c05edef44
-#: 3f67b80a7be749d6b9e06e40040ba69e 54b3c2d1fd1b471b83c462abaeeedee8
-#: 6b16812b4e8d43a48dfc08003424686b 7d90def94e9b4721b355b5c6568e8e6f
-#: 8de254edf5c84d599fb5c37d26253ec0 a2407e90429149a79db1b5ee278a1dc9
-#: bf5eae97450b4e40bd2157395afa650e c236bd9da41742fa9c9399bd38e4aa90
-#: df4b78673a4946d18d2e5d56973c31a1 ffc3e9102ad84c3c9424d446574b2b0c
+#: 0da50f3c0c5e4d7bb6fb2b2b8a3138a3 54b3c2d1fd1b471b83c462abaeeedee8
+#: 6b16812b4e8d43a48dfc08003424686b bf5eae97450b4e40bd2157395afa650e
+#: c236bd9da41742fa9c9399bd38e4aa90
 msgid "Return type"
 msgstr ""
 
@@ -285,32 +279,31 @@ msgstr ""
 #: 728c248aab564a90a3260107d51aba61 discord.ext.tasks.Loop.stop:3 of
 msgid ""
 "Unlike :meth:`cancel`\\, this allows the task to finish its current "
-"iteration before gracefully exiting. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+"iteration before gracefully exiting."
 msgstr ""
 
-#: 455bbbc49062472e84be47a8520c7a7e discord.ext.tasks.Loop.stop:10 of
+#: 455bbbc49062472e84be47a8520c7a7e discord.ext.tasks.Loop.stop:8 of
 msgid ""
 "If the internal function raises an error that can be handled before "
 "finishing then it will retry until it succeeds."
 msgstr ""
 
-#: 3adfd1fe09014389a8d77c57bc6a9a33 discord.ext.tasks.Loop.stop:14 of
+#: 3adfd1fe09014389a8d77c57bc6a9a33 discord.ext.tasks.Loop.stop:12 of
 msgid ""
 "If this is undesirable, either remove the error handling before stopping "
 "via :meth:`clear_exception_types` or use :meth:`cancel` instead."
 msgstr ""
 
-#: 3a18cece246a4010a6ab25de921042cc discord.ext.tasks.Loop.cancel:1 of
-msgid "Cancels the internal task, if it is running."
+#: cc431f5256bc4e699afe36a16bb35452
+#: discord.ext.tasks.Loop.add_exception_type:16 discord.ext.tasks.Loop.cancel:4
+#: discord.ext.tasks.Loop.change_interval:29
+#: discord.ext.tasks.Loop.clear_exception_types:8
+#: discord.ext.tasks.Loop.restart:13 discord.ext.tasks.Loop.stop:19 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
-#: 2efbe31b3fd64b6eacee66fb02b272aa 5871f9579cb5482a9eb81da12f4cdd26
-#: a83424395d0f4d8d8ebfd708aebfb3b9 cc431f5256bc4e699afe36a16bb35452
-#: discord.ext.tasks.Loop.add_exception_type:16 discord.ext.tasks.Loop.cancel:4
-#: discord.ext.tasks.Loop.change_interval:29 discord.ext.tasks.Loop.restart:13
-#: of
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+#: 3a18cece246a4010a6ab25de921042cc discord.ext.tasks.Loop.cancel:1 of
+msgid "Cancels the internal task, if it is running."
 msgstr ""
 
 #: a7de1ec471ef4af788957432e6df3502 discord.ext.tasks.Loop.restart:1 of
@@ -343,7 +336,7 @@ msgid ""
 "that raises its own set of exceptions."
 msgstr ""
 
-#: 162db15291784b0fa4b3654019ca5aa4 d46fb346a0d249eebdb303ea7b661ab3
+#: d46fb346a0d249eebdb303ea7b661ab3
 #: discord.ext.tasks.Loop.add_exception_type:11
 #: discord.ext.tasks.Loop.remove_exception_type:4 of
 msgid "An argument list of exception classes to handle."
@@ -356,15 +349,13 @@ msgid ""
 ":class:`BaseException`."
 msgstr ""
 
-#: 9567edfad8a444f6a38c8cd8ad6697dd
+#: 4ca4d3d9ff2346e2a6b79c8ed24ef34c
 #: discord.ext.tasks.Loop.clear_exception_types:1 of
-msgid ""
-"Removes all exception types that are handled. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgid "Removes all exception types that are handled."
 msgstr ""
 
 #: 714a51591f9143eab9a0a994136f1368
-#: discord.ext.tasks.Loop.clear_exception_types:7 of
+#: discord.ext.tasks.Loop.clear_exception_types:5 of
 msgid "This operation obviously cannot be undone!"
 msgstr ""
 
@@ -398,39 +389,36 @@ msgstr ""
 msgid "Whether the task is being cancelled."
 msgstr ""
 
-#: ca525c4cd84243e7a6954afd8c4177ca discord.ext.tasks.Loop.is_being_cancelled:4
-#: of
+#: ca525c4cd84243e7a6954afd8c4177ca discord.ext.tasks.Loop.failed:6
+#: discord.ext.tasks.Loop.is_being_cancelled:4
+#: discord.ext.tasks.Loop.is_running:6 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: b07983af01e44e859cff333049533f23 discord.ext.tasks.Loop.failed:1 of
-msgid ""
-"Whether the internal task has failed. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#: 3a18cece246a4010a6ab25de921042cc discord.ext.tasks.Loop.failed:1 of
+msgid "Whether the internal task has failed."
 msgstr ""
 
-#: afea19295c07476b9c661c3c4877faa0 discord.ext.tasks.Loop.is_running:1 of
-msgid ""
-"Check if the task is currently running. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#: 3a18cece246a4010a6ab25de921042cc discord.ext.tasks.Loop.is_running:1 of
+msgid "Check if the task is currently running."
 msgstr ""
 
 #: 83530989bb114f24b7e77d873f86ceff discord.ext.tasks.Loop.change_interval:1 of
 msgid "Changes the interval for the sleep time."
 msgstr ""
 
-#: 9d539eda63744ec18b6422108e8dcc3f c79687228d5f4b14a5b5cf8eedf1d2f2
-#: discord.ext.tasks.Loop.change_interval:6 discord.ext.tasks.loop:5 of
+#: c79687228d5f4b14a5b5cf8eedf1d2f2 discord.ext.tasks.Loop.change_interval:6
+#: discord.ext.tasks.loop:5 of
 msgid "The number of seconds between every iteration."
 msgstr ""
 
 #: 643036f81e8548148226f98ad662f662 discord.ext.tasks.Loop.change_interval:9
-#: discord.ext.tasks.loop:8 faab724401534ba891a54abd1063b632 of
+#: discord.ext.tasks.loop:8 of
 msgid "The number of minutes between every iteration."
 msgstr ""
 
-#: 25e739b47679456d9706cd47304e9978 6e09adb27be8418588dfd743e748f717
-#: discord.ext.tasks.Loop.change_interval:12 discord.ext.tasks.loop:11 of
+#: 6e09adb27be8418588dfd743e748f717 discord.ext.tasks.Loop.change_interval:12
+#: discord.ext.tasks.loop:11 of
 msgid "The number of hours between every iteration."
 msgstr ""
 
@@ -451,13 +439,13 @@ msgid ""
 "conjunction with the relative time parameters."
 msgstr ""
 
-#: 318ff42090a54ee6ba110b06461a5d2e b3b725baac894dc4aec2325b26106b6f
-#: discord.ext.tasks.Loop.change_interval:23 discord.ext.tasks.loop:22 of
+#: b3b725baac894dc4aec2325b26106b6f discord.ext.tasks.Loop.change_interval:23
+#: discord.ext.tasks.loop:22 of
 msgid "Duplicate times will be ignored, and only run once."
 msgstr ""
 
-#: b9bff9f275424b10b9b4b4a745dc7f96 d34550bdeb504b4ba94cd33934a387ac
-#: discord.ext.tasks.Loop.change_interval:26 discord.ext.tasks.loop:40 of
+#: d34550bdeb504b4ba94cd33934a387ac discord.ext.tasks.Loop.change_interval:26
+#: discord.ext.tasks.loop:46 of
 msgid "An invalid value was given."
 msgstr ""
 
@@ -513,14 +501,29 @@ msgid ""
 ":func:`asyncio.get_event_loop`."
 msgstr ""
 
-#: 1b6f0ce5942646378838dbe0ab4fe0a0 discord.ext.tasks.loop:41 of
+#: 63717a681ce3456e9baac2694ca74f00 discord.ext.tasks.loop:40 of
+msgid ""
+"Controls whether overlapping executions of the task loop are allowed. Set"
+" to False (default) to run iterations one at a time, True for unlimited "
+"overlap, or an int to cap the number of concurrent runs.  .. "
+"versionadded:: 2.7"
+msgstr ""
+
+#: 1f6974d4b45448cc849e761ec1e2f97e discord.ext.tasks.loop:40 of
+msgid ""
+"Controls whether overlapping executions of the task loop are allowed. Set"
+" to False (default) to run iterations one at a time, True for unlimited "
+"overlap, or an int to cap the number of concurrent runs."
+msgstr ""
+
+#: 1b6f0ce5942646378838dbe0ab4fe0a0 discord.ext.tasks.loop:47 of
 msgid ""
 "The function was not a coroutine, an invalid value for the ``time`` "
 "parameter was passed,     or ``time`` parameter was passed in conjunction"
 " with relative time parameters."
 msgstr ""
 
-#: 3dd1e6ebb48849edb09bcd60b72c860c discord.ext.tasks.loop:43 of
+#: 3dd1e6ebb48849edb09bcd60b72c860c discord.ext.tasks.loop:49 of
 msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\"
 " \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
@@ -537,4 +540,29 @@ msgid ""
 "\\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ "
 "\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\]`"
 msgstr ""
+
+#~ msgid ""
+#~ "Unlike :meth:`cancel`\\, this allows the "
+#~ "task to finish its current iteration "
+#~ "before gracefully exiting. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Removes all exception types that are "
+#~ "handled. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether the internal task has failed."
+#~ " :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Check if the task is currently "
+#~ "running. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
 

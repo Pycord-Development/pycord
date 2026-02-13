@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -143,10 +143,9 @@ msgid "This decorator is overridden by :class:`discord.ext.commands.Bot`."
 msgstr ""
 
 #: ../../api/clients.rst 383b7b70518e4373a487cda57b5af7e9
-#: 3cb58a3abe1b42c1819b2852310d653a 7a83a9a6026f4952ac18057feeedb044
-#: ad2dc10d548c40968eb973127142a32b cd605e7e5962488ab3e2441535990042
-#: d26b63e1b0dd4241989d229e204c2df0 discord.client.Client.wait_for
-#: e6969df24be54c1da77efc157913d736 of
+#: 3cb58a3abe1b42c1819b2852310d653a ad2dc10d548c40968eb973127142a32b
+#: cd605e7e5962488ab3e2441535990042 d26b63e1b0dd4241989d229e204c2df0
+#: discord.client.Client.wait_for of
 msgid "Returns"
 msgstr ""
 
@@ -163,12 +162,10 @@ msgstr ""
 #: 6587a9a35be04d6ebd805391f1cfaeae 679603f71c3842ceb9ab9301877e0a68
 #: 755dcc201bf14875a0f66b9268ab8006 80db389f7eb84893ab0b237312ef5b00
 #: a135a1aad44744079848b59aa8959a9b b5a22ed2f79040b2a8deb95f91416849
-#: c08ffb6b169b4e5d9ea796330e158ba4 c776ad51021d4b88a50e1e87662bf4a5
-#: c813b855074d4004962e777b87bdb92b d01fd2e5a7ce4d7c8e3c738e2769c0b3
+#: c08ffb6b169b4e5d9ea796330e158ba4 d01fd2e5a7ce4d7c8e3c738e2769c0b3
 #: d13af68c11444be193cc57060b9a1dd7 d70f77a306c44a01b87030581102cfb4
 #: discord.client.Client.entitlements discord.client.Client.fetch_guilds
-#: discord.client.Client.wait_for ec487369222e4fca9c3158f3caec9ae7
-#: fef47654c88e403dad85dc4284b5a5ab of
+#: discord.client.Client.wait_for fef47654c88e403dad85dc4284b5a5ab of
 msgid "Return type"
 msgstr ""
 
@@ -207,11 +204,11 @@ msgid ""
 msgstr ""
 
 #: ../../api/clients.rst 4727e7dbff374a62b8a56c79dc66082d
-#: 51511a34fb6745aab1ca324ba180e340 6ab72d7126304941a2843cd3f79e15bc
-#: 6dcc2de71d1343bc93b3f0bca6661072 853e4bafa2c8478789b84f073f328614
-#: ad56de6ed3ee40d4b537dfd9f8bcc2c4 be57f62d640d498db3acc576e8c69090
-#: discord.client.Client.entitlements discord.client.Client.fetch_guilds
-#: discord.client.Client.wait_for f7d3143efeea400d85cc0fcf45b1e15b of
+#: 6ab72d7126304941a2843cd3f79e15bc 6dcc2de71d1343bc93b3f0bca6661072
+#: 853e4bafa2c8478789b84f073f328614 ad56de6ed3ee40d4b537dfd9f8bcc2c4
+#: be57f62d640d498db3acc576e8c69090 discord.client.Client.entitlements
+#: discord.client.Client.fetch_guilds discord.client.Client.wait_for
+#: f7d3143efeea400d85cc0fcf45b1e15b of
 msgid "Raises"
 msgstr ""
 
@@ -231,12 +228,10 @@ msgstr ""
 msgid "Example"
 msgstr ""
 
-#: ../../api/clients.rst 080b97188f5a44679891cfb716d50114
-#: 17352eb8d90a471c86796deec5f40361 197545f9c6ed4c5da3e235134e4fe25a
-#: 3200a85e4002416db55ed3790af21f4e 3a0cbb5f03924ae4b02a402fe8156523
-#: 3c6cba4ba69e43249df187fcaeb5f207 8bf1ef24b9714c1c8e0436865b442e9a
-#: 944756aa81e34907af880c9ea3ddd943 99d7d45c973e4cab836405c222bbdf74
-#: a03bb4ec204c4867b740eb2c4bc3d398 a32d372fc9f34a179efb70f960db2fcd
+#: ../../api/clients.rst 17352eb8d90a471c86796deec5f40361
+#: 197545f9c6ed4c5da3e235134e4fe25a 3200a85e4002416db55ed3790af21f4e
+#: 3a0cbb5f03924ae4b02a402fe8156523 3c6cba4ba69e43249df187fcaeb5f207
+#: 8bf1ef24b9714c1c8e0436865b442e9a a03bb4ec204c4867b740eb2c4bc3d398
 #: discord.client.Client.entitlements discord.client.Client.fetch_guilds
 #: discord.client.Client.wait_for f706cf333c1a47f1a2976aa784a20ba9
 #: ff5108bb0b184c7082382a51ee4ba248 of
@@ -334,10 +329,9 @@ msgstr ""
 msgid "The function being listened to is not a coroutine."
 msgstr ""
 
-#: 05065b5c67e1401295e5b37bd9a647ce 0b4f57fc36b548dc991b0b9d9359c3db
-#: 176d61be271e4a91a68e8a2183190329 discord.client.Client.add_listener:11
-#: discord.client.Client.listen:8 eefde4a89ebe4183b4d58c68754a33a3 of
-msgid "The ``name`` (event name) does not start with 'on_'"
+#: 05065b5c67e1401295e5b37bd9a647ce discord.client.Client.add_listener:11
+#: discord.client.Client.listen:8 of
+msgid "The ``name`` (event name) does not start with ``on_``."
 msgstr ""
 
 #: 467abba7c2824825bf9ac0b065144559 discord.client.Client.listen:29
@@ -408,6 +402,8 @@ msgstr ""
 #: discord.client.Client.close:6 discord.client.Client.connect:18
 #: discord.client.Client.delete_emoji:11 discord.client.Client.delete_invite:16
 #: discord.client.Client.login:14 discord.client.Client.on_error:15
+#: discord.client.Client.on_modal_error:15
+#: discord.client.Client.on_view_error:17
 #: discord.client.Client.remove_listener:10 discord.client.Client.run:28
 #: discord.client.Client.start:11 discord.client.Client.wait_until_ready:6
 #: discord.cog.CogMixin.add_cog:24 discord.cog.CogMixin.reload_extension:26
@@ -495,9 +491,8 @@ msgstr ""
 msgid "The ``func`` parameter is not a coroutine function."
 msgstr ""
 
-#: 5bfee65c9551403997926307bfac288b 8fdde2412a434bc889eb2470635efba6
-#: discord.client.Client.add_view:1 of
-msgid "Registers a :class:`~discord.ui.View` for persistent listening."
+#: 8fdde2412a434bc889eb2470635efba6 discord.client.Client.add_view:1 of
+msgid "Registers a :class:`~discord.ui.BaseView` for persistent listening."
 msgstr ""
 
 #: 184b080c1ff64b3c92c2733aa9df8c75 a51b4f92d6494f518fa69f07e378bc51
@@ -594,7 +589,7 @@ msgid ""
 ":func:`~discord.on_connect` is called."
 msgstr ""
 
-#: 41081b0ab799472fa6aa72c01266cc77 a7ce19c3920f40ab91a7d270dfff2d0e
+#: 41081b0ab799472fa6aa72c01266cc77
 #: discord.bot.ApplicationCommandMixin.get_application_context:1
 #: discord.bot.ApplicationCommandMixin.get_autocomplete_context:1
 #: discord.bot.ApplicationCommandMixin.get_desynced_commands:1
@@ -609,11 +604,11 @@ msgstr ""
 #: discord.client.Client.before_identify_hook:1
 #: discord.client.Client.change_presence:1 discord.client.Client.close:1
 #: discord.client.Client.connect:1 discord.client.Client.create_dm:1
-#: discord.client.Client.create_emoji:1 discord.client.Client.create_guild:1
-#: discord.client.Client.delete_emoji:1 discord.client.Client.delete_invite:1
-#: discord.client.Client.fetch_channel:1 discord.client.Client.fetch_emoji:1
-#: discord.client.Client.fetch_emojis:1 discord.client.Client.fetch_guild:1
-#: discord.client.Client.fetch_invite:1
+#: discord.client.Client.create_emoji:1 discord.client.Client.delete_emoji:1
+#: discord.client.Client.delete_invite:1 discord.client.Client.fetch_channel:1
+#: discord.client.Client.fetch_default_sounds:1
+#: discord.client.Client.fetch_emoji:1 discord.client.Client.fetch_emojis:1
+#: discord.client.Client.fetch_guild:1 discord.client.Client.fetch_invite:1
 #: discord.client.Client.fetch_premium_sticker_packs:1
 #: discord.client.Client.fetch_role_connection_metadata_records:1
 #: discord.client.Client.fetch_skus:1
@@ -622,7 +617,8 @@ msgstr ""
 #: discord.client.Client.fetch_user:1 discord.client.Client.fetch_webhook:1
 #: discord.client.Client.fetch_widget:1
 #: discord.client.Client.get_or_fetch_user:1 discord.client.Client.login:1
-#: discord.client.Client.on_error:1 discord.client.Client.start:1
+#: discord.client.Client.on_error:1 discord.client.Client.on_modal_error:1
+#: discord.client.Client.on_view_error:1 discord.client.Client.start:1
 #: discord.client.Client.update_role_connection_metadata_records:1
 #: discord.client.Client.wait_for:1 discord.client.Client.wait_until_ready:1
 #: discord.shard.AutoShardedClient.change_presence:1
@@ -898,49 +894,6 @@ msgstr ""
 msgid "The slash command group that was created."
 msgstr ""
 
-#: 3b97fc8c08714dc0bf7cbe2a88d0fcab discord.client.Client.create_guild:3 of
-msgid "Creates a :class:`.Guild`."
-msgstr ""
-
-#: 8524eb9f26414048b1952e19fc192260 discord.client.Client.create_guild:5 of
-msgid "Bot accounts in more than 10 guilds are not allowed to create guilds."
-msgstr ""
-
-#: bfd43e9bd0f34e918327fc339e37937b discord.client.Client.create_guild:8 of
-msgid "The name of the guild."
-msgstr ""
-
-#: 62b9a65381f34c1bac438c5fd2c7ba6f discord.client.Client.create_guild:11 of
-msgid ""
-"The :term:`py:bytes-like object` representing the icon. See "
-":meth:`.ClientUser.edit` for more details on what is expected."
-msgstr ""
-
-#: 0722a839383b4001aa95fb0d76912f04 discord.client.Client.create_guild:15 of
-msgid "The code for a template to create the guild with.  .. versionadded:: 1.4"
-msgstr ""
-
-#: 352fe566629842ad9d6ff7432397522e discord.client.Client.create_guild:15 of
-msgid "The code for a template to create the guild with."
-msgstr ""
-
-#: discord.client.Client.create_guild:20 ef6b2cc2844948a6afac53df0c6c4c71 of
-msgid "The guild created. This is not the same guild that is added to cache."
-msgstr ""
-
-#: ac312b1700ba40e3ab5989b9c39cdc00 discord.client.Client.create_guild:22
-#: discord.client.Client.fetch_guild:26 of
-msgid ":class:`.Guild`"
-msgstr ""
-
-#: 6fa7e508b0cf4b958775cf91dac4ba35 discord.client.Client.create_guild:24 of
-msgid "Guild creation failed."
-msgstr ""
-
-#: 2d01c286352d4eeba440b3662378cc26 discord.client.Client.create_guild:25 of
-msgid "Invalid icon image format given. Must be PNG or JPG."
-msgstr ""
-
 #: c6993c8ace9a402dbd8a19399cff355a discord.client.Client.delete_emoji:3 of
 msgid "Deletes the custom :class:`AppEmoji` from the application."
 msgstr ""
@@ -949,8 +902,7 @@ msgstr ""
 msgid "The emoji you are deleting."
 msgstr ""
 
-#: 1c85bc449adf413483d92b5ca9136cfa discord.client.Client.delete_emoji:9
-#: ea862460293d4b07aa6764d066c3a2d0 of
+#: 1c85bc449adf413483d92b5ca9136cfa discord.client.Client.delete_emoji:9 of
 msgid "An error occurred deleting the emoji."
 msgstr ""
 
@@ -1147,6 +1099,21 @@ msgstr ""
 msgid "You do not have permission to fetch this channel."
 msgstr ""
 
+#: 9424f8645549490aad4b3df67690028b
+#: discord.client.Client.fetch_default_sounds:3 of
+msgid "Fetches the bot's default sounds."
+msgstr ""
+
+#: 2994835195fe455b9ba97aa0bf93c946
+#: discord.client.Client.fetch_default_sounds:7 of
+msgid "The bot's default sounds."
+msgstr ""
+
+#: discord.client.Client.fetch_default_sounds:8
+#: f2c67dc53c534b0aa88697406f41a753 of
+msgid "List[:class:`.SoundboardSound`]"
+msgstr ""
+
 #: c6993c8ace9a402dbd8a19399cff355a discord.client.Client.fetch_emoji:3 of
 msgid "Retrieves a custom :class:`AppEmoji` from the application."
 msgstr ""
@@ -1163,8 +1130,7 @@ msgstr ""
 msgid "The emoji requested could not be found."
 msgstr ""
 
-#: 93b617ce45a047109131fd5c50b58243 b863b5ab9f294d39841d1e57a8cd00f8
-#: discord.client.Client.fetch_emoji:13 of
+#: 93b617ce45a047109131fd5c50b58243 discord.client.Client.fetch_emoji:13 of
 msgid "An error occurred fetching the emoji."
 msgstr ""
 
@@ -1172,8 +1138,7 @@ msgstr ""
 msgid "Retrieves all custom :class:`AppEmoji`\\s from the application."
 msgstr ""
 
-#: 02bc2b83e6184eb2b71db6efe7e331a2 af44be4f67084ac48d3f3df89bf28261
-#: discord.client.Client.fetch_emojis:5 of
+#: af44be4f67084ac48d3f3df89bf28261 discord.client.Client.fetch_emojis:5 of
 msgid "An error occurred fetching the emojis."
 msgstr ""
 
@@ -1222,6 +1187,10 @@ msgstr ""
 
 #: 13441326e09f4c41a4b70ace65d3685a discord.client.Client.fetch_guild:25 of
 msgid "The guild from the ID."
+msgstr ""
+
+#: ac312b1700ba40e3ab5989b9c39cdc00 discord.client.Client.fetch_guild:26 of
+msgid ":class:`.Guild`"
 msgstr ""
 
 #: 18b98d33672748fab571d1592086006c discord.client.Client.fetch_guild:28 of
@@ -1575,14 +1544,7 @@ msgstr ""
 msgid "This is equivalent to: ::"
 msgstr ""
 
-#: 954c934a3ae542bd8e48d65c6872c37f discord.client.Client.get_all_channels:8 of
-msgid ""
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
-" \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, "
-"\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ""
-
-#: 14df624bee0b4d23b1f9088155d3e882 discord.client.Client.get_all_channels:13
+#: 14df624bee0b4d23b1f9088155d3e882 discord.client.Client.get_all_channels:11
 #: of
 msgid ""
 "Just because you receive a :class:`.abc.GuildChannel` does not mean that "
@@ -1590,9 +1552,17 @@ msgid ""
 ":meth:`.abc.GuildChannel.permissions_for` should be used for that."
 msgstr ""
 
-#: 5eab19fe94124dbcab31f439d0973160 discord.client.Client.get_all_channels:17
+#: 5eab19fe94124dbcab31f439d0973160 discord.client.Client.get_all_channels:15
 #: of
 msgid ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
+msgstr ""
+
+#: 954c934a3ae542bd8e48d65c6872c37f discord.client.Client.get_all_channels:18
+#: of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+" \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, "
+"\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
 #: 1e23815e30ed4e7fba2bd525936c0e85 discord.client.Client.get_all_members:1 of
@@ -1845,6 +1815,53 @@ msgstr ""
 msgid "Optional[:class:`.Message`]"
 msgstr ""
 
+#: 40741c808230425e8d7dc80e17681e61 720eb7ea330741a79e1e19f54d10f052
+#: discord.client.Client.get_or_fetch:1 of
+msgid ""
+"Shortcut method to get data from an object either by returning the cached"
+" version, or if it does not exist, attempting to fetch it from the API."
+msgstr ""
+
+#: 904c1ae5fcc14436b80548bb1f284c43 discord.client.Client.get_or_fetch:4 of
+msgid "Type of object to fetch or get."
+msgstr ""
+
+#: 48131e8c68c54b29a687d0b09b1e0ca5 d69af493bbcf413d87fc3285f992c135
+#: discord.client.Client.get_or_fetch:7 of
+msgid ""
+"ID of object to get. If :data:`None`, returns `default` if provided, else"
+" :data:`None`."
+msgstr ""
+
+#: 17d8bc2b665448449901cf839610118c 5a78321eba0a4eeb9bffab209938d247
+#: discord.client.Client.get_or_fetch:10 of
+msgid "A default to return instead of raising if fetch fails."
+msgstr ""
+
+#: 54e34fb7ed4b48a0a11b3dfdc0e96bdf c01b643560b2442687827e7d61969bfc
+#: discord.client.Client.get_or_fetch:13 of
+msgid "The object if found, or `default` if provided when not found."
+msgstr ""
+
+#: 39cdc353142f427b8ff3189b5eccb258 71f90cc0d13c43f5923ac152444333a9
+#: discord.client.Client.get_or_fetch:14 of
+msgid ""
+":class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | "
+":class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | "
+":class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` "
+"| :data:`None`"
+msgstr ""
+
+#: 48fb97da636b42f0a40a340de2718703 5afb1794bbc04908b6ecb28e7a1d4157
+#: discord.client.Client.get_or_fetch:16 of
+msgid "Raised when required parameters are missing or invalid types are provided."
+msgstr ""
+
+#: af0ccff4d2f94894a5ddb28596d145d4 c30e74d3a060471fadfae7b8fc74e9cb
+#: discord.client.Client.get_or_fetch:17 of
+msgid "Raised when an unsupported or incompatible object type is used."
+msgstr ""
+
 #: discord.client.Client.get_or_fetch_user:3 ef34cecd55904074aadf36c69ae1a3fe
 #: of
 msgid "Looks up a user in the user cache or fetches if not found."
@@ -1906,6 +1923,22 @@ msgstr ""
 
 #: c742fb9939e244578e66f27785b9e0b3 discord.client.Client.get_poll:8 of
 msgid "Optional[:class:`.Poll`]"
+msgstr ""
+
+#: c0e500eca4654493bcbde640ebc18e15 discord.client.Client.get_sound:1 of
+msgid "Gets a :class:`.Sound` from the bot's sound cache."
+msgstr ""
+
+#: 206390d6458e4be89131c95feaa9c242 discord.client.Client.get_sound:6 of
+msgid "The ID of the sound to get."
+msgstr ""
+
+#: c69d0ea814a84230941d413794f573c9 discord.client.Client.get_sound:9 of
+msgid "The sound with the given ID."
+msgstr ""
+
+#: c164f779fe0a43e6a2f6abf608af6f93 discord.client.Client.get_sound:10 of
+msgid "Optional[:class:`.SoundboardSound`]"
 msgstr ""
 
 #: 3d786cc212a44afea512d29b0e007d4e discord.client.Client.get_stage_instance:1
@@ -1992,7 +2025,8 @@ msgid "Indicates if the WebSocket connection is closed."
 msgstr ""
 
 #: 1044d7a76781488d8e388f935f5d4867 discord.client.Client.is_closed:4
-#: discord.client.Client.is_ready:4 of
+#: discord.client.Client.is_ready:4 discord.client.Client.is_ws_ratelimited:9
+#: discord.shard.AutoShardedClient.is_ws_ratelimited:12 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
@@ -2031,16 +2065,15 @@ msgstr ""
 msgid "Whether the WebSocket is currently rate limited."
 msgstr ""
 
-#: 62af1fa7dcf84492b242000ea4241503 discord.client.Client.is_ws_ratelimited:3
-#: of
+#: 771bda0c3a274e548f284047259f561a discord.client.Client.is_ws_ratelimited:3
+#: discord.shard.AutoShardedClient.is_ws_ratelimited:3 of
 msgid ""
 "This can be useful to know when deciding whether you should query members"
-" using HTTP or via the gateway. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+" using HTTP or via the gateway."
 msgstr ""
 
-#: 19a5ab09684e42629fda01fdb8529cd7 b833b064d3654341ac190b5824bd6b24
-#: discord.Bot.latency:1 discord.Client.latency:1 of
+#: b833b064d3654341ac190b5824bd6b24 discord.Bot.latency:1
+#: discord.Client.latency:1 of
 msgid ""
 "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If "
 "no websocket is present, this returns ``nan``, and if no heartbeat has "
@@ -2267,6 +2300,42 @@ msgid ""
 "By default, this prints to :data:`sys.stderr` however it could be "
 "overridden to have a different implementation. Check "
 ":func:`~discord.on_error` for more details."
+msgstr ""
+
+#: discord.client.Client.on_modal_error:3 fb14025cdc964e5796fa74884c5d87b8 of
+msgid ""
+"The default modal error handler provided by the client. The default "
+"implementation prints the traceback to stderr."
+msgstr ""
+
+#: 054f9eb286a249488d4516a6c9a77bbf discord.client.Client.on_modal_error:6 of
+msgid ""
+"This only fires for a modal if you did not define its "
+":func:`~discord.ui.Modal.on_error`."
+msgstr ""
+
+#: d6fa64d947654bf7becf7fad301f0fb9 discord.client.Client.on_modal_error:9
+#: discord.client.Client.on_view_error:8 of
+msgid "The exception that was raised."
+msgstr ""
+
+#: 5eba8aff592647dbb428a36b08475afc discord.client.Client.on_modal_error:12
+#: discord.client.Client.on_view_error:14 of
+msgid "The interaction that was received."
+msgstr ""
+
+#: 57179a6f7b13404b8d698521898a6d9c discord.client.Client.on_view_error:3 of
+msgid "The default view error handler provided by the client."
+msgstr ""
+
+#: discord.client.Client.on_view_error:5 f101d9263c01410e8ef9263e0b8c3b0e of
+msgid ""
+"This only fires for a view if you did not define its "
+":func:`~discord.ui.BaseView.on_error`."
+msgstr ""
+
+#: b39bab7b652b4d4f98cf18b2b9db6484 discord.client.Client.on_view_error:11 of
+msgid "The item that the user interacted with."
 msgstr ""
 
 #: 0ddbaefb41734b77ad0d3ad0792c3d18 discord.Bot.persistent_views:1
@@ -2560,6 +2629,11 @@ msgid ""
 "This function must be the last function to call due to the fact that it "
 "is blocking. That means that registration of events or anything being "
 "called after this function call will not execute until it returns."
+msgstr ""
+
+#: 6d3be79316ad4aed8e4440853891714e discord.Bot.sounds:1
+#: discord.Client.sounds:1 of
+msgid "A list of all the sounds the bot can see."
 msgstr ""
 
 #: 904fe45f358146e683fec60eee80c2e5 discord.client.Client.start:3 of
@@ -3155,21 +3229,86 @@ msgstr ""
 msgid "Whether the websocket is currently rate limited."
 msgstr ""
 
-#: 771bda0c3a274e548f284047259f561a
-#: discord.shard.AutoShardedClient.is_ws_ratelimited:3 of
-msgid ""
-"This can be useful to know when deciding whether you should query members"
-" using HTTP or via the gateway."
-msgstr ""
-
 #: af9ce954ce2644af83ba1462c4d8d5a5
 #: discord.shard.AutoShardedClient.is_ws_ratelimited:6 of
 msgid ""
 "This implementation checks if any of the shards are rate limited. For "
-"more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. "
-":rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+"more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`."
 msgstr ""
 
 #~ msgid "Optional[:class:`.Emoji`]"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+#~ " \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, "
+#~ "\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#~ msgstr ""
+
+#~ msgid "The ``name`` (event name) does not start with 'on_'"
+#~ msgstr ""
+
+#~ msgid "Registers a :class:`~discord.ui.View` for persistent listening."
+#~ msgstr ""
+
+#~ msgid "Creates a :class:`.Guild`."
+#~ msgstr ""
+
+#~ msgid "Bot accounts in more than 10 guilds are not allowed to create guilds."
+#~ msgstr ""
+
+#~ msgid "The name of the guild."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The :term:`py:bytes-like object` representing"
+#~ " the icon. See :meth:`.ClientUser.edit` for"
+#~ " more details on what is expected."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The code for a template to create"
+#~ " the guild with.  .. versionadded:: "
+#~ "1.4"
+#~ msgstr ""
+
+#~ msgid "The code for a template to create the guild with."
+#~ msgstr ""
+
+#~ msgid "The guild created. This is not the same guild that is added to cache."
+#~ msgstr ""
+
+#~ msgid "Guild creation failed."
+#~ msgstr ""
+
+#~ msgid "Invalid icon image format given. Must be PNG or JPG."
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`Generator\\[Member\\]`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This can be useful to know when"
+#~ " deciding whether you should query "
+#~ "members using HTTP or via the "
+#~ "gateway. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`None`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This only fires for a view if "
+#~ "you did not define its "
+#~ ":func:`~discord.ui.View.on_error`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This implementation checks if any of "
+#~ "the shards are rate limited. For "
+#~ "more granular control, consider "
+#~ ":meth:`ShardInfo.is_ws_ratelimited`. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 #~ msgstr ""
 

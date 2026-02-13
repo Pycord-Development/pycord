@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -117,7 +117,7 @@ msgstr ""
 msgid "Commands"
 msgstr ""
 
-#: ../../api/application_commands.rst:24 ../../api/application_commands.rst:68
+#: ../../api/application_commands.rst:24 ../../api/application_commands.rst:69
 #: 456c801c48554014be173f2a5a16cbe8 7f6a87ba8b2c4cb783a577d4adf8ff82
 msgid "Shortcut Decorators"
 msgstr ""
@@ -238,7 +238,7 @@ msgstr ""
 msgid "Callable[..., :class:`.MessageCommand`]"
 msgstr ""
 
-#: ../../api/application_commands.rst:42 ../../api/application_commands.rst:73
+#: ../../api/application_commands.rst:42 ../../api/application_commands.rst:74
 #: 90d12871fc60443cab43a4d2a559062f f29d6e2aba484c70ac570333290b6b69
 msgid "Objects"
 msgstr ""
@@ -264,8 +264,8 @@ msgstr ""
 msgid "A boolean indicating if the command is on cooldown."
 msgstr ""
 
-#: 1cd0f7372eb94a76a4c4eb766a807d99 469210f5cf914546997454d384d9029d
-#: 5f86ec376bce414983af08e853bde10c 6c64647e98224b3580a97a6971e0460f
+#: 469210f5cf914546997454d384d9029d 5f86ec376bce414983af08e853bde10c
+#: 6c64647e98224b3580a97a6971e0460f
 #: discord.commands.core.ApplicationCommand.is_on_cooldown:12
 #: discord.commands.core.MessageCommand:31
 #: discord.commands.core.MessageCommand:38
@@ -347,7 +347,11 @@ msgstr ""
 msgid "Checks whether the command has an error handler registered."
 msgstr ""
 
-#: aa27a8c0af014a0d8c7b4f3d6eb24ed9
+#: aa27a8c0af014a0d8c7b4f3d6eb24ed9 c8c22acd0edf4230bcd59ce97fe0e0bf
+#: discord.commands.context.ApplicationContext.is_guild_authorised:9
+#: discord.commands.context.ApplicationContext.is_guild_authorized:6
+#: discord.commands.context.ApplicationContext.is_user_authorised:9
+#: discord.commands.context.ApplicationContext.is_user_authorized:6
 #: discord.commands.core.ApplicationCommand.has_error_handler:4 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
@@ -464,8 +468,7 @@ msgstr ""
 #: discord.commands.core.SlashCommandGroup discord.commands.core.UserCommand
 #: discord.commands.options.Option discord.commands.options.OptionChoice
 #: discord.commands.options.option f2e9e70af4b14850a489ad1bc26923a7
-#: f422915c4028467f9272f041e90ac356 f4d4ca31df8b4d2196f56fbf4bb71e61
-#: fe884d1963e24986a26db506c9fe20dd of
+#: f4d4ca31df8b4d2196f56fbf4bb71e61 fe884d1963e24986a26db506c9fe20dd of
 msgid "type"
 msgstr ""
 
@@ -652,15 +655,14 @@ msgid ""
 "valid locales."
 msgstr ""
 
-#: 023e1e7e67f84b929dedc87e98bf488f 7897fe9f532240669b41fd64f8d327df
-#: 7f013ded205c49e4a449eb1a8356e3b8 94ef4db9991241619146371c2d241eec
-#: discord.commands.core.MessageCommand:75
+#: 023e1e7e67f84b929dedc87e98bf488f 7f013ded205c49e4a449eb1a8356e3b8
+#: 94ef4db9991241619146371c2d241eec discord.commands.core.MessageCommand:75
 #: discord.commands.core.SlashCommand:102
 #: discord.commands.core.SlashCommand:109
 #: discord.commands.core.SlashCommandGroup:69
 #: discord.commands.core.SlashCommandGroup:76
-#: discord.commands.core.UserCommand:75 discord.commands.options.Option:99
-#: discord.commands.options.Option:106 discord.commands.options.OptionChoice:22
+#: discord.commands.core.UserCommand:75 discord.commands.options.Option:86
+#: discord.commands.options.Option:93 discord.commands.options.OptionChoice:22
 #: of
 msgid "Dict[:class:`str`, :class:`str`]"
 msgstr ""
@@ -705,10 +707,6 @@ msgstr ""
 #: discord.commands.core.SlashCommandGroup:90
 #: discord.commands.core.UserCommand:87 e4cf9dee7685447693343bc155de82b8 of
 msgid "Set[:class:`InteractionContextType`]"
-msgstr ""
-
-#: discord.SlashCommand.cog:1 f0a5c570cc0640daaab5e1d358b07b15 of
-msgid "The type of the None singleton."
 msgstr ""
 
 #: discord.commands.core.MessageCommand.copy:1
@@ -875,7 +873,7 @@ msgstr ""
 msgid ":class:`MessageCommand`"
 msgstr ""
 
-#: ../../api/application_commands.rst:65 0d9d93397a80433d9df6280b37e9cf0b
+#: ../../api/application_commands.rst:66 0d9d93397a80433d9df6280b37e9cf0b
 msgid "Options"
 msgstr ""
 
@@ -990,28 +988,7 @@ msgid ""
 "of :class:`str`."
 msgstr ""
 
-#: b16be74fd64a4d818577dc51a2d75445 discord.commands.options.Option:75 of
-msgid ""
-"The autocomplete handler for the option. Accepts a callable (sync or "
-"async) that takes a single argument of :class:`AutocompleteContext`. The "
-"callable must return an iterable of :class:`str` or "
-":class:`OptionChoice`. Alternatively, "
-":func:`discord.utils.basic_autocomplete` may be used in place of the "
-"callable."
-msgstr ""
-
-#: 96075db6b84448e8ae59a0aaf54aa561 discord.commands.options.Option:82 of
-msgid "Does not validate the input value against the autocomplete results."
-msgstr ""
-
-#: 6b97e34cbdd640fc848c3a62b0ce3ea3 discord.commands.options.Option:84 of
-msgid ""
-"Optional[Callable[[:class:`.AutocompleteContext`], "
-"Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`],"
-" Iterable[:class:`int`], Iterable[:class:`float`]]]]]"
-msgstr ""
-
-#: discord.commands.options.Option:88 efe2d8d761e245b5b1cbca504fe5a3b6 of
+#: discord.commands.options.Option:75 efe2d8d761e245b5b1cbca504fe5a3b6 of
 msgid ""
 "A list of channel types that can be selected in this option. Only applies"
 " to Options with an :attr:`input_type` of "
@@ -1019,11 +996,11 @@ msgid ""
 "used, :attr:`input_type` will be ignored."
 msgstr ""
 
-#: 3895aa7de025406b82492d8871b80352 discord.commands.options.Option:92 of
+#: 3895aa7de025406b82492d8871b80352 discord.commands.options.Option:79 of
 msgid "list[:class:`discord.ChannelType`] | None"
 msgstr ""
 
-#: dbae42fcf31241ada80858c6674efcfc discord.commands.options.Option:96 of
+#: dbae42fcf31241ada80858c6674efcfc discord.commands.options.Option:83 of
 msgid ""
 "The name localizations for this option. The values of this should be "
 "``\"locale\": \"name\"``. See `here "
@@ -1031,7 +1008,7 @@ msgid ""
 "valid locales."
 msgstr ""
 
-#: 3d90448f536f49ed990f5e5cb38b5f0a discord.commands.options.Option:103 of
+#: 3d90448f536f49ed990f5e5cb38b5f0a discord.commands.options.Option:90 of
 msgid ""
 "The description localizations for this option. The values of this should "
 "be ``\"locale\": \"description\"``. See `here "
@@ -1039,12 +1016,44 @@ msgid ""
 "valid locales."
 msgstr ""
 
-#: 73185a2e6c6e4d739ed5f24132cf9742 discord.commands.options.Option:109 of
+#: 73185a2e6c6e4d739ed5f24132cf9742 discord.commands.options.Option:96 of
 msgid "Examples"
 msgstr ""
 
-#: cc7ba7cb42254be2b8f3f28c2631f7b6 discord.commands.options.Option:110 of
+#: cc7ba7cb42254be2b8f3f28c2631f7b6 discord.commands.options.Option:97 of
 msgid "Basic usage: ::"
+msgstr ""
+
+#: b16be74fd64a4d818577dc51a2d75445 discord.Option.autocomplete:1 of
+msgid ""
+"The autocomplete handler for the option. Accepts a callable (sync or "
+"async) that takes a single required argument of "
+":class:`AutocompleteContext` or two arguments of :class:`discord.Cog` "
+"(being the command's cog) and :class:`AutocompleteContext`. The callable "
+"must return an iterable of :class:`str` or :class:`OptionChoice`. "
+"Alternatively, :func:`discord.utils.basic_autocomplete` may be used in "
+"place of the callable."
+msgstr ""
+
+#: 0d18ff8fad7c45b59c1fc6a6b27eea8e discord.Option.autocomplete:7 of
+msgid ""
+"* *Optional[AutocompleteFunction]* * *.. versionchanged:: 2.7* * *.. "
+"note::* -- Does not validate the input value against the autocomplete "
+"results."
+msgstr ""
+
+#: 55cf6af7b08a4f7c93e92c2ec39a8632 discord.Option.autocomplete:7 of
+msgid "*Optional[AutocompleteFunction]*"
+msgstr ""
+
+#: c95324c20b714dce8cea04b4cfa5b6eb discord.Option.autocomplete:8 of
+msgid "*.. versionchanged:: 2.7*"
+msgstr ""
+
+#: 96075db6b84448e8ae59a0aaf54aa561 discord.Option.autocomplete:9 of
+msgid ""
+"*.. note::* -- Does not validate the input value against the autocomplete"
+" results."
 msgstr ""
 
 #: 058fb547f7e048828c72114ef59e3b91 discord.commands.options.ThreadOption:1 of
@@ -1081,7 +1090,7 @@ msgid ""
 "valid locales."
 msgstr ""
 
-#: ../../api/application_commands.rst:89 1532468326964e3a8f4778fffa6157f9
+#: ../../api/application_commands.rst:90 1532468326964e3a8f4778fffa6157f9
 msgid "Context Objects"
 msgstr ""
 
@@ -1119,18 +1128,6 @@ msgstr ""
 #: discord.commands.context.ApplicationContext:18
 #: discord.commands.context.AutocompleteContext:17 of
 msgid ":class:`.Interaction`"
-msgstr ""
-
-#: d6f68d1b5a754d4faff41bef78e15ad3
-#: discord.commands.context.ApplicationContext:22
-#: discord.commands.context.AutocompleteContext:21 of
-msgid "The command that this context belongs to."
-msgstr ""
-
-#: 731cda54c14a44f4a88a9bc501f056d7
-#: discord.commands.context.ApplicationContext:24
-#: discord.commands.context.AutocompleteContext:23 of
-msgid ":class:`.ApplicationCommand`"
 msgstr ""
 
 #: 68f22a8232be41a3b2b45d850414330f discord.ApplicationContext.defer:1
@@ -1186,51 +1183,50 @@ msgid ""
 " \\\\\\(\\`\\`T\\`\\`\\)`"
 msgstr ""
 
-#: ../../docstring b609dea40cc743b08e49d5c7be8c7bcb
-#: discord.ApplicationContext.channel:1 of
+#: d6f68d1b5a754d4faff41bef78e15ad3 discord.ApplicationContext.command:1
+#: discord.AutocompleteContext.command:1 of
+msgid "The command that this context belongs to."
+msgstr ""
+
+#: b609dea40cc743b08e49d5c7be8c7bcb discord.ApplicationContext.channel:1 of
 msgid ""
 "Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, "
 ":class:`Thread`]: Returns the channel associated with this context's "
 "command. Shorthand for :attr:`.Interaction.channel`."
 msgstr ""
 
-#: ../../docstring discord.ApplicationContext.channel_id:1
-#: e2e42bf39f034fa09a42af3e0df8cb7b of
+#: discord.ApplicationContext.channel_id:1 e2e42bf39f034fa09a42af3e0df8cb7b of
 msgid ""
 "Returns the ID of the channel associated with this context's command. "
 "Shorthand for :attr:`.Interaction.channel_id`."
 msgstr ""
 
-#: ../../docstring 328542dec1c2423f82d4288770e7acfb
-#: discord.ApplicationContext.guild:1 of
+#: 328542dec1c2423f82d4288770e7acfb discord.ApplicationContext.guild:1 of
 msgid ""
 "Returns the guild associated with this context's command. Shorthand for "
 ":attr:`.Interaction.guild`."
 msgstr ""
 
-#: ../../docstring 18c9865ad4024501a55ff86619379a13
-#: discord.ApplicationContext.guild_id:1 of
+#: 18c9865ad4024501a55ff86619379a13 discord.ApplicationContext.guild_id:1 of
 msgid ""
 "Returns the ID of the guild associated with this context's command. "
 "Shorthand for :attr:`.Interaction.guild_id`."
 msgstr ""
 
-#: ../../docstring 4d0d154dfb024841ae4273ee278d35cb
-#: discord.ApplicationContext.locale:1 of
+#: 4d0d154dfb024841ae4273ee278d35cb discord.ApplicationContext.locale:1 of
 msgid ""
 "Returns the locale of the guild associated with this context's command. "
 "Shorthand for :attr:`.Interaction.locale`."
 msgstr ""
 
-#: ../../docstring 0f7171062ad34e40ba2a50d12af92493
-#: discord.ApplicationContext.guild_locale:1 of
+#: 0f7171062ad34e40ba2a50d12af92493 discord.ApplicationContext.guild_locale:1
+#: of
 msgid ""
 "Returns the locale of the guild associated with this context's command. "
 "Shorthand for :attr:`.Interaction.guild_locale`."
 msgstr ""
 
-#: ../../docstring discord.ApplicationContext.me:1
-#: fb27d9ced4754e0bba9315eda057f24d of
+#: discord.ApplicationContext.me:1 fb27d9ced4754e0bba9315eda057f24d of
 msgid ""
 "Union[:class:`.Member`, :class:`.ClientUser`]: Similar to "
 ":attr:`.Guild.me` except it may return the :class:`.ClientUser` in "
@@ -1238,15 +1234,14 @@ msgid ""
 "absent."
 msgstr ""
 
-#: ../../docstring 360aae08d5ec4329a775a2b12cb73428
-#: discord.ApplicationContext.message:1 of
+#: 360aae08d5ec4329a775a2b12cb73428 discord.ApplicationContext.message:1 of
 msgid ""
 "Returns the message sent with this context's command. Shorthand for "
 ":attr:`.Interaction.message`, if applicable."
 msgstr ""
 
-#: ../../docstring d233902b55f7474383181ef505b0deb0
-#: discord.ApplicationContext.author:1 discord.ApplicationContext.user:1 of
+#: d233902b55f7474383181ef505b0deb0 discord.ApplicationContext.author:1
+#: discord.ApplicationContext.user:1 of
 msgid ""
 "Returns the user that sent this context's command. Shorthand for "
 ":attr:`.Interaction.user`."
@@ -1261,8 +1256,7 @@ msgid ""
 "applicable."
 msgstr ""
 
-#: ../../docstring 57de46aa89ee401b90d87d96729b87d8
-#: discord.ApplicationContext.response:1 of
+#: 57de46aa89ee401b90d87d96729b87d8 discord.ApplicationContext.response:1 of
 msgid ""
 "Returns the response object associated with this context's command. "
 "Shorthand for :attr:`.Interaction.response`."
@@ -1305,6 +1299,13 @@ msgstr ""
 #: 55cf6af7b08a4f7c93e92c2ec39a8632
 #: discord.ApplicationContext.unselected_options:5 of
 msgid "Optional[List[:class:`.Option`]]"
+msgstr ""
+
+#: discord.ApplicationContext.attachment_size_limit:1
+#: e2e42bf39f034fa09a42af3e0df8cb7b of
+msgid ""
+"Returns the attachment size limit associated with this context's "
+"interaction. Shorthand for :attr:`.Interaction.attachment_size_limit`."
 msgstr ""
 
 #: discord.ApplicationContext.send_modal:1 fcd8fc00fc3444d4a347984fd3b9ed1d of
@@ -1430,9 +1431,11 @@ msgstr ""
 msgid "Sending the message failed."
 msgstr ""
 
-#: a0f75187304f404fb792a05b68249126 discord.ApplicationContext.send_response:51
+#: c6b8b47999374b87931c77b60a96a2d4 discord.ApplicationContext.send_response:51
 #: of
-msgid "You specified both ``embed`` and ``embeds``."
+msgid ""
+"You specified both ``embed`` and ``embeds``, or sent content or embeds "
+"with V2 components."
 msgstr ""
 
 #: 0a737ffed25c468a8fa88b66f105c037 discord.ApplicationContext.edit:55
@@ -1618,9 +1621,9 @@ msgstr ""
 msgid ""
 "Either there was no token associated with this webhook, ``ephemeral`` was"
 " passed     with the improper webhook type, there was no state attached "
-"with this webhook when     giving it a view, you specified both "
-"``thread_name`` and ``thread``, or ``applied_tags``     was passed with "
-"neither ``thread_name`` nor ``thread`` specified."
+"with this webhook when     giving it a dispatchable view, you specified "
+"both ``thread_name`` and ``thread``,     or ``applied_tags`` was passed "
+"with neither ``thread_name`` nor ``thread`` specified."
 msgstr ""
 
 #: discord.ApplicationContext.defer:3 eafc302ded3343bfa7c60d20da0291cb of
@@ -1798,9 +1801,7 @@ msgstr ""
 
 #: 27854a581be54d2ca5e020fb0355b768
 #: discord.commands.context.ApplicationContext.is_guild_authorised:4 of
-msgid ""
-"There is an alias for this called :meth:`.is_guild_authorized`. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "There is an alias for this called :meth:`.is_guild_authorized`."
 msgstr ""
 
 #: 7c5843df10734082b20d87652eedb730
@@ -1812,23 +1813,17 @@ msgstr ""
 
 #: c1c6d413f39c498698c17bed484de46f
 #: discord.commands.context.ApplicationContext.is_user_authorised:4 of
-msgid ""
-"There is an alias for this called :meth:`.is_user_authorized`. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "There is an alias for this called :meth:`.is_user_authorized`."
 msgstr ""
 
 #: 6d0f7b6360b144369463f617bf6fda74
 #: discord.commands.context.ApplicationContext.is_guild_authorized:1 of
-msgid ""
-":class:`bool`: An alias for :meth:`.is_guild_authorised`. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid ":class:`bool`: An alias for :meth:`.is_guild_authorised`."
 msgstr ""
 
 #: a672117d3103480d961a778b53df95e7
 #: discord.commands.context.ApplicationContext.is_user_authorized:1 of
-msgid ""
-":class:`bool`: An alias for :meth:`.is_user_authorised`. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid ":class:`bool`: An alias for :meth:`.is_user_authorised`."
 msgstr ""
 
 #: 48def13f6174498892c7611747545cd9
@@ -1849,34 +1844,100 @@ msgid "The interaction object that invoked the autocomplete."
 msgstr ""
 
 #: 59a530105ac6485197b9bf2cefe8e50a
-#: discord.commands.context.AutocompleteContext:27 of
+#: discord.commands.context.AutocompleteContext:21 of
 msgid "The option the user is currently typing."
 msgstr ""
 
 #: 326327f43433488a8304984c578d455b
-#: discord.commands.context.AutocompleteContext:29 of
+#: discord.commands.context.AutocompleteContext:23 of
 msgid ":class:`.Option`"
 msgstr ""
 
 #: 59f72990e3c14649938ce6341ee0005f
-#: discord.commands.context.AutocompleteContext:33 of
+#: discord.commands.context.AutocompleteContext:27 of
 msgid "The content of the focused option."
 msgstr ""
 
 #: 58801cfd58d44239a96812222e3aa822
-#: discord.commands.context.AutocompleteContext:35 of
+#: discord.commands.context.AutocompleteContext:29 of
 msgid ":class:`.str`"
 msgstr ""
 
 #: 4c4055bc1b5242568ae0246a1a990d13
-#: discord.commands.context.AutocompleteContext:39 of
+#: discord.commands.context.AutocompleteContext:33 of
 msgid ""
 "A name to value mapping of the options that the user has selected before "
 "this option."
 msgstr ""
 
 #: 808133417bf3421090c005298b52fda3
-#: discord.commands.context.AutocompleteContext:41 of
+#: discord.commands.context.AutocompleteContext:35 of
 msgid "Dict[:class:`str`, Any]"
 msgstr ""
+
+#~ msgid ":class:`.ApplicationCommand`"
+#~ msgstr ""
+
+#~ msgid "You specified both ``embed`` and ``embeds``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Either there was no token associated "
+#~ "with this webhook, ``ephemeral`` was "
+#~ "passed     with the improper webhook "
+#~ "type, there was no state attached "
+#~ "with this webhook when     giving it "
+#~ "a view, you specified both "
+#~ "``thread_name`` and ``thread``, or "
+#~ "``applied_tags``     was passed with neither"
+#~ " ``thread_name`` nor ``thread`` specified."
+#~ msgstr ""
+
+#~ msgid "The type of the None singleton."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The autocomplete handler for the option."
+#~ " Accepts a callable (sync or async)"
+#~ " that takes a single argument of "
+#~ ":class:`AutocompleteContext`. The callable must "
+#~ "return an iterable of :class:`str` or"
+#~ " :class:`OptionChoice`. Alternatively, "
+#~ ":func:`discord.utils.basic_autocomplete` may be used"
+#~ " in place of the callable."
+#~ msgstr ""
+
+#~ msgid "Does not validate the input value against the autocomplete results."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Optional[Callable[[:class:`.AutocompleteContext`], "
+#~ "Awaitable[Union[Iterable[:class:`.OptionChoice`], "
+#~ "Iterable[:class:`str`], Iterable[:class:`int`], "
+#~ "Iterable[:class:`float`]]]]]"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "There is an alias for this called"
+#~ " :meth:`.is_guild_authorized`. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "There is an alias for this called"
+#~ " :meth:`.is_user_authorized`. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":class:`bool`: An alias for "
+#~ ":meth:`.is_guild_authorised`. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":class:`bool`: An alias for "
+#~ ":meth:`.is_user_authorised`. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
 

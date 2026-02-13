@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Generator: Crowdin\n"
 
 msgid "API Reference"
 msgstr "API Reference"
@@ -158,8 +158,8 @@ msgstr "The functions being listened to must be a :ref:`coroutine <coroutine>`."
 msgid "The function being listened to is not a coroutine."
 msgstr "The function being listened to is not a coroutine."
 
-msgid "The ``name`` (event name) does not start with 'on_'"
-msgstr "The ``name`` (event name) does not start with 'on_'"
+msgid "The ``name`` (event name) does not start with ``on_``."
+msgstr "The ``name`` (event name) does not start with ``on_``."
 
 msgid "Would print one and two in an unspecified order."
 msgstr "Would print one and two in an unspecified order."
@@ -248,8 +248,8 @@ msgstr "The name of the event to listen for. Defaults to ``func.__name__``."
 msgid "The ``func`` parameter is not a coroutine function."
 msgstr "The ``func`` parameter is not a coroutine function."
 
-msgid "Registers a :class:`~discord.ui.View` for persistent listening."
-msgstr "Registers a :class:`~discord.ui.View` for persistent listening."
+msgid "Registers a :class:`~discord.ui.BaseView` for persistent listening."
+msgstr "Registers a :class:`~discord.ui.BaseView` for persistent listening."
 
 msgid "This method should be used for when a view is comprised of components that last longer than the lifecycle of the program."
 msgstr "This method should be used for when a view is comprised of components that last longer than the lifecycle of the program."
@@ -419,36 +419,6 @@ msgstr "Any additional keyword arguments to pass to :class:`.SlashCommandGroup`.
 msgid "The slash command group that was created."
 msgstr "The slash command group that was created."
 
-msgid "Creates a :class:`.Guild`."
-msgstr "Creates a :class:`.Guild`."
-
-msgid "Bot accounts in more than 10 guilds are not allowed to create guilds."
-msgstr "Bot accounts in more than 10 guilds are not allowed to create guilds."
-
-msgid "The name of the guild."
-msgstr "The name of the guild."
-
-msgid "The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit` for more details on what is expected."
-msgstr "The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit` for more details on what is expected."
-
-msgid "The code for a template to create the guild with.  .. versionadded:: 1.4"
-msgstr "The code for a template to create the guild with.  .. versionadded:: 1.4"
-
-msgid "The code for a template to create the guild with."
-msgstr "The code for a template to create the guild with."
-
-msgid "The guild created. This is not the same guild that is added to cache."
-msgstr "The guild created. This is not the same guild that is added to cache."
-
-msgid ":class:`.Guild`"
-msgstr ":class:`.Guild`"
-
-msgid "Guild creation failed."
-msgstr "Guild creation failed."
-
-msgid "Invalid icon image format given. Must be PNG or JPG."
-msgstr "Invalid icon image format given. Must be PNG or JPG."
-
 msgid "Deletes the custom :class:`AppEmoji` from the application."
 msgstr "Deletes the custom :class:`AppEmoji` from the application."
 
@@ -575,6 +545,15 @@ msgstr "Invalid Channel ID."
 msgid "You do not have permission to fetch this channel."
 msgstr "You do not have permission to fetch this channel."
 
+msgid "Fetches the bot's default sounds."
+msgstr "Fetches the bot's default sounds."
+
+msgid "The bot's default sounds."
+msgstr "The bot's default sounds."
+
+msgid "List[:class:`.SoundboardSound`]"
+msgstr "List[:class:`.SoundboardSound`]"
+
 msgid "Retrieves a custom :class:`AppEmoji` from the application."
 msgstr "Retrieves a custom :class:`AppEmoji` from the application."
 
@@ -622,6 +601,9 @@ msgstr "Whether to include count information in the guild. This fills the :attr:
 
 msgid "The guild from the ID."
 msgstr "The guild from the ID."
+
+msgid ":class:`.Guild`"
+msgstr ":class:`.Guild`"
 
 msgid "You do not have access to the guild."
 msgstr "You do not have access to the guild."
@@ -851,11 +833,17 @@ msgstr "Just because you receive a :class:`.abc.GuildChannel` does not mean that
 msgid ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
 msgstr ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
 
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+
 msgid "Returns a generator with every :class:`.Member` the client can see."
 msgstr "Returns a generator with every :class:`.Member` the client can see."
 
 msgid ":class:`.Member` -- A member the client can see."
 msgstr ":class:`.Member` -- A member the client can see."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "Get an :class:`.ApplicationCommand` from the internal list of commands."
 msgstr "Get an :class:`.ApplicationCommand` from the internal list of commands."
@@ -1013,6 +1001,30 @@ msgstr "The returned message or ``None`` if not found."
 msgid "Optional[:class:`.Message`]"
 msgstr "Optional[:class:`.Message`]"
 
+msgid "Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API."
+msgstr "Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API."
+
+msgid "Type of object to fetch or get."
+msgstr "Type of object to fetch or get."
+
+msgid "ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`."
+msgstr "ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`."
+
+msgid "A default to return instead of raising if fetch fails."
+msgstr "A default to return instead of raising if fetch fails."
+
+msgid "The object if found, or `default` if provided when not found."
+msgstr "The object if found, or `default` if provided when not found."
+
+msgid ":class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`"
+msgstr ":class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`"
+
+msgid "Raised when required parameters are missing or invalid types are provided."
+msgstr "Raised when required parameters are missing or invalid types are provided."
+
+msgid "Raised when an unsupported or incompatible object type is used."
+msgstr "Raised when an unsupported or incompatible object type is used."
+
 msgid "Looks up a user in the user cache or fetches if not found."
 msgstr "Looks up a user in the user cache or fetches if not found."
 
@@ -1063,6 +1075,18 @@ msgstr "A list of prefixes or a single prefix that the bot is listening for."
 
 msgid "Union[List[:class:`str`], :class:`str`]"
 msgstr "Union[List[:class:`str`], :class:`str`]"
+
+msgid "Gets a :class:`.Sound` from the bot's sound cache."
+msgstr "Gets a :class:`.Sound` from the bot's sound cache."
+
+msgid "The ID of the sound to get."
+msgstr "The ID of the sound to get."
+
+msgid "The sound with the given ID."
+msgstr "The sound with the given ID."
+
+msgid "Optional[:class:`.SoundboardSound`]"
+msgstr "Optional[:class:`.SoundboardSound`]"
 
 msgid "Returns a stage instance with the given stage channel ID."
 msgstr "Returns a stage instance with the given stage channel ID."
@@ -1133,8 +1157,8 @@ msgstr "Specifies if the client's internal cache is ready for use."
 msgid "Whether the WebSocket is currently rate limited."
 msgstr "Whether the WebSocket is currently rate limited."
 
-msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
+msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
 
 msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``."
 msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``."
@@ -1255,6 +1279,27 @@ msgstr "The default error handler provided by the client."
 
 msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
 msgstr "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
+
+msgid "The default modal error handler provided by the client. The default implementation prints the traceback to stderr."
+msgstr "The default modal error handler provided by the client. The default implementation prints the traceback to stderr."
+
+msgid "This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`."
+msgstr "This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`."
+
+msgid "The exception that was raised."
+msgstr "The exception that was raised."
+
+msgid "The interaction that was received."
+msgstr "The interaction that was received."
+
+msgid "The default view error handler provided by the client."
+msgstr "The default view error handler provided by the client."
+
+msgid "This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`."
+msgstr "This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`."
+
+msgid "The item that the user interacted with."
+msgstr "The item that the user interacted with."
 
 msgid "A sequence of persistent views added to the client."
 msgstr "A sequence of persistent views added to the client."
@@ -1442,6 +1487,9 @@ msgstr "A shortcut decorator that initializes the provided subclass of :class:`.
 msgid "The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed."
 msgstr "The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed."
 
+msgid "A list of all the sounds the bot can see."
+msgstr "A list of all the sounds the bot can see."
+
 msgid "A shorthand coroutine for :meth:`login` + :meth:`connect`."
 msgstr "A shorthand coroutine for :meth:`login` + :meth:`connect`."
 
@@ -1577,6 +1625,9 @@ msgstr "An iterator that recursively walks through all application commands and 
 msgid ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
 msgstr ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
 
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+
 msgid "An iterator that recursively walks through all commands and subcommands."
 msgstr "An iterator that recursively walks through all commands and subcommands."
 
@@ -1585,6 +1636,9 @@ msgstr "Duplicates due to aliases are no longer returned"
 
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the internal list of commands."
 msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the internal list of commands."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "AutoShardedBot"
 msgstr "AutoShardedBot"
@@ -1922,8 +1976,8 @@ msgstr "The amount of time left on this command's cooldown in seconds. If this i
 msgid ":class:`float`"
 msgstr ":class:`float`"
 
-msgid "Checks whether the command has an error handler registered. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Checks whether the command has an error handler registered. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Checks whether the command has an error handler registered."
+msgstr "Checks whether the command has an error handler registered."
 
 msgid "The name of the cog this command belongs to, if any."
 msgstr "The name of the cog this command belongs to, if any."
@@ -1999,6 +2053,9 @@ msgstr "An iterator that recursively walks through this cog's commands and subco
 
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "A :class:`list` of commands that are defined inside this cog.  .. note::      This does not include subcommands."
 msgstr "A :class:`list` of commands that are defined inside this cog.  .. note::      This does not include subcommands."
@@ -2179,6 +2236,9 @@ msgstr "Whether to sort the result."
 
 msgid "An optional key function to pass to :func:`py:sorted` that takes a :class:`Command` as its sole parameter. If ``sort`` is passed as ``True`` then this will default as the command name."
 msgstr "An optional key function to pass to :func:`py:sorted` that takes a :class:`Command` as its sole parameter. If ``sort`` is passed as ``True`` then this will default as the command name."
+
+msgid "A tuple of command types to exclude from the filter."
+msgstr "A tuple of command types to exclude from the filter."
 
 msgid "A list of commands that passed the filter."
 msgstr "A list of commands that passed the filter."
@@ -2600,14 +2660,14 @@ msgstr "If all checks fail then :exc:`.CheckAnyFailure` is raised to signal the 
 msgid "The ``predicate`` attribute for this function **is** a coroutine."
 msgstr "The ``predicate`` attribute for this function **is** a coroutine."
 
+msgid "Creating a basic check to see if it's the bot owner or the server owner:"
+msgstr "Creating a basic check to see if it's the bot owner or the server owner:"
+
 msgid "An argument list of checks that have been decorated with the :func:`check` decorator."
 msgstr "An argument list of checks that have been decorated with the :func:`check` decorator."
 
 msgid "A check passed has not been decorated with the :func:`check`     decorator."
 msgstr "A check passed has not been decorated with the :func:`check`     decorator."
-
-msgid "Creating a basic check to see if it's the bot owner or the server owner:"
-msgstr "Creating a basic check to see if it's the bot owner or the server owner:"
 
 msgid "A :func:`.check` that is added that checks if the member invoking the command has the role specified via the name or ID specified."
 msgstr "A :func:`.check` that is added that checks if the member invoking the command has the role specified via the name or ID specified."
@@ -2750,11 +2810,11 @@ msgstr "The bucket that this concurrency is based on, e.g. ``BucketType.guild`` 
 msgid "Whether the command should wait for the queue to be over. If this is set to ``False`` then instead of waiting until the command can run again, the command raises :exc:`.MaxConcurrencyReached` to its error handler. If this is set to ``True`` then the command waits until it can be executed."
 msgstr "Whether the command should wait for the queue to be over. If this is set to ``False`` then instead of waiting until the command can run again, the command raises :exc:`.MaxConcurrencyReached` to its error handler. If this is set to ``True`` then the command waits until it can be executed."
 
-msgid "This allows you to refer to one before invoke hook for several commands that do not have to be within the same cog. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
-msgstr "This allows you to refer to one before invoke hook for several commands that do not have to be within the same cog. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+msgid "This allows you to refer to one before invoke hook for several commands that do not have to be within the same cog."
+msgstr "This allows you to refer to one before invoke hook for several commands that do not have to be within the same cog."
 
-msgid "This allows you to refer to one after invoke hook for several commands that do not have to be within the same cog. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
-msgstr "This allows you to refer to one after invoke hook for several commands that do not have to be within the same cog. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+msgid "This allows you to refer to one after invoke hook for several commands that do not have to be within the same cog."
+msgstr "This allows you to refer to one after invoke hook for several commands that do not have to be within the same cog."
 
 msgid "A :func:`.check` that indicates this command must only be used in a guild context only. Basically, no private messages are allowed when using the command."
 msgstr "A :func:`.check` that indicates this command must only be used in a guild context only. Basically, no private messages are allowed when using the command."
@@ -2765,8 +2825,8 @@ msgstr "This check raises a special exception, :exc:`.NoPrivateMessage` that is 
 msgid "A :func:`.check` that indicates this command must only be used in a DM context. Only private messages are allowed when using the command."
 msgstr "A :func:`.check` that indicates this command must only be used in a DM context. Only private messages are allowed when using the command."
 
-msgid "This check raises a special exception, :exc:`.PrivateMessageOnly` that is inherited from :exc:`.CheckFailure`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
-msgstr "This check raises a special exception, :exc:`.PrivateMessageOnly` that is inherited from :exc:`.CheckFailure`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+msgid "This check raises a special exception, :exc:`.PrivateMessageOnly` that is inherited from :exc:`.CheckFailure`."
+msgstr "This check raises a special exception, :exc:`.PrivateMessageOnly` that is inherited from :exc:`.CheckFailure`."
 
 msgid "A :func:`.check` that checks if the person invoking this command is the owner of the bot."
 msgstr "A :func:`.check` that checks if the person invoking this command is the owner of the bot."
@@ -2780,8 +2840,8 @@ msgstr "This check raises a special exception, :exc:`.NotOwner` that is derived 
 msgid "A :func:`.check` that checks if the channel is a NSFW channel."
 msgstr "A :func:`.check` that checks if the channel is a NSFW channel."
 
-msgid "This check raises a special exception, :exc:`.NSFWChannelRequired` that is derived from :exc:`.CheckFailure`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
-msgstr "This check raises a special exception, :exc:`.NSFWChannelRequired` that is derived from :exc:`.CheckFailure`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+msgid "This check raises a special exception, :exc:`.NSFWChannelRequired` that is derived from :exc:`.CheckFailure`."
+msgstr "This check raises a special exception, :exc:`.NSFWChannelRequired` that is derived from :exc:`.CheckFailure`."
 
 msgid "Raise :exc:`.NSFWChannelRequired` instead of generic :exc:`.CheckFailure`. DM channels will also now pass this check."
 msgstr "Raise :exc:`.NSFWChannelRequired` instead of generic :exc:`.CheckFailure`. DM channels will also now pass this check."
@@ -2945,14 +3005,17 @@ msgstr "Flattening into a list: ::"
 msgid "Returns a context manager that allows you to type for an indefinite period of time."
 msgstr "Returns a context manager that allows you to type for an indefinite period of time."
 
-msgid "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
-msgstr "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgid "This is useful for denoting long computations in your bot."
+msgstr "This is useful for denoting long computations in your bot."
 
 msgid "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
 msgstr "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
 
 msgid "Example Usage: ::"
 msgstr "Example Usage: ::"
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 
 msgid "Calls a command with the arguments given."
 msgstr "Calls a command with the arguments given."
@@ -3038,6 +3101,21 @@ msgstr "The entity to show help for."
 msgid "The result of the help command, if any."
 msgstr "The result of the help command, if any."
 
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+msgstr "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+
+msgid "The message that was sent."
+msgstr "The message that was sent."
+
+msgid "Sending the message failed."
+msgstr "Sending the message failed."
+
+msgid "You do not have the proper permissions to send the message."
+msgstr "You do not have the proper permissions to send the message."
+
+msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
+msgstr "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
+
 msgid "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
 msgstr "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
 
@@ -3068,35 +3146,35 @@ msgstr "You do not have the permissions required to get a message."
 msgid "Retrieving the message failed."
 msgstr "Retrieving the message failed."
 
-msgid "Retrieves all messages that are currently pinned in the channel."
-msgstr "Retrieves all messages that are currently pinned in the channel."
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to forward the :class:`.Message` to a channel."
+msgstr "A shortcut method to :meth:`.abc.Messageable.send` to forward the :class:`.Message` to a channel."
 
-msgid "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
-msgstr "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
+msgid "The channel to forward this to."
+msgstr "The channel to forward this to."
 
-msgid "The messages that are currently pinned."
-msgstr "The messages that are currently pinned."
+msgid "Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages."
+msgstr "Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages."
 
-msgid "List[:class:`~discord.Message`]"
-msgstr "List[:class:`~discord.Message`]"
+msgid "Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead."
+msgstr "Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead."
 
-msgid "Retrieving the pinned messages failed."
-msgstr "Retrieving the pinned messages failed."
+msgid "The number of pinned messages to retrieve. If ``None``, retrieves every pinned message in the channel."
+msgstr "The number of pinned messages to retrieve. If ``None``, retrieves every pinned message in the channel."
 
-msgid "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
-msgstr "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+msgid "Retrieve messages pinned before this datetime. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve messages pinned before this datetime. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
 
-msgid "The message that was sent."
-msgstr "The message that was sent."
+msgid ":class:`~discord.MessagePin` -- The pinned message."
+msgstr ":class:`~discord.MessagePin` -- The pinned message."
 
-msgid "Sending the message failed."
-msgstr "Sending the message failed."
+msgid "You do not have permissions to get pinned messages."
+msgstr "You do not have permissions to get pinned messages."
 
-msgid "You do not have the proper permissions to send the message."
-msgstr "You do not have the proper permissions to send the message."
+msgid "The request to get pinned messages failed."
+msgstr "The request to get pinned messages failed."
 
-msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
-msgstr "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MessagePinIterator\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MessagePinIterator\\``"
 
 msgid "Sends a message to the destination with the content given."
 msgstr "Sends a message to the destination with the content given."
@@ -3143,11 +3221,11 @@ msgstr "Controls the mentions being processed in this message. If this is passed
 msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
 msgstr "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
 
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
-msgstr "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+msgstr "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
 
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
-msgstr "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgstr "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
 
 msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
 msgstr "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
@@ -3461,8 +3539,8 @@ msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.Guil
 msgid "Converts to a :class:`~discord.PartialEmoji`."
 msgstr "Converts to a :class:`~discord.PartialEmoji`."
 
-msgid "This is done by extracting the animated flag, name and ID from the emoji."
-msgstr "This is done by extracting the animated flag, name and ID from the emoji."
+msgid "This is done by extracting the animated flag, name, and ID for custom emojis, or by using the standard Unicode emojis supported by Discord."
+msgstr "This is done by extracting the animated flag, name, and ID for custom emojis, or by using the standard Unicode emojis supported by Discord."
 
 msgid "Raise :exc:`.PartialEmojiConversionFailure` instead of generic :exc:`.BadArgument`"
 msgstr "Raise :exc:`.PartialEmojiConversionFailure` instead of generic :exc:`.BadArgument`"
@@ -3620,6 +3698,9 @@ msgstr "The underlying evaluated annotation of the flag."
 msgid "The maximum number of arguments the flag can accept. A negative value indicates an unlimited amount of arguments."
 msgstr "The maximum number of arguments the flag can accept. A negative value indicates an unlimited amount of arguments."
 
+msgid "Whether the flag is positional. A :class:`FlagConverter` can only handle one positional flag."
+msgstr "Whether the flag is positional. A :class:`FlagConverter` can only handle one positional flag."
+
 msgid "Whether multiple given values overrides the previous value."
 msgstr "Whether multiple given values overrides the previous value."
 
@@ -3646,6 +3727,9 @@ msgstr "The maximum number of arguments the flag can accept. A negative value in
 
 msgid "Whether multiple given values overrides the previous value. The default value depends on the annotation given."
 msgstr "Whether multiple given values overrides the previous value. The default value depends on the annotation given."
+
+msgid "Whether the flag is positional or not. There can only be one positional flag."
+msgstr "Whether the flag is positional or not. There can only be one positional flag."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"

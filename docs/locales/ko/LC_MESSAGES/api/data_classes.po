@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=1; plural=0;\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Crowdin\n"
 
 msgid "Data Classes"
 msgstr "Data Classes"
@@ -52,6 +52,12 @@ msgstr "type"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
+
+msgid "The model this object's ID is based off."
+msgstr "The model this object's ID is based off."
+
+msgid "type[:class:`abc.Snowflake`]"
+msgstr "type[:class:`abc.Snowflake`]"
 
 msgid "Parameters"
 msgstr "Parameters"
@@ -97,6 +103,96 @@ msgstr ":class:`bool`"
 
 msgid "The emoji of the option, if available."
 msgstr "The emoji of the option, if available."
+
+msgid "Represents a :class:`discord.SelectMenu`\\s default value."
+msgstr "Represents a :class:`discord.SelectMenu`\\s default value."
+
+msgid "This is only applicable to selects of type other than :attr:`ComponentType.string_select`."
+msgstr "This is only applicable to selects of type other than :attr:`ComponentType.string_select`."
+
+msgid "The model type this select default value is based of.  Below, is a table defining the model instance type and the default value type it will be mapped:  +-----------------------------------+--------------------------------------------------------------------------+ | Model Type                        | Default Value Type                                                       | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above | +-----------------------------------+--------------------------------------------------------------------------+  If you pass a model that is not defined in the table, ``TypeError`` will be raised.  .. note::      The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,     :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change     based of the new channel types Discord adds."
+msgstr "The model type this select default value is based of.  Below, is a table defining the model instance type and the default value type it will be mapped:  +-----------------------------------+--------------------------------------------------------------------------+ | Model Type                        | Default Value Type                                                       | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above | +-----------------------------------+--------------------------------------------------------------------------+  If you pass a model that is not defined in the table, ``TypeError`` will be raised.  .. note::      The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,     :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change     based of the new channel types Discord adds."
+
+msgid "The model type this select default value is based of."
+msgstr "The model type this select default value is based of."
+
+msgid "Below, is a table defining the model instance type and the default value type it will be mapped:"
+msgstr "Below, is a table defining the model instance type and the default value type it will be mapped:"
+
+msgid "Model Type"
+msgstr "Model Type"
+
+msgid "Default Value Type"
+msgstr "Default Value Type"
+
+msgid ":class:`discord.User`"
+msgstr ":class:`discord.User`"
+
+msgid ":attr:`discord.SelectDefaultValueType.user`"
+msgstr ":attr:`discord.SelectDefaultValueType.user`"
+
+msgid ":class:`discord.Member`"
+msgstr ":class:`discord.Member`"
+
+msgid ":class:`discord.Role`"
+msgstr ":class:`discord.Role`"
+
+msgid ":attr:`discord.SelectDefaultValueType.role`"
+msgstr ":attr:`discord.SelectDefaultValueType.role`"
+
+msgid ":class:`discord.abc.GuildChannel`"
+msgstr ":class:`discord.abc.GuildChannel`"
+
+msgid ":attr:`discord.SelectDefaultValueType.channel`"
+msgstr ":attr:`discord.SelectDefaultValueType.channel`"
+
+msgid ":class:`discord.Object`"
+msgstr ":class:`discord.Object`"
+
+msgid "depending on :attr:`discord.Object.type`, it will be mapped to any above"
+msgstr "depending on :attr:`discord.Object.type`, it will be mapped to any above"
+
+msgid "If you pass a model that is not defined in the table, ``TypeError`` will be raised."
+msgstr "If you pass a model that is not defined in the table, ``TypeError`` will be raised."
+
+msgid "The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`, :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change based of the new channel types Discord adds."
+msgstr "The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`, :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change based of the new channel types Discord adds."
+
+msgid "The ID of the default value. This cannot be used with ``object``."
+msgstr "The ID of the default value. This cannot be used with ``object``."
+
+msgid "The default value type. This cannot be used with ``object``."
+msgstr "The default value type. This cannot be used with ``object``."
+
+msgid "Raises"
+msgstr "Raises"
+
+msgid "You did not provide any parameter, you provided all parameters, or you provided ``id`` but not ``type``."
+msgstr "You did not provide any parameter, you provided all parameters, or you provided ``id`` but not ``type``."
+
+msgid "Represents an item used in the :class:`MediaGallery` component."
+msgstr "Represents an item used in the :class:`MediaGallery` component."
+
+msgid "This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`."
+msgstr "This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`."
+
+msgid "The URL of this gallery item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files."
+msgstr "The URL of this gallery item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files."
+
+msgid "The gallery item's description, up to 1024 characters."
+msgstr "The gallery item's description, up to 1024 characters."
+
+msgid "Whether the gallery item is a spoiler."
+msgstr "Whether the gallery item is a spoiler."
+
+msgid "Optional[:class:`bool`]"
+msgstr "Optional[:class:`bool`]"
+
+msgid "Represents an Unfurled Media Item used in Components V2."
+msgstr "Represents an Unfurled Media Item used in Components V2."
+
+msgid "The URL of this media item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files."
+msgstr "The URL of this media item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files."
 
 msgid "Wraps up a Discord gateway intent flag."
 msgstr "Wraps up a Discord gateway intent flag."
@@ -809,8 +905,8 @@ msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for 
 msgid "Whether the websocket is currently rate limited."
 msgstr "Whether the websocket is currently rate limited."
 
-msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
+msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
 
 msgid "Message"
 msgstr "Message"
@@ -836,17 +932,26 @@ msgstr "Controls the roles being mentioned. If ``True`` (the default) then roles
 msgid "Whether to mention the author of the message being replied to. Defaults to ``True``."
 msgstr "Whether to mention the author of the message being replied to. Defaults to ``True``."
 
-msgid "A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True`` :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
-msgstr "A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True`` :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
+msgid "A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True``"
+msgstr "A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True``"
 
-msgid "A factory method that returns a :class:`AllowedMentions` with all fields set to ``False`` :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
-msgstr "A factory method that returns a :class:`AllowedMentions` with all fields set to ``False`` :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
+
+msgid "A factory method that returns a :class:`AllowedMentions` with all fields set to ``False``"
+msgstr "A factory method that returns a :class:`AllowedMentions` with all fields set to ``False``"
 
 msgid "Represents a reference to a :class:`~discord.Message`."
 msgstr "Represents a reference to a :class:`~discord.Message`."
 
 msgid "This class can now be constructed by users."
 msgstr "This class can now be constructed by users."
+
+msgid "The type of message reference. If this is not provided, assume the default behavior (i.e., reply)."
+msgstr "The type of message reference. If this is not provided, assume the default behavior (i.e., reply)."
+
+msgid "Optional[:class:`~discord.MessageReferenceType`]"
+msgstr "Optional[:class:`~discord.MessageReferenceType`]"
 
 msgid "The id of the message referenced."
 msgstr "The id of the message referenced."
@@ -877,6 +982,12 @@ msgstr "The message to be converted into a reference."
 
 msgid "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
 msgstr "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
+
+msgid "The type of reference to create. Defaults to :attr:`MessageReferenceType.default` (reply).  .. versionadded:: 2.7"
+msgstr "The type of reference to create. Defaults to :attr:`MessageReferenceType.default` (reply).  .. versionadded:: 2.7"
+
+msgid "The type of reference to create. Defaults to :attr:`MessageReferenceType.default` (reply)."
+msgstr "The type of reference to create. Defaults to :attr:`MessageReferenceType.default` (reply)."
 
 msgid "Returns"
 msgstr "Returns"
@@ -968,9 +1079,6 @@ msgstr "If provided, the number of seconds to wait in the background before dele
 msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr "The reason for deleting the message. Shows up on the audit log."
 
-msgid "Raises"
-msgstr "Raises"
-
 msgid "You do not have proper permissions to delete the message."
 msgstr "You do not have proper permissions to delete the message."
 
@@ -998,8 +1106,8 @@ msgstr "Publishing the message failed."
 msgid "Pins the message."
 msgstr "Pins the message."
 
-msgid "You must have the :attr:`~Permissions.manage_messages` permission to do this in a non-private channel context."
-msgstr "You must have the :attr:`~Permissions.manage_messages` permission to do this in a non-private channel context."
+msgid "You must have the :attr:`~Permissions.pin_messages` permission to do this in a non-private channel context."
+msgstr "You must have the :attr:`~Permissions.pin_messages` permission to do this in a non-private channel context."
 
 msgid "The reason for pinning the message. Shows up on the audit log.  .. versionadded:: 1.4"
 msgstr "The reason for pinning the message. Shows up on the audit log.  .. versionadded:: 1.4"
@@ -1121,6 +1229,12 @@ msgstr "You do not have the proper permissions to send the message."
 msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
 msgstr "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
 
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to forward the :class:`.Message` to a channel."
+msgstr "A shortcut method to :meth:`.abc.Messageable.send` to forward the :class:`.Message` to a channel."
+
+msgid "The channel to forward this to."
+msgstr "The channel to forward this to."
+
 msgid "Creates a :class:`~discord.MessageReference` from the current message."
 msgstr "Creates a :class:`~discord.MessageReference` from the current message."
 
@@ -1129,6 +1243,12 @@ msgstr "Whether replying using the message reference should raise :class:`HTTPEx
 
 msgid "Whether replying using the message reference should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message."
 msgstr "Whether replying using the message reference should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message."
+
+msgid "The type of message reference. Defaults to a reply.  .. versionadded:: 2.7"
+msgstr "The type of message reference. Defaults to a reply.  .. versionadded:: 2.7"
+
+msgid "The type of message reference. Defaults to a reply."
+msgstr "The type of message reference. Defaults to a reply."
 
 msgid "The reference to this message."
 msgstr "The reference to this message."
@@ -1625,9 +1745,6 @@ msgstr "Checks if this poll has completely ended. Shortcut for :attr:`PollResult
 msgid "Returns a boolean if :attr:`results` is available, otherwise ``None``."
 msgstr "Returns a boolean if :attr:`results` is available, otherwise ``None``."
 
-msgid "Optional[:class:`bool`]"
-msgstr "Optional[:class:`bool`]"
-
 msgid "Shortcut for :meth:`PollResults.total_votes` This may not be precise if :attr:`is_finalized` is ``False``."
 msgstr "Shortcut for :meth:`PollResults.total_votes` This may not be precise if :attr:`is_finalized` is ``False``."
 
@@ -1946,6 +2063,12 @@ msgstr "Users will still receive mentions."
 msgid "Returns ``True`` if this message is a voice message."
 msgstr "Returns ``True`` if this message is a voice message."
 
+msgid "Returns ``True`` if this message has v2 components. This flag disables sending `content`, `embed`, and `embeds`."
+msgstr "Returns ``True`` if this message has v2 components. This flag disables sending `content`, `embed`, and `embeds`."
+
+msgid "Returns ``True`` if this message has a snapshot from message forwarding."
+msgstr "Returns ``True`` if this message has a snapshot from message forwarding."
+
 msgid "Wraps up the Discord Attachment flags."
 msgstr "Wraps up the Discord Attachment flags."
 
@@ -2041,6 +2164,9 @@ msgstr "Returns ``True`` if the thread is pinned to the top of its parent forum 
 
 msgid "Returns ``True`` if a tag is required to be specified when creating a thread in a :class:`ForumChannel`."
 msgstr "Returns ``True`` if a tag is required to be specified when creating a thread in a :class:`ForumChannel`."
+
+msgid "Returns ``True`` if the embedded media download options are hidden for the media channel posts."
+msgstr "Returns ``True`` if the embedded media download options are hidden for the media channel posts."
 
 msgid "Wraps up the Discord SKU flags."
 msgstr "Wraps up the Discord SKU flags."
@@ -2168,8 +2294,8 @@ msgstr "A factory method that returns a :class:`Colour` with a value of ``0x1abc
 msgid "A factory method that returns a :class:`Colour` with a value of ``0x11806a``."
 msgstr "A factory method that returns a :class:`Colour` with a value of ``0x11806a``."
 
-msgid "A factory method that returns a :class:`Colour` with a value of ``0x57F287``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
-msgstr "A factory method that returns a :class:`Colour` with a value of ``0x57F287``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x57F287``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x57F287``."
 
 msgid "A factory method that returns a :class:`Colour` with a value of ``0x2ecc71``."
 msgstr "A factory method that returns a :class:`Colour` with a value of ``0x2ecc71``."
@@ -2207,8 +2333,8 @@ msgstr "A factory method that returns a :class:`Colour` with a value of ``0xe67e
 msgid "A factory method that returns a :class:`Colour` with a value of ``0xa84300``."
 msgstr "A factory method that returns a :class:`Colour` with a value of ``0xa84300``."
 
-msgid "A factory method that returns a :class:`Colour` with a value of ``0xED4245``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
-msgstr "A factory method that returns a :class:`Colour` with a value of ``0xED4245``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xED4245``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xED4245``."
 
 msgid "A factory method that returns a :class:`Colour` with a value of ``0xe74c3c``."
 msgstr "A factory method that returns a :class:`Colour` with a value of ``0xe74c3c``."
@@ -2237,17 +2363,17 @@ msgstr "A factory method that returns a :class:`Colour` with a value of ``0x5865
 msgid "A factory method that returns a :class:`Colour` with a value of ``0x99aab5``."
 msgstr "A factory method that returns a :class:`Colour` with a value of ``0x99aab5``."
 
-msgid "A factory method that returns a :class:`Colour` with a value of ``0x36393F``. This will appear transparent on Discord's dark theme. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
-msgstr "A factory method that returns a :class:`Colour` with a value of ``0x36393F``. This will appear transparent on Discord's dark theme. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x36393F``. This will appear transparent on Discord's dark theme."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x36393F``. This will appear transparent on Discord's dark theme."
 
-msgid "A factory method that returns a :class:`Colour` with a value of ``0xEB459E``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
-msgstr "A factory method that returns a :class:`Colour` with a value of ``0xEB459E``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xEB459E``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xEB459E``."
 
-msgid "A factory method that returns a :class:`Colour` with a value of ``0xFEE75C``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
-msgstr "A factory method that returns a :class:`Colour` with a value of ``0xFEE75C``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xFEE75C``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xFEE75C``."
 
-msgid "A factory method that returns a :class:`Colour` with a value of ``0xf47fff``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
-msgstr "A factory method that returns a :class:`Colour` with a value of ``0xf47fff``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xf47fff``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xf47fff``."
 
 msgid "A factory method that returns a :class:`Colour` corresponding to the embed colours on discord clients, with a value of:"
 msgstr "A factory method that returns a :class:`Colour` corresponding to the embed colours on discord clients, with a value of:"
@@ -2585,8 +2711,8 @@ msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\
 msgid "A factory method that creates a :class:`Permissions` with all permissions set to ``True``."
 msgstr "A factory method that creates a :class:`Permissions` with all permissions set to ``True``."
 
-msgid "A :class:`Permissions` with all channel-specific permissions set to ``True`` and the guild-specific ones set to ``False``. The guild-specific permissions are currently: :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
-msgstr "A :class:`Permissions` with all channel-specific permissions set to ``True`` and the guild-specific ones set to ``False``. The guild-specific permissions are currently: :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+msgid "A :class:`Permissions` with all channel-specific permissions set to ``True`` and the guild-specific ones set to ``False``. The guild-specific permissions are currently:"
+msgstr "A :class:`Permissions` with all channel-specific permissions set to ``True`` and the guild-specific ones set to ``False``. The guild-specific permissions are currently:"
 
 msgid ":attr:`manage_emojis`"
 msgstr ":attr:`manage_emojis`"
@@ -2624,8 +2750,8 @@ msgstr "Added :attr:`stream`, :attr:`priority_speaker` and :attr:`use_slash_comm
 msgid "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`, :attr:`use_external_stickers`, :attr:`send_messages_in_threads` and :attr:`request_to_speak` permissions."
 msgstr "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`, :attr:`use_external_stickers`, :attr:`send_messages_in_threads` and :attr:`request_to_speak` permissions."
 
-msgid "A factory method that creates a :class:`Permissions` with all \"General\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
-msgstr "A factory method that creates a :class:`Permissions` with all \"General\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+msgid "A factory method that creates a :class:`Permissions` with all \"General\" permissions from the official Discord UI set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all \"General\" permissions from the official Discord UI set to ``True``."
 
 msgid "Permission :attr:`read_messages` is now included in the general permissions, but permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part of the general permissions."
 msgstr "Permission :attr:`read_messages` is now included in the general permissions, but permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part of the general permissions."
@@ -2633,11 +2759,11 @@ msgstr "Permission :attr:`read_messages` is now included in the general permissi
 msgid "Added :attr:`view_creator_monetization_analytics` permission."
 msgstr "Added :attr:`view_creator_monetization_analytics` permission."
 
-msgid "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
-msgstr "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+msgid "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``."
 
-msgid "A factory method that creates a :class:`Permissions` with all \"Text\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
-msgstr "A factory method that creates a :class:`Permissions` with all \"Text\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+msgid "A factory method that creates a :class:`Permissions` with all \"Text\" permissions from the official Discord UI set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all \"Text\" permissions from the official Discord UI set to ``True``."
 
 msgid "Permission :attr:`read_messages` is no longer part of the text permissions. Added :attr:`use_slash_commands` permission."
 msgstr "Permission :attr:`read_messages` is no longer part of the text permissions. Added :attr:`use_slash_commands` permission."
@@ -2648,14 +2774,14 @@ msgstr "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :at
 msgid "A factory method that creates a :class:`Permissions` with all \"Voice\" permissions from the official Discord UI set to ``True``."
 msgstr "A factory method that creates a :class:`Permissions` with all \"Voice\" permissions from the official Discord UI set to ``True``."
 
-msgid "A factory method that creates a :class:`Permissions` with all \"Stage Channel\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
-msgstr "A factory method that creates a :class:`Permissions` with all \"Stage Channel\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+msgid "A factory method that creates a :class:`Permissions` with all \"Stage Channel\" permissions from the official Discord UI set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all \"Stage Channel\" permissions from the official Discord UI set to ``True``."
 
-msgid "A factory method that creates a :class:`Permissions` with all \"Stage Moderator\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
-msgstr "A factory method that creates a :class:`Permissions` with all \"Stage Moderator\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+msgid "A factory method that creates a :class:`Permissions` with all \"Stage Moderator\" permissions from the official Discord UI set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all \"Stage Moderator\" permissions from the official Discord UI set to ``True``."
 
-msgid "A factory method that creates a :class:`Permissions` with all \"Advanced\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
-msgstr "A factory method that creates a :class:`Permissions` with all \"Advanced\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+msgid "A factory method that creates a :class:`Permissions` with all \"Advanced\" permissions from the official Discord UI set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all \"Advanced\" permissions from the official Discord UI set to ``True``."
 
 msgid "Bulk updates this permission object."
 msgstr "Bulk updates this permission object."
@@ -2714,11 +2840,11 @@ msgstr "Returns ``True`` if a user can send messages from all or specific text c
 msgid "Returns ``True`` if a user can send TTS messages from all or specific text channels."
 msgstr "Returns ``True`` if a user can send TTS messages from all or specific text channels."
 
-msgid "Returns ``True`` if a user can delete or pin messages in a text channel."
-msgstr "Returns ``True`` if a user can delete or pin messages in a text channel."
+msgid "Returns ``True`` if a user can delete messages in a text channel."
+msgstr "Returns ``True`` if a user can delete messages in a text channel."
 
-msgid "Note that there are currently no ways to edit other people's messages."
-msgstr "Note that there are currently no ways to edit other people's messages."
+msgid "Starting from January 12th 2026, this will no longer grant the ability to pin/unpin messages. Use :attr:`pin_messages` instead."
+msgstr "Starting from January 12th 2026, this will no longer grant the ability to pin/unpin messages. Use :attr:`pin_messages` instead."
 
 msgid "Returns ``True`` if a user's messages will automatically be embedded by Discord."
 msgstr "Returns ``True`` if a user's messages will automatically be embedded by Discord."
@@ -2729,8 +2855,8 @@ msgstr "Returns ``True`` if a user can send files in their messages."
 msgid "Returns ``True`` if a user can read a text channel's previous messages."
 msgstr "Returns ``True`` if a user can read a text channel's previous messages."
 
-msgid "Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel."
-msgstr "Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel."
+msgid "Returns ``True`` if a user's ``@everyone``, ``@here`` or role mentions will mention in the text channel."
+msgstr "Returns ``True`` if a user's ``@everyone``, ``@here`` or role mentions will mention in the text channel."
 
 msgid "Returns ``True`` if a user can use emojis from other guilds."
 msgstr "Returns ``True`` if a user can use emojis from other guilds."
@@ -2842,6 +2968,12 @@ msgstr "Returns ``True`` if a member's user-installed apps can show public respo
 
 msgid "This only applies to apps that are also not installed to the guild."
 msgstr "This only applies to apps that are also not installed to the guild."
+
+msgid "Returns ``True`` if a member can pin/unpin messages."
+msgstr "Returns ``True`` if a member can pin/unpin messages."
+
+msgid "Returns ``True`` if a user can bypass slowmode."
+msgstr "Returns ``True`` if a user can bypass slowmode."
 
 msgid "A type that is used to represent a channel specific permission."
 msgstr "A type that is used to represent a channel specific permission."

@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=1; plural=0;\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Crowdin\n"
 
 msgid "Webhook Support"
 msgstr "Webhook Support"
@@ -97,6 +97,12 @@ msgstr "The channel that this webhook is following. Only given if :attr:`type` i
 
 msgid "Optional[:class:`PartialWebhookChannel`]"
 msgstr "Optional[:class:`PartialWebhookChannel`]"
+
+msgid "The interaction this webhook belongs to. Only set if :attr:`type` is :attr:`WebhookType.application`."
+msgstr "The interaction this webhook belongs to. Only set if :attr:`type` is :attr:`WebhookType.application`."
+
+msgid "Optional[:class:`Interaction`]"
+msgstr "Optional[:class:`Interaction`]"
 
 msgid "Parameters"
 msgstr "Parameters"
@@ -332,8 +338,8 @@ msgstr "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``."
 msgid "The length of ``embeds`` was invalid."
 msgstr "The length of ``embeds`` was invalid."
 
-msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
-msgstr "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
+msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a dispatchable view, you specified both ``thread_name`` and ``thread``,     or ``applied_tags`` was passed with neither ``thread_name`` nor ``thread`` specified."
+msgstr "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a dispatchable view, you specified both ``thread_name`` and ``thread``,     or ``applied_tags`` was passed with neither ``thread_name`` nor ``thread`` specified."
 
 msgid "Returns an :class:`Asset` for the avatar the webhook has."
 msgstr "Returns an :class:`Asset` for the avatar the webhook has."
@@ -380,11 +386,14 @@ msgstr "There was no token associated with this webhook."
 msgid "The guild this webhook belongs to."
 msgstr "The guild this webhook belongs to."
 
-msgid "Whether the webhook is authenticated with a bot token. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Whether the webhook is authenticated with a bot token. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Whether the webhook is authenticated with a bot token."
+msgstr "Whether the webhook is authenticated with a bot token."
 
-msgid "Whether the webhook is a \"partial\" webhook. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Whether the webhook is a \"partial\" webhook. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid "Whether the webhook is a \"partial\" webhook."
+msgstr "Whether the webhook is a \"partial\" webhook."
 
 msgid "Edits a message owned by this webhook."
 msgstr "Edits a message owned by this webhook."

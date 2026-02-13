@@ -1,26 +1,25 @@
 [build-system]
 requires = [
-    "setuptools>=62.6,<=77.0.3",
-    "setuptools-scm>=6.2,<=8.2.1",
+    "setuptools>=77.0.3,<=80.9.0",
+    "setuptools-scm>=9.2,<=9.2.2",
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "py-cord"
 authors = [
-    {name = "Pycord Development"}
+    { name = "Pycord Development" }
 ]
 description = "A Python wrapper for the Discord API"
-readme = {content-type = "text/x-rst", file = "README.rst"}
-requires-python = ">=3.9"
-license = {text = "MIT"}
+readme = { content-type = "text/x-rst", file = "README.rst" }
+requires-python = ">=3.10, <3.14"
+license = "MIT"
+license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -57,18 +56,18 @@ packages = [
 ]
 
 [tool.setuptools.dynamic]
-dependencies = {file = "requirements/_.txt"}
-readme = {content-type = "text/x-rst", file = "README.rst"}
+dependencies = { file = "requirements/_.txt" }
+readme = { content-type = "text/x-rst", file = "README.rst" }
 
 [tool.setuptools.dynamic.optional-dependencies]
-docs = {file = "requirements/docs.txt"}
-speed = {file = "requirements/speed.txt"}
-voice = {file = "requirements/voice.txt"}
+docs = { file = "requirements/docs.txt" }
+speed = { file = "requirements/speed.txt" }
+voice = { file = "requirements/voice.txt" }
 
 [tool.setuptools_scm]
 
 [tool.black]
-target-version = ['py39', 'py310', 'py311', 'py312', 'py313']
+target-version = ['py310', 'py311', 'py312', 'py313']
 
 [tool.isort]
 profile = "black"
@@ -87,7 +86,7 @@ extension-pkg-whitelist = [
     "pydantic",
     "ujson"
 ]
-py-version = 3.9
+py-version = 3.10
 
 [tool.pylint.messages_control]
 enable = [

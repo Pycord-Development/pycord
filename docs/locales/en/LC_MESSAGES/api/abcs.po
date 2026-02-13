@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/abcs.rst:4 eba096c79e094bb18465d6e9ff3678cf
 msgid "Abstract Base Classes"
@@ -244,11 +244,11 @@ msgid "Returns the channel-specific overwrites for a member or a role."
 msgstr ""
 
 #: ../../api/abcs.rst 3b20d94d071448afb0cbcba6c02e4d62
-#: 5e160138a0124ebfb2463589a38c520a 60a67e189f30413bb931557ae0d677e5
-#: 66c20e4761ee48f487e2336799758e70 697615a7dc374833a2a4dc54e612d578
-#: a397ed5dee4e403b968a341016bfaff6 ce1db15f4b774f6eb4047d5e0dc10eb7
-#: d0147bebe9a04d399c13c8a22b7256aa d939dcebd14648b9b876851182b079a2
-#: discord.abc.Messageable.history f599952a5df34d498f5b7113811451b4 of
+#: 5e160138a0124ebfb2463589a38c520a 66c20e4761ee48f487e2336799758e70
+#: 697615a7dc374833a2a4dc54e612d578 a397ed5dee4e403b968a341016bfaff6
+#: ce1db15f4b774f6eb4047d5e0dc10eb7 d0147bebe9a04d399c13c8a22b7256aa
+#: d939dcebd14648b9b876851182b079a2 discord.abc.Messageable.history
+#: discord.abc.Messageable.pins f599952a5df34d498f5b7113811451b4 of
 msgid "Parameters"
 msgstr ""
 
@@ -257,12 +257,10 @@ msgstr ""
 msgid "The role or user denoting whose overwrite to get."
 msgstr ""
 
-#: ../../api/abcs.rst 0becae8c7a3343bfa74ee70d0bcf63fa
-#: 1d2679ae9f514304bd3579ef87f81507 2c633fc68b5748e1adfc9ec3aff4f8ed
-#: 65b08451ad3a43d093e03f3f5e7a55c6 66f37f1f6ffc4532b5e7767864a5222b
+#: ../../api/abcs.rst 1d2679ae9f514304bd3579ef87f81507
+#: 2c633fc68b5748e1adfc9ec3aff4f8ed 65b08451ad3a43d093e03f3f5e7a55c6
 #: 8101933b7aca44b491e77ce2b88e718e 8e507fe851d946d5a39bf30a61c1b560
-#: 9a9cab84cf46487ab80637c624490b36 c1807c81320a4c4a9eea27db6d535110
-#: ef49855ea26e49d18e9c5f14cd4d5a2b
+#: c1807c81320a4c4a9eea27db6d535110 ef49855ea26e49d18e9c5f14cd4d5a2b
 msgid "Returns"
 msgstr ""
 
@@ -272,13 +270,12 @@ msgid "The permission overwrites for this object."
 msgstr ""
 
 #: ../../api/abcs.rst 0c2690be6dc44bd99487721b1c473943
-#: 11a136a4062b498a8539ad8c06771df5 1da797b8dd684105852b0c651b5b1369
-#: 37f01e30f738487bbe95997ed7571b62 41f62d98c7404eabaebc4820fa6da3e6
-#: 6012b511381143e9ab71be1e7d0e2ec6 64aa35176668433594fbf6d7bb7a9b57
-#: 65da9d2f771749c6870d5bc0e175f919 6623b7471154462a8a89a38165cebaac
+#: 11a136a4062b498a8539ad8c06771df5 41f62d98c7404eabaebc4820fa6da3e6
+#: 6012b511381143e9ab71be1e7d0e2ec6 6623b7471154462a8a89a38165cebaac
 #: 7bcc922e527d44179d22772f6c16984f ae7e9663432d4aa99ce5152a8849b58b
 #: bfd321f562164c8592b70e22b870cb1b d748e7f595124a2caf29f95f0c884c4e
-#: discord.abc.Messageable.history f458fbadecb448e38f1f3085d9edc8a6 of
+#: discord.abc.Messageable.history discord.abc.Messageable.pins
+#: f458fbadecb448e38f1f3085d9edc8a6 of
 msgid "Return type"
 msgstr ""
 
@@ -409,17 +406,14 @@ msgstr ""
 msgid ":class:`~discord.Permissions`"
 msgstr ""
 
-#: 00f7634217064d6295a6924fadd26f6d 0c2bd17b81764ad9b602a4bcf46e7adb
 #: 53afb5db720048589629b816ddb03782 5516007d80a04f27b710e8e89440c211
 #: 68a664b278c7485c8e45e152218a4c8e 76535a41a98d42889332c5da6b2421a5
 #: 9321611b3f474e18a58779e48164f1d1 c2c158e15aff478c90ebe68ed8119565
-#: db09d175309e4f788bdd7945b1d9f0c6 discord.abc.GuildChannel.clone:1
-#: discord.abc.GuildChannel.create_invite:1 discord.abc.GuildChannel.delete:1
-#: discord.abc.GuildChannel.invites:1 discord.abc.GuildChannel.move:1
-#: discord.abc.GuildChannel.set_permissions:1
-#: discord.abc.Messageable.fetch_message:1 discord.abc.Messageable.pins:1
-#: discord.abc.Messageable.send:1 discord.abc.Messageable.trigger_typing:1
-#: fc11191cacf3443f913a5bd69d919a77 of
+#: discord.abc.GuildChannel.clone:1 discord.abc.GuildChannel.create_invite:1
+#: discord.abc.GuildChannel.delete:1 discord.abc.GuildChannel.invites:1
+#: discord.abc.GuildChannel.move:1 discord.abc.GuildChannel.set_permissions:1
+#: discord.abc.Messageable.fetch_message:1 discord.abc.Messageable.send:1
+#: discord.abc.Messageable.trigger_typing:1 fc11191cacf3443f913a5bd69d919a77 of
 msgid "|coro|"
 msgstr ""
 
@@ -438,11 +432,10 @@ msgid "The reason for deleting this channel. Shows up on the audit log."
 msgstr ""
 
 #: ../../api/abcs.rst 0e8239ac7ddc4e048eb60772728e419d
-#: 31de3a885a3e42c387e130575ac07bf7 5448d7297cf24ec3b2d30012a69f357a
-#: 72d120a0412a4abc8b158e77726150f2 989d13fe26cf462bafcec9e32b983161
+#: 31de3a885a3e42c387e130575ac07bf7 72d120a0412a4abc8b158e77726150f2
 #: bc1f6f8dfabf4e2bbd3ad10f31bd169c c41fe790e3f04807b5d5eea4918ecbda
-#: c4357f7a3367410786087828206f5204 c5942183ac1b422d874ef5456324b188
-#: cb61738138474c3093f076891a253869 discord.abc.Messageable.history
+#: c4357f7a3367410786087828206f5204 cb61738138474c3093f076891a253869
+#: discord.abc.Messageable.history discord.abc.Messageable.pins
 #: f18991acfb0a458899f3d2977c2c26ef of
 msgid "Raises"
 msgstr ""
@@ -510,7 +503,8 @@ msgstr ""
 
 #: 1c3537f7b30748c58ac9d43193c9f927 b3123c1220764f4a8b84f628beded5d3
 #: discord.abc.GuildChannel.set_permissions:25
-#: discord.abc.Messageable.history:39 of
+#: discord.abc.Messageable.history:39 discord.abc.Messageable.pins:26
+#: f599952a5df34d498f5b7113811451b4 of
 msgid "Examples"
 msgstr ""
 
@@ -868,7 +862,8 @@ msgid ""
 "destination's message history."
 msgstr ""
 
-#: db7fe24b56174ba88b9125364a39bcef discord.abc.Messageable.history:3 of
+#: 26f39c2265e84ac1853fb843b86d9989 db7fe24b56174ba88b9125364a39bcef
+#: discord.abc.Messageable.history:3 discord.abc.Messageable.pins:3 of
 msgid ""
 "You must have :attr:`~discord.Permissions.read_message_history` "
 "permissions to use this."
@@ -909,7 +904,8 @@ msgid ""
 "``True`` if ``after`` is specified, otherwise ``False``."
 msgstr ""
 
-#: 330775df4db2489d90277342ad6022c7 discord.abc.Messageable.history of
+#: 04df3129fa844277b44637ef7a7aa9d3 330775df4db2489d90277342ad6022c7
+#: discord.abc.Messageable.history discord.abc.Messageable.pins of
 msgid "Yields"
 msgstr ""
 
@@ -929,15 +925,18 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.HistoryIterator\\``"
 msgstr ""
 
-#: cc41fde924a646b2a66d6e1950f15cde discord.abc.Messageable.history:40 of
+#: cc41fde924a646b2a66d6e1950f15cde ce174e50840e41c6baa1a488719a67d8
+#: discord.abc.Messageable.history:40 discord.abc.Messageable.pins:27 of
 msgid "Usage ::"
 msgstr ""
 
-#: 8fe09bfbadaa4e0d9f16f3d6de860f92 discord.abc.Messageable.history:47 of
+#: 8fe09bfbadaa4e0d9f16f3d6de860f92 b08a62da8cfd45988c75048d2594eeca
+#: discord.abc.Messageable.history:47 discord.abc.Messageable.pins:34 of
 msgid "Flattening into a list: ::"
 msgstr ""
 
-#: 62bb3065f7c048abb84b05680ea83ed7 discord.abc.Messageable.history:52 of
+#: 0e01e3e75df74c6abecda75e54a0c410 62bb3065f7c048abb84b05680ea83ed7
+#: discord.abc.Messageable.history:52 discord.abc.Messageable.pins:39 of
 msgid "All parameters are optional."
 msgstr ""
 
@@ -948,19 +947,21 @@ msgid ""
 msgstr ""
 
 #: 1ce571c393ad4909a237f0df41acf5ac discord.abc.Messageable.typing:3 of
-msgid ""
-"This is useful for denoting long computations in your bot. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgid "This is useful for denoting long computations in your bot."
 msgstr ""
 
-#: 6d2c4668d8fc4cfda30eccbf8458acbf discord.abc.Messageable.typing:9 of
+#: 6d2c4668d8fc4cfda30eccbf8458acbf discord.abc.Messageable.typing:7 of
 msgid ""
 "This is both a regular context manager and an async context manager. This"
 " means that both ``with`` and ``async with`` work with this."
 msgstr ""
 
-#: 05520cdec2f14434a84fe4504e8ae4e3 discord.abc.Messageable.typing:12 of
+#: 05520cdec2f14434a84fe4504e8ae4e3 discord.abc.Messageable.typing:10 of
 msgid "Example Usage: ::"
+msgstr ""
+
+#: 1ce571c393ad4909a237f0df41acf5ac discord.abc.Messageable.typing:19 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 msgstr ""
 
 #: 2d718f3d7f8a4088acdd3329b88a90e8 discord.abc.Messageable.send:3 of
@@ -1057,10 +1058,10 @@ msgstr ""
 
 #: 9309ccd20be043ffa5aee6e61d6082ff discord.abc.Messageable.send:59 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``.  .. versionadded::"
 " 1.6"
@@ -1068,10 +1069,10 @@ msgstr ""
 
 #: b4916e6a8e914fe9b0f1786b0a5b52df discord.abc.Messageable.send:59 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``."
 msgstr ""
@@ -1138,8 +1139,8 @@ msgstr ""
 msgid "The message that was sent."
 msgstr ""
 
-#: 999c449e088140378a9aca3429066337 b2c842a4fe6f435fafe3c2b2a1e47515
-#: discord.abc.Messageable.fetch_message:10 discord.abc.Messageable.send:100 of
+#: 999c449e088140378a9aca3429066337 discord.abc.Messageable.fetch_message:10
+#: discord.abc.Messageable.send:100 of
 msgid ":class:`~discord.Message`"
 msgstr ""
 
@@ -1194,27 +1195,45 @@ msgstr ""
 msgid "Retrieving the message failed."
 msgstr ""
 
-#: 4bbececd17ce4733aa89e7a128cc27cb discord.abc.Messageable.pins:3 of
-msgid "Retrieves all messages that are currently pinned in the channel."
-msgstr ""
-
-#: 19f6cad4e0a748608bac294104790fb3 discord.abc.Messageable.pins:7 of
+#: 10f02bd60fa14430b8038069410fa366 discord.abc.Messageable.pins:1 of
 msgid ""
-"Due to a limitation with the Discord API, the :class:`.Message` objects "
-"returned by this method do not contain complete "
-":attr:`.Message.reactions` data."
+"Returns a :class:`~discord.MessagePinIterator` that enables receiving the"
+" destination's pinned messages."
 msgstr ""
 
-#: 08f13fe21c66434ba1000150fb780040 discord.abc.Messageable.pins:11 of
-msgid "The messages that are currently pinned."
+#: 5d56d46473744e128e5a674e9d3c8dcc discord.abc.Messageable.pins:7 of
+msgid ""
+"Starting from version 3.0, `await channel.pins()` will no longer return a"
+" list of :class:`Message`. See examples below for new usage instead."
 msgstr ""
 
-#: discord.abc.Messageable.pins:12 e2d50204039c4ebbb8cb5794d26a930b of
-msgid "List[:class:`~discord.Message`]"
+#: 0320dba3d13944dfa8a138f76c785d5c discord.abc.Messageable.pins:10 of
+msgid ""
+"The number of pinned messages to retrieve. If ``None``, retrieves every "
+"pinned message in the channel."
 msgstr ""
 
-#: 4cfb764c52fa4d2da0b34a29ae460acb discord.abc.Messageable.pins:14 of
-msgid "Retrieving the pinned messages failed."
+#: b1cdb3aa825f4be2b41cb15211af9758 discord.abc.Messageable.pins:14 of
+msgid ""
+"Retrieve messages pinned before this datetime. If a datetime is provided,"
+" it is recommended to use a UTC aware datetime. If the datetime is naive,"
+" it is assumed to be local time."
+msgstr ""
+
+#: 70f06690476641b4908fe5c58523a0ec discord.abc.Messageable.pins:19 of
+msgid ":class:`~discord.MessagePin` -- The pinned message."
+msgstr ""
+
+#: 4da989d152b844d4aff41f6835dda941 discord.abc.Messageable.pins:21 of
+msgid "You do not have permissions to get pinned messages."
+msgstr ""
+
+#: 4cfb764c52fa4d2da0b34a29ae460acb discord.abc.Messageable.pins:22 of
+msgid "The request to get pinned messages failed."
+msgstr ""
+
+#: 1ce571c393ad4909a237f0df41acf5ac discord.abc.Messageable.pins:23 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MessagePinIterator\\``"
 msgstr ""
 
 #: 97efca508c8545a0a10cee9651abdf07 discord.abc.Messageable.can_send:1 of
@@ -1242,4 +1261,56 @@ msgid ""
 "This ABC is not decorated with :func:`typing.runtime_checkable`, so will "
 "fail :func:`isinstance`/:func:`issubclass` checks."
 msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``.  .. versionadded::"
+#~ " 1.6"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This is useful for denoting long "
+#~ "computations in your bot. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+#~ msgstr ""
+
+#~ msgid "Retrieves all messages that are currently pinned in the channel."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Due to a limitation with the "
+#~ "Discord API, the :class:`.Message` objects "
+#~ "returned by this method do not "
+#~ "contain complete :attr:`.Message.reactions` data."
+#~ msgstr ""
+
+#~ msgid "The messages that are currently pinned."
+#~ msgstr ""
+
+#~ msgid "List[:class:`~discord.Message`]"
+#~ msgstr ""
+
+#~ msgid "Retrieving the pinned messages failed."
+#~ msgstr ""
 

@@ -29,7 +29,13 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
+from .enums import (
+    AuditLogAction,
+    ChannelType,
+    ReactionType,
+    VoiceChannelEffectAnimationType,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -37,8 +43,10 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
+    from .soundboard import PartialSoundboardSound, SoundboardSound
     from .state import ConnectionState
     from .threads import Thread
+    from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.raw_models import (
         AuditLogEntryEvent,
     )
@@ -81,6 +89,7 @@ __all__ = (
     "RawAuditLogEntryEvent",
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
+    "RawSoundboardSoundDeleteEvent",
 )
 
 
@@ -104,7 +113,7 @@ class RawMessageDeleteEvent(_RawReprMixin):
     cached_message: Optional[:class:`Message`]
         The cached message, if found in the internal message cache.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete>`__.
 
         .. versionadded:: 2.5
     """
@@ -136,7 +145,7 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
     cached_messages: List[:class:`Message`]
         The cached messages, if found in the internal message cache.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete-bulk>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-delete-bulk>`__.
 
         .. versionadded:: 2.5
     """
@@ -172,19 +181,25 @@ class RawMessageUpdateEvent(_RawReprMixin):
         .. versionadded:: 1.7
 
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway#message-update>`_
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway#message-update>`__
     cached_message: Optional[:class:`Message`]
         The cached message, if found in the internal message cache. Represents the message before
         it is modified by the data in :attr:`RawMessageUpdateEvent.data`.
+    new_message: :class:`Message`
+        The new message object. Represents the message after it is modified by the data in
+        :attr:`RawMessageUpdateEvent.data`.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = ("message_id", "channel_id", "guild_id", "data", "cached_message")
 
-    def __init__(self, data: MessageUpdateEvent) -> None:
+    def __init__(self, data: MessageUpdateEvent, new_message: Message) -> None:
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.data: MessageUpdateEvent = data
         self.cached_message: Message | None = None
+        self.new_message: Message = new_message
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
@@ -229,7 +244,7 @@ class RawReactionActionEvent(_RawReprMixin):
     type: :class:`ReactionType`
         The type of reaction added.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-add>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-add>`__.
 
         .. versionadded:: 2.5
     """
@@ -282,7 +297,7 @@ class RawReactionClearEvent(_RawReprMixin):
     guild_id: Optional[:class:`int`]
         The guild ID where the reactions got cleared.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all>`__.
 
         .. versionadded:: 2.5
     """
@@ -324,7 +339,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
     type: :class:`ReactionType`
         The type of reaction removed.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji>`__.
 
         .. versionadded:: 2.5
     """
@@ -371,7 +386,7 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     guild_id: :class:`int`
         The guild ID where the integration got deleted.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#integration-delete>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#integration-delete>`__.
 
         .. versionadded:: 2.5
     """
@@ -405,7 +420,7 @@ class RawThreadUpdateEvent(_RawReprMixin):
     parent_id: :class:`int`
         The ID of the channel the thread belongs to.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-update>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-update>`__.
     thread: :class:`discord.Thread` | None
         The thread, if it could be found in the internal cache.
     """
@@ -440,7 +455,7 @@ class RawThreadDeleteEvent(_RawReprMixin):
     thread: Optional[:class:`discord.Thread`]
         The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-delete>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-delete>`__.
 
         .. versionadded:: 2.5
     """
@@ -470,7 +485,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
     status: Optional[:class:`str`]
         The new new voice channel status.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#voice-channel-status-update>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#voice-channel-status-update>`__.
     """
 
     __slots__ = ("id", "guild_id", "status", "data")
@@ -504,7 +519,7 @@ class RawTypingEvent(_RawReprMixin):
     member: Optional[:class:`Member`]
         The member who started typing. Only available if the member started typing in a guild.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#typing-start>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#typing-start>`__.
 
         .. versionadded:: 2.5
     """
@@ -538,7 +553,7 @@ class RawMemberRemoveEvent(_RawReprMixin):
     guild_id: :class:`int`
         The ID of the guild the user left.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-member-remove>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-member-remove>`__.
 
         .. versionadded:: 2.5
     """
@@ -569,7 +584,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
         Can be either ``USER_ADD`` or ``USER_REMOVE`` depending on
         the event called.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-add>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-add>`__.
 
         .. versionadded:: 2.5
     """
@@ -629,7 +644,7 @@ class AutoModActionExecutionEvent:
     matched_content: :class:`str`
         The substring in the content that was matched.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#auto-moderation-action-execution>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#auto-moderation-action-execution>`__.
 
         .. versionadded:: 2.5
     """
@@ -724,7 +739,7 @@ class RawThreadMembersUpdateEvent(_RawReprMixin):
     member_count: :class:`int`
         The approximate number of members in the thread. Maximum of 50.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-members-update>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#thread-members-update>`__.
 
         .. versionadded:: 2.5
     """
@@ -765,7 +780,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         contains extra information. See :class:`AuditLogAction` for
         which actions have this field filled out.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create>`_.
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create>`__.
     """
 
     __slots__ = (
@@ -816,7 +831,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
     added: :class:`bool`
         Whether this vote was added or removed.
     data: :class:`dict`
-        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway#message-poll-vote-add>`
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway#message-poll-vote-add>`__
     """
 
     __slots__ = (
@@ -841,3 +856,17 @@ class RawMessagePollVoteEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+
+class RawSoundboardSoundDeleteEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_soundboard_sound_delete`.
+
+    .. versionadded 2.7
+    """
+
+    __slots__ = ("sound_id", "guild_id", "data")
+
+    def __init__(self, data: PartialSoundboardSound) -> None:
+        self.sound_id: int = int(data["sound_id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.data: PartialSoundboardSound = data

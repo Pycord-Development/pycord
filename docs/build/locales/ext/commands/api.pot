@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -259,6 +259,7 @@ msgstr ""
 #: 6d8c11bb47b2404baadf295e73360b7c
 #: 6d8c11bb47b2404baadf295e73360b7c
 #: 6d8c11bb47b2404baadf295e73360b7c
+#: 6d8c11bb47b2404baadf295e73360b7c
 msgid "type"
 msgstr ""
 
@@ -283,7 +284,8 @@ msgstr ""
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.Group:25
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin:15
 #: ../../../discord/ext/commands/errors.py:docstring of discord.ext.commands.errors.CommandRegistrationError:18
-#: ../../../discord/ext/commands/flags.py:docstring of discord.ext.commands.flags.Flag:48
+#: ../../../discord/ext/commands/flags.py:docstring of discord.ext.commands.flags.Flag:49
+#: ../../../discord/ext/commands/flags.py:docstring of discord.ext.commands.flags.Flag:55
 #: ../../../discord/ext/commands/help.py:docstring of discord.ext.commands.help.DefaultHelpCommand:18
 #: ../../../discord/ext/commands/help.py:docstring of discord.ext.commands.help.HelpCommand:24
 #: ../../../discord/ext/commands/help.py:docstring of discord.ext.commands.help.MinimalHelpCommand:9
@@ -314,6 +316,7 @@ msgstr ""
 #: af2f1296905749558682b61c1f7363ae
 #: af2f1296905749558682b61c1f7363ae
 #: af2f1296905749558682b61c1f7363ae
+#: af2f1296905749558682b61c1f7363ae
 msgid ":class:`bool`"
 msgstr ""
 
@@ -336,6 +339,7 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.entitlements:0
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guilds:0
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.wait_for:0
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:0
 #: ../../ext/commands/api.rst:0
 #: f49495cd4b3f496f96f84ac8aa1f87e4
 #: 2a95458e7d8643c2ba53f80511c7fd97
@@ -379,12 +383,6 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: 3750ee9874a649329aece5d76398dd35
-#: 3750ee9874a649329aece5d76398dd35
-#: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -399,29 +397,13 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -452,8 +434,34 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -481,17 +489,7 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -512,21 +510,15 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: 3750ee9874a649329aece5d76398dd35
-#: 3750ee9874a649329aece5d76398dd35
-#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -539,6 +531,23 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -613,6 +622,7 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.entitlements:0
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guilds:0
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.wait_for:0
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:0
 #: ../../ext/commands/api.rst:0
 #: 630f4288af604d4dbc8e4177a7f21fac
 #: 9deb4f77a61449abb51bd5c6b99a742f
@@ -637,7 +647,6 @@ msgstr ""
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
-#: 65b2a4bfdd9f4cc8b834d6d484ef0034
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
@@ -674,19 +683,21 @@ msgstr ""
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 227204ee62a54c638c2f8b9a91f21145
-#: 227204ee62a54c638c2f8b9a91f21145
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 4518277f66b34d9ea6be92e3704fe30a
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 4518277f66b34d9ea6be92e3704fe30a
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
@@ -754,7 +765,7 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.add_listener:15
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.change_presence:16
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.bot.when_mentioned_or:8
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.before_invoke:11
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.before_invoke:9
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.has_any_role:22
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.has_permissions:21
 #: 587e23d4697f4a4f94f960f265e6d788
@@ -803,25 +814,6 @@ msgstr ""
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 60a9892afb20420f98ee9221fe525e3e
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 21f49b5974d544ffa30d029b89640d48
-#: 21f49b5974d544ffa30d029b89640d48
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
@@ -849,7 +841,28 @@ msgstr ""
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 21f49b5974d544ffa30d029b89640d48
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
@@ -900,6 +913,7 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.entitlements:0
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guilds:0
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.wait_for:0
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:0
 #: ../../ext/commands/api.rst:0
 #: bf756d9820a94075834d33924e09e0e2
 #: c9bc8a557c184c6d9f063626b67cc4cd
@@ -922,189 +936,205 @@ msgstr ""
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
 #: f4e246fdf7f2458baa9253a36a4045e0
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 378dd7f9c2a64e0189299a60058beda8
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: fc5da63fdcca41d5a4742949f05235c9
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: 844194587e244cf2b26a421da5ef2919
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
+#: f4e246fdf7f2458baa9253a36a4045e0
 msgid "Return type"
 msgstr ""
 
@@ -1179,8 +1209,8 @@ msgstr ""
 #: ../../../discord/client.py:docstring of discord.client.Client.listen:8
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.add_listener:11
 #: e21be3ea4d0446efaa81b5acd1c28fdd
-#: 55915adcdcbc4935b1637428f964dfbb
-msgid "The ``name`` (event name) does not start with 'on_'"
+#: e21be3ea4d0446efaa81b5acd1c28fdd
+msgid "The ``name`` (event name) does not start with ``on_``."
 msgstr ""
 
 #: ../../../discord/client.py:docstring of discord.client.Client.listen:29
@@ -1239,6 +1269,8 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.delete_invite:16
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.login:14
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_error:15
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:15
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:17
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.remove_listener:10
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.run:28
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.start:11
@@ -1265,6 +1297,8 @@ msgstr ""
 #: 0017e074dd134426b570354c2504b7db
 #: bb305a7b77fe4ff9a8e70816d97d46ae
 #: 62d9613a1121411c960009687e8cc328
+#: 7d0a457d06344339819fc176a73566c2
+#: 7d0a457d06344339819fc176a73566c2
 #: 7d0a457d06344339819fc176a73566c2
 #: 7d0a457d06344339819fc176a73566c2
 #: 7d0a457d06344339819fc176a73566c2
@@ -1425,7 +1459,7 @@ msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.add_view:1
 #: d05412d810f4441fa9fc55ed14abaccb
-msgid "Registers a :class:`~discord.ui.View` for persistent listening."
+msgid "Registers a :class:`~discord.ui.BaseView` for persistent listening."
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.add_view:3
@@ -1514,10 +1548,10 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.connect:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_dm:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_emoji:1
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.delete_emoji:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.delete_invite:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_channel:1
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_default_sounds:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_emoji:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_emojis:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guild:1
@@ -1534,6 +1568,8 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch_user:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.login:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_error:1
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:1
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.start:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.update_role_connection_metadata_records:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.wait_for:1
@@ -1545,9 +1581,9 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.bot.BotBase.on_command_error:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.bot.BotBase.process_commands:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.fetch_message:1
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.trigger_typing:1
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.invoke:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reinvoke:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:1
@@ -1620,7 +1656,6 @@ msgstr ""
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
@@ -1637,8 +1672,6 @@ msgstr ""
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
@@ -1655,19 +1688,24 @@ msgstr ""
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 25dea9a1072d49a4a52f17e137de72c3
-#: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
@@ -1897,58 +1935,6 @@ msgstr ""
 msgid "The slash command group that was created."
 msgstr ""
 
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:3
-#: 583248c24e104f60a8d7b44b63a93d8b
-msgid "Creates a :class:`.Guild`."
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:5
-#: 480ab82fc12b401f8b75d5ac50648a04
-msgid "Bot accounts in more than 10 guilds are not allowed to create guilds."
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:8
-#: 751a75562aa647628af12ff17756d819
-msgid "The name of the guild."
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:11
-#: 75d40bc85a17414a943100275453e7b5
-msgid "The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit` for more details on what is expected."
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:15
-#: 7ca63a3c7aca436ca90a0d584ad7a2bb
-msgid "The code for a template to create the guild with.  .. versionadded:: 1.4"
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:15
-#: 46ee421067d246aeabd1ba31f8c97032
-msgid "The code for a template to create the guild with."
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:20
-#: 4312ec6459c5431e9821af9fc31fb0d5
-msgid "The guild created. This is not the same guild that is added to cache."
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:22
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guild:26
-#: 97536bb06f8049b5837ac583ff2dce33
-#: 97536bb06f8049b5837ac583ff2dce33
-msgid ":class:`.Guild`"
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:24
-#: fe6c3f12bfb54bee919c57282004f16c
-msgid "Guild creation failed."
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.create_guild:25
-#: 76f88cf22b1d4c1ba41c3a09a320adf1
-msgid "Invalid icon image format given. Must be PNG or JPG."
-msgstr ""
-
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.delete_emoji:3
 #: 39474d78af2f441d818ba1b7ccdeccd0
 msgid "Deletes the custom :class:`AppEmoji` from the application."
@@ -2052,7 +2038,9 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_members:0
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:0
 #: ../../../discord/ext/commands/cog.py:docstring of discord.ext.commands.cog.Cog.walk_commands:0
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:0
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:0
+#: db580d1226264744a222ffee4584ffd4
 #: db580d1226264744a222ffee4584ffd4
 #: db580d1226264744a222ffee4584ffd4
 #: db580d1226264744a222ffee4584ffd4
@@ -2085,8 +2073,10 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.entitlements:40
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guilds:41
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.wait_for:42
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:26
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check:37
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:20
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:14
+#: 3321eb8445bb48ffb68d9cb74a155012
 #: 3321eb8445bb48ffb68d9cb74a155012
 #: 3321eb8445bb48ffb68d9cb74a155012
 #: 3321eb8445bb48ffb68d9cb74a155012
@@ -2099,6 +2089,8 @@ msgstr ""
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:40
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.entitlements:41
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guilds:42
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:27
+#: 9c43804aa1e84f4db26daf70ceda2518
 #: 9c43804aa1e84f4db26daf70ceda2518
 #: 9c43804aa1e84f4db26daf70ceda2518
 #: 9c43804aa1e84f4db26daf70ceda2518
@@ -2115,6 +2107,8 @@ msgstr ""
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:52
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.entitlements:50
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guilds:52
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:39
+#: f3a460b6dbc644f1a519e478316d2ace
 #: f3a460b6dbc644f1a519e478316d2ace
 #: f3a460b6dbc644f1a519e478316d2ace
 #: f3a460b6dbc644f1a519e478316d2ace
@@ -2196,6 +2190,21 @@ msgstr ""
 msgid "You do not have permission to fetch this channel."
 msgstr ""
 
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_default_sounds:3
+#: 97b00444639641fc920ebe9efab0d1ba
+msgid "Fetches the bot's default sounds."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_default_sounds:7
+#: b3004ecd7bfe478c89204898761a7aa8
+msgid "The bot's default sounds."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_default_sounds:8
+#: 9cfe57c2d101467d87400e0d145a2c08
+msgid "List[:class:`.SoundboardSound`]"
+msgstr ""
+
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_emoji:3
 #: 39474d78af2f441d818ba1b7ccdeccd0
 msgid "Retrieves a custom :class:`AppEmoji` from the application."
@@ -2274,6 +2283,11 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guild:25
 #: a3f16751f69144a3b4797e7f1b235a0c
 msgid "The guild from the ID."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guild:26
+#: 97536bb06f8049b5837ac583ff2dce33
+msgid ":class:`.Guild`"
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.fetch_guild:28
@@ -2650,19 +2664,19 @@ msgstr ""
 msgid "This is equivalent to: ::"
 msgstr ""
 
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_channels:8
-#: d1219c96be1d44378e6cc2e7e6537aaa
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ""
-
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_channels:13
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_channels:11
 #: 32d5a41f29ab4eab83ff4181703345a6
 msgid "Just because you receive a :class:`.abc.GuildChannel` does not mean that you can communicate in said channel. :meth:`.abc.GuildChannel.permissions_for` should be used for that."
 msgstr ""
 
-#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_channels:17
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_channels:15
 #: 9860d3eda1264a0c8df1f138ffe0bb12
 msgid ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_channels:18
+#: d1219c96be1d44378e6cc2e7e6537aaa
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_members:1
@@ -2676,7 +2690,7 @@ msgid ":class:`.Member` -- A member the client can see."
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_members:12
-#: 9624b70cfbee4ca3af484bcf68e4e8ab
+#: d1219c96be1d44378e6cc2e7e6537aaa
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
@@ -2990,6 +3004,46 @@ msgstr ""
 msgid "Optional[:class:`.Message`]"
 msgstr ""
 
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:1
+#: 22e7832ebd704130bea132480d8aa977
+msgid "Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:4
+#: 50a668aa170c4373aac97fc0a8a14b8a
+msgid "Type of object to fetch or get."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:7
+#: 155277c1155e4f49977a9365db9f5060
+msgid "ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:10
+#: 94ba1f40a50347beb65c73d6279c02d7
+msgid "A default to return instead of raising if fetch fails."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:13
+#: 302d5d1597f04b16a58937bcc46bebba
+msgid "The object if found, or `default` if provided when not found."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:14
+#: c9a80f36a19a411eae0f947eb27e43ba
+msgid ":class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`"
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:16
+#: e62841d006d34f26940cdf4e4ac28263
+msgid "Raised when required parameters are missing or invalid types are provided."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch:17
+#: c51e0d4fd7674e50a70a703eda6a26f2
+msgid "Raised when an unsupported or incompatible object type is used."
+msgstr ""
+
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch_user:3
 #: 275a6d7b15584cc595412689b620e5d8
 msgid "Looks up a user in the user cache or fetches if not found."
@@ -3079,6 +3133,26 @@ msgstr ""
 msgid "Union[List[:class:`str`], :class:`str`]"
 msgstr ""
 
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_sound:1
+#: d555628fb6a74c5697817061624609d9
+msgid "Gets a :class:`.Sound` from the bot's sound cache."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_sound:6
+#: d9354bca6a4948efb9716c2410e9413a
+msgid "The ID of the sound to get."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_sound:9
+#: 3c43e6dcda3848efb665d49d3cb97ad1
+msgid "The sound with the given ID."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_sound:10
+#: a0421f9c994a4d42b5d1d086df607ef7
+msgid "Optional[:class:`.SoundboardSound`]"
+msgstr ""
+
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_stage_instance:1
 #: 19d360590711420b85975a29897dd4da
 msgid "Returns a stage instance with the given stage channel ID."
@@ -3158,6 +3232,11 @@ msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.is_closed:4
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.is_ready:4
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.is_ws_ratelimited:9
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.Command.has_error_handler:6
+#: f2d2ffb4c5de4294b00e0d6960df1d3d
+#: f2d2ffb4c5de4294b00e0d6960df1d3d
+#: f2d2ffb4c5de4294b00e0d6960df1d3d
 #: f2d2ffb4c5de4294b00e0d6960df1d3d
 #: f2d2ffb4c5de4294b00e0d6960df1d3d
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
@@ -3200,7 +3279,7 @@ msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.is_ws_ratelimited:3
 #: 247b66b1c7ac49109fc876742bb3aa13
-msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.Bot.latency:1
@@ -3425,6 +3504,45 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_error:5
 #: 0109e81b10394bdb842f6887198636a4
 msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:3
+#: 4bd84969508349538a18e4462fc68a75
+msgid "The default modal error handler provided by the client. The default implementation prints the traceback to stderr."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:6
+#: a95fc73d1af4455db17072682a05e1f1
+msgid "This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:9
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:8
+#: 7db908c9bd4146148c671612f1a21c16
+#: 7db908c9bd4146148c671612f1a21c16
+msgid "The exception that was raised."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:12
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:14
+#: 7db908c9bd4146148c671612f1a21c16
+#: 7db908c9bd4146148c671612f1a21c16
+msgid "The interaction that was received."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:3
+#: 62a23463e67743778ff5b5ffda0e1cb5
+msgid "The default view error handler provided by the client."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:5
+#: 5401cf8b6fca4120bce2806abf520d45
+msgid "This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:11
+#: 1538eaf30f75407ab466133776dbc71e
+msgid "The item that the user interacted with."
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.Bot.persistent_views:1
@@ -3762,6 +3880,11 @@ msgstr ""
 msgid "The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed."
 msgstr ""
 
+#: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.Bot.sounds:1
+#: 85e2b097c0464c2983971f8c305ef6db
+msgid "A list of all the sounds the bot can see."
+msgstr ""
+
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.start:3
 #: d76b1fe4d76f4ca69d1a0ade53afc1ce
 msgid "A shorthand coroutine for :meth:`login` + :meth:`connect`."
@@ -4070,26 +4193,34 @@ msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:1
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:1
-#: 9ab1b0a34851422dab23e9815b835095
-#: b2b6b3e05bff41358f8540d591062b2d
-#: a61700d2944e4b7bb85ba47e21e2c0b7
-msgid "An iterator that recursively walks through all commands and subcommands. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#: 1456f4943caa4b34a8e69f60b5a07808
+#: 1456f4943caa4b34a8e69f60b5a07808
+#: 1456f4943caa4b34a8e69f60b5a07808
+msgid "An iterator that recursively walks through all commands and subcommands."
 msgstr ""
 
-#: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:5
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:5
+#: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:3
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:3
 #: 49f59fb863cd4209bd0f1f4182299127
 #: 49f59fb863cd4209bd0f1f4182299127
 #: 49f59fb863cd4209bd0f1f4182299127
 msgid "Duplicates due to aliases are no longer returned"
 msgstr ""
 
-#: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:8
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:8
+#: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:6
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:6
 #: c046361221d6494fa948452872c5775c
 #: c046361221d6494fa948452872c5775c
 #: c046361221d6494fa948452872c5775c
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the internal list of commands."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:9
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:9
+#: 9ab1b0a34851422dab23e9815b835095
+#: 9ab1b0a34851422dab23e9815b835095
+#: 9ab1b0a34851422dab23e9815b835095
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
 #: ../../ext/commands/api.rst:53
@@ -4760,9 +4891,9 @@ msgid ":class:`float`"
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.Command.has_error_handler:1
-#: 3970666bdb78497b8d5a65197482a7bc
-#: 3970666bdb78497b8d5a65197482a7bc
-msgid "Checks whether the command has an error handler registered. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#: 30141c30cc364576aac449f316b52da0
+#: 30141c30cc364576aac449f316b52da0
+msgid "Checks whether the command has an error handler registered."
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.Command.cog_name:1
@@ -5993,27 +6124,35 @@ msgstr ""
 msgid "The predicate to check if the command should be invoked."
 msgstr ""
 
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.after_invoke:9
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.before_invoke:38
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.bot_has_any_role:15
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.bot_has_guild_permissions:8
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.bot_has_permissions:9
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.bot_has_role:15
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check:68
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:21
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:37
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.cooldown:27
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.dm_only:11
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.dynamic_cooldown:29
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.guild_only:9
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.has_any_role:19
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.has_guild_permissions:11
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.has_permissions:18
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.has_role:25
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.is_nsfw:12
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.is_owner:10
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.max_concurrency:24
 #: 9624b70cfbee4ca3af484bcf68e4e8ab
-#: d1219c96be1d44378e6cc2e7e6537aaa
+#: 9624b70cfbee4ca3af484bcf68e4e8ab
 #: 9624b70cfbee4ca3af484bcf68e4e8ab
 #: d1219c96be1d44378e6cc2e7e6537aaa
 #: 9624b70cfbee4ca3af484bcf68e4e8ab
 #: d1219c96be1d44378e6cc2e7e6537aaa
+#: 9624b70cfbee4ca3af484bcf68e4e8ab
+#: 9624b70cfbee4ca3af484bcf68e4e8ab
+#: 9624b70cfbee4ca3af484bcf68e4e8ab
+#: 9624b70cfbee4ca3af484bcf68e4e8ab
 #: 9624b70cfbee4ca3af484bcf68e4e8ab
 #: 9624b70cfbee4ca3af484bcf68e4e8ab
 #: 9624b70cfbee4ca3af484bcf68e4e8ab
@@ -6041,19 +6180,19 @@ msgstr ""
 msgid "The ``predicate`` attribute for this function **is** a coroutine."
 msgstr ""
 
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:14
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:15
+#: e375d514f6dc4418ab45510e055e9919
+msgid "Creating a basic check to see if it's the bot owner or the server owner:"
+msgstr ""
+
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:31
 #: 4a7b81eca1c3484fba8cf44b85ba6fdc
 msgid "An argument list of checks that have been decorated with the :func:`check` decorator."
 msgstr ""
 
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:18
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:35
 #: 0a3c24e60414491ba64d3853fc673029
 msgid "A check passed has not been decorated with the :func:`check`     decorator."
-msgstr ""
-
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.check_any:23
-#: e375d514f6dc4418ab45510e055e9919
-msgid "Creating a basic check to see if it's the bot owner or the server owner:"
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.has_role:1
@@ -6299,12 +6438,12 @@ msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.before_invoke:3
 #: f5e756aa4e554e66a3257a5129c4ef4b
-msgid "This allows you to refer to one before invoke hook for several commands that do not have to be within the same cog. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+msgid "This allows you to refer to one before invoke hook for several commands that do not have to be within the same cog."
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.after_invoke:3
 #: f74267b631a5439eb0c212f5feded4e0
-msgid "This allows you to refer to one after invoke hook for several commands that do not have to be within the same cog. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+msgid "This allows you to refer to one after invoke hook for several commands that do not have to be within the same cog."
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.guild_only:1
@@ -6323,8 +6462,8 @@ msgid "A :func:`.check` that indicates this command must only be used in a DM co
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.dm_only:5
-#: 590b200bb7aa4c1080ac46793bed34f7
-msgid "This check raises a special exception, :exc:`.PrivateMessageOnly` that is inherited from :exc:`.CheckFailure`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+#: 51b7f083cf344183970934ed917e18fc
+msgid "This check raises a special exception, :exc:`.PrivateMessageOnly` that is inherited from :exc:`.CheckFailure`."
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.is_owner:1
@@ -6348,11 +6487,11 @@ msgid "A :func:`.check` that checks if the channel is a NSFW channel."
 msgstr ""
 
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.is_nsfw:3
-#: fba7938014474c98afff1432159e3000
-msgid "This check raises a special exception, :exc:`.NSFWChannelRequired` that is derived from :exc:`.CheckFailure`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
+#: 51b7f083cf344183970934ed917e18fc
+msgid "This check raises a special exception, :exc:`.NSFWChannelRequired` that is derived from :exc:`.CheckFailure`."
 msgstr ""
 
-#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.is_nsfw:10
+#: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.is_nsfw:8
 #: 7588f10840c442aea15f191eac9ae20c
 msgid "Raise :exc:`.NSFWChannelRequired` instead of generic :exc:`.CheckFailure`. DM channels will also now pass this check."
 msgstr ""
@@ -6473,8 +6612,10 @@ msgid "The message that triggered the command being executed."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context:13
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:13
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:9
 #: e1bc43a7b22b49f7bb9f4ba8e292f620
+#: 6c79017c8b06446498c3190155904db2
 #: 6c79017c8b06446498c3190155904db2
 msgid ":class:`.Message`"
 msgstr ""
@@ -6573,6 +6714,8 @@ msgid "Returns an :class:`~discord.AsyncIterator` that enables receiving the des
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:3
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:3
+#: 89afaf721f6643aab53272b5f881dec9
 #: 89afaf721f6643aab53272b5f881dec9
 msgid "You must have :attr:`~discord.Permissions.read_message_history` permissions to use this."
 msgstr ""
@@ -6623,6 +6766,8 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.H
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:47
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:34
+#: 1cad16da9e4a4a039e1c0be9c6789df6
 #: 1cad16da9e4a4a039e1c0be9c6789df6
 msgid "Flattening into a list: ::"
 msgstr ""
@@ -6634,17 +6779,22 @@ msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:3
 #: 186d34907d0f42f0be28a22e9c5d48f6
-msgid "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgid "This is useful for denoting long computations in your bot."
 msgstr ""
 
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:9
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:7
 #: 03c747a982a54571968a3331429f7a20
 msgid "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
 msgstr ""
 
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:12
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:10
 #: a48fc9f9ab9846158116f6d2cd0dee5b
 msgid "Example Usage: ::"
+msgstr ""
+
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:19
+#: 2623771c36a040caab45e6a378ce74e0
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.invoke:3
@@ -6732,22 +6882,22 @@ msgstr ""
 msgid "Returns the cog associated with this context's command. None if it does not exist."
 msgstr ""
 
-#: ../../docstring of discord.ext.commands.Context.guild:1
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.Context.guild:1
 #: 3b3b16de997e4e54877d2d70b173cfe2
 msgid "Returns the guild associated with this context's command. None if not available."
 msgstr ""
 
-#: ../../docstring of discord.ext.commands.Context.channel:1
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.Context.channel:1
 #: 40a2b9fd266f44c69a5de1c7ee7ed5ff
 msgid "Returns the channel associated with this context's command. Shorthand for :attr:`.Message.channel`."
 msgstr ""
 
-#: ../../docstring of discord.ext.commands.Context.author:1
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.Context.author:1
 #: dd56849813db4c7299d6a6f2757ca297
 msgid "Union[:class:`~discord.User`, :class:`.Member`]: Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`"
 msgstr ""
 
-#: ../../docstring of discord.ext.commands.Context.me:1
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.Context.me:1
 #: a3c47787a8d44d61ba8043b2dcfd58ab
 msgid "Union[:class:`.Member`, :class:`.ClientUser`]: Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message message contexts, or when :meth:`Intents.guilds` is absent."
 msgstr ""
@@ -6785,6 +6935,45 @@ msgstr ""
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.send_help:21
 #: 68525271233843f89cac1a272fb172f9
 msgid "The result of the help command, if any."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:3
+#: 666fc58fd984426b9fc3697183d98530
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:99
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:12
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:8
+#: 07908514f89544cd8fadb56e8b84c9ea
+#: 07908514f89544cd8fadb56e8b84c9ea
+#: 07908514f89544cd8fadb56e8b84c9ea
+msgid "The message that was sent."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:102
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:15
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:11
+#: 44cfdba165a2496f86c393e4ff002312
+#: 44cfdba165a2496f86c393e4ff002312
+#: 44cfdba165a2496f86c393e4ff002312
+msgid "Sending the message failed."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:103
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:16
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:12
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4
+msgid "You do not have the proper permissions to send the message."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:17
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:13
+#: dd5c11c9c7f04d8da2c0fcf683585cbd
+#: dd5c11c9c7f04d8da2c0fcf683585cbd
+msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.can_send:1
@@ -6839,60 +7028,54 @@ msgstr ""
 msgid "Retrieving the message failed."
 msgstr ""
 
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:3
-#: c0f7203f91234dcf9b71d4aa08c2743e
-msgid "Retrieves all messages that are currently pinned in the channel."
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:3
+#: 666fc58fd984426b9fc3697183d98530
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to forward the :class:`.Message` to a channel."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:9
+#: 9605ca58dc7540ba809f5b9944de8e93
+msgid "The channel to forward this to."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:1
+#: 61fb3dc224d44b0783c3b04b7fea1ddd
+msgid "Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:7
-#: 5897281b37544f1ab20f5339ce9ab3ed
-msgid "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
+#: 86a19f1a733d47f99e0516c265864f4b
+msgid "Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead."
 msgstr ""
 
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:11
-#: 7bad27e461a740d299b8c4bd148fd4e3
-msgid "The messages that are currently pinned."
-msgstr ""
-
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:12
-#: e8b1b5f758104e489149fdbb07deeafb
-msgid "List[:class:`~discord.Message`]"
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:10
+#: 4468fb7df14b42d6b759894e1d023b0e
+msgid "The number of pinned messages to retrieve. If ``None``, retrieves every pinned message in the channel."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:14
-#: 46fce97e3e2044b9812605b7371e03c5
-msgid "Retrieving the pinned messages failed."
+#: eaf31d1fd11746ff859caaec64b90ca1
+msgid "Retrieve messages pinned before this datetime. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
 msgstr ""
 
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:3
-#: 666fc58fd984426b9fc3697183d98530
-msgid "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:19
+#: 83b8d6805ef1420b87d97e31bc10efdf
+msgid ":class:`~discord.MessagePin` -- The pinned message."
 msgstr ""
 
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:99
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:8
-#: 07908514f89544cd8fadb56e8b84c9ea
-#: 07908514f89544cd8fadb56e8b84c9ea
-msgid "The message that was sent."
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:21
+#: 9510fd4d07914ac0a5d62b96ad673bbc
+msgid "You do not have permissions to get pinned messages."
 msgstr ""
 
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:102
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:11
-#: 44cfdba165a2496f86c393e4ff002312
-#: 44cfdba165a2496f86c393e4ff002312
-msgid "Sending the message failed."
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:22
+#: 4355deb6fa9d4bdfb104c171c05cdabd
+msgid "The request to get pinned messages failed."
 msgstr ""
 
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:103
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:12
-#: 1baacf7f645a4a3e98b1d53ae7e82fa4
-#: 1baacf7f645a4a3e98b1d53ae7e82fa4
-msgid "You do not have the proper permissions to send the message."
-msgstr ""
-
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:13
-#: dd5c11c9c7f04d8da2c0fcf683585cbd
-msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:23
+#: 295caaa8c9a047a1a1ee5c2029093ff0
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MessagePinIterator\\``"
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:3
@@ -6972,12 +7155,12 @@ msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:59
 #: db923c5ea4f34a8ab38cd7fd07aa8f96
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:59
 #: e35ba87b49314f98b33ba3227b02d2e0
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:68
@@ -7861,11 +8044,11 @@ msgid "Converts to a :class:`~discord.PartialEmoji`."
 msgstr ""
 
 #: ../../../discord/ext/commands/converter.py:docstring of discord.ext.commands.converter.PartialEmojiConverter:3
-#: 42c767df989a4c90b5d6b441a08d7df2
-msgid "This is done by extracting the animated flag, name and ID from the emoji."
+#: 4ef3868b27c74590ba7387e6346038b8
+msgid "This is done by extracting the animated flag, name, and ID for custom emojis, or by using the standard Unicode emojis supported by Discord."
 msgstr ""
 
-#: ../../../discord/ext/commands/converter.py:docstring of discord.ext.commands.converter.PartialEmojiConverter:5
+#: ../../../discord/ext/commands/converter.py:docstring of discord.ext.commands.converter.PartialEmojiConverter:6
 #: 07638781992545e39720fcaf86933a79
 msgid "Raise :exc:`.PartialEmojiConversionFailure` instead of generic :exc:`.BadArgument`"
 msgstr ""
@@ -8128,6 +8311,11 @@ msgid "The maximum number of arguments the flag can accept. A negative value ind
 msgstr ""
 
 #: ../../../discord/ext/commands/flags.py:docstring of discord.ext.commands.flags.Flag:46
+#: aa5d5ecaf255426aaca0601daf7232d4
+msgid "Whether the flag is positional. A :class:`FlagConverter` can only handle one positional flag."
+msgstr ""
+
+#: ../../../discord/ext/commands/flags.py:docstring of discord.ext.commands.flags.Flag:53
 #: 9bcc7c0f11ce42f68c9b4e442b1bd117
 msgid "Whether multiple given values overrides the previous value."
 msgstr ""
@@ -8173,6 +8361,11 @@ msgid "Whether multiple given values overrides the previous value. The default v
 msgstr ""
 
 #: ../../../discord/ext/commands/flags.py:docstring of discord.ext.commands.flags.flag:25
+#: ed669b7174e54cdc8ff12f1d228e28a5
+msgid "Whether the flag is positional or not. There can only be one positional flag."
+msgstr ""
+
+#: ../../../discord/ext/commands/flags.py:docstring of discord.ext.commands.flags.flag:28
 #: 739a359756dd4d95bcbb386fc201f629
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 msgstr ""

@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Event Reference"
 msgstr "Event Reference"
@@ -292,33 +292,6 @@ msgstr "This is only for the messages sent from the client WebSocket. The voice 
 
 msgid "The message that is about to be passed on to the WebSocket library. It can be :class:`bytes` to denote a binary message or :class:`str` to denote a regular text message."
 msgstr "The message that is about to be passed on to the WebSocket library. It can be :class:`bytes` to denote a binary message or :class:`str` to denote a regular text message."
-
-msgid "Entitlements"
-msgstr "Entitlements"
-
-msgid "Called when a user subscribes to an SKU."
-msgstr "Called when a user subscribes to an SKU."
-
-msgid "The entitlement that was created as a result of the subscription."
-msgstr "The entitlement that was created as a result of the subscription."
-
-msgid "Called when a user's subscription to an Entitlement is renewed for the next billing period."
-msgstr "Called when a user's subscription to an Entitlement is renewed for the next billing period."
-
-msgid "The entitlement that was updated."
-msgstr "The entitlement that was updated."
-
-msgid "Called when a user's entitlement is deleted."
-msgstr "Called when a user's entitlement is deleted."
-
-msgid "Entitlements are usually only deleted when Discord issues a refund for a subscription, or manually removes an entitlement from a user."
-msgstr "Entitlements are usually only deleted when Discord issues a refund for a subscription, or manually removes an entitlement from a user."
-
-msgid "This is not called when a user's subscription is cancelled."
-msgstr "This is not called when a user's subscription is cancelled."
-
-msgid "The entitlement that was deleted."
-msgstr "The entitlement that was deleted."
 
 msgid "Guilds"
 msgstr "Guilds"
@@ -791,6 +764,60 @@ msgstr "The reaction that got cleared."
 msgid "Called when a message has a specific reaction removed from it. Unlike :func:`on_reaction_clear_emoji` this is called regardless of the state of the internal message cache."
 msgstr "Called when a message has a specific reaction removed from it. Unlike :func:`on_reaction_clear_emoji` this is called regardless of the state of the internal message cache."
 
+msgid "Monetization"
+msgstr "Monetization"
+
+msgid "Called when a user subscribes to an SKU."
+msgstr "Called when a user subscribes to an SKU."
+
+msgid "The entitlement that was created as a result of the subscription."
+msgstr "The entitlement that was created as a result of the subscription."
+
+msgid "Called when a user's subscription to an Entitlement is cancelled."
+msgstr "Called when a user's subscription to an Entitlement is cancelled."
+
+msgid "Before October 1, 2024, this event was called when a user's subscription was renewed."
+msgstr "Before October 1, 2024, this event was called when a user's subscription was renewed."
+
+msgid "Entitlements that no longer follow this behavior will have a type of :attr:`EntitlementType.purchase`. Those that follow the old behavior will have a type of :attr:`EntitlementType.application_subscription`."
+msgstr "Entitlements that no longer follow this behavior will have a type of :attr:`EntitlementType.purchase`. Those that follow the old behavior will have a type of :attr:`EntitlementType.application_subscription`."
+
+msgid "`See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
+msgstr "`See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
+
+msgid "The entitlement that was updated."
+msgstr "The entitlement that was updated."
+
+msgid "Called when a user's entitlement is deleted."
+msgstr "Called when a user's entitlement is deleted."
+
+msgid "Entitlements are usually only deleted when Discord issues a refund for a subscription, or manually removes an entitlement from a user."
+msgstr "Entitlements are usually only deleted when Discord issues a refund for a subscription, or manually removes an entitlement from a user."
+
+msgid "This is not called when a user's subscription is cancelled."
+msgstr "This is not called when a user's subscription is cancelled."
+
+msgid "The entitlement that was deleted."
+msgstr "The entitlement that was deleted."
+
+msgid "Called when a subscription is created for the application."
+msgstr "Called when a subscription is created for the application."
+
+msgid "The subscription that was created."
+msgstr "The subscription that was created."
+
+msgid "Called when a subscription has been updated. This could be a renewal, cancellation, or other payment related update."
+msgstr "Called when a subscription has been updated. This could be a renewal, cancellation, or other payment related update."
+
+msgid "The subscription that was updated."
+msgstr "The subscription that was updated."
+
+msgid "Called when a subscription has been deleted."
+msgstr "Called when a subscription has been deleted."
+
+msgid "The subscription that was deleted."
+msgstr "The subscription that was deleted."
+
 msgid "Scheduled Events"
 msgstr "Scheduled Events"
 
@@ -982,4 +1009,52 @@ msgstr "Called when someone updates a voice channels status."
 
 msgid "The raw voice channel status update payload."
 msgstr "The raw voice channel status update payload."
+
+msgid "Voice Channel Effects"
+msgstr "Voice Channel Effects"
+
+msgid "Called when a voice channel effect is sent."
+msgstr "Called when a voice channel effect is sent."
+
+msgid "The voice channel effect event."
+msgstr "The voice channel effect event."
+
+msgid "Soundboard Sound"
+msgstr "Soundboard Sound"
+
+msgid "Called when multiple guild soundboard sounds are updated at once and they were all already in the cache. This is called, for example, when a guild loses a boost level and some sounds become unavailable."
+msgstr "Called when multiple guild soundboard sounds are updated at once and they were all already in the cache. This is called, for example, when a guild loses a boost level and some sounds become unavailable."
+
+msgid "The soundboard sounds prior to being updated."
+msgstr "The soundboard sounds prior to being updated."
+
+msgid "The soundboard sounds after being updated."
+msgstr "The soundboard sounds after being updated."
+
+msgid "Called when multiple guild soundboard sounds are updated at once. This is called, for example, when a guild loses a boost level and some sounds become unavailable."
+msgstr "Called when multiple guild soundboard sounds are updated at once. This is called, for example, when a guild loses a boost level and some sounds become unavailable."
+
+msgid "Called when a soundboard sound is updated and it was already in the cache."
+msgstr "Called when a soundboard sound is updated and it was already in the cache."
+
+msgid "The soundboard sound prior to being updated."
+msgstr "The soundboard sound prior to being updated."
+
+msgid "The soundboard sound after being updated."
+msgstr "The soundboard sound after being updated."
+
+msgid "Called when a soundboard sound is updated."
+msgstr "Called when a soundboard sound is updated."
+
+msgid "Called when a soundboard sound is deleted."
+msgstr "Called when a soundboard sound is deleted."
+
+msgid "The soundboard sound that was deleted."
+msgstr "The soundboard sound that was deleted."
+
+msgid "Called when a soundboard sound is created."
+msgstr "Called when a soundboard sound is created."
+
+msgid "The soundboard sound that was created."
+msgstr "The soundboard sound that was created."
 

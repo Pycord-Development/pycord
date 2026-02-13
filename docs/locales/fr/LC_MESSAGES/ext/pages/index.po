@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "discord.ext.pages"
 msgstr "discord.ext.pages"
@@ -326,30 +326,6 @@ msgstr "If set, deletes the paginator after the specified time."
 msgid "The message that was sent with the paginator."
 msgstr "The message that was sent with the paginator."
 
-msgid "Adds an item to the view."
-msgstr "Adds an item to the view."
-
-msgid "The item to add to the view."
-msgstr "The item to add to the view."
-
-msgid "Raises"
-msgstr "Raises"
-
-msgid "An :class:`Item` was not passed."
-msgstr "An :class:`Item` was not passed."
-
-msgid "Maximum number of children has been exceeded (25)     or the row the item is trying to be added to is full."
-msgstr "Maximum number of children has been exceeded (25)     or the row the item is trying to be added to is full."
-
-msgid "Removes all items from the view."
-msgstr "Removes all items from the view."
-
-msgid "Disables all items in the view."
-msgstr "Disables all items in the view."
-
-msgid "A list of items in `self.children` to not disable from the view."
-msgstr "A list of items in `self.children` to not disable from the view."
-
 msgid "Edits an existing message to replace it with the paginator contents."
 msgstr "Edits an existing message to replace it with the paginator contents."
 
@@ -371,20 +347,50 @@ msgstr "The message that was edited. Returns ``None`` if the operation failed."
 msgid "Optional[:class:`discord.Message`]"
 msgstr "Optional[:class:`discord.Message`]"
 
-msgid "Enables all items in the view."
-msgstr "Enables all items in the view."
+msgid "Adds an item to the view. Attempting to add a :class:`~discord.ui.ActionRow` will add its children instead."
+msgstr "Adds an item to the view. Attempting to add a :class:`~discord.ui.ActionRow` will add its children instead."
+
+msgid "The item to add to the view."
+msgstr "The item to add to the view."
+
+msgid "Raises"
+msgstr "Raises"
+
+msgid "An :class:`ViewItem` was not passed."
+msgstr "An :class:`ViewItem` was not passed."
+
+msgid "Maximum number of children has been exceeded (25)     or the row the item is trying to be added to is full."
+msgstr "Maximum number of children has been exceeded (25)     or the row the item is trying to be added to is full."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Self\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Self\\``"
+
+msgid "Removes all items from the view."
+msgstr "Removes all items from the view."
+
+msgid "Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."
+msgstr "Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`str\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`str\\``"
+
+msgid "Disables all buttons and select menus in the view."
+msgstr "Disables all buttons and select menus in the view."
+
+msgid "A list of items in `self.children` to not disable from the view."
+msgstr "A list of items in `self.children` to not disable from the view."
+
+msgid "Enables all buttons and select menus in the view."
+msgstr "Enables all buttons and select menus in the view."
 
 msgid "A list of items in `self.children` to not enable from the view."
 msgstr "A list of items in `self.children` to not enable from the view."
 
-msgid "Converts a message's components into a :class:`View`."
-msgstr "Converts a message's components into a :class:`View`."
+msgid "Converts a list of component dicts into a :class:`View`."
+msgstr "Converts a list of component dicts into a :class:`View`."
 
-msgid "The :attr:`.Message.components` of a message are read-only and separate types from those in the ``discord.ui`` namespace. In order to modify and edit message components they must be converted into a :class:`View` first."
-msgstr "The :attr:`.Message.components` of a message are read-only and separate types from those in the ``discord.ui`` namespace. In order to modify and edit message components they must be converted into a :class:`View` first."
-
-msgid "The message with components to convert into a view."
-msgstr "The message with components to convert into a view."
+msgid "The list of components to convert into a view."
+msgstr "The list of components to convert into a view."
 
 msgid "The timeout of the converted view."
 msgstr "The timeout of the converted view."
@@ -395,23 +401,41 @@ msgstr "The converted view. This always returns a :class:`View` and not one of i
 msgid ":class:`View`"
 msgstr ":class:`View`"
 
-msgid "Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`."
-msgstr "Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`."
+msgid "Converts a message's components into a :class:`View`."
+msgstr "Converts a message's components into a :class:`View`."
 
-msgid "The custom_id of the item to get"
-msgstr "The custom_id of the item to get"
+msgid "The :attr:`.Message.components` of a message are read-only and separate types from those in the ``discord.ui`` namespace. In order to modify and edit message components they must be converted into a :class:`View` first."
+msgstr "The :attr:`.Message.components` of a message are read-only and separate types from those in the ``discord.ui`` namespace. In order to modify and edit message components they must be converted into a :class:`View` first."
 
-msgid "The item with the matching ``custom_id`` if it exists."
-msgstr "The item with the matching ``custom_id`` if it exists."
+msgid "The message with components to convert into a view."
+msgstr "The message with components to convert into a view."
+
+msgid "Gets an item from this structure. Roughly equal to `utils.get(self.children, ...)`. If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by  ``custom_id``. This method will also search nested items."
+msgstr "Gets an item from this structure. Roughly equal to `utils.get(self.children, ...)`. If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by  ``custom_id``. This method will also search nested items."
+
+msgid "The id of the item to get"
+msgstr "The id of the item to get"
+
+msgid "The item with the matching ``custom_id`` or ``id`` if it exists."
+msgstr "The item with the matching ``custom_id`` or ``id`` if it exists."
 
 msgid "Optional[:class:`Item`]"
 msgstr "Optional[:class:`Item`]"
 
-msgid "Whether the view has been added for dispatching purposes."
-msgstr "Whether the view has been added for dispatching purposes."
+msgid "Whether the view contains V2 components."
+msgstr "Whether the view contains V2 components."
+
+msgid "A view containing V2 components cannot be sent alongside message content or embeds."
+msgstr "A view containing V2 components cannot be sent alongside message content or embeds."
+
+msgid "This is always ``False`` for :class:`View`."
+msgstr "This is always ``False`` for :class:`View`."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid "Whether the view has been added for dispatching purposes."
+msgstr "Whether the view has been added for dispatching purposes."
 
 msgid "Whether the view has finished interacting."
 msgstr "Whether the view has finished interacting."
@@ -422,8 +446,8 @@ msgstr "Whether the view is set up as persistent."
 msgid "A persistent view has all their components with a set ``custom_id`` and a :attr:`timeout` set to ``None``."
 msgstr "A persistent view has all their components with a set ``custom_id`` and a :attr:`timeout` set to ``None``."
 
-msgid "|coro| A callback that is called when a :meth:`View.interaction_check` returns ``False``. This can be used to send a response when a check failure occurs."
-msgstr "|coro| A callback that is called when a :meth:`View.interaction_check` returns ``False``. This can be used to send a response when a check failure occurs."
+msgid "|coro| A callback that is called when a :meth:`BaseView.interaction_check` returns ``False``. This can be used to send a response when a check failure occurs."
+msgstr "|coro| A callback that is called when a :meth:`BaseView.interaction_check` returns ``False``. This can be used to send a response when a check failure occurs."
 
 msgid "A callback that is called when an item's callback or :meth:`interaction_check` fails with an error."
 msgstr "A callback that is called when an item's callback or :meth:`interaction_check` fails with an error."
@@ -440,26 +464,11 @@ msgstr "The item that failed the dispatch."
 msgid "The interaction that led to the failure."
 msgstr "The interaction that led to the failure."
 
-msgid "Removes an item from the view."
-msgstr "Removes an item from the view."
+msgid "Removes an item from the view. If an :class:`int` or :class:`str` is passed, the item will be removed by Item ``id`` or ``custom_id`` respectively."
+msgstr "Removes an item from the view. If an :class:`int` or :class:`str` is passed, the item will be removed by Item ``id`` or ``custom_id`` respectively."
 
-msgid "The item to remove from the view."
-msgstr "The item to remove from the view."
-
-msgid "Stops listening to interaction events from this view."
-msgstr "Stops listening to interaction events from this view."
-
-msgid "This operation cannot be undone."
-msgstr "This operation cannot be undone."
-
-msgid "Waits until the view has finished interacting."
-msgstr "Waits until the view has finished interacting."
-
-msgid "A view is considered finished when :meth:`stop` is called, or it times out."
-msgstr "A view is considered finished when :meth:`stop` is called, or it times out."
-
-msgid "If ``True``, then the view timed out. If ``False`` then the view finished normally."
-msgstr "If ``True``, then the view timed out. If ``False`` then the view finished normally."
+msgid "The item, item ``id``, or item ``custom_id`` to remove from the view."
+msgstr "The item, item ``id``, or item ``custom_id`` to remove from the view."
 
 msgid "Sends an interaction response or followup with the paginated items."
 msgstr "Sends an interaction response or followup with the paginated items."
@@ -484,6 +493,21 @@ msgstr "The content of the interaction response shown when the paginator message
 
 msgid "The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator."
 msgstr "The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator."
+
+msgid "Stops listening to interaction events from this view."
+msgstr "Stops listening to interaction events from this view."
+
+msgid "This operation cannot be undone."
+msgstr "This operation cannot be undone."
+
+msgid "Waits until the view has finished interacting."
+msgstr "Waits until the view has finished interacting."
+
+msgid "A view is considered finished when :meth:`stop` is called, or it times out."
+msgstr "A view is considered finished when :meth:`stop` is called, or it times out."
+
+msgid "If ``True``, then the view timed out. If ``False`` then the view finished normally."
+msgstr "If ``True``, then the view timed out. If ``False`` then the view finished normally."
 
 msgid "PaginatorButton"
 msgstr "PaginatorButton"
@@ -536,17 +560,26 @@ msgstr "The ID of the button that gets received during an interaction."
 msgid "If this button is for a URL, it does not have a custom ID."
 msgstr "If this button is for a URL, it does not have a custom ID."
 
+msgid "Gets this item's ID."
+msgstr "Gets this item's ID."
+
+msgid "This can be set by the user when constructing an Item. If not, Discord will automatically provide one when the item's parent is sent."
+msgstr "This can be set by the user when constructing an Item. If not, Discord will automatically provide one when the item's parent is sent."
+
+msgid "The ID of this item, or ``None`` if the user didn't set one."
+msgstr "The ID of this item, or ``None`` if the user didn't set one."
+
 msgid "Gets or sets the row position of this item within its parent view."
 msgstr "Gets or sets the row position of this item within its parent view."
 
-msgid "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate that no specific row is set."
-msgstr "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate that no specific row is set."
+msgid "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 39 (inclusive), or ``None`` to indicate that no specific row is set."
+msgstr "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 39 (inclusive), or ``None`` to indicate that no specific row is set."
 
 msgid "The row position of the item, or ``None`` if not explicitly set."
 msgstr "The row position of the item, or ``None`` if not explicitly set."
 
-msgid "If the row value is not ``None`` and is outside the range [0, 4]."
-msgstr "If the row value is not ``None`` and is outside the range [0, 4]."
+msgid "If the row value is not ``None`` and is outside the range [0, 39]."
+msgstr "If the row value is not ``None`` and is outside the range [0, 39]."
 
 msgid "The ID of the SKU this button refers to."
 msgstr "The ID of the SKU this button refers to."
@@ -557,14 +590,14 @@ msgstr "The URL this button sends you to."
 msgid "Gets the parent view associated with this item."
 msgstr "Gets the parent view associated with this item."
 
-msgid "The view refers to the container that holds this item. This is typically set automatically when the item is added to a view."
-msgstr "The view refers to the container that holds this item. This is typically set automatically when the item is added to a view."
+msgid "The view refers to the structure that holds this item. This is typically set automatically when the item is added to a view."
+msgstr "The view refers to the structure that holds this item. This is typically set automatically when the item is added to a view."
 
 msgid "The parent view of this item, or ``None`` if the item is not attached to any view."
 msgstr "The parent view of this item, or ``None`` if the item is not attached to any view."
 
-msgid "Optional[:class:`View`]"
-msgstr "Optional[:class:`View`]"
+msgid "Optional[:class:`BaseView`]"
+msgstr "Optional[:class:`BaseView`]"
 
 msgid "Gets the width of the item in the UI layout."
 msgstr "Gets the width of the item in the UI layout."
@@ -586,6 +619,24 @@ msgstr "The placeholder text that is shown if nothing is selected."
 
 msgid "The paginator class where this menu is being used. Assigned to the menu when ``Paginator.add_menu`` is called."
 msgstr "The paginator class where this menu is being used. Assigned to the menu when ``Paginator.add_menu`` is called."
+
+msgid "Adds a default value to the select menu."
+msgstr "Adds a default value to the select menu."
+
+msgid "To append a pre-existing :class:`discord.SelectDefaultValue` use the :meth:`append_default_value` method instead."
+msgstr "To append a pre-existing :class:`discord.SelectDefaultValue` use the :meth:`append_default_value` method instead."
+
+msgid "The ID of the entity to add as a default."
+msgstr "The ID of the entity to add as a default."
+
+msgid "The default value type of the ID. This is only required if the select ``type`` is :attr:`discord.ComponentType.mentionable_select`."
+msgstr "The default value type of the ID. This is only required if the select ``type`` is :attr:`discord.ComponentType.mentionable_select`."
+
+msgid "The select type is a mentionable_select and type was not provided, or the select     type is string_select."
+msgstr "The select type is a mentionable_select and type was not provided, or the select     type is string_select."
+
+msgid "The number of default select values exceeds 25."
+msgstr "The number of default select values exceeds 25."
 
 msgid "Adds an option to the select menu."
 msgstr "Adds an option to the select menu."
@@ -611,6 +662,63 @@ msgstr "Whether this option is selected by default."
 msgid "The number of options exceeds 25."
 msgstr "The number of options exceeds 25."
 
+msgid "Appends a default value to this select menu."
+msgstr "Appends a default value to this select menu."
+
+msgid "The default value to append to this select.  These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue` instances.  Below, is a table defining the model instance type and the default value type it will be mapped:  +-----------------------------------+--------------------------------------------------------------------------+ | Model Type                        | Default Value Type                                                       | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above | +-----------------------------------+--------------------------------------------------------------------------+  If you pass a model that is not defined in the table, ``TypeError`` will be raised.  .. note::      The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,     :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change     based of the new channel types Discord adds."
+msgstr "The default value to append to this select.  These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue` instances.  Below, is a table defining the model instance type and the default value type it will be mapped:  +-----------------------------------+--------------------------------------------------------------------------+ | Model Type                        | Default Value Type                                                       | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           | +-----------------------------------+--------------------------------------------------------------------------+ | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above | +-----------------------------------+--------------------------------------------------------------------------+  If you pass a model that is not defined in the table, ``TypeError`` will be raised.  .. note::      The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,     :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change     based of the new channel types Discord adds."
+
+msgid "The default value to append to this select."
+msgstr "The default value to append to this select."
+
+msgid "These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue` instances."
+msgstr "These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue` instances."
+
+msgid "Below, is a table defining the model instance type and the default value type it will be mapped:"
+msgstr "Below, is a table defining the model instance type and the default value type it will be mapped:"
+
+msgid "Model Type"
+msgstr "Model Type"
+
+msgid "Default Value Type"
+msgstr "Default Value Type"
+
+msgid ":class:`discord.User`"
+msgstr ":class:`discord.User`"
+
+msgid ":attr:`discord.SelectDefaultValueType.user`"
+msgstr ":attr:`discord.SelectDefaultValueType.user`"
+
+msgid ":class:`discord.Member`"
+msgstr ":class:`discord.Member`"
+
+msgid ":class:`discord.Role`"
+msgstr ":class:`discord.Role`"
+
+msgid ":attr:`discord.SelectDefaultValueType.role`"
+msgstr ":attr:`discord.SelectDefaultValueType.role`"
+
+msgid ":class:`discord.abc.GuildChannel`"
+msgstr ":class:`discord.abc.GuildChannel`"
+
+msgid ":attr:`discord.SelectDefaultValueType.channel`"
+msgstr ":attr:`discord.SelectDefaultValueType.channel`"
+
+msgid ":class:`discord.Object`"
+msgstr ":class:`discord.Object`"
+
+msgid "depending on :attr:`discord.Object.type`, it will be mapped to any above"
+msgstr "depending on :attr:`discord.Object.type`, it will be mapped to any above"
+
+msgid "If you pass a model that is not defined in the table, ``TypeError`` will be raised."
+msgstr "If you pass a model that is not defined in the table, ``TypeError`` will be raised."
+
+msgid "The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`, :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change based of the new channel types Discord adds."
+msgstr "The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`, :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change based of the new channel types Discord adds."
+
+msgid "The select type is string_select, which does not allow for default_values"
+msgstr "The select type is string_select, which does not allow for default_values"
+
 msgid "Appends an option to the select menu."
 msgstr "Appends an option to the select menu."
 
@@ -623,6 +731,9 @@ msgstr "A list of channel types that can be selected in this menu."
 msgid "The ID of the select menu that gets received during an interaction."
 msgstr "The ID of the select menu that gets received during an interaction."
 
+msgid "A list of the select's default values. This is only applicable if the select type is not :attr:`discord.ComponentType.string_select`."
+msgstr "A list of the select's default values. This is only applicable if the select type is not :attr:`discord.ComponentType.string_select`."
+
 msgid "Whether the select is disabled or not."
 msgstr "Whether the select is disabled or not."
 
@@ -632,11 +743,23 @@ msgstr "The maximum number of items that must be chosen for this select menu."
 msgid "The minimum number of items that must be chosen for this select menu."
 msgstr "The minimum number of items that must be chosen for this select menu."
 
+msgid "Gets the parent modal associated with this item. This is typically set automatically when the item is added to a modal."
+msgstr "Gets the parent modal associated with this item. This is typically set automatically when the item is added to a modal."
+
+msgid "The parent modal of this item, or ``None`` if the item is not attached to any modal."
+msgstr "The parent modal of this item, or ``None`` if the item is not attached to any modal."
+
+msgid "Optional[:class:`BaseModal`]"
+msgstr "Optional[:class:`BaseModal`]"
+
 msgid "A list of options that can be selected in this menu."
 msgstr "A list of options that can be selected in this menu."
 
 msgid "The placeholder text that is shown if nothing is selected, if any."
 msgstr "The placeholder text that is shown if nothing is selected, if any."
+
+msgid "Whether the select is required or not. Only applicable in modal selects."
+msgstr "Whether the select is required or not. Only applicable in modal selects."
 
 msgid "List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] | List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None: A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet."
 msgstr "List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] | List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None: A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet."

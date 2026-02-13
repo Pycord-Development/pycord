@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import contextlib
 from typing import List
 
 import discord
@@ -155,9 +156,9 @@ class Page:
         files: list[discord.File] | None = None,
         **kwargs,
     ):
-        if content is None and embeds is None:
+        if content is None and embeds is None and custom_view is None:
             raise discord.InvalidArgument(
-                "A page cannot have both content and embeds equal to None."
+                "A page must at least have content, embeds, or custom_view set."
             )
         self._content = content
         self._embeds = embeds or []
@@ -418,17 +419,20 @@ class Paginator(discord.ui.View):
         self.default_page_group: int = 0
 
         if all(isinstance(pg, PageGroup) for pg in pages):
-            self.page_groups = self.pages if show_menu else None
-            if sum(pg.default is True for pg in self.page_groups) > 1:
+            if sum(pg.default is True for pg in pages) > 1:
                 raise ValueError("Only one PageGroup can be set as the default.")
-            for pg in self.page_groups:
+
+            default_pg_index = 0
+            for pg in pages:
                 if pg.default:
-                    self.default_page_group = self.page_groups.index(pg)
+                    default_pg_index = pages.index(pg)
                     break
+
             self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
+                pages[default_pg_index]
             )
 
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: list = custom_buttons
@@ -530,16 +534,20 @@ class Paginator(discord.ui.View):
         ) = (pages if pages is not None else self.pages)
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
-            self.page_groups = self.pages if self.show_menu else None
-            if sum(pg.default is True for pg in self.page_groups) > 1:
+            if sum(pg.default is True for pg in pages) > 1:
                 raise ValueError("Only one PageGroup can be set as the default.")
-            for pg in self.page_groups:
+
+            default_pg_index = 0
+            for pg in pages:
                 if pg.default:
-                    self.default_page_group = self.page_groups.index(pg)
+                    default_pg_index = pages.index(pg)
                     break
+
             self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
+                pages[default_pg_index]
             )
+
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
@@ -591,16 +599,18 @@ class Paginator(discord.ui.View):
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
         if self.disable_on_timeout:
-            for item in self.children:
-                item.disabled = True
+            for item in self.walk_children():
+                if hasattr(item, "disabled"):
+                    item.disabled = True
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
-            await self.message.edit(
-                view=self,
-                files=files or [],
-                attachments=[],
-            )
+            with contextlib.suppress(discord.NotFound, discord.Forbidden):
+                await self.message.edit(
+                    view=self,
+                    files=files or [],
+                    attachments=[],
+                )
 
     async def disable(
         self,
@@ -617,12 +627,12 @@ class Paginator(discord.ui.View):
             The page content to show after disabling the paginator.
         """
         page = self.get_page_content(page)
-        for item in self.children:
+        for item in self.walk_children():
             if (
                 include_custom
                 or not self.custom_view
                 or item not in self.custom_view.children
-            ):
+            ) and hasattr(item, "disabled"):
                 item.disabled = True
         if page:
             await self.message.edit(
@@ -708,7 +718,9 @@ class Paginator(discord.ui.View):
 
         try:
             if interaction:
-                await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+                await (
+                    interaction.response.defer()
+                )  # needed to force webhook message edit route for files kwarg support
                 await interaction.followup.edit_message(
                     message_id=self.message.id,
                     content=page.content,
@@ -897,7 +909,8 @@ class Paginator(discord.ui.View):
         """Updates the custom view shown on the paginator."""
         if isinstance(self.custom_view, discord.ui.View):
             for item in self.custom_view.children:
-                self.remove_item(item)
+                if item in self.children:
+                    self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
 
@@ -918,6 +931,8 @@ class Paginator(discord.ui.View):
             return Page(content=None, embeds=[page], files=[])
         elif isinstance(page, discord.File):
             return Page(content=None, embeds=[], files=[page])
+        elif isinstance(page, discord.ui.View):
+            return Page(content=None, embeds=[], files=[], custom_view=page)
         elif isinstance(page, List):
             if all(isinstance(x, discord.Embed) for x in page):
                 return Page(content=None, embeds=page, files=[])
@@ -927,7 +942,7 @@ class Paginator(discord.ui.View):
                 raise TypeError("All list items must be embeds or files.")
         else:
             raise TypeError(
-                "Page content must be a Page object, string, an embed, a list of"
+                "Page content must be a Page object, string, an embed, a view, a list of"
                 " embeds, a file, or a list of files."
             )
 

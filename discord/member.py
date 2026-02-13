@@ -39,9 +39,12 @@ from .activity import ActivityTypes, create_activity
 from .asset import Asset
 from .colour import Colour
 from .enums import Status, try_enum
+from .errors import InvalidArgument
 from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
+from .primary_guild import PrimaryGuild
+from .role import RoleColours
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
 
@@ -59,6 +62,7 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .types.activity import PartialPresenceUpdate
+    from .types.member import Member
     from .types.member import Member as MemberPayload
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
@@ -310,6 +314,7 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_color: Colour | None
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
+        primary_guild: PrimaryGuild | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -448,7 +453,8 @@ class Member(discord.abc.Messageable, _UserTag):
     ) -> tuple[User, User] | None:
         self.activities = tuple(map(create_activity, data["activities"]))
         self._client_status = {
-            sys.intern(key): sys.intern(value) for key, value in data.get("client_status", {}).items()  # type: ignore
+            sys.intern(key): sys.intern(value)
+            for key, value in data.get("client_status", {}).items()  # type: ignore
         }
         self._client_status[None] = sys.intern(data["status"])
 
@@ -458,14 +464,30 @@ class Member(discord.abc.Messageable, _UserTag):
 
     def _update_inner_user(self, user: UserPayload) -> tuple[User, User] | None:
         u = self._user
-        original = (u.name, u._avatar, u.discriminator, u.global_name, u._public_flags)
+        original = (
+            u.name,
+            u._avatar,
+            u.discriminator,
+            u.global_name,
+            u._public_flags,
+            u.primary_guild,
+        )
         # These keys seem to always be available
+        if (
+            new_primary_guild_data := user.get("primary_guild")
+        ) and new_primary_guild_data.get("identity_enabled"):
+            new_primary_guild: PrimaryGuild | None = PrimaryGuild(
+                new_primary_guild_data, state=self._state
+            )
+        else:
+            new_primary_guild = None
         modified = (
             user["username"],
             user["avatar"],
             user["discriminator"],
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
+            new_primary_guild,
         )
         if original != modified:
             to_return = User._copy(self._user)
@@ -475,6 +497,7 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.discriminator,
                 u.global_name,
                 u._public_flags,
+                u.primary_guild,
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
@@ -525,11 +548,33 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def colour(self) -> Colour:
-        """A property that returns a colour denoting the rendered colour
+        """A property that returns a colour denoting the rendered primary colour
         for the member. If the default colour is the one rendered then an instance
         of :meth:`Colour.default` is returned.
 
-        There is an alias for this named :attr:`color`.
+        This is an alias for ``Member.colours.primary``.
+        """
+        return self.colours.primary
+
+    @property
+    def color(self) -> Colour:
+        """A property that returns a color denoting the primary rendered color for
+        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
+        is returned.
+
+        This is an alias for ``Member.colours.primary``.
+        """
+        return self.colours.primary
+
+    @property
+    def colours(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for
+        the member. If the default color is the one rendered then an instance of :meth:`RoleColours.default`
+        is returned.
+
+        There is an alias for this named :attr:`colors`.
+
+        .. versionadded:: 2.8
         """
 
         roles = self.roles[1:]  # remove @everyone
@@ -538,19 +583,21 @@ class Member(discord.abc.Messageable, _UserTag):
         # if the highest is the default colour then the next one with a colour
         # is chosen instead
         for role in reversed(roles):
-            if role.colour.value:
-                return role.colour
-        return Colour.default()
+            if role.colours.primary.value:
+                return role.colours
+        return RoleColours.default()
 
     @property
-    def color(self) -> Colour:
-        """A property that returns a color denoting the rendered color for
-        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
-        is returned.
+    def colors(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for the member.
+        If the default color is the one rendered then an instance
+        of :meth:`Colour.default` is returned.
 
-        There is an alias for this named :attr:`colour`.
+        This is an alias for :attr:`colours`.
+
+        .. versionadded:: 2.8
         """
-        return self.colour
+        return self.colours
 
     @property
     def roles(self) -> list[Role]:
@@ -769,6 +816,9 @@ class Member(discord.abc.Messageable, _UserTag):
         reason: str | None = None,
         communication_disabled_until: datetime.datetime | None = MISSING,
         bypass_verification: bool | None = MISSING,
+        banner: bytes | None = MISSING,
+        avatar: bytes | None = MISSING,
+        bio: str | None = MISSING,
     ) -> Member | None:
         """|coro|
 
@@ -803,6 +853,14 @@ class Member(discord.abc.Messageable, _UserTag):
             - Client has :attr:`Permissions.manage_roles`
 
             - Client has ALL THREE of :attr:`Permissions.moderate_members`, :attr:`Permissions.kick_members`, and :attr:`Permissions.ban_members`
+
+        .. note::
+
+            The following parameters are only available when editing the bot's own member:
+
+            - ``avatar``
+            - ``banner``
+            - ``bio``
 
         All parameters are optional.
 
@@ -841,6 +899,26 @@ class Member(discord.abc.Messageable, _UserTag):
             Indicates if the member should bypass the guild's verification requirements.
 
             .. versionadded:: 2.6
+        banner: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the banner.
+            Could be ``None`` to denote removal of the banner.
+
+            This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
+
+            .. versionadded:: 2.7
+        avatar: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the avatar.
+            Could be ``None`` to denote removal of the avatar.
+
+            This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
+
+            .. versionadded:: 2.7
+        bio: Optional[:class:`str`]
+            The new bio for the member. Could be ``None`` to denote removal of the bio.
+
+            This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
+
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -854,16 +932,19 @@ class Member(discord.abc.Messageable, _UserTag):
             You do not have the proper permissions to the action requested.
         HTTPException
             The operation failed.
+        InvalidArgument
+            You tried to edit the avatar, banner, or bio of a member that is not the bot.
         """
         http = self._state.http
         guild_id = self.guild.id
         me = self._state.self_id == self.id
         payload: dict[str, Any] = {}
+        bot_payload: dict[str, Any] = {}
 
         if nick is not MISSING:
             nick = nick or ""
             if me:
-                await http.change_my_nickname(guild_id, nick, reason=reason)
+                bot_payload["nick"] = nick
             else:
                 payload["nick"] = nick
 
@@ -910,9 +991,34 @@ class Member(discord.abc.Messageable, _UserTag):
             flags.bypasses_verification = bypass_verification
             payload["flags"] = flags.value
 
+        if avatar is not MISSING:
+            if avatar is None:
+                bot_payload["avatar"] = None
+            else:
+                bot_payload["avatar"] = utils._bytes_to_base64_data(avatar)
+
+        if banner is not MISSING:
+            if banner is None:
+                bot_payload["banner"] = None
+            else:
+                bot_payload["banner"] = utils._bytes_to_base64_data(banner)
+
+        if bio is not MISSING:
+            bot_payload["bio"] = bio or ""
+
+        if bot_payload and not me:
+            raise InvalidArgument(
+                "Can only edit avatar, banner, or bio for the bot's member."
+            )
+
         if payload:
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
-            return Member(data=data, guild=self.guild, state=self._state)
+        elif bot_payload:
+            data = await http.edit_member(guild_id, "@me", reason=reason, **bot_payload)
+        else:
+            return None
+
+        return Member(data=data, guild=self.guild, state=self._state)
 
     async def timeout(
         self, until: datetime.datetime | None, *, reason: str | None = None

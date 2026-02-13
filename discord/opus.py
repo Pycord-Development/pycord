@@ -323,7 +323,7 @@ def is_loaded() -> bool:
     :class:`bool`
         Indicates if the opus library has been loaded.
     """
-    global _lib
+    global _lib  # noqa: F824
     return _lib is not None
 
 

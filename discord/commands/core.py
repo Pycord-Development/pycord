@@ -50,9 +50,7 @@ from ..enums import Enum as DiscordEnum
 from ..enums import (
     IntegrationType,
     InteractionContextType,
-    MessageType,
     SlashCommandOptionType,
-    try_enum,
 )
 from ..errors import (
     ApplicationCommandError,
@@ -62,7 +60,6 @@ from ..errors import (
     InvalidArgument,
     ValidationError,
 )
-from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
@@ -73,9 +70,9 @@ from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
 if sys.version_info >= (3, 11):
-    from typing import Annotated, get_args, get_origin
+    from typing import Annotated, Literal, get_args, get_origin
 else:
-    from typing_extensions import Annotated, get_args, get_origin
+    from typing_extensions import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -190,7 +187,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping
 
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
@@ -233,7 +230,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "__default_member_permissions__",
             kwargs.get("default_member_permissions", None),
         )
-        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", None))
+        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", False))
 
         integration_types = getattr(
             func, "__integration_types__", kwargs.get("integration_types", None)
@@ -726,6 +723,8 @@ class SlashCommand(ApplicationCommand):
 
     type = 1
 
+    parent: SlashCommandGroup | None
+
     def __new__(cls, *args, **kwargs) -> SlashCommand:
         self = super().__new__(cls)
 
@@ -806,6 +805,27 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
+            option = Option._strip_none_type(option)
+            if self._is_typing_literal(option):
+                literal_values = get_args(option)
+                if not all(isinstance(v, (str, int, float)) for v in literal_values):
+                    raise TypeError(
+                        "Literal values for choices must be str, int, or float."
+                    )
+
+                value_type = type(literal_values[0])
+                if not all(isinstance(v, value_type) for v in literal_values):
+                    raise TypeError(
+                        "All Literal values for choices must be of the same type."
+                    )
+
+                option = Option(
+                    value_type,
+                    choices=[
+                        OptionChoice(name=str(v), value=v) for v in literal_values
+                    ],
+                )
+
             if self._is_typing_annotated(option):
                 type_hint = get_args(option)[0]
                 metadata = option.__metadata__
@@ -864,17 +884,22 @@ class SlashCommand(ApplicationCommand):
         params = self._check_required_params(params)
 
         check_annotations: list[Callable[[Option, type], bool]] = [
-            lambda o, a: o.input_type == SlashCommandOptionType.string
-            and o.converter is not None,  # pass on converters
+            lambda o, a: (
+                o.input_type == SlashCommandOptionType.string
+                and o.converter is not None
+            ),  # pass on converters
             lambda o, a: isinstance(
                 o.input_type, SlashCommandOptionType
             ),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
-            lambda o, a: self._is_typing_optional(a)
-            and not o.required
-            and o._raw_type in a.__args__,  # optional
-            lambda o, a: isinstance(a, type)
-            and issubclass(a, o._raw_type),  # 'normal' types
+            lambda o, a: (
+                self._is_typing_optional(a)
+                and not o.required
+                and o._raw_type in a.__args__
+            ),  # optional
+            lambda o, a: (
+                isinstance(a, type) and issubclass(a, o._raw_type)
+            ),  # 'normal' types
         ]
         for o in options:
             _validate_names(o)
@@ -907,6 +932,9 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _is_typing_literal(self, annotation):
+        return get_origin(annotation) is Literal
 
     def _is_typing_annotated(self, annotation):
         return get_origin(annotation) is Annotated
@@ -1095,13 +1123,13 @@ class SlashCommand(ApplicationCommand):
                 ctx.value = op.get("value")
                 ctx.options = values
 
-                if len(inspect.signature(option.autocomplete).parameters) == 2:
+                if option._autocomplete_is_instance_method:
                     instance = getattr(option.autocomplete, "__self__", ctx.cog)
                     result = option.autocomplete(instance, ctx)
                 else:
                     result = option.autocomplete(ctx)
 
-                if asyncio.iscoroutinefunction(option.autocomplete):
+                if inspect.isawaitable(result):
                     result = await result
 
                 choices = [
@@ -1255,7 +1283,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.default_member_permissions: Permissions | None = kwargs.get(
             "default_member_permissions", None
         )
-        self.nsfw: bool | None = kwargs.get("nsfw", None)
+        self.nsfw: bool | None = kwargs.get("nsfw", False)
 
         integration_types = kwargs.get("integration_types", None)
         contexts = kwargs.get("contexts", None)
@@ -2042,11 +2070,13 @@ def command(**kwargs):
 
 docs = "https://discord.com/developers/docs"
 valid_locales = [
+    "id",
     "da",
     "de",
     "en-GB",
     "en-US",
     "es-ES",
+    "es-419",
     "fr",
     "hr",
     "it",

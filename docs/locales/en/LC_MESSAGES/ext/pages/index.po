@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -52,20 +52,14 @@ msgid ""
 msgstr ""
 
 #: ../../ext/pages/index.rst 001d8bed52f640e6b65faeb5e57cd564
-#: 063bbc6f3e424780b3fca294ca70043c 09ddd6dd6d764f9d8afa0a4291730274
-#: 0e9e89efe9e643c3acc962e0648c89a5 13ad2f1d0c7641d59bec5738903ebd38
-#: 1ed97b7d592d457e91f0607e776a78d6 341e6342cd654d72a002d8bc1bbf025a
-#: 34ba1e0e3f634a529e2461c1c8d10b16 422220e75757468b9e523551808c390d
-#: 4c13c6d74aac47ba8b3ab6fc503d4c08 4ebe1f73ecfe4d27aff3c7e8aca24bfd
-#: 5526f25c16e840daa4ff844390a50843 5a2d03e908f5498ca371e47073d60077
-#: 5d0da1f34118460c8f4eddf4eedb0437 655fc98117b74364b87cb5d49111b23f
+#: 063bbc6f3e424780b3fca294ca70043c 1ed97b7d592d457e91f0607e776a78d6
+#: 341e6342cd654d72a002d8bc1bbf025a 422220e75757468b9e523551808c390d
+#: 5526f25c16e840daa4ff844390a50843 5d0da1f34118460c8f4eddf4eedb0437
 #: 697e50f1545c45f4b9e7370baba6fb36 6a04ca7a36094db29f14c6fe2ce8b176
-#: 6bf63b66304d4c34b3dee842785b34c1 6e0c755cc95c460dacb7bb287f7856fc
-#: 99a76d768ef6423e9a3952a8dec21a78 9a2b6c56e51f47e6b866350220f8c0f6
-#: ac20d3e78ca94a39857c8376d4001b92 beac103455d843ac836e933650a4dd62
-#: c11dd90c56d64c83a8bbac2e2b0f341e c1d3f802b5e54055a23682050656d600
-#: c6df38aa49414da5a6de205f703db624 d5bca9a9f4e3404884791ef3d4aca196
-#: df1997f923f64977a58153c7935dca20 f2a2b2cd04354ce2b4dbcb6e77dd1bd1
+#: 6bf63b66304d4c34b3dee842785b34c1 99a76d768ef6423e9a3952a8dec21a78
+#: 9a2b6c56e51f47e6b866350220f8c0f6 ac20d3e78ca94a39857c8376d4001b92
+#: beac103455d843ac836e933650a4dd62 c11dd90c56d64c83a8bbac2e2b0f341e
+#: c6df38aa49414da5a6de205f703db624 df1997f923f64977a58153c7935dca20
 msgid "Parameters"
 msgstr ""
 
@@ -92,13 +86,12 @@ msgid ""
 msgstr ""
 
 #: 0ac477cf619c420fafdaac5b6a1fbd18 0e2e6db2218f41dc81c2bbdf0354cbe4
-#: 5d024d19341544b2a7a40d0969eef03e b2df49c3af9a4c74bb099b83349ddcfc
 #: cfc9f4305077455fad6922d274bc383d
 #: discord.ext.pages.pagination.Page.callback:1
 #: discord.ext.pages.pagination.Paginator.interaction_check:1
 #: discord.ext.pages.pagination.PaginatorButton.callback:1
 #: discord.ext.pages.pagination.PaginatorMenu.callback:1
-#: discord.ui.view.View.on_error:1 of
+#: discord.ui.view.BaseView.on_error:1 of
 msgid "|coro|"
 msgstr ""
 
@@ -121,22 +114,12 @@ msgid ""
 "times. This is called internally each time the page is sent."
 msgstr ""
 
-#: ../../ext/pages/index.rst 08830e24540a4075a566ce6b6055bf58
-#: 0df6b7d0cf984f17843c219c54453fdd 1562ad6d689b4e78a93104700ab3429f
-#: 1f00671156554ebb8b1e8e178a7e76bb 20aa4fd3a1ba4a329e930300f1bfec70
-#: 248c0373d8944714814082aba337d190 2aef4bef743e42c6b10dc7dc409dddee
-#: 2b3e3b8a6018461984a424487aa9e6ab 371cb60b44484310bd22f6a9197741e9
-#: 38bb18eb66264addb0e210e066903922 3bee1989b47b4a7a82ed576e7684bcfd
-#: 3c10e0bc688f4d958a2089fd1b26e767 44df48e0960e411391d8959fd9d11450
-#: 4cee4928e1df4606b6ef905abbd63533 4d583655849d4c3eae271f096ea6e32a
+#: ../../ext/pages/index.rst 2aef4bef743e42c6b10dc7dc409dddee
+#: 2b3e3b8a6018461984a424487aa9e6ab 4cee4928e1df4606b6ef905abbd63533
 #: 550c48f6c2e1423ba8c77b021dbb3dcd 5f9e2f91dd6f4ddf8aba9945c851a7d0
-#: 627d893b1afb4056a4f521d568d44df1 68cd1cac42dd4ab384b9d993fd5b3d3d
 #: 7fae07446dae40adbe93cfc309708f70 89185399683243b8a8161ef2321fb944
-#: 8b422ca21de24735a81d7c356e107d08 a4fa9795433e414082cd2d9c77c020a0
-#: a97d7cfc0d8547fba1a07c473d6aa220 abda4ea8404f4fd1b6ff60b850d9f36b
 #: aeb2988a559840d3ba83ac47b72253f7 b17d3a717a7c43bfbf6a28db9c9e8847
 #: be696f9851b549dc9e9ac50b6f55f198 d4e5702bc04a4bc4b7641557751fde48
-#: d5396ed79c0a49578511de018e0b2963 dd536d96843d46489e6579cc1bf9d9c0
 #: df303e968a55460b84813fa21867fc46 e5bcc53a42f240c9b5ff34f27d6f0bc4
 msgid "Return type"
 msgstr ""
@@ -298,11 +281,10 @@ msgid "The page group select menu associated with this paginator."
 msgstr ""
 
 #: 0018653201484c08a1efb39a95e5496a 10fc8a4ebd814531a213613eb9c1a227
-#: 25f5deaf82234969896d2ff9af594576 370e4876a6f44d2fb97522e2d6436744
-#: 3bf364dda08e4407b362896b9f58c12d 5ab60fb665a04f979c0831942086c3de
-#: 6463e465ccd0446d997680daed481da6 95024e9505d948148493ddafe8b895de
-#: cf1fd8809876457cad8b65bb8ecdff62 db10884582044f4e9c0b780d876ae769
-#: discord.ext.pages.pagination.Paginator
+#: 370e4876a6f44d2fb97522e2d6436744 3bf364dda08e4407b362896b9f58c12d
+#: 5ab60fb665a04f979c0831942086c3de 6463e465ccd0446d997680daed481da6
+#: 95024e9505d948148493ddafe8b895de cf1fd8809876457cad8b65bb8ecdff62
+#: db10884582044f4e9c0b780d876ae769 discord.ext.pages.pagination.Paginator
 #: discord.ext.pages.pagination.PaginatorButton
 #: discord.ext.pages.pagination.PaginatorMenu of
 msgid "type"
@@ -331,8 +313,9 @@ msgid ""
 ":class:`PageGroup`."
 msgstr ""
 
-#: 06df5cad38f549c581993c96ecea1a0e 6a06163b053143819ff1b3f107885c50
-#: 9427ff2e436a432290830b7a5ed07653 discord.ext.pages.PaginatorButton.row:8
+#: 6a06163b053143819ff1b3f107885c50 9427ff2e436a432290830b7a5ed07653
+#: discord.ext.pages.PaginatorButton.id:6
+#: discord.ext.pages.PaginatorButton.row:8 discord.ext.pages.PaginatorMenu.id:6
 #: discord.ext.pages.PaginatorMenu.row:8
 #: discord.ext.pages.pagination.Paginator:70 of
 msgid "Optional[:class:`int`]"
@@ -430,21 +413,16 @@ msgstr ""
 msgid "Disables all buttons when the view times out."
 msgstr ""
 
-#: 128c5298c9494f91a4b3f649fa6df996 1b99936247fa444d8f760ffecb3bfbeb
 #: 3c63f3adb2364adead3012e035129ebc 68e2cc93f0e6490b8f2f6cee4790cba9
-#: 718868e38cac43a586cfbd4a6305d236 73506917c2ae4d10839ac863f15c0649
-#: 948ff3860b7449e189966372f0999657 a7be2bff8d9e4794b701800978b38389
-#: b6e8b71f2e914b7aa52f4bf5895f9498 c2fbf9bef8224850b4afa5ea4c5afbc2
+#: 718868e38cac43a586cfbd4a6305d236 c2fbf9bef8224850b4afa5ea4c5afbc2
 #: discord.ext.pages.pagination.Paginator.cancel:10
 #: discord.ext.pages.pagination.Paginator.disable:10
 #: discord.ext.pages.pagination.Paginator.on_timeout:4
 #: discord.ext.pages.pagination.Paginator.page_action:7
-#: discord.ui.view.View.add_item:10 discord.ui.view.View.clear_items:4
-#: discord.ui.view.View.disable_all_items:7
-#: discord.ui.view.View.enable_all_items:7
-#: discord.ui.view.View.on_check_failure:9 discord.ui.view.View.on_error:18
-#: discord.ui.view.View.remove_item:7 discord.ui.view.View.stop:6
-#: e63b8fb4db3b4bee81d67b79af441412 e7e7b98e6e7b4408b492675432ece6e4 of
+#: discord.ui.view.BaseView.on_check_failure:9
+#: discord.ui.view.BaseView.on_error:18 discord.ui.view.BaseView.stop:6
+#: discord.ui.view.View.clear_items:4 discord.ui.view.View.remove_item:8
+#: e63b8fb4db3b4bee81d67b79af441412 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
@@ -513,12 +491,7 @@ msgstr ""
 
 #: ../../ext/pages/index.rst 071b3f2f83194ecb863f34a81f2b7318
 #: 23d2d513e75249be834c3da0e3806faf 433ab35ccdc34f8a8721f26b0e699f02
-#: 43940aed299244c5a538ec120a016f76 5b58697a956a4cf4a58ce5a800e4deb1
-#: 60cad8cd26d448e497604cad7a23855a 6560da2073c3421896857e7282cf3722
-#: 7194b0de3a6c48f09395740786c65dfe 7b9083154e6b470aa6f83a1a46968cd9
-#: 9d3a83013ff043eda39a19a8533e2db2 afe45ade9581404fbe8fb11422546746
-#: b76f2a1bbef34d9e922ff8ccd944e554 d335e1267ee54dccb7ce08d2f96e082d
-#: e982cc1b46af41aca5a4ade870cbb45b ee4568b124ed45489d0ca2389831f6b6
+#: 60cad8cd26d448e497604cad7a23855a 9d3a83013ff043eda39a19a8533e2db2
 msgid "Returns"
 msgstr ""
 
@@ -567,7 +540,7 @@ msgstr ""
 
 #: 616d5c00eb544301af1b0d00548c865e 62c2722e6b6a40fd8c8a215d7cb11a21
 #: discord.ext.pages.pagination.Paginator.interaction_check:19
-#: discord.ui.view.View.on_check_failure:6 of
+#: discord.ui.view.BaseView.on_check_failure:6 of
 msgid "The interaction that occurred."
 msgstr ""
 
@@ -578,7 +551,7 @@ msgstr ""
 
 #: 607f9270f774451e96d48d6a223876de c5464d8a113b4293be79478ba33f200d
 #: discord.ext.pages.pagination.Paginator.interaction_check:23
-#: discord.ui.view.View.wait:8 of
+#: discord.ui.view.BaseView.wait:8 of
 msgid ":class:`bool`"
 msgstr ""
 
@@ -721,41 +694,6 @@ msgstr ""
 msgid "The message that was sent with the paginator."
 msgstr ""
 
-#: 0d286971aaf84f359ea3f2b868341679 discord.ui.view.View.add_item:1 of
-msgid "Adds an item to the view."
-msgstr ""
-
-#: b596145e148445798536949956fec5b6 discord.ui.view.View.add_item:4 of
-msgid "The item to add to the view."
-msgstr ""
-
-#: ../../ext/pages/index.rst b67cd9be980a4fdf8e179a3825ce7070
-#: db25be38ef7749eab275cfcf7ce4fb30
-msgid "Raises"
-msgstr ""
-
-#: 799eb95c1d8f40df9edcf9e5b694789e discord.ui.view.View.add_item:7 of
-msgid "An :class:`Item` was not passed."
-msgstr ""
-
-#: discord.ui.view.View.add_item:8 e69d7b97a3c8409c8efd81ad1626f25d of
-msgid ""
-"Maximum number of children has been exceeded (25)     or the row the item"
-" is trying to be added to is full."
-msgstr ""
-
-#: discord.ui.view.View.clear_items:1 f7b8e5d7c4304348abcbfbc505545cf3 of
-msgid "Removes all items from the view."
-msgstr ""
-
-#: 1a4ac6f032f5427aab3f14952bb0a9ae discord.ui.view.View.disable_all_items:1 of
-msgid "Disables all items in the view."
-msgstr ""
-
-#: 115ed036dbed4b93bf59511d61482bc4 discord.ui.view.View.disable_all_items:4 of
-msgid "A list of items in `self.children` to not disable from the view."
-msgstr ""
-
 #: db376aa4460347ecaa0cc6a71294ed64
 #: discord.ext.pages.pagination.Paginator.edit:1 of
 msgid "Edits an existing message to replace it with the paginator contents."
@@ -797,12 +735,98 @@ msgstr ""
 msgid "Optional[:class:`discord.Message`]"
 msgstr ""
 
-#: 5529aa1751fe48a1aac3071120fe5b99 discord.ui.view.View.enable_all_items:1 of
-msgid "Enables all items in the view."
+#: c44c763d02724a4fab350d705fd9a2a3 discord.ui.view.View.add_item:1 of
+msgid ""
+"Adds an item to the view. Attempting to add a "
+":class:`~discord.ui.ActionRow` will add its children instead."
 msgstr ""
 
-#: b115fab8e9f441ae97058262b47e4eeb discord.ui.view.View.enable_all_items:4 of
+#: b596145e148445798536949956fec5b6 discord.ui.view.View.add_item:4 of
+msgid "The item to add to the view."
+msgstr ""
+
+#: ../../ext/pages/index.rst db25be38ef7749eab275cfcf7ce4fb30
+msgid "Raises"
+msgstr ""
+
+#: 799eb95c1d8f40df9edcf9e5b694789e discord.ui.view.View.add_item:7 of
+msgid "An :class:`ViewItem` was not passed."
+msgstr ""
+
+#: discord.ui.view.View.add_item:8 e69d7b97a3c8409c8efd81ad1626f25d of
+msgid ""
+"Maximum number of children has been exceeded (25)     or the row the item"
+" is trying to be added to is full."
+msgstr ""
+
+#: 47016b19dd1741b1a063b2f5068dd3ec
+#: discord.ui.select.Select.add_default_value:19
+#: discord.ui.select.Select.add_option:28
+#: discord.ui.select.Select.append_default_value:39
+#: discord.ui.select.Select.append_option:9
+#: discord.ui.view.BaseView.disable_all_items:7
+#: discord.ui.view.BaseView.enable_all_items:7 discord.ui.view.View.add_item:10
+#: of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Self\\``"
+msgstr ""
+
+#: discord.ui.view.View.clear_items:1 f7b8e5d7c4304348abcbfbc505545cf3 of
+msgid "Removes all items from the view."
+msgstr ""
+
+#: 4ea1206a52154d8a98623bbc44bf5b10 discord.ui.view.BaseView.copy_text:1 of
+msgid ""
+"Returns the text of all :class:`~discord.ui.TextDisplay` items in this "
+"View. Equivalent to the `Copy Text` option on Discord clients."
+msgstr ""
+
+#: 47016b19dd1741b1a063b2f5068dd3ec discord.ui.view.BaseView.copy_text:5 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`str\\``"
+msgstr ""
+
+#: discord.ui.view.BaseView.disable_all_items:1
+#: f55070f9c63b4f438d22e271d923e292 of
+msgid "Disables all buttons and select menus in the view."
+msgstr ""
+
+#: 115ed036dbed4b93bf59511d61482bc4
+#: discord.ui.view.BaseView.disable_all_items:4 of
+msgid "A list of items in `self.children` to not disable from the view."
+msgstr ""
+
+#: discord.ui.view.BaseView.enable_all_items:1 f55070f9c63b4f438d22e271d923e292
+#: of
+msgid "Enables all buttons and select menus in the view."
+msgstr ""
+
+#: b115fab8e9f441ae97058262b47e4eeb discord.ui.view.BaseView.enable_all_items:4
+#: of
 msgid "A list of items in `self.children` to not enable from the view."
+msgstr ""
+
+#: discord.ui.view.View.from_dict:1 fb9fe3622ae9490eba53b40685382759 of
+msgid "Converts a list of component dicts into a :class:`View`."
+msgstr ""
+
+#: 5e13e4d3661642fd8e02726cc001660a discord.ui.view.View.from_dict:4 of
+msgid "The list of components to convert into a view."
+msgstr ""
+
+#: 1830d4b99a8e451d8fc931733f8bfd68 discord.ui.view.View.from_dict:7
+#: discord.ui.view.View.from_message:12 of
+msgid "The timeout of the converted view."
+msgstr ""
+
+#: 9bc9774d4bd74c418de1d9b36c3c5c8a discord.ui.view.View.from_dict:10
+#: discord.ui.view.View.from_message:15 of
+msgid ""
+"The converted view. This always returns a :class:`View` and not one of "
+"its subclasses."
+msgstr ""
+
+#: 086f552dd0d342c290385bf3bdf985ab discord.ui.view.View.from_dict:12
+#: discord.ui.view.View.from_message:17 of
+msgid ":class:`View`"
 msgstr ""
 
 #: discord.ui.view.View.from_message:1 fb9fe3622ae9490eba53b40685382759 of
@@ -821,121 +845,106 @@ msgstr ""
 msgid "The message with components to convert into a view."
 msgstr ""
 
-#: 1830d4b99a8e451d8fc931733f8bfd68 discord.ui.view.View.from_message:12 of
-msgid "The timeout of the converted view."
-msgstr ""
-
-#: 9bc9774d4bd74c418de1d9b36c3c5c8a discord.ui.view.View.from_message:15 of
+#: 0edf0b73952c4797b9000ba28a6a0d73 discord.ui.core.ItemInterface.get_item:1 of
 msgid ""
-"The converted view. This always returns a :class:`View` and not one of "
-"its subclasses."
+"Gets an item from this structure. Roughly equal to "
+"`utils.get(self.children, ...)`. If an :class:`int` is provided, the item"
+" will be retrieved by ``id``, otherwise by  ``custom_id``. This method "
+"will also search nested items."
 msgstr ""
 
-#: 086f552dd0d342c290385bf3bdf985ab discord.ui.view.View.from_message:17 of
-msgid ":class:`View`"
+#: 39c8c0f1510244288c5734268ff2ecfc discord.ui.core.ItemInterface.get_item:6 of
+msgid "The id of the item to get"
 msgstr ""
 
-#: b2a30fc2dab449648d3ccac33a6713a4 discord.ui.view.View.get_item:1 of
-msgid ""
-"Get an item from the view with the given custom ID. Alias for "
-"`utils.get(view.children, custom_id=custom_id)`."
+#: d3278dd56b5e4104b98070ea85764693 discord.ui.core.ItemInterface.get_item:9 of
+msgid "The item with the matching ``custom_id`` or ``id`` if it exists."
 msgstr ""
 
-#: 39c8c0f1510244288c5734268ff2ecfc discord.ui.view.View.get_item:4 of
-msgid "The custom_id of the item to get"
-msgstr ""
-
-#: d3278dd56b5e4104b98070ea85764693 discord.ui.view.View.get_item:7 of
-msgid "The item with the matching ``custom_id`` if it exists."
-msgstr ""
-
-#: 49f9aab462e146199bb0ad2eb8987e74 discord.ui.view.View.get_item:8 of
+#: 49f9aab462e146199bb0ad2eb8987e74 discord.ui.core.ItemInterface.get_item:10
+#: of
 msgid "Optional[:class:`Item`]"
 msgstr ""
 
-#: 1d7e2b0e1c18422c9227cbe351a94a36 discord.ui.view.View.is_dispatching:1 of
-msgid "Whether the view has been added for dispatching purposes."
+#: 8fcb089aef584d57b8d0165e8a22048e discord.ui.view.View.is_components_v2:1 of
+msgid "Whether the view contains V2 components."
 msgstr ""
 
-#: 47016b19dd1741b1a063b2f5068dd3ec 7ebc8aa9eb5a4749b302688f0898a9bc
-#: discord.ui.view.View.is_dispatching:4 discord.ui.view.View.is_finished:4
-#: discord.ui.view.View.is_persistent:7 e528916f3a854bc58c88136808c5e02c of
+#: 7f50de30b8c64c9fa3ff21e4563bd2d9 discord.ui.view.View.is_components_v2:3 of
+msgid ""
+"A view containing V2 components cannot be sent alongside message content "
+"or embeds."
+msgstr ""
+
+#: 99b7c3ecb2f24918be68416ab087508b discord.ui.view.View.is_components_v2:5 of
+msgid "This is always ``False`` for :class:`View`."
+msgstr ""
+
+#: 47016b19dd1741b1a063b2f5068dd3ec discord.ui.view.BaseView.is_dispatching:4
+#: discord.ui.view.BaseView.is_finished:4
+#: discord.ui.view.BaseView.is_persistent:7
+#: discord.ui.view.View.is_components_v2:8 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: 37860b521c8143f3833fb4beb0a1a2ea discord.ui.view.View.is_finished:1 of
+#: 1d7e2b0e1c18422c9227cbe351a94a36 discord.ui.view.BaseView.is_dispatching:1
+#: of
+msgid "Whether the view has been added for dispatching purposes."
+msgstr ""
+
+#: 37860b521c8143f3833fb4beb0a1a2ea discord.ui.view.BaseView.is_finished:1 of
 msgid "Whether the view has finished interacting."
 msgstr ""
 
-#: 8fcb089aef584d57b8d0165e8a22048e discord.ui.view.View.is_persistent:1 of
+#: 8fcb089aef584d57b8d0165e8a22048e discord.ui.view.BaseView.is_persistent:1 of
 msgid "Whether the view is set up as persistent."
 msgstr ""
 
-#: b1fe671c39f5430baade51f464b8eaf2 discord.ui.view.View.is_persistent:3 of
+#: b1fe671c39f5430baade51f464b8eaf2 discord.ui.view.BaseView.is_persistent:3 of
 msgid ""
 "A persistent view has all their components with a set ``custom_id`` and a"
 " :attr:`timeout` set to ``None``."
 msgstr ""
 
-#: 26ea98091eed4b37a02e4fb299ce6413 discord.ui.view.View.on_check_failure:1 of
+#: 26ea98091eed4b37a02e4fb299ce6413 discord.ui.view.BaseView.on_check_failure:1
+#: of
 msgid ""
-"|coro| A callback that is called when a :meth:`View.interaction_check` "
-"returns ``False``. This can be used to send a response when a check "
-"failure occurs."
+"|coro| A callback that is called when a "
+":meth:`BaseView.interaction_check` returns ``False``. This can be used to"
+" send a response when a check failure occurs."
 msgstr ""
 
-#: de6e9c49e57d45b2a3a59296cd5da7c8 discord.ui.view.View.on_error:3 of
+#: de6e9c49e57d45b2a3a59296cd5da7c8 discord.ui.view.BaseView.on_error:3 of
 msgid ""
 "A callback that is called when an item's callback or "
 ":meth:`interaction_check` fails with an error."
 msgstr ""
 
-#: bf46d9fcc45d4f1b885a743615cbd049 discord.ui.view.View.on_error:6 of
+#: bf46d9fcc45d4f1b885a743615cbd049 discord.ui.view.BaseView.on_error:6 of
 msgid "The default implementation prints the traceback to stderr."
 msgstr ""
 
-#: 955a74f46d014b4db4a84da5f9e43c02 discord.ui.view.View.on_error:9 of
+#: 955a74f46d014b4db4a84da5f9e43c02 discord.ui.view.BaseView.on_error:9 of
 msgid "The exception that was raised."
 msgstr ""
 
-#: discord.ui.view.View.on_error:12 f882a5d3e3cb47b1bcf9d7c720cf97d7 of
+#: discord.ui.view.BaseView.on_error:12 f882a5d3e3cb47b1bcf9d7c720cf97d7 of
 msgid "The item that failed the dispatch."
 msgstr ""
 
-#: 0eaa94893f944a62a87305a25f22ee07 discord.ui.view.View.on_error:15 of
+#: 0eaa94893f944a62a87305a25f22ee07 discord.ui.view.BaseView.on_error:15 of
 msgid "The interaction that led to the failure."
 msgstr ""
 
-#: cb2bb9fa0f2d4adf8ae284983f41b8eb discord.ui.view.View.remove_item:1 of
-msgid "Removes an item from the view."
-msgstr ""
-
-#: 13af2b65c7a6448b89c506d4b733b44a discord.ui.view.View.remove_item:4 of
-msgid "The item to remove from the view."
-msgstr ""
-
-#: cd3fd1e5c76042c8896020ad68e3d6ed discord.ui.view.View.stop:1 of
-msgid "Stops listening to interaction events from this view."
-msgstr ""
-
-#: da2a7c40b68548eea51cd5f66cd11ea1 discord.ui.view.View.stop:3 of
-msgid "This operation cannot be undone."
-msgstr ""
-
-#: a7fd726fe8824da08c1ef4726cb85e56 discord.ui.view.View.wait:1 of
-msgid "Waits until the view has finished interacting."
-msgstr ""
-
-#: 2c6c8756f7ad4b758c243288a6f448be discord.ui.view.View.wait:3 of
+#: 9a689abf00984f59a28e68742549c79f discord.ui.view.View.remove_item:1 of
 msgid ""
-"A view is considered finished when :meth:`stop` is called, or it times "
-"out."
+"Removes an item from the view. If an :class:`int` or :class:`str` is "
+"passed, the item will be removed by Item ``id`` or ``custom_id`` "
+"respectively."
 msgstr ""
 
-#: 3c69a4b00f914f128f11aa2b8240d061 discord.ui.view.View.wait:6 of
-msgid ""
-"If ``True``, then the view timed out. If ``False`` then the view finished"
-" normally."
+#: 7a8937a2dbb54965a590f68e98627806 discord.ui.view.View.remove_item:5 of
+msgid "The item, item ``id``, or item ``custom_id`` to remove from the view."
 msgstr ""
 
 #: 5a13e5a534e2484180375a59f828dadf
@@ -996,6 +1005,30 @@ msgid ""
 "was sent with the paginator."
 msgstr ""
 
+#: cd3fd1e5c76042c8896020ad68e3d6ed discord.ui.view.BaseView.stop:1 of
+msgid "Stops listening to interaction events from this view."
+msgstr ""
+
+#: da2a7c40b68548eea51cd5f66cd11ea1 discord.ui.view.BaseView.stop:3 of
+msgid "This operation cannot be undone."
+msgstr ""
+
+#: a7fd726fe8824da08c1ef4726cb85e56 discord.ui.view.BaseView.wait:1 of
+msgid "Waits until the view has finished interacting."
+msgstr ""
+
+#: 2c6c8756f7ad4b758c243288a6f448be discord.ui.view.BaseView.wait:3 of
+msgid ""
+"A view is considered finished when :meth:`stop` is called, or it times "
+"out."
+msgstr ""
+
+#: 3c69a4b00f914f128f11aa2b8240d061 discord.ui.view.BaseView.wait:6 of
+msgid ""
+"If ``True``, then the view timed out. If ``False`` then the view finished"
+" normally."
+msgstr ""
+
 #: ../../ext/pages/index.rst:312 20630bd0e40b4eeaa17398c49bc9c715
 msgid "PaginatorButton"
 msgstr ""
@@ -1045,8 +1078,7 @@ msgstr ""
 
 #: 65b16c206cc54c01a115ae6dd829d2c1
 #: discord.ext.pages.pagination.PaginatorButton:26
-#: discord.ext.pages.pagination.PaginatorMenu:12
-#: f24f43ef85fc4fa49db3873d9f486199 of
+#: discord.ext.pages.pagination.PaginatorMenu:12 of
 msgid ":class:`Paginator`"
 msgstr ""
 
@@ -1090,30 +1122,44 @@ msgstr ""
 msgid "If this button is for a URL, it does not have a custom ID."
 msgstr ""
 
-#: 1baa1d66ae084e69b552dda00eeb3809 dd9f54893efb4676bdf90fd27986561d
-#: discord.ext.pages.PaginatorButton.row:1
+#: dda9b3885e0a4250979ffbca77e592f9 discord.ext.pages.PaginatorButton.id:1
+#: discord.ext.pages.PaginatorMenu.id:1 of
+msgid "Gets this item's ID."
+msgstr ""
+
+#: 3a44bc197ba140eab665419a5cc8a9bf discord.ext.pages.PaginatorButton.id:3
+#: discord.ext.pages.PaginatorMenu.id:3 of
+msgid ""
+"This can be set by the user when constructing an Item. If not, Discord "
+"will automatically provide one when the item's parent is sent."
+msgstr ""
+
+#: 7a8937a2dbb54965a590f68e98627806 discord.ext.pages.PaginatorButton.id:5
+#: discord.ext.pages.PaginatorMenu.id:5 of
+msgid "The ID of this item, or ``None`` if the user didn't set one."
+msgstr ""
+
+#: dd9f54893efb4676bdf90fd27986561d discord.ext.pages.PaginatorButton.row:1
 #: discord.ext.pages.PaginatorMenu.row:1 of
 msgid "Gets or sets the row position of this item within its parent view."
 msgstr ""
 
 #: ddd63fd900d9470383dfa2a87694928d discord.ext.pages.PaginatorButton.row:3
-#: discord.ext.pages.PaginatorMenu.row:3 e678ad7b20054d43ad687a9f33dccb3e of
+#: discord.ext.pages.PaginatorMenu.row:3 of
 msgid ""
 "The row position determines the vertical placement of the item in the UI."
-" The value must be an integer between 0 and 4 (inclusive), or ``None`` to"
-" indicate that no specific row is set."
+" The value must be an integer between 0 and 39 (inclusive), or ``None`` "
+"to indicate that no specific row is set."
 msgstr ""
 
-#: 23221f1b8cac42baa39792993a1eb4f3 5aa856fc9a7841bc99debf8c3eeef373
-#: discord.ext.pages.PaginatorButton.row:7
+#: 23221f1b8cac42baa39792993a1eb4f3 discord.ext.pages.PaginatorButton.row:7
 #: discord.ext.pages.PaginatorMenu.row:7 of
 msgid "The row position of the item, or ``None`` if not explicitly set."
 msgstr ""
 
-#: 9a2e9db42440405ea8f8faf1bc3241cf ddbceb2510a84338bc7582315e3cd972
-#: discord.ext.pages.PaginatorButton.row:10
+#: ddbceb2510a84338bc7582315e3cd972 discord.ext.pages.PaginatorButton.row:10
 #: discord.ext.pages.PaginatorMenu.row:10 of
-msgid "If the row value is not ``None`` and is outside the range [0, 4]."
+msgid "If the row value is not ``None`` and is outside the range [0, 39]."
 msgstr ""
 
 #: c87c8240e5dd4ff69d19866fc6522c5f discord.ext.pages.PaginatorButton.sku_id:1
@@ -1125,31 +1171,28 @@ msgstr ""
 msgid "The URL this button sends you to."
 msgstr ""
 
-#: 0691648cd462495ba6b66f420fefb0e8 624fd0e7e2b94fa4afe0a2a37d896c6c
-#: discord.ext.pages.PaginatorButton.view:1
+#: 624fd0e7e2b94fa4afe0a2a37d896c6c discord.ext.pages.PaginatorButton.view:1
 #: discord.ext.pages.PaginatorMenu.view:1 of
 msgid "Gets the parent view associated with this item."
 msgstr ""
 
-#: 8c642c826f7d4546b997eb3342f2c947 de1896f184794a4aad8b50b0a376c468
-#: discord.ext.pages.PaginatorButton.view:3
+#: de1896f184794a4aad8b50b0a376c468 discord.ext.pages.PaginatorButton.view:3
 #: discord.ext.pages.PaginatorMenu.view:3 of
 msgid ""
-"The view refers to the container that holds this item. This is typically "
+"The view refers to the structure that holds this item. This is typically "
 "set automatically when the item is added to a view."
 msgstr ""
 
-#: 7a8937a2dbb54965a590f68e98627806 9ef563a417bd443eba9d613f25f4ad4e
-#: discord.ext.pages.PaginatorButton.view:6
+#: 7a8937a2dbb54965a590f68e98627806 discord.ext.pages.PaginatorButton.view:6
 #: discord.ext.pages.PaginatorMenu.view:6 of
 msgid ""
 "The parent view of this item, or ``None`` if the item is not attached to "
 "any view."
 msgstr ""
 
-#: 23fd525d702e4836a60f604a7deca651 discord.ext.pages.PaginatorButton.view:7
+#: discord.ext.pages.PaginatorButton.view:7
 #: discord.ext.pages.PaginatorMenu.view:7 ec07a9dea875411c92d7312aeba8aec1 of
-msgid "Optional[:class:`View`]"
+msgid "Optional[:class:`BaseView`]"
 msgstr ""
 
 #: dea0f3e5ef3c4c6ea0067ef707954f13 discord.ext.pages.PaginatorButton.width:1
@@ -1157,7 +1200,7 @@ msgstr ""
 msgid "Gets the width of the item in the UI layout."
 msgstr ""
 
-#: a81482f1a9b54169847bf97b702e19c2 discord.ext.pages.PaginatorButton.width:3
+#: discord.ext.pages.PaginatorButton.width:3
 #: discord.ext.pages.PaginatorMenu.width:3 f37e3f782a9d4a16bb3e8d35ea49d26d of
 msgid ""
 "The width determines how much horizontal space this item occupies within "
@@ -1190,6 +1233,43 @@ msgstr ""
 msgid ""
 "The paginator class where this menu is being used. Assigned to the menu "
 "when ``Paginator.add_menu`` is called."
+msgstr ""
+
+#: discord.ui.select.Select.add_default_value:1
+#: fd0f251caa31466f86f28a963b80e74e of
+msgid "Adds a default value to the select menu."
+msgstr ""
+
+#: 0ef246583a96465ab9a2662925dea262
+#: discord.ui.select.Select.add_default_value:3 of
+msgid ""
+"To append a pre-existing :class:`discord.SelectDefaultValue` use the "
+":meth:`append_default_value` method instead."
+msgstr ""
+
+#: c87c8240e5dd4ff69d19866fc6522c5f
+#: discord.ui.select.Select.add_default_value:9 of
+msgid "The ID of the entity to add as a default."
+msgstr ""
+
+#: 1b5882cecf5346bd9ed130e24ae26d3a
+#: discord.ui.select.Select.add_default_value:12 of
+msgid ""
+"The default value type of the ID. This is only required if the select "
+"``type`` is :attr:`discord.ComponentType.mentionable_select`."
+msgstr ""
+
+#: c19235fe10b744309c2714e2e75a9917
+#: discord.ui.select.Select.add_default_value:16 of
+msgid ""
+"The select type is a mentionable_select and type was not provided, or the"
+" select     type is string_select."
+msgstr ""
+
+#: 8aa241191edb441496f0c1bd02fe0da0
+#: discord.ui.select.Select.add_default_value:17
+#: discord.ui.select.Select.append_default_value:37 of
+msgid "The number of default select values exceeds 25."
 msgstr ""
 
 #: discord.ui.select.Select.add_option:1 fd0f251caa31466f86f28a963b80e74e of
@@ -1236,6 +1316,151 @@ msgstr ""
 msgid "The number of options exceeds 25."
 msgstr ""
 
+#: bafa80d0afd248d4b54b80365d46b82a
+#: discord.ui.select.Select.append_default_value:1 of
+msgid "Appends a default value to this select menu."
+msgstr ""
+
+#: 568fa0f1172e48089290708011c9f781
+#: discord.ui.select.Select.append_default_value:6 of
+msgid ""
+"The default value to append to this select.  These can be either "
+":class:`discord.SelectDefaultValue` instances or models, which will be "
+"converted into :class:`discord.SelectDefaultvalue` instances.  Below, is "
+"a table defining the model instance type and the default value type it "
+"will be mapped:  "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | Model Type                        | Default Value Type"
+"                                                       | "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.User`             | "
+":attr:`discord.SelectDefaultValueType.user`                              "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.Member`           | "
+":attr:`discord.SelectDefaultValueType.user`                              "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.Role`             | "
+":attr:`discord.SelectDefaultValueType.role`                              "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.abc.GuildChannel` | "
+":attr:`discord.SelectDefaultValueType.channel`                           "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.Object`           | depending on "
+":attr:`discord.Object.type`, it will be mapped to any above | "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+"  If you pass a model that is not defined in the table, ``TypeError`` "
+"will be raised.  .. note::      The :class:`discord.abc.GuildChannel` "
+"protocol includes :class:`discord.TextChannel`, "
+":class:`discord.VoiceChannel`, :class:`discord.StageChannel`,     "
+":class:`discord.ForumChannel`, :class:`discord.Thread`, "
+":class:`discord.MediaChannel`. This list is not exhaustive, and is bound "
+"to change     based of the new channel types Discord adds."
+msgstr ""
+
+#: 2d8599f9eca74a0cb9cc8f88c0406158
+#: discord.ui.select.Select.append_default_value:6 of
+msgid "The default value to append to this select."
+msgstr ""
+
+#: 236c059f93f649e2a83c2a4b3fecf5db
+#: discord.ui.select.Select.append_default_value:8 of
+msgid ""
+"These can be either :class:`discord.SelectDefaultValue` instances or "
+"models, which will be converted into :class:`discord.SelectDefaultvalue` "
+"instances."
+msgstr ""
+
+#: discord.ui.select.Select.append_default_value:11
+#: f03a4aee49654389a07378d27de13c98 of
+msgid ""
+"Below, is a table defining the model instance type and the default value "
+"type it will be mapped:"
+msgstr ""
+
+#: 2aef4bef743e42c6b10dc7dc409dddee
+#: discord.ui.select.Select.append_default_value:14 of
+msgid "Model Type"
+msgstr ""
+
+#: 09827ac46bef482090fb7db0002e01b7
+#: discord.ui.select.Select.append_default_value:14 of
+msgid "Default Value Type"
+msgstr ""
+
+#: bde2084b48ec4c9787e78682dcc81fb5
+#: discord.ui.select.Select.append_default_value:16 of
+msgid ":class:`discord.User`"
+msgstr ""
+
+#: 925e444e9a04411f87cb5597d89ad609
+#: discord.ui.select.Select.append_default_value:16
+#: discord.ui.select.Select.append_default_value:18
+#: fcbccc228cde427192f78f0b30babf77 of
+msgid ":attr:`discord.SelectDefaultValueType.user`"
+msgstr ""
+
+#: bde2084b48ec4c9787e78682dcc81fb5
+#: discord.ui.select.Select.append_default_value:18 of
+msgid ":class:`discord.Member`"
+msgstr ""
+
+#: bde2084b48ec4c9787e78682dcc81fb5
+#: discord.ui.select.Select.append_default_value:20 of
+msgid ":class:`discord.Role`"
+msgstr ""
+
+#: bff451550e4d4b6f855cbe751d1d0f1f
+#: discord.ui.select.Select.append_default_value:20 of
+msgid ":attr:`discord.SelectDefaultValueType.role`"
+msgstr ""
+
+#: 8fd0293cf86a41dfbe9da2ef3385008f
+#: discord.ui.select.Select.append_default_value:22 of
+msgid ":class:`discord.abc.GuildChannel`"
+msgstr ""
+
+#: 4140d53d7b7a481eac1e205148b029a0
+#: discord.ui.select.Select.append_default_value:22 of
+msgid ":attr:`discord.SelectDefaultValueType.channel`"
+msgstr ""
+
+#: bde2084b48ec4c9787e78682dcc81fb5
+#: discord.ui.select.Select.append_default_value:24 of
+msgid ":class:`discord.Object`"
+msgstr ""
+
+#: 417505b9b42c4452a5b15c911a3fa25f
+#: discord.ui.select.Select.append_default_value:24 of
+msgid "depending on :attr:`discord.Object.type`, it will be mapped to any above"
+msgstr ""
+
+#: a5a9d6f0eeae435e85be10f33420ae78
+#: discord.ui.select.Select.append_default_value:27 of
+msgid ""
+"If you pass a model that is not defined in the table, ``TypeError`` will "
+"be raised."
+msgstr ""
+
+#: 1a9c671416ff416a8098e527e4238487
+#: discord.ui.select.Select.append_default_value:31 of
+msgid ""
+"The :class:`discord.abc.GuildChannel` protocol includes "
+":class:`discord.TextChannel`, :class:`discord.VoiceChannel`, "
+":class:`discord.StageChannel`, :class:`discord.ForumChannel`, "
+":class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not "
+"exhaustive, and is bound to change based of the new channel types Discord"
+" adds."
+msgstr ""
+
+#: 18524fc414134b34b18561fba7601d73
+#: discord.ui.select.Select.append_default_value:36 of
+msgid "The select type is string_select, which does not allow for default_values"
+msgstr ""
+
 #: bafa80d0afd248d4b54b80365d46b82a discord.ui.select.Select.append_option:1 of
 msgid "Appends an option to the select menu."
 msgstr ""
@@ -1254,6 +1479,13 @@ msgstr ""
 msgid "The ID of the select menu that gets received during an interaction."
 msgstr ""
 
+#: b60875f0f6584c8580ab3c1eaa07687c
+#: discord.ext.pages.PaginatorMenu.default_values:1 of
+msgid ""
+"A list of the select's default values. This is only applicable if the "
+"select type is not :attr:`discord.ComponentType.string_select`."
+msgstr ""
+
 #: 4ca8076e7aa84cf0959662de2d2070a3 discord.ext.pages.PaginatorMenu.disabled:1
 #: of
 msgid "Whether the select is disabled or not."
@@ -1269,6 +1501,22 @@ msgstr ""
 msgid "The minimum number of items that must be chosen for this select menu."
 msgstr ""
 
+#: de1896f184794a4aad8b50b0a376c468 discord.ext.pages.PaginatorMenu.modal:1 of
+msgid ""
+"Gets the parent modal associated with this item. This is typically set "
+"automatically when the item is added to a modal."
+msgstr ""
+
+#: 7a8937a2dbb54965a590f68e98627806 discord.ext.pages.PaginatorMenu.modal:4 of
+msgid ""
+"The parent modal of this item, or ``None`` if the item is not attached to"
+" any modal."
+msgstr ""
+
+#: discord.ext.pages.PaginatorMenu.modal:5 ec07a9dea875411c92d7312aeba8aec1 of
+msgid "Optional[:class:`BaseModal`]"
+msgstr ""
+
 #: 6323c7b02d2242bfaec760b147775d6d discord.ext.pages.PaginatorMenu.options:1
 #: of
 msgid "A list of options that can be selected in this menu."
@@ -1277,6 +1525,11 @@ msgstr ""
 #: 2360c22bf0db488ea313baf24fc77930
 #: discord.ext.pages.PaginatorMenu.placeholder:1 of
 msgid "The placeholder text that is shown if nothing is selected, if any."
+msgstr ""
+
+#: ad1c00b8d66d40468dea5a61731423db discord.ext.pages.PaginatorMenu.required:1
+#: of
+msgid "Whether the select is required or not. Only applicable in modal selects."
 msgstr ""
 
 #: 1a9c671416ff416a8098e527e4238487 discord.ext.pages.PaginatorMenu.values:1 of
@@ -1365,5 +1618,95 @@ msgstr ""
 #~ "string representing the custom or "
 #~ "unicode emoji or an instance of "
 #~ ":class:`.PartialEmoji` or :class:`.Emoji`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Maximum number of children has been "
+#~ "exceeded (25)     or the row the "
+#~ "item is trying to be added to "
+#~ "is full."
+#~ msgstr ""
+
+#~ msgid "Disables all items in the view."
+#~ msgstr ""
+
+#~ msgid "Enables all items in the view."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Get an item from the view with "
+#~ "the given custom ID. Alias for "
+#~ "`utils.get(view.children, custom_id=custom_id)`."
+#~ msgstr ""
+
+#~ msgid "The item with the matching ``custom_id`` if it exists."
+#~ msgstr ""
+
+#~ msgid "Removes an item from the view."
+#~ msgstr ""
+
+#~ msgid "The item to remove from the view."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The row position determines the vertical"
+#~ " placement of the item in the "
+#~ "UI. The value must be an integer"
+#~ " between 0 and 4 (inclusive), or "
+#~ "``None`` to indicate that no specific"
+#~ " row is set."
+#~ msgstr ""
+
+#~ msgid "If the row value is not ``None`` and is outside the range [0, 4]."
+#~ msgstr ""
+
+#~ msgid "Adds an item to the view."
+#~ msgstr ""
+
+#~ msgid "An :class:`Item` was not passed."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Maximum number of children has been "
+#~ "exceeded (40)     or the row the "
+#~ "item is trying to be added to "
+#~ "is full."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Gets an item from the view. "
+#~ "Roughly equal to `utils.get(view.children, "
+#~ "...)`. If an :class:`int` is provided,"
+#~ " the item will be retrieved by "
+#~ "``id``, otherwise by  ``custom_id``. This "
+#~ "method will also search nested items."
+#~ msgstr ""
+
+#~ msgid "The custom_id of the item to get"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "|coro| A callback that is called "
+#~ "when a :meth:`View.interaction_check` returns "
+#~ "``False``. This can be used to "
+#~ "send a response when a check "
+#~ "failure occurs."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This can be set by the user "
+#~ "when constructing an Item. If not, "
+#~ "Discord will automatically provide one "
+#~ "when the View is sent."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The view refers to the container "
+#~ "that holds this item. This is "
+#~ "typically set automatically when the "
+#~ "item is added to a view."
+#~ msgstr ""
+
+#~ msgid "Optional[:class:`View`]"
 #~ msgstr ""
 
