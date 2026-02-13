@@ -128,8 +128,15 @@ class RoleType(IntEnum):
         The role is a guild's booster role.
     GUILD_PRODUCT: :class:`int`
         The role is a guild product role.
+
+        .. note::
+            This is not possible to determine at times because role tags seem to be missing altogether when
+            a role is fetched notably. In such cases :class:`Role.type` and `Role.tags` will both be :class:`None`.
     PREMIUM_SUBSCRIPTION_BASE: :class:`int`
-        The role is a base subscription role. This is not possible to determine currently, will be INTEGRATION if it's a base subscription.
+        The role is a base subscription role.
+
+        .. note::
+            This is not possible to determine currently, will be INTEGRATION if it's a base subscription.
     PREMIUM_SUBSCRIPTION_TIER: :class:`int`
         The role is a subscription role.
     DRAFT_PREMIUM_SUBSCRIPTION_TIER: :class:`int`
@@ -145,7 +152,7 @@ class RoleType(IntEnum):
     NORMAL = 0
     APPLICATION = 1
     BOOSTER = 2
-    GUILD_PRODUCT = 3
+    GUILD_PRODUCT = 3  # Not possible to determine *at times* because role tags seem to be missing altogether when fetched
     PREMIUM_SUBSCRIPTION_BASE = 4  # Not possible to determine currently, will be INTEGRATION if it's a base subscription
     PREMIUM_SUBSCRIPTION_TIER = 5
     DRAFT_PREMIUM_SUBSCRIPTION_TIER = 6
