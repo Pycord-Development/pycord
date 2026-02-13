@@ -28,8 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
-- Deprecated the `suppress` parameter in all applicable message-related methods in
-  favor of `suppress_embeds`. Does not affect any functions related to voice.
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`. Does not affect any functions related to voice.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
