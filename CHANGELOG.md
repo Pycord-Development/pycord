@@ -12,7 +12,13 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `Member.colours` and `Member.colors` properties.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+
 ### Changed
+
+- Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 
 ### Fixed
 
@@ -75,6 +81,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
 - Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
   ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
+- Fixed `get_or_fetch()` not supporting `Thread` objects.
+  ([#3101](https://github.com/Pycord-Development/pycord/pull/3101))
 
 ## [2.7.0] - 2025-12-24
 
@@ -1197,7 +1205,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 - `get_application_command()` now supports retrieving subcommands and subcommand groups.
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
--
 
 ### Removed
 
