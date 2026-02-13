@@ -12,8 +12,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added `.extension` attribute to emojis to get their file extension.
+- Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added the ability to compare instances of `PrimaryGuild`.
+  ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
 
 ### Changed
 
@@ -22,28 +24,47 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
+- Updated the docs' Sphinx version to v9.
+  ([#3067](https://github.com/Pycord-Development/pycord/pull/3067))
 
 ### Fixed
 
+- Fixed an issue where views raised unnecessary errors on timeout.
+  ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
-- Fixed downloading animated emojis which were originally uploaded as WebP files by
-  changing the `.url` extension of animated emojis from .gif to .webp.
+- Fixed an issue with downloading animated emojis which were originally uploaded as WebP
+  files by changing the `.url` extension of animated emojis from `.gif` to `.webp`.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
-- Fixed `Interaction.channel` not being resolved with user-installed commands ran in
-  guilds which the bot is not a member of.
+- Fixed the `Interaction.channel` attribute not being properly resolved with
+  user-installed commands ran in guilds of which the bot is not a member.
   ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
-
-### Deprecated
+- Fixed the following `ForwardedMessage` attributes not being populated:
+  `ForwardedMessage.mentions`, `ForwardedMessage.role_mentions`, and
+  `ForwardedMessage.type`.
+  ([#3051](https://github.com/Pycord-Development/pycord/pull/3051))
+- Fixed incorrect page group assignment in paginators.
+  ([#3065](https://github.com/Pycord-Development/pycord/pull/3065))
+- Fixed the `Interaction.respond` and `ApplicationContext.respond` methods to explicitly
+  list the accepted parameters.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed an issue where the optional parameters of the `InteractionResponse.send_message`
+  method were not type-hinted as optional.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed the update of a user's `primary_guild` to now cause an `on_user_update` event to
+  fire. ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Fixed an error when using methods from other classes regarding option autocompletes.
+  ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
+- Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
+  ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
 
 ### Removed
 
-- Removed guild creation and ownership related methods and arguments as they're not
-  allowed for bots anymore.
-  ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-  - Removed `Guild.set_mfa_required`, `Guild.delete`, `Template.create_guild` and
-    `Client.create_guild`.
-  - Removed the `owner` keyword argument from `Guild.edit`.
+- Removed the guild creation and ownership-related methods and arguments due to updated
+  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+    `Template.create_guild`, and `Client.create_guild`.
+  - Removed the `owner` argument from the method `Guild.edit`.
 
 ## [2.7.0] - 2025-12-24
 
