@@ -81,7 +81,6 @@ class ApplicationCtl(TypedDict):
 __all__ = (
     "Encoder",
     "Decoder",
-    "DecodeManager",
     "OpusError",
     "OpusNotLoaded",
 )
@@ -463,7 +462,9 @@ class Encoder(_OpusStruct):
         _lib.opus_encoder_ctl(self._state, CTL_SET_FEC, 1 if enabled else 0)
 
     def set_expected_packet_loss_percent(self, percentage: float) -> None:
-        _lib.opus_encoder_ctl(self._state, CTL_SET_PLP, min(100, max(0, int(percentage * 100))))  # type: ignore
+        _lib.opus_encoder_ctl(
+            self._state, CTL_SET_PLP, min(100, max(0, int(percentage * 100)))
+        )  # type: ignore
 
     def encode(self, pcm: bytes, frame_size: int | None = None) -> bytes:
         max_data_bytes = len(pcm)
