@@ -30,19 +30,22 @@ import datetime
 import functools
 import inspect
 import re
-import sys
 import types
 from collections import OrderedDict
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     Callable,
     Coroutine,
     Generator,
     Generic,
+    Literal,
     TypeVar,
     Union,
+    get_args,
+    get_origin,
 )
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
@@ -69,11 +72,6 @@ from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_depr
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
-if sys.version_info >= (3, 11):
-    from typing import Annotated, Literal, get_args, get_origin
-else:
-    from typing_extensions import Annotated, Literal, get_args, get_origin
-
 __all__ = (
     "_BaseCommand",
     "ApplicationCommand",
@@ -90,7 +88,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec
+    from typing import Concatenate, ParamSpec
 
     from .. import Permissions
     from ..cog import Cog
