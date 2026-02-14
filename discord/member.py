@@ -37,7 +37,6 @@ import discord.abc
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
-from .collectibles import Nameplate
 from .colour import Colour
 from .enums import Status, try_enum
 from .errors import InvalidArgument
