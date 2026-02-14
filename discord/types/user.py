@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
+from .collectibles import Nameplate
 from .primary_guild import PrimaryGuild
 from .snowflake import Snowflake
 
@@ -53,3 +54,4 @@ class User(PartialUser, total=False):
     premium_type: PremiumType
     public_flags: int
     primary_guild: PrimaryGuild
+    nameplate: Nameplate

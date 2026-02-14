@@ -22,6 +22,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed updates of the following `User` attributes not triggering the `on_user_update`
+  event: `User.nameplate`
+  ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
+
 ### Deprecated
 
 ### Removed
