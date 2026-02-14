@@ -84,6 +84,7 @@ __all__ = (
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
+    "InviteTargetUsersJobStatusCode",
 )
 
 
@@ -1129,6 +1130,13 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class InviteTargetUsersJobStatusCode(Enum):
+    unspecified = 0
+    processing = 1
+    completed = 2
+    failed = 3
 
 
 T = TypeVar("T")

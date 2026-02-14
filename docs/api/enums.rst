@@ -1822,6 +1822,28 @@ of :class:`enum.Enum`.
 
         Note that your bot won't be verified if you provide users access to this
 
+.. class:: InviteTargetUsersJobStatusCode
+
+    Represents the status code for an invite target users processing job.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: unspecified
+
+        The job status is unspecified.
+
+    .. attribute:: processing
+
+        The job is currently processing.
+
+    .. attribute:: completed
+
+        The job has completed successfully.
+
+    .. attribute:: failed
+
+        The job has failed.
+
 .. class:: VideoQualityMode
 
     Represents the camera video quality mode for voice channel participants.
