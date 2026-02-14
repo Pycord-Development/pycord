@@ -37,6 +37,7 @@ import discord.abc
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
+from .collectibles import Nameplate
 from .colour import Colour
 from .enums import Status, try_enum
 from .errors import InvalidArgument
@@ -295,6 +296,7 @@ class Member(discord.abc.Messageable, _UserTag):
         "_banner",
         "communication_disabled_until",
         "flags",
+        "_nameplate",
     )
 
     if TYPE_CHECKING:
@@ -315,6 +317,7 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
         primary_guild: PrimaryGuild | None
+        nameplate: Nameplate | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -339,6 +342,9 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
+        self._nameplate: dict[str, Any] | None = data.get("collectibles") and data[
+            "collectibles"
+        ].get("nameplate")
 
     def __str__(self) -> str:
         return str(self._user)
@@ -416,6 +422,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._banner = member._banner
         self.communication_disabled_until = member.communication_disabled_until
         self.flags = member.flags
+        self._nameplate = member._nameplate
 
         # Reference will not be copied unless necessary by PRESENCE_UPDATE
         # See below
@@ -447,6 +454,9 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags = MemberFlags._from_value(data.get("flags", 0))
+        self._nameplate = data.get("collectibles") and data["collectibles"].get(
+            "nameplate"
+        )
 
     def _presence_update(
         self, data: PartialPresenceUpdate, user: UserPayload
@@ -500,6 +510,21 @@ class Member(discord.abc.Messageable, _UserTag):
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
+
+    @property
+    def nameplate(self) -> Nameplate | None:
+        """The members's guild-specific nameplate, if there is one, otherwise this will return .
+
+        .. versionadded:: 2.7
+        """
+        if self._nameplate is None:
+            return self._user.nameplate
+        else:
+            return (
+                Nameplate(data=self._nameplate, state=self._state)
+                if self._nameplate
+                else None
+            )
 
     @property
     def status(self) -> Status:
