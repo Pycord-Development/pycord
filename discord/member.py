@@ -472,7 +472,7 @@ class Member(discord.abc.Messageable, _UserTag):
             u.global_name,
             u._public_flags,
             u.primary_guild,
-            u.nameplate,
+            u._nameplate,
         )
         # These keys seem to always be available
         if (
@@ -484,15 +484,6 @@ class Member(discord.abc.Messageable, _UserTag):
         else:
             new_primary_guild = None
 
-        new_nameplate = u.nameplate
-        if (collectibles := user.get("collectibles")) is not None:
-            if collectibles.get("nameplate") is None:
-                new_nameplate = None
-            else:
-                new_nameplate = Nameplate(
-                    data=collectibles.get("nameplate"), state=self._state
-                )
-
         modified = (
             user["username"],
             user["avatar"],
@@ -500,7 +491,7 @@ class Member(discord.abc.Messageable, _UserTag):
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
             new_primary_guild,
-            new_nameplate,
+            user.get("collectibles") and user["collectibles"].get("nameplate"),
         )
         if original != modified:
             to_return = User._copy(self._user)
@@ -511,7 +502,7 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.global_name,
                 u._public_flags,
                 u.primary_guild,
-                u.nameplate,
+                u._nameplate,
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
