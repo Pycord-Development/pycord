@@ -188,6 +188,8 @@ class InputText(ModalItem):
             raise TypeError(
                 f"custom_id must be None or str not {value.__class__.__name__}"
             )
+        if value and len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         self.underlying.custom_id = value
 
     @property
