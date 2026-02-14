@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime
+import itertools
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -898,6 +899,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         with_member: bool = False,
         before: datetime.datetime | int | None = None,
         after: datetime.datetime | int | None = None,
+        use_cache: bool = False,
     ):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
@@ -909,6 +911,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         self.with_member = with_member
         self.before = before
         self.after = after
+        self.use_cache = use_cache
 
         self.subscribers = asyncio.Queue()
         self.get_subscribers = self.event._state.http.get_scheduled_event_users
@@ -948,12 +951,28 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
 
         return User(state=self.event._state, data=user)
 
+    async def _fill_from_cache(self):
+        """Fill subscribers queue from cached user IDs."""
+        cached_user_ids = list(self.event._cached_subscribers.keys())
+
+        for user_id in itertools.islice(iter(cached_user_ids), self.retrieve):
+            member = self.event.guild.get_member(user_id)
+            if member:
+                await self.subscribers.put(member)
+
+        self.limit = 0
+
     async def fill_subs(self):
         if not self._get_retrieve():
             return
 
+        if self.use_cache:
+            await self._fill_from_cache()
+            return
+
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
+
         data = await self.get_subscribers(
             guild_id=self.event.guild.id,
             event_id=self.event.id,
@@ -966,9 +985,8 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         data_length = len(data)
         if data_length < self.retrieve:
             self.limit = 0
-        elif data_length > 0:
-            if self.limit:
-                self.limit -= self.retrieve
+        elif data_length > 0 and self.limit is not None:
+            self.limit -= self.retrieve
             self.after = Object(id=int(data[-1]["user_id"]))
 
         for element in reversed(data):
@@ -1277,7 +1295,7 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
 
     def __await__(self) -> Generator[Any, Any, MessagePin]:
         warn_deprecated(
-            f"Messageable.pins() returning a list of Message",
+            "Messageable.pins() returning a list of Message",
             since="2.7",
             removed="3.0",
             reference="The documentation of pins()",
