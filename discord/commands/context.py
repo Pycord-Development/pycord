@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
     from ..ui import BaseView
     from ..user import User
-    from ..voice_client import VoiceClient
+    from ..voice import VoiceClient
     from ..webhook import WebhookMessage
     from .core import ApplicationCommand, Option
 

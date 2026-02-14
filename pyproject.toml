@@ -53,6 +53,7 @@ packages = [
     "discord.ext.pages",
     "discord.ext.bridge",
     "discord.bin",
+    "discord.voice",
 ]
 
 [tool.setuptools.dynamic]

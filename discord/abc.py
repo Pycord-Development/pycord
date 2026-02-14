@@ -55,7 +55,7 @@ from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
-from .voice_client import VoiceClient, VoiceProtocol
+from .voice import VoiceClient, VoiceProtocol
 
 __all__ = (
     "Snowflake",
@@ -1966,6 +1966,7 @@ class Connectable(Protocol):
 
     __slots__ = ()
     _state: ConnectionState
+    id: int
 
     def _get_voice_client_key(self) -> tuple[int, str]:
         raise NotImplementedError
