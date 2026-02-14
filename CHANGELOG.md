@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 
 ### Changed
 
@@ -26,6 +28,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
 
 ### Deprecated
+
+- Deprecated for both `Role` and `RoleTags`: `is_bot_managed`, `is_premium_subscriber`,
+  `is_integration`, `is_available_for_purchase`, and `is_guild_connections_role`, in
+  favor of `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 
 ### Removed
 
