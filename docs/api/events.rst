@@ -1496,3 +1496,16 @@ Soundboard Sound
 
         :param sound: The soundboard sound that was created.
         :type sound: :class:`SoundboardSound`
+
+.. function:: on_raw_member_update(payload)
+
+    Called when a :class:`Member` updates their profile.
+    Unlike :func:`on_member_update`, this is called regardless of the
+    state of the internal member cache.
+
+    This requires :attr:`Intents.members` to be enabled.
+
+    .. versionadded:: 2.7
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawMemberUpdateEvent`
