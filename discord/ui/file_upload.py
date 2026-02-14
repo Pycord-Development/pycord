@@ -86,15 +86,15 @@ class FileUpload(ModalItem):
         custom_id: str | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
-        required: bool = None,
+        required: bool | None = None,
         id: int | None = None,
     ) -> FileUploadComponent:
         super()._generate_underlying(FileUploadComponent)
         return FileUploadComponent._raw_construct(
             type=ComponentType.file_upload,
             custom_id=custom_id or self.custom_id,
-            min_values=min_values or self.min_values,
-            max_values=max_values or self.max_values,
+            min_values=min_values if min_values is not None else self.min_values,
+            max_values=max_values if max_values is not None else self.max_values,
             required=required if required is not None else self.required,
             id=id or self.id,
         )
