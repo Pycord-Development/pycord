@@ -14,6 +14,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `silent` parameter to all methods that send messages which were missing it,
+  including `ApplicationContext.respond`, `Interaction.respond` and
+  `InteractionResponse.send_message`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
 
@@ -26,6 +30,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
 
 ### Deprecated
+
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
 
