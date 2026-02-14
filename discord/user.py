@@ -181,6 +181,7 @@ class BaseUser(_UserTag):
         self._state = user._state
         self._public_flags = user._public_flags
         self.primary_guild = user.primary_guild
+        self.nameplate = user.nameplate
 
         return self
 
