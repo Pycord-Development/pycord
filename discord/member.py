@@ -471,6 +471,7 @@ class Member(discord.abc.Messageable, _UserTag):
             u.global_name,
             u._public_flags,
             u.primary_guild,
+            u._collectibles,
         )
         # These keys seem to always be available
         if (
@@ -488,6 +489,7 @@ class Member(discord.abc.Messageable, _UserTag):
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
             new_primary_guild,
+            user.get("collectibles"),
         )
         if original != modified:
             to_return = User._copy(self._user)
@@ -498,6 +500,7 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.global_name,
                 u._public_flags,
                 u.primary_guild,
+                u._collectibles,
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u

@@ -29,7 +29,31 @@ if TYPE_CHECKING:
     from .state import ConnectionState
 
 from .asset import Asset
+from .types.collectibles import Collectibles as CollectiblesPayload
 from .types.collectibles import Nameplate as NameplatePayload
+
+
+class Collectibles:
+    """
+    Represents all the User's equipped collectibles.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    nameplate: :class:`Nameplate`
+        The user's nameplate.
+    """
+
+    def __init__(self, data: CollectiblesPayload, state: "ConnectionState") -> None:
+        if data and data.get("nameplate"):
+            self.nameplate = Nameplate(data=data["nameplate"], state=state)
+        else:
+            self.nameplate = None
+        self._state = state
+
+    def __repr__(self) -> str:
+        return f"<Collectibles nameplate={self.nameplate}>"
 
 
 class Nameplate:
@@ -75,4 +99,7 @@ class Nameplate:
         return Asset._from_collectible(self._state, self._asset, animated=True)
 
 
-__all__ = ("Nameplate",)
+__all__ = (
+    "Collectibles",
+    "Nameplate",
+)

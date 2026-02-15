@@ -14,11 +14,15 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `User.collectibles` property, currently containing only a user's nameplate.
+  ([#3106](https://github.com/Pycord-Development/pycord/pull/3106))
 
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Changed `User.nameplate` to be be an alias for `User.collectibles.nameplate`.
+  ([#3106](https://github.com/Pycord-Development/pycord/pull/3106))
 
 ### Fixed
 
