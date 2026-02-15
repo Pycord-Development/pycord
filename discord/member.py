@@ -470,24 +470,21 @@ class Member(discord.abc.Messageable, _UserTag):
             u.discriminator,
             u.global_name,
             u._public_flags,
-            u.primary_guild,
+            u._primary_guild,
+            u._nameplate,
+            u._avatar_decoration,
         )
         # These keys seem to always be available
-        if (
-            new_primary_guild_data := user.get("primary_guild")
-        ) and new_primary_guild_data.get("identity_enabled"):
-            new_primary_guild: PrimaryGuild | None = PrimaryGuild(
-                new_primary_guild_data, state=self._state
-            )
-        else:
-            new_primary_guild = None
+
         modified = (
             user["username"],
             user["avatar"],
             user["discriminator"],
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
-            new_primary_guild,
+            user.get("primary_guild"),
+            user.get("collectibles") and user["collectibles"].get("nameplate"),
+            user.get("avatar_decoration_data"),
         )
         if original != modified:
             to_return = User._copy(self._user)
@@ -497,7 +494,9 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.discriminator,
                 u.global_name,
                 u._public_flags,
-                u.primary_guild,
+                u._primary_guild,
+                u._nameplate,
+                u._avatar_decoration,
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u

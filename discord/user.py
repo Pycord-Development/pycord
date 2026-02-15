@@ -78,8 +78,8 @@ class BaseUser(_UserTag):
         "_public_flags",
         "_avatar_decoration",
         "_state",
-        "nameplate",
-        "primary_guild",
+        "_nameplate",
+        "_primary_guild",
     )
 
     if TYPE_CHECKING:
@@ -95,8 +95,8 @@ class BaseUser(_UserTag):
         _accent_colour: int | None
         _avatar_decoration: dict | None
         _public_flags: int
-        nameplate: Nameplate | None
-        primary_guild: PrimaryGuild | None
+        _nameplate: Nameplate | None
+        _primary_guild: PrimaryGuild | None
 
     def __init__(
         self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
@@ -149,18 +149,8 @@ class BaseUser(_UserTag):
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
         self._avatar_decoration = data.get("avatar_decoration_data", None)
-        nameplate = (data.get("collectibles") or {}).get("nameplate", None)
-        if nameplate:
-            self.nameplate = Nameplate(data=nameplate, state=self._state)
-        else:
-            self.nameplate = None
-        primary_guild_payload = data.get("primary_guild", None)
-        if primary_guild_payload and primary_guild_payload.get("identity_enabled"):
-            self.primary_guild = PrimaryGuild(
-                data=primary_guild_payload, state=self._state
-            )
-        else:
-            self.primary_guild = None
+        self._nameplate = (data.get("collectibles") or {}).get("nameplate", None)
+        self._primary_guild = data.get("primary_guild")
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
@@ -180,7 +170,8 @@ class BaseUser(_UserTag):
         self.bot = user.bot
         self._state = user._state
         self._public_flags = user._public_flags
-        self.primary_guild = user.primary_guild
+        self._primary_guild = user._primary_guild
+        self._nameplate = user._nameplate
 
         return self
 
@@ -193,6 +184,31 @@ class BaseUser(_UserTag):
             "global_name": self.global_name,
             "bot": self.bot,
         }
+
+    @property
+    def primary_guild(self) -> PrimaryGuild | None:
+        """
+        The user's primary guild, if the user has one. Represents what guild the user's
+        tag is from.
+
+        ..versionadded:: 2.7
+        """
+        if self._primary_guild and self._primary_guild.get("identity_enabled"):
+            return PrimaryGuild(data=self._primary_guild, state=self._state)
+        else:
+            return None
+
+    @property
+    def nameplate(self) -> Nameplate | None:
+        """The user's nameplate, if the user has one.
+
+        .. versionadded:: 2.7
+        """
+        return (
+            Nameplate(data=self._nameplate, state=self._state)
+            if self._nameplate
+            else None
+        )
 
     @property
     def jump_url(self) -> str:
@@ -553,14 +569,6 @@ class User(BaseUser, discord.abc.Messageable):
         Specifies if the user is a bot account.
     system: :class:`bool`
         Specifies if the user is a system user (i.e. represents Discord officially).
-    nameplate: Optional[:class:`Nameplate`]
-        The user's nameplate, if the user has one.
-
-        .. versionadded:: 2.7
-    primary_guild: Optional[:class:`PrimaryGuild`]
-        The user's primary guild, if the user has one. Represent what guild the user's tag is from.
-
-        .. versionadded:: 2.7
     """
 
     __slots__ = ("_stored",)
