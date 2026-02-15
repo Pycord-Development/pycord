@@ -21,7 +21,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
-- Changed `User.nameplate` to be be an alias for `User.collectibles.nameplate`.
+- Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
   ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 
 ### Fixed
