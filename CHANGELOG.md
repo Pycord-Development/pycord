@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed some `Item` attributes not being set correctly.
   ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
 
 ### Deprecated
 
