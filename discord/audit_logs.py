@@ -278,7 +278,7 @@ class AuditLogChanges:
         "type": (None, _transform_type),
         "status": (None, _enum_transformer(enums.ScheduledEventStatus)),
         "entity_type": (
-            "entity_type",
+            "location_type",
             _enum_transformer(enums.ScheduledEventEntityType),
         ),
         "command_id": ("command_id", _transform_snowflake),
@@ -364,6 +364,18 @@ class AuditLogChanges:
             else:
                 if transformer:
                     after = transformer(entry, after)
+
+            if attr == "location" and hasattr(self.after, "location_type"):
+                from .scheduled_events import ScheduledEventLocation
+
+                if self.after.location_type is enums.ScheduledEventEntityType.external:
+                    after = ScheduledEventLocation(state=state, value=after)
+                elif hasattr(self.after, "channel"):
+                    after = ScheduledEventLocation(
+                        state=state, value=self.after.channel
+                    )
+
+            setattr(self.after, attr, after)
 
         # add an alias
         if hasattr(self.after, "colour"):
