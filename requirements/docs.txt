@@ -1,11 +1,11 @@
-sphinx==8.2.3
-sphinxcontrib_trio==1.1.2
-sphinxcontrib-websupport==2.0.0
-myst-parser[linkify]==4.0.1
-sphinxext-opengraph==0.13.0
-sphinx-copybutton==0.5.2
-furo==2024.8.6
-sphinx-autodoc-typehints==3.5.2
-sphinx-intl==2.3.2
-typing_extensions==4.15.0
-levenshtein==0.27.3
+sphinx==9.1.0 ; python_version >= "3.13"
+sphinxcontrib_trio==1.2.0 ; python_version >= "3.13"
+sphinxcontrib-websupport==2.0.0 ; python_version >= "3.13"
+myst-parser[linkify]==5.0.0 ; python_version >= "3.13"
+sphinxext-opengraph==0.13.0 ; python_version >= "3.13"
+sphinx-copybutton==0.5.2 ; python_version >= "3.13"
+furo==2025.12.19 ; python_version >= "3.13"
+sphinx-autodoc-typehints==3.6.2 ; python_version >= "3.13"
+sphinx-intl==2.3.2 ; python_version >= "3.13"
+typing_extensions==4.15.0 ; python_version >= "3.13"
+levenshtein==0.27.3 ; python_version >= "3.13"

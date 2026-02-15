@@ -40,6 +40,19 @@ class PrimaryGuild:
 
     .. versionadded:: 2.7
 
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two Primary Guilds are equal.
+
+        .. describe:: x != y
+
+            Checks if two Primary Guilds are not equal.
+
+    .. versionchanged:: 2.7.1
+        Primary Guilds are now comparable.
+
     Attributes
     ----------
     identity_guild_id: int
@@ -61,6 +74,16 @@ class PrimaryGuild:
 
     def __repr__(self) -> str:
         return f"<PrimaryGuild identity_guild_id={self.identity_guild_id} identity_enabled={self.identity_enabled} tag={self.tag}>"
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PrimaryGuild):
+            return NotImplemented
+
+        return (
+            self.identity_guild_id == other.identity_guild_id
+            and self.identity_enabled == other.identity_enabled
+            and self.tag == other.tag
+        )
 
     @cached_property
     def badge(self) -> Asset | None:

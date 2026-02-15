@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\n"
-"POT-Creation-Date: 2025-06-24 08:32-0000\n"
-"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -20,8 +20,8 @@ msgstr "Dies ist die Dokumentation für Pycord, eine Bibliothek für Python, die
 msgid "Prerequisites"
 msgstr "Voraussetzungen"
 
-msgid "Pycord works with Python 3.9 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.8 or lower is not supported."
-msgstr "Pycord works with Python 3.9 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.8 or lower is not supported."
+msgid "Pycord works with Python 3.10 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.8 or lower is not supported."
+msgstr "Pycord works with Python 3.10 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.8 or lower is not supported."
 
 msgid "Installing"
 msgstr "Installieren"
