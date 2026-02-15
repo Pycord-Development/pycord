@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\n"
-"POT-Creation-Date: 2025-06-24 08:32-0000\n"
-"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -158,8 +158,8 @@ msgstr ":class:`asyncio.Task`"
 msgid "Gracefully stops the task from running."
 msgstr "Empêche la tâche de s'exécuter proprement."
 
-msgid "Unlike :meth:`cancel`\\, this allows the task to finish its current iteration before gracefully exiting. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
-msgstr "Contrairement à :meth:`cancel`\\, cela permet à la tâche de terminer son itération actuelle avant de se terminer. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgid "Unlike :meth:`cancel`\\, this allows the task to finish its current iteration before gracefully exiting."
+msgstr "Unlike :meth:`cancel`\\, this allows the task to finish its current iteration before gracefully exiting."
 
 msgid "If the internal function raises an error that can be handled before finishing then it will retry until it succeeds."
 msgstr "Si la fonction interne lève une erreur pouvant être gérée avant la fin, elle sera réessayée jusqu'à ce qu'elle réussisse."
@@ -167,11 +167,11 @@ msgstr "Si la fonction interne lève une erreur pouvant être gérée avant la f
 msgid "If this is undesirable, either remove the error handling before stopping via :meth:`clear_exception_types` or use :meth:`cancel` instead."
 msgstr "Si cela est indésirable, soit retirez la gestion des erreurs avant d'arrêter via :meth:`clear_exception_types`, soit utilisez :meth:`cancel` à la place."
 
-msgid "Cancels the internal task, if it is running."
-msgstr "Annule la tâche interne si elle est en cours d'exécution."
-
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+
+msgid "Cancels the internal task, if it is running."
+msgstr "Annule la tâche interne si elle est en cours d'exécution."
 
 msgid "A convenience method to restart the internal task."
 msgstr "Une méthode pratique pour redémarrer la tâche interne."
@@ -194,8 +194,8 @@ msgstr "Une liste d'arguments de classes d'exception à gérer."
 msgid "An exception passed is either not a class or not inherited from :class:`BaseException`."
 msgstr "Une exception passée n'est soit pas une classe, soit elle n'est pas héritée de :class:`BaseException`."
 
-msgid "Removes all exception types that are handled. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
-msgstr "Supprime tous les types d'exception qui sont gérés. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\:\\`None\\``"
+msgid "Removes all exception types that are handled."
+msgstr "Removes all exception types that are handled."
 
 msgid "This operation obviously cannot be undone!"
 msgstr "Cette opération ne peut évidemment pas être annulée !"
@@ -221,11 +221,11 @@ msgstr "Si la tâche est en cours d'annulation."
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
-msgid "Whether the internal task has failed. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Si la tâche interne a échoué. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Whether the internal task has failed."
+msgstr "Whether the internal task has failed."
 
-msgid "Check if the task is currently running. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Vérifie si la tâche est en cours d'exécution. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Check if the task is currently running."
+msgstr "Check if the task is currently running."
 
 msgid "Changes the interval for the sleep time."
 msgstr "Modifie l'intervalle de temps de veille."
@@ -274,6 +274,12 @@ msgstr "Si vous voulez gérer les erreurs et redémarrer la tâche en utilisant 
 
 msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
 msgstr "La boucle à utiliser pour enregistrer la tâche, si elle n'est pas donnée par défaut à :func:`asyncio.get_event_loop`."
+
+msgid "Controls whether overlapping executions of the task loop are allowed. Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.  .. versionadded:: 2.7"
+msgstr "Controls whether overlapping executions of the task loop are allowed. Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.  .. versionadded:: 2.7"
+
+msgid "Controls whether overlapping executions of the task loop are allowed. Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs."
+msgstr "Controls whether overlapping executions of the task loop are allowed. Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs."
 
 msgid "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."
 msgstr "La fonction n'est pas une coroutine, une valeur invalide a été passée pour le paramètre ``time``, ou le paramètre ``time`` a été passé en conjonction avec des paramètres de temps relatifs."
