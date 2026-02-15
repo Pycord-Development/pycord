@@ -24,8 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed some `Item` attributes not being set correctly.
   ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
-- Fixed updates of the following `User` attributes not triggering the `on_user_update`
-  event: `User.nameplate`.
+- Fixed updates of the `User.nameplate` and `User.avatar_decoration_data` attributes not
+  triggering the `on_user_update` event.
   ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
 - Fixed `User.nameplate` attribute not being accessible.
   ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
