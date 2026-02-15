@@ -513,9 +513,9 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def nameplate(self) -> Nameplate | None:
-        """The members's guild-specific nameplate, if there is one, otherwise this will return .
+        """The member's guild specific nameplate, if one is set, otherwise this will return :attr:`User.nameplate`.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.8
         """
         if self._nameplate is None:
             return self._user.nameplate
