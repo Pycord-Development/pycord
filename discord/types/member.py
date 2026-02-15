@@ -50,6 +50,7 @@ class Member(PartialMember, total=False):
     permissions: str
     communication_disabled_until: str
     flags: int
+    nameplate: str
 
 
 class _OptionalMemberWithUser(PartialMember, total=False):
