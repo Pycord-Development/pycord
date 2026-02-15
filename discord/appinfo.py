@@ -147,22 +147,22 @@ class AppInfo:
     integration_types_config: Optional[:class:`IntegrationTypesConfig`]
         Per-installation context configuration for guild (``0``) and user (``1``) contexts.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
 
     event_webhooks_url: Optional[:class:`str`]
         The URL used to receive application event webhooks, if set.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
 
     event_webhooks_status: Optional[:class:`ApplicationEventWebhookStatus`]
         The status of event webhooks for the application, if set.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
 
     event_webhooks_types: Optional[List[:class:`str`]]
         List of event webhook types subscribed to, if set.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
 
     tags: Optional[List[:class:`str`]]
         The list of tags describing the content and functionality of the app, if set.
@@ -179,12 +179,12 @@ class AppInfo:
     approximate_user_authorization_count: Optional[:class:`int`]
         The approximate count of users who have authorized the application, if any.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
 
     bot: Optional[:class:`User`]
         The bot user associated with this application, if any.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
     """
 
     __slots__ = (
@@ -305,7 +305,7 @@ class AppInfo:
 
         Returns an :class:`ApplicationFlags` instance or ``None`` when not present.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
         """
         if self._flags is None:
             return None
@@ -334,7 +334,7 @@ class AppInfo:
 
         Edit the current application's settings.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
 
         Parameters
         ----------
@@ -556,7 +556,7 @@ class AppInstallParams:
     def _to_payload(self) -> dict[str, object]:
         """Serialize this object into an application install params payload.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
 
         Returns
         -------
@@ -578,7 +578,7 @@ class IntegrationTypesConfig:
 
     This object is used to build the payload for the ``integration_types_config`` field when editing an application.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Parameters
     ----------
@@ -644,7 +644,7 @@ class IntegrationTypesConfig:
         Dict[int, Dict[str, Dict[str, Any]] | None]
             Mapping of integration context IDs to encoded install parameters, or ``None`` to clear.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.8
         """
         payload: dict[int, dict[str, dict[str, Any]] | None] = {}
         if self.guild is not utils.MISSING:
