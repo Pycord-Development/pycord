@@ -489,7 +489,7 @@ class Member(discord.abc.Messageable, _UserTag):
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
             new_primary_guild,
-            user.get("collectibles"),
+            user.get("collectibles") if user.get("collectibles") else u._collectibles,
         )
         if original != modified:
             to_return = User._copy(self._user)
