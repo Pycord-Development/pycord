@@ -401,7 +401,7 @@ class InviteTargetUsers:
 
         Updates the target users list for this invite.
 
-        You must have created this invite or the :attr:`~Permissions.manage_guild` permission to do this.
+        You must have created this invite or have the :attr:`~Permissions.manage_guild` permission to do this.
 
         Parameters
         ----------
