@@ -209,8 +209,8 @@ class BaseUser(_UserTag):
 
         .. versionadded:: 2.7
         """
-        if self.collectibles and self.collectibles.nameplate:
-            return Nameplate(data=self.collectibles.nameplate, state=self._state)
+        if self.collectibles:
+            return self.collectibles.nameplate
         return None
 
     @property
