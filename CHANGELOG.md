@@ -14,9 +14,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
-- Added `silent` parameter to all methods that send messages which were missing it,
-  including `ApplicationContext.respond`, `Interaction.respond` and
-  `InteractionResponse.send_message`.
+- Added the ability to respond to interactions with suppressed push and desktop notifications.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
