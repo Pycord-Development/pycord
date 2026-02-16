@@ -191,7 +191,7 @@ class BaseUser(_UserTag):
         The user's primary guild, if the user has one. Represents what guild the user's
         tag is from.
 
-        ..versionadded:: 2.7
+        .. versionadded:: 2.7
         """
         if self._primary_guild and self._primary_guild.get("identity_enabled"):
             return PrimaryGuild(data=self._primary_guild, state=self._state)
