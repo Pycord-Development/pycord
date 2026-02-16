@@ -205,7 +205,7 @@ class BaseUser(_UserTag):
 
     @property
     def nameplate(self) -> Nameplate | None:
-        """The user's nameplate, if the user has one. Alias ``User.collectibles.nameplate``.
+        """The user's nameplate, if the user has one equipped. Alias for ``User.collectibles.nameplate``.
 
         .. versionadded:: 2.7
         """
