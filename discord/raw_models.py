@@ -47,6 +47,7 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.member import MemberUpdateEvent
     from .types.raw_models import (
         AuditLogEntryEvent,
     )
@@ -90,6 +91,7 @@ __all__ = (
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
     "RawSoundboardSoundDeleteEvent",
+    "RawMemberUpdateEvent",
 )
 
 
@@ -870,3 +872,28 @@ class RawSoundboardSoundDeleteEvent(_RawReprMixin):
         self.sound_id: int = int(data["sound_id"])
         self.guild_id: int = int(data["guild_id"])
         self.data: PartialSoundboardSound = data
+
+
+class RawMemberUpdateEvent(_RawReprMixin):
+    """Represents the payload for a :func:`on_raw_member_update` event.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    data: :class:`dict`
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#guild-member-update>`_
+    cached_member: Optional[:class:`Member`]
+        The cached member, if found in the internal member cache.
+    member: :class:`Member`
+        The new member object after the update.
+    """
+
+    __slots__ = ("guild_id", "user_id", "data", "cached_member", "member")
+
+    def __init__(self, data: MemberUpdateEvent, member: Member) -> None:
+        self.guild_id: int = int(data["guild_id"])
+        self.user_id: int = int(data["user"]["id"])
+        self.data: MemberUpdateEvent = data
+        self.cached_member: Member | None = None
+        self.member: Member = member

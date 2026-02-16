@@ -85,6 +85,7 @@ if TYPE_CHECKING:
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
     from .types.guild import Guild as GuildPayload
+    from .types.member import MemberUpdateEvent
     from .types.message import Message as MessagePayload
     from .types.poll import Poll as PollPayload
     from .types.sticker import GuildSticker as GuildStickerPayload
@@ -913,7 +914,11 @@ class ConnectionState:
                     counts[answer.id].count += 1
                 else:
                     counts[answer.id] = PollAnswerCount(
-                        {"id": answer.id, "count": 1, "me_voted": False}
+                        {
+                            "id": answer.id,
+                            "count": 1,
+                            "me_voted": False,
+                        }
                     )
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
@@ -1324,10 +1329,8 @@ class ConnectionState:
             )
         self.dispatch("raw_member_remove", raw)
 
-    def parse_guild_member_update(self, data) -> None:
+    def parse_guild_member_update(self, data: MemberUpdateEvent) -> None:
         guild = self._get_guild(int(data["guild_id"]))
-        user = data["user"]
-        user_id = int(user["id"])
         if guild is None:
             _log.debug(
                 "GUILD_MEMBER_UPDATE referencing an unknown guild ID: %s. Discarding.",
@@ -1335,29 +1338,41 @@ class ConnectionState:
             )
             return
 
-        member = guild.get_member(user_id)
-        if member is not None:
-            old_member = Member._copy(member)
-            member._update(data)
-            user_update = member._update_inner_user(user)
-            if user_update:
-                self.dispatch("user_update", user_update[0], user_update[1])
+        user = data["user"]
+        user_id = int(user["id"])
 
-            self.dispatch("member_update", old_member, member)
+        # Try to get the old member from cache
+        old_member: Member | None = guild.get_member(user_id)
+        old_member_copy: Member | None = (
+            Member._copy(old_member) if old_member is not None else None
+        )
+
+        # Always create or update the member object
+        if old_member is not None:
+            old_member._update(data)
+            new_member = old_member
+        else:
+            new_member = Member(guild=guild, data=data, state=self)  # type: ignore
+
+        raw = RawMemberUpdateEvent(data, new_member)
+        raw.cached_member = old_member_copy
+        self.dispatch("raw_member_update", raw)
+
+        # Update the user cache if needed
+        user_update = None
+        if old_member_copy is not None:
+            user_update = old_member_copy._update_inner_user(user)
+        else:
+            user_update = new_member._update_inner_user(user)
+
+        if user_update:
+            self.dispatch("user_update", user_update[0], user_update[1])
+
+        if old_member_copy is not None:
+            self.dispatch("member_update", old_member_copy, new_member)
         else:
             if self.member_cache_flags.joined:
-                member = Member(data=data, guild=guild, state=self)
-
-                # Force an update on the inner user if necessary
-                user_update = member._update_inner_user(user)
-                if user_update:
-                    self.dispatch("user_update", user_update[0], user_update[1])
-
-                guild._add_member(member)
-            _log.debug(
-                "GUILD_MEMBER_UPDATE referencing an unknown member ID: %s. Discarding.",
-                user_id,
-            )
+                guild._add_member(new_member)
 
     def parse_guild_emojis_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))

@@ -715,6 +715,7 @@ class Intents(BaseFlags):
         - :func:`on_raw_member_remove`
         - :func:`on_member_update`
         - :func:`on_user_update`
+        - :func:`on_raw_member_update`
 
         This also corresponds to the following attributes and classes in terms of cache:
 
