@@ -426,7 +426,7 @@ class InviteTargetUsers:
 
         Retrieves the status of the target users processing job for this invite.
 
-        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        You must have created this invite or have the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log` permissions.
         permission to do this.
 
         Returns
