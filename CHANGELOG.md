@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
 
@@ -28,6 +30,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
 
 ### Deprecated
+
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
 
