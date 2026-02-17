@@ -172,7 +172,6 @@ class RoleTags:
     If you find an issue, please report it on `GitHub <https://github.com/Pycord-Development/pycord/issues/new?template=bug_report.yml>`_.
     Read `this <https://lulalaby.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work.
 
-    .. versionadded:: 1.6
     .. versionchanged:: 2.8
         The type of the role is now determined by the :attr:`RoleTags.type` attribute.
 
