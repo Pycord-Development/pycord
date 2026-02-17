@@ -503,7 +503,7 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.discriminator,
                 u.global_name,
                 u._public_flags,
-                new_primary_guild,
+                u.primary_guild,
                 u._collectibles,
                 u._avatar_decoration,
             ) = modified

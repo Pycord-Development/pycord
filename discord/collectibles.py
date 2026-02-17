@@ -25,22 +25,22 @@ DEALINGS IN THE SOFTWARE.
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from .asset import Asset
+from .types.collectibles import Collectibles as CollectiblesPayload
+from .types.collectibles import Nameplate as NameplatePayload
+
+if TYPE_CHECKING:
+    from .state import ConnectionState
+
 __all__ = (
     "Collectibles",
     "Nameplate",
 )
 
-if TYPE_CHECKING:
-    from .state import ConnectionState
-
-from .asset import Asset
-from .types.collectibles import Collectibles as CollectiblesPayload
-from .types.collectibles import Nameplate as NameplatePayload
-
 
 class Collectibles:
     """
-    Represents all the User's equipped collectibles.
+    Represents a user or member's equipped collectibles.
 
     .. versionadded:: 2.8
 
@@ -80,7 +80,7 @@ class Nameplate:
 
     .. versionadded:: 2.7
     .. versionchanged:: 2.8
-        Added methods to compare nameplates.
+        Nameplates are now comparable.
 
     .. container:: operations
 
