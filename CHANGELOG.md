@@ -16,6 +16,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 - Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
   ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
 
@@ -24,12 +26,20 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed some `Item` attributes not being set correctly.
+  ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
+
 ### Deprecated
 
 - Deprecated for both `Role` and `RoleTags`: `is_bot_managed`, `is_premium_subscriber`,
   `is_integration`, `is_available_for_purchase`, and `is_guild_connections_role`, in
   favor of `Role.type` and `RoleTags.type`.
   ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
 
