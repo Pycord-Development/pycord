@@ -78,7 +78,6 @@ class BaseUser(_UserTag):
         "_public_flags",
         "_avatar_decoration",
         "_state",
-        "_nameplate",
         "primary_guild",
         "_collectibles",
     )
@@ -208,6 +207,8 @@ class BaseUser(_UserTag):
         """The user's nameplate, if the user has one equipped. Alias for ``User.collectibles.nameplate``.
 
         .. versionadded:: 2.7
+        .. versionchanged:: 2.8
+            Now an alias for :attr:`User.collectibles.nameplate`.
         """
         if self.collectibles:
             return self.collectibles.nameplate

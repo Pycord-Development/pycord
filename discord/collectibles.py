@@ -46,13 +46,13 @@ class Collectibles:
 
     .. container:: operations
 
-    .. describe:: x == y
+        .. describe:: x == y
 
-        Checks if two sets of collectibles are equal.
+            Checks if two sets of collectibles are equal.
 
-    .. describe:: x != y
+        .. describe:: x != y
 
-        Checks if two sets of collectibles are not equal.
+            Checks if two sets of collectibles are not equal.
 
     Attributes
     ----------
@@ -61,8 +61,8 @@ class Collectibles:
     """
 
     def __init__(self, data: CollectiblesPayload, state: "ConnectionState") -> None:
-        if data and data.get("nameplate"):
-            self.nameplate = Nameplate(data=data["nameplate"], state=state)
+        if nameplate_data := data.get("nameplate"):
+            self.nameplate = Nameplate(data=nameplate_data, state=state)
         else:
             self.nameplate = None
         self._state = state
@@ -79,16 +79,18 @@ class Nameplate:
     Represents a Discord Nameplate.
 
     .. versionadded:: 2.7
+    .. versionchanged:: 2.8
+        Added methods to compare nameplates.
 
     .. container:: operations
 
-    .. describe:: x == y
+        .. describe:: x == y
 
-        Checks if two nameplates are equal.
+            Checks if two nameplates are equal.
 
-    .. describe:: x != y
+        .. describe:: x != y
 
-        Checks if two nameplates are not equal.
+            Checks if two nameplates are not equal.
 
     Attributes
     ----------

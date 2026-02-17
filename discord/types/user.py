@@ -54,5 +54,4 @@ class User(PartialUser, total=False):
     premium_type: PremiumType
     public_flags: int
     primary_guild: PrimaryGuild
-    nameplate: Nameplate
     collectibles: Collectibles
