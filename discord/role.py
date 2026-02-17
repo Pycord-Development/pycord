@@ -114,7 +114,7 @@ def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
 class RoleType(IntEnum):
     """Represents the type of role.
 
-    This is NOT provided by discord but is rather computed by pycord based on the role tags.
+    This is NOT provided by Discord but is rather computed based on the role tags.
 
     .. versionadded:: 2.8
 
