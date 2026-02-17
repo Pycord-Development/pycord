@@ -33,9 +33,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
-- Deprecated for both `Role` and `RoleTags`: `is_bot_managed`, `is_premium_subscriber`,
-  `is_integration`, `is_available_for_purchase`, and `is_guild_connections_role`, in
-  favor of `Role.type` and `RoleTags.type`.
+- Deprecated `is_bot_managed`, `is_premium_subscriber`,
+  `is_integration`, `is_available_for_purchase`, and `is_guild_connections_role` in
+  favor of `type` for both `Role` and `RoleTags` .
   ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 - Deprecated the `suppress` parameter in all applicable message-related methods in favor
   of `suppress_embeds`.
