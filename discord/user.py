@@ -210,8 +210,8 @@ class BaseUser(_UserTag):
         .. versionchanged:: 2.8
             Now an alias for :attr:`User.collectibles.nameplate`.
         """
-        if self.collectibles:
-            return self.collectibles.nameplate
+        if collectibles := self.collectibles:
+            return collectibles.nameplate
         return None
 
     @property
