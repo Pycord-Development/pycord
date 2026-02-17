@@ -80,7 +80,7 @@ class Nameplate:
 
     .. versionadded:: 2.7
     .. versionchanged:: 2.8
-        Added methods to compare nameplates.
+        Nameplates are now comparable.
 
     .. container:: operations
 
