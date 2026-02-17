@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
-from ..types.collectibles import Collectibles, Nameplate
+from .collectibles import Collectibles
 from .primary_guild import PrimaryGuild
 from .snowflake import Snowflake
 

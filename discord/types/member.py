@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import TypedDict
 
-from ..collectibles import Collectibles
+from .collectibles import Collectibles
 from .snowflake import SnowflakeList
 from .user import User
 
