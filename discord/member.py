@@ -37,6 +37,7 @@ import discord.abc
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
+from .collectibles import Collectibles
 from .colour import Colour
 from .enums import Status, try_enum
 from .errors import InvalidArgument
@@ -315,6 +316,7 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
         primary_guild: PrimaryGuild | None
+        collectibles: Collectibles | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -470,20 +472,27 @@ class Member(discord.abc.Messageable, _UserTag):
             u.discriminator,
             u.global_name,
             u._public_flags,
-            u._primary_guild,
-            u._nameplate,
+            u.primary_guild,
+            u._collectibles,
             u._avatar_decoration,
         )
         # These keys seem to always be available
-
+        if (
+            new_primary_guild_data := user.get("primary_guild")
+        ) and new_primary_guild_data.get("identity_enabled"):
+            new_primary_guild: PrimaryGuild | None = PrimaryGuild(
+                new_primary_guild_data, state=self._state
+            )
+        else:
+            new_primary_guild = None
         modified = (
             user["username"],
             user["avatar"],
             user["discriminator"],
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
-            user.get("primary_guild"),
-            user.get("collectibles") and user["collectibles"].get("nameplate"),
+            new_primary_guild,
+            user.get("collectibles") or u._collectibles,
             user.get("avatar_decoration_data"),
         )
         if original != modified:
@@ -494,8 +503,8 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.discriminator,
                 u.global_name,
                 u._public_flags,
-                u._primary_guild,
-                u._nameplate,
+                new_primary_guild,
+                u._collectibles,
                 u._avatar_decoration,
             ) = modified
             # Signal to dispatch on_user_update
