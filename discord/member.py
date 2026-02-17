@@ -37,6 +37,7 @@ import discord.abc
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
+from .collectibles import Collectibles
 from .colour import Colour
 from .enums import Status, try_enum
 from .errors import InvalidArgument
@@ -315,6 +316,7 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
         primary_guild: PrimaryGuild | None
+        collectibles: Collectibles | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
