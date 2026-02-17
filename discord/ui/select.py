@@ -71,8 +71,8 @@ if TYPE_CHECKING:
 
 ST = TypeVar("ST", bound="Snowflake | str", covariant=True, default=Any)
 S = TypeVar("S", bound="Select")
-V = TypeVar("V", bound="BaseView", covariant=True)
-M = TypeVar("M", bound="DesignerModal", covariant=True)
+V = TypeVar("V", bound="BaseView", covariant=True, default="BaseView")
+M = TypeVar("M", bound="DesignerModal", covariant=True, default="DesignerModal")
 
 
 class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
@@ -464,8 +464,8 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         id: :class:`int`
             The ID of the entity to add as a default.
         type: :class:`discord.SelectDefaultValueType`
-            The default value type of the ID. This is only required if :attr:`.type` is of
-            type :attr:`discord.ComponentType.mentionable_select`.
+            The default value type of the ID. This is only required if the select ``type`` is
+            :attr:`discord.ComponentType.mentionable_select`.
 
         Raises
         ------

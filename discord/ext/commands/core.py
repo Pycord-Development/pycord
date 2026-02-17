@@ -1799,7 +1799,7 @@ def check(predicate: Check) -> Callable[[T], T]:
         The ``predicate`` attribute was added.
 
     Examples
-    ---------
+    --------
 
     Creating a basic check to see if the command invoker is you.
 
@@ -1828,7 +1828,7 @@ def check(predicate: Check) -> Callable[[T], T]:
             await ctx.send('Only you!')
 
     Parameters
-    -----------
+    ----------
     predicate: Callable[[:class:`Context`], :class:`bool`]
         The predicate to check if the command should be invoked.
     """
@@ -1870,20 +1870,8 @@ def check_any(*checks: Check) -> Callable[[T], T]:
 
     .. versionadded:: 1.3
 
-    Parameters
-    ------------
-    \*checks: Callable[[:class:`Context`], :class:`bool`]
-        An argument list of checks that have been decorated with
-        the :func:`check` decorator.
-
-    Raises
-    ------
-    TypeError
-        A check passed has not been decorated with the :func:`check`
-        decorator.
-
     Examples
-    ---------
+    --------
 
     Creating a basic check to see if it's the bot owner or
     the server owner:
@@ -1899,6 +1887,18 @@ def check_any(*checks: Check) -> Callable[[T], T]:
         @commands.check_any(commands.is_owner(), is_guild_owner())
         async def only_for_owners(ctx):
             await ctx.send('Hello mister owner!')
+
+    Parameters
+    ----------
+    \*checks: Callable[[:class:`Context`], :class:`bool`]
+        An argument list of checks that have been decorated with
+        the :func:`check` decorator.
+
+    Raises
+    ------
+    TypeError
+        A check passed has not been decorated with the :func:`check`
+        decorator.
 
     """
 
@@ -1989,12 +1989,12 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
         instead of generic :exc:`.CheckFailure`
 
     Parameters
-    -----------
+    ----------
     items: List[Union[:class:`str`, :class:`int`]]
         An argument list of names or IDs to check that the member has roles wise.
 
     Example
-    --------
+    -------
 
     .. code-block:: python3
 
@@ -2104,12 +2104,12 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
     If the command is executed within a DM, it returns ``True``.
 
     Parameters
-    ------------
+    ----------
     \*\*perms: Dict[:class:`str`, :class:`bool`]
         An argument list of permissions to check for.
 
     Example
-    ---------
+    -------
 
     .. code-block:: python3
 
