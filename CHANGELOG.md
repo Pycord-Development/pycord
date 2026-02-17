@@ -34,10 +34,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
 - Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
   ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
-- Fixed updates of the `User.nameplate` and `User.avatar_decoration_data` attributes not
-  triggering the `on_user_update` event.
-  ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
-- Fixed `User.nameplate` attribute not being accessible.
+- Fixed updates to a user's avatar decoration not triggering the `on_user_update` event.
   ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
 
 ### Deprecated
