@@ -451,8 +451,8 @@ class Role(Hashable):
     mentionable: :class:`bool`
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
-        The role tags associated with this role. Use the tags to determine additional information about the role,
-        like if it's a bot role, a booster role, etc...
+        The role tags associated with this role. Tags indicate whether the role is a special role, 
+        such as a bot role or the booster role.
     unicode_emoji: Optional[:class:`str`]
         The role's unicode emoji.
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
