@@ -65,7 +65,7 @@ def _parse_tag_bool(data: RoleTagPayload, key: str) -> bool | None:
 
     None is returned if the key is not present.
     True is returned if the key is present and the value is None.
-    False is returned if the key is present and the value is not None.
+    False is returned for any other cases, but this should allegedly not happen.
 
     Parameters
     ----------
@@ -235,7 +235,7 @@ class RoleTags:
 
     @deprecated("RoleTags.type", "2.8")
     def is_guild_connections_role(self) -> bool:
-        """Whether the role is available for purchase.
+        """Whether the role is a guild connections role.
 
         Returns ``True`` if the role is available for purchase, and
         ``False`` if it is not available for purchase or if the role
