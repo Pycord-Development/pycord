@@ -2387,7 +2387,12 @@ class Client:
             The bot's default sounds.
         """
         data = await self._connection.http.get_default_sounds()
-        return [
+        sounds = [
             SoundboardSound(http=self.http, state=self._connection, data=s)
             for s in data
         ]
+        cached_sounds = [s.id for s in self._connection.sounds]
+        for sound in sounds:
+            if sound.id not in cached_sounds:
+                self._connection._sounds[sound.id] = sound
+        return sounds
