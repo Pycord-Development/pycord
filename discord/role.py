@@ -130,8 +130,8 @@ class RoleType(IntEnum):
         The role is a guild product role.
 
         .. note::
-            This is not possible to determine at times because role tags seem to be missing altogether when
-            a role is fetched notably. In such cases :class:`Role.type` and `Role.tags` will both be :class:`None`.
+            This is not possible to determine at times because role tags seem to be missing altogether, notably when
+            a role is fetched. In such cases :class:`Role.type` and `Role.tags` will both be :class:`None`.
     PREMIUM_SUBSCRIPTION_BASE: :class:`int`
         The role is a base subscription role.
 
@@ -452,7 +452,7 @@ class Role(Hashable):
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
         The role tags associated with this role. Tags indicate whether the role is a special role,
-        such as a bot role or the booster role.
+        such as but not limited to a bot role or the booster role.
     unicode_emoji: Optional[:class:`str`]
         The role's unicode emoji.
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
