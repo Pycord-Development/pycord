@@ -229,6 +229,10 @@ class Client:
             run :func:`fetch_emojis`.
 
         .. versionadded:: 2.7
+    cache_default_sounds: :class:`bool`
+        Whether to automatically fetch and cache the default soundboard sounds on startup. Defaults to ``True``.
+
+        .. versionadded:: 2.8
 
     Attributes
     -----------

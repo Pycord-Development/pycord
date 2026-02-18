@@ -253,6 +253,7 @@ class ConnectionState:
             self.deref_user = self.deref_user_no_intents  # type: ignore
 
         self.cache_app_emojis: bool = options.get("cache_app_emojis", False)
+        self.cache_default_sounds: bool = options.get("cache_default_sounds", True)
 
         self.parsers = parsers = {}
         for attr, func in inspect.getmembers(self):
@@ -663,7 +664,8 @@ class ConnectionState:
         except asyncio.CancelledError:
             pass
         else:
-            await self._add_default_sounds()
+            if self.cache_default_sounds:
+                await self._add_default_sounds()
             # dispatch the event
             self.call_handlers("ready")
             self.dispatch("ready")
