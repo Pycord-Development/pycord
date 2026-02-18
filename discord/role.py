@@ -280,7 +280,14 @@ class RoleTags:
 
     @deprecated("RoleTags.type", "2.8")
     def is_guild_connections_role(self) -> bool:
-        """Whether the role is a guild connections role."""
+        """Whether the role is available for purchase.
+
+        Returns ``True`` if the role is available for purchase, and
+        ``False`` if it is not available for purchase or if the role
+        is not linked to a guild subscription.
+
+        .. versionadded:: 2.7
+        """
         return self._guild_connections is True
 
     def __repr__(self) -> str:
