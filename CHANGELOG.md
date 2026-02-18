@@ -20,8 +20,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 - Added the ability to compare instances of `Nameplate`.
   ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
-- Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration` to
-  access a member's guild-specific avatar decoration.
+- Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
   ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
 
 ### Changed

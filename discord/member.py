@@ -516,28 +516,6 @@ class Member(discord.abc.Messageable, _UserTag):
             return to_return, u
 
     @property
-    def display_avatar_decoration(self) -> Asset | None:
-        """Returns an :class:`Asset` for the member's guild specific avatar decoration if one is set. Otherwise,
-        their global avatar decoration is returned.
-
-        .. versionadded:: 2.8
-        """
-        return self.guild_avatar_decoration or self._user.avatar_decoration
-
-    @property
-    def guild_avatar_decoration(self) -> Asset | None:
-        """Returns an :class:`Asset` for the guild specific avatar decoration
-        the member has. If unavailable, ``None`` is returned.
-
-        .. versionadded:: 2.8
-        """
-        if self._avatar_decoration is None:
-            return None
-        return Asset._from_avatar_decoration(
-            self._state, self.id, self._avatar_decoration.get("asset")
-        )
-
-    @property
     def status(self) -> Status:
         """The member's overall status.
         If the value is unknown, then it will be a :class:`str` instead.
@@ -688,6 +666,31 @@ class Member(discord.abc.Messageable, _UserTag):
             return None
         return Asset._from_guild_avatar(
             self._state, self.guild.id, self.id, self._avatar
+        )
+
+    @property
+    def display_avatar_decoration(self) -> Asset | None:
+        """Returns the member's displayed avatar decoration.
+
+        For regular members this is just their avatar decoration, but
+        if they have a guild specific avatar decoration then that
+        is returned instead.
+
+        .. versionadded:: 2.8
+        """
+        return self.guild_avatar_decoration or self._user.avatar_decoration
+
+    @property
+    def guild_avatar_decoration(self) -> Asset | None:
+        """Returns an :class:`Asset` for the guild specific avatar decoration
+        the member has. If unavailable, ``None`` is returned.
+
+        .. versionadded:: 2.8
+        """
+        if self._avatar_decoration is None:
+            return None
+        return Asset._from_avatar_decoration(
+            self._state, self.id, self._avatar_decoration.get("asset")
         )
 
     @property
