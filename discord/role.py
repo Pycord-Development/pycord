@@ -219,7 +219,7 @@ class RoleTags:
     @deprecated("RoleTags.type", "2.8")
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild."""
-        return self._premium_subscriber is None
+        return self._premium_subscriber is True
 
     @deprecated("RoleTags.type", "2.8")
     def is_integration(self) -> bool:
