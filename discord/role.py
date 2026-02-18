@@ -26,13 +26,13 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from contextlib import suppress
-from enum import IntEnum
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from typing_extensions import Self
 
 from .asset import Asset
 from .colour import Colour
+from .enums import RoleType
 from .errors import InvalidArgument
 from .flags import RoleFlags
 from .mixins import Hashable
@@ -40,7 +40,6 @@ from .permissions import Permissions
 from .utils import (
     MISSING,
     _bytes_to_base64_data,
-    _get_as_snowflake,
     cached_slot_property,
     deprecated,
     snowflake_time,
@@ -111,56 +110,6 @@ def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
     return None
 
 
-class RoleType(IntEnum):
-    """Represents the type of role.
-
-    This is NOT provided by Discord but is rather computed based on the role tags.
-
-    .. versionadded:: 2.8
-
-    Attributes
-    ----------
-    NORMAL: :class:`int`
-        The role is a normal role.
-    APPLICATION: :class:`int`
-        The role is an application (bot) role.
-    BOOSTER: :class:`int`
-        The role is a guild's booster role.
-    GUILD_PRODUCT: :class:`int`
-        The role is a guild product role.
-
-        .. note::
-            This is not possible to determine at times because role tags seem to be missing altogether, notably when
-            a role is fetched. In such cases :class:`Role.type` and `Role.tags` will both be :class:`None`.
-    PREMIUM_SUBSCRIPTION_BASE: :class:`int`
-        The role is a base subscription role.
-
-        .. note::
-            This is not possible to determine currently, will be INTEGRATION if it's a base subscription.
-    PREMIUM_SUBSCRIPTION_TIER: :class:`int`
-        The role is a subscription role.
-    DRAFT_PREMIUM_SUBSCRIPTION_TIER: :class:`int`
-        The role is a draft subscription role.
-    INTEGRATION: :class:`int`
-        The role is an integration role, such as Twitch or YouTube, or a base subscription role.
-    CONNECTION: :class:`int`
-        The role is a guild connections role.
-    UNKNOWN: :class:`int`
-        The role type is unknown.
-    """
-
-    NORMAL = 0
-    APPLICATION = 1
-    BOOSTER = 2
-    GUILD_PRODUCT = 3  # Not possible to determine *at times* because role tags seem to be missing altogether when fetched
-    PREMIUM_SUBSCRIPTION_BASE = 4  # Not possible to determine currently, will be INTEGRATION if it's a base subscription
-    PREMIUM_SUBSCRIPTION_TIER = 5
-    DRAFT_PREMIUM_SUBSCRIPTION_TIER = 6
-    INTEGRATION = 7
-    CONNECTION = 8
-    UNKNOWN = 9
-
-
 class RoleTags:
     """Represents tags on a role.
 
@@ -222,7 +171,13 @@ class RoleTags:
 
     @cached_slot_property("_type")
     def type(self) -> RoleType:
-        """The type of the role."""
+        """:class:`RoleType`: The type of the role.
+
+        Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
+        In order to make your life easier, pycord provides a :attr:`RoleTags.type` attribute that attempts to determine the role type based on the role tags. Its value is not provided by Discord but is rather computed based on the role tags.
+        If you find an issue, please report it on `GitHub <https://github.com/Pycord-Development/pycord/issues/new?template=bug_report.yml>`_.
+        Read `this <https://lulalaby.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work.
+        """
         # Bot role
         if self.bot_id is not None:
             return RoleType.APPLICATION
@@ -716,6 +671,8 @@ class Role(Hashable):
     @property
     def type(self) -> RoleType:
         """The type of the role.
+
+        This is an alias for :attr:`RoleTags.type`.
 
         .. versionadded:: 2.8
         """
