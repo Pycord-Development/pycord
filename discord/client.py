@@ -42,6 +42,7 @@ from typing import (
 )
 
 import aiohttp
+from typing_extensions import deprecated
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -1185,10 +1186,8 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
-    @utils.deprecated(
-        instead="Client.get_or_fetch(User, id)",
-        since="2.7",
-        removed="3.0",
+    @deprecated(
+        "Client.get_or_fetch_user is deprecated since version 2.7 and will be removed in version 3.0, consider using Client.get_or_fetch(User, id) instead."
     )
     async def get_or_fetch_user(self, id: int, /) -> User | None:  # TODO: Remove in 3.0
         """|coro|
