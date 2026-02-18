@@ -517,13 +517,22 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def display_avatar_decoration(self) -> Asset | None:
-        """Returns the member's guild specific avatar decoration if one is set. Otherwise,
+        """Returns an :class:`Asset` for the member's guild specific avatar decoration if one is set. Otherwise,
         their global avatar decoration is returned.
 
         .. versionadded:: 2.8
         """
+        return self.guild_avatar_decoration or self._user.avatar_decoration
+
+    @property
+    def guild_avatar_decoration(self) -> Asset | None:
+        """Returns an :class:`Asset` for the guild specific avatar decoration
+        the member has. If unavailable, ``None`` is returned.
+
+        .. versionadded:: 2.8
+        """
         if self._avatar_decoration is None:
-            return self._user.avatar_decoration
+            return None
         return Asset._from_avatar_decoration(
             self._state, self.id, self._avatar_decoration.get("asset")
         )
