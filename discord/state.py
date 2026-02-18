@@ -253,7 +253,9 @@ class ConnectionState:
             self.deref_user = self.deref_user_no_intents  # type: ignore
 
         self.cache_app_emojis: bool = options.get("cache_app_emojis", False)
-        self.cache_default_sounds: bool = options.get("cache_default_sounds", True) # TODO(Paillat-dev): Don't cache default sounds by default
+        self.cache_default_sounds: bool = options.get(
+            "cache_default_sounds", True
+        )  # TODO(Paillat-dev): Don't cache default sounds by default
 
         self.parsers = parsers = {}
         for attr, func in inspect.getmembers(self):
