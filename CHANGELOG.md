@@ -14,18 +14,32 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `User.collectibles` property.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added the ability to compare instances of `Nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 
 ### Fixed
 
 - Fixed some `Item` attributes not being set correctly.
   ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
 
 ### Deprecated
+
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
 
@@ -42,6 +56,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added the ability to compare instances of `PrimaryGuild`.
   ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Added `cache_default_sounds` parameter to `Client` and its subclasses.
+  ([#3113](https://github.com/Pycord-Development/pycord/pull/3113))
 
 ### Changed
 
