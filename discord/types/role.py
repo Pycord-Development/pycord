@@ -25,6 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from typing import Literal
+
 from typing_extensions import NotRequired, TypedDict
 
 from .snowflake import Snowflake
@@ -51,6 +53,10 @@ class Role(TypedDict):
 
 
 class RoleTags(TypedDict, total=False):
-    bot_id: Snowflake
-    integration_id: Snowflake
-    premium_subscriber: None
+    bot_id: NotRequired[Snowflake]
+    integration_id: NotRequired[Snowflake]
+    subscription_listing_id: NotRequired[Snowflake]
+    # For future reference, here a key being present and `None` means `True`, and it being missing means `False`
+    premium_subscriber: NotRequired[Literal[None]]
+    available_for_purchase: NotRequired[Literal[None]]
+    guild_connections: NotRequired[Literal[None]]
