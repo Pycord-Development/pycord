@@ -570,6 +570,9 @@ class Role(Hashable):
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot.
 
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
+
         .. versionadded:: 1.6
         """
         return self.tags is not None and self.tags.is_bot_managed()
@@ -577,6 +580,9 @@ class Role(Hashable):
     @deprecated("Role.type", "2.8")
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild.
+
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
 
         .. versionadded:: 1.6
         """
@@ -586,6 +592,9 @@ class Role(Hashable):
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
+
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
 
         .. versionadded:: 1.6
         """
@@ -622,6 +631,9 @@ class Role(Hashable):
         ``False`` if it is not available for purchase or if the
         role is not linked to a guild subscription.
 
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
+
         .. versionadded:: 2.7
         """
         return self.tags is not None and self.tags.is_available_for_purchase()
@@ -629,6 +641,9 @@ class Role(Hashable):
     @deprecated("Role.type", "2.8")
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
+
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
 
         .. versionadded:: 2.7
         """
