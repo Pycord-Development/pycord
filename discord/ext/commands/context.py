@@ -34,7 +34,7 @@ import discord.utils
 from discord.message import Message
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from discord.abc import MessageableChannel
     from discord.guild import Guild
