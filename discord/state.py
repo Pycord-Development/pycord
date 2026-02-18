@@ -620,6 +620,8 @@ class ConnectionState:
             data = await self.http.get_all_application_emojis(self.application_id)
             for e in data.get("items", []):
                 self.maybe_store_app_emoji(self.application_id, e)
+        if self.cache_default_sounds:
+            await self._add_default_sounds()
         try:
             states = []
             while True:
@@ -664,8 +666,6 @@ class ConnectionState:
         except asyncio.CancelledError:
             pass
         else:
-            if self.cache_default_sounds:
-                await self._add_default_sounds()
             # dispatch the event
             self.call_handlers("ready")
             self.dispatch("ready")
