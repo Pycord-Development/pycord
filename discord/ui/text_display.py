@@ -70,20 +70,31 @@ class TextDisplay(ViewItem[V], ModalItem[M]):
     ):
         super().__init__()
 
-        self._underlying = TextDisplayComponent._raw_construct(
-            type=ComponentType.text_display,
+        self._underlying = self._generate_underlying(
             id=id,
             content=content,
+        )
+
+    def _generate_underlying(
+        self,
+        content: str | None = None,
+        id: int | None = None,
+    ) -> TextDisplayComponent:
+        super()._generate_underlying(TextDisplayComponent)
+        return TextDisplayComponent._raw_construct(
+            type=ComponentType.text_display,
+            id=id or self.id,
+            content=content or self.content,
         )
 
     @property
     def content(self) -> str:
         """The text display's content."""
-        return self._underlying.content
+        return self.underlying.content
 
     @content.setter
     def content(self, value: str) -> None:
-        self._underlying.content = value
+        self.underlying.content = value
 
     def to_component_dict(self) -> TextDisplayComponentPayload:
         return super().to_component_dict()

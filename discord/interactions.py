@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-from typing import TYPE_CHECKING, Any, Coroutine, Union
+from typing import TYPE_CHECKING, Any, Coroutine, Union, overload
 
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
@@ -47,6 +47,7 @@ from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
 from .user import User
+from .utils import warn_deprecated
 from .webhook.async_ import (
     Webhook,
     WebhookMessage,
@@ -88,7 +89,7 @@ if TYPE_CHECKING:
     from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
-    from .ui.modal import Modal
+    from .ui.modal import BaseModal
     from .ui.view import BaseView
 
     InteractionChannel = Union[
@@ -168,7 +169,7 @@ class Interaction:
         The view that this interaction belongs to.
 
         .. versionadded:: 2.7
-    modal: Optional[:class:`Modal`]
+    modal: Optional[:class:`BaseModal`]
         The modal that this interaction belongs to.
 
         .. versionadded:: 2.7
@@ -258,7 +259,7 @@ class Interaction:
 
         self.command: ApplicationCommand | None = None
         self.view: BaseView | None = None
-        self.modal: Modal | None = None
+        self.modal: BaseModal | None = None
         self.attachment_size_limit: int = data.get("attachment_size_limit")
 
         self.message: Message | None = None
@@ -300,6 +301,7 @@ class Interaction:
 
         channel = data.get("channel")
         data_ch_type: int | None = channel.get("type") if channel else None
+        factory: Any | None = None
 
         if data_ch_type is not None:
             factory, ch_type = _threaded_channel_factory(data_ch_type)
@@ -308,6 +310,11 @@ class Interaction:
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
+            if self.channel is None and factory is not None:
+                self.channel = factory(
+                    state=self._state, data=channel, guild=self.guild
+                )
+
         if self.channel is None and self.channel_id is not None:
             ch_type = (
                 ChannelType.text if self.guild_id is not None else ChannelType.private
@@ -519,7 +526,8 @@ class Interaction:
         view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
-        suppress: bool = False,
+        suppress: bool | None = None,
+        suppress_embeds: bool = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -561,6 +569,12 @@ class Interaction:
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
 
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         :class:`InteractionMessage`
@@ -579,6 +593,12 @@ class Interaction:
         """
 
         previous_mentions: AllowedMentions | None = self._state.allowed_mentions
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+        elif suppress_embeds is None:
+            suppress_embeds = False
         params = handle_message_parameters(
             content=content,
             file=file,
@@ -589,7 +609,7 @@ class Interaction:
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            suppress=suppress,
+            suppress=suppress_embeds,
         )
         if view and self.message:
             self._state.prevent_view_updates_for(self.message.id)
@@ -693,11 +713,86 @@ class Interaction:
         """
         return await self.delete_original_response(**kwargs)
 
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embed: Embed | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
+    ) -> Interaction | WebhookMessage: ...
+
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
+    ) -> Interaction | WebhookMessage: ...
+
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
         """|coro|
 
         Sends either a response or a message using the followup webhook determined by whether the interaction
         has been responded to or not.
+
+        Parameters
+        ----------
+        content: Optional[:class:`str`]
+            The content of the message to send.
+        embeds: List[:class:`Embed`]
+            A list of embeds to send with the content. Maximum of 10. This cannot
+            be mixed with the ``embed`` parameter.
+        embed: :class:`Embed`
+            The rich embed for the content to send. This cannot be mixed with
+            ``embeds`` parameter.
+        tts: :class:`bool`
+            Indicates if the message should be sent using text-to-speech.
+        view: :class:`discord.ui.BaseView`
+            The view to send with the message.
+        ephemeral: :class:`bool`
+            Indicates if the message should only be visible to the user who started the interaction.
+            If a view is sent with an ephemeral message, and it has no timeout set then the timeout
+            is set to 15 minutes.
+        allowed_mentions: :class:`AllowedMentions`
+            Controls the mentions being processed in this message.
+            See :meth:`.abc.Messageable.send` for more information.
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
+        file: :class:`File`
+            The file to upload.
+        files: List[:class:`File`]
+            A list of files to upload. Must be a maximum of 10.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -932,7 +1027,11 @@ class InteractionResponse:
                     "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
                 )
             state = _InteractionMessageState(self._parent, self._parent._state)
-            message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
+            message = InteractionMessage(
+                state=state,
+                channel=channel,
+                data=callback_response["resource"]["message"],
+            )  # type: ignore
             self._parent._original_response = message
 
         self._parent.callback = InteractionCallback(callback_response["interaction"])
@@ -941,16 +1040,18 @@ class InteractionResponse:
         self,
         content: Any | None = None,
         *,
-        embed: Embed = None,
-        embeds: list[Embed] = None,
-        view: BaseView = None,
+        embed: Embed | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
         tts: bool = False,
         ephemeral: bool = False,
-        allowed_mentions: AllowedMentions = None,
-        file: File = None,
-        files: list[File] = None,
-        poll: Poll = None,
-        delete_after: float = None,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction:
         """|coro|
 
@@ -988,6 +1089,14 @@ class InteractionResponse:
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1026,7 +1135,11 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        flags = MessageFlags(ephemeral=ephemeral)
+        flags = MessageFlags(
+            ephemeral=ephemeral,
+            suppress_notifications=silent,
+            suppress_embeds=suppress_embeds,
+        )
 
         if view:
             payload["components"] = view.to_components()
@@ -1333,14 +1446,14 @@ class InteractionResponse:
         self._responded = True
         await self._process_callback_response(callback_response)
 
-    async def send_modal(self, modal: Modal) -> Interaction:
+    async def send_modal(self, modal: BaseModal) -> Interaction:
         """|coro|
         Responds to this interaction by sending a modal dialog.
         This cannot be used to respond to another modal dialog submission.
 
         Parameters
         ----------
-        modal: :class:`discord.ui.Modal`
+        modal: :class:`discord.ui.BaseModal`
             The modal dialog to display to the user.
 
         Raises

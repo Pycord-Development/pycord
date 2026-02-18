@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-02 04:28+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -89,14 +89,10 @@ msgid "The webhook's ID"
 msgstr ""
 
 #: 05226483bba4422686ebd5e1759e03eb 072b763bd6954d3887f1377e27a1cf78
-#: 1c5ffd2d40474cd69c8be7d2369fa2bd 399c74a3ba7a4edf8f85c0dbfa06b384
-#: 7f6a88023911415b9572f52fd6745bf6 867fb1d0956c45a688a9bccd4d0e39d2
-#: 8ec37bba20ef472bbd5212b0e31c1f90 977e58a364e54f12a0e7ab82f7953c1e
+#: 867fb1d0956c45a688a9bccd4d0e39d2 8ec37bba20ef472bbd5212b0e31c1f90
 #: 9ee22664aca94669b7f1f42eee35554d a175b7d3b082438481a88e170e3b56ee
-#: a7888f4831c04a9d8543768f6e1124bc c62c2bc7e9dc40df90d661c4f5495935
-#: d7094652b36144c0bfebb152aa3641a5 d78e692debe24339a7306250c641697d
-#: discord.webhook.async_.Webhook discord.webhook.sync.SyncWebhook
-#: ef7491e47bbe4bc6a92a3f236a1243b5 f3f076cd019940dbac5d2fde2b488ffb
+#: c62c2bc7e9dc40df90d661c4f5495935 discord.webhook.async_.Webhook
+#: discord.webhook.sync.SyncWebhook ef7491e47bbe4bc6a92a3f236a1243b5
 #: f89922b9fe28493d8b9865e2221e51c6 fcd7cc29aa6642c69b150c09448a7cc2 of
 msgid "type"
 msgstr ""
@@ -123,10 +119,10 @@ msgid ""
 "webhook cannot be used to make requests."
 msgstr ""
 
-#: 39cd7a6cc7614da0951dcb4fd2941973 5649761eac8c4357bf37e0ee72ed10a8
-#: 9fe496235d7840c398a8639d961be6d3 b51554387f2146e2a8d4785717942922
-#: discord.webhook.async_.Webhook:64 discord.webhook.async_.Webhook:89
-#: discord.webhook.sync.SyncWebhook:41 discord.webhook.sync.SyncWebhook:66 of
+#: 5649761eac8c4357bf37e0ee72ed10a8 9fe496235d7840c398a8639d961be6d3
+#: b51554387f2146e2a8d4785717942922 discord.webhook.async_.Webhook:64
+#: discord.webhook.async_.Webhook:89 discord.webhook.sync.SyncWebhook:41
+#: discord.webhook.sync.SyncWebhook:66 of
 msgid "Optional[:class:`str`]"
 msgstr ""
 
@@ -135,10 +131,10 @@ msgstr ""
 msgid "The guild ID this webhook is for."
 msgstr ""
 
-#: 1b1adc2b50f9480baf153d1c675d23cf 34f98475bb884d7a8a4d349034bec7ac
-#: 5d430eaf86a048df9dec47af3be3b9b3 c32911d397be4cf89ac379159b2f6d57
-#: discord.webhook.async_.Webhook:70 discord.webhook.async_.Webhook:76
-#: discord.webhook.sync.SyncWebhook:47 discord.webhook.sync.SyncWebhook:53 of
+#: 34f98475bb884d7a8a4d349034bec7ac 5d430eaf86a048df9dec47af3be3b9b3
+#: c32911d397be4cf89ac379159b2f6d57 discord.webhook.async_.Webhook:70
+#: discord.webhook.async_.Webhook:76 discord.webhook.sync.SyncWebhook:47
+#: discord.webhook.sync.SyncWebhook:53 of
 msgid "Optional[:class:`int`]"
 msgstr ""
 
@@ -188,56 +184,49 @@ msgstr ""
 msgid "Optional[:class:`PartialWebhookChannel`]"
 msgstr ""
 
-#: ../../api/webhooks.rst 2a6dbf19fec0401da878f409a1223406
-#: 2a7ce2d14e6f4d43b8c18dff80d69818 4741bbc19cc448e7a02b3f14ab40082c
-#: 47f64a1ccedb412d84512fcc3de54af9 4b8e494f55ce467a83a0dcf8564c7128
-#: 5a1d6647cea44a9d9b3b953b03be20a7 65b91ca4c67a4c6e9e223bd4baa39cb6
-#: 65d278375a114be1ad47244bad120056 729868ab3cdb4d64b21427008b0e502a
-#: 81a7bc9a0f9b44f096f6bc43e2b732df 89516d3e3b6e4664bc4cb33c0a15da00
-#: 8d2ed0e6e1f04493bea6cde65a3b803e 8d70d5eaacf6471eb3976571a766f5ac
-#: aeac642079b24da39a55b480d7f11f21 b6ec5afcc4844a89a37ff06b1fce8728
-#: b9fbe6d21b144e38a3b8bddecb0cd260 baac432c9cbe4b4dafaea5b2e243ef22
-#: bab986faa9b84b6eab3766e5dc4f65be bb88186e3c324dc9ae129eed893ed95a
-#: c1637efd86d14f01a5ab87bf13ff0a9a dd2dadd1bc354860a8d3bfd963efa172
-#: e2fc7b85f0a54cf2bc9583210cbc562a eaa61028dd334053a6054d950e115f67
-#: ecefa989d6bf4423817f8af3a9760b04 fca3bbdeba264d51b10896fc9ba953ab
-#: ff360a3fe64d475c8bb0223c151e15b2
+#: 6b7f2c1f04ab47fbaccb2d8da7fe625b discord.webhook.async_.Webhook:111 of
+msgid ""
+"The interaction this webhook belongs to. Only set if :attr:`type` is "
+":attr:`WebhookType.application`."
+msgstr ""
+
+#: dbf3fdf8db6f4a6aaa23cdd208067234 discord.webhook.async_.Webhook:116 of
+msgid "Optional[:class:`Interaction`]"
+msgstr ""
+
+#: ../../api/webhooks.rst 65d278375a114be1ad47244bad120056
+#: 8d2ed0e6e1f04493bea6cde65a3b803e b9fbe6d21b144e38a3b8bddecb0cd260
 msgid "Parameters"
 msgstr ""
 
-#: 018110b6f40d477fb9910915d427bea0 80def0fef9c746b99c1c6e318bf3e746
-#: discord.SyncWebhook.url:1 discord.Webhook.url:1 of
+#: 80def0fef9c746b99c1c6e318bf3e746 discord.SyncWebhook.url:1
+#: discord.Webhook.url:1 of
 msgid "Returns the webhook's url."
 msgstr ""
 
-#: 7060f29dd7d1487eb9d7de8d9442330e 8a221f21eb4f46038c4abbfa44db1805
-#: discord.webhook.async_.Webhook.partial:1
+#: 8a221f21eb4f46038c4abbfa44db1805 discord.webhook.async_.Webhook.partial:1
 #: discord.webhook.sync.SyncWebhook.partial:1 of
 msgid "Creates a partial :class:`Webhook`."
 msgstr ""
 
-#: 0592a0870448481e81add88499153b79 4255bef48a8b4c979d2947ded336c0a0
-#: discord.webhook.async_.Webhook.partial:4
+#: 4255bef48a8b4c979d2947ded336c0a0 discord.webhook.async_.Webhook.partial:4
 #: discord.webhook.sync.SyncWebhook.partial:4 of
 msgid "The ID of the webhook."
 msgstr ""
 
-#: b4570f53785d4f84b44fbd4766c2c1a4 c26ef7a4a733461089c7cc53d5264381
-#: discord.webhook.async_.Webhook.partial:7
+#: c26ef7a4a733461089c7cc53d5264381 discord.webhook.async_.Webhook.partial:7
 #: discord.webhook.sync.SyncWebhook.partial:7 of
 msgid "The authentication token of the webhook."
 msgstr ""
 
-#: 169396a9a2a44033b16911dd71982574 6ba95c33a1c147bcae02dd0fb1ad126f
-#: discord.webhook.async_.Webhook.from_url:7
+#: 169396a9a2a44033b16911dd71982574 discord.webhook.async_.Webhook.from_url:7
 #: discord.webhook.async_.Webhook.partial:10 of
 msgid ""
 "The session to use to send requests with. Note that the library does not "
 "manage the session and will not close it.  .. versionadded:: 2.0"
 msgstr ""
 
-#: 0392881964294df0adb890e3948ef49a 5d12b915f2fe409e9134257c1fce1245
-#: discord.webhook.async_.Webhook.from_url:7
+#: 5d12b915f2fe409e9134257c1fce1245 discord.webhook.async_.Webhook.from_url:7
 #: discord.webhook.async_.Webhook.partial:10 of
 msgid ""
 "The session to use to send requests with. Note that the library does not "
@@ -245,38 +234,26 @@ msgid ""
 msgstr ""
 
 #: 4059598390a3493db4f0464693630d6f discord.webhook.async_.Webhook.from_url:14
-#: discord.webhook.async_.Webhook.partial:17 f56210d48c314e5ea934feb4104820be
-#: of
+#: discord.webhook.async_.Webhook.partial:17 of
 msgid ""
 "The bot authentication token for authenticated requests involving the "
 "webhook.  .. versionadded:: 2.0"
 msgstr ""
 
-#: 064c5bda421e4afe8052ed60c0c4571e 16b667fd36e34ab399f839558bbc75ad
-#: b89e527c039d4ac4bfb0a83251f0555f discord.webhook.async_.Webhook.from_url:14
+#: 16b667fd36e34ab399f839558bbc75ad discord.webhook.async_.Webhook.from_url:14
 #: discord.webhook.async_.Webhook.partial:17
 #: discord.webhook.sync.SyncWebhook.from_url:13
-#: discord.webhook.sync.SyncWebhook.partial:16 e533e1fc79ea4a9d894e7d4a9696bd95
-#: of
+#: discord.webhook.sync.SyncWebhook.partial:16 of
 msgid ""
 "The bot authentication token for authenticated requests involving the "
 "webhook."
 msgstr ""
 
-#: ../../api/webhooks.rst 12571487fd124a6eb98a51b7920fe0e0
-#: 1d8bc33d958e4f5badb9f73b71839d26 3b3abc39ee1844b0bb02a7aafaee63e2
-#: 6e5d965f5a2349cfb6a0986aa9c2b95c 741af853c2694404a8ef56d3c940e9cf
-#: 9ec5fe0284294ee9a5fd8a662fc09e1d a5c71bce8be04ac48397306b296e5072
-#: a69a2f45e4084666a57a753f4330b119 b3acc75316bb4d99b9aaf08576b709ec
-#: bbb70b8fcf224bc2921b14e7a306d2f9 be0a1ab8a2254c6fbb9f6bbbc1297311
-#: bfbbab2561944cb7815d1807ed46bbf4 bfccb2081a444eabb4f9950ff32a1f1c
-#: ca07b32fc1e442589857078a4fc9fcdd
+#: ../../api/webhooks.rst 9ec5fe0284294ee9a5fd8a662fc09e1d
 msgid "Returns"
 msgstr ""
 
-#: 36c2aaac7c1c430ab6e86cbec6344fd5 36f56ffb485d46158134af3f3b72d49e
-#: 5ef04c727fa84405952bca3ed5f64830 a9420415c08a419f937591ef861c05bd
-#: discord.webhook.async_.Webhook.from_url:20
+#: 5ef04c727fa84405952bca3ed5f64830 discord.webhook.async_.Webhook.from_url:20
 #: discord.webhook.async_.Webhook.partial:23
 #: discord.webhook.sync.SyncWebhook.from_url:17
 #: discord.webhook.sync.SyncWebhook.partial:20 of
@@ -285,23 +262,12 @@ msgid ""
 "with an ID and a token."
 msgstr ""
 
-#: ../../api/webhooks.rst 0061f3f374b842f89f81294919e7b332
-#: 0e582d4c476141f2a5dfb615c6d02191 17f68472dcba42fe8f0af144bff7693b
-#: 1c93c2d555534835830b25ff5e8de975 21a35e447c374a698149c8cee0fb0f2e
-#: 29a4d73f6f654bdb95f59cdb8283b986 3524ae7c70fe448da373ac18c91541b4
-#: 3a0de5cee95f4f069e27cab0d5bd36ad 41dc47e592ff45e9804d032c9de5487c
-#: 5e09707da35846aea09a89d60f3c1644 6543b487b51f491093b0a7518bdaff2b
-#: 6699173541df4cf0b2d64dc1b9e32155 829bc489f8b4466ca10e8cb4aba00216
-#: a4b300f6a3534ff4b69575c05386db6f aa5695c654474111925b8ffa2a2c9e8b
-#: b7c09fab2c2a41bbbdccb0e3bd1c1551 cac2e021160d479aa7aadb818c8ac8e2
-#: d7c1fa42b71d435e943f6847ae61ff6d e4cbe6ca2eb842c8a8500ec39b672a77
-#: ef9b57f90dde4f56a2ccfe907ae6f69a fd3f5c1073b64aef85851f24f370d2a7
+#: ../../api/webhooks.rst aa5695c654474111925b8ffa2a2c9e8b
 msgid "Return type"
 msgstr ""
 
-#: 059596f78a2a4bc9a8f8dc47c0d72545 0ccfcf6854e942f9b2da580aab110e81
-#: 601902981989407daf93c9fcbb016b17 6abca8c4a9b04a5886c172663749bb17
-#: a0f0f04098a04adb95f6e6abc687ad8f discord.webhook.async_.Webhook.fetch:21
+#: 0ccfcf6854e942f9b2da580aab110e81 6abca8c4a9b04a5886c172663749bb17
+#: discord.webhook.async_.Webhook.fetch:21
 #: discord.webhook.async_.Webhook.from_url:22
 #: discord.webhook.async_.Webhook.partial:25
 #: discord.webhook.sync.SyncWebhook.from_url:19
@@ -309,29 +275,17 @@ msgstr ""
 msgid ":class:`Webhook`"
 msgstr ""
 
-#: 62db58ad3bb54bedaf637267dc5a1fee 7149d5e4edae46c987d2af3fcb4ebd5f
-#: discord.webhook.async_.Webhook.from_url:1
+#: 7149d5e4edae46c987d2af3fcb4ebd5f discord.webhook.async_.Webhook.from_url:1
 #: discord.webhook.sync.SyncWebhook.from_url:1 of
 msgid "Creates a partial :class:`Webhook` from a webhook URL."
 msgstr ""
 
-#: 4f9eae91845a4c379810ccd3aad3cc56 7c5b01df522d472f80c1a9f78fa193e0
-#: discord.webhook.async_.Webhook.from_url:4
+#: 7c5b01df522d472f80c1a9f78fa193e0 discord.webhook.async_.Webhook.from_url:4
 #: discord.webhook.sync.SyncWebhook.from_url:4 of
 msgid "The URL of the webhook."
 msgstr ""
 
-#: ../../api/webhooks.rst 28e9e782dcad43c79f853109d7b92168
-#: 3080f4116f3e474a964564620d33d546 3a5fb2ca5abe4ff9a7d5135aa47cb20d
-#: 43431d37eb44432ab097b3c8bd6eebaa 44a3c53d49f14587bd21ab912ce74102
-#: 595a6c1517874a3ca096bfc82e4eb846 636efb42801a4e0ab427b4b82d656c51
-#: 63a102f3ac9b44338a3a33437fe21c10 735b30610b2d466fbc18d717607b17af
-#: 783798e7c763484396703d61f4209dbc 8846e8c581084bd88c4286cea6adbada
-#: 897b5cd4992649b8a43bef0460638485 a319616061d3489dbd1dd48a4fee5c2d
-#: a4b28b0d5cbc42bc82da2d2681de25c1 c8082c50852f4964a1162bc2b99d28b7
-#: d518bcc0541b4feb921292e91cf26a84 e9c9c989994a48a696dd689ad339f5bb
-#: eb44bdd7071642c4a7ccb7218511163e f80dfcc52ab24a2faf78d0c8ae0f3e45
-#: fcb19d9c341241e4bf05a85eca2c35fa
+#: ../../api/webhooks.rst 735b30610b2d466fbc18d717607b17af
 msgid "Raises"
 msgstr ""
 
@@ -341,10 +295,6 @@ msgstr ""
 msgid "The URL is invalid."
 msgstr ""
 
-#: 3c670e77e3014641b345ff9edcb30e48 5abfca86c9ce4e8ba1b1400f5b041625
-#: 5b3ab39649904daa96a5df16fe43ada9 65809090934a42c385643aa8161f76c5
-#: 98db0506d8664e9883d7d98092812915 99fc496d0ac84fd1b6254e9e641ae26a
-#: a07e1c7805a6456eb5fae0f8e1d4e9a7 d750fbe688d34b7aa89e230293149b20
 #: discord.webhook.async_.Webhook.delete:1
 #: discord.webhook.async_.Webhook.delete_message:1
 #: discord.webhook.async_.Webhook.edit:1
@@ -358,19 +308,17 @@ msgstr ""
 msgid "|coro|"
 msgstr ""
 
-#: 06063b46c8fa47e5aa54f5814933d47a c00659f5b83642ed863a181fe19bf563
-#: discord.webhook.async_.Webhook.fetch:3
+#: 06063b46c8fa47e5aa54f5814933d47a discord.webhook.async_.Webhook.fetch:3
 #: discord.webhook.sync.SyncWebhook.fetch:1 of
 msgid "Fetches the current webhook."
 msgstr ""
 
 #: 128848745b104f83b614d254f783f575 discord.webhook.async_.Webhook.fetch:5
-#: discord.webhook.sync.SyncWebhook.fetch:3 fd68769bc4214fb9b2ab6cb849349357 of
+#: discord.webhook.sync.SyncWebhook.fetch:3 of
 msgid "This could be used to get a full webhook from a partial webhook."
 msgstr ""
 
-#: d017065daedf4887aaa434a7884526ba d8056223bc7b452588e155d2a25a0e6a
-#: discord.webhook.async_.Webhook.fetch:11
+#: d8056223bc7b452588e155d2a25a0e6a discord.webhook.async_.Webhook.fetch:11
 #: discord.webhook.sync.SyncWebhook.fetch:7 of
 msgid ""
 "When fetching with an unauthenticated webhook, i.e. "
@@ -378,10 +326,7 @@ msgid ""
 "does not contain any user information."
 msgstr ""
 
-#: 2678d85a6195438ead791df56aba8df8 7bc22bff719a48868bb779b991673888
-#: a3b0757465ff40988f39230e3583ac71 a4d0c0aa071342de89544bd3e9a7b773
-#: a5e2023263e54bc9b57bc000f2d35cb6 d2c9412a9a9540379a2cf7e75301ed37
-#: discord.webhook.async_.Webhook.delete:11
+#: d2c9412a9a9540379a2cf7e75301ed37 discord.webhook.async_.Webhook.delete:11
 #: discord.webhook.async_.Webhook.edit:22
 #: discord.webhook.async_.Webhook.fetch:16
 #: discord.webhook.sync.SyncWebhook.delete:9
@@ -392,26 +337,23 @@ msgid ""
 "Defaults to ``True``."
 msgstr ""
 
-#: 273850f6ead544f3b039a7fc9a36a66b discord.webhook.async_.Webhook.fetch:20
+#: discord.webhook.async_.Webhook.fetch:20
 #: discord.webhook.sync.SyncWebhook.fetch:16 f0d7a0df843d452d9308fe6926d375e4
 #: of
 msgid "The fetched webhook."
 msgstr ""
 
-#: 1042ce16b0744e7eb7b3e2ba09d38b89 9581e77c1dfb4ff891ce35b50293fd58
-#: discord.webhook.async_.Webhook.fetch:23
+#: 1042ce16b0744e7eb7b3e2ba09d38b89 discord.webhook.async_.Webhook.fetch:23
 #: discord.webhook.sync.SyncWebhook.fetch:19 of
 msgid "Could not fetch the webhook"
 msgstr ""
 
-#: ac9d6dc8a5e94357a2e6169cb134288a be725566b076491d86a4709022702a7c
-#: discord.webhook.async_.Webhook.fetch:24
+#: ac9d6dc8a5e94357a2e6169cb134288a discord.webhook.async_.Webhook.fetch:24
 #: discord.webhook.sync.SyncWebhook.fetch:20 of
 msgid "Could not find the webhook by this ID"
 msgstr ""
 
-#: 2b80475f32b64b1cb7d4b297023aeabe 4fb58470918e432bbeb2fc2fe82f1a7f
-#: 95dfabf235cb4b9aaf48598815661b67 99bdd9cfc74e4f4c8aa76af7a2ece6f9
+#: 2b80475f32b64b1cb7d4b297023aeabe 99bdd9cfc74e4f4c8aa76af7a2ece6f9
 #: discord.webhook.async_.Webhook.delete:20
 #: discord.webhook.async_.Webhook.fetch:25
 #: discord.webhook.sync.SyncWebhook.delete:16
@@ -420,67 +362,58 @@ msgid "This webhook does not have a token associated with it."
 msgstr ""
 
 #: b98fb63484e64e238162e965364b8f0e discord.webhook.async_.Webhook.delete:3
-#: discord.webhook.sync.SyncWebhook.delete:1 fa3754c578994f009aeddfcebd10e908
-#: of
+#: discord.webhook.sync.SyncWebhook.delete:1 of
 msgid "Deletes this Webhook."
 msgstr ""
 
-#: 41d7fe3477004c43900875770aa5e2b1 cd9be7a2d2974b00948398efa1c82331
-#: discord.webhook.async_.Webhook.delete:6
+#: cd9be7a2d2974b00948398efa1c82331 discord.webhook.async_.Webhook.delete:6
 #: discord.webhook.sync.SyncWebhook.delete:4 of
 msgid ""
 "The reason for deleting this webhook. Shows up on the audit log.  .. "
 "versionadded:: 1.4"
 msgstr ""
 
-#: b038db542f144f3495620fc573cdad90 d1cc11d81a834d5684d1741fa4437b2e
-#: discord.webhook.async_.Webhook.delete:6
+#: d1cc11d81a834d5684d1741fa4437b2e discord.webhook.async_.Webhook.delete:6
 #: discord.webhook.sync.SyncWebhook.delete:4 of
 msgid "The reason for deleting this webhook. Shows up on the audit log."
 msgstr ""
 
-#: 1044d0d698e040529c945421e1302e6e 4cde6ae633004199abdcb5396fe41a15
-#: discord.webhook.async_.Webhook.delete:11
+#: 4cde6ae633004199abdcb5396fe41a15 discord.webhook.async_.Webhook.delete:11
 #: discord.webhook.async_.Webhook.edit:22 of
 msgid ""
 "Whether to use the bot token over the webhook token if available. "
 "Defaults to ``True``.  .. versionadded:: 2.0"
 msgstr ""
 
-#: 45efc6b25d14483b87436e3ecf9fd1f6 discord.webhook.async_.Webhook.delete:17
+#: discord.webhook.async_.Webhook.delete:17
 #: discord.webhook.sync.SyncWebhook.delete:13 eddf95f3a67e4642bc193431f42deb08
 #: of
 msgid "Deleting the webhook failed."
 msgstr ""
 
-#: 3b285a7aeb9f427daeb7bd5e53ff5a86 536f14d418644251b5ff1b7e5ec01288
 #: discord.webhook.async_.Webhook.delete:18
 #: discord.webhook.async_.Webhook.edit:29
 #: discord.webhook.sync.SyncWebhook.delete:14
-#: discord.webhook.sync.SyncWebhook.edit:26 e1f647d0018b4547ad3f3ba402104247
-#: ee60ed9a009c4fa09656abd081f253cf of
+#: discord.webhook.sync.SyncWebhook.edit:26 ee60ed9a009c4fa09656abd081f253cf of
 msgid "This webhook does not exist."
 msgstr ""
 
-#: 71f5a227d7c44b61a6eef981e23dddc5 85e69036989b4731be5731dfcd41306a
-#: discord.webhook.async_.Webhook.delete:19
+#: 85e69036989b4731be5731dfcd41306a discord.webhook.async_.Webhook.delete:19
 #: discord.webhook.sync.SyncWebhook.delete:15 of
 msgid "You do not have permissions to delete this webhook."
 msgstr ""
 
-#: 89935539aa134092ac26de7c313688be a670d75bf6e24f2ab26632be661e51c2
-#: discord.webhook.async_.Webhook.edit:3
+#: a670d75bf6e24f2ab26632be661e51c2 discord.webhook.async_.Webhook.edit:3
 #: discord.webhook.sync.SyncWebhook.edit:1 of
 msgid "Edits this Webhook."
 msgstr ""
 
 #: a6532d34b6a9471cac961393098701e6 discord.webhook.async_.Webhook.edit:6
-#: discord.webhook.sync.SyncWebhook.edit:4 e242bdfc90f84563bb08b4a578fe643a of
+#: discord.webhook.sync.SyncWebhook.edit:4 of
 msgid "The webhook's new default name."
 msgstr ""
 
-#: beac2aa1cdaf423b85631336044144f5 bf637234fa6c42e8b1aa7f77b6d274d2
-#: discord.webhook.async_.Webhook.edit:9
+#: bf637234fa6c42e8b1aa7f77b6d274d2 discord.webhook.async_.Webhook.edit:9
 #: discord.webhook.sync.SyncWebhook.edit:7 of
 msgid ""
 "A :term:`py:bytes-like object` representing the webhook's new default "
@@ -493,14 +426,12 @@ msgid ""
 "versionadded:: 2.0"
 msgstr ""
 
-#: 4f9bd57c61d94fd3a99ab909c3c3191a 5b3c6db14fb245dfb10e78a5d84c0838
-#: discord.webhook.async_.Webhook.edit:12
+#: 5b3c6db14fb245dfb10e78a5d84c0838 discord.webhook.async_.Webhook.edit:12
 #: discord.webhook.sync.SyncWebhook.edit:10 of
 msgid "The webhook's new channel. This requires an authenticated webhook."
 msgstr ""
 
-#: 6bdcdf3cdaae445cbdfd9515165491ee a2237b9b7cf84433bed33ef1d5ea7785
-#: discord.webhook.async_.Webhook.edit:17
+#: 6bdcdf3cdaae445cbdfd9515165491ee discord.webhook.async_.Webhook.edit:17
 #: discord.webhook.sync.SyncWebhook.edit:13 of
 msgid ""
 "The reason for editing this webhook. Shows up on the audit log.  .. "
@@ -508,12 +439,11 @@ msgid ""
 msgstr ""
 
 #: 493fa2a1bfc14309912031da714d1d75 discord.webhook.async_.Webhook.edit:17
-#: discord.webhook.sync.SyncWebhook.edit:13 e92ca34e199847288c58367a4b032e09 of
+#: discord.webhook.sync.SyncWebhook.edit:13 of
 msgid "The reason for editing this webhook. Shows up on the audit log."
 msgstr ""
 
-#: 4f747bf4be1a48ebb06ecc3d8dbf1852 7b3a47d8d38b48809a95ebfc7dc82b14
-#: discord.webhook.async_.Webhook.edit:28
+#: 4f747bf4be1a48ebb06ecc3d8dbf1852 discord.webhook.async_.Webhook.edit:28
 #: discord.webhook.sync.SyncWebhook.edit:25 of
 msgid "Editing the webhook failed."
 msgstr ""
@@ -529,28 +459,26 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.webhook.async\\_.Webhook\\``"
 msgstr ""
 
-#: 04fff9e0abfb46a4904b63e06103f1ba d7b2819abc7d4e308bec9e2c19ab9261
-#: discord.webhook.async_.Webhook.send:3
+#: 04fff9e0abfb46a4904b63e06103f1ba discord.webhook.async_.Webhook.send:3
 #: discord.webhook.sync.SyncWebhook.send:1 of
 msgid "Sends a message using the webhook."
 msgstr ""
 
 #: c5e799be8ade40e995feec52b7c333a0 discord.webhook.async_.Webhook.send:5
-#: discord.webhook.sync.SyncWebhook.send:3 e939b3c1c0d244ec8c03f29cbd41840e of
+#: discord.webhook.sync.SyncWebhook.send:3 of
 msgid ""
 "The content must be a type that can convert to a string through "
 "``str(content)``."
 msgstr ""
 
-#: 1b6688110e8b417d9bee52af7467dbb0 discord.webhook.async_.Webhook.send:7
+#: discord.webhook.async_.Webhook.send:7
 #: discord.webhook.sync.SyncWebhook.send:5 e72113abad1b4144aa87980fa08569cd of
 msgid ""
 "To upload a single file, the ``file`` parameter should be used with a "
 "single :class:`File` object."
 msgstr ""
 
-#: 0831d821492945b0a04d2f131a91cf8c 63ec2bb4d5414b35bd9c625c36c49c81
-#: discord.webhook.async_.Webhook.send:10
+#: 0831d821492945b0a04d2f131a91cf8c discord.webhook.async_.Webhook.send:10
 #: discord.webhook.sync.SyncWebhook.send:8 of
 msgid ""
 "If the ``embed`` parameter is provided, it must be of type :class:`Embed`"
@@ -559,8 +487,7 @@ msgid ""
 ":class:`Embed` objects to send."
 msgstr ""
 
-#: 0a8bf2ad589c441980181bba4eb1bfa1 da60f05732dc43f5958cf2351d73c9bd
-#: discord.webhook.async_.Webhook.send:15
+#: 0a8bf2ad589c441980181bba4eb1bfa1 discord.webhook.async_.Webhook.send:15
 #: discord.webhook.sync.SyncWebhook.send:13 of
 msgid "The content of the message to send."
 msgstr ""
@@ -574,8 +501,7 @@ msgid ""
 "``True``."
 msgstr ""
 
-#: 329f894d60e8418babd0615535838d79 75fd2675f2e44032be336c27e95f0425
-#: discord.webhook.async_.Webhook.send:24
+#: 75fd2675f2e44032be336c27e95f0425 discord.webhook.async_.Webhook.send:24
 #: discord.webhook.sync.SyncWebhook.send:21 of
 msgid ""
 "The username to send with this message. If no username is provided then "
@@ -583,15 +509,14 @@ msgid ""
 msgstr ""
 
 #: 415ad7a79b724742b603af8dfd4a1d34 discord.webhook.async_.Webhook.send:28
-#: discord.webhook.sync.SyncWebhook.send:25 ed3035289e594e30a8faada7130a8ad3 of
+#: discord.webhook.sync.SyncWebhook.send:25 of
 msgid ""
 "The avatar URL to send with this message. If no avatar URL is provided "
 "then the default avatar for the webhook is used. If this is not a string "
 "then it is explicitly cast using ``str``."
 msgstr ""
 
-#: 57b92cca2540465fa3d09723f5190ae3 bdec6f4cafa148e3918db01822d37174
-#: discord.webhook.async_.Webhook.send:33
+#: 57b92cca2540465fa3d09723f5190ae3 discord.webhook.async_.Webhook.send:33
 #: discord.webhook.sync.SyncWebhook.send:30 of
 msgid "Indicates if the message should be sent using text-to-speech."
 msgstr ""
@@ -612,9 +537,7 @@ msgid ""
 " set to 15 minutes."
 msgstr ""
 
-#: 3362b95bd934419c9251381914e90628 7c30236d94224488a57c2332448cb6e6
-#: 7c6e08154ecc4ca69dc4a064b23455ef b3a137449ab44e4aae5afd8b4c86108b
-#: d5da797dde68461daf15dbe5cbc015df d67be620b0914c15b92a79cd02cb6319
+#: b3a137449ab44e4aae5afd8b4c86108b
 #: discord.webhook.async_.Webhook.edit_message:31
 #: discord.webhook.async_.Webhook.send:44
 #: discord.webhook.async_.WebhookMessage.edit:21
@@ -624,9 +547,6 @@ msgstr ""
 msgid "The file to upload. This cannot be mixed with ``files`` parameter."
 msgstr ""
 
-#: 27765acd077d4a3b9e30f2fa38359bd7 34064a7e9e464392a61a70d956a57dfb
-#: 7b7808e744a04aadb3d5e42c0f305be7 8d9cff7ca166417db59a8343a80ea9f0
-#: 9f5ad9e7cee54181848d2e2db990f038
 #: discord.webhook.async_.Webhook.edit_message:36
 #: discord.webhook.async_.Webhook.send:47
 #: discord.webhook.async_.WebhookMessage.edit:26
@@ -639,32 +559,28 @@ msgid ""
 "``file`` parameter."
 msgstr ""
 
-#: 7964d458be5e410b8d83db53a682494d 7c09cfd88d8a4109851ed05a46ae1e58
-#: discord.webhook.async_.Webhook.send:51
+#: 7964d458be5e410b8d83db53a682494d discord.webhook.async_.Webhook.send:51
 #: discord.webhook.sync.SyncWebhook.send:40 of
 msgid ""
 "The rich embed for the content to send. This cannot be mixed with "
 "``embeds`` parameter."
 msgstr ""
 
-#: 33169aeae0d04196aaa9cdba77c5523a 4129e6e69a744c9f9011157faafde27a
-#: discord.webhook.async_.Webhook.send:55
+#: 33169aeae0d04196aaa9cdba77c5523a discord.webhook.async_.Webhook.send:55
 #: discord.webhook.sync.SyncWebhook.send:44 of
 msgid ""
 "A list of embeds to send with the content. Maximum of 10. This cannot be "
 "mixed with the ``embed`` parameter."
 msgstr ""
 
-#: 38548540ca534e32b82858dc7e869d49 5ad6432e50fc4f0b8637b5f042754c8c
-#: discord.webhook.async_.Webhook.send:59
+#: 5ad6432e50fc4f0b8637b5f042754c8c discord.webhook.async_.Webhook.send:59
 #: discord.webhook.sync.SyncWebhook.send:48 of
 msgid ""
 "Controls the mentions being processed in this message.  .. versionadded::"
 " 1.4"
 msgstr ""
 
-#: 25a24ffcb57243e3a6aac660e58f40df a46016c132a14ba9a0b18b8a658f78d0
-#: discord.webhook.async_.Webhook.send:59
+#: a46016c132a14ba9a0b18b8a658f78d0 discord.webhook.async_.Webhook.send:59
 #: discord.webhook.sync.SyncWebhook.send:48 of
 msgid "Controls the mentions being processed in this message."
 msgstr ""
@@ -691,16 +607,14 @@ msgstr ""
 msgid "The thread to send this webhook to."
 msgstr ""
 
-#: 7a187519aa2940c9905505a4d17452f9 ce59182ca5ae46a7aa023fb15a759cff
-#: discord.webhook.async_.Webhook.send:77
+#: 7a187519aa2940c9905505a4d17452f9 discord.webhook.async_.Webhook.send:77
 #: discord.webhook.sync.SyncWebhook.send:58 of
 msgid ""
 "The name of the thread to create. Only works for forum channels.  .. "
 "versionadded:: 2.0"
 msgstr ""
 
-#: 66b29f938d6744b793c75e144a609c1b cec0156f9702482e87281e9c7d4b5888
-#: discord.webhook.async_.Webhook.send:77
+#: cec0156f9702482e87281e9c7d4b5888 discord.webhook.async_.Webhook.send:77
 #: discord.webhook.sync.SyncWebhook.send:58 of
 msgid "The name of the thread to create. Only works for forum channels."
 msgstr ""
@@ -729,7 +643,7 @@ msgstr ""
 msgid "The poll to send."
 msgstr ""
 
-#: 198202cf1d9c4722873b76551c23a666 discord.webhook.async_.Webhook.send:96
+#: discord.webhook.async_.Webhook.send:96
 #: discord.webhook.sync.SyncWebhook.send:66 e0b22d0c21d741aa88a1390bece4595d of
 msgid ""
 "If ``wait`` is ``True`` then the message that was sent, otherwise "
@@ -740,20 +654,17 @@ msgstr ""
 msgid "Optional[:class:`WebhookMessage`]"
 msgstr ""
 
-#: 7f8a38b849e445d6ba889e6cd458100e bfbf2157a6bb43c4b27470ab17ae6444
-#: discord.webhook.async_.Webhook.send:99
+#: bfbf2157a6bb43c4b27470ab17ae6444 discord.webhook.async_.Webhook.send:99
 #: discord.webhook.sync.SyncWebhook.send:69 of
 msgid "Sending the message failed."
 msgstr ""
 
-#: 14297b15634c4d1c8e59a5505bef80ae bcb74264d1f94f878a08026994728ba7
-#: discord.webhook.async_.Webhook.send:100
+#: bcb74264d1f94f878a08026994728ba7 discord.webhook.async_.Webhook.send:100
 #: discord.webhook.sync.SyncWebhook.send:70 of
 msgid "This webhook was not found."
 msgstr ""
 
-#: 288565c3281349929137c3cbd84263c1 57e9e2c90b6345d78dbd1c5a212a020a
-#: discord.webhook.async_.Webhook.send:101
+#: 57e9e2c90b6345d78dbd1c5a212a020a discord.webhook.async_.Webhook.send:101
 #: discord.webhook.sync.SyncWebhook.send:71 of
 msgid "The authorization token for the webhook is incorrect."
 msgstr ""
@@ -775,32 +686,31 @@ msgid ""
 "with neither ``thread_name`` nor ``thread`` specified."
 msgstr ""
 
-#: b698d80096f7403ba6c9c5f4f56f8cc4 discord.SyncWebhook.avatar:1
-#: discord.Webhook.avatar:1 fb5c67f696704406ada2e50fc20c3b5a of
+#: discord.SyncWebhook.avatar:1 discord.Webhook.avatar:1
+#: fb5c67f696704406ada2e50fc20c3b5a of
 msgid "Returns an :class:`Asset` for the avatar the webhook has."
 msgstr ""
 
-#: aa7e7e77e9a6417bbcad10b68769112a cd4bafd5cdd748e68418c0fe6a77903f
-#: discord.SyncWebhook.avatar:3 discord.Webhook.avatar:3 of
+#: cd4bafd5cdd748e68418c0fe6a77903f discord.SyncWebhook.avatar:3
+#: discord.Webhook.avatar:3 of
 msgid ""
 "If the webhook does not have a traditional avatar, an asset for the "
 "default avatar is returned instead."
 msgstr ""
 
-#: b0e5df787afd4134a9f27c14cfa0806f discord.SyncWebhook.channel:1
-#: discord.Webhook.channel:1 ec155bb383b3493db6d592f118ef175d of
+#: discord.SyncWebhook.channel:1 discord.Webhook.channel:1
+#: ec155bb383b3493db6d592f118ef175d of
 msgid "The text channel this webhook belongs to."
 msgstr ""
 
-#: 022253ecc6494569a37a64e3989de332 49f080cdd3004ec4a04e580041816ff8
-#: c66385e00fac41c189ea7d82d85d0db9 discord.SyncWebhook.channel:3
+#: 49f080cdd3004ec4a04e580041816ff8 discord.SyncWebhook.channel:3
 #: discord.SyncWebhook.guild:3 discord.Webhook.channel:3
-#: discord.Webhook.guild:3 fd82aac7debd473aa87a4ac0207e9c07 of
+#: discord.Webhook.guild:3 of
 msgid "If this is a partial webhook, then this will always return ``None``."
 msgstr ""
 
-#: 2bb647713cb24bc2b8fc3564e3c354d3 51ccbb8f14b1435a9cddb90967145461
-#: discord.SyncWebhook.created_at:1 discord.Webhook.created_at:1 of
+#: 2bb647713cb24bc2b8fc3564e3c354d3 discord.SyncWebhook.created_at:1
+#: discord.Webhook.created_at:1 of
 msgid "Returns the webhook's creation time in UTC."
 msgstr ""
 
@@ -809,15 +719,13 @@ msgstr ""
 msgid "Retrieves a single :class:`~discord.WebhookMessage` owned by this webhook."
 msgstr ""
 
-#: c416c824f58646938cc10f1ce57ed672
 #: discord.webhook.async_.Webhook.fetch_message:8
 #: discord.webhook.sync.SyncWebhook.fetch_message:6
 #: fe03e2f34f3949aebe2b2c2aeb8f376a of
 msgid "The message ID to look for."
 msgstr ""
 
-#: 1b801aa3da694b1fb0a41e006f67db48 54c1624e152d44a1b49022a5be33c6ed
-#: c5e6600bf7394a67aa8724a86d9a8276 d3b17fa5d4074e1db1ae04d6532cc0b1
+#: 54c1624e152d44a1b49022a5be33c6ed
 #: discord.webhook.async_.Webhook.delete_message:14
 #: discord.webhook.async_.Webhook.fetch_message:11
 #: discord.webhook.sync.SyncWebhook.delete_message:12
@@ -825,7 +733,7 @@ msgstr ""
 msgid "The ID of the thread that contains the message."
 msgstr ""
 
-#: 6ab628d937b6459aafb88ff400bca888 764b8caa264548efafbde9aa61f2bd13
+#: 764b8caa264548efafbde9aa61f2bd13
 #: discord.webhook.async_.Webhook.fetch_message:14
 #: discord.webhook.sync.SyncWebhook.fetch_message:12 of
 msgid "The message asked for."
@@ -836,28 +744,25 @@ msgstr ""
 msgid ":class:`~discord.WebhookMessage`"
 msgstr ""
 
-#: 7207fe3b68f64f8a8c140da81aa900da adc0d8e7494b4b28a27689f4642a99bf
+#: adc0d8e7494b4b28a27689f4642a99bf
 #: discord.webhook.async_.Webhook.fetch_message:17
 #: discord.webhook.sync.SyncWebhook.fetch_message:15 of
 msgid "The specified message was not found."
 msgstr ""
 
-#: c26879650f5d433c814783394ac3ecf4
 #: discord.webhook.async_.Webhook.fetch_message:18
 #: discord.webhook.sync.SyncWebhook.fetch_message:16
 #: e527d204d3684032bdc3fc71333dcb56 of
 msgid "You do not have the permissions required to get a message."
 msgstr ""
 
-#: 3b2a515c5b8448499ac19916bebbd377 92494eb4200f4da19d323bc789631de0
+#: 3b2a515c5b8448499ac19916bebbd377
 #: discord.webhook.async_.Webhook.fetch_message:19
 #: discord.webhook.sync.SyncWebhook.fetch_message:17 of
 msgid "Retrieving the message failed."
 msgstr ""
 
-#: 15d7ddb34d114f7a99c69037b8bc39fa 1776e8cab52642f6a978d91bbf648938
-#: 4d11b05888b04d598188a4d96d126217 5b05a764b5944c69861df40833dc56b8
-#: c26a2b16d5d94bd3a65a5149327152aa
+#: 1776e8cab52642f6a978d91bbf648938 4d11b05888b04d598188a4d96d126217
 #: discord.webhook.async_.Webhook.fetch_message:20
 #: discord.webhook.async_.WebhookMessage.edit:58
 #: discord.webhook.sync.SyncWebhook.edit_message:40
@@ -866,32 +771,34 @@ msgstr ""
 msgid "There was no token associated with this webhook."
 msgstr ""
 
-#: 52d58c37da744b78934404b08a05d5ef cd00141236a54abb9ac3b84eae0a578b
-#: discord.SyncWebhook.guild:1 discord.Webhook.guild:1 of
+#: 52d58c37da744b78934404b08a05d5ef discord.SyncWebhook.guild:1
+#: discord.Webhook.guild:1 of
 msgid "The guild this webhook belongs to."
 msgstr ""
 
-#: 53da81ecbe5a4d4bb63f4b4f776c0d41 c46e8899998c48fdbcc590fa47717cef
+#: c46e8899998c48fdbcc590fa47717cef
 #: discord.webhook.async_.BaseWebhook.is_authenticated:1 of
-msgid ""
-"Whether the webhook is authenticated with a bot token. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Whether the webhook is authenticated with a bot token."
 msgstr ""
 
-#: b6d6fa1f6451445c81ef826852a24c77 d39d405809f54a778e5db34e04b3fc95
+#: 56f1e679fe0149e591ce572cd88e0d1a
+#: discord.webhook.async_.BaseWebhook.is_authenticated:6
+#: discord.webhook.async_.BaseWebhook.is_partial:6 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: 128848745b104f83b614d254f783f575
 #: discord.webhook.async_.BaseWebhook.is_partial:1 of
-msgid ""
-"Whether the webhook is a \"partial\" webhook. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Whether the webhook is a \"partial\" webhook."
 msgstr ""
 
-#: c1b9dd3681ee4a8584c4cd79ed1d4977 c7eadbacb5ac4096b9b9bada91e833d2
+#: c1b9dd3681ee4a8584c4cd79ed1d4977
 #: discord.webhook.async_.Webhook.edit_message:3
 #: discord.webhook.sync.SyncWebhook.edit_message:1 of
 msgid "Edits a message owned by this webhook."
 msgstr ""
 
-#: 3eefa1a227ea4f96b8d847a3a507fd6e 9971472f245b415aaadbb8956285f297
+#: 9971472f245b415aaadbb8956285f297
 #: discord.webhook.async_.Webhook.edit_message:5
 #: discord.webhook.sync.SyncWebhook.edit_message:3 of
 msgid ""
@@ -899,7 +806,7 @@ msgid ""
 "you only have an ID."
 msgstr ""
 
-#: 2d67b9ca76344875adb757cf10cd8511 8af6785c98bc455e81d47c71f41501d8
+#: 2d67b9ca76344875adb757cf10cd8511
 #: discord.webhook.async_.Webhook.edit_message:10
 #: discord.webhook.async_.WebhookMessage.edit:7 of
 msgid ""
@@ -907,34 +814,29 @@ msgid ""
 "returned."
 msgstr ""
 
-#: 5a82c8e80c41438cae3f995cf46fe2d6 a9e4ea6e61aa408ea880bd28b50cb2f8
+#: 5a82c8e80c41438cae3f995cf46fe2d6
 #: discord.webhook.async_.Webhook.edit_message:14
 #: discord.webhook.sync.SyncWebhook.edit_message:9 of
 msgid "The message ID to edit."
 msgstr ""
 
-#: 1bc930d388a74891b13d38e6263f9603 7cbd742ce2934ba58758ac9b9bd76dad
-#: 9271f9c8ad084cebb3ed15f2dc0c2dc9
+#: 1bc930d388a74891b13d38e6263f9603
 #: discord.webhook.async_.Webhook.edit_message:17
 #: discord.webhook.async_.WebhookMessage.edit:11
 #: discord.webhook.sync.SyncWebhook.edit_message:12
-#: discord.webhook.sync.SyncWebhookMessage.edit:4
-#: ed34e4fc95fb47acbc1577c836be845a of
+#: discord.webhook.sync.SyncWebhookMessage.edit:4 of
 msgid "The content to edit the message with or ``None`` to clear it."
 msgstr ""
 
-#: 20312965a9b94e4fadbed393402e9263 85dd5e157ee54e66a6e28d78c61dc7bd
-#: d8f2037a79c5458fba497be4b8086130
+#: 20312965a9b94e4fadbed393402e9263
 #: discord.webhook.async_.Webhook.edit_message:20
 #: discord.webhook.async_.WebhookMessage.edit:14
 #: discord.webhook.sync.SyncWebhook.edit_message:15
-#: discord.webhook.sync.SyncWebhookMessage.edit:7
-#: eaf9bef906a241228685837428b088e2 of
+#: discord.webhook.sync.SyncWebhookMessage.edit:7 of
 msgid "A list of embeds to edit the message with."
 msgstr ""
 
-#: 75f6749124da45c898b2058893bbcf1b 76fc68e7bd934eaf8fd9d73f92e66aa4
-#: a427e1e0136e41efaf57f2ffdb117ca2 b9494426284345ffbacd4b90e110c519
+#: a427e1e0136e41efaf57f2ffdb117ca2
 #: discord.webhook.async_.Webhook.edit_message:23
 #: discord.webhook.async_.WebhookMessage.edit:17
 #: discord.webhook.sync.SyncWebhook.edit_message:18
@@ -944,7 +846,7 @@ msgid ""
 "should not be mixed with the ``embeds`` parameter."
 msgstr ""
 
-#: 1261a847eaa24dc5a94da52ea090d093 6db59c19de404a34aa15bd6d90797c9b
+#: 6db59c19de404a34aa15bd6d90797c9b
 #: discord.webhook.async_.Webhook.edit_message:27
 #: discord.webhook.async_.WebhookMessage.edit:32 of
 msgid ""
@@ -952,7 +854,6 @@ msgid ""
 "all attachments are removed."
 msgstr ""
 
-#: d973a268394c4f73b7f8296b53b752a4
 #: discord.webhook.async_.Webhook.edit_message:31
 #: discord.webhook.async_.WebhookMessage.edit:21
 #: ec50809a68e94bfcad75d7052dd6e7e9 of
@@ -961,7 +862,7 @@ msgid ""
 "versionadded:: 2.0"
 msgstr ""
 
-#: 0648f797465242acbb5ad4fdefade223 2c367cdfe97d4ad0ab9138716b92addd
+#: 2c367cdfe97d4ad0ab9138716b92addd
 #: discord.webhook.async_.Webhook.edit_message:36
 #: discord.webhook.async_.WebhookMessage.edit:26 of
 msgid ""
@@ -969,8 +870,6 @@ msgid ""
 "``file`` parameter.  .. versionadded:: 2.0"
 msgstr ""
 
-#: 67a35408e50b4bed92ac9a3f9e48eea7 8a2bb7cfd1b6467c9c7274a714affc32
-#: cb74411660504cafa28540cb949c8383
 #: discord.webhook.async_.Webhook.edit_message:42
 #: discord.webhook.async_.WebhookMessage.edit:38
 #: discord.webhook.sync.SyncWebhook.edit_message:29
@@ -997,14 +896,13 @@ msgid ""
 ":meth:`send`."
 msgstr ""
 
-#: 3ffcd5e8c19c43a893c62a8a241bb38e c8e07f2912274c8690eea158d709400e
+#: c8e07f2912274c8690eea158d709400e
 #: discord.webhook.async_.Webhook.edit_message:53
 #: discord.webhook.sync.SyncWebhook.edit_message:33 of
 msgid "The thread that contains the message."
 msgstr ""
 
-#: 0e58b4588c244b2795b9a25162938b69 13349759eb4d4dd8802d0bed0cb95c2b
-#: 67c4905f360444e286aa49fcfa2b1b10 ba994c7eba3048d7a5330aa66e6223a2
+#: 0e58b4588c244b2795b9a25162938b69
 #: discord.webhook.async_.Webhook.edit_message:56
 #: discord.webhook.async_.WebhookMessage.edit:48
 #: discord.webhook.sync.SyncWebhook.send:63
@@ -1017,14 +915,13 @@ msgstr ""
 msgid "The newly edited webhook message."
 msgstr ""
 
-#: d23329b2f76a4159a4087965b502de6e de7030ddb3b642eab991d82d5465c6f6
+#: de7030ddb3b642eab991d82d5465c6f6
 #: discord.webhook.async_.Webhook.edit_message:60
 #: discord.webhook.async_.WebhookMessage.edit:52 of
 msgid ":class:`WebhookMessage`"
 msgstr ""
 
-#: 2911c1f972ab4f1288075c647b177fe6 6071f2c259c143f7bbd0333a204b45d3
-#: 6b5a68c2d6384ab18f5c9c56e376ce4d d84d5cea09fe494b9d14bf275d256589
+#: d84d5cea09fe494b9d14bf275d256589
 #: discord.webhook.async_.Webhook.edit_message:62
 #: discord.webhook.async_.WebhookMessage.edit:54
 #: discord.webhook.sync.SyncWebhook.edit_message:36
@@ -1032,18 +929,14 @@ msgstr ""
 msgid "Editing the message failed."
 msgstr ""
 
-#: 614c1f2626bb459b86310fb14a6766a5 97fab4294de84554a109d5cd2c95a4bd
-#: ad39ad3511944866a16078d24a752fd5
+#: 97fab4294de84554a109d5cd2c95a4bd
 #: discord.webhook.async_.Webhook.edit_message:63
 #: discord.webhook.async_.WebhookMessage.edit:55
 #: discord.webhook.sync.SyncWebhook.edit_message:37
-#: discord.webhook.sync.SyncWebhookMessage.edit:32
-#: e85aed7299274aa8a607ea5efecdcd76 of
+#: discord.webhook.sync.SyncWebhookMessage.edit:32 of
 msgid "Edited a message that is not yours."
 msgstr ""
 
-#: 05ce44d9433040619f0f644b8b548189 0ee40fbeeaed44cd89a5c938b564313c
-#: 5cf2e6a486c747f695d24c1dd923ea49 6eac1c3b7292418d9bdc9468d9fd736b
 #: d13931c4ffe84322bebc37b53d758401
 #: discord.webhook.async_.Webhook.edit_message:64
 #: discord.webhook.async_.WebhookMessage.edit:56
@@ -1053,14 +946,12 @@ msgstr ""
 msgid "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``"
 msgstr ""
 
-#: 434643453fe94810856e9d1711091f11 4fc8b66942cb4839b20e5560afa7501e
-#: b3eab12f8e87462abedbcfa904a6e147
 #: discord.webhook.async_.Webhook.edit_message:65
 #: discord.webhook.async_.WebhookMessage.edit:57
 #: discord.webhook.sync.SyncWebhook.edit_message:39
 #: discord.webhook.sync.SyncWebhook.send:73
 #: discord.webhook.sync.SyncWebhookMessage.edit:34
-#: e8b9d1bf3500443ca1d1f7af7e64ab46 efe8437bf03e4fe99966973bbda26d5e of
+#: e8b9d1bf3500443ca1d1f7af7e64ab46 of
 msgid "The length of ``embeds`` was invalid"
 msgstr ""
 
@@ -1071,13 +962,13 @@ msgid ""
 " state."
 msgstr ""
 
-#: 15dea039ddd742c2811ae0ba4a4022a6 5c9da7d28dce4982bb84fd12dbbcecb0
+#: 5c9da7d28dce4982bb84fd12dbbcecb0
 #: discord.webhook.async_.Webhook.delete_message:3
 #: discord.webhook.sync.SyncWebhook.delete_message:1 of
 msgid "Deletes a message owned by this webhook."
 msgstr ""
 
-#: d5c47868890b4d0cafffe8e6d913036b db8c1747493a459087e6b3b081ac0d5e
+#: db8c1747493a459087e6b3b081ac0d5e
 #: discord.webhook.async_.Webhook.delete_message:5
 #: discord.webhook.sync.SyncWebhook.delete_message:3 of
 msgid ""
@@ -1085,13 +976,12 @@ msgid ""
 "you only have an ID."
 msgstr ""
 
-#: 234aadd0447949f7ab7b01771bb782e7 6d1658d87fd344908d39bdff91044acb
+#: 234aadd0447949f7ab7b01771bb782e7
 #: discord.webhook.async_.Webhook.delete_message:11
 #: discord.webhook.sync.SyncWebhook.delete_message:9 of
 msgid "The message ID to delete."
 msgstr ""
 
-#: 08193ea844e54abdbec4d40e9e9ec844 091a2a3956304512919d443b2dfc9323
 #: cf6413728c3f4601bd518d470cd6aa52
 #: discord.webhook.async_.Webhook.delete_message:17
 #: discord.webhook.async_.WebhookMessage.delete:12
@@ -1101,15 +991,13 @@ msgstr ""
 msgid "Deleting the message failed."
 msgstr ""
 
-#: 922e88d327a343d08e8a5cea1070c9c1 9be5c7332c714e99ba44b7e8ea204674
+#: 9be5c7332c714e99ba44b7e8ea204674
 #: discord.webhook.async_.Webhook.delete_message:18
 #: discord.webhook.sync.SyncWebhook.delete_message:16 of
 msgid "Deleted a message that is not yours."
 msgstr ""
 
-#: 28f726448b1a4165867a73648669ed22 56f1e679fe0149e591ce572cd88e0d1a
-#: 8e0ca3a0c65c4e00a88b8200783d8b3f b41bf4df2b96442ca315d4798262ea41
-#: c46e105b902f43849250fbc1da24ed70
+#: 56f1e679fe0149e591ce572cd88e0d1a
 #: discord.webhook.async_.Webhook.delete_message:20
 #: discord.webhook.async_.WebhookMessage.delete:14
 #: discord.webhook.sync.SyncWebhook.delete:18
@@ -1118,27 +1006,24 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
-#: 50e22ee16b5848178dc9b232382ae7e0 d71174eb01124078b8485ecf5425ec05
-#: discord.webhook.async_.WebhookMessage:1
+#: d71174eb01124078b8485ecf5425ec05 discord.webhook.async_.WebhookMessage:1
 #: discord.webhook.sync.SyncWebhookMessage:1 of
 msgid "Represents a message sent from your webhook."
 msgstr ""
 
-#: 1c655677226f4830aedb23fb6f1837a8 c733980eb8534faf99bb803c964524c3
-#: discord.webhook.async_.WebhookMessage:3
+#: 1c655677226f4830aedb23fb6f1837a8 discord.webhook.async_.WebhookMessage:3
 #: discord.webhook.sync.SyncWebhookMessage:3 of
 msgid "This allows you to edit or delete a message sent by your webhook."
 msgstr ""
 
-#: 33093f55fb9f4195a31a391a774f446b 8da32e9c443f44618a2d11ad25586f60
-#: discord.webhook.async_.WebhookMessage:6
+#: 33093f55fb9f4195a31a391a774f446b discord.webhook.async_.WebhookMessage:6
 #: discord.webhook.sync.SyncWebhookMessage:6 of
 msgid ""
 "This inherits from :class:`discord.Message` with changes to :meth:`edit` "
 "and :meth:`delete` to work."
 msgstr ""
 
-#: 8d76438ac0a449f096840bc580b21c7a a2e790bc16394691bb3ba3168ece42f6
+#: a2e790bc16394691bb3ba3168ece42f6
 #: discord.webhook.async_.WebhookMessage.edit:3
 #: discord.webhook.sync.SyncWebhookMessage.edit:1 of
 msgid "Edits the message."
@@ -1167,12 +1052,11 @@ msgstr ""
 
 #: 0d4acea514904c8b82ce6ba49a8d5093
 #: discord.webhook.async_.WebhookMessage.edit:51
-#: discord.webhook.sync.SyncWebhookMessage.edit:28
-#: ea51e461eb4b4e72921bd90176465112 of
+#: discord.webhook.sync.SyncWebhookMessage.edit:28 of
 msgid "The newly edited message."
 msgstr ""
 
-#: 1512b9e2d2e74beea6be22bd4a805a28 16f52ca9ace24fb38a6dd193b112cc64
+#: 1512b9e2d2e74beea6be22bd4a805a28
 #: discord.webhook.async_.WebhookMessage.delete:3
 #: discord.webhook.sync.SyncWebhookMessage.delete:1 of
 msgid "Deletes the message."
@@ -1185,13 +1069,12 @@ msgid ""
 "The waiting is done in the background and deletion failures are ignored."
 msgstr ""
 
-#: 96b6ad26e0cc4979923a463e329f90b3 aba4600cb0384affabc1e3f706cd8796
+#: aba4600cb0384affabc1e3f706cd8796
 #: discord.webhook.async_.WebhookMessage.delete:10
 #: discord.webhook.sync.SyncWebhookMessage.delete:8 of
 msgid "You do not have proper permissions to delete the message."
 msgstr ""
 
-#: b83c32c0775b4ad2903f16caa49b75cf
 #: discord.webhook.async_.WebhookMessage.delete:11
 #: discord.webhook.sync.SyncWebhookMessage.delete:9
 #: f04e4a0b1cbf4f3daade0da691833e50 of
@@ -1206,8 +1089,7 @@ msgstr ""
 msgid "For an asynchronous counterpart, see :class:`Webhook`."
 msgstr ""
 
-#: 840907faec8c45c0952ebfdb3349d390 b9c19a7dc665479f9dd4388f7783d712
-#: discord.webhook.sync.SyncWebhook.from_url:7
+#: b9c19a7dc665479f9dd4388f7783d712 discord.webhook.sync.SyncWebhook.from_url:7
 #: discord.webhook.sync.SyncWebhook.partial:10 of
 msgid ""
 "The session to use to send requests with. Note that the library does not "
@@ -1215,8 +1097,7 @@ msgid ""
 "auto session creation functions are used instead."
 msgstr ""
 
-#: 4d5326bd667b4df2bebe23caaa5cc701 be82f96debd24cffb17feed64f30b7e9
-#: discord.webhook.sync.SyncWebhook.edit:23
+#: 4d5326bd667b4df2bebe23caaa5cc701 discord.webhook.sync.SyncWebhook.edit:23
 #: discord.webhook.sync.SyncWebhook.fetch:17 of
 msgid ":class:`SyncWebhook`"
 msgstr ""
@@ -1290,5 +1171,17 @@ msgstr ""
 #~ "``thread_name`` and ``thread``, or "
 #~ "``applied_tags``     was passed with neither"
 #~ " ``thread_name`` nor ``thread`` specified."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether the webhook is authenticated "
+#~ "with a bot token. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether the webhook is a \"partial\" "
+#~ "webhook. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 #~ msgstr ""
 
