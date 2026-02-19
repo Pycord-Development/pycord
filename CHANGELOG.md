@@ -36,8 +36,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
 - Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
   ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
-- Fixed updates to a user's avatar decoration not triggering the `on_user_update` event.
-  ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
+- Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
+  event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
 
 ### Deprecated
 
@@ -60,9 +60,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added the ability to compare instances of `PrimaryGuild`.
   ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Added `cache_default_sounds` parameter to `Client` and its subclasses.
+  ([#3113](https://github.com/Pycord-Development/pycord/pull/3113))
 
 ### Changed
 
+- Migrated away from `utils.deprecated` in favor of `warnings.deprecated`. Added type
+  checker warnings support for function deprecations.
+  ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
 - Updated the docs' Sphinx version to v9.

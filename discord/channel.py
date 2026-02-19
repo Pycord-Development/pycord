@@ -38,6 +38,8 @@ from typing import (
     overload,
 )
 
+from typing_extensions import deprecated
+
 import discord.abc
 
 from . import utils
@@ -3118,10 +3120,8 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """
         return await self.guild.create_forum_channel(name, category=self, **options)
 
-    @utils.deprecated(
-        since="2.7",
-        removed="3.0",
-        reference="NSFW categories are not available in the Discord API.",
+    @deprecated(
+        "CategoryChannel.is_nsfw is deprecated since version 2.7 and will be removed in version 3.0. NSFW categories are not available in the Discord API."
     )
     def is_nsfw(self) -> bool:
         return False
@@ -3129,10 +3129,8 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     # TODO: Remove in 3.0
 
     @property
-    @utils.deprecated(
-        since="2.7",
-        removed="3.0",
-        reference="NSFW categories are not available in the Discord API.",
+    @deprecated(
+        "CategoryChannel.nsfw is deprecated since version 2.7 and will be removed in version 3.0. NSFW categories are not available in the Discord API."
     )
     def nsfw(self) -> bool:
         return False
