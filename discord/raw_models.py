@@ -29,6 +29,8 @@ import datetime
 from collections.abc import ItemsView, KeysView, ValuesView
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import deprecated
+
 from . import utils
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import (
@@ -817,18 +819,14 @@ class RawMessagePollVoteEvent(_RawReprMixin):
 class _PayloadLike(_RawReprMixin):
     _raw_data: dict[str, Any]
 
-    @utils.deprecated(
-        "the attributes",
-        "2.7",
-        "3.0",
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
     )
     def __getitem__(self, key: str) -> Any:
         return self._raw_data[key]
 
-    @utils.deprecated(
-        "the attributes",
-        "2.7",
-        "3.0",
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
     )
     def get(self, key: str, default: Any = None) -> Any:
         """Gets an item from this raw event, and returns its value or ``default``.
@@ -838,10 +836,8 @@ class _PayloadLike(_RawReprMixin):
         """
         return self._raw_data.get(key, default)
 
-    @utils.deprecated(
-        "the attributes",
-        "2.7",
-        "3.0",
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
     )
     def items(self) -> ItemsView:
         """Returns the (key, value) pairs of this raw event.
@@ -851,10 +847,8 @@ class _PayloadLike(_RawReprMixin):
         """
         return self._raw_data.items()
 
-    @utils.deprecated(
-        "the attributes",
-        "2.7",
-        "3.0",
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
     )
     def values(self) -> ValuesView:
         """Returns the values of this raw event.
@@ -864,10 +858,8 @@ class _PayloadLike(_RawReprMixin):
         """
         return self._raw_data.values()
 
-    @utils.deprecated(
-        "the attributes",
-        "2.7",
-        "3.0",
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
     )
     def keys(self) -> KeysView:
         """Returns the keys of this raw event.

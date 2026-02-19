@@ -56,7 +56,7 @@ from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
 from .utils import warn_deprecated
-from .voice_client import VoiceClient, VoiceProtocol
+from .voice._types import VoiceProtocol
 
 __all__ = (
     "Snowflake",
@@ -1996,7 +1996,7 @@ class Connectable(Protocol):
         *,
         timeout: float = 60.0,
         reconnect: bool = True,
-        cls: Callable[[Client, Connectable], T] = VoiceClient,
+        cls: Callable[[Client, Connectable], T] = None,
     ) -> T:
         """|coro|
 
@@ -2031,6 +2031,10 @@ class Connectable(Protocol):
         ~discord.opus.OpusNotLoaded
             The opus library has not been loaded.
         """
+        if cls is None:
+            from .voice import VoiceClient
+
+            cls = VoiceClient
 
         key_id, _ = self._get_voice_client_key()
         state = self._state

@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .utils import deprecated
+from typing_extensions import deprecated
 
 """
 since discord.voice raises an error when importing it without having the
@@ -36,39 +36,27 @@ that would break the whole library, that is why this file is here.
 
 the error would still be raised, but at least here we have more freedom on how we are typing it
 """
-
 __all__ = ("VoiceProtocol", "VoiceClient")
 
-
 if TYPE_CHECKING:
-    from typing_extensions import deprecated
-
-    from discord.voice import VoiceClientC, VoiceProtocolC
-
-    @deprecated(
-        "discord.VoiceClient is deprecated in favour "
-        "of discord.voice.VoiceClient since 2.7 and "
-        "will be removed in 3.0",
+    from discord.voice import (
+        VoiceClient,
+        VoiceProtocol,
     )
-    def VoiceClient(client, channel) -> VoiceClientC: ...
-
-    @deprecated(
-        "discord.VoiceProtocol is deprecated in favour "
-        "of discord.voice.VoiceProtocol since 2.7 and "
-        "will be removed in 3.0",
-    )
-    def VoiceProtocol(client, channel) -> VoiceProtocolC: ...
-
 else:
 
-    @deprecated("discord.VoiceClient", "discord.voice.VoiceClient", "2.7", "3.0")
-    def VoiceClient(client, channel):
+    @deprecated(
+        "discord.VoiceClient is deprecated since version 2.7.0, consider using discord.voice.VoiceClient instead."
+    )
+    def VoiceClient(*args, **kwargs):
         from discord.voice import VoiceClient
 
-        return VoiceClient(client, channel)
+        return VoiceClient(*args, **kwargs)
 
-    @deprecated("discord.VoiceProtocol", "discord.voice.VoiceProtocol", "2.7", "3.0")
-    def VoiceProtocol(client, channel):
+    @deprecated(
+        "discord.VoiceProtocol is deprecated since version 2.8.0, consider using discord.voice.VoiceProtocol instead."
+    )
+    def VoiceProtocol(*args, **kwargs):
         from discord.voice import VoiceProtocol
 
-        return VoiceProtocol(client, channel)
+        return VoiceProtocol(*args, **kwargs)
