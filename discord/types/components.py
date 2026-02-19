@@ -142,8 +142,8 @@ class FileComponent(BaseComponent):
     type: Literal[13]
     file: UnfurledMediaItem
     spoiler: NotRequired[bool]
-    name: str
-    size: int
+    name: NotRequired[str]
+    size: NotRequired[int]
 
 
 class SeparatorComponent(BaseComponent):
