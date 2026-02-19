@@ -1397,7 +1397,7 @@ class FileUpload(Component):
         self.custom_id = data["custom_id"]
         self.min_values: int | None = data.get("min_values", None)
         self.max_values: int | None = data.get("max_values", None)
-        self.required: bool = data.get("required", True)
+        self.required: bool | None = data.get("required")
 
     def to_dict(self) -> FileUploadComponentPayload:
         payload = {
@@ -1413,7 +1413,7 @@ class FileUpload(Component):
         if self.max_values is not None:
             payload["max_values"] = self.max_values
 
-        if not self.required:
+        if self.required is not None:
             payload["required"] = self.required
 
         return payload  # type: ignore

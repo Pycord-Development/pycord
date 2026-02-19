@@ -31,7 +31,7 @@ class FileUpload(ModalItem):
         The maximum number of files that can be uploaded.
         Must be between 1 and 10, inclusive.
     required: Optional[:class:`bool`]
-        Whether the file upload field is required or not. Defaults to ``True``.
+        Whether the file upload field is required or not.
     id: Optional[:class:`int`]
         The file upload field's ID.
     """
@@ -50,7 +50,7 @@ class FileUpload(ModalItem):
         custom_id: str | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
-        required: bool = True,
+        required: bool | None = None,
         id: int | None = None,
     ):
         super().__init__()
@@ -62,7 +62,7 @@ class FileUpload(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
-        if not isinstance(required, bool):
+        if required is not None and not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._attachments: list[Attachment] | None = None
@@ -148,15 +148,15 @@ class FileUpload(ModalItem):
         self.underlying.max_values = value
 
     @property
-    def required(self) -> bool:
-        """Whether the input file upload is required or not. Defaults to ``True``."""
+    def required(self) -> bool | None:
+        """Whether the input file upload is required or not."""
         return self.underlying.required
 
     @required.setter
-    def required(self, value: bool):
-        if not isinstance(value, bool):
+    def required(self, value: bool | None):
+        if value is not None and not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
-        self.underlying.required = bool(value)
+        self.underlying.required = value
 
     @property
     def values(self) -> list[Attachment] | None:
