@@ -34,6 +34,8 @@ import threading
 from collections.abc import Callable, Generator, Sequence
 from typing import IO, TYPE_CHECKING, Any, Literal, TypeVar, overload
 
+from typing_extensions import deprecated
+
 from discord.file import File
 from discord.player import FFmpegAudio
 from discord.utils import MISSING, SequenceProxy
@@ -307,23 +309,12 @@ class MultiSink(Sink):
             dest._parent = None
 
 
-if TYPE_CHECKING:
-    from typing_extensions import deprecated
-
-    @deprecated(
-        "RawData has been deprecated and will be removed in 3.0 in favour of VoiceData",
-        category=DeprecationWarning,
-    )
-    def RawData(**kwargs: Any) -> Any:
-        """Deprecated since version 2.7, use :class:`VoiceData` instead."""
-
-else:
-
-    class RawData:
-        def __init__(self, **kwargs: Any) -> None:
-            raise DeprecationWarning(
-                "RawData has been deprecated in favour of VoiceData"
-            )
+@deprecated(
+    "RawData has been deprecated and will be removed in 3.0 in favour of VoiceData",
+    category=DeprecationWarning,
+)
+class RawData:
+    def __init__(self, **kwargs: Any) -> None: ...
 
 
 class FFmpegSink(Sink):
