@@ -253,6 +253,10 @@ class ConnectionState:
             self.deref_user = self.deref_user_no_intents  # type: ignore
 
         self.cache_app_emojis: bool = options.get("cache_app_emojis", False)
+        self.cache_default_sounds: bool = options.get(
+            "cache_default_sounds",
+            True,  # TODO(Paillat-dev): Don't cache default sounds by default
+        )
 
         self.parsers = parsers = {}
         for attr, func in inspect.getmembers(self):
@@ -619,6 +623,8 @@ class ConnectionState:
             data = await self.http.get_all_application_emojis(self.application_id)
             for e in data.get("items", []):
                 self.maybe_store_app_emoji(self.application_id, e)
+        if self.cache_default_sounds:
+            await self._add_default_sounds()
         try:
             states = []
             while True:
@@ -663,7 +669,6 @@ class ConnectionState:
         except asyncio.CancelledError:
             pass
         else:
-            await self._add_default_sounds()
             # dispatch the event
             self.call_handlers("ready")
             self.dispatch("ready")

@@ -29,6 +29,8 @@ import asyncio
 import datetime
 from typing import TYPE_CHECKING, Any, Coroutine, Union, overload
 
+from typing_extensions import deprecated
+
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import (
@@ -47,6 +49,7 @@ from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
 from .user import User
+from .utils import warn_deprecated
 from .webhook.async_ import (
     Webhook,
     WebhookMessage,
@@ -222,6 +225,7 @@ class Interaction:
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
         self.callback: InteractionCallback | None = None
+        self._cs_channel: InteractionChannel | None = MISSING
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
@@ -356,14 +360,19 @@ class Interaction:
         """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
 
-    @utils.cached_slot_property("_cs_channel")
-    @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
+    @property
+    @deprecated(
+        "Interaction.cached_channel is deprecated since version 2.7, consider using Interaction.channel instead."
+    )
     def cached_channel(self) -> InteractionChannel | None:
         """The cached channel from which the interaction was sent.
         DM channels are not resolved. These are :class:`PartialMessageable` instead.
 
         .. deprecated:: 2.7
         """
+        if self._cs_channel is not MISSING:
+            return self._cs_channel
+        r: InteractionChannel | None = None
         guild = self.guild
         channel = guild and guild._resolve_channel(self.channel_id)
         if channel is None:
@@ -373,11 +382,11 @@ class Interaction:
                     if self.guild_id is not None
                     else ChannelType.private
                 )
-                return PartialMessageable(
-                    state=self._state, id=self.channel_id, type=type
-                )
-            return None
-        return channel
+                r = PartialMessageable(state=self._state, id=self.channel_id, type=type)
+        else:
+            r = channel
+        self._cs_channel = r
+        return r
 
     @property
     def permissions(self) -> Permissions:
@@ -495,7 +504,9 @@ class Interaction:
         self._original_response = message
         return message
 
-    @utils.deprecated("Interaction.original_response", "2.2")
+    @deprecated(
+        "Interaction.original_message is deprecated since version 2.2, consider using Interaction.original_response instead."
+    )
     async def original_message(self):
         """An alias for :meth:`original_response`.
 
@@ -525,7 +536,8 @@ class Interaction:
         view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
-        suppress: bool = False,
+        suppress: bool | None = None,
+        suppress_embeds: bool = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -567,6 +579,12 @@ class Interaction:
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
 
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         :class:`InteractionMessage`
@@ -585,6 +603,12 @@ class Interaction:
         """
 
         previous_mentions: AllowedMentions | None = self._state.allowed_mentions
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+        elif suppress_embeds is None:
+            suppress_embeds = False
         params = handle_message_parameters(
             content=content,
             file=file,
@@ -595,7 +619,7 @@ class Interaction:
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            suppress=suppress,
+            suppress=suppress_embeds,
         )
         if view and self.message:
             self._state.prevent_view_updates_for(self.message.id)
@@ -628,7 +652,9 @@ class Interaction:
 
         return message
 
-    @utils.deprecated("Interaction.edit_original_response", "2.2")
+    @deprecated(
+        "Interaction.edit_original_message is deprecated since version 2.2, consider using Interaction.edit_original_response instead."
+    )
     async def edit_original_message(self, **kwargs):
         """An alias for :meth:`edit_original_response`.
 
@@ -686,7 +712,9 @@ class Interaction:
         else:
             await func
 
-    @utils.deprecated("Interaction.delete_original_response", "2.2")
+    @deprecated(
+        "Interaction.delete_original_message is deprecated since version 2.2, consider using Interaction.delete_original_response instead."
+    )
     async def delete_original_message(self, **kwargs):
         """An alias for :meth:`delete_original_response`.
 
@@ -712,6 +740,8 @@ class Interaction:
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction | WebhookMessage: ...
 
     @overload
@@ -727,6 +757,8 @@ class Interaction:
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction | WebhookMessage: ...
 
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
@@ -767,6 +799,14 @@ class Interaction:
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1024,6 +1064,8 @@ class InteractionResponse:
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction:
         """|coro|
 
@@ -1061,6 +1103,14 @@ class InteractionResponse:
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1099,7 +1149,11 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        flags = MessageFlags(ephemeral=ephemeral)
+        flags = MessageFlags(
+            ephemeral=ephemeral,
+            suppress_notifications=silent,
+            suppress_embeds=suppress_embeds,
+        )
 
         if view:
             payload["components"] = view.to_components()
@@ -1447,7 +1501,9 @@ class InteractionResponse:
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
-    @utils.deprecated("a button with type ButtonType.premium", "2.6")
+    @deprecated(
+        "InteractionResponse.premium_required is deprecated since version 2.6, consider using a button with type ButtonType.premium instead."
+    )
     async def premium_required(self) -> Interaction:
         """|coro|
 

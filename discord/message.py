@@ -60,7 +60,7 @@ from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
-from .utils import MISSING, escape_mentions, find
+from .utils import MISSING, escape_mentions, find, warn_deprecated
 
 if TYPE_CHECKING:
     from .abc import (
@@ -1737,6 +1737,7 @@ class Message(Hashable):
         files: list[File] | None = ...,
         attachments: list[Attachment] = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         delete_after: float | None = ...,
         allowed_mentions: AllowedMentions | None = ...,
         view: BaseView | None = ...,
@@ -1751,6 +1752,7 @@ class Message(Hashable):
         files: list[Sequence[File]] = MISSING,
         attachments: list[Attachment] = MISSING,
         suppress: bool = MISSING,
+        suppress_embeds: bool = MISSING,
         delete_after: float | None = None,
         allowed_mentions: AllowedMentions | None = MISSING,
         view: BaseView | None = MISSING,
@@ -1789,6 +1791,15 @@ class Message(Hashable):
             all the embeds if set to ``True``. If set to ``False``
             this brings the embeds back if they were suppressed.
             Using this parameter requires :attr:`~.Permissions.manage_messages`.
+
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message. This removes
+            all the embeds if set to ``True``. If set to ``False``
+            this brings the embeds back if they were suppressed.
+            Using this parameter requires :attr:`~.Permissions.manage_messages`.
+
+            .. versionadded:: 2.8
         delete_after: Optional[:class:`float`]
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
@@ -1837,7 +1848,12 @@ class Message(Hashable):
         flags = MessageFlags._from_value(self.flags.value)
 
         if suppress is not MISSING:
-            flags.suppress_embeds = suppress
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is MISSING:
+                suppress_embeds = suppress
+
+        if suppress_embeds is not MISSING:
+            flags.suppress_embeds = suppress_embeds
 
         if allowed_mentions is MISSING:
             if (

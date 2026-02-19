@@ -294,6 +294,8 @@ class ApplicationContext(discord.abc.Messageable):
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction | WebhookMessage: ...
 
     @overload
@@ -309,6 +311,8 @@ class ApplicationContext(discord.abc.Messageable):
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction | WebhookMessage: ...
 
     @discord.utils.copy_doc(Interaction.respond)

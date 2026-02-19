@@ -55,7 +55,8 @@ from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
-from .voice import VoiceClient, VoiceProtocol
+from .utils import warn_deprecated
+from .voice_client import VoiceClient, VoiceProtocol
 
 __all__ = (
     "Snowflake",
@@ -1358,6 +1359,7 @@ class Messageable:
         view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1379,6 +1381,7 @@ class Messageable:
         view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1400,6 +1403,7 @@ class Messageable:
         view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1421,6 +1425,7 @@ class Messageable:
         view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1443,6 +1448,7 @@ class Messageable:
         view=None,
         poll=None,
         suppress=None,
+        suppress_embeds=None,
         silent=None,
     ):
         """|coro|
@@ -1521,6 +1527,12 @@ class Messageable:
             .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
+
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
         silent: :class:`bool`
             Whether to suppress push and desktop notifications for the message.
 
@@ -1568,8 +1580,13 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+
         flags = MessageFlags(
-            suppress_embeds=bool(suppress),
+            suppress_embeds=bool(suppress_embeds),
             suppress_notifications=bool(silent),
         )
 
