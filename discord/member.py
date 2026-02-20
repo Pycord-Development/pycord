@@ -343,7 +343,9 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
-        self._avatar_decoration: Asset | None = data.get("avatar_decoration_data")
+        self._avatar_decoration: dict[str, str | int] | None = data.get(
+            "avatar_decoration_data"
+        )
 
     def __str__(self) -> str:
         return str(self._user)
