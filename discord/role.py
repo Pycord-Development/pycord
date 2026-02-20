@@ -213,33 +213,53 @@ class RoleTags:
 
     @deprecated("RoleTags.type", "2.8")
     def is_bot_managed(self) -> bool:
-        """Whether the role is associated with a bot."""
+        """Whether the role is associated with a bot.
+
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
+        """
         return self.bot_id is not None
 
     @deprecated("RoleTags.type", "2.8")
     def is_premium_subscriber(self) -> bool:
-        """Whether the role is the premium subscriber, AKA "boost", role for the guild."""
+        """Whether the role is the premium subscriber, AKA "boost", role for the guild.
+
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
+        """
         return self._premium_subscriber is True
 
     @deprecated("RoleTags.type", "2.8")
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
+
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
         """
         return self.integration_id is not None
 
     @deprecated("RoleTags.type", "2.8")
     def is_available_for_purchase(self) -> bool:
-        """Whether the role is available for purchase."""
+        """Whether the role is available for purchase.
+
+        Returns ``True`` if the role is available for purchase, and
+        ``False`` if it is not available for purchase or if the role
+        is not linked to a guild subscription.
+
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
+
+        .. versionadded:: 2.7
+        """
         return self._available_for_purchase is True
 
     @deprecated("RoleTags.type", "2.8")
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
-        Returns ``True`` if the role is available for purchase, and
-        ``False`` if it is not available for purchase or if the role
-        is not linked to a guild subscription.
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
 
         .. versionadded:: 2.7
         """
