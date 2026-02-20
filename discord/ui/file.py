@@ -119,12 +119,12 @@ class File(ViewItem[V]):
         self.underlying.spoiler = spoiler
 
     @property
-    def name(self) -> str:
+    def name(self) -> str | None:
         """The name of this file, if provided by Discord."""
         return self.underlying.name
 
     @property
-    def size(self) -> int:
+    def size(self) -> int | None:
         """The size of this file in bytes, if provided by Discord."""
         return self.underlying.size
 
