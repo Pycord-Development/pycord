@@ -46,6 +46,7 @@ from .object import Object
 from .permissions import Permissions
 from .primary_guild import PrimaryGuild
 from .role import RoleColours
+from .types.collectibles import AvatarDecoration
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
 
@@ -343,7 +344,7 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
-        self._avatar_decoration: dict[str, str | int] | None = data.get(
+        self._avatar_decoration: AvatarDecoration | None = data.get(
             "avatar_decoration_data"
         )
 
