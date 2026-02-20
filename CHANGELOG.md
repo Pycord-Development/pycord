@@ -14,13 +14,60 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `replace_item` to `DesignerView`, `Section`, `Container`, `ActionRow`, &
   `MediaGallery` ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
+- Added `Member.colours` and `Member.colors` properties.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `User.collectibles` property.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added the ability to compare instances of `Nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+
+### Changed
+
+- Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+
+### Fixed
+
+- Fixed some `Item` attributes not being set correctly.
+  ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
+- Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
+  event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
+
+### Deprecated
+
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+
+### Removed
+
+- Removed the guild creation and ownership-related methods and arguments due to updated
+  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+    `Template.create_guild`, and `Client.create_guild`.
+
+## [2.7.1] - 2026-02-09
+
+### Added
+
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added the ability to compare instances of `PrimaryGuild`.
   ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Added `cache_default_sounds` parameter to `Client` and its subclasses.
+  ([#3113](https://github.com/Pycord-Development/pycord/pull/3113))
 
 ### Changed
 
+- Migrated away from `utils.deprecated` in favor of `warnings.deprecated`. Added type
+  checker warnings support for function deprecations.
+  ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
 - Updated the docs' Sphinx version to v9.
@@ -58,14 +105,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
 - Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
   ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
-
-### Removed
-
-- Removed the guild creation and ownership-related methods and arguments due to updated
-  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
-    `Template.create_guild`, and `Client.create_guild`.
-  - Removed the `owner` argument from the method `Guild.edit`.
+- Fixed `get_or_fetch()` not supporting `Thread` objects.
+  ([#3101](https://github.com/Pycord-Development/pycord/pull/3101))
 
 ## [2.7.0] - 2025-12-24
 
@@ -1188,7 +1229,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 - `get_application_command()` now supports retrieving subcommands and subcommand groups.
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
--
 
 ### Removed
 
@@ -1584,7 +1624,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...HEAD
+[2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
 [2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1

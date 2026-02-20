@@ -37,6 +37,7 @@ import discord.abc
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
+from .collectibles import Collectibles
 from .colour import Colour
 from .enums import Status, try_enum
 from .errors import InvalidArgument
@@ -44,6 +45,7 @@ from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
 from .primary_guild import PrimaryGuild
+from .role import RoleColours
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
 
@@ -61,6 +63,7 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .types.activity import PartialPresenceUpdate
+    from .types.member import Member
     from .types.member import Member as MemberPayload
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
@@ -313,6 +316,7 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
         primary_guild: PrimaryGuild | None
+        collectibles: Collectibles | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -469,6 +473,8 @@ class Member(discord.abc.Messageable, _UserTag):
             u.global_name,
             u._public_flags,
             u.primary_guild,
+            u._collectibles,
+            u._avatar_decoration,
         )
         # These keys seem to always be available
         if (
@@ -486,6 +492,8 @@ class Member(discord.abc.Messageable, _UserTag):
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
             new_primary_guild,
+            user.get("collectibles") or u._collectibles,
+            user.get("avatar_decoration_data"),
         )
         if original != modified:
             to_return = User._copy(self._user)
@@ -496,6 +504,8 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.global_name,
                 u._public_flags,
                 u.primary_guild,
+                u._collectibles,
+                u._avatar_decoration,
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
@@ -546,11 +556,33 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def colour(self) -> Colour:
-        """A property that returns a colour denoting the rendered colour
+        """A property that returns a colour denoting the rendered primary colour
         for the member. If the default colour is the one rendered then an instance
         of :meth:`Colour.default` is returned.
 
-        There is an alias for this named :attr:`color`.
+        This is an alias for ``Member.colours.primary``.
+        """
+        return self.colours.primary
+
+    @property
+    def color(self) -> Colour:
+        """A property that returns a color denoting the primary rendered color for
+        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
+        is returned.
+
+        This is an alias for ``Member.colours.primary``.
+        """
+        return self.colours.primary
+
+    @property
+    def colours(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for
+        the member. If the default color is the one rendered then an instance of :meth:`RoleColours.default`
+        is returned.
+
+        There is an alias for this named :attr:`colors`.
+
+        .. versionadded:: 2.8
         """
 
         roles = self.roles[1:]  # remove @everyone
@@ -559,19 +591,21 @@ class Member(discord.abc.Messageable, _UserTag):
         # if the highest is the default colour then the next one with a colour
         # is chosen instead
         for role in reversed(roles):
-            if role.colour.value:
-                return role.colour
-        return Colour.default()
+            if role.colours.primary.value:
+                return role.colours
+        return RoleColours.default()
 
     @property
-    def color(self) -> Colour:
-        """A property that returns a color denoting the rendered color for
-        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
-        is returned.
+    def colors(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for the member.
+        If the default color is the one rendered then an instance
+        of :meth:`Colour.default` is returned.
 
-        There is an alias for this named :attr:`colour`.
+        This is an alias for :attr:`colours`.
+
+        .. versionadded:: 2.8
         """
-        return self.colour
+        return self.colours
 
     @property
     def roles(self) -> list[Role]:
