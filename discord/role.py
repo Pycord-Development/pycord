@@ -210,7 +210,9 @@ class RoleTags:
         # Seeing how messed up this is it wouldn't be a surprise if this happened
         return RoleType.UNKNOWN
 
-    @deprecated("RoleTags.type", "2.8")
+    @deprecated(
+        "RoleTags.is_bot_managed is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot.
 
@@ -219,7 +221,9 @@ class RoleTags:
         """
         return self.bot_id is not None
 
-    @deprecated("RoleTags.type", "2.8")
+    @deprecated(
+        "RoleTags.is_premium_subscriber is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild.
 
@@ -228,7 +232,9 @@ class RoleTags:
         """
         return self._premium_subscriber is True
 
-    @deprecated("RoleTags.type", "2.8")
+    @deprecated(
+        "RoleTags.is_integration is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
@@ -238,7 +244,9 @@ class RoleTags:
         """
         return self.integration_id is not None
 
-    @deprecated("RoleTags.type", "2.8")
+    @deprecated(
+        "RoleTags.is_available_for_purchase is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
 
@@ -253,7 +261,9 @@ class RoleTags:
         """
         return self._available_for_purchase is True
 
-    @deprecated("RoleTags.type", "2.8")
+    @deprecated(
+        "RoleTags.is_guild_connections_role is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
@@ -540,7 +550,9 @@ class Role(Hashable):
         """Checks if the role is the default role."""
         return self.guild.id == self.id
 
-    @deprecated("Role.type", "2.8")
+    @deprecated(
+        "Role.is_bot_managed is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot.
 
@@ -551,7 +563,9 @@ class Role(Hashable):
         """
         return self.tags is not None and self.tags.is_bot_managed()
 
-    @deprecated("Role.type", "2.8")
+    @deprecated(
+        "Role.is_premium_subscriber is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild.
 
@@ -562,7 +576,9 @@ class Role(Hashable):
         """
         return self.tags is not None and self.tags.is_premium_subscriber()
 
-    @deprecated("Role.type", "2.8")
+    @deprecated(
+        "Role.is_integration is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
@@ -597,7 +613,9 @@ class Role(Hashable):
             and me.top_role > self
         )
 
-    @deprecated("Role.type", "2.8")
+    @deprecated(
+        "Role.is_available_for_purchase is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
 
@@ -612,7 +630,9 @@ class Role(Hashable):
         """
         return self.tags is not None and self.tags.is_available_for_purchase()
 
-    @deprecated("Role.type", "2.8")
+    @deprecated(
+        "Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
