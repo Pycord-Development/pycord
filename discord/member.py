@@ -37,6 +37,7 @@ import discord.abc
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
+from .collectibles import Collectibles
 from .colour import Colour
 from .enums import Status, try_enum
 from .errors import InvalidArgument
@@ -315,6 +316,7 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
         primary_guild: PrimaryGuild | None
+        collectibles: Collectibles | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -471,6 +473,8 @@ class Member(discord.abc.Messageable, _UserTag):
             u.global_name,
             u._public_flags,
             u.primary_guild,
+            u._collectibles,
+            u._avatar_decoration,
         )
         # These keys seem to always be available
         if (
@@ -488,6 +492,8 @@ class Member(discord.abc.Messageable, _UserTag):
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
             new_primary_guild,
+            user.get("collectibles") or u._collectibles,
+            user.get("avatar_decoration_data"),
         )
         if original != modified:
             to_return = User._copy(self._user)
@@ -498,6 +504,8 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.global_name,
                 u._public_flags,
                 u.primary_guild,
+                u._collectibles,
+                u._avatar_decoration,
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
