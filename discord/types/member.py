@@ -52,6 +52,7 @@ class Member(PartialMember, total=False):
     communication_disabled_until: str
     flags: int
     collectibles: Collectibles
+    avatar_decoration_data: AvatarDecoration
 
 
 class _OptionalMemberWithUser(PartialMember, total=False):
