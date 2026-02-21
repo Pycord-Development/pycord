@@ -1272,6 +1272,8 @@ class GuildChannel:
         target_users_file: Optional[:class:`File`]
             A CSV file with a single column of user IDs for all the users able to accept this invite.
 
+            You can use :func:`utils.users_to_csv` to generate a virtual CSV file from a sequence of user IDs.
+
             .. versionadded:: 2.8
 
         Returns
