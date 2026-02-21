@@ -12,6 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `replace_item` to `DesignerView`, `Section`, `Container`, `ActionRow`, &
+  `MediaGallery` ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 - Added the ability to respond to interactions with suppressed push and desktop
