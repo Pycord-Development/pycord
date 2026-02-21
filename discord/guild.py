@@ -87,7 +87,11 @@ from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role, RoleColours
-from .scheduled_events import ScheduledEvent, ScheduledEventLocation
+from .scheduled_events import (
+    ScheduledEvent,
+    ScheduledEventLocation,
+    ScheduledEventRecurrenceRule,
+)
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
@@ -4287,8 +4291,10 @@ class Guild(Hashable):
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
         image: bytes = MISSING,
-    ) -> ScheduledEvent | None:
+        recurrence_rule: ScheduledEventRecurrenceRule | None = MISSING,
+    ) -> ScheduledEvent:
         """|coro|
+
         Creates a scheduled event.
 
         Parameters
@@ -4310,7 +4316,10 @@ class Guild(Hashable):
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
-            The cover image of the scheduled event
+            The cover image of the scheduled event.
+        recurrence_rule: Optional[:class:`ScheduledEventRecurrenceRule`]
+            The recurrence rule this event will follow. If this is ``None`` then this is a
+            one-time event.
 
         Returns
         -------
@@ -4324,7 +4333,8 @@ class Guild(Hashable):
         HTTPException
             The operation failed.
         """
-        payload: dict[str, str | int] = {
+
+        payload: dict[str, Any] = {
             "name": name,
             "scheduled_start_time": start_time.isoformat(),
             "privacy_level": int(privacy_level),
@@ -4350,6 +4360,12 @@ class Guild(Hashable):
 
         if image is not MISSING:
             payload["image"] = utils._bytes_to_base64_data(image)
+
+        if recurrence_rule is not MISSING:
+            if recurrence_rule is None:
+                payload["recurrence_rule"] = None
+            else:
+                payload["recurrence_rule"] = recurrence_rule._to_dict()
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload

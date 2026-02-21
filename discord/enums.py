@@ -83,6 +83,8 @@ __all__ = (
     "ThreadArchiveDuration",
     "SubscriptionStatus",
     "SeparatorSpacingSize",
+    "ScheduledEventRecurrenceFrequency",
+    "ScheduledEventWeekday",
     "SelectDefaultValueType",
 )
 
@@ -1102,6 +1104,27 @@ class SubscriptionStatus(Enum):
     active = 0
     ending = 1
     inactive = 2
+
+
+class ScheduledEventRecurrenceFrequency(Enum):
+    """A scheduled event recurrence rule's frequency."""
+
+    yearly = 0
+    monthly = 1
+    weekly = 2
+    daily = 3
+
+
+class ScheduledEventWeekday(Enum):
+    """A scheduled event week day."""
+
+    monday = 0
+    tuesday = 1
+    wednesday = 2
+    thursday = 3
+    friday = 4
+    saturday = 5
+    sunday = 6
 
 
 class ThreadArchiveDuration(IntEnum):

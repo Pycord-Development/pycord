@@ -23,6 +23,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
   ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
 
+- Added recurrence rules for `ScheduledEvent` objects.
+  ([#2749](https://github.com/Pycord-Development/pycord/pull/2749))
+
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.

@@ -26,6 +26,8 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
+from typing_extensions import NotRequired
+
 from .member import Member
 from .snowflake import Snowflake
 from .user import User
@@ -33,6 +35,8 @@ from .user import User
 ScheduledEventStatus = Literal[1, 2, 3, 4]
 ScheduledEventLocationType = Literal[1, 2, 3]
 ScheduledEventPrivacyLevel = Literal[2]
+ScheduledEventRecurrenceFrequency = Literal[0, 1, 2, 3]
+ScheduledEventWeekdayRecurrence = Literal[0, 1, 2, 3, 4, 5, 6]
 
 
 class ScheduledEvent(TypedDict):
@@ -52,6 +56,9 @@ class ScheduledEvent(TypedDict):
     entity_metadata: ScheduledEventEntityMetadata
     creator: User
     user_count: int | None
+    recurrence_rule: ScheduledEventRecurrenceRule | None
+    auto_start: bool
+    guild_scheduled_events_exceptions: list[Snowflake]
 
 
 class ScheduledEventEntityMetadata(TypedDict):
@@ -63,3 +70,21 @@ class ScheduledEventSubscriber(TypedDict):
     user_id: Snowflake
     user: User
     member: Member | None
+
+
+class ScheduledEventRecurrenceRule(TypedDict):
+    start: str
+    end: NotRequired[str | None]
+    frequency: ScheduledEventRecurrenceFrequency
+    interval: int
+    by_weekday: list[ScheduledEventWeekdayRecurrence] | None
+    by_n_weekday: list[ScheduledEventNWeekdayRecurrence] | None
+    by_month: list[int] | None
+    by_month_day: list[int] | None
+    by_year_day: NotRequired[list[int] | None]
+    count: NotRequired[int | None]
+
+
+class ScheduledEventNWeekdayRecurrence(TypedDict):
+    n: Literal[1, 2, 3, 4, 5]
+    day: ScheduledEventWeekdayRecurrence
