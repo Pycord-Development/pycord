@@ -375,7 +375,7 @@ class InviteTargetUsers:
             with open(fp, "wb") as f:
                 return f.write(data)
 
-    async def fetch_user_ids(self) -> list[int]:
+    async def as_user_ids(self) -> list[int]:
         """|coro|
 
         Retrieves a list of user IDs that can accept this invite. This internally
