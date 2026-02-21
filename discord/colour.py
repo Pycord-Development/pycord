@@ -340,7 +340,7 @@ class Colour:
         .. versionadded:: 1.5
 
         .. versionchanged:: 2.8
-            Updated to match new Discord theme colour.
+            Updated to match Discord's new theme colour.
         """
         return cls(0x1A1A1E)
 
