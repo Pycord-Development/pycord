@@ -25,6 +25,7 @@ from ._version import *
 
 
 from . import abc, opus, sinks, ui, utils
+from ._voice_aliases import *
 from .activity import *
 from .appinfo import *
 from .application_role_connection import *
@@ -74,7 +75,6 @@ from .team import *
 from .template import *
 from .threads import *
 from .user import *
-from .voice_client import *
 from .webhook import *
 from .welcome_screen import *
 from .widget import *

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 21:10+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,6 @@ msgstr ""
 #: a548999373424e22a1eef592535cb0e9
 #: a548999373424e22a1eef592535cb0e9
 #: a548999373424e22a1eef592535cb0e9
-#: a548999373424e22a1eef592535cb0e9
 msgid "Return type"
 msgstr ""
 
@@ -105,7 +104,7 @@ msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.walk_commands:6
 #: 37ca252417a04d0f9a6d189f27bf99a5
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\]`"
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.get_listeners:1
@@ -172,18 +171,7 @@ msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.has_error_handler:1
 #: 8540394b44384ceb81c96c63caa5c2d2
-msgid "Checks whether the cog has an error handler."
-msgstr ""
-
-#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check:11
-#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:11
-#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:11
-#: ../../../discord/cog.py:docstring of discord.cog.Cog.has_error_handler:6
-#: bc04772b95eb445880b68aa35b50195a
-#: bc04772b95eb445880b68aa35b50195a
-#: bc04772b95eb445880b68aa35b50195a
-#: bc04772b95eb445880b68aa35b50195a
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Checks whether the cog has an error handler. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_unload:1
@@ -237,6 +225,15 @@ msgstr ""
 #: 21d75be906eb43a4839ac7c2ac76eb49
 #: 21d75be906eb43a4839ac7c2ac76eb49
 msgid "The invocation context."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check:11
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:11
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:11
+#: bc04772b95eb445880b68aa35b50195a
+#: bc04772b95eb445880b68aa35b50195a
+#: bc04772b95eb445880b68aa35b50195a
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check:1

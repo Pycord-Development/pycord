@@ -22,82 +22,97 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-import io
-import os
-import subprocess
-import time
+from __future__ import annotations
 
-from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
-from .errors import M4ASinkError
+from collections.abc import Callable
+from typing import IO, TYPE_CHECKING, Any, overload
+
+from discord.utils import MISSING
+
+from .core import FFmpegSink
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
+
+    from ..voice.packets import VoiceData
+
+__all__ = ("M4ASink",)
 
 
-class M4ASink(Sink):
+class M4ASink(FFmpegSink):
     """A special sink for .m4a files.
 
     .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    filename: :class:`str`
+        The file in which the recording will be saved into.
+        This can't be mixed with ``buffer``.
+
+        .. versionadded:: 2.7
+    buffer: IO[:class:`bytes`]
+        The buffer in which the recording will be saved into.
+        This can't be mixed with ``filename``.
+
+        .. verionadded:: 2.7
+    executable: :class:`str`
+        The executable in which ``ffmpeg`` is in.
+
+        .. versionadded:: 2.7
+    stderr: IO[:class:`bytes`] | :data:`None`
+        The stderr buffer in which will be written. Defaults to ``None``.
+
+        .. versionadded:: 2.7
+    options: :class:`str` | :data:`None`
+        The options to append to the ffmpeg executable flags. You should not
+        use this because you may override any already-provided flag.
+
+        .. versionadded:: 2.7
+    error_hook: Callable[[:class:`FFmpegSink`, :class:`Exception`, :class:`discord.voice.VoiceData` | :data:`None`], Any] | :data:`None`
+        The callback to call when an error ocurrs with this sink.
+
+        .. versionadded:: 2.7
     """
 
-    def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
+    @overload
+    def __init__(
+        self,
+        *,
+        filename: str,
+        executable: str = ...,
+        stderr: IO[bytes] | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
 
-        self.encoding = "m4a"
-        self.vc = None
-        self.audio_data = {}
+    @overload
+    def __init__(
+        self,
+        *,
+        buffer: IO[bytes],
+        executable: str = ...,
+        stderr: IO[bytes] | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
 
-    def format_audio(self, audio):
-        """Formats the recorded audio.
-
-        Raises
-        ------
-        M4ASinkError
-            Audio may only be formatted after recording is finished.
-        M4ASinkError
-            Formatting the audio failed.
-        """
-        if self.vc.recording:
-            raise M4ASinkError(
-                "Audio may only be formatted after recording is finished."
-            )
-        m4a_file = f"{time.time()}.tmp"
-        args = [
-            "ffmpeg",
-            "-f",
-            "s16le",
-            "-ar",
-            "48000",
-            "-loglevel",
-            "error",
-            "-ac",
-            "2",
-            "-i",
-            "-",
-            "-f",
-            "ipod",
-            m4a_file,
-        ]
-        if os.path.exists(m4a_file):
-            os.remove(
-                m4a_file
-            )  # process will get stuck asking whether to overwrite, if file already exists.
-        try:
-            process = subprocess.Popen(
-                args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE
-            )
-        except FileNotFoundError:
-            raise M4ASinkError("ffmpeg was not found.") from None
-        except subprocess.SubprocessError as exc:
-            raise M4ASinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
-
-        process.communicate(audio.file.read())
-
-        with open(m4a_file, "rb") as f:
-            audio.file = io.BytesIO(f.read())
-            audio.file.seek(0)
-        os.remove(m4a_file)
-
-        audio.on_format(self.encoding)
+    def __init__(
+        self,
+        *,
+        filename: str = MISSING,
+        buffer: IO[bytes] = MISSING,
+        executable: str = "ffmpeg",
+        stderr: IO[bytes] | None = None,
+        options: str | None = None,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = None,
+    ) -> None:
+        super().__init__(
+            executable=executable,
+            before_options="-f ipod -loglevel error",
+            filename=filename,
+            buffer=buffer,
+            stderr=stderr,
+            options=options,
+            error_hook=error_hook,
+        )  # type: ignore

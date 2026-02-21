@@ -87,3 +87,25 @@ class MKASinkError(SinkException):
 
     .. versionadded:: 2.0
     """
+
+
+class MaxProcessesCountReached(SinkException):
+    """Exception thrown when you try to create an audio converter process and the maximum
+    process count threshold is exceeded.
+
+    .. versionadded:: 2.7
+    """
+
+
+class FFmpegNotFound(SinkException):
+    """Exception thrown when the provided FFmpeg executable path was not found.
+
+    .. versionadded:: 2.7
+    """
+
+
+class NoUserAudio(SinkException):
+    """Exception thrown when you try to format the audio of a user not saved in a sink.
+
+    .. versionadded:: 2.7
+    """

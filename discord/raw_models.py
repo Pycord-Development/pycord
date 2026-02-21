@@ -26,27 +26,29 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING
+from collections.abc import ItemsView, KeysView, ValuesView
+from typing import TYPE_CHECKING, Any
 
+from typing_extensions import deprecated
+
+from . import utils
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import (
     AuditLogAction,
     ChannelType,
     ReactionType,
-    VoiceChannelEffectAnimationType,
     try_enum,
 )
 
 if TYPE_CHECKING:
-    from .abc import MessageableChannel
+    from .abc import GuildChannel, MessageableChannel
     from .guild import Guild
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
-    from .soundboard import PartialSoundboardSound, SoundboardSound
+    from .soundboard import PartialSoundboardSound
     from .state import ConnectionState
     from .threads import Thread
-    from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.raw_models import (
         AuditLogEntryEvent,
     )
@@ -67,6 +69,8 @@ if TYPE_CHECKING:
         ThreadUpdateEvent,
         TypingEvent,
         VoiceChannelStatusUpdateEvent,
+        VoiceServerUpdateEvent,
+        VoiceStateEvent,
     )
     from .user import User
 
@@ -90,12 +94,20 @@ __all__ = (
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
     "RawSoundboardSoundDeleteEvent",
+    "RawVoiceServerUpdateEvent",
+    "RawVoiceStateUpdateEvent",
 )
 
 
 class _RawReprMixin:
+    __slots__: tuple[str, ...]
+
     def __repr__(self) -> str:
-        value = " ".join(f"{attr}={getattr(self, attr)!r}" for attr in self.__slots__)
+        value = " ".join(
+            f"{attr}={getattr(self, attr)!r}"
+            for attr in self.__slots__
+            if not attr.startswith("_")
+        )
         return f"<{self.__class__.__name__} {value}>"
 
 
@@ -124,10 +136,7 @@ class RawMessageDeleteEvent(_RawReprMixin):
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.cached_message: Message | None = None
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: MessageDeleteEvent = data
 
 
@@ -156,11 +165,7 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
         self.message_ids: set[int] = {int(x) for x in data.get("ids", [])}
         self.channel_id: int = int(data["channel_id"])
         self.cached_messages: list[Message] = []
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: BulkMessageDeleteEvent = data
 
 
@@ -200,11 +205,7 @@ class RawMessageUpdateEvent(_RawReprMixin):
         self.data: MessageUpdateEvent = data
         self.cached_message: Message | None = None
         self.new_message: Message = new_message
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
 
 class RawReactionActionEvent(_RawReprMixin):
@@ -277,11 +278,7 @@ class RawReactionActionEvent(_RawReprMixin):
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
         self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: ReactionActionEvent = data
 
 
@@ -307,11 +304,7 @@ class RawReactionClearEvent(_RawReprMixin):
     def __init__(self, data: ReactionClearEvent) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: ReactionClearEvent = data
 
 
@@ -364,11 +357,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
         self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: ReactionClearEmojiEvent = data
 
 
@@ -396,11 +385,9 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     def __init__(self, data: IntegrationDeleteEvent) -> None:
         self.integration_id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
-
-        try:
-            self.application_id: int | None = int(data["application_id"])
-        except KeyError:
-            self.application_id: int | None = None
+        self.application_id: int | None = utils._get_as_snowflake(
+            data, "application_id"
+        )
         self.data: IntegrationDeleteEvent = data
 
 
@@ -463,10 +450,10 @@ class RawThreadDeleteEvent(_RawReprMixin):
     __slots__ = ("thread_id", "thread_type", "guild_id", "parent_id", "thread", "data")
 
     def __init__(self, data: ThreadDeleteEvent) -> None:
-        self.thread_id: int = int(data["id"])
-        self.thread_type: ChannelType = try_enum(ChannelType, int(data["type"]))
-        self.guild_id: int = int(data["guild_id"])
-        self.parent_id: int = int(data["parent_id"])
+        self.thread_id: int = int(data["id"])  # type: ignore
+        self.thread_type: ChannelType = try_enum(ChannelType, int(data["type"]))  # type: ignore
+        self.guild_id: int = int(data["guild_id"])  # type: ignore
+        self.parent_id: int = int(data["parent_id"])  # type: ignore
         self.thread: Thread | None = None
         self.data: ThreadDeleteEvent = data
 
@@ -493,11 +480,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
     def __init__(self, data: VoiceChannelStatusUpdateEvent) -> None:
         self.id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
-
-        try:
-            self.status: str | None = data["status"]
-        except KeyError:
-            self.status: str | None = None
+        self.status: str | None = data.get("status")
         self.data: VoiceChannelStatusUpdateEvent = data
 
 
@@ -533,11 +516,7 @@ class RawTypingEvent(_RawReprMixin):
             data.get("timestamp"), tz=datetime.timezone.utc
         )
         self.member: Member | None = None
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: TypingEvent = data
 
 
@@ -592,8 +571,8 @@ class RawScheduledEventSubscription(_RawReprMixin):
     __slots__ = ("event_id", "guild", "user_id", "event_type", "data")
 
     def __init__(self, data: ScheduledEventSubscription, event_type: str):
-        self.event_id: int = int(data["guild_scheduled_event_id"])
-        self.user_id: int = int(data["user_id"])
+        self.event_id: int = int(data["guild_scheduled_event_id"])  # type: ignore
+        self.user_id: int = int(data["user_id"])  # type: ignore
         self.guild: Guild | None = None
         self.event_type: str = event_type
         self.data: ScheduledEventSubscription = data
@@ -679,42 +658,23 @@ class AutoModActionExecutionEvent:
         self.guild: Guild | None = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
         self.content: str | None = data.get("content", None)
-        self.matched_keyword: str = data["matched_keyword"]
+        self.matched_keyword: str = data["matched_keyword"]  # type: ignore
         self.matched_content: str | None = data.get("matched_content", None)
-
-        if self.guild:
-            self.member: Member | None = self.guild.get_member(self.user_id)
-        else:
-            self.member: Member | None = None
-
-        try:
-            # I don't see why this would be optional, but it's documented
-            # as such, so we should treat it that way
-            self.channel_id: int | None = int(data["channel_id"])
-            self.channel: MessageableChannel | None = self.guild.get_channel_or_thread(
-                self.channel_id
-            )
-        except KeyError:
-            self.channel_id: int | None = None
-            self.channel: MessageableChannel | None = None
-
-        try:
-            self.message_id: int | None = int(data["message_id"])
-            self.message: Message | None = state._get_message(self.message_id)
-        except KeyError:
-            self.message_id: int | None = None
-            self.message: Message | None = None
-
-        try:
-            self.alert_system_message_id: int | None = int(
-                data["alert_system_message_id"]
-            )
-            self.alert_system_message: Message | None = state._get_message(
-                self.alert_system_message_id
-            )
-        except KeyError:
-            self.alert_system_message_id: int | None = None
-            self.alert_system_message: Message | None = None
+        self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
+        self.channel: MessageableChannel | None = (
+            self.channel_id
+            and self.guild
+            and self.guild.get_channel_or_thread(self.channel_id)
+        )  # type: ignore
+        self.member: Member | None = self.guild and self.guild.get_member(self.user_id)
+        self.message_id: int | None = utils._get_as_snowflake(data, "message_id")
+        self.message: Message | None = state._get_message(self.message_id)
+        self.alert_system_message_id: int | None = utils._get_as_snowflake(
+            data, "alert_system_message_id"
+        )
+        self.alert_system_message: Message | None = state._get_message(
+            self.alert_system_message_id
+        )
         self.data: AutoModActionExecution = data
 
     def __repr__(self) -> str:
@@ -851,11 +811,182 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         self.answer_id: int = int(data["answer_id"])
         self.data: MessagePollVoteEvent = data
         self.added: bool = added
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+
+# this is for backwards compatibility because VoiceProtocol.on_voice_..._update
+# passed the raw payload instead of a raw object. Emit deprecation warning.
+class _PayloadLike(_RawReprMixin):
+    _raw_data: dict[str, Any]
+
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
+    )
+    def __getitem__(self, key: str) -> Any:
+        return self._raw_data[key]
+
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
+    )
+    def get(self, key: str, default: Any = None) -> Any:
+        """Gets an item from this raw event, and returns its value or ``default``.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.get(key, default)
+
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
+    )
+    def items(self) -> ItemsView:
+        """Returns the (key, value) pairs of this raw event.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.items()
+
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
+    )
+    def values(self) -> ValuesView:
+        """Returns the values of this raw event.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.values()
+
+    @deprecated(
+        "Direct attribute access from _PayloadLike objects is deprecated since version 2.8.0, and will be removed in version 3.0."
+    )
+    def keys(self) -> KeysView:
+        """Returns the keys of this raw event.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.keys()
+
+
+class RawVoiceStateUpdateEvent(_PayloadLike):
+    """Represents the payload for a :meth:`VoiceProtocol.on_voice_state_update` event.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    deaf: :class:`bool`
+        Whether the user is guild deafened.
+    mute: :class:`bool`
+        Whether the user is guild muted.
+    self_mute: :class:`bool`
+        Whether the user has muted themselves by their own accord.
+    self_deaf: :class:`bool`
+        Whether the user has deafened themselves by their own accord.
+    self_stream: :class:`bool`
+        Whether the user is currently streaming via the 'Go Live' feature.
+    self_video: :class:`bool`
+        Whether the user is currently broadcasting video.
+    suppress: :class:`bool`
+        Whether the user is suppressed from speaking in a stage channel.
+    requested_to_speak_at: Optional[:class:`datetime.datetime`]
+        An aware datetime object that specifies when a member has requested to speak
+        in a stage channel. It will be ``None`` if they are not requesting to speak
+        anymore or have been accepted to.
+    afk: :class:`bool`
+        Whether the user is connected on the guild's AFK channel.
+    channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+        The voice channel that the user is currently connected to. ``None`` if the user
+        is not currently in a voice channel.
+
+        There are certain scenarios in which this is impossible to be ``None``.
+    session_id: :class:`str`
+        The voice connection session ID.
+    guild_id: Optional[:class:`int`]
+        The guild ID the user channel is from.
+    channel_id: Optional[:class:`int`]
+        The channel ID the user is connected to. Or ``None`` if not connected to any.
+    """
+
+    __slots__ = (
+        "session_id",
+        "mute",
+        "deaf",
+        "self_mute",
+        "self_deaf",
+        "self_stream",
+        "self_video",
+        "suppress",
+        "requested_to_speak_at",
+        "afk",
+        "guild_id",
+        "channel_id",
+        "_state",
+        "_raw_data",
+    )
+
+    def __init__(self, *, data: VoiceStateEvent, state: ConnectionState) -> None:
+        self.session_id: str = data["session_id"]
+        self._state: ConnectionState = state
+
+        self.self_mute: bool = data.get("self_mute", False)
+        self.self_deaf: bool = data.get("self_deaf", False)
+        self.mute: bool = data.get("mute", False)
+        self.deaf: bool = data.get("deaf", False)
+        self.suppress: bool = data.get("suppress", False)
+        self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(
+            data.get("request_to_speak_timestamp")
+        )
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
+        self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
+        self._raw_data: VoiceStateEvent = data
+
+    @property
+    def guild(self) -> Guild | None:
+        """Returns the guild channel the user is connected to, or ``None``."""
+        return self._state._get_guild(self.guild_id)
+
+    @property
+    def channel(self) -> GuildChannel | None:
+        """Returns the channel the user is connected to, or ``None``."""
+        return self._state.get_channel(self.channel_id)  # type: ignore
+
+
+class RawVoiceServerUpdateEvent(_PayloadLike):
+    """Represents the payload for a :meth:`VoiceProtocol.on_voice_server_update` event.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    token: :class:`str`
+        The voice connection token. This should not be shared.
+    guild_id: :class:`int`
+        The guild ID this token is part from.
+    endpoint: Optional[:class:`str`]
+        The voice server host to connect to.
+    """
+
+    __slots__ = (
+        "token",
+        "guild_id",
+        "endpoint",
+        "_raw_data",
+        "_state",
+    )
+
+    def __init__(self, *, data: VoiceServerUpdateEvent, state: ConnectionState) -> None:
+        self._state: ConnectionState = state
+        self.guild_id: int = int(data["guild_id"])
+        self.token: str = data["token"]
+        self.endpoint: str | None = data["endpoint"]
+
+    @property
+    def guild(self) -> Guild | None:
+        """Returns the guild this server update is from."""
+        return self._state._get_guild(self.guild_id)
 
 
 class RawSoundboardSoundDeleteEvent(_RawReprMixin):

@@ -1626,7 +1626,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self, guild: Guild, data: VoiceChannelPayload | StageChannelPayload
     ) -> None:
         # This data will always exist
-        self.guild = guild
+        self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
 

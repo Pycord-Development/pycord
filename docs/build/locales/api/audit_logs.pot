@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 21:10+0000\n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,7 +127,6 @@ msgstr ""
 #: ae9ec0bda90b41c1804663b15d03ff46
 #: 9167517e1b4440e488acc02f4d53b6dd
 #: 1b2f941479d9453db940b802623e13ed
-#: b2ffaa90169249a69585e235c7217414
 msgid "type"
 msgstr ""
 
@@ -216,27 +215,27 @@ msgstr ""
 msgid "Parameters"
 msgstr ""
 
-#: ../../../discord/audit_logs.py:docstring of discord.AuditLogEntry.created_at:1
+#: ../../docstring of discord.AuditLogEntry.created_at:1
 #: 35c34734a85b4772ab44cafcdb0c1487
 msgid "Returns the entry's creation time in UTC."
 msgstr ""
 
-#: ../../../discord/audit_logs.py:docstring of discord.AuditLogEntry.category:1
+#: ../../docstring of discord.AuditLogEntry.category:1
 #: 42a54accd66e4774b590c0e2c23cef74
 msgid "The category of the action, if applicable."
 msgstr ""
 
-#: ../../../discord/audit_logs.py:docstring of discord.AuditLogEntry.changes:1
+#: ../../docstring of discord.AuditLogEntry.changes:1
 #: 3f099394b54d4de38f2c30f64db98003
 msgid "The list of changes this entry has."
 msgstr ""
 
-#: ../../../discord/audit_logs.py:docstring of discord.AuditLogEntry.before:1
+#: ../../docstring of discord.AuditLogEntry.before:1
 #: 413918f132a3422e93b9002da753ffe3
 msgid "The target's prior state."
 msgstr ""
 
-#: ../../../discord/audit_logs.py:docstring of discord.AuditLogEntry.after:1
+#: ../../docstring of discord.AuditLogEntry.after:1
 #: 3a963ab211594298b7dce384b294f823
 msgid "The target's subsequent state."
 msgstr ""
@@ -994,14 +993,4 @@ msgstr ""
 #: ../../api/audit_logs.rst:529
 #: 1028bd2d6f464ae48a24408209380e30
 msgid "The cover image of a :class:`ScheduledEvent`."
-msgstr ""
-
-#: ../../api/audit_logs.rst:535
-#: 49b6724c13de4f3ba45acb3692dffdf3
-msgid "Until when a :class:`Member` will be timed out"
-msgstr ""
-
-#: ../../api/audit_logs.rst:537
-#: bd2864c09d1c49c1998460b11c807125
-msgid ":class:`datetime.datetime` | :data:`None`"
 msgstr ""
