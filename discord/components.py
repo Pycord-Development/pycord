@@ -1127,9 +1127,9 @@ class FileComponent(Component):
     ----------
     file: :class:`UnfurledMediaItem`
         The file's media item.
-    name: :class:`str`
+    name: Optional[:class:`str`]
         The file's name.
-    size: :class:`int`
+    size: Optional[:class:`int`]
         The file's size in bytes.
     spoiler: Optional[:class:`bool`]
         Whether the file has the spoiler overlay.
@@ -1148,8 +1148,8 @@ class FileComponent(Component):
     def __init__(self, data: FileComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.name: str = data.get("name")
-        self.size: int = data.get("size")
+        self.name: str | None = data.get("name")
+        self.size: int | None = data.get("size")
         self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(
             data.get("file", {}), state=state
         )
