@@ -60,7 +60,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
-from .monetization import SKU, Entitlement
+from .monetization import SKU
 from .object import Object
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
@@ -78,20 +78,15 @@ from .widget import Widget
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import (
-        CategoryChannel,
         DMChannel,
-        ForumChannel,
-        StageChannel,
-        TextChannel,
-        VoiceChannel,
     )
     from .interactions import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
     from .soundboard import SoundboardSound
-    from .threads import Thread, ThreadMember
-    from .ui.item import Item, ViewItem
+    from .threads import Thread
+    from .ui.item import ViewItem
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -1876,8 +1871,6 @@ class Client:
             Retrieving the information failed somehow.
         """
         data = await self.http.application_info()
-        if "rpc_origins" not in data:
-            data["rpc_origins"] = None
         return AppInfo(self._connection, data)
 
     async def fetch_user(self, user_id: int, /) -> User:

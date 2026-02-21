@@ -2630,3 +2630,21 @@ of :class:`enum.Enum`.
     .. attribute:: user
 
         The default value is a user.
+
+
+.. class:: ApplicationEventWebhookStatus
+
+    Represents the application event webhook status.
+
+    .. versionadded:: 2.7.1
+
+    .. attribute:: disabled
+
+        The application webhook is disabled.
+
+    .. attribute:: enabled
+
+        The application webhook is enabled.
+
+    .. attribute:: disabled_by_discord
+        The application webhook is disabled by Discord.
