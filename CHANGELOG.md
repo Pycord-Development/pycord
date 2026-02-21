@@ -16,6 +16,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 - Added `Colour.light_theme()`, `Colour.ash_theme()` and `Colour.onyx_theme()`.
   ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `User.collectibles` property.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added the ability to compare instances of `Nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
+  ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
 
 ### Changed
 
@@ -23,13 +31,25 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 - Updated `Colour.dark_theme()` with Discord's new theme colours.
   ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 
 ### Fixed
+
+- Fixed some `Item` attributes not being set correctly.
+  ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
+- Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
+  event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
 
 ### Deprecated
 
 - Deprecated `Colour.embed_background()`.
   ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
 
@@ -46,9 +66,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added the ability to compare instances of `PrimaryGuild`.
   ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Added `cache_default_sounds` parameter to `Client` and its subclasses.
+  ([#3113](https://github.com/Pycord-Development/pycord/pull/3113))
 
 ### Changed
 
+- Migrated away from `utils.deprecated` in favor of `warnings.deprecated`. Added type
+  checker warnings support for function deprecations.
+  ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
 - Updated the docs' Sphinx version to v9.

@@ -29,8 +29,17 @@ from typing import TypedDict
 from .snowflake import Snowflake
 
 
+class Collectibles(TypedDict):
+    nameplate: Nameplate
+
+
 class Nameplate(TypedDict):
     sku_id: Snowflake
     asset: str
     label: str
     palette: str
+
+
+class AvatarDecoration(TypedDict):
+    sku_id: Snowflake
+    asset: str
