@@ -399,56 +399,6 @@ class InviteTargetUsers:
             .splitlines()[1:]  # first line is standardized "user_ids" header
         ]
 
-    async def edit(self, target_users_file: File) -> None:
-        """|coro|
-
-        Updates the target users list for this invite.
-
-        You must have created this invite or have the :attr:`~Permissions.manage_guild` permission to do this.
-
-        Parameters
-        ----------
-        target_users_file: :class:`File`
-            A CSV file with a single column of user IDs for all the users able to accept this invite.
-
-        Raises
-        ------
-        HTTPException
-            Updating the target users failed.
-        Forbidden
-            You do not have permissions to edit this invite.
-        NotFound
-            The invite is invalid or expired.
-        """
-        await self._state.http.update_invite_target_users(
-            self.invite_code, target_users_file=target_users_file
-        )
-
-    async def get_job_status(self) -> InviteTargetUsersJobStatus:
-        """|coro|
-
-        Retrieves the status of the target users processing job for this invite.
-
-        You must have created this invite or have the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log` permissions.
-        permission to do this.
-
-        Returns
-        -------
-        :class:`InviteTargetUsersJobStatus`
-            The job status information.
-
-        Raises
-        ------
-        HTTPException
-            Fetching the job status failed.
-        NotFound
-            The invite is invalid or expired.
-        Forbidden
-            You do not have permission to view the target users.
-        """
-        r = await self._state.http.get_invite_target_users_job_status(self.invite_code)
-        return InviteTargetUsersJobStatus(data=r)
-
 
 I = TypeVar("I", bound="Invite")
 
@@ -771,6 +721,58 @@ class Invite(Hashable):
         .. versionadded:: 2.8
         """
         return InviteTargetUsers(invite_code=self.code, state=self._state)
+
+    async def edit_target_users(self, target_users_file: File) -> None:
+        """|coro|
+
+        Updates the target users list for this invite.
+
+        You must have created this invite or have the :attr:`~Permissions.manage_guild` permission to do this.
+
+        You can use :func:`utils.users_to_csv` to generate a virtual CSV file from a sequence of user IDs.
+
+        Parameters
+        ----------
+        target_users_file: :class:`File`
+            A CSV file with a single column of user IDs for all the users able to accept this invite.
+
+        Raises
+        ------
+        HTTPException
+            Updating the target users failed.
+        Forbidden
+            You do not have permissions to edit this invite.
+        NotFound
+            The invite is invalid or expired.
+        """
+        await self._state.http.update_invite_target_users(
+            self.invite_code, target_users_file=target_users_file
+        )
+
+    async def fetch_target_users_job_status(self) -> InviteTargetUsersJobStatus:
+        """|coro|
+
+        Retrieves the status of the target users processing job for this invite.
+
+        You must have created this invite or have the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log` permissions.
+        permission to do this.
+
+        Returns
+        -------
+        :class:`InviteTargetUsersJobStatus`
+            The job status information.
+
+        Raises
+        ------
+        HTTPException
+            Fetching the job status failed.
+        NotFound
+            The invite is invalid or expired.
+        Forbidden
+            You do not have permission to view the target users.
+        """
+        r = await self._state.http.get_invite_target_users_job_status(self.code)
+        return InviteTargetUsersJobStatus(data=r)
 
     async def delete(self, *, reason: str | None = None):
         """|coro|
