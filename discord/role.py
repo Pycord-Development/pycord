@@ -25,12 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from contextlib import suppress
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from typing_extensions import Self, deprecated
 
 from .asset import Asset
 from .colour import Colour
+from .enums import RoleType
 from .errors import InvalidArgument
 from .flags import RoleFlags
 from .mixins import Hashable
@@ -38,7 +40,7 @@ from .permissions import Permissions
 from .utils import (
     MISSING,
     _bytes_to_base64_data,
-    _get_as_snowflake,
+    cached_slot_property,
     snowflake_time,
     warn_deprecated,
 )
@@ -57,20 +59,69 @@ if TYPE_CHECKING:
     from .types.role import RoleTags as RoleTagPayload
 
 
+def _parse_tag_bool(data: RoleTagPayload, key: str) -> bool | None:
+    """Parse a boolean from a role tag payload.
+
+    None is returned if the key is not present.
+    True is returned if the key is present and the value is None.
+    False is returned for any other cases, but this should allegedly not happen.
+
+    Parameters
+    ----------
+    data: :class:`RoleTagPayload`
+        The role tag payload to parse from.
+    key: :class:`str`
+        The key to parse from.
+
+    Returns
+    -------
+    :class:`bool` | :class:`None`
+        The parsed boolean value or None if the key is not present.
+    """
+    # if it is False, False is not None -> False
+    # if it is None, None is None -> True
+    # if the key is not present, None
+    return data[key] is None if key in data else None
+
+
+def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
+    """Parse an integer from a role tag payload.
+
+    An integer is returned if the key is present and the value is an integer string.
+    None is returned if the key is not present or the value is not an integer string.
+
+    Parameters
+    ----------
+    data: :class:`RoleTagPayload`
+        The role tag payload to parse from.
+    key: :class:`str`
+        The key to parse from.
+
+    Returns
+    -------
+    :class:`int` | :class:`None`
+        The parsed integer value or None if the key is not present or the value is not an integer string.
+    """
+    if value := data.get(key):
+        with suppress(ValueError):
+            # value error means it's not an number string (None or "")
+            return int(value)  # pyright: ignore[reportUnknownArgumentType]
+    return None
+
+
 class RoleTags:
     """Represents tags on a role.
 
     A role tag is a piece of extra information attached to a managed role
     that gives it context for the reason the role is managed.
 
-    While this can be accessed, a useful interface is also provided in the
-    :class:`Role` and :class:`Guild` classes as well.
-
     Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
-    We aim to improve the documentation / introduce new attributes in future.
-    For the meantime read `this <https://discord-lib-devs.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work.
+    In order to make your life easier, pycord provides a :attr:`RoleTags.type` attribute that attempts to determine the role type based on the role tags. Its value is not provided by Discord but is rather computed based on the role tags.
+    If you find an issue, please report it on `GitHub <https://github.com/Pycord-Development/pycord/issues/new?template=bug_report.yml>`_.
+    Read `this <https://lulalaby.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work.
 
-    .. versionadded:: 1.6
+    .. versionchanged:: 2.8
+        The type of the role is now determined by the :attr:`RoleTags.type` attribute.
 
     Attributes
     ----------
@@ -85,45 +136,117 @@ class RoleTags:
     """
 
     __slots__ = (
-        "bot_id",
         "integration_id",
         "subscription_listing_id",
         "_premium_subscriber",
         "_available_for_purchase",
         "_guild_connections",
+        "_is_guild_product_role",
+        "bot_id",
+        "_data",
+        "_type",
     )
 
+    _type: RoleType
+
     def __init__(self, data: RoleTagPayload):
-        self.bot_id: int | None = _get_as_snowflake(data, "bot_id")
-        self.integration_id: int | None = _get_as_snowflake(data, "integration_id")
-        self.subscription_listing_id: int | None = _get_as_snowflake(
+        self._data: RoleTagPayload = data
+        self.integration_id: int | None = _parse_tag_int(data, "integration_id")
+        self.subscription_listing_id: int | None = _parse_tag_int(
             data, "subscription_listing_id"
         )
-        # NOTE: The API returns "null" for each of the following tags if they are True, and omits them if False.
-        # However, "null" corresponds to None.
-        # This is different from other fields where "null" means "not there".
-        # So in this case, a value of None is the same as True.
-        # Which means we would need a different sentinel.
-        self._premium_subscriber: Any | None = data.get("premium_subscriber", MISSING)
-        self._available_for_purchase: Any | None = data.get(
-            "available_for_purchase", MISSING
+        self.bot_id: int | None = _parse_tag_int(data, "bot_id")
+        self._guild_connections: bool | None = _parse_tag_bool(
+            data, "guild_connections"
         )
-        self._guild_connections: Any | None = data.get("guild_connections", MISSING)
+        self._premium_subscriber: bool | None = _parse_tag_bool(
+            data, "premium_subscriber"
+        )
+        self._available_for_purchase: bool | None = _parse_tag_bool(
+            data, "available_for_purchase"
+        )
+        # here discord did things in a normal and logical way for once so we don't have to use _parse_tag_bool
+        self._is_guild_product_role: bool | None = data.get("is_guild_product_role")
 
+    @cached_slot_property("_type")
+    def type(self) -> RoleType:
+        """:class:`RoleType`: The type of the role.
+
+        Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
+        In order to make your life easier, pycord provides a :attr:`RoleTags.type` attribute that attempts to determine the role type based on the role tags. Its value is not provided by Discord but is rather computed based on the role tags.
+        If you find an issue, please report it on `GitHub <https://github.com/Pycord-Development/pycord/issues/new?template=bug_report.yml>`_.
+        Read `this <https://lulalaby.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work.
+        """
+        # Bot role
+        if self.bot_id is not None:
+            return RoleType.APPLICATION
+
+        # Role connection
+        if self._guild_connections is True:
+            return RoleType.CONNECTION
+
+        # Paid roles
+        if self._is_guild_product_role is True:
+            return RoleType.GUILD_PRODUCT
+
+        # Booster role
+        if self._premium_subscriber is True:
+            return RoleType.BOOSTER
+
+        # Subscription roles
+        if (
+            self.integration_id is not None
+            and self._premium_subscriber is None
+            and self.subscription_listing_id is not None
+        ):
+            if self._available_for_purchase is True:
+                return RoleType.PREMIUM_SUBSCRIPTION_TIER
+            return RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER
+
+        # Integration role (Twitch/YouTube)
+        if self.integration_id is not None:
+            return RoleType.INTEGRATION
+
+        # Seeing how messed up this is it wouldn't be a surprise if this happened
+        return RoleType.UNKNOWN
+
+    @deprecated(
+        "RoleTags.is_bot_managed is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_bot_managed(self) -> bool:
-        """Whether the role is associated with a bot."""
+        """Whether the role is associated with a bot.
+
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
+        """
         return self.bot_id is not None
 
+    @deprecated(
+        "RoleTags.is_premium_subscriber is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_premium_subscriber(self) -> bool:
-        """Whether the role is the premium subscriber, AKA "boost", role for the guild."""
-        return self._premium_subscriber is None
+        """Whether the role is the premium subscriber, AKA "boost", role for the guild.
 
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
+        """
+        return self._premium_subscriber is True
+
+    @deprecated(
+        "RoleTags.is_integration is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
+
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
         """
         return self.integration_id is not None
 
+    @deprecated(
+        "RoleTags.is_available_for_purchase is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
 
@@ -131,24 +254,31 @@ class RoleTags:
         ``False`` if it is not available for purchase or if the role
         is not linked to a guild subscription.
 
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
+
         .. versionadded:: 2.7
         """
-        return self._available_for_purchase is None
+        return self._available_for_purchase is True
 
+    @deprecated(
+        "RoleTags.is_guild_connections_role is deprecated since version 2.8, consider using RoleTags.type instead."
+    )
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
+        .. deprecated:: 2.8
+            Use :attr:`RoleTags.type` instead.
+
         .. versionadded:: 2.7
         """
-        return self._guild_connections is None
+        return self._guild_connections is True
 
     def __repr__(self) -> str:
         return (
             f"<RoleTags bot_id={self.bot_id} integration_id={self.integration_id} "
-            f"subscription_listing_id={self.subscription_listing_id} "
-            f"premium_subscriber={self.is_premium_subscriber()} "
-            f"available_for_purchase={self.is_available_for_purchase()} "
-            f"guild_connections={self.is_guild_connections_role()}>"
+            + f"subscription_listing_id={self.subscription_listing_id} "
+            + f"type={self.type!r}>"
         )
 
 
@@ -312,7 +442,8 @@ class Role(Hashable):
     mentionable: :class:`bool`
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
-        The role tags associated with this role.
+        The role tags associated with this role. Tags indicate whether the role is a special role,
+        such as but not limited to a bot role or the booster role.
     unicode_emoji: Optional[:class:`str`]
         The role's unicode emoji.
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
@@ -419,23 +550,41 @@ class Role(Hashable):
         """Checks if the role is the default role."""
         return self.guild.id == self.id
 
+    @deprecated(
+        "Role.is_bot_managed is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot.
+
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
 
         .. versionadded:: 1.6
         """
         return self.tags is not None and self.tags.is_bot_managed()
 
+    @deprecated(
+        "Role.is_premium_subscriber is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild.
+
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
 
         .. versionadded:: 1.6
         """
         return self.tags is not None and self.tags.is_premium_subscriber()
 
+    @deprecated(
+        "Role.is_integration is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
+
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
 
         .. versionadded:: 1.6
         """
@@ -464,6 +613,9 @@ class Role(Hashable):
             and me.top_role > self
         )
 
+    @deprecated(
+        "Role.is_available_for_purchase is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
 
@@ -471,12 +623,21 @@ class Role(Hashable):
         ``False`` if it is not available for purchase or if the
         role is not linked to a guild subscription.
 
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
+
         .. versionadded:: 2.7
         """
         return self.tags is not None and self.tags.is_available_for_purchase()
 
+    @deprecated(
+        "Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead."
+    )
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
+
+        .. deprecated:: 2.8
+            Use :attr:`Role.type` instead.
 
         .. versionadded:: 2.7
         """
@@ -549,6 +710,16 @@ class Role(Hashable):
             return None
 
         return Asset._from_icon(self._state, self.id, self._icon, "role")
+
+    @property
+    def type(self) -> RoleType:
+        """The type of the role.
+
+        This is an alias for :attr:`RoleTags.type`.
+
+        .. versionadded:: 2.8
+        """
+        return self.tags.type if self.tags is not None else RoleType.NORMAL
 
     async def _move(self, position: int, reason: str | None) -> None:
         if position <= 0:

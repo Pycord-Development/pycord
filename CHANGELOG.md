@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 - Added the ability to respond to interactions with suppressed push and desktop
   notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 - Added `User.collectibles` property.
@@ -41,6 +43,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
+- Deprecated `is_bot_managed`, `is_premium_subscriber`, `is_integration`,
+  `is_available_for_purchase`, and `is_guild_connections_role` in favor of `type` for
+  both `Role` and `RoleTags` .
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 - Deprecated the `suppress` parameter in all applicable message-related methods in favor
   of `suppress_embeds`.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))

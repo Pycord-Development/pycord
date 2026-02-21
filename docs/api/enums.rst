@@ -2630,3 +2630,6 @@ of :class:`enum.Enum`.
     .. attribute:: user
 
         The default value is a user.
+
+.. autoclass:: RoleType
+    :members:

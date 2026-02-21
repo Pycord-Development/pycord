@@ -81,6 +81,7 @@ __all__ = (
     "PollLayoutType",
     "MessageReferenceType",
     "ThreadArchiveDuration",
+    "RoleType",
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
@@ -1129,6 +1130,56 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class RoleType(IntEnum):
+    """Represents the type of role.
+
+    This is NOT provided by Discord but is rather computed based on :attr:`Role.tags`.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    NORMAL: :class:`int`
+        The role is a normal role.
+    APPLICATION: :class:`int`
+        The role is an application (bot) role.
+    BOOSTER: :class:`int`
+        The role is a guild's booster role.
+    GUILD_PRODUCT: :class:`int`
+        The role is a guild product role.
+
+        .. note::
+            This is not possible to determine at times because role tags seem to be missing altogether, notably when
+            a role is fetched. In such cases :attr:`Role.type` and :attr:`Role.tags` will both be :data:`None`.
+    PREMIUM_SUBSCRIPTION_BASE: :class:`int`
+        The role is a base subscription role.
+
+        .. note::
+            This is not possible to determine currently, will be :attr:`.INTEGRATION` if it's a base subscription.
+    PREMIUM_SUBSCRIPTION_TIER: :class:`int`
+        The role is a subscription role.
+    DRAFT_PREMIUM_SUBSCRIPTION_TIER: :class:`int`
+        The role is a draft subscription role.
+    INTEGRATION: :class:`int`
+        The role is an integration role, such as Twitch or YouTube, or a base subscription role.
+    CONNECTION: :class:`int`
+        The role is a guild connections role.
+    UNKNOWN: :class:`int`
+        The role type is unknown.
+    """
+
+    NORMAL = 0
+    APPLICATION = 1
+    BOOSTER = 2
+    GUILD_PRODUCT = 3  # Not possible to determine *at times* because role tags seem to be missing altogether when fetched
+    PREMIUM_SUBSCRIPTION_BASE = 4  # Not possible to determine currently, will be INTEGRATION if it's a base subscription
+    PREMIUM_SUBSCRIPTION_TIER = 5
+    DRAFT_PREMIUM_SUBSCRIPTION_TIER = 6
+    INTEGRATION = 7
+    CONNECTION = 8
+    UNKNOWN = 9
 
 
 T = TypeVar("T")
