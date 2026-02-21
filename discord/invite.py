@@ -30,6 +30,8 @@ import io
 import os
 from typing import TYPE_CHECKING, TypeVar, Union
 
+from typing_extensions import override
+
 from .appinfo import PartialAppInfo
 from .asset import Asset
 from .enums import (
@@ -271,10 +273,11 @@ class InviteTargetUsersJobStatus:
             InviteTargetUsersJobStatusCode, data["status"]
         )
 
+    @override
     def __repr__(self) -> str:
         return (
             f"<InviteTargetUsersJobStatus total_users={self.total_users} processed_users={self.processed_users} "
-            f"created_at={self.created_at} completed_at={self.completed_at} error_message={self.error_message} "
+            f"created_at={self.created_at!r} completed_at={self.completed_at!r} error_message={self.error_message} "
             f"status={self.status}>"
         )
 
