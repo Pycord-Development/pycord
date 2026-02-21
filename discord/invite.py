@@ -25,19 +25,34 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import datetime
+import io
+import os
 from typing import TYPE_CHECKING, TypeVar, Union
+
+from typing_extensions import override
 
 from .appinfo import PartialAppInfo
 from .asset import Asset
-from .enums import ChannelType, InviteTarget, VerificationLevel, try_enum
+from .enums import (
+    ChannelType,
+    InviteTarget,
+    InviteTargetUsersJobStatusCode,
+    VerificationLevel,
+    try_enum,
+)
+from .file import File
 from .mixins import Hashable
 from .object import Object
+from .role import Role
 from .utils import _get_as_snowflake, parse_time, snowflake_time
 
 __all__ = (
     "PartialInviteChannel",
     "PartialInviteGuild",
     "Invite",
+    "InviteTargetUsers",
+    "InviteTargetUsersJobStatus",
 )
 
 if TYPE_CHECKING:
@@ -49,14 +64,17 @@ if TYPE_CHECKING:
     from .types.invite import GatewayInvite as GatewayInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
+    from .types.invite import (
+        InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
+    )
     from .types.invite import VanityInvite as VanityInvitePayload
+    from .types.role import Role as RolePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
+    from .types.snowflake import Snowflake
     from .user import User
 
     InviteGuildType = Union[Guild, "PartialInviteGuild", Object]
     InviteChannelType = Union[GuildChannel, "PartialInviteChannel", Object]
-
-    import datetime
 
 
 class PartialInviteChannel:
@@ -222,6 +240,166 @@ class PartialInviteGuild:
         )
 
 
+class InviteTargetUsersJobStatus:
+    """Represents the status of a target users processing job for an invite.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    total_users: :class:`int`
+        The total number of users to process.
+    processed_users: :class:`int`
+        The number of users that have been processed so far.
+    created_at: Optional[:class:`datetime.datetime`]
+        When the job was created. ``None`` if the creation time is not available.
+    completed_at: Optional[:class:`datetime.datetime`]
+        When the job was completed. ``None`` if the job is still processing.
+    error_message: Optional[:class:`str`]
+        The error message if the job failed. ``None`` if no error occurred.
+    status: :class:`InviteTargetUsersJobStatusCode`
+        The current status of the job.
+    """
+
+    def __init__(self, *, data: InviteTargetUsersJobStatusPayload):
+        self.total_users: int = data["total_users"]
+        self.processed_users: int = data["processed_users"]
+        self.created_at: datetime.datetime | None = parse_time(data.get("created_at"))
+        self.completed_at: datetime.datetime | None = parse_time(
+            data.get("completed_at")
+        )
+        self.error_message: str | None = data.get("error_message")
+        self.status: InviteTargetUsersJobStatusCode = try_enum(
+            InviteTargetUsersJobStatusCode, data["status"]
+        )
+
+    @override
+    def __repr__(self) -> str:
+        return (
+            f"<InviteTargetUsersJobStatus total_users={self.total_users} processed_users={self.processed_users} "
+            f"created_at={self.created_at!r} completed_at={self.completed_at!r} error_message={self.error_message} "
+            f"status={self.status}>"
+        )
+
+
+class InviteTargetUsers:
+    """
+    Represents the target users CSV file for an invite.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    invite_code: str
+        The invite code for which the target users are associated.
+    """
+
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        invite_code: str,
+    ):
+        self._state: ConnectionState = state
+        self.invite_code: str = invite_code
+
+    async def read(self) -> bytes:
+        """|coro|
+
+        Retrieves this invite's target users CSV file as a :class:`bytes` object.
+
+        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        permission to do this.
+
+        Returns
+        -------
+        :class:`bytes`
+            The content of the CSV file.
+
+        Raises
+        ------
+        DiscordException
+            There was no internal connection state.
+        HTTPException
+            Downloading the file failed.
+        NotFound
+            This invite does not have any target users set.
+        Forbidden
+            You do not have permission to view the target users.
+        """
+        return await self._state.http.get_invite_target_users(self.invite_code)
+
+    async def save(
+        self,
+        fp: str | bytes | os.PathLike[str] | io.BufferedIOBase,
+        *,
+        seek_begin: bool = True,
+    ) -> int:
+        """|coro|
+
+        Saves this invite's target users CSV file into a file-like object.
+
+        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        permission to do this.
+
+        Parameters
+        ----------
+        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+            The file-like object to save this file to or the filename
+            to use. If a filename is passed then a file is created with that
+            filename and used instead.
+        seek_begin: :class:`bool`
+            Whether to seek to the beginning of the file after saving is
+            successfully done.
+
+        Returns
+        -------
+        :class:`int`
+            The number of bytes written.
+
+        Raises
+        ------
+        DiscordException
+            There was no internal connection state.
+        HTTPException
+            Downloading the file failed.
+        NotFound
+            This invite does not have any target users set.
+        Forbidden
+            You do not have permission to view the target users.
+        """
+        data = await self.read()
+        if isinstance(fp, io.BufferedIOBase):
+            written = fp.write(data)
+            if seek_begin:
+                fp.seek(0)
+            return written
+        else:
+            with open(fp, "wb") as f:
+                return f.write(data)
+
+    async def as_user_ids(self) -> list[int]:
+        """|coro|
+
+        Retrieves a list of user IDs that can accept this invite. This internally
+        reads the invite's target users CSV file and parses the user IDs from it.
+
+        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        permission to do this.
+
+        Returns
+        -------
+        list[int]
+            A list of user IDs that can accept this invite.
+        """
+        return [
+            int(line.split(",")[0])
+            for line in (await self.read())
+            .decode()
+            .splitlines()[1:]  # first line is standardized "user_ids" header
+        ]
+
+
 I = TypeVar("I", bound="Invite")
 
 
@@ -325,6 +503,12 @@ class Invite(Hashable):
         .. versionadded:: 2.0
     scheduled_event: Optional[:class:`ScheduledEvent`]
         The scheduled event linked with the invite.
+    roles: List[Union[:class:`Role`, :class:`Object`]]
+        The roles that will be assigned to a user that joins via this invite.
+
+        When using `Client.fetch_invite`, these may be partial role objects and have nullish attributes.
+
+        .. versionadded:: 2.8
     """
 
     __slots__ = (
@@ -346,6 +530,7 @@ class Invite(Hashable):
         "scheduled_event",
         "target_application",
         "expires_at",
+        "roles",
     )
 
     BASE = "https://discord.gg"
@@ -411,6 +596,10 @@ class Invite(Hashable):
         application = data.get("target_application")
         self.target_application: PartialAppInfo | None = (
             PartialAppInfo(data=application, state=state) if application else None
+        )
+
+        self.roles: list[Object | Role] = self._resolve_roles(
+            role_ids=data.get("role_ids") or [], roles=data.get("roles") or []
         )
 
     @classmethod
@@ -483,6 +672,22 @@ class Invite(Hashable):
 
         return PartialInviteChannel(data)
 
+    def _resolve_roles(
+        self, role_ids: list[Snowflake], roles: list[RolePayload]
+    ) -> list[Object | Role]:
+        if roles and self.guild is not None:
+            result: list[Object | Role] = [
+                Role(guild=self.guild, data=role, state=self._state) for role in roles
+            ]
+            return result
+        if self.guild is not None and not isinstance(self.guild, PartialInviteGuild):
+            return [
+                self.guild.get_role(int(role_id)) or Object(role_id)
+                for role_id in role_ids
+            ]
+        else:
+            return [Object(role_id) for role_id in role_ids]
+
     def __str__(self) -> str:
         return self.url
 
@@ -491,7 +696,9 @@ class Invite(Hashable):
             f"<Invite code={self.code!r} guild={self.guild!r} "
             f"online={self.approximate_presence_count} "
             f"members={self.approximate_member_count} "
-            f"scheduled_event={self.scheduled_event}>"
+            f"scheduled_event={self.scheduled_event!r} "
+            f"roles={self.roles!r}"
+            f">"
         )
 
     def __hash__(self) -> int:
@@ -506,6 +713,66 @@ class Invite(Hashable):
     def url(self) -> str:
         """A property that retrieves the invite URL."""
         return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
+
+    @property
+    def target_users(self) -> InviteTargetUsers:
+        """An :class:`InviteTargetUsers` object for managing the target users list for this invite.
+
+        .. versionadded:: 2.8
+        """
+        return InviteTargetUsers(invite_code=self.code, state=self._state)
+
+    async def edit_target_users(self, target_users_file: File) -> None:
+        """|coro|
+
+        Updates the target users list for this invite.
+
+        You must have created this invite or have the :attr:`~Permissions.manage_guild` permission to do this.
+
+        You can use :func:`utils.users_to_csv` to generate a virtual CSV file from a sequence of user IDs.
+
+        Parameters
+        ----------
+        target_users_file: :class:`File`
+            A CSV file with a single column of user IDs for all the users able to accept this invite.
+
+        Raises
+        ------
+        HTTPException
+            Updating the target users failed.
+        Forbidden
+            You do not have permissions to edit this invite.
+        NotFound
+            The invite is invalid or expired.
+        """
+        await self._state.http.update_invite_target_users(
+            self.invite_code, target_users_file=target_users_file
+        )
+
+    async def fetch_target_users_job_status(self) -> InviteTargetUsersJobStatus:
+        """|coro|
+
+        Retrieves the status of the target users processing job for this invite.
+
+        You must have created this invite or have the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log` permissions.
+        permission to do this.
+
+        Returns
+        -------
+        :class:`InviteTargetUsersJobStatus`
+            The job status information.
+
+        Raises
+        ------
+        HTTPException
+            Fetching the job status failed.
+        NotFound
+            The invite is invalid or expired.
+        Forbidden
+            You do not have permission to view the target users.
+        """
+        r = await self._state.http.get_invite_target_users_job_status(self.code)
+        return InviteTargetUsersJobStatus(data=r)
 
     async def delete(self, *, reason: str | None = None):
         """|coro|

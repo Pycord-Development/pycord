@@ -31,6 +31,7 @@ import collections.abc
 import datetime
 import functools
 import importlib.resources
+import io
 import itertools
 import json
 import logging
@@ -116,6 +117,7 @@ __all__ = (
     "basic_autocomplete",
     "filter_params",
     "MISSING",
+    "users_to_csv",
 )
 
 _log = logging.getLogger(__name__)
@@ -1553,3 +1555,19 @@ def filter_params(params, **kwargs):
                 params[new_param] = params.pop(old_param)
 
     return params
+
+
+def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
+    """Converts an iterable of users to a CSV file-like object for usage as Invite Target Users.
+
+    Parameters
+    ----------
+    users: Iterable[:class:`discord.abc.Snowflake`]
+        An iterable of users to convert.
+
+    Returns
+    -------
+    :class:`io.BytesIO`
+        A file-like object containing the CSV data.
+    """
+    return io.BytesIO("\n".join(map(lambda u: str(u.id), users)).encode("utf-8"))
