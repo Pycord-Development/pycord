@@ -47,6 +47,11 @@ if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
+    from .types.components import CheckboxComponent as CheckboxComponentPayload
+    from .types.components import (
+        CheckboxGroupComponent as CheckboxGroupComponentPayload,
+    )
+    from .types.components import CheckboxGroupOption as CheckboxGroupOptionPayload
     from .types.components import Component as ComponentPayload
     from .types.components import ContainerComponent as ContainerComponentPayload
     from .types.components import FileComponent as FileComponentPayload
@@ -55,6 +60,8 @@ if TYPE_CHECKING:
     from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
+    from .types.components import RadioGroupComponent as RadioGroupComponentPayload
+    from .types.components import RadioGroupOption as RadioGroupOptionPayload
     from .types.components import SectionComponent as SectionComponentPayload
     from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenu as SelectMenuPayload
@@ -83,6 +90,11 @@ __all__ = (
     "Label",
     "SelectDefaultValue",
     "FileUpload",
+    "RadioGroup",
+    "RadioGroupOption",
+    "CheckboxGroup",
+    "CheckboxGroupOption",
+    "Checkbox",
 )
 
 C = TypeVar("C", bound="Component")
@@ -1331,7 +1343,7 @@ class Label(Component):
     __slots__: tuple[str, ...] = ("component", "label", "description")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = ()
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: LabelComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -1389,7 +1401,7 @@ class FileUpload(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (1, 2)
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: FileUploadComponentPayload):
         self.type = ComponentType.file_upload
@@ -1419,6 +1431,359 @@ class FileUpload(Component):
         return payload  # type: ignore
 
 
+class RadioGroup(Component):
+    """Represents an Radio Group component from the Discord Bot UI Kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.RadioGroup` instead.
+
+    .. versionadded:: 2.7.1
+
+    Attributes
+    ----------
+    custom_id: Optional[:class:`str`]
+        The custom ID of the radio group that gets received during an interaction.
+    options: List[:class:`RadioGroupOption`]
+        A list of options that can be selected in this group.
+    required: Optional[:class:`bool`]
+        Whether the radio group requires a selection or not. Defaults to ``True``.
+    id: Optional[:class:`int`]
+        The radio group's ID.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "type",
+        "custom_id",
+        "options",
+        "required",
+        "id",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: RadioGroupComponentPayload):
+        self.type = ComponentType.radio_group
+        self.id: int | None = data.get("id")
+        self.custom_id = data.get("custom_id")
+        self.options: list[RadioGroupOption] = [
+            RadioGroupOption.from_dict(option) for option in data.get("options", [])
+        ]
+        self.required: bool = data.get("required", True)
+
+    def to_dict(self) -> RadioGroupComponentPayload:
+        payload = {
+            "type": 21,
+            "custom_id": self.custom_id,
+            "options": [opt.to_dict() for opt in self.options],
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+
+        if not self.required:
+            payload["required"] = self.required
+
+        return payload
+
+
+class RadioGroupOption:
+    """Represents a :class:`discord.RadioGroup`'s option.
+
+    These can be created by users.
+
+    .. versionadded:: 2.7.1
+
+    Attributes
+    ----------
+    label: :class:`str`
+        The label of the option. This is displayed to users.
+        Can only be up to 100 characters.
+    value: :class:`str`
+        The value of the option. This is not displayed to users.
+        If not provided when constructed then it defaults to the
+        label. Can only be up to 100 characters.
+    description: Optional[:class:`str`]
+        An additional description of the option, if any.
+        Can only be up to 100 characters.
+    default: :class:`bool`
+        Whether this option is selected by default.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "label",
+        "value",
+        "description",
+        "default",
+    )
+
+    def __init__(
+        self,
+        *,
+        label: str,
+        value: str = MISSING,
+        description: str | None = None,
+        default: bool = False,
+    ) -> None:
+        if len(label) > 100:
+            raise ValueError("label must be 100 characters or fewer")
+
+        if value is not MISSING and len(value) > 100:
+            raise ValueError("value must be 100 characters or fewer")
+
+        if description is not None and len(description) > 100:
+            raise ValueError("description must be 100 characters or fewer")
+
+        self.label = label
+        self.value = label if value is MISSING else value
+        self.description = description
+        self.default = default
+
+    def __repr__(self) -> str:
+        return (
+            "<RadioGroupOption"
+            f" label={self.label!r} value={self.value!r} description={self.description!r} "
+            f"default={self.default!r}>"
+        )
+
+    def __str__(self) -> str:
+        if self.description:
+            return f"{self.label}\n{self.description}"
+        return self.label
+
+    @classmethod
+    def from_dict(cls, data: RadioGroupOptionPayload) -> RadioGroupOption:
+        return cls(
+            label=data["label"],
+            value=data["value"],
+            description=data.get("description"),
+            default=data.get("default", False),
+        )
+
+    def to_dict(self) -> RadioGroupOptionPayload:
+        payload: RadioGroupOptionPayload = {
+            "label": self.label,
+            "value": self.value,
+            "default": self.default,
+        }
+
+        if self.description:
+            payload["description"] = self.description
+
+        return payload
+
+
+class CheckboxGroup(Component):
+    """Represents an Checkbox Group component from the Discord Bot UI Kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.CheckboxGroup` instead.
+
+    .. versionadded:: 2.7.1
+
+    Attributes
+    ----------
+    custom_id: Optional[:class:`str`]
+        The custom ID of the checkbox group that gets received during an interaction.
+    options: List[:class:`CheckboxGroupOption`]
+        A list of options that can be selected in this group.
+    min_values: Optional[:class:`int`]
+        The minimum number of options that must be selected.
+    max_values: Optional[:class:`int`]
+        The maximum number of options that can be selected.
+    required: Optional[:class:`bool`]
+        Whether the checkbox group requires a selection or not. Defaults to ``True``.
+    id: Optional[:class:`int`]
+        The checkbox group's ID.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "type",
+        "custom_id",
+        "options",
+        "min_values",
+        "max_values",
+        "required",
+        "id",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: CheckboxGroupComponentPayload):
+        self.type = ComponentType.checkbox_group
+        self.id: int | None = data.get("id")
+        self.custom_id = data.get("custom_id")
+        self.options: list[CheckboxGroupOption] = [
+            CheckboxGroupOption.from_dict(option) for option in data.get("options", [])
+        ]
+        self.min_values: int | None = data.get("min_values", None)
+        self.max_values: int | None = data.get("max_values", None)
+        self.required: bool = data.get("required", True)
+
+    def to_dict(self) -> CheckboxGroupComponentPayload:
+        payload = {
+            "type": 22,
+            "custom_id": self.custom_id,
+            "options": [opt.to_dict() for opt in self.options],
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+
+        if self.min_values is not None:
+            payload["min_values"] = self.min_values
+
+        if self.max_values is not None:
+            payload["max_values"] = self.max_values
+
+        if not self.required:
+            payload["required"] = self.required
+
+        return payload
+
+
+class CheckboxGroupOption:
+    """Represents a :class:`discord.CheckboxGroup`'s option.
+
+    These can be created by users.
+
+    .. versionadded:: 2.7.1
+
+    Attributes
+    ----------
+    label: :class:`str`
+        The label of the option. This is displayed to users.
+        Can only be up to 100 characters.
+    value: :class:`str`
+        The value of the option. This is not displayed to users.
+        If not provided when constructed then it defaults to the
+        label. Can only be up to 100 characters.
+    description: Optional[:class:`str`]
+        An additional description of the option, if any.
+        Can only be up to 100 characters.
+    default: :class:`bool`
+        Whether this option is selected by default.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "label",
+        "value",
+        "description",
+        "default",
+    )
+
+    def __init__(
+        self,
+        *,
+        label: str,
+        value: str = MISSING,
+        description: str | None = None,
+        default: bool = False,
+    ) -> None:
+        if len(label) > 100:
+            raise ValueError("label must be 100 characters or fewer")
+
+        if value is not MISSING and len(value) > 100:
+            raise ValueError("value must be 100 characters or fewer")
+
+        if description is not None and len(description) > 100:
+            raise ValueError("description must be 100 characters or fewer")
+
+        self.label = label
+        self.value = label if value is MISSING else value
+        self.description = description
+        self.default = default
+
+    def __repr__(self) -> str:
+        return (
+            "<CheckboxGroupOption"
+            f" label={self.label!r} value={self.value!r} description={self.description!r} "
+            f"default={self.default!r}>"
+        )
+
+    def __str__(self) -> str:
+        if self.description:
+            return f"{self.label}\n{self.description}"
+        return self.label
+
+    @classmethod
+    def from_dict(cls, data: CheckboxGroupOptionPayload) -> CheckboxGroupOption:
+        return cls(
+            label=data["label"],
+            value=data["value"],
+            description=data.get("description"),
+            default=data.get("default", False),
+        )
+
+    def to_dict(self) -> CheckboxGroupOptionPayload:
+        payload: CheckboxGroupOptionPayload = {
+            "label": self.label,
+            "value": self.value,
+            "default": self.default,
+        }
+
+        if self.description:
+            payload["description"] = self.description
+
+        return payload
+
+
+class Checkbox(Component):
+    """Represents an Checkbox component from the Discord Bot UI Kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Checkbox` instead.
+
+    .. versionadded:: 2.7.1
+
+    Attributes
+    ----------
+    custom_id: Optional[:class:`str`]
+        The custom ID of the checkbox group that gets received during an interaction.
+    required: Optional[:class:`bool`]
+        Whether this checkbox is selected by default.
+    id: Optional[:class:`int`]
+        The checkbox group's ID.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "type",
+        "custom_id",
+        "default",
+        "id",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: CheckboxComponentPayload):
+        self.type = ComponentType.checkbox
+        self.id: int | None = data.get("id")
+        self.custom_id = data.get("custom_id")
+        self.default: bool = data.get("default", False)
+
+    def to_dict(self) -> CheckboxComponentPayload:
+        payload = {
+            "type": 23,
+            "custom_id": self.custom_id,
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+
+        if self.default is not None:
+            payload["default"] = self.default
+
+        return payload
+
+
 COMPONENT_MAPPINGS = {
     1: ActionRow,
     2: Button,
@@ -1437,6 +1802,9 @@ COMPONENT_MAPPINGS = {
     17: Container,
     18: Label,
     19: FileUpload,
+    21: RadioGroup,
+    22: CheckboxGroup,
+    23: Checkbox,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)

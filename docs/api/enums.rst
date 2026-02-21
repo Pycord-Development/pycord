@@ -535,6 +535,15 @@ of :class:`enum.Enum`.
     .. attribute:: file_upload
 
         Represents a file upload component.
+    .. attribute:: radio_group
+
+        Represents a radio group component.
+    .. attribute:: checkbox_group
+
+        Represents a checkbox group component.
+    .. attribute:: checkbox
+
+        Represents a checkbox component.
 
 .. class:: ButtonStyle
 

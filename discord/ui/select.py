@@ -377,7 +377,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError("custom_id must be None or str")
-        if len(value) > 100:
+        if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self.underlying.custom_id = value
         self._provided_custom_id = value is not None
@@ -661,14 +661,14 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         return self
 
     @property
-    def values(self) -> list[ST]:
+    def values(self) -> list[ST] | None:
         """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] |
         List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None:
         A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet.
         """
         if self._interaction is None or self._interaction.data is None:
             # The select has not been interacted with yet
-            return []
+            return None
         select_type = self.underlying.type
         if select_type is ComponentType.string_select:
             return self._selected_values  # type: ignore # ST is str

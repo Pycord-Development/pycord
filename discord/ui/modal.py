@@ -35,7 +35,6 @@ from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 from ..enums import ComponentType
 from ..utils import find
 from .core import ItemInterface
-from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ModalItem
 from .label import Label
@@ -158,7 +157,7 @@ class BaseModal(ItemInterface):
             raise TypeError(
                 f"expected custom_id to be str, not {value.__class__.__name__}"
             )
-        if len(value) > 100:
+        if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._custom_id = value
 

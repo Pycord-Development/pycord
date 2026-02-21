@@ -92,6 +92,7 @@ class Item(Generic[T]):
 
     @property
     def type(self) -> ComponentType:
+        """The underlying component's type."""
         if not self.underlying:
             raise NotImplementedError
         return self.underlying.type
@@ -231,10 +232,14 @@ class ModalItem(Item[M]):
     - :class:`discord.ui.Label`
     - :class:`discord.ui.TextDisplay`
 
-    And :class:`discord.ui.Label` should be used in :class:`discord.ui.DesignerModal` to support the following items:
+    And :class:`discord.ui.Label` should be used in :class:`discord.ui.DesignerModal` to add the following items:
+
     - :class:`discord.ui.InputText`
     - :class:`discord.ui.Select`
     - :class:`discord.ui.FileUpload`
+    - :class:`discord.ui.RadioGroup`
+    - :class:`discord.ui.CheckboxGroup`
+    - :class:`discord.ui.Checkbox`
 
     .. versionadded:: 2.7
     """
