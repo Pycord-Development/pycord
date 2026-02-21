@@ -500,7 +500,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The coroutine passed is not actually a coroutine.
         """
 
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The error handler must be a coroutine.")
 
         self.on_error = coro
@@ -529,7 +529,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
@@ -554,7 +554,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro
@@ -733,7 +733,7 @@ class SlashCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
@@ -1666,7 +1666,7 @@ class ContextMenuCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 

@@ -1396,7 +1396,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
@@ -1428,7 +1428,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
             The coroutine passed is not actually a coroutine.
 
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro
