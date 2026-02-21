@@ -335,7 +335,7 @@ class Colour:
     @classmethod
     def dark_theme(cls: type[Self]) -> Self:
         """A factory method that returns a :class:`Colour` with a value of ``0x1a1a1e``.
-        This will appear transparent on Discord's onyx theme.
+        This will appear transparent on Discord's dark theme.
 
         .. versionadded:: 1.5
 
