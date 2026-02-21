@@ -22,7 +22,7 @@ async def create_custom_invite(ctx: discord.ApplicationContext, user_ids: str):
         max_uses=1,
         target_users_file=target_users_file,
     )
-    job_status = await invite.target_users.get_job_status()
+    job_status = await invite.fetch_target_users_job_status()
     await ctx.respond(f"Invite created: {invite.url}, Job status: {job_status.status}")
 
 
@@ -37,7 +37,7 @@ async def create_custom_invite_from_file(
         max_uses=1,
         target_users_file=target_users_file,
     )
-    job_status = await invite.target_users.get_job_status()
+    job_status = await invite.fetch_target_users_job_status()
     await ctx.respond(f"Invite created: {invite.url}. Job status: {job_status.status}")
 
 
@@ -52,8 +52,8 @@ async def update_custom_invite(
         return await ctx.respond("You can only update invites from this server.")
 
     target_users_file = await target_users.to_file()
-    await invite.target_users.edit(target_users_file=target_users_file)
-    job_status = await invite.target_users.get_job_status()
+    await invite.edit_target_users(target_users_file=target_users_file)
+    job_status = await invite.fetch_target_users_job_status()
     await ctx.respond(f"Invite updated: {invite.url}. Job status: {job_status.status}")
 
 
@@ -65,7 +65,7 @@ async def get_invite_target_users(ctx: discord.ApplicationContext, code: str):
         return await ctx.respond(
             "You can only get target users from invites from this server."
         )
-    user_ids = await invite.target_users.fetch_user_ids()
+    user_ids = await invite.target_users.as_user_ids()
     await ctx.respond(f"Target user IDs: {user_ids}")
 
 
