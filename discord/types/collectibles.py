@@ -38,3 +38,8 @@ class Nameplate(TypedDict):
     asset: str
     label: str
     palette: str
+
+
+class AvatarDecoration(TypedDict):
+    sku_id: Snowflake
+    asset: str
