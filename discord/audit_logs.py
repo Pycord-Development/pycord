@@ -51,7 +51,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .role import Role
-    from .scheduled_events import ScheduledEvent
+    from .scheduled_events import ScheduledEvent, ScheduledEventEntityMetadata
     from .stage_instance import StageInstance
     from .state import ConnectionState
     from .sticker import GuildSticker
@@ -217,6 +217,20 @@ def _transform_communication_disabled_until(
     return None
 
 
+def _transform_entity_metadata(
+    entry: AuditLogEntry, data: dict | str | None
+) -> ScheduledEventEntityMetadata | None:
+    from .scheduled_events import ScheduledEventEntityMetadata
+
+    if data is None:
+        return None
+    if isinstance(data, dict):
+        location = data.get("location")
+    else:
+        location = data
+    return ScheduledEventEntityMetadata(location=location)
+
+
 class AuditLogDiff:
     def __len__(self) -> int:
         return len(self.__dict__)
@@ -271,6 +285,8 @@ class AuditLogChanges:
             "default_notifications",
             _enum_transformer(enums.NotificationLevel),
         ),
+        "entity_metadata": (None, _transform_entity_metadata),
+        "location": (None, _transform_entity_metadata),
         "rtc_region": (None, _enum_transformer(enums.VoiceRegion)),
         "video_quality_mode": (None, _enum_transformer(enums.VideoQualityMode)),
         "privacy_level": (None, _enum_transformer(enums.StagePrivacyLevel)),
@@ -279,7 +295,7 @@ class AuditLogChanges:
         "status": (None, _enum_transformer(enums.ScheduledEventStatus)),
         "entity_type": (
             "location_type",
-            _enum_transformer(enums.ScheduledEventLocationType),
+            _enum_transformer(enums.ScheduledEventEntityType),
         ),
         "command_id": ("command_id", _transform_snowflake),
         "image_hash": ("image", _transform_scheduled_event_image),
@@ -318,7 +334,11 @@ class AuditLogChanges:
                 "$add_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.before, self.after, entry, elem["new_value"], attr  # type: ignore
+                    self.before,
+                    self.after,
+                    entry,
+                    elem["new_value"],
+                    attr,  # type: ignore
                 )
                 continue
             elif attr in [
@@ -327,7 +347,11 @@ class AuditLogChanges:
                 "$remove_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.after, self.before, entry, elem["new_value"], attr  # type: ignore
+                    self.after,
+                    self.before,
+                    entry,
+                    elem["new_value"],
+                    attr,  # type: ignore
                 )
                 continue
 
@@ -349,21 +373,6 @@ class AuditLogChanges:
                 if transformer:
                     before = transformer(entry, before)
 
-            if attr == "location" and hasattr(self.before, "location_type"):
-                from .scheduled_events import ScheduledEventLocation
-
-                if (
-                    self.before.location_type
-                    is enums.ScheduledEventLocationType.external
-                ):
-                    before = ScheduledEventLocation(state=state, value=before)
-                elif hasattr(self.before, "channel"):
-                    before = ScheduledEventLocation(
-                        state=state, value=self.before.channel
-                    )
-
-            setattr(self.before, attr, before)
-
             try:
                 after = elem["new_value"]
             except KeyError:
@@ -372,20 +381,10 @@ class AuditLogChanges:
                 if transformer:
                     after = transformer(entry, after)
 
-            if attr == "location" and hasattr(self.after, "location_type"):
-                from .scheduled_events import ScheduledEventLocation
-
-                if (
-                    self.after.location_type
-                    is enums.ScheduledEventLocationType.external
-                ):
-                    after = ScheduledEventLocation(state=state, value=after)
-                elif hasattr(self.after, "channel"):
-                    after = ScheduledEventLocation(
-                        state=state, value=self.after.channel
-                    )
-
             setattr(self.after, attr, after)
+            if attr == "location":
+                setattr(self.after, "entity_metadata", after)
+                setattr(self.before, "entity_metadata", before)
 
         # add an alias
         if hasattr(self.after, "colour"):
@@ -691,7 +690,12 @@ class AuditLogEntry(Hashable):
             "uses": changeset.uses,
         }
 
-        obj = Invite(state=self._state, data=fake_payload, guild=self.guild, channel=changeset.channel)  # type: ignore
+        obj = Invite(
+            state=self._state,
+            data=fake_payload,
+            guild=self.guild,
+            channel=changeset.channel,
+        )  # type: ignore
         try:
             obj.inviter = changeset.inviter
         except AttributeError:

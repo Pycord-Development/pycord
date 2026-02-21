@@ -61,6 +61,7 @@ __all__ = (
     "EmbeddedActivity",
     "ScheduledEventStatus",
     "ScheduledEventPrivacyLevel",
+    "ScheduledEventEntityType",
     "ScheduledEventLocationType",
     "InputTextStyle",
     "SlashCommandOptionType",
@@ -955,12 +956,20 @@ class ScheduledEventPrivacyLevel(Enum):
         return self.value
 
 
-class ScheduledEventLocationType(Enum):
-    """Scheduled event location type"""
+class ScheduledEventEntityType(Enum):
+    """Scheduled event entity type"""
 
     stage_instance = 1
     voice = 2
     external = 3
+
+    def __int__(self):
+        return self.value
+
+
+# TODO(Paillat-dev): Add @deprecated notice using warnings.deprecated in relevant PR
+class ScheduledEventLocationType(ScheduledEventEntityType):
+    """Scheduled event location type (deprecated alias for :class:`ScheduledEventEntityType`)"""
 
 
 class AutoModTriggerType(Enum):

@@ -61,7 +61,7 @@ from .enums import (
     NotificationLevel,
     NSFWLevel,
     OnboardingMode,
-    ScheduledEventLocationType,
+    ScheduledEventEntityType,
     ScheduledEventPrivacyLevel,
     SortOrder,
     VerificationLevel,
@@ -69,7 +69,13 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
+from .errors import (
+    ClientException,
+    HTTPException,
+    InvalidArgument,
+    InvalidData,
+    ValidationError,
+)
 from .file import File
 from .flags import SystemChannelFlags
 from .incidents import IncidentsData
@@ -87,13 +93,17 @@ from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role, RoleColours
-from .scheduled_events import ScheduledEvent, ScheduledEventLocation
+from .scheduled_events import (
+    ScheduledEvent,
+    ScheduledEventEntityMetadata,
+    ScheduledEventLocation,
+)
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
-from .utils import _D, _FETCHABLE
+from .utils import _D, _FETCHABLE, warn_deprecated
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
@@ -4276,6 +4286,7 @@ class Guild(Hashable):
         """
         return self._scheduled_events.get(event_id)
 
+    @overload
     async def create_scheduled_event(
         self,
         *,
@@ -4283,13 +4294,52 @@ class Guild(Hashable):
         description: str = MISSING,
         start_time: datetime.datetime,
         end_time: datetime.datetime = MISSING,
-        location: str | int | VoiceChannel | StageChannel | ScheduledEventLocation,
+        location: (
+            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
+        ) = MISSING,
+        reason: str | None = None,
+        image: bytes = MISSING,
+    ) -> ScheduledEvent | None: ...
+
+    @overload
+    async def create_scheduled_event(
+        self,
+        *,
+        name: str,
+        description: str = MISSING,
+        scheduled_start_time: datetime.datetime,
+        scheduled_end_time: datetime.datetime = MISSING,
+        entity_type: ScheduledEventEntityType = MISSING,
+        entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
+        channel_id: int = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
         image: bytes = MISSING,
+    ) -> ScheduledEvent | None: ...
+    async def create_scheduled_event(
+        self,
+        *,
+        name: str,
+        description: str = MISSING,
+        scheduled_start_time: datetime.datetime,
+        scheduled_end_time: datetime.datetime = MISSING,
+        location: (
+            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
+        ) = MISSING,
+        entity_type: ScheduledEventEntityType = MISSING,
+        entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
+        channel_id: int = MISSING,
+        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        reason: str | None = None,
+        image: bytes = MISSING,
+        start_time: datetime.datetime = MISSING,
+        end_time: datetime.datetime = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
         Creates a scheduled event.
+
+        For EXTERNAL events, ``entity_metadata`` with a location and ``end_time`` are required.
+        For STAGE_INSTANCE or VOICE events, ``channel_id`` is required.
 
         Parameters
         ----------
@@ -4297,16 +4347,21 @@ class Guild(Hashable):
             The name of the scheduled event.
         description: Optional[:class:`str`]
             The description of the scheduled event.
-        start_time: :class:`datetime.datetime`
+        scheduled_start_time: :class:`datetime.datetime`
             A datetime object of when the scheduled event is supposed to start.
-        end_time: Optional[:class:`datetime.datetime`]
+        scheduled_end_time: Optional[:class:`datetime.datetime`]
             A datetime object of when the scheduled event is supposed to end.
-        location: :class:`ScheduledEventLocation`
-            The location of where the event is happening.
+            Required for EXTERNAL events.
+        entity_type: :class:`ScheduledEventEntityType`
+            The type of scheduled event (STAGE_INSTANCE, VOICE, or EXTERNAL).
+        entity_metadata: Optional[:class:`ScheduledEventEntityMetadata`]
+            The entity metadata (required for EXTERNAL events with a location).
+        channel_id: Optional[Union[:class:`int`, :class:`VoiceChannel`, :class:`StageChannel`]]
+            The channel ID for STAGE_INSTANCE or VOICE events.
+            Can be a channel object or a snowflake ID.
         privacy_level: :class:`ScheduledEventPrivacyLevel`
             The privacy level of the event. Currently, the only possible value
-            is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
-            so there is no need to change this parameter.
+            is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
@@ -4323,33 +4378,73 @@ class Guild(Hashable):
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
+        ValidationError
+            Invalid parameters for the event type.
         """
         payload: dict[str, str | int] = {
             "name": name,
-            "scheduled_start_time": start_time.isoformat(),
+            "scheduled_start_time": scheduled_start_time.isoformat(),
             "privacy_level": int(privacy_level),
+            "entity_type": int(entity_type),
         }
+        if location is MISSING and entity_type is MISSING:
+            raise TypeError("Either location or entity_type must be provided.")
+        if start_time is MISSING and scheduled_start_time is MISSING:
+            raise TypeError(
+                "Either start_time or scheduled_start_time must be provided."
+            )
+        if start_time is not MISSING:
+            warn_deprecated("start_time", "scheduled_start_time", "2.7")
+            if scheduled_start_time is MISSING:
+                scheduled_start_time = start_time
 
-        if not isinstance(location, ScheduledEventLocation):
-            location = ScheduledEventLocation(state=self._state, value=location)
+        if end_time is not MISSING:
+            warn_deprecated("end_time", "scheduled_end_time", "2.7")
+            if scheduled_end_time is MISSING:
+                scheduled_end_time = end_time
 
-        payload["entity_type"] = location.type.value
+        if location is not MISSING:
+            warn_deprecated("location", "entity_metadata", "2.7", "3.0")
+            if entity_metadata is MISSING:
+                if not isinstance(location, (ScheduledEventLocation)):
+                    location = ScheduledEventLocation(state=self._state, value=location)
+                    if entity_type is MISSING:
+                        entity_type = location.type
+                if location.type == ScheduledEventEntityType.external:
+                    entity_metadata = ScheduledEventEntityMetadata(str(location))
 
-        if location.type == ScheduledEventLocationType.external:
-            payload["channel_id"] = None
-            payload["entity_metadata"] = {"location": location.value}
-        else:
-            payload["channel_id"] = location.value.id
-            payload["entity_metadata"] = None
+        if scheduled_end_time is not MISSING:
+            payload["scheduled_end_time"] = scheduled_end_time.isoformat()
 
         if description is not MISSING:
             payload["description"] = description
 
-        if end_time is not MISSING:
-            payload["scheduled_end_time"] = end_time.isoformat()
-
         if image is not MISSING:
             payload["image"] = utils._bytes_to_base64_data(image)
+
+        if entity_type == ScheduledEventEntityType.external:
+            if entity_metadata is MISSING or entity_metadata is None:
+                raise ValidationError(
+                    "entity_metadata with a location is required for EXTERNAL events."
+                )
+            if not entity_metadata.location:
+                raise ValidationError(
+                    "entity_metadata.location cannot be empty for EXTERNAL events."
+                )
+            if scheduled_end_time is MISSING:
+                raise ValidationError(
+                    "scheduled_end_time is required for EXTERNAL events."
+                )
+
+            payload["channel_id"] = None
+            payload["entity_metadata"] = entity_metadata.to_payload()
+        else:
+            if channel_id is MISSING:
+                raise ValidationError(
+                    "channel_id is required for STAGE_INSTANCE and VOICE events."
+                )
+
+            payload["channel_id"] = channel_id
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload
