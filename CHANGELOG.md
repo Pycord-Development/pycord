@@ -14,17 +14,21 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `Colour.light_theme()`, `Colour.ash_theme()` and `Colour.onyx_theme()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Updated `Colour.dark_theme()` with Discord's new theme colours.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 
 ### Fixed
 
 ### Deprecated
 
-- Deprecated `Colour.dark_theme()` and `Colour.embed_background()`.
+- Deprecated `Colour.embed_background()`.
   ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 
 ### Removed
