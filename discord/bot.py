@@ -96,7 +96,7 @@ class DefaultComparison:
         The values that should be considered equivalent to each other
     callback: Callable[[Any, Any], bool]
         A callable that will do additional comparison on the objects if neither are a default value.
-        Defaults to a `!=` comparison.
+        Defaults to a `==` comparison.
         It should accept the 2 objects as arguments and return True if they should be considered equivalent
         and False otherwise.
     """
@@ -104,7 +104,7 @@ class DefaultComparison:
     def __init__(
         self,
         defaults: tuple[Any, ...],
-        callback: Callable[[Any, Any], bool] = lambda x, y: x != y,
+        callback: Callable[[Any, Any], bool] = lambda x, y: x == y,
     ):
         self.defaults = defaults
         self.callback = callback
@@ -113,15 +113,23 @@ class DefaultComparison:
         defaults = (local in self.defaults) + (remote in self.defaults)
         if defaults == 2:
             # Both are COMMAND_DEFAULTS, so they can be counted as the same
-            return False
+            return True
         elif defaults == 0:
             # Neither are COMMAND_DEFAULTS so the callback has to be used
             return None
         else:
             # Only one is a default, so the command must be out of sync
-            return True
+            return False
 
     def check(self, local, remote) -> bool:
+        """
+        Compares the local and remote objects.
+
+        Returns
+        -------
+        bool
+            True if local and remote are deemed to be equivalent. False otherwise.
+        """
         if (rtn := self._check_defaults(local, remote)) is not None:
             return rtn
         else:
@@ -151,29 +159,29 @@ def _compare_defaults(
     schema: NestedComparison,
 ) -> bool:
     if not isinstance(match, Mapping) or not isinstance(obj, Mapping):
-        return obj != match
+        return obj == match
     for field, comparison in schema.items():
         remote = match.get(field, MISSING)
         local = obj.get(field, MISSING)
         if isinstance(comparison, dict):
             _compare_defaults(local, remote, comparison)
         elif isinstance(comparison, DefaultComparison):
-            if comparison.check(local, remote):
-                return True
-    return False
+            if not comparison.check(local, remote):
+                return False
+    return True
 
 
-option_default_values = ([], MISSING)
+OPTION_DEFAULT_VALUES = ([], MISSING)
 
 
 def _option_comparison_check(local, remote) -> bool:
-    matching = (local in option_default_values) + (remote in option_default_values)
+    matching = (local in OPTION_DEFAULT_VALUES) + (remote in OPTION_DEFAULT_VALUES)
     if matching == 2:
-        return False
-    elif matching == 1:
         return True
+    elif matching == 1:
+        return False
     else:
-        return len(local) != len(remote) or any(
+        return len(local) == len(remote) and all(
             [
                 _compare_defaults(local[x], remote[x], COMMAND_OPTION_DEFAULTS)
                 for x in range(len(local))
@@ -181,17 +189,17 @@ def _option_comparison_check(local, remote) -> bool:
         )
 
 
-choices_default_values = ([], MISSING)
+CHOICES_DEFAULT_VALUES = ([], MISSING)
 
 
 def _choices_comparison_check(local, remote) -> bool:
-    matching = (local in choices_default_values) + (remote in choices_default_values)
+    matching = (local in CHOICES_DEFAULT_VALUES) + (remote in CHOICES_DEFAULT_VALUES)
     if matching == 2:
-        return False
-    elif matching == 1:
         return True
+    elif matching == 1:
+        return False
     else:
-        return len(local) != len(remote) or any(
+        return len(local) == len(remote) and all(
             [
                 _compare_defaults(local[x], remote[x], OPTIONS_CHOICES_DEFAULTS)
                 for x in range(len(local))
@@ -205,17 +213,15 @@ COMMAND_DEFAULTS: NestedComparison = {
     "description": DefaultComparison((MISSING,)),
     "name_localizations": DefaultComparison((None, {}, MISSING)),
     "description_localizations": DefaultComparison((None, {}, MISSING)),
-    "options": DefaultComparison(option_default_values, _option_comparison_check),
+    "options": DefaultComparison(OPTION_DEFAULT_VALUES, _option_comparison_check),
     "default_member_permissions": DefaultComparison((None, MISSING)),
     "nsfw": DefaultComparison((False, MISSING)),
-    # TODO: Change the below default if needed to use the correct default integration types and contexts
-    "integration_types": DefaultSetComparison(
-        (MISSING, {0, 1}), lambda x, y: set(x) != set(y)
-    ),
+    # TODO: Change the below default if needed to use the correct default integration types
     # Discord States That This Defaults To "your app's configured contexts"
-    "contexts": DefaultSetComparison(
-        (None, {0, 1, 2}, MISSING), lambda x, y: set(x) != set(y)
+    "integration_types": DefaultSetComparison(
+        (MISSING, {0, 1}), lambda x, y: set(x) == set(y)
     ),
+    "contexts": DefaultSetComparison((None, MISSING), lambda x, y: set(x) == set(y)),
 }
 COMMAND_OPTION_DEFAULTS: NestedComparison = {
     "type": DefaultComparison(()),
@@ -224,7 +230,7 @@ COMMAND_OPTION_DEFAULTS: NestedComparison = {
     "name_localizations": DefaultComparison((None, {}, MISSING)),
     "description_localizations": DefaultComparison((None, {}, MISSING)),
     "required": DefaultComparison((False, MISSING)),
-    "choices": DefaultComparison(choices_default_values, _choices_comparison_check),
+    "choices": DefaultComparison(CHOICES_DEFAULT_VALUES, _choices_comparison_check),
     "channel_types": DefaultComparison(([], MISSING)),
     "min_value": DefaultComparison((MISSING,)),
     "max_value": DefaultComparison((MISSING,)),
@@ -430,19 +436,18 @@ class ApplicationCommandMixin(ABC):
 
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
         def _check_command(cmd: ApplicationCommand, match: Mapping[str, Any]) -> bool:
-            cmd = cmd.to_dict()
-
+            """Returns True If Commands Are Equivalent"""
             if isinstance(cmd, SlashCommandGroup):
                 if len(cmd.subcommands) != len(match.get("options", [])):
-                    return True
+                    return False
                 for i, subcommand in enumerate(cmd.subcommands):
                     match_ = find(
                         lambda x: x["name"] == subcommand.name, match["options"]
                     )
-                    if match_ is not None and _check_command(subcommand, match_):
-                        return True
+                    if match_ is not None and not _check_command(subcommand, match_):
+                        return False
             else:
-                return _compare_defaults(cmd, match, COMMAND_DEFAULTS)
+                return _compare_defaults(cmd.to_dict(), match, COMMAND_DEFAULTS)
 
         return_value = []
         cmds = self.pending_application_commands.copy()
@@ -477,7 +482,7 @@ class ApplicationCommandMixin(ABC):
             if match is None:
                 return_value.append({"command": cmd, "action": "upsert"})
             # We have a different version of the command then Discord
-            elif _check_command(cmd, match):
+            elif not _check_command(cmd, match):
                 return_value.append(
                     {
                         "command": cmd,
