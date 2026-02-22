@@ -44,7 +44,6 @@ from typing import (
     Mapping,
     TypeAlias,
     TypeVar,
-    Union,
 )
 
 from typing_extensions import override
@@ -150,7 +149,7 @@ class DefaultSetComparison(DefaultComparison):
         return super().check(local, remote)
 
 
-NestedComparison: TypeAlias = dict[str, Union["NestedComparison", DefaultComparison]]
+NestedComparison: TypeAlias = dict[str, "NestedComparison | DefaultComparison"]
 
 
 def _compare_defaults(
