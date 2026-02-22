@@ -164,7 +164,8 @@ def _compare_defaults(
         remote = match.get(field, MISSING)
         local = obj.get(field, MISSING)
         if isinstance(comparison, dict):
-            _compare_defaults(local, remote, comparison)
+            if not _compare_defaults(local, remote, comparison):
+                return False
         elif isinstance(comparison, DefaultComparison):
             if not comparison.check(local, remote):
                 return False
@@ -222,6 +223,14 @@ COMMAND_DEFAULTS: NestedComparison = {
         (MISSING, {0, 1}), lambda x, y: set(x) == set(y)
     ),
     "contexts": DefaultSetComparison((None, MISSING), lambda x, y: set(x) == set(y)),
+}
+SUBCOMMAND_DEFAULTS: NestedComparison = {
+    "type": DefaultComparison(()),
+    "name": DefaultComparison(()),
+    "description": DefaultComparison(()),
+    "name_localizations": DefaultComparison((None, {}, MISSING)),
+    "description_localizations": DefaultComparison((None, {}, MISSING)),
+    "options": DefaultComparison(OPTION_DEFAULT_VALUES, _option_comparison_check),
 }
 COMMAND_OPTION_DEFAULTS: NestedComparison = {
     "type": DefaultComparison(()),
@@ -444,10 +453,13 @@ class ApplicationCommandMixin(ABC):
                     match_ = find(
                         lambda x: x["name"] == subcommand.name, match["options"]
                     )
-                    if match_ is not None and not _check_command(subcommand, match_):
-                        return False
+                    if match_ is not None:
+                        return _check_command(subcommand, match_)
             else:
-                return _compare_defaults(cmd.to_dict(), match, COMMAND_DEFAULTS)
+                if cmd.parent is None:
+                    return _compare_defaults(cmd.to_dict(), match, COMMAND_DEFAULTS)
+                else:
+                    return _compare_defaults(cmd.to_dict(), match, SUBCOMMAND_DEFAULTS)
 
         return_value = []
         cmds = self.pending_application_commands.copy()
