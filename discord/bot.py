@@ -42,8 +42,12 @@ from typing import (
     Generator,
     Literal,
     Mapping,
+    TypeAlias,
     TypeVar,
+    Union,
 )
+
+from typing_extensions import override
 
 from .client import Client
 from .cog import CogMixin
@@ -79,6 +83,166 @@ __all__ = (
 )
 
 _log = logging.getLogger(__name__)
+
+
+class DefaultComparison:
+    """
+    Comparison rule for when there are multiple default values that should be considered equivalent when comparing 2 objects.
+    Allows for a custom check to be passed for further control over equality.
+
+    Attributes
+    ----------
+    defaults: :class:`tuple`
+        The values that should be considered equivalent to each other
+    callback: Callable[[Any, Any], bool]
+        A callable that will do additional comparison on the objects if neither are a default value.
+        Defaults to a `==` comparison.
+        It should accept the 2 objects as arguments and return True if they should be considered equivalent
+        and False otherwise.
+    """
+
+    def __init__(
+        self,
+        defaults: tuple[Any, ...],
+        callback: Callable[[Any, Any], bool] = lambda x, y: x == y,
+    ):
+        self.defaults = defaults
+        self.callback = callback
+
+    def _check_defaults(self, local, remote) -> bool | None:
+        defaults = (local in self.defaults) + (remote in self.defaults)
+        if defaults == 2:
+            # Both are COMMAND_DEFAULTS, so they can be counted as the same
+            return True
+        elif defaults == 0:
+            # Neither are COMMAND_DEFAULTS so the callback has to be used
+            return None
+        else:
+            # Only one is a default, so the command must be out of sync
+            return False
+
+    def check(self, local, remote) -> bool:
+        """
+        Compares the local and remote objects.
+
+        Returns
+        -------
+        bool
+            True if local and remote are deemed to be equivalent. False otherwise.
+        """
+        if (rtn := self._check_defaults(local, remote)) is not None:
+            return rtn
+        else:
+            return self.callback(local, remote)
+
+
+class DefaultSetComparison(DefaultComparison):
+    @override
+    def check(self, local, remote) -> bool:
+        try:
+            local = set(local)
+        except TypeError:
+            pass
+        try:
+            remote = set(remote)
+        except TypeError:
+            pass
+        return super().check(local, remote)
+
+
+NestedComparison: TypeAlias = dict[str, Union["NestedComparison", DefaultComparison]]
+
+
+def _compare_defaults(
+    obj: Mapping[str, Any] | Any,
+    match: Mapping[str, Any] | Any,
+    schema: NestedComparison,
+) -> bool:
+    if not isinstance(match, Mapping) or not isinstance(obj, Mapping):
+        return obj == match
+    for field, comparison in schema.items():
+        remote = match.get(field, MISSING)
+        local = obj.get(field, MISSING)
+        if isinstance(comparison, dict):
+            _compare_defaults(local, remote, comparison)
+        elif isinstance(comparison, DefaultComparison):
+            if not comparison.check(local, remote):
+                return False
+    return True
+
+
+OPTION_DEFAULT_VALUES = ([], MISSING)
+
+
+def _option_comparison_check(local, remote) -> bool:
+    matching = (local in OPTION_DEFAULT_VALUES) + (remote in OPTION_DEFAULT_VALUES)
+    if matching == 2:
+        return True
+    elif matching == 1:
+        return False
+    else:
+        return len(local) == len(remote) and all(
+            [
+                _compare_defaults(local[x], remote[x], COMMAND_OPTION_DEFAULTS)
+                for x in range(len(local))
+            ]
+        )
+
+
+CHOICES_DEFAULT_VALUES = ([], MISSING)
+
+
+def _choices_comparison_check(local, remote) -> bool:
+    matching = (local in CHOICES_DEFAULT_VALUES) + (remote in CHOICES_DEFAULT_VALUES)
+    if matching == 2:
+        return True
+    elif matching == 1:
+        return False
+    else:
+        return len(local) == len(remote) and all(
+            [
+                _compare_defaults(local[x], remote[x], OPTIONS_CHOICES_DEFAULTS)
+                for x in range(len(local))
+            ]
+        )
+
+
+COMMAND_DEFAULTS: NestedComparison = {
+    "type": DefaultComparison((1, MISSING)),
+    "name": DefaultComparison(()),
+    "description": DefaultComparison((MISSING,)),
+    "name_localizations": DefaultComparison((None, {}, MISSING)),
+    "description_localizations": DefaultComparison((None, {}, MISSING)),
+    "options": DefaultComparison(OPTION_DEFAULT_VALUES, _option_comparison_check),
+    "default_member_permissions": DefaultComparison((None, MISSING)),
+    "nsfw": DefaultComparison((False, MISSING)),
+    # TODO: Change the below default if needed to use the correct default integration types
+    # Discord States That This Defaults To "your app's configured contexts"
+    "integration_types": DefaultSetComparison(
+        (MISSING, {0, 1}), lambda x, y: set(x) == set(y)
+    ),
+    "contexts": DefaultSetComparison((None, MISSING), lambda x, y: set(x) == set(y)),
+}
+COMMAND_OPTION_DEFAULTS: NestedComparison = {
+    "type": DefaultComparison(()),
+    "name": DefaultComparison(()),
+    "description": DefaultComparison(()),
+    "name_localizations": DefaultComparison((None, {}, MISSING)),
+    "description_localizations": DefaultComparison((None, {}, MISSING)),
+    "required": DefaultComparison((False, MISSING)),
+    "choices": DefaultComparison(CHOICES_DEFAULT_VALUES, _choices_comparison_check),
+    "channel_types": DefaultComparison(([], MISSING)),
+    "min_value": DefaultComparison((MISSING,)),
+    "max_value": DefaultComparison((MISSING,)),
+    "min_length": DefaultComparison((MISSING,)),
+    "max_length": DefaultComparison((MISSING,)),
+    "autocomplete": DefaultComparison((MISSING, False)),
+}
+OPTIONS_CHOICES_DEFAULTS: NestedComparison = {
+    "name": DefaultComparison(()),
+    "name_localizations": DefaultComparison((None, {}, MISSING)),
+    "value": DefaultComparison(()),
+}
 
 
 class ApplicationCommandMixin(ABC):
@@ -271,81 +435,19 @@ class ApplicationCommandMixin(ABC):
         """
 
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
-
         def _check_command(cmd: ApplicationCommand, match: Mapping[str, Any]) -> bool:
+            """Returns True If Commands Are Equivalent"""
             if isinstance(cmd, SlashCommandGroup):
                 if len(cmd.subcommands) != len(match.get("options", [])):
-                    return True
+                    return False
                 for i, subcommand in enumerate(cmd.subcommands):
-                    match_ = next(
-                        (
-                            data
-                            for data in match["options"]
-                            if data["name"] == subcommand.name
-                        ),
-                        MISSING,
+                    match_ = find(
+                        lambda x: x["name"] == subcommand.name, match["options"]
                     )
-                    if match_ is not MISSING and _check_command(subcommand, match_):
-                        return True
+                    if match_ is not None and not _check_command(subcommand, match_):
+                        return False
             else:
-                as_dict = cmd.to_dict()
-                to_check = {
-                    "nsfw": None,
-                    "default_member_permissions": None,
-                    "name": None,
-                    "description": None,
-                    "name_localizations": None,
-                    "description_localizations": None,
-                    "options": [
-                        "type",
-                        "name",
-                        "description",
-                        "autocomplete",
-                        "choices",
-                        "name_localizations",
-                        "description_localizations",
-                    ],
-                    "contexts": None,
-                    "integration_types": None,
-                }
-                for check, value in to_check.items():
-                    if type(to_check[check]) == list:
-                        # We need to do some falsy conversion here
-                        # The API considers False (autocomplete) and [] (choices) to be falsy values
-                        falsy_vals = (False, [])
-                        for opt in value:
-                            cmd_vals = (
-                                [val.get(opt, MISSING) for val in as_dict[check]]
-                                if check in as_dict
-                                else []
-                            )
-                            for i, val in enumerate(cmd_vals):
-                                if val in falsy_vals:
-                                    cmd_vals[i] = MISSING
-                            if match.get(
-                                check, MISSING
-                            ) is not MISSING and cmd_vals != [
-                                val.get(opt, MISSING) for val in match[check]
-                            ]:
-                                # We have a difference
-                                return True
-                    elif (attr := getattr(cmd, check, None)) != (
-                        found := match.get(check)
-                    ):
-                        # We might have a difference
-                        if "localizations" in check and bool(attr) == bool(found):
-                            # unlike other attrs, localizations are MISSING by default
-                            continue
-                        elif (
-                            check == "default_permission"
-                            and attr is True
-                            and found is None
-                        ):
-                            # This is a special case
-                            # TODO: Remove for perms v2
-                            continue
-                        return True
-            return False
+                return _compare_defaults(cmd.to_dict(), match, COMMAND_DEFAULTS)
 
         return_value = []
         cmds = self.pending_application_commands.copy()
@@ -376,10 +478,11 @@ class ApplicationCommandMixin(ABC):
         # First let's check if the commands we have locally are the same as the ones on discord
         for cmd in pending:
             match = registered_commands_dict.get(cmd.name)
+            # We don't have this command registered
             if match is None:
-                # We don't have this command registered
                 return_value.append({"command": cmd, "action": "upsert"})
-            elif _check_command(cmd, match):
+            # We have a different version of the command then Discord
+            elif not _check_command(cmd, match):
                 return_value.append(
                     {
                         "command": cmd,
@@ -388,7 +491,7 @@ class ApplicationCommandMixin(ABC):
                     }
                 )
             else:
-                # We have this command registered but it's the same
+                # We have this command registered and it's the same
                 return_value.append(
                     {"command": cmd, "action": None, "id": int(match["id"])}
                 )
