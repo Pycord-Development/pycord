@@ -1,11 +1,7 @@
 import discord
 from discord.utils import users_to_csv
 
-intents = discord.Intents.default()
-
-bot = discord.Bot(
-    intents=intents,
-)
+bot = discord.Bot()
 
 
 @bot.slash_command()
