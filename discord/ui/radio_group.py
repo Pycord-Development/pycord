@@ -221,8 +221,7 @@ class RadioGroup(ModalItem):
         return self
 
     def clear_options(self) -> Self:
-        """Remove all options from the radio group.
-        """
+        """Remove all options from the radio group."""
 
         self.underlying.options.clear()
         return self

@@ -265,8 +265,7 @@ class CheckboxGroup(ModalItem):
         return self
 
     def clear_options(self) -> Self:
-        """Remove all options from the checkbox group.
-        """
+        """Remove all options from the checkbox group."""
 
         self.underlying.options.clear()
         return self
