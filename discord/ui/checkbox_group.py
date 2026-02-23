@@ -47,7 +47,7 @@ if TYPE_CHECKING:
 class CheckboxGroup(ModalItem):
     """Represents a UI Checkbox Group component.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Parameters
     ----------

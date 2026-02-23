@@ -1440,7 +1440,7 @@ class RadioGroup(Component):
 
         This class is not useable by end-users; see :class:`discord.ui.RadioGroup` instead.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Attributes
     ----------
@@ -1494,7 +1494,7 @@ class RadioGroupOption:
 
     These can be created by users.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Attributes
     ----------
@@ -1584,7 +1584,7 @@ class CheckboxGroup(Component):
 
         This class is not useable by end-users; see :class:`discord.ui.CheckboxGroup` instead.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Attributes
     ----------
@@ -1654,7 +1654,7 @@ class CheckboxGroupOption:
 
     These can be created by users.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Attributes
     ----------
@@ -1744,7 +1744,7 @@ class Checkbox(Component):
 
         This class is not useable by end-users; see :class:`discord.ui.Checkbox` instead.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Attributes
     ----------

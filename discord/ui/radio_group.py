@@ -45,7 +45,7 @@ if TYPE_CHECKING:
 class RadioGroup(ModalItem):
     """Represents a UI Radio Group component.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Attributes
     ----------

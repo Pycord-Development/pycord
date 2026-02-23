@@ -41,7 +41,7 @@ if TYPE_CHECKING:
 class Checkbox(ModalItem):
     """Represents a UI Checkbox component.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.8
 
     Parameters
     ----------
