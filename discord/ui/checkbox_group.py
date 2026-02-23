@@ -109,7 +109,7 @@ class CheckboxGroup(ModalItem):
             id=id,
         )
         if options:
-            self.options = option
+            self.options = options
 
     def _generate_underlying(
         self,
