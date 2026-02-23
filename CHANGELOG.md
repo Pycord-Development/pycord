@@ -40,6 +40,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
 - Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
   event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
+- Fixed `TypeError` when using `Literal` type hints with the `option` decorator without
+  explicitly passing `input_type`.
+  ([#3123](https://github.com/Pycord-Development/pycord/pull/3123))
 
 ### Deprecated
 
