@@ -597,9 +597,9 @@ class Interaction:
             previous_allowed_mentions=previous_mentions,
             suppress=suppress,
         )
-        _message = self.message or self._original_response
-        if view and _message:
-            self._state.prevent_view_updates_for(_message.id)
+        _target = self.message or self._original_response
+        if view and _target:
+            self._state.prevent_view_updates_for(_target.id)
         adapter = async_context.get()
         http = self._state.http
         data = await adapter.edit_original_interaction_response(
