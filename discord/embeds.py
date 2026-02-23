@@ -522,15 +522,7 @@ class Embed:
 
     @colour.setter
     def colour(self, value: int | Colour | None):  # type: ignore
-        if value is None or isinstance(value, Colour):
-            self._colour = value
-        elif isinstance(value, int):
-            self._colour = Colour(value=value)
-        else:
-            raise TypeError(
-                "Expected discord.Colour, int, or None but received"
-                f" {value.__class__.__name__} instead."
-            )
+        self._colour = Colour.resolve_value(value)
 
     color = colour
 

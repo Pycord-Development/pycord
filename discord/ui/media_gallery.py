@@ -51,10 +51,15 @@ class MediaGallery(ViewItem[V]):
 
     Parameters
     ----------
-    *items: :class:`MediaGalleryItem`
+    *items: :class:`~discord.MediaGalleryItem`
         The initial items contained in this gallery, up to 10.
     id: Optional[:class:`int`]
         The gallery's ID.
+
+    Attributes
+    ----------
+    items: List[:class:`~discord.MediaGalleryItem`]
+        The list of media items in this gallery.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -65,13 +70,32 @@ class MediaGallery(ViewItem[V]):
     def __init__(self, *items: MediaGalleryItem, id: int | None = None):
         super().__init__()
 
-        self._underlying = MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery, id=id, items=[i for i in items]
+        self._underlying = self._generate_underlying(id=id, items=items)
+
+    def _generate_underlying(
+        self, id: int | None = None, items: list[MediaGalleryItem] | None = None
+    ) -> MediaGalleryComponent:
+        super()._generate_underlying(MediaGalleryComponent)
+        return MediaGalleryComponent._raw_construct(
+            type=ComponentType.media_gallery,
+            id=id or self.id,
+            items=[i for i in items] if items else [i for i in self.items or []],
         )
 
     @property
-    def items(self):
-        return self._underlying.items
+    def items(self) -> list[MediaGalleryItem]:
+        """The list of media items in this gallery."""
+        return self.underlying.items
+
+    @items.setter
+    def items(self, value: list[MediaGalleryItem]) -> None:
+        if len(value) > 10:
+            raise ValueError("may not set more than 10 items in a gallery.")
+
+        if not all(isinstance(i, MediaGalleryItem) for i in value):
+            raise TypeError(f"items must be a list of MediaGalleryItem.")
+
+        self.underlying.items = value
 
     def append_item(self, item: MediaGalleryItem) -> Self:
         """Adds a :attr:`MediaGalleryItem` to the gallery.
@@ -90,12 +114,12 @@ class MediaGallery(ViewItem[V]):
         """
 
         if len(self.items) >= 10:
-            raise ValueError("maximum number of children exceeded")
+            raise ValueError("maximum number of items exceeded")
 
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
 
-        self._underlying.items.append(item)
+        self.underlying.items.append(item)
         return self
 
     def add_item(
@@ -129,7 +153,23 @@ class MediaGallery(ViewItem[V]):
 
         return self.append_item(item)
 
+    def remove_item(self, index: int) -> Self:
+        """Removes an item from the gallery.
+
+        Parameters
+        ----------
+        index: :class:`int`
+            The index of the item to remove from the gallery.
+        """
+
+        try:
+            self.items.pop(index)
+        except IndexError:
+            pass
+        return self
+
     def to_component_dict(self) -> MediaGalleryComponentPayload:
+        self._underlying = self._generate_underlying()
         return super().to_component_dict()
 
     @classmethod

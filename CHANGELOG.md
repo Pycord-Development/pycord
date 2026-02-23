@@ -12,16 +12,73 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
-  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added `Member.colours` and `Member.colors` properties.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `User.collectibles` property.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added the ability to compare instances of `Nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
+  ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
 
 ### Changed
 
-- Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
-  permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
+- Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 
 ### Fixed
 
+- Fixed some `Item` attributes not being set correctly.
+  ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
+- Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
+  event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
+
+### Deprecated
+
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+
+### Removed
+
+- Removed the guild creation and ownership-related methods and arguments due to updated
+  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+    `Template.create_guild`, and `Client.create_guild`.
+
+## [2.7.1] - 2026-02-09
+
+### Added
+
+- Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
+  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added the ability to compare instances of `PrimaryGuild`.
+  ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Added `cache_default_sounds` parameter to `Client` and its subclasses.
+  ([#3113](https://github.com/Pycord-Development/pycord/pull/3113))
+
+### Changed
+
+- Migrated away from `utils.deprecated` in favor of `warnings.deprecated`. Added type
+  checker warnings support for function deprecations.
+  ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
+- Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
+  permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
+- Updated the docs' Sphinx version to v9.
+  ([#3067](https://github.com/Pycord-Development/pycord/pull/3067))
+
+### Fixed
+
+- Fixed core issues with modifying items in `Container` and `Section`
+  ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
+- Fixed an issue where views raised unnecessary errors on timeout.
+  ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
 - Fixed an issue with downloading animated emojis which were originally uploaded as WebP
@@ -42,14 +99,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed an issue where the optional parameters of the `InteractionResponse.send_message`
   method were not type-hinted as optional.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
-
-### Removed
-
-- Removed the guild creation and ownership-related methods and arguments due to updated
-  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
-    `Template.create_guild`, and `Client.create_guild`.
-  - Removed the `owner` argument from the method `Guild.edit`.
+- Fixed the update of a user's `primary_guild` to now cause an `on_user_update` event to
+  fire. ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Fixed an error when using methods from other classes regarding option autocompletes.
+  ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
+- Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
+  ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
+- Fixed `get_or_fetch()` not supporting `Thread` objects.
+  ([#3101](https://github.com/Pycord-Development/pycord/pull/3101))
 
 ## [2.7.0] - 2025-12-24
 
@@ -1172,7 +1229,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 - `get_application_command()` now supports retrieving subcommands and subcommand groups.
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
--
 
 ### Removed
 
@@ -1568,7 +1624,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...HEAD
+[2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
 [2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1
