@@ -731,6 +731,9 @@ Webhooks
 Collectibles
 ------------
 
+.. attributetable:: Collectibles
+.. autoclass:: Collectibles()
+
 .. attributetable:: Nameplate
 
 .. autoclass:: Nameplate()
