@@ -25,11 +25,53 @@ DEALINGS IN THE SOFTWARE.
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from .asset import Asset
+from .types.collectibles import Collectibles as CollectiblesPayload
+from .types.collectibles import Nameplate as NameplatePayload
+
 if TYPE_CHECKING:
     from .state import ConnectionState
 
-from .asset import Asset
-from .types.collectibles import Nameplate as NameplatePayload
+__all__ = (
+    "Collectibles",
+    "Nameplate",
+)
+
+
+class Collectibles:
+    """
+    Represents a user or member's equipped collectibles.
+
+    .. versionadded:: 2.8
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two sets of collectibles are equal.
+
+        .. describe:: x != y
+
+            Checks if two sets of collectibles are not equal.
+
+    Attributes
+    ----------
+    nameplate: :class:`Nameplate`
+        The user's nameplate.
+    """
+
+    def __init__(self, data: CollectiblesPayload, state: "ConnectionState") -> None:
+        if nameplate_data := data.get("nameplate"):
+            self.nameplate = Nameplate(data=nameplate_data, state=state)
+        else:
+            self.nameplate = None
+        self._state = state
+
+    def __repr__(self) -> str:
+        return f"<Collectibles nameplate={self.nameplate}>"
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Collectibles) and self.nameplate == other.nameplate
 
 
 class Nameplate:
@@ -37,6 +79,18 @@ class Nameplate:
     Represents a Discord Nameplate.
 
     .. versionadded:: 2.7
+    .. versionchanged:: 2.8
+        Nameplates are now comparable.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two nameplates are equal.
+
+        .. describe:: x != y
+
+            Checks if two nameplates are not equal.
 
     Attributes
     ----------
@@ -56,6 +110,13 @@ class Nameplate:
     def __repr__(self) -> str:
         return f"<Nameplate sku_id={self.sku_id} palette={self.palette}>"
 
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, Nameplate)
+            and self.sku_id == other.sku_id
+            and self.palette == other.palette
+        )
+
     @cached_property
     def static_asset(self) -> Asset:
         """
@@ -73,6 +134,3 @@ class Nameplate:
         .. versionadded:: 2.7
         """
         return Asset._from_collectible(self._state, self._asset, animated=True)
-
-
-__all__ = ("Nameplate",)
