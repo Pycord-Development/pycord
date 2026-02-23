@@ -1027,7 +1027,7 @@ class ViewStore:
         components = [_component_factory(d, state=self._state) for d in components]
         try:
             view._refresh(components)
-        except Exception as e:
+        except Exception:
             _log.exception(
                 f"Failed to refresh View {view} from Message {message_id} due to mismatched state. Items may not have complete data."
             )
