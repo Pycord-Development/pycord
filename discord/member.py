@@ -46,6 +46,7 @@ from .object import Object
 from .permissions import Permissions
 from .primary_guild import PrimaryGuild
 from .role import RoleColours
+from .types.collectibles import AvatarDecoration
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
 
@@ -296,6 +297,7 @@ class Member(discord.abc.Messageable, _UserTag):
         "_banner",
         "communication_disabled_until",
         "flags",
+        "_avatar_decoration",
     )
 
     if TYPE_CHECKING:
@@ -317,6 +319,7 @@ class Member(discord.abc.Messageable, _UserTag):
         communication_disabled_until: datetime.datetime | None
         primary_guild: PrimaryGuild | None
         collectibles: Collectibles | None
+        avatar_decoration: Asset | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -341,6 +344,9 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
+        self._avatar_decoration: AvatarDecoration | None = data.get(
+            "avatar_decoration_data"
+        )
 
     def __str__(self) -> str:
         return str(self._user)
@@ -418,6 +424,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._banner = member._banner
         self.communication_disabled_until = member.communication_disabled_until
         self.flags = member.flags
+        self._avatar_decoration = member._avatar_decoration
 
         # Reference will not be copied unless necessary by PRESENCE_UPDATE
         # See below
@@ -449,6 +456,7 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags = MemberFlags._from_value(data.get("flags", 0))
+        self._avatar_decoration = data.get("avatar_decoration_data")
 
     def _presence_update(
         self, data: PartialPresenceUpdate, user: UserPayload
@@ -661,6 +669,31 @@ class Member(discord.abc.Messageable, _UserTag):
             return None
         return Asset._from_guild_avatar(
             self._state, self.guild.id, self.id, self._avatar
+        )
+
+    @property
+    def display_avatar_decoration(self) -> Asset | None:
+        """Returns the member's displayed avatar decoration.
+
+        For regular members this is just their avatar decoration, but
+        if they have a guild specific avatar decoration then that
+        is returned instead.
+
+        .. versionadded:: 2.8
+        """
+        return self.guild_avatar_decoration or self._user.avatar_decoration
+
+    @property
+    def guild_avatar_decoration(self) -> Asset | None:
+        """Returns an :class:`Asset` for the guild specific avatar decoration
+        the member has. If unavailable, ``None`` is returned.
+
+        .. versionadded:: 2.8
+        """
+        if self._avatar_decoration is None:
+            return None
+        return Asset._from_avatar_decoration(
+            self._state, self.id, self._avatar_decoration.get("asset")
         )
 
     @property
