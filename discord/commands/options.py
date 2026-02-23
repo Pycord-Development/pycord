@@ -39,6 +39,7 @@ from typing import (
     TypeVar,
     Union,
     get_args,
+    get_origin,
 )
 
 if sys.version_info >= (3, 12):
@@ -226,6 +227,9 @@ class Option:
         self._parameter_name = self.name  # default
         input_type = self._parse_type_alias(input_type)
         input_type = self._strip_none_type(input_type)
+        if get_origin(input_type) is Literal:
+            args = get_args(input_type)
+            input_type = type(args[0]) if args else str
         self._raw_type: InputType | tuple = input_type
 
         enum_choices = []
