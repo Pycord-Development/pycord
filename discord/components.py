@@ -1748,7 +1748,7 @@ class Checkbox(Component):
     ----------
     custom_id: Optional[:class:`str`]
         The custom ID of the checkbox group that gets received during an interaction.
-    required: Optional[:class:`bool`]
+    default: Optional[:class:`bool`]
         Whether this checkbox is selected by default.
     id: Optional[:class:`int`]
         The checkbox group's ID.

@@ -132,12 +132,6 @@ class InputText(ModalItem):
             id=id,
         )
 
-    def __repr__(self) -> str:
-        attrs = " ".join(
-            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
-        )
-        return f"<{self.__class__.__name__} {attrs}>"
-
     def _generate_underlying(
         self,
         style: InputTextStyle | None = None,
