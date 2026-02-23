@@ -102,12 +102,14 @@ class CheckboxGroup(ModalItem):
 
         self._underlying: CheckboxGroupComponent = self._generate_underlying(
             custom_id=custom_id,
-            options=options or [],
+            options=[],
             min_values=min_values,
             max_values=max_values,
             required=required,
             id=id,
         )
+        if options:
+            self.options = option
 
     def _generate_underlying(
         self,

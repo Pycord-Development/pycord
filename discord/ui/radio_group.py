@@ -90,7 +90,7 @@ class RadioGroup(ModalItem):
             required=required,
             id=id,
         )
-        if options is not None:
+        if options:
             self.options = options
 
     def _generate_underlying(
