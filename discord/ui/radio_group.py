@@ -52,7 +52,7 @@ class RadioGroup(ModalItem):
     custom_id: Optional[:class:`str`]
         The ID of the radio group that gets received during an interaction.
     options: List[:class:`discord.RadioGroupOption`]
-        A list of options that can be selected from this group.
+        A list of options that can be selected from this group. Must provide between 2 and 10 options.
     required: Optional[:class:`bool`]
         Whether an option selection is required or not. Defaults to ``True``.
     id: Optional[:class:`int`]
@@ -86,10 +86,12 @@ class RadioGroup(ModalItem):
 
         self._underlying: RadioGroupComponent = self._generate_underlying(
             custom_id=custom_id,
-            options=options or [],
+            options=[],
             required=required,
             id=id,
         )
+        if options is not None:
+            self.options = options
 
     def _generate_underlying(
         self,
@@ -147,10 +149,12 @@ class RadioGroup(ModalItem):
     def options(self, value: list[RadioGroupOption]):
         if not isinstance(value, list):
             raise TypeError("options must be a list of RadioGroupOption")
-        if len(value) > 10:
-            raise ValueError("you may only provide up to 10 options.")
+        if not (2 >= len(value) >= 10) and len(value) != 0:
+            raise ValueError("you must provide between 2 and 10 options.")
         if not all(isinstance(obj, RadioGroupOption) for obj in value):
             raise TypeError("all list items must subclass RadioGroupOption")
+        if len([o for o in value if o.default]) > 1:
+            raise ValueError("only 1 option can be set as default.")
 
         self.underlying.options = value
 
@@ -214,6 +218,13 @@ class RadioGroup(ModalItem):
             raise ValueError("maximum number of options already provided")
 
         self.underlying.options.append(option)
+        return self
+
+    def clear_options(self) -> Self:
+        """Remove all options from the radio group.
+        """
+
+        self.underlying.options.clear()
         return self
 
     def to_component_dict(self) -> RadioGroupComponentPayload:

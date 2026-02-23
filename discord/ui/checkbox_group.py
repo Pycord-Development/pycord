@@ -264,6 +264,13 @@ class CheckboxGroup(ModalItem):
         self.underlying.options.append(option)
         return self
 
+    def clear_options(self) -> Self:
+        """Remove all options from the checkbox group.
+        """
+
+        self.underlying.options.clear()
+        return self
+
     def to_component_dict(self) -> CheckboxGroupComponentPayload:
         return self.underlying.to_dict()
 

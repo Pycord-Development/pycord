@@ -1447,7 +1447,7 @@ class RadioGroup(Component):
     custom_id: Optional[:class:`str`]
         The custom ID of the radio group that gets received during an interaction.
     options: List[:class:`RadioGroupOption`]
-        A list of options that can be selected in this group.
+        A list of options that can be selected in this group, between 2 and 10.
     required: Optional[:class:`bool`]
         Whether the radio group requires a selection or not. Defaults to ``True``.
     id: Optional[:class:`int`]
@@ -1509,7 +1509,7 @@ class RadioGroupOption:
         An additional description of the option, if any.
         Can only be up to 100 characters.
     default: :class:`bool`
-        Whether this option is selected by default.
+        Whether this option is selected by default. Only 1 option should be set to default within a :class:`discord.RadioGroup`.
     """
 
     __slots__: tuple[str, ...] = (
@@ -1594,8 +1594,10 @@ class CheckboxGroup(Component):
         A list of options that can be selected in this group.
     min_values: Optional[:class:`int`]
         The minimum number of options that must be selected.
+        Defaults to 1 and must be between 0 and 25. If set to 0, :attr:`required` must be ``False``.
     max_values: Optional[:class:`int`]
         The maximum number of options that can be selected.
+        Must be between 1 and 10.
     required: Optional[:class:`bool`]
         Whether the checkbox group requires a selection or not. Defaults to ``True``.
     id: Optional[:class:`int`]
