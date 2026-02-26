@@ -744,6 +744,8 @@ class VoiceClient(VoiceProtocol):
 
         self._reader = AudioReader(sink, self, after=callback, start=True)
 
+    start_listening = start_recording
+
     def stop_recording(self) -> None:
         """Stops the recording of the provided ``sink``, or all recording sinks.
 
@@ -759,6 +761,8 @@ class VoiceClient(VoiceProtocol):
             self._reader = MISSING
         else:
             raise RecordingException("You are not recording")
+
+    stop_listening = stop_recording
 
     def is_recording(self) -> bool:
         """Whether the current client is recording in any sink."""

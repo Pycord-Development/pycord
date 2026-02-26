@@ -43,9 +43,9 @@ from discord.sinks import RawData, Sink
 try:
     import davey
 except ImportError:
-    import warnings
-
-    warnings.warn_explicit()
+    raise RuntimeError(
+        "Can not initialize a client without the davey package, please install it with the py-cord[voice] extra requirement."
+    )
 
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
@@ -286,7 +286,7 @@ class VoiceConnectionState:
 
     @property
     def ssrc_user_map(self) -> dict[int, int]:
-        return dict(zip(self.user_ssrc_map.values(), self.user_ssrc_map.keys()))
+        return {v: k for k, v in self.user_ssrc_map.items()}
 
     @property
     def max_dave_proto_version(self) -> int:
@@ -845,7 +845,7 @@ class VoiceConnectionState:
                             break
                         else:
                             _log.info(
-                                "Successfully reconnected and resume the voice connection"
+                                "Successfully reconnected and resumed the voice connection"
                             )
                             continue
                     else:
