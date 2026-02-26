@@ -180,9 +180,9 @@ class InputText(ModalItem):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError(
-                f"custom_id must be None or str not {value.__class__.__name__}"
+                f"custom_id must be str not {value.__class__.__name__}"
             )
-        if value and len(value) > 100:
+        if len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self.underlying.custom_id = value
 
