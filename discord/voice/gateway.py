@@ -264,7 +264,10 @@ class VoiceWebSocket(DiscordWebSocket):
         if op == OpCodes.mls_external_sender_package:
             _log.debug("Received MLS External Sender Package, applying to DAVE session")
             state.dave_session.set_external_sender(msg[3:])
-            _log.debug("Applied MLS External Sender Package, user IDs available: %s", state.dave_session.get_user_ids())
+            _log.debug(
+                "Applied MLS External Sender Package, user IDs available: %s",
+                state.dave_session.get_user_ids(),
+            )
         elif op == OpCodes.mls_proposals:
             op_type = msg[3]
             result = state.dave_session.process_proposals(

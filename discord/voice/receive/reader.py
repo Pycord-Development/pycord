@@ -34,7 +34,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 import davey
 
-from ..packets.rtp import RTCPPacket, ReceiverReportPacket, decode
+from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
 from .router import PacketRouter, SinkEventRouter
 
 try:
@@ -71,7 +71,12 @@ def is_rtcp(data: bytes) -> bool:
 
 class AudioReader:
     def __init__(
-        self, sink: Sink, client: VoiceClient, *, after: AfterCallback | None = None, start: bool = False,
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback | None = None,
+        start: bool = False,
     ) -> None:
         if after is not None and not callable(after):
             raise TypeError(
@@ -208,7 +213,9 @@ class AudioReader:
         elif rtp_packet:
 
             if not rtp_packet.decrypted_data:
-                _log.debug("No decrypted data for RTP packet, this should be safe to ignore.")
+                _log.debug(
+                    "No decrypted data for RTP packet, this should be safe to ignore."
+                )
                 return
 
             ssrc = rtp_packet.ssrc
@@ -220,7 +227,9 @@ class AudioReader:
                     _log.info(
                         "Received a packet for unknown SSRC %s: %s", ssrc, rtp_packet
                     )
-                    _log.debug("Current SSRCs: %s", self.client._connection.ssrc_user_map)
+                    _log.debug(
+                        "Current SSRCs: %s", self.client._connection.ssrc_user_map
+                    )
 
             self.speaking_timer.notify(ssrc)
 
@@ -301,9 +310,10 @@ class PacketDecryptor:
                     else:
                         packet.decrypted_data = decrypted_audio
                 except Exception as exc:
-                    _log.debug("Ignoring exception while decoding DAVE packet", exc_info=exc)
+                    _log.debug(
+                        "Ignoring exception while decoding DAVE packet", exc_info=exc
+                    )
                     packet.decrypted_data = OPUS_SILENCE
-
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:
         data = self._decryptor_rtcp(packet)
@@ -394,7 +404,10 @@ class PacketDecryptor:
         return header + result
 
     def _decrypt_rtp_aead_xchacha20_poly1305_rtpsize(self, packet: RTPPacket) -> bytes:
-        _log.debug("Decrypting RTP AEAD XChaCha20 Poly1305 RTPSize, has decrypted data?: %s", packet.decrypted_data is not None)
+        _log.debug(
+            "Decrypting RTP AEAD XChaCha20 Poly1305 RTPSize, has decrypted data?: %s",
+            packet.decrypted_data is not None,
+        )
         packet.adjust_rtpsize()
         nonce = packet.nonce + b"\x00" * 20
 
@@ -424,7 +437,7 @@ class PacketDecryptor:
         assert isinstance(self.box, nacl.secret.Aead)
         result = self.box.decrypt(data[8:-4], bytes(header), bytes(nonce))
 
-        return (header + result)
+        return header + result
 
 
 class SpeakingTimer(threading.Thread):

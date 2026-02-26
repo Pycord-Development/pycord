@@ -690,7 +690,12 @@ class PacketDecoder:
         dave: davey.DaveSession | None = self.sink.client._connection.dave_session
         in_dave = dave is not None
 
-        _log.debug("Decrypting packet for user %s (DAVE enabled: %s). Has decrypted data?: %s", user_id, in_dave, packet.decrypted_data is not None)
+        _log.debug(
+            "Decrypting packet for user %s (DAVE enabled: %s). Has decrypted data?: %s",
+            user_id,
+            in_dave,
+            packet.decrypted_data is not None,
+        )
 
         # personally, the best variable
         other_code = True
