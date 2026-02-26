@@ -877,7 +877,7 @@ class RawSoundboardSoundDeleteEvent(_RawReprMixin):
 class RawMemberUpdateEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_member_update` event.
 
-    .. versionadded:: 2.7
+    .. versionadded:: 2.8
 
     Attributes
     ----------

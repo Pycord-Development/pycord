@@ -1505,7 +1505,7 @@ Soundboard Sound
 
     This requires :attr:`Intents.members` to be enabled.
 
-    .. versionadded:: 2.7
+    .. versionadded:: 2.8
 
     :param payload: The raw event payload data.
     :type payload: :class:`RawMemberUpdateEvent`
