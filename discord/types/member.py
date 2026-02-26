@@ -24,10 +24,11 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 from .collectibles import AvatarDecoration, Collectibles
-from .snowflake import SnowflakeList, Snowflake
+from .snowflake import Snowflake, SnowflakeList
 from .user import User
 
 
