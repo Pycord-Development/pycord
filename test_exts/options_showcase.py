@@ -105,8 +105,8 @@ class OptionShowcase(commands.Cog):
     async def opt_optional(
         self,
         ctx: discord.ApplicationContext,
-        note: Optional[str] = None,
-        amount: Optional[int] = None,
+        note: str | None = None,
+        amount: int | None = None,
     ) -> None:
         await ctx.respond(f"note={note} amount={amount}")
 
@@ -114,7 +114,7 @@ class OptionShowcase(commands.Cog):
     async def opt_channels(
         self,
         ctx: discord.ApplicationContext,
-        channel: Union[discord.TextChannel, discord.VoiceChannel],
+        channel: discord.TextChannel | discord.VoiceChannel,
         thread: discord.Thread,
     ) -> None:
         await ctx.respond(f"channel={channel.mention} thread={thread.mention}")
@@ -152,7 +152,7 @@ class OptionShowcase(commands.Cog):
     async def opt_union_user(
         self,
         ctx: discord.ApplicationContext,
-        target: Union[discord.Member, discord.User],
+        target: discord.Member | discord.User,
     ) -> None:
         await ctx.respond(f"target={target.mention}")
 
@@ -160,7 +160,7 @@ class OptionShowcase(commands.Cog):
     async def opt_type_checking(
         self,
         ctx: discord.ApplicationContext,
-        target: Union[TcMember, TcUser],
+        target: TcMember | TcUser,
     ) -> None:
         await ctx.respond(f"target={target.mention}")
 
