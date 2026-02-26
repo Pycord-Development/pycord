@@ -33,12 +33,9 @@ import threading
 from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
-from discord import opus, utils
+from discord import utils
 from discord.backoff import ExponentialBackoff
-from discord.enums import SpeakingState, try_enum
 from discord.errors import ConnectionClosed
-from discord.object import Object
-from discord.sinks import RawData, Sink
 
 try:
     import davey
