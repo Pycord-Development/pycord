@@ -530,6 +530,15 @@ class BaseView(ItemInterface):
     def message(self, value):
         self._message = value
 
+    @classmethod
+    def from_message(
+        cls, message: Message, /, *, timeout: float | None = 180.0
+    ) -> BaseView:
+        view = cls(timeout=timeout)
+        for component in message.components:
+            view.add_item(_component_to_item(component))
+        return view
+
 
 class View(BaseView):
     """Represents a legacy UI view for V1 components :class:`~discord.ui.Button` and :class:`~discord.ui.Select`.
@@ -1182,7 +1191,7 @@ class ViewStore:
         }
         return list(views.values())
 
-    def __verify_integrity(self):
+    def __verify_integrity(self) -> None:
         to_remove: list[tuple[int, int | None, str]] = []
         for k, (view, _) in self._views.items():
             if view.is_finished():
@@ -1191,7 +1200,7 @@ class ViewStore:
         for k in to_remove:
             del self._views[k]
 
-    def add_view(self, view: BaseView, message_id: int | None = None):
+    def add_view(self, view: BaseView, message_id: int | None = None) -> None:
         if not view._store:
             return
         self.__verify_integrity()
@@ -1207,7 +1216,7 @@ class ViewStore:
         if message_id is not None:
             self._synced_message_views[message_id] = view
 
-    def remove_view(self, view: BaseView):
+    def remove_view(self, view: BaseView) -> None:
         for item in view.walk_children():
             if item.is_storable():
                 self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
@@ -1217,10 +1226,13 @@ class ViewStore:
                 self.remove_message_view(key)
                 break
 
-    def remove_message_view(self, message_id):
+    def remove_message_view(self, message_id: int) -> None:
         del self._synced_message_views[message_id]
 
-    def dispatch(self, component_type: int, custom_id: str, interaction: Interaction):
+    def get_message_view(self, message_id: int) -> BaseView | None:
+        return self._synced_message_views.get(message_id)
+
+    def dispatch(self, component_type: int, custom_id: str, interaction: Interaction) -> None:
         self.__verify_integrity()
         message_id: int | None = interaction.message and interaction.message.id
         key = (component_type, message_id, custom_id)
@@ -1237,13 +1249,13 @@ class ViewStore:
         item.refresh_state(interaction)
         view._dispatch_item(item, interaction)
 
-    def is_message_tracked(self, message_id: int):
+    def is_message_tracked(self, message_id: int) -> bool:
         return message_id in self._synced_message_views
 
     def remove_message_tracking(self, message_id: int) -> BaseView | None:
         return self._synced_message_views.pop(message_id, None)
 
-    def update_from_message(self, message_id: int, components: list[ComponentPayload]):
+    def update_from_message(self, message_id: int, components: list[ComponentPayload]) -> None:
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
         components = [_component_factory(d, state=self._state) for d in components]
