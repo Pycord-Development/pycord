@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 import discord.abc
 
 from .asset import Asset
-from .collectibles import Nameplate
+from .collectibles import Collectibles, Nameplate
 from .colour import Colour
 from .flags import PublicUserFlags
 from .iterators import EntitlementIterator
@@ -78,8 +78,8 @@ class BaseUser(_UserTag):
         "_public_flags",
         "_avatar_decoration",
         "_state",
-        "nameplate",
         "primary_guild",
+        "_collectibles",
     )
 
     if TYPE_CHECKING:
@@ -97,6 +97,7 @@ class BaseUser(_UserTag):
         _public_flags: int
         nameplate: Nameplate | None
         primary_guild: PrimaryGuild | None
+        collectibles: Collectibles
 
     def __init__(
         self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
@@ -149,11 +150,7 @@ class BaseUser(_UserTag):
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
         self._avatar_decoration = data.get("avatar_decoration_data", None)
-        nameplate = (data.get("collectibles") or {}).get("nameplate", None)
-        if nameplate:
-            self.nameplate = Nameplate(data=nameplate, state=self._state)
-        else:
-            self.nameplate = None
+        self._collectibles = data.get("collectibles")
         primary_guild_payload = data.get("primary_guild", None)
         if primary_guild_payload and primary_guild_payload.get("identity_enabled"):
             self.primary_guild = PrimaryGuild(
@@ -181,6 +178,7 @@ class BaseUser(_UserTag):
         self._state = user._state
         self._public_flags = user._public_flags
         self.primary_guild = user.primary_guild
+        self._collectibles = user._collectibles
 
         return self
 
@@ -193,6 +191,28 @@ class BaseUser(_UserTag):
             "global_name": self.global_name,
             "bot": self.bot,
         }
+
+    @property
+    def collectibles(self) -> Collectibles | None:
+        """Returns the user's equipped collectibles.
+
+        .. versionadded:: 2.8
+        """
+        if self._collectibles is None:
+            return None
+        return Collectibles(data=self._collectibles, state=self._state)
+
+    @property
+    def nameplate(self) -> Nameplate | None:
+        """The user's nameplate, if the user has one equipped. Alias for ``User.collectibles.nameplate``.
+
+        .. versionadded:: 2.7
+        .. versionchanged:: 2.8
+            Now an alias for :attr:`User.collectibles.nameplate`.
+        """
+        if collectibles := self.collectibles:
+            return collectibles.nameplate
+        return None
 
     @property
     def jump_url(self) -> str:
@@ -553,10 +573,6 @@ class User(BaseUser, discord.abc.Messageable):
         Specifies if the user is a bot account.
     system: :class:`bool`
         Specifies if the user is a system user (i.e. represents Discord officially).
-    nameplate: Optional[:class:`Nameplate`]
-        The user's nameplate, if the user has one.
-
-        .. versionadded:: 2.7
     primary_guild: Optional[:class:`PrimaryGuild`]
         The user's primary guild, if the user has one. Represent what guild the user's tag is from.
 

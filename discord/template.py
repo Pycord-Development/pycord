@@ -168,40 +168,6 @@ class Template:
             f" creator={self.creator!r} source_guild={self.source_guild!r} is_dirty={self.is_dirty}>"
         )
 
-    async def create_guild(self, name: str, icon: Any = None) -> Guild:
-        """|coro|
-
-        Creates a :class:`.Guild` using the template.
-
-        Bot accounts in more than 10 guilds are not allowed to create guilds.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the guild.
-        icon: :class:`bytes`
-            The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit`
-            for more details on what is expected.
-
-        Returns
-        -------
-        :class:`.Guild`
-            The guild created. This is not the same guild that is
-            added to cache.
-
-        Raises
-        ------
-        HTTPException
-            Guild creation failed.
-        InvalidArgument
-            Invalid icon image format given. Must be PNG or JPG.
-        """
-        if icon is not None:
-            icon = _bytes_to_base64_data(icon)
-
-        data = await self._state.http.create_from_template(self.code, name, icon)
-        return Guild(data=data, state=self._state)
-
     async def sync(self) -> Template:
         """|coro|
 

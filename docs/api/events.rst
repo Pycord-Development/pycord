@@ -736,6 +736,7 @@ Members/Users
     - username
     - discriminator
     - global_name
+    - primary_guild
 
     This requires :attr:`Intents.members` to be enabled.
 

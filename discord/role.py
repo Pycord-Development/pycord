@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from typing_extensions import Self
+from typing_extensions import Self, deprecated
 
 from .asset import Asset
 from .colour import Colour
@@ -39,7 +39,6 @@ from .utils import (
     MISSING,
     _bytes_to_base64_data,
     _get_as_snowflake,
-    deprecated,
     snowflake_time,
     warn_deprecated,
 )
@@ -443,15 +442,26 @@ class Role(Hashable):
         return self.tags is not None and self.tags.is_integration()
 
     def is_assignable(self) -> bool:
-        """Whether the role is able to be assigned or removed by the bot.
+        """Whether the role is able to be assigned or removed by the bot. This checks whether all of the following conditions are true:
+
+        - The role is not the guild's :attr:`Guild.default_role`
+
+        - The role is not managed
+
+        - The bot has the :attr:`~Permissions.manage_roles` permission
+
+        - The bot's top role is above this role
 
         .. versionadded:: 2.0
+        .. versionchanged:: 2.7.1
+            Added check for :attr:`~Permissions.manage_roles` permission
         """
         me = self.guild.me
         return (
             not self.is_default()
             and not self.managed
-            and (me.top_role > self or me.id == self.guild.owner_id)
+            and me.guild_permissions.manage_roles
+            and me.top_role > self
         )
 
     def is_available_for_purchase(self) -> bool:
@@ -478,7 +488,9 @@ class Role(Hashable):
         return Permissions(self._permissions)
 
     @property
-    @deprecated("colours.primary", "2.7")
+    @deprecated(
+        "Role.colour is deprecated since version 2.7, consider using colours.primary instead."
+    )
     def colour(self) -> Colour:
         """Returns the role colour. Equivalent to :attr:`colours.primary`.
         An alias exists under ``color``.
@@ -488,7 +500,9 @@ class Role(Hashable):
         return self.colours.primary
 
     @property
-    @deprecated("colors.primary", "2.7")
+    @deprecated(
+        "Role.color is deprecated since version 2.7, consider using colors.primary instead."
+    )
     def color(self) -> Colour:
         """Returns the role's primary color. Equivalent to :attr:`colors.primary`.
         An alias exists under ``colour``.

@@ -40,7 +40,7 @@ jobs:
         working-directory: ./docs
       - name: "Crowdin"
         id: crowdin
-        uses: crowdin/github-action@v2.13.0
+        uses: crowdin/github-action@v2.14.0
         with:
           upload_sources: false
           upload_translations: false

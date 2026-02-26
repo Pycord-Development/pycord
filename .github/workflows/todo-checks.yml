@@ -23,7 +23,7 @@ jobs:
       - name: "Checkout Repository"
         uses: actions/checkout@v6
       - name: "Track TODO Action"
-        uses: ribtoks/tdg-github-action@v0.4.15-beta
+        uses: ribtoks/tdg-github-action@v0.4.16-beta
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}

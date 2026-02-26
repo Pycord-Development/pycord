@@ -12,6 +12,7 @@
     U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0,
     U+1EA0-1EF9, U+20AB;
 }
+
 /* latin-ext */
 @font-face {
   font-family: "Saira";
@@ -25,6 +26,7 @@
     U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113,
     U+2C60-2C7F, U+A720-A7FF;
 }
+
 /* latin */
 @font-face {
   font-family: "Saira";
@@ -38,6 +40,7 @@
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
     U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
 /* latin */
 @font-face {
   font-family: "Outfit";
@@ -50,6 +53,7 @@
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
     U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
 /* latin */
 @font-face {
   font-family: "Outfit";
@@ -173,4 +177,60 @@ img[src="_images/snake_dark.svg"] {
   transition: max-height 0.2s ease-out;
   max-height: 0;
   overflow: hidden;
+}
+
+.appearance-selector-separator {
+  border: none;
+  border-top: 1px solid var(--color-sidebar-search-border);
+  margin: 0.5rem 0;
+}
+
+.width-selector-label {
+  font-weight: normal !important;
+  margin-top: 0 !important;
+}
+
+.width-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.85em;
+  color: var(--color-foreground-primary);
+  font-family: "Outfit", sans-serif;
+  transition: color 0.2s ease;
+  justify-content: start !important;
+  width: 100% !important;
+  padding: 0 0 0 var(--sidebar-item-spacing-horizontal);
+}
+
+.width-option:hover {
+  color: var(--color-brand-content);
+}
+
+.width-option input[type="radio"] {
+  cursor: pointer;
+  margin: 0;
+  width: 1em;
+  height: 1em;
+}
+
+.width-option span {
+  user-select: none;
+  position: static;
+  display: inline;
+  flex-shrink: 0;
+}
+
+.sidebar-tree .width-option {
+  display: flex !important;
+  position: relative !important;
+}
+
+body.wide-mode .sidebar-drawer {
+  width: 0;
+}
+
+body.wide-mode .content {
+  width: fit-content;
 }

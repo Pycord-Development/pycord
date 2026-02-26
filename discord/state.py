@@ -70,7 +70,7 @@ from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
-from .ui.modal import Modal, ModalStore
+from .ui.modal import BaseModal, ModalStore
 from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
 
@@ -254,6 +254,10 @@ class ConnectionState:
             self.deref_user = self.deref_user_no_intents  # type: ignore
 
         self.cache_app_emojis: bool = options.get("cache_app_emojis", False)
+        self.cache_default_sounds: bool = options.get(
+            "cache_default_sounds",
+            True,  # TODO(Paillat-dev): Don't cache default sounds by default
+        )
 
         self.parsers = parsers = {}
         for attr, func in inspect.getmembers(self):
@@ -414,7 +418,7 @@ class ConnectionState:
     def purge_message_view(self, message_id: int) -> None:
         self._view_store.remove_message_view(message_id)
 
-    def store_modal(self, modal: Modal, message_id: int) -> None:
+    def store_modal(self, modal: BaseModal, message_id: int) -> None:
         self._modal_store.add_modal(modal, message_id)
 
     def prevent_view_updates_for(self, message_id: int) -> BaseView | None:
@@ -620,6 +624,8 @@ class ConnectionState:
             data = await self.http.get_all_application_emojis(self.application_id)
             for e in data.get("items", []):
                 self.maybe_store_app_emoji(self.application_id, e)
+        if self.cache_default_sounds:
+            await self._add_default_sounds()
         try:
             states = []
             while True:
@@ -664,7 +670,6 @@ class ConnectionState:
         except asyncio.CancelledError:
             pass
         else:
-            await self._add_default_sounds()
             # dispatch the event
             self.call_handlers("ready")
             self.dispatch("ready")
@@ -796,6 +801,8 @@ class ConnectionState:
                 self._messages.remove(old_message)
             self._messages.append(message)
         raw = RawMessageUpdateEvent(data, message)
+        if old_message is not None:
+            raw.cached_message = old_message
         self.dispatch("raw_message_edit", raw)
         if old_message is not None:
             self.dispatch("message_edit", old_message, message)

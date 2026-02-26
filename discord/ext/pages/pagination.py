@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import contextlib
 from typing import List
 
 import discord
@@ -431,7 +432,7 @@ class Paginator(discord.ui.View):
                 pages[default_pg_index]
             )
 
-            self.page_groups = self.pages if show_menu else None
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: list = custom_buttons
@@ -546,7 +547,7 @@ class Paginator(discord.ui.View):
                 pages[default_pg_index]
             )
 
-            self.page_groups = self.pages if show_menu else None
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
@@ -604,11 +605,12 @@ class Paginator(discord.ui.View):
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
-            await self.message.edit(
-                view=self,
-                files=files or [],
-                attachments=[],
-            )
+            with contextlib.suppress(discord.NotFound, discord.Forbidden):
+                await self.message.edit(
+                    view=self,
+                    files=files or [],
+                    attachments=[],
+                )
 
     async def disable(
         self,
@@ -716,7 +718,9 @@ class Paginator(discord.ui.View):
 
         try:
             if interaction:
-                await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+                await (
+                    interaction.response.defer()
+                )  # needed to force webhook message edit route for files kwarg support
                 await interaction.followup.edit_message(
                     message_id=self.message.id,
                     content=page.content,
@@ -905,7 +909,8 @@ class Paginator(discord.ui.View):
         """Updates the custom view shown on the paginator."""
         if isinstance(self.custom_view, discord.ui.View):
             for item in self.custom_view.children:
-                self.remove_item(item)
+                if item in self.children:
+                    self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
 

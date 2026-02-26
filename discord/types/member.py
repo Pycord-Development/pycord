@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import TypedDict
 
-from typing_extensions import NotRequired
-
-from .snowflake import Snowflake, SnowflakeList
+from .collectibles import AvatarDecoration, Collectibles
+from .snowflake import SnowflakeList
 from .user import User
 
 
@@ -52,6 +51,8 @@ class Member(PartialMember, total=False):
     permissions: str
     communication_disabled_until: str
     flags: int
+    collectibles: Collectibles
+    avatar_decoration_data: AvatarDecoration
 
 
 class _OptionalMemberWithUser(PartialMember, total=False):
@@ -60,6 +61,7 @@ class _OptionalMemberWithUser(PartialMember, total=False):
     premium_since: str
     pending: bool
     permissions: str
+    avatar_decoration_data: AvatarDecoration
 
 
 class MemberWithUser(_OptionalMemberWithUser):
@@ -68,20 +70,3 @@ class MemberWithUser(_OptionalMemberWithUser):
 
 class UserWithMember(User, total=False):
     member: _OptionalMemberWithUser
-
-
-class MemberUpdateEvent(TypedDict):
-    guild_id: Snowflake
-    user: User
-    roles: list[Snowflake]
-    nick: NotRequired[str | None]
-    avatar: NotRequired[str | None]
-    banner: NotRequired[str | None]
-    joined_at: NotRequired[str | None]
-    premium_since: NotRequired[str | None]
-    deaf: NotRequired[bool | None]
-    mute: NotRequired[bool | None]
-    pending: NotRequired[bool | None]
-    communication_disabled_until: NotRequired[str | None]
-    flags: NotRequired[int | None]
-    avatar_decoration_data: NotRequired[dict | None]

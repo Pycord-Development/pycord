@@ -66,6 +66,13 @@ class Section(ViewItem[V]):
         Sections must have an accessory attached before being sent.
     id: Optional[:class:`int`]
         The section's ID.
+
+    Attributes
+    ----------
+    items: List[:class:`ViewItem`]
+        The list of items in this section.
+    accessory: :class:`ViewItem`
+        The section's accessory, displayed in the top right of the section.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -93,11 +100,8 @@ class Section(ViewItem[V]):
         self.items: list[ViewItem] = []
         self.accessory: ViewItem | None = None
 
-        self._underlying = SectionComponent._raw_construct(
-            type=ComponentType.section,
+        self._underlying = self._generate_underlying(
             id=id,
-            components=[],
-            accessory=None,
         )
         for func in self.__section_accessory_item__:
             item: ViewItem = func.__discord_ui_model_type__(
@@ -112,12 +116,26 @@ class Section(ViewItem[V]):
             self.add_item(i)
 
     def _add_component_from_item(self, item: ViewItem):
-        self._underlying.components.append(item._underlying)
+        self.underlying.components.append(item.underlying)
 
     def _set_components(self, items: list[ViewItem]):
-        self._underlying.components.clear()
+        self.underlying.components.clear()
         for item in items:
             self._add_component_from_item(item)
+
+    def _generate_underlying(self, id: int | None = None) -> SectionComponent:
+        super()._generate_underlying(SectionComponent)
+        section = SectionComponent._raw_construct(
+            type=ComponentType.section,
+            id=id or self.id,
+            components=[],
+            accessory=None,
+        )
+        for i in self.items:
+            section.components.append(i._generate_underlying())
+        if self.accessory:
+            section.accessory = self.accessory._generate_underlying()
+        return section
 
     def add_item(self, item: ViewItem) -> Self:
         """Adds an item to the section.
@@ -159,10 +177,13 @@ class Section(ViewItem[V]):
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            self.items.remove(item)
+            if item is self.accessory:
+                self.accessory = None
+            else:
+                self.items.remove(item)
+            item.parent = None
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def get_item(self, id: int | str) -> ViewItem | None:
@@ -231,7 +252,7 @@ class Section(ViewItem[V]):
         item.parent = self
 
         self.accessory = item
-        self._underlying.accessory = item._underlying
+        self.underlying.accessory = item._generate_underlying()
         return self
 
     def set_thumbnail(
@@ -275,7 +296,7 @@ class Section(ViewItem[V]):
         return self.accessory.is_persistent()
 
     def refresh_component(self, component: SectionComponent) -> None:
-        self._underlying = component
+        self.underlying = component
         for x, y in zip(self.items, component.components):
             x.refresh_component(y)
         if self.accessory and component.accessory:
@@ -323,9 +344,7 @@ class Section(ViewItem[V]):
             yield from r
 
     def to_component_dict(self) -> SectionComponentPayload:
-        self._set_components(self.items)
-        if self.accessory:
-            self.set_accessory(self.accessory)
+        self._underlying = self._generate_underlying()
         return super().to_component_dict()
 
     @classmethod

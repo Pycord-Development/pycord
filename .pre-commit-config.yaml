@@ -11,7 +11,7 @@ repos:
       - id: end-of-file-fixer
         exclude: \.(po|pot|yml|yaml)$
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.3.1
+    rev: v2.3.2
     hooks:
       - id: autoflake
   #        args:
@@ -31,7 +31,7 @@ repos:
       - id: isort
         exclude: \.(po|pot|yml|yaml)$
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.12.0
+    rev: 26.1.0
     hooks:
       - id: black
         args: [--safe, --quiet]

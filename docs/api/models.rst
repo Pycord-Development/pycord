@@ -89,6 +89,16 @@ Messages
 .. autoclass:: Message()
     :members:
 
+.. attributetable:: MessageSnapshot
+
+.. autoclass:: MessageSnapshot()
+    :members:
+
+.. attributetable:: ForwardedMessage
+
+.. autoclass:: ForwardedMessage()
+    :members:
+
 .. attributetable:: DeletedReferencedMessage
 
 .. autoclass:: DeletedReferencedMessage()
@@ -702,6 +712,9 @@ Webhooks
 
 Collectibles
 ------------
+
+.. attributetable:: Collectibles
+.. autoclass:: Collectibles()
 
 .. attributetable:: Nameplate
 
