@@ -149,7 +149,7 @@ class RadioGroup(ModalItem):
     def options(self, value: list[RadioGroupOption]):
         if not isinstance(value, list):
             raise TypeError("options must be a list of RadioGroupOption")
-        if not (2 >= len(value) >= 10) and len(value) != 0:
+        if not (2 <= len(value) <= 10) and len(value) != 0:
             raise ValueError("you must provide between 2 and 10 options.")
         if not all(isinstance(obj, RadioGroupOption) for obj in value):
             raise TypeError("all list items must subclass RadioGroupOption")
