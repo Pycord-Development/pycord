@@ -223,7 +223,7 @@ class VoiceWebSocket(DiscordWebSocket):
                     await state.execute_dave_transition(data["transition_id"])
                 else:
                     if data["protocol_version"] == 0 and state.dave_session:
-                        state.dave_session.set_passthrough_mode(True, 120)
+                        state.dave_session.set_passthrough_mode(True, 10)
                     await self.send_dave_transition_ready(transition_id)
             elif op == OpCodes.dave_execute_transition:
                 _log.info(
@@ -262,7 +262,9 @@ class VoiceWebSocket(DiscordWebSocket):
             return
 
         if op == OpCodes.mls_external_sender_package:
+            _log.debug("Received MLS External Sender Package, applying to DAVE session")
             state.dave_session.set_external_sender(msg[3:])
+            _log.debug("Applied MLS External Sender Package, user IDs available: %s", state.dave_session.get_user_ids())
         elif op == OpCodes.mls_proposals:
             op_type = msg[3]
             result = state.dave_session.process_proposals(

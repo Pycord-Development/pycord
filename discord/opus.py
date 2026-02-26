@@ -643,6 +643,7 @@ class PacketDecoder:
                 return packets[0]
             return
         elif not packet:
+            _log.debug("Making fake packet")
             packet = self._make_fakepacket()
         return packet
 
@@ -652,6 +653,7 @@ class PacketDecoder:
         return FakePacket(self.ssrc, seq, ts)
 
     def _process_packet(self, packet: Packet) -> VoiceData:
+        _log.debug("Processing packet %s", packet)
         from discord.object import Object
         from discord.voice import VoiceData
 
@@ -688,6 +690,8 @@ class PacketDecoder:
         dave: davey.DaveSession | None = self.sink.client._connection.dave_session
         in_dave = dave is not None
 
+        _log.debug("Decrypting packet for user %s (DAVE enabled: %s). Has decrypted data?: %s", user_id, in_dave, packet.decrypted_data is not None)
+
         # personally, the best variable
         other_code = True
 
@@ -711,6 +715,7 @@ class PacketDecoder:
                 pcm = self._decoder.decode(None, fec=False)
 
         if user_id is not None and in_dave and dave.can_passthrough(user_id):
+            _log.debug("User ID %s can passthrough, decrypting with DAVE", user_id)
             pcm = dave.decrypt(user_id, davey.MediaType.audio, pcm)
 
         return packet, pcm

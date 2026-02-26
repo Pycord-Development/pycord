@@ -162,26 +162,32 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def session_id(self) -> str | None:
+        """The session ID of the current voice call."""
         return self._connection.session_id
 
     @property
     def token(self) -> str | None:
+        """The token of the voice connection. You should not share this."""
         return self._connection.token
 
     @property
     def endpoint(self) -> str | None:
+        """The endpoint where the client is connected."""
         return self._connection.endpoint
 
     @property
     def ssrc(self) -> int:
+        """The SSRC of the current user in the voice call."""
         return self._connection.ssrc
 
     @property
     def mode(self) -> SupportedModes:
+        """The encryption / decryption mode the voice client is currently using."""
         return self._connection.mode
 
     @property
     def secret_key(self) -> list[int]:
+        """Returns the secret key of the current connected voice call."""
         return self._connection.secret_key
 
     @property
@@ -190,7 +196,13 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def timeout(self) -> float:
+        """The amount of ms the client waits before killing connect attempts."""
         return self._connection.timeout
+
+    def is_dave_connection(self) -> bool:
+        """Whether the voice client is connected to a DAVE call."""
+        session = self._connection.dave_session
+        return session is not None
 
     def checked_add(self, attr: str, value: int, limit: int) -> None:
         val = getattr(self, attr)
@@ -730,8 +742,7 @@ class VoiceClient(VoiceProtocol):
                 "'sync_tart' parameter is deprecated since 2.7 and will be removed in 3.0"
             )
 
-        self._reader = AudioReader(sink, self, after=callback)
-        self._reader.start()
+        self._reader = AudioReader(sink, self, after=callback, start=True)
 
     def stop_recording(self) -> None:
         """Stops the recording of the provided ``sink``, or all recording sinks.

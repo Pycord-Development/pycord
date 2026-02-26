@@ -148,25 +148,39 @@ class RTPPacket(Packet):
         if self._rtpsize:
             data = self.header[-4:] + data
 
+        if len(data) < 4:
+            return 0
+
         profile, length = struct.unpack_from(">2sH", data)
+        total_ext_length = length * 4
 
         if profile == self._ext_magic:
             self._parse_bede_header(data, length)
 
-        values = struct.unpack(">%sI" % length, data[4 : 4 + length * 4])
-        self.extension = self._ext_header(profile, length, values)
+        if len(data) >= 4 + total_ext_length:
+            try:
+                values = struct.unpack(">%sI" % length, data[4 : 4 + total_ext_length])
+                self.extension = self._ext_header(profile, length, values)
+            except struct.error:
+                self.extension = self._ext_header(profile, 0, [])
 
-        offset = 4 + length * 4
+        offset = 4 + total_ext_length
+
         if self._rtpsize:
             offset -= 4
 
-        return offset
+        return max(0, min(offset, len(data)))
 
     def _parse_bede_header(self, data: bytes, length: int) -> None:
         offset = 4
         n = 0
 
+        max_bytes = length * 4 + 4
+
         while n < length:
+            if offset >= len(data) or offset >= max_bytes:
+                break
+
             next_byte = data[offset : offset + 1]
 
             if next_byte == b"\x00":

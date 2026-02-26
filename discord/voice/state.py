@@ -285,6 +285,10 @@ class VoiceConnectionState:
         return self.client._id_to_ssrc
 
     @property
+    def ssrc_user_map(self) -> dict[int, int]:
+        return dict(zip(self.user_ssrc_map.values(), self.user_ssrc_map.keys()))
+
+    @property
     def max_dave_proto_version(self) -> int:
         return davey.DAVE_PROTOCOL_VERSION
 

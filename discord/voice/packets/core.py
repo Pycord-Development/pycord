@@ -55,6 +55,9 @@ class Packet:
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__}> data={len(self.data)} bytes>"
 
+    def __bool__(self) -> bool:
+        return bool(self.data)
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented

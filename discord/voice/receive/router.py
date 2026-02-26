@@ -217,7 +217,7 @@ class SinkEventRouter(threading.Thread):
         except Exception as exc:
             _log.exception("Error in sink event router", exc_info=exc)
             self.reader.error = exc
-            self.reader.client.stop_listening()
+            self.reader.client.stop_recording()
 
     def _do_run(self) -> None:
         while not self._end_thread.is_set():

@@ -22,18 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations
-
-import io
-from typing import TYPE_CHECKING
-
-from .core import Sink
-
-if TYPE_CHECKING:
-    from discord import abc
-    from discord.voice import VoiceData
-
-__all__ = ("PCMSink",)
+from .core import Filters, Sink, default_filters
 
 
 class PCMSink(Sink):
@@ -42,10 +31,15 @@ class PCMSink(Sink):
     .. versionadded:: 2.0
     """
 
-    def __init__(self) -> None:
-        super().__init__(dest=None)
+    def __init__(self, *, filters=None):
+        if filters is None:
+            filters = default_filters
+        self.filters = filters
+        Filters.__init__(self, **self.filters)
 
-        self.buffer: io.BytesIO = io.BytesIO()
+        self.encoding = "pcm"
+        self.vc = None
+        self.audio_data = {}
 
-    def write(self, user: abc.User | None, data: VoiceData) -> None:
-        self.buffer.write(data.pcm)
+    def format_audio(self, audio):
+        return
