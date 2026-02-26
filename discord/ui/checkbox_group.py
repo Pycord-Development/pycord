@@ -96,7 +96,7 @@ class CheckboxGroup(ModalItem):
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
         if not isinstance(required, bool):
-            raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
+            raise TypeError(f"required must be bool not {required.__class__.__name__}")
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._selected_values: list[str] | None = None
 
@@ -154,7 +154,7 @@ class CheckboxGroup(ModalItem):
     @min_values.setter
     def min_values(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"min_values must be None or int not {value.__class__.__name__}")  # type: ignore
+            raise TypeError(f"min_values must be None or int not {value.__class__.__name__}")
         if value and (value < 0 or value > 10):
             raise ValueError("min_values must be between 0 and 10")
         self.underlying.min_values = value
@@ -167,7 +167,7 @@ class CheckboxGroup(ModalItem):
     @max_values.setter
     def max_values(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"max_values must be None or int not {value.__class__.__name__}")  # type: ignore
+            raise TypeError(f"max_values must be None or int not {value.__class__.__name__}")
         if value and (value < 1 or value > 10):
             raise ValueError("max_values must be between 1 and 10")
         self.underlying.max_values = value
@@ -180,7 +180,7 @@ class CheckboxGroup(ModalItem):
     @required.setter
     def required(self, value: bool):
         if not isinstance(value, bool):
-            raise TypeError(f"required must be bool, not {value.__class__.__name__}")  # type: ignore
+            raise TypeError(f"required must be bool, not {value.__class__.__name__}")
         self.underlying.required = bool(value)
 
     @property
