@@ -1232,7 +1232,9 @@ class ViewStore:
     def get_message_view(self, message_id: int) -> BaseView | None:
         return self._synced_message_views.get(message_id)
 
-    def dispatch(self, component_type: int, custom_id: str, interaction: Interaction) -> None:
+    def dispatch(
+        self, component_type: int, custom_id: str, interaction: Interaction
+    ) -> None:
         self.__verify_integrity()
         message_id: int | None = interaction.message and interaction.message.id
         key = (component_type, message_id, custom_id)
@@ -1255,7 +1257,9 @@ class ViewStore:
     def remove_message_tracking(self, message_id: int) -> BaseView | None:
         return self._synced_message_views.pop(message_id, None)
 
-    def update_from_message(self, message_id: int, components: list[ComponentPayload]) -> None:
+    def update_from_message(
+        self, message_id: int, components: list[ComponentPayload]
+    ) -> None:
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
         components = [_component_factory(d, state=self._state) for d in components]

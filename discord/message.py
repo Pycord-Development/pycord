@@ -60,8 +60,8 @@ from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
-from .utils import MISSING, escape_mentions, find, warn_deprecated
 from .ui.view import DesignerView
+from .utils import MISSING, escape_mentions, find, warn_deprecated
 
 if TYPE_CHECKING:
     from .abc import (
