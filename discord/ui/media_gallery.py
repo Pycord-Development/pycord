@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypeVar
@@ -5,7 +29,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import MediaGalleryItem
 from ..enums import ComponentType
-from .item import Item
+from .item import ViewItem
 
 __all__ = ("MediaGallery",)
 
@@ -13,24 +37,29 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 M = TypeVar("M", bound="MediaGallery")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class MediaGallery(Item[V]):
+class MediaGallery(ViewItem[V]):
     """Represents a UI Media Gallery. Galleries may contain up to 10 :class:`MediaGalleryItem` objects.
 
     .. versionadded:: 2.7
 
     Parameters
     ----------
-    *items: :class:`MediaGalleryItem`
+    *items: :class:`~discord.MediaGalleryItem`
         The initial items contained in this gallery, up to 10.
     id: Optional[:class:`int`]
         The gallery's ID.
+
+    Attributes
+    ----------
+    items: List[:class:`~discord.MediaGalleryItem`]
+        The list of media items in this gallery.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -41,13 +70,32 @@ class MediaGallery(Item[V]):
     def __init__(self, *items: MediaGalleryItem, id: int | None = None):
         super().__init__()
 
-        self._underlying = MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery, id=id, items=[i for i in items]
+        self._underlying = self._generate_underlying(id=id, items=items)
+
+    def _generate_underlying(
+        self, id: int | None = None, items: list[MediaGalleryItem] | None = None
+    ) -> MediaGalleryComponent:
+        super()._generate_underlying(MediaGalleryComponent)
+        return MediaGalleryComponent._raw_construct(
+            type=ComponentType.media_gallery,
+            id=id or self.id,
+            items=[i for i in items] if items else [i for i in self.items or []],
         )
 
     @property
-    def items(self):
-        return self._underlying.items
+    def items(self) -> list[MediaGalleryItem]:
+        """The list of media items in this gallery."""
+        return self.underlying.items
+
+    @items.setter
+    def items(self, value: list[MediaGalleryItem]) -> None:
+        if len(value) > 10:
+            raise ValueError("may not set more than 10 items in a gallery.")
+
+        if not all(isinstance(i, MediaGalleryItem) for i in value):
+            raise TypeError(f"items must be a list of MediaGalleryItem.")
+
+        self.underlying.items = value
 
     def append_item(self, item: MediaGalleryItem) -> Self:
         """Adds a :attr:`MediaGalleryItem` to the gallery.
@@ -66,12 +114,12 @@ class MediaGallery(Item[V]):
         """
 
         if len(self.items) >= 10:
-            raise ValueError("maximum number of children exceeded")
+            raise ValueError("maximum number of items exceeded")
 
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
 
-        self._underlying.items.append(item)
+        self.underlying.items.append(item)
         return self
 
     def add_item(
@@ -80,7 +128,7 @@ class MediaGallery(Item[V]):
         *,
         description: str = None,
         spoiler: bool = False,
-    ) -> None:
+    ) -> Self:
         """Adds a new media item to the gallery.
 
         Parameters
@@ -105,20 +153,24 @@ class MediaGallery(Item[V]):
 
         return self.append_item(item)
 
-    @Item.view.setter
-    def view(self, value):
-        self._view = value
+    def remove_item(self, index: int) -> Self:
+        """Removes an item from the gallery.
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
+        Parameters
+        ----------
+        index: :class:`int`
+            The index of the item to remove from the gallery.
+        """
 
-    @property
-    def width(self) -> int:
-        return 5
+        try:
+            self.items.pop(index)
+        except IndexError:
+            pass
+        return self
 
     def to_component_dict(self) -> MediaGalleryComponentPayload:
-        return self._underlying.to_dict()
+        self._underlying = self._generate_underlying()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[M], component: MediaGalleryComponent) -> M:

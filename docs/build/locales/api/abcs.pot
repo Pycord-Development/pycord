@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-02 04:28+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,6 +296,7 @@ msgid "Returns the channel-specific overwrites for a member or a role."
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:0
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:0
 #: ../../api/abcs.rst:0
 #: 3b20d94d071448afb0cbcba6c02e4d62
 #: a397ed5dee4e403b968a341016bfaff6
@@ -306,7 +307,8 @@ msgstr ""
 #: ce1db15f4b774f6eb4047d5e0dc10eb7
 #: d0147bebe9a04d399c13c8a22b7256aa
 #: f599952a5df34d498f5b7113811451b4
-#: 60a67e189f30413bb931557ae0d677e5
+#: f599952a5df34d498f5b7113811451b4
+#: f599952a5df34d498f5b7113811451b4
 msgid "Parameters"
 msgstr ""
 
@@ -323,9 +325,8 @@ msgstr ""
 #: 8101933b7aca44b491e77ce2b88e718e
 #: 65b08451ad3a43d093e03f3f5e7a55c6
 #: ef49855ea26e49d18e9c5f14cd4d5a2b
-#: 0becae8c7a3343bfa74ee70d0bcf63fa
-#: 66f37f1f6ffc4532b5e7767864a5222b
-#: 9a9cab84cf46487ab80637c624490b36
+#: ef49855ea26e49d18e9c5f14cd4d5a2b
+#: ef49855ea26e49d18e9c5f14cd4d5a2b
 msgid "Returns"
 msgstr ""
 
@@ -335,6 +336,7 @@ msgid "The permission overwrites for this object."
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:0
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:0
 #: ../../api/abcs.rst:0
 #: bfd321f562164c8592b70e22b870cb1b
 #: 6012b511381143e9ab71be1e7d0e2ec6
@@ -346,10 +348,11 @@ msgstr ""
 #: 7bcc922e527d44179d22772f6c16984f
 #: 41f62d98c7404eabaebc4820fa6da3e6
 #: f458fbadecb448e38f1f3085d9edc8a6
-#: 65da9d2f771749c6870d5bc0e175f919
-#: 1da797b8dd684105852b0c651b5b1369
-#: 64aa35176668433594fbf6d7bb7a9b57
-#: 37f01e30f738487bbe95997ed7571b62
+#: f458fbadecb448e38f1f3085d9edc8a6
+#: f458fbadecb448e38f1f3085d9edc8a6
+#: f458fbadecb448e38f1f3085d9edc8a6
+#: f458fbadecb448e38f1f3085d9edc8a6
+#: f458fbadecb448e38f1f3085d9edc8a6
 msgid "Return type"
 msgstr ""
 
@@ -480,7 +483,6 @@ msgstr ""
 #: ../../../discord/abc.py:docstring of discord.abc.GuildChannel.move:1
 #: ../../../discord/abc.py:docstring of discord.abc.GuildChannel.set_permissions:1
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.fetch_message:1
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:1
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.send:1
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.trigger_typing:1
 #: 5516007d80a04f27b710e8e89440c211
@@ -490,9 +492,8 @@ msgstr ""
 #: 53afb5db720048589629b816ddb03782
 #: 68a664b278c7485c8e45e152218a4c8e
 #: fc11191cacf3443f913a5bd69d919a77
-#: db09d175309e4f788bdd7945b1d9f0c6
-#: 0c2bd17b81764ad9b602a4bcf46e7adb
-#: 00f7634217064d6295a6924fadd26f6d
+#: fc11191cacf3443f913a5bd69d919a77
+#: fc11191cacf3443f913a5bd69d919a77
 msgid "|coro|"
 msgstr ""
 
@@ -512,6 +513,7 @@ msgid "The reason for deleting this channel. Shows up on the audit log."
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:0
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:0
 #: ../../api/abcs.rst:0
 #: 72d120a0412a4abc8b158e77726150f2
 #: f18991acfb0a458899f3d2977c2c26ef
@@ -521,9 +523,9 @@ msgstr ""
 #: 0e8239ac7ddc4e048eb60772728e419d
 #: c4357f7a3367410786087828206f5204
 #: bc1f6f8dfabf4e2bbd3ad10f31bd169c
-#: 5448d7297cf24ec3b2d30012a69f357a
-#: c5942183ac1b422d874ef5456324b188
-#: 989d13fe26cf462bafcec9e32b983161
+#: bc1f6f8dfabf4e2bbd3ad10f31bd169c
+#: bc1f6f8dfabf4e2bbd3ad10f31bd169c
+#: bc1f6f8dfabf4e2bbd3ad10f31bd169c
 msgid "Raises"
 msgstr ""
 
@@ -583,8 +585,10 @@ msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.GuildChannel.set_permissions:25
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:39
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:26
 #: b3123c1220764f4a8b84f628beded5d3
 #: 1c3537f7b30748c58ac9d43193c9f927
+#: f599952a5df34d498f5b7113811451b4
 msgid "Examples"
 msgstr ""
 
@@ -911,7 +915,9 @@ msgid "Returns an :class:`~discord.AsyncIterator` that enables receiving the des
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:3
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:3
 #: db7fe24b56174ba88b9125364a39bcef
+#: 26f39c2265e84ac1853fb843b86d9989
 msgid "You must have :attr:`~discord.Permissions.read_message_history` permissions to use this."
 msgstr ""
 
@@ -941,7 +947,9 @@ msgid "If set to ``True``, return messages in oldest->newest order. Defaults to 
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:0
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:0
 #: 330775df4db2489d90277342ad6022c7
+#: 04df3129fa844277b44637ef7a7aa9d3
 msgid "Yields"
 msgstr ""
 
@@ -966,17 +974,23 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.H
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:40
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:27
 #: cc41fde924a646b2a66d6e1950f15cde
+#: ce174e50840e41c6baa1a488719a67d8
 msgid "Usage ::"
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:47
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:34
 #: 8fe09bfbadaa4e0d9f16f3d6de860f92
+#: b08a62da8cfd45988c75048d2594eeca
 msgid "Flattening into a list: ::"
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.history:52
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:39
 #: 62bb3065f7c048abb84b05680ea83ed7
+#: 0e01e3e75df74c6abecda75e54a0c410
 msgid "All parameters are optional."
 msgstr ""
 
@@ -987,17 +1001,22 @@ msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:3
 #: 1ce571c393ad4909a237f0df41acf5ac
-msgid "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgid "This is useful for denoting long computations in your bot."
 msgstr ""
 
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:9
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:7
 #: 6d2c4668d8fc4cfda30eccbf8458acbf
 msgid "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
 msgstr ""
 
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:12
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:10
 #: 05520cdec2f14434a84fe4504e8ae4e3
 msgid "Example Usage: ::"
+msgstr ""
+
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.typing:19
+#: 1ce571c393ad4909a237f0df41acf5ac
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.send:3
@@ -1153,7 +1172,7 @@ msgstr ""
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.fetch_message:10
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.send:100
 #: 999c449e088140378a9aca3429066337
-#: b2c842a4fe6f435fafe3c2b2a1e47515
+#: 999c449e088140378a9aca3429066337
 msgid ":class:`~discord.Message`"
 msgstr ""
 
@@ -1212,29 +1231,44 @@ msgstr ""
 msgid "Retrieving the message failed."
 msgstr ""
 
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:3
-#: 4bbececd17ce4733aa89e7a128cc27cb
-msgid "Retrieves all messages that are currently pinned in the channel."
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:1
+#: 10f02bd60fa14430b8038069410fa366
+msgid "Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages."
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:7
-#: 19f6cad4e0a748608bac294104790fb3
-msgid "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
+#: 5d56d46473744e128e5a674e9d3c8dcc
+msgid "Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead."
 msgstr ""
 
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:11
-#: 08f13fe21c66434ba1000150fb780040
-msgid "The messages that are currently pinned."
-msgstr ""
-
-#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:12
-#: e2d50204039c4ebbb8cb5794d26a930b
-msgid "List[:class:`~discord.Message`]"
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:10
+#: 0320dba3d13944dfa8a138f76c785d5c
+msgid "The number of pinned messages to retrieve. If ``None``, retrieves every pinned message in the channel."
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:14
+#: b1cdb3aa825f4be2b41cb15211af9758
+msgid "Retrieve messages pinned before this datetime. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr ""
+
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:19
+#: 70f06690476641b4908fe5c58523a0ec
+msgid ":class:`~discord.MessagePin` -- The pinned message."
+msgstr ""
+
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:21
+#: 4da989d152b844d4aff41f6835dda941
+msgid "You do not have permissions to get pinned messages."
+msgstr ""
+
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:22
 #: 4cfb764c52fa4d2da0b34a29ae460acb
-msgid "Retrieving the pinned messages failed."
+msgid "The request to get pinned messages failed."
+msgstr ""
+
+#: ../../../discord/abc.py:docstring of discord.abc.Messageable.pins:23
+#: 1ce571c393ad4909a237f0df41acf5ac
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MessagePinIterator\\``"
 msgstr ""
 
 #: ../../../discord/abc.py:docstring of discord.abc.Messageable.can_send:1

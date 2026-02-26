@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/audit_logs.rst:6 c15e7cd810f943f28c384477750f4f15
 msgid "Audit Log Data"
@@ -80,18 +80,19 @@ msgstr ""
 #: 9167517e1b4440e488acc02f4d53b6dd 93fafdc3767245c1b52628509caf0af2
 #: 99df7c68d5f24841a158b287d5cc41df 9e1f7ebe763c4148acace5eaffee8b7d
 #: 9edb5cae872e4dd3877591d5a7001b92 a5e79d2bf9b0440abeb92e949a5878a6
-#: ae9ec0bda90b41c1804663b15d03ff46 b78a900781d64dfb8728cde0bc78ff60
-#: c3d2889d125c481ebd191ec6a179c253 c49d2a0985e145e7a383f0123dc1ff52
-#: c57b847ed99d48408e23d66e88a31c68 c60356036ca745f4b40fed50de3b3474
-#: cbac2288ff274b719bdcf57f8b9661fb cdbfcba6d6cb422084edcdfc438027f0
-#: ce2b8b2a277d418c8ffd666502e64697 d2a278e08dde4150b5dcd92ddb321dcf
-#: d4d94dd92843423db8465de85409e5bf dd73304f0e1a477799a52784017c8a51
-#: discord.audit_logs.AuditLogEntry ea85bad4af264314aa2c7ec6e16d1e53
-#: ed7384c9d8d6407eb8b0b145cd1b0a43 f1b22b933ffd4502ae08190e61ab1dd3
-#: f4b0051464374dffbab9e489460a9e4a f6dc9c09512e4f42875d84f023641208
-#: f719b0f52c4349f7a1114e8c16abd49e f7a45a775bde4406bea1e457c7060dea
-#: f840f1761b5a4a508ba57b2113a897a9 f8c4ba816552415482b1c2d63e8f4a14
-#: f93ebef541414ae4a422ba3257083910 fb0c7fd0eed34636a9a0c40ae5cc04c5 of
+#: ae9ec0bda90b41c1804663b15d03ff46 b2ffaa90169249a69585e235c7217414
+#: b78a900781d64dfb8728cde0bc78ff60 c3d2889d125c481ebd191ec6a179c253
+#: c49d2a0985e145e7a383f0123dc1ff52 c57b847ed99d48408e23d66e88a31c68
+#: c60356036ca745f4b40fed50de3b3474 cbac2288ff274b719bdcf57f8b9661fb
+#: cdbfcba6d6cb422084edcdfc438027f0 ce2b8b2a277d418c8ffd666502e64697
+#: d2a278e08dde4150b5dcd92ddb321dcf d4d94dd92843423db8465de85409e5bf
+#: dd73304f0e1a477799a52784017c8a51 discord.audit_logs.AuditLogEntry
+#: ea85bad4af264314aa2c7ec6e16d1e53 ed7384c9d8d6407eb8b0b145cd1b0a43
+#: f1b22b933ffd4502ae08190e61ab1dd3 f4b0051464374dffbab9e489460a9e4a
+#: f6dc9c09512e4f42875d84f023641208 f719b0f52c4349f7a1114e8c16abd49e
+#: f7a45a775bde4406bea1e457c7060dea f840f1761b5a4a508ba57b2113a897a9
+#: f8c4ba816552415482b1c2d63e8f4a14 f93ebef541414ae4a422ba3257083910
+#: fb0c7fd0eed34636a9a0c40ae5cc04c5 of
 msgid "type"
 msgstr ""
 
@@ -162,28 +163,23 @@ msgstr ""
 msgid "Parameters"
 msgstr ""
 
-#: ../../docstring 35c34734a85b4772ab44cafcdb0c1487
-#: discord.AuditLogEntry.created_at:1 of
+#: 35c34734a85b4772ab44cafcdb0c1487 discord.AuditLogEntry.created_at:1 of
 msgid "Returns the entry's creation time in UTC."
 msgstr ""
 
-#: ../../docstring 42a54accd66e4774b590c0e2c23cef74
-#: discord.AuditLogEntry.category:1 of
+#: 42a54accd66e4774b590c0e2c23cef74 discord.AuditLogEntry.category:1 of
 msgid "The category of the action, if applicable."
 msgstr ""
 
-#: ../../docstring 3f099394b54d4de38f2c30f64db98003
-#: discord.AuditLogEntry.changes:1 of
+#: 3f099394b54d4de38f2c30f64db98003 discord.AuditLogEntry.changes:1 of
 msgid "The list of changes this entry has."
 msgstr ""
 
-#: ../../docstring 413918f132a3422e93b9002da753ffe3
-#: discord.AuditLogEntry.before:1 of
+#: 413918f132a3422e93b9002da753ffe3 discord.AuditLogEntry.before:1 of
 msgid "The target's prior state."
 msgstr ""
 
-#: ../../docstring 3a963ab211594298b7dce384b294f823
-#: discord.AuditLogEntry.after:1 of
+#: 3a963ab211594298b7dce384b294f823 discord.AuditLogEntry.after:1 of
 msgid "The target's subsequent state."
 msgstr ""
 
@@ -800,5 +796,13 @@ msgstr ""
 
 #: ../../api/audit_logs.rst:529 1028bd2d6f464ae48a24408209380e30
 msgid "The cover image of a :class:`ScheduledEvent`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:535 49b6724c13de4f3ba45acb3692dffdf3
+msgid "Until when a :class:`Member` will be timed out"
+msgstr ""
+
+#: ../../api/audit_logs.rst:537 bd2864c09d1c49c1998460b11c807125
+msgid ":class:`datetime.datetime` | :data:`None`"
 msgstr ""
 

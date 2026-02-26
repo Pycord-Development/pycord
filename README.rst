@@ -32,7 +32,7 @@ Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for D
 Note
 ----
 
-Pycord supports Python ``3.9`` - ``3.13``
+Pycord supports Python ``3.10`` - ``3.13``
 
 Key Features
 ------------
@@ -45,7 +45,7 @@ Key Features
 Installing
 ----------
 
-**Python 3.9 or higher is required**
+**Python 3.10 or higher is required**
 
 To install the library without full voice support, run the following command:
 

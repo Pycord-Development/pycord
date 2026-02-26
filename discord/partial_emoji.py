@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
@@ -245,8 +245,18 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         if self.is_unicode_emoji():
             return ""
 
-        fmt = "gif" if self.animated else "png"
-        return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
+        url = f"{Asset.BASE}/emojis/{self.id}.{self.extension}"
+        if self.animated:
+            url += "?animated=true"
+        return url
+
+    @property
+    def extension(self) -> Literal["webp", "png"]:
+        """Return the file extension of the emoji.
+
+        .. versionadded:: 2.7.1
+        """
+        return "webp" if self.animated else "png"
 
     async def read(self) -> bytes:
         if self.is_unicode_emoji():

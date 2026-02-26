@@ -207,7 +207,7 @@ class AutoModTriggerMetadata:
     +-----------------------------+--------------------------------------------------------------------------------+
 
     Each attribute has limits that may change based on the trigger type.
-    See `here <https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata-field-limits>`_
+    See `here <https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata-field-limits>`__
     for information on attribute limits.
 
     .. versionadded:: 2.0

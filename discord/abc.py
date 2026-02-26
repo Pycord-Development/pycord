@@ -55,7 +55,7 @@ from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
-from .voice import VoiceClient, VoiceProtocol
+from .utils import warn_deprecated
 
 __all__ = (
     "Snowflake",
@@ -66,8 +66,6 @@ __all__ = (
     "Connectable",
     "Mentionable",
 )
-
-T = TypeVar("T", bound=VoiceProtocol)
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -95,7 +93,7 @@ if TYPE_CHECKING:
     from .types.channel import GuildChannel as GuildChannelPayload
     from .types.channel import OverwriteType
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
-    from .ui.view import View
+    from .ui.view import BaseView
     from .user import ClientUser
 
     PartialMessageableChannel = Union[
@@ -103,6 +101,10 @@ if TYPE_CHECKING:
     ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
+
+    from .voice import VoiceClient, VoiceProtocol
+
+    T = TypeVar("T", bound=VoiceProtocol)
 
 MISSING = utils.MISSING
 
@@ -235,7 +237,7 @@ class User(Snowflake, Protocol):
     name: str
     discriminator: str
     global_name: str | None
-    avatar: Asset
+    avatar: Asset | None
     bot: bool
 
     @property
@@ -963,7 +965,7 @@ class GuildChannel:
         if overwrite is None:
             await http.delete_channel_permissions(self.id, target.id, reason=reason)
         elif isinstance(overwrite, PermissionOverwrite):
-            (allow, deny) = overwrite.pair()
+            allow, deny = overwrite.pair()
             await http.edit_channel_permissions(
                 self.id, target.id, allow.value, deny.value, perm_type, reason=reason
             )
@@ -1355,9 +1357,10 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1376,9 +1379,10 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1397,9 +1401,10 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1418,9 +1423,10 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
+        suppress_embeds: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
 
@@ -1443,6 +1449,7 @@ class Messageable:
         view=None,
         poll=None,
         suppress=None,
+        suppress_embeds=None,
         silent=None,
     ):
         """|coro|
@@ -1509,7 +1516,7 @@ class Messageable:
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
 
             .. versionadded:: 1.6
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             A Discord UI View to add to the message.
         embeds: List[:class:`~discord.Embed`]
             A list of embeds to upload. Must be a maximum of 10.
@@ -1521,6 +1528,12 @@ class Messageable:
             .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
+
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
         silent: :class:`bool`
             Whether to suppress push and desktop notifications for the message.
 
@@ -1568,8 +1581,13 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+
         flags = MessageFlags(
-            suppress_embeds=bool(suppress),
+            suppress_embeds=bool(suppress_embeds),
             suppress_notifications=bool(silent),
         )
 
@@ -1611,7 +1629,7 @@ class Messageable:
         if view:
             if not hasattr(view, "__discord_ui_view__"):
                 raise InvalidArgument(
-                    f"view parameter must be View not {view.__class__!r}"
+                    f"view parameter must be BaseView not {view.__class__!r}"
                 )
 
             components = view.to_components()
@@ -1979,7 +1997,7 @@ class Connectable(Protocol):
         *,
         timeout: float = 60.0,
         reconnect: bool = True,
-        cls: Callable[[Client, Connectable], T] = VoiceClient,
+        cls: Callable[[Client, Connectable], T] = MISSING,
     ) -> T:
         """|coro|
 
@@ -2014,6 +2032,15 @@ class Connectable(Protocol):
         ~discord.opus.OpusNotLoaded
             The opus library has not been loaded.
         """
+
+        # import directly from _types so if the user does not have davey
+        # it won't error here
+        from .voice._types import VoiceProtocol
+
+        if cls is MISSING:
+            # if the user passes no cls, then actually import VoiceClient
+            from .voice import VoiceClient
+            cls = VoiceClient  # pyright: ignore[reportAssignmentType]
 
         key_id, _ = self._get_voice_client_key()
         state = self._state

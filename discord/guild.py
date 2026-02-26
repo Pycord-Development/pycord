@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import copy
+import datetime
 import unicodedata
 from typing import (
     TYPE_CHECKING,
@@ -36,9 +37,12 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    TypeVar,
     Union,
     overload,
 )
+
+from typing_extensions import override
 
 from . import abc, utils
 from .asset import Asset
@@ -65,9 +69,10 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .errors import ClientException, InvalidArgument, InvalidData
+from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
 from .flags import SystemChannelFlags
+from .incidents import IncidentsData
 from .integrations import Integration, _integration_factory
 from .invite import Invite
 from .iterators import (
@@ -88,10 +93,11 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
+from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
 
 MISSING = utils.MISSING
 
@@ -112,7 +118,11 @@ if TYPE_CHECKING:
     from .template import Template
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
-    from .types.guild import GuildFeature, MFALevel
+    from .types.guild import (
+        GuildFeature,
+        MFALevel,
+    )
+    from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import VoiceState as GuildVoiceState
@@ -124,6 +134,8 @@ if TYPE_CHECKING:
         VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
     ]
     ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+
+T = TypeVar("T")
 
 
 class BanEntry(NamedTuple):
@@ -137,6 +149,81 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+class GuildRoleCounts(dict[int, int]):
+    """A dictionary subclass that maps role IDs to their member counts.
+
+    This class allows accessing member counts by either role ID (:class:`int`) or by
+    a Snowflake object (which has an ``.id`` attribute).
+
+    .. versionadded:: 2.7
+    """
+
+    @override
+    def __repr__(self):
+        return f"<GuildRoleCounts {super().__repr__()}>"
+
+    @override
+    def __getitem__(self, key: int | abc.Snowflake) -> int:
+        """Get the member count for a role.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+
+        Returns
+        -------
+        :class:`int`
+            The member count for the role.
+
+        Raises
+        ------
+        KeyError
+            The role ID was not found.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().__getitem__(key)
+
+    @override
+    def get(self, key: int | abc.Snowflake, default: T = None) -> int | T:
+        """Get the member count for a role, returning a default if not found.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+        default: Any
+            The value to return if the role ID is not found.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The member count for the role, or ``default`` if the role is not present.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().get(key, default)
+
+    @override
+    def __contains__(self, key: int | abc.Snowflake) -> bool:
+        """Check if a role ID or Snowflake object is in the counts.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+
+        Returns
+        -------
+        :class:`bool`
+            ``True`` if the role ID is present, ``False`` otherwise.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().__contains__(key)
 
 
 class Guild(Hashable):
@@ -244,6 +331,11 @@ class Guild(Hashable):
         with ``with_counts=True``.
 
         .. versionadded:: 2.0
+
+    incidents_data: Optional[:class:`IncidentsData`]
+        The incidents data for the guild.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -290,6 +382,7 @@ class Guild(Hashable):
         "approximate_member_count",
         "approximate_presence_count",
         "_sounds",
+        "incidents_data",
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
@@ -568,6 +661,13 @@ class Guild(Hashable):
         for sound in guild.get("soundboard_sounds", []):
             sound = SoundboardSound(state=state, http=state.http, data=sound)
             self._add_sound(sound)
+
+        incidents_payload = guild.get("incidents_data")
+        self.incidents_data: IncidentsData | None = (
+            IncidentsData(data=incidents_payload)
+            if incidents_payload is not None
+            else None
+        )
 
     def _add_sound(self, sound: SoundboardSound) -> None:
         self._sounds[sound.id] = sound
@@ -1027,6 +1127,49 @@ class Guild(Hashable):
         """
         return self._members.get(user_id)
 
+    async def get_or_fetch(
+        self: Guild,
+        object_type: type[_FETCHABLE],
+        object_id: int | None,
+        default: _D = None,
+    ) -> _FETCHABLE | _D | None:
+        """
+        Shortcut method to get data from this guild either by returning the cached version,
+        or if it does not exist, attempting to fetch it from the API.
+
+        Parameters
+        ----------
+        object_type: Type[:class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji`]
+            Type of object to fetch or get.
+
+        object_id: :class:`int` | :data:`None`
+            ID of the object to get. If :data:`None`, returns `default` if provided, otherwise :data:`None`.
+
+        default: Any | :data:`None`
+            The value to return instead of raising if fetching fails or if `object_id` is :data:`None`.
+
+        Returns
+        -------
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :data:`None`
+            The object if found, or `default` if provided when not found.
+
+        Raises
+        ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
+        """
+        try:
+            return await utils.get_or_fetch(
+                obj=self,
+                object_type=object_type,
+                object_id=object_id,
+                default=default,
+            )
+        except (HTTPException, ValueError, InvalidData):
+            return default
+
     @property
     def premium_subscribers(self) -> list[Member]:
         """A list of members who have "boosted" this guild."""
@@ -1055,6 +1198,44 @@ class Guild(Hashable):
             The role or ``None`` if not found.
         """
         return self._roles.get(role_id)
+
+    async def fetch_roles_member_counts(self) -> GuildRoleCounts:
+        """|coro|
+        Fetches a mapping of role IDs to their member counts for this guild.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        :class:`GuildRoleCounts`
+            A mapping of role IDs to their member counts. Can be accessed
+            with either role IDs (:class:`int`) or Snowflake objects (e.g., :class:`Role`).
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Fetching the role member counts failed.
+
+        Examples
+        --------
+
+        Getting member counts using role IDs:
+
+        .. code-block:: python3
+
+            counts = await guild.fetch_roles_member_counts()
+            member_count = counts[123456789]
+
+        Using a role object:
+
+        .. code-block:: python3
+
+            counts = await guild.fetch_roles_member_counts()
+            role = guild.get_role(123456789)
+            member_count = counts[role]
+        """
+        r = await self._state.http.get_roles_member_counts(self.id)
+        return GuildRoleCounts({int(role_id): count for role_id, count in r.items()})
 
     @property
     def default_role(self) -> Role:
@@ -1901,43 +2082,6 @@ class Guild(Hashable):
         """
         await self._state.http.leave_guild(self.id)
 
-    async def delete(self) -> None:
-        """|coro|
-
-        Deletes the guild. You must be the guild owner to delete the
-        guild.
-
-        Raises
-        ------
-        HTTPException
-            Deleting the guild failed.
-        Forbidden
-            You do not have permissions to delete the guild.
-        """
-        await self._state.http.delete_guild(self.id)
-
-    async def set_mfa_required(self, required: bool, *, reason: str = None) -> None:
-        """|coro|
-
-        Set whether it is required to have MFA enabled on your account
-        to perform moderation actions. You must be the guild owner to do this.
-
-        Parameters
-        ----------
-        required: :class:`bool`
-            Whether MFA should be required to perform moderation actions.
-        reason: :class:`str`
-            The reason to show up in the audit log.
-
-        Raises
-        ------
-        HTTPException
-            The operation failed.
-        Forbidden
-            You are not the owner of the guild.
-        """
-        await self._state.http.edit_guild_mfa(self.id, required, reason=reason)
-
     async def edit(
         self,
         *,
@@ -1950,7 +2094,6 @@ class Guild(Hashable):
         discovery_splash: bytes | None = MISSING,
         community: bool = MISSING,
         afk_channel: VoiceChannel | None = MISSING,
-        owner: Snowflake = MISSING,
         afk_timeout: int = MISSING,
         default_notifications: NotificationLevel = MISSING,
         verification_level: VerificationLevel = MISSING,
@@ -2014,9 +2157,6 @@ class Guild(Hashable):
             The new channel that is the AFK channel. Could be ``None`` for no AFK channel.
         afk_timeout: :class:`int`
             The number of seconds until someone is moved to the AFK channel.
-        owner: :class:`Member`
-            The new owner of the guild to transfer ownership to. Note that you must
-            be owner of the guild to do this.
         verification_level: :class:`VerificationLevel`
             The new verification level for the guild.
         default_notifications: :class:`NotificationLevel`
@@ -2059,8 +2199,7 @@ class Guild(Hashable):
             Editing the guild failed.
         InvalidArgument
             The image format passed in to ``icon`` is invalid. It must be
-            PNG or JPG. This is also raised if you are not the owner of the
-            guild and request an ownership transfer.
+            PNG or JPG.
 
         Returns
         --------
@@ -2136,14 +2275,6 @@ class Guild(Hashable):
                 fields["public_updates_channel_id"] = public_updates_channel
             else:
                 fields["public_updates_channel_id"] = public_updates_channel.id
-
-        if owner is not MISSING:
-            if self.owner_id != self._state.self_id:
-                raise InvalidArgument(
-                    "To transfer ownership you must be the owner of the guild."
-                )
-
-            fields["owner_id"] = owner.id
 
         if verification_level is not MISSING:
             if not isinstance(verification_level, VerificationLevel):
@@ -2997,6 +3128,26 @@ class Guild(Hashable):
             An error occurred deleting the sticker.
         """
         await self._state.http.delete_guild_sticker(self.id, sticker.id, reason)
+
+    def get_emoji(self, emoji_id: int, /) -> GuildEmoji | None:
+        """Returns an emoji with the given ID.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        emoji_id: int
+            The ID to get.
+
+        Returns
+        -------
+        Optional[:class:`Emoji`]
+            The returned Emoji or ``None`` if not found.
+        """
+        emoji = self._state.get_emoji(emoji_id)
+        if emoji and emoji.guild == self:
+            return emoji
+        return None
 
     async def fetch_emojis(self) -> list[GuildEmoji]:
         r"""|coro|
@@ -4404,6 +4555,52 @@ class Guild(Hashable):
 
         new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
         return Onboarding(data=new, guild=self)
+
+    async def modify_incident_actions(
+        self,
+        *,
+        invites_disabled_until: datetime.datetime | None = MISSING,
+        dms_disabled_until: datetime.datetime | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> IncidentsData:
+        """|coro|
+
+        Modify the guild's incident actions, controlling when invites or DMs
+        are re-enabled after being temporarily disabled. Requires
+        the :attr:`~Permissions.manage_guild` permission.
+
+        Parameters
+        ----------
+        invites_disabled_until: Optional[:class:`datetime.datetime`]
+            The ISO8601 timestamp indicating when invites will be enabled again,
+            or ``None`` to enable invites immediately.
+        dms_disabled_until: Optional[:class:`datetime.datetime`]
+            The ISO8601 timestamp indicating when DMs will be enabled again,
+            or ``None`` to enable DMs immediately.
+        reason: Optional[:class:`str`]
+            The reason for this action, used for the audit log.
+
+        Returns
+        -------
+        :class:`IncidentsData`
+            The updated incidents data for the guild.
+        """
+
+        fields: ModifyIncidentsPayload = {}
+        if invites_disabled_until is not MISSING:
+            fields["invites_disabled_until"] = (
+                invites_disabled_until and invites_disabled_until.isoformat()
+            )
+
+        if dms_disabled_until is not MISSING:
+            fields["dms_disabled_until"] = (
+                dms_disabled_until and dms_disabled_until.isoformat()
+            )
+
+        new = await self._state.http.modify_guild_incident_actions(
+            self.id, fields, reason=reason
+        )
+        return IncidentsData(data=new)
 
     async def delete_auto_moderation_rule(
         self,

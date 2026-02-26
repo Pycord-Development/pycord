@@ -81,6 +81,7 @@ class Attachment(TypedDict):
     waveform: NotRequired[str]
     flags: NotRequired[int]
     title: NotRequired[str]
+    ephemeral: NotRequired[bool]
 
 
 MessageActivityType = Literal[1, 2, 3, 5]

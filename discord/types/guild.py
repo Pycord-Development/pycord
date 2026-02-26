@@ -164,6 +164,7 @@ class Guild(_BaseGuildPreview):
     premium_tier: PremiumTier
     preferred_locale: str
     public_updates_channel_id: Snowflake | None
+    incidents_data: IncidentsData | None
 
 
 class InviteGuild(Guild, total=False):
@@ -197,3 +198,15 @@ class GuildMFAModify(TypedDict):
 class GuildBulkBan(TypedDict):
     banned_users: list[Snowflake]
     failed_users: list[Snowflake]
+
+
+class IncidentsData(TypedDict, total=False):
+    invites_disabled_until: str | None
+    dms_disabled_until: str | None
+    dm_spam_detected_at: str | None
+    raid_detected_at: str | None
+
+
+class ModifyIncidents(TypedDict, total=False):
+    invites_disabled_until: str | None
+    dms_disabled_until: str | None

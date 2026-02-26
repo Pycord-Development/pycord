@@ -33,15 +33,45 @@ Shortcut decorators
 Objects
 -------
 
+.. attributetable:: discord.ui.BaseView
+
+.. autoclass:: discord.ui.BaseView
+    :members:
+
 .. attributetable:: discord.ui.View
 
 .. autoclass:: discord.ui.View
     :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.DesignerView
+
+.. autoclass:: discord.ui.DesignerView
+    :members:
+    :inherited-members:
 
 .. attributetable:: discord.ui.Item
 
 .. autoclass:: discord.ui.Item
     :members:
+
+.. attributetable:: discord.ui.ViewItem
+
+.. autoclass:: discord.ui.ViewItem
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.ModalItem
+
+.. autoclass:: discord.ui.ModalItem
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.ActionRow
+
+.. autoclass:: discord.ui.ActionRow
+    :members:
+    :inherited-members:
 
 .. attributetable:: discord.ui.Button
 
@@ -54,6 +84,27 @@ Objects
 .. autoclass:: discord.ui.Select
     :members:
     :inherited-members:
+
+
+.. class:: discord.ui.StringSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.string_select`.
+
+.. class:: discord.ui.UserSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.user_select`.
+
+.. class:: discord.ui.RoleSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.role_select`.
+
+.. class:: discord.ui.MentionableSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.mentionable_select`.
+
+.. class:: discord.ui.ChannelSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.channel_select`.
 
 .. attributetable:: discord.ui.Section
 
@@ -97,14 +148,38 @@ Objects
     :members:
     :inherited-members:
 
+.. attributetable:: discord.ui.BaseModal
+
+.. autoclass:: discord.ui.BaseModal
+    :members:
+    :inherited-members:
+
 .. attributetable:: discord.ui.Modal
 
 .. autoclass:: discord.ui.Modal
     :members:
     :inherited-members:
 
+.. attributetable:: discord.ui.DesignerModal
+
+.. autoclass:: discord.ui.DesignerModal
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.Label
+
+.. autoclass:: discord.ui.Label
+    :members:
+    :inherited-members:
+
 .. attributetable:: discord.ui.InputText
 
 .. autoclass:: discord.ui.InputText
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.FileUpload
+
+.. autoclass:: discord.ui.FileUpload
     :members:
     :inherited-members:

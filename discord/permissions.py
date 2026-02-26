@@ -419,7 +419,7 @@ class Permissions(BaseFlags):
 
     @flag_value
     def mention_everyone(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel."""
+        """:class:`bool`: Returns ``True`` if a user's ``@everyone``, ``@here`` or role mentions will mention in the text channel."""
         return 1 << 17
 
     @flag_value
@@ -679,6 +679,14 @@ class Permissions(BaseFlags):
         .. versionadded:: 2.7
         """
         return 1 << 51
+
+    @flag_value
+    def bypass_slowmode(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can bypass slowmode.
+
+        .. versionadded:: 2.7
+        """
+        return 1 << 52
 
 
 PO = TypeVar("PO", bound="PermissionOverwrite")

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,6 +147,14 @@ msgstr ""
 #: e3455443ac954b88b181ebe074279d1a
 #: e3455443ac954b88b181ebe074279d1a
 #: e3455443ac954b88b181ebe074279d1a
+#: e8ae12f2522d48c8a4b8a09b9aa31134
+#: f2ffd70b9229453dac99ed7cf42cd9ea
+#: e2f0114001324fd88506ede59b9db004
+#: 58a07515a84a439a9d6b697521ba9834
+#: 2ba0802f3d1046c88a9d57d1263ab22e
+#: cda2a25c32904c0abab0b5e2bc4be102
+#: 307aa980f65741c38c969a23f6a1fb85
+#: 1bbd24a3b6cb4b9884783f93463da604
 msgid "Parameters"
 msgstr ""
 
@@ -234,6 +242,7 @@ msgstr ""
 #: ../../api/events.rst:1293
 #: ../../api/events.rst:1320
 #: ../../api/events.rst:1354
+#: ../../api/events.rst:1487
 #: 2c7f1cc4edff4bc29e8b8268e06aa93e
 #: 6214e4ff9d514cadbf5a0815af3cccaa
 #: 6214e4ff9d514cadbf5a0815af3cccaa
@@ -251,6 +260,7 @@ msgstr ""
 #: 6214e4ff9d514cadbf5a0815af3cccaa
 #: 6214e4ff9d514cadbf5a0815af3cccaa
 #: 6214e4ff9d514cadbf5a0815af3cccaa
+#: ce29818d211643cba28752cdddc25f2b
 msgid "The raw event payload data."
 msgstr ""
 
@@ -1945,4 +1955,90 @@ msgstr ""
 #: ../../api/events.rst:1414
 #: 1bb0b4ef346543ad92c14dd99a025211
 msgid "The raw voice channel status update payload."
+msgstr ""
+
+#: ../../api/events.rst:1418
+#: c5ebcdd01be24bca80d809bf0a7e2915
+msgid "Voice Channel Effects"
+msgstr ""
+
+#: ../../api/events.rst:1421
+#: 1a7a03f9bb3c44ccaee90c88f77d310e
+msgid "Called when a voice channel effect is sent."
+msgstr ""
+
+#: ../../api/events.rst:1425
+#: b35f7ab35765453eac00c5288f700c70
+msgid "The voice channel effect event."
+msgstr ""
+
+#: ../../api/events.rst:1429
+#: 087c37fe715c481d9992625654bed911
+msgid "Soundboard Sound"
+msgstr ""
+
+#: ../../api/events.rst:1432
+#: c1b5f866473f4cf9a431418cdbb76237
+msgid "Called when multiple guild soundboard sounds are updated at once and they were all already in the cache. This is called, for example, when a guild loses a boost level and some sounds become unavailable."
+msgstr ""
+
+#: ../../api/events.rst:1437
+#: 2bf6c6c8c74c41cf896f35e49fdca6a8
+msgid "The soundboard sounds prior to being updated."
+msgstr ""
+
+#: ../../api/events.rst:1439
+#: ../../api/events.rst:1449
+#: cb65228af34047429b6f616d58fc17a8
+#: b147f1dec98b4de6a10b33433cf49849
+msgid "The soundboard sounds after being updated."
+msgstr ""
+
+#: ../../api/events.rst:1444
+#: 882ccbec060743528aa081df467e839a
+msgid "Called when multiple guild soundboard sounds are updated at once. This is called, for example, when a guild loses a boost level and some sounds become unavailable."
+msgstr ""
+
+#: ../../api/events.rst:1454
+#: 8d2a83e156c84583a83c472c55bbc115
+msgid "Called when a soundboard sound is updated and it was already in the cache."
+msgstr ""
+
+#: ../../api/events.rst:1458
+#: 206c20e27285453ea5070757bcd4c429
+msgid "The soundboard sound prior to being updated."
+msgstr ""
+
+#: ../../api/events.rst:1460
+#: ../../api/events.rst:1469
+#: 5e89c982391849c19d0872ca5c3bc0b4
+#: 054bcd9bfd064dd0bd790bc45e9bcf5c
+msgid "The soundboard sound after being updated."
+msgstr ""
+
+#: ../../api/events.rst:1465
+#: 99259bcd473a4b5994d7eab926fa6f65
+msgid "Called when a soundboard sound is updated."
+msgstr ""
+
+#: ../../api/events.rst:1474
+#: ../../api/events.rst:1483
+#: 7f9bafd2f3004b749a6877da93187875
+#: 83254ab89f4e435b8414b354f808e35f
+msgid "Called when a soundboard sound is deleted."
+msgstr ""
+
+#: ../../api/events.rst:1478
+#: 0fddb9417b4543698ea11a1b3c524e3e
+msgid "The soundboard sound that was deleted."
+msgstr ""
+
+#: ../../api/events.rst:1492
+#: 05bcf36a1b1a418a8ddc67e337b3c888
+msgid "Called when a soundboard sound is created."
+msgstr ""
+
+#: ../../api/events.rst:1496
+#: 51065dc838234ff3ba3805c442730192
+msgid "The soundboard sound that was created."
 msgstr ""

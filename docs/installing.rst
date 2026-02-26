@@ -13,7 +13,7 @@ in creating applications that utilise the Discord API.
 Prerequisites
 -------------
 
-Pycord works with Python 3.9 or higher. Support for earlier versions of Python
+Pycord works with Python 3.10 or higher. Support for earlier versions of Python
 is not provided. Python 2.7 or lower is not supported. Python 3.8 or lower is not supported.
 
 
