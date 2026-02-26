@@ -154,7 +154,9 @@ class CheckboxGroup(ModalItem):
     @min_values.setter
     def min_values(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"min_values must be None or int not {value.__class__.__name__}")
+            raise TypeError(
+                f"min_values must be None or int not {value.__class__.__name__}"
+            )
         if value and (value < 0 or value > 10):
             raise ValueError("min_values must be between 0 and 10")
         self.underlying.min_values = value
@@ -167,7 +169,9 @@ class CheckboxGroup(ModalItem):
     @max_values.setter
     def max_values(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"max_values must be None or int not {value.__class__.__name__}")
+            raise TypeError(
+                f"max_values must be None or int not {value.__class__.__name__}"
+            )
         if value and (value < 1 or value > 10):
             raise ValueError("max_values must be between 1 and 10")
         self.underlying.max_values = value
