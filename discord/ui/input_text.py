@@ -146,7 +146,7 @@ class InputText(ModalItem):
         placeholder: str | None = None,
         min_length: int | None = None,
         max_length: int | None = None,
-        required: bool | None = True,
+        required: bool | None = None,
         value: str | None = None,
         id: int | None = None,
     ) -> InputTextComponent:
@@ -157,9 +157,9 @@ class InputText(ModalItem):
             custom_id=custom_id or self.custom_id,
             label=label or self.label,
             placeholder=placeholder or self.placeholder,
-            min_length=min_length or self.min_length,
-            max_length=max_length or self.max_length,
-            required=required or self.required,
+            min_length=min_length if min_length is not None else self.min_length,
+            max_length=max_length if max_length is not None else self.max_length,
+            required=required if required is not None else self.required,
             value=value or self.value,
             id=id or self.id,
         )
