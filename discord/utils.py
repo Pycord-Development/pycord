@@ -347,7 +347,7 @@ def warn_deprecated(
 
 
 @ext_deprecated(
-    "@deprecated is deprecated since version 2.8, consider using @warnings.deprecated instead."
+    "deprecated is deprecated since version 2.8, consider using warnings.deprecated instead."
 )
 def deprecated(
     instead: str | None = None,
