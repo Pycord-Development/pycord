@@ -40,7 +40,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
 - Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
   event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
-- Fixed the `discord.slash_command` and `ApplicationContext.respond` methods to
+- Fixed the `slash_command`, `message_command` and `user_command` decorators to
   explicitly list the accepted parameters, and have a return type.
   ([#3119](https://github.com/Pycord-Development/pycord/pull/3119))
 
