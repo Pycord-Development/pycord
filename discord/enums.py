@@ -667,7 +667,6 @@ class StickerFormatType(Enum):
             StickerFormatType.lottie: "json",
             StickerFormatType.gif: "gif",
         }
-        # TODO: Improve handling of unknown sticker format types if possible
         return lookup.get(self, "png")
 
 
