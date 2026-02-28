@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import TypedDict
 
+from .collectibles import AvatarDecoration, Collectibles
 from .snowflake import SnowflakeList
 from .user import User
 
@@ -50,6 +51,8 @@ class Member(PartialMember, total=False):
     permissions: str
     communication_disabled_until: str
     flags: int
+    collectibles: Collectibles
+    avatar_decoration_data: AvatarDecoration
 
 
 class _OptionalMemberWithUser(PartialMember, total=False):
@@ -58,6 +61,7 @@ class _OptionalMemberWithUser(PartialMember, total=False):
     premium_since: str
     pending: bool
     permissions: str
+    avatar_decoration_data: AvatarDecoration
 
 
 class MemberWithUser(_OptionalMemberWithUser):

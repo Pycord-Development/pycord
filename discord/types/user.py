@@ -27,6 +27,8 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
+from .collectibles import Collectibles
+from .primary_guild import PrimaryGuild
 from .snowflake import Snowflake
 
 
@@ -51,3 +53,5 @@ class User(PartialUser, total=False):
     flags: int
     premium_type: PremiumType
     public_flags: int
+    primary_guild: PrimaryGuild
+    collectibles: Collectibles

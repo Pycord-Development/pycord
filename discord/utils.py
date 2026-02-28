@@ -94,7 +94,6 @@ else:
 __all__ = (
     "parse_time",
     "warn_deprecated",
-    "deprecated",
     "oauth_url",
     "snowflake_time",
     "time_snowflake",
@@ -343,57 +342,6 @@ def warn_deprecated(
         message += f" See {reference} for more information."
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
-
-
-def deprecated(
-    instead: str | None = None,
-    since: str | None = None,
-    removed: str | None = None,
-    reference: str | None = None,
-    stacklevel: int = 3,
-    *,
-    use_qualname: bool = True,
-) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
-    """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
-    the decorated function is called.
-
-    Parameters
-    ----------
-    instead: Optional[:class:`str`]
-        A recommended alternative to the function.
-    since: Optional[:class:`str`]
-        The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
-        the patch version is optional.
-    removed: Optional[:class:`str`]
-        The version in which the function is planned to be removed. This should be in the format
-        ``major.minor(.patch)``, where the patch version is optional.
-    reference: Optional[:class:`str`]
-        A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
-        issue/PR.
-    stacklevel: :class:`int`
-        The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
-    use_qualname: :class:`bool`
-        Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of
-        the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__
-        will display as ``login``. Defaults to ``True``.
-    """
-
-    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
-        @functools.wraps(func)
-        def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
-            warn_deprecated(
-                name=func.__qualname__ if use_qualname else func.__name__,
-                instead=instead,
-                since=since,
-                removed=removed,
-                reference=reference,
-                stacklevel=stacklevel,
-            )
-            return func(*args, **kwargs)
-
-        return decorated
-
-    return actual_decorator
 
 
 def oauth_url(
@@ -760,7 +708,7 @@ def _get_string_to_type_map() -> dict[str, type]:
 @functools.lru_cache(maxsize=1)
 def _get_getter_fetcher_map() -> dict[type, tuple[_Getter, _Fetcher]]:
     """Return a cached map of type names -> (getter, fetcher) functions."""
-    from discord import Guild, Member, Role, User, abc, emoji
+    from discord import Guild, Member, Role, Thread, User, abc, emoji
 
     base_map: dict[type, tuple[_Getter, _Fetcher]] = {
         Member: (
@@ -784,6 +732,10 @@ def _get_getter_fetcher_map() -> dict[type, tuple[_Getter, _Fetcher]]:
             lambda obj, oid: obj.fetch_emoji(oid),
         ),
         abc.GuildChannel: (
+            lambda obj, oid: obj.get_channel(oid),
+            lambda obj, oid: obj.fetch_channel(oid),
+        ),
+        Thread: (
             lambda obj, oid: obj.get_channel(oid),
             lambda obj, oid: obj.fetch_channel(oid),
         ),

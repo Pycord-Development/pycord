@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import contextlib
 from typing import List
 
 import discord
@@ -604,11 +605,12 @@ class Paginator(discord.ui.View):
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
-            await self.message.edit(
-                view=self,
-                files=files or [],
-                attachments=[],
-            )
+            with contextlib.suppress(discord.NotFound, discord.Forbidden):
+                await self.message.edit(
+                    view=self,
+                    files=files or [],
+                    attachments=[],
+                )
 
     async def disable(
         self,
@@ -907,7 +909,8 @@ class Paginator(discord.ui.View):
         """Updates the custom view shown on the paginator."""
         if isinstance(self.custom_view, discord.ui.View):
             for item in self.custom_view.children:
-                self.remove_item(item)
+                if item in self.children:
+                    self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
 

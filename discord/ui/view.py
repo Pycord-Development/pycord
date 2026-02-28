@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import os
 import sys
 import time
@@ -47,6 +48,8 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
+from ..components import FileUpload as FileUploadComponent
+from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
@@ -55,7 +58,8 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..enums import ChannelType
+from ..enums import ChannelType, SeparatorSpacingSize
+from ..errors import Forbidden, NotFound
 from ..utils import find
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
@@ -70,6 +74,7 @@ __all__ = (
 
 
 if TYPE_CHECKING:
+    from ..components import MediaGalleryItem
     from ..interactions import Interaction, InteractionMessage
     from ..message import Message
     from ..state import ConnectionState
@@ -97,7 +102,6 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
 
 
 def _component_to_item(component: Component) -> ViewItem[V]:
-
     if isinstance(component, ButtonComponent):
         from .button import Button
 
@@ -142,6 +146,14 @@ def _component_to_item(component: Component) -> ViewItem[V]:
         from .label import Label
 
         return Label.from_component(component)
+    if isinstance(component, InputTextComponent):
+        from .input_text import InputText
+
+        return InputText.from_component(component)
+    if isinstance(component, FileUploadComponent):
+        from .file_upload import FileUpload
+
+        return FileUpload.from_component(component)
     return ViewItem.from_component(component)
 
 
@@ -259,11 +271,11 @@ class BaseView(ItemInterface):
         try:
             if item.parent is self:
                 self.children.remove(item)
+                item.parent = None
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def clear_items(self) -> Self:
@@ -321,9 +333,10 @@ class BaseView(ItemInterface):
                 message = self.message
 
             if message:
-                m = await message.edit(view=self)
-                if m:
-                    self._message = m
+                with contextlib.suppress(NotFound, Forbidden):
+                    m = await message.edit(view=self)
+                    if m:
+                        self._message = m
 
     async def on_check_failure(self, interaction: Interaction) -> None:
         """|coro|
@@ -362,7 +375,7 @@ class BaseView(ItemInterface):
 
         A view containing V2 components cannot be sent alongside message content or embeds.
         """
-        return any([item._underlying.is_v2() for item in self.children])
+        return any([item.underlying.is_v2() for item in self.children])
 
     async def _scheduled_task(self, item: ViewItem[V], interaction: Interaction):
         try:
@@ -536,6 +549,8 @@ class View(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
@@ -552,8 +567,6 @@ class View(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
-    store: Optional[:class:`bool`]
-        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     __view_children_items__: ClassVar[list[ItemCallbackType]] = []
@@ -690,11 +703,11 @@ class View(BaseView):
             or the row the item is trying to be added to is full.
         """
 
-        if item._underlying.is_v2():
+        if item.underlying.is_v2():
             raise ValueError(
-                f"cannot use V2 components in View. Use DesignerView instead."
+                "cannot use V2 components in View. Use DesignerView instead."
             )
-        if isinstance(item._underlying, ActionRowComponent):
+        if isinstance(item.underlying, ActionRowComponent):
             for i in item.children:
                 self.add_item(i)
             return self
@@ -703,7 +716,7 @@ class View(BaseView):
         self.__weights.add_item(item)
         return self
 
-    def remove_item(self, item: ViewItem[V] | int | str) -> None:
+    def remove_item(self, item: ViewItem[V] | int | str) -> Self:
         """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
         the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
@@ -720,7 +733,7 @@ class View(BaseView):
             pass
         return self
 
-    def clear_items(self) -> None:
+    def clear_items(self) -> Self:
         """Removes all items from the view."""
         super().clear_items()
         self.__weights.clear()
@@ -729,7 +742,9 @@ class View(BaseView):
     def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], ViewItem[V]] = {
-            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
+            (item.type.value, item.custom_id): item
+            for item in self.children
+            if item.is_dispatchable()  # type: ignore
         }
         children: list[ViewItem[V]] = [
             item for item in self.children if not item.is_dispatchable()
@@ -772,6 +787,8 @@ class DesignerView(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
@@ -788,8 +805,6 @@ class DesignerView(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
-    store: Optional[:class:`bool`]
-        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     MAX_ITEMS: int = 40
@@ -812,6 +827,14 @@ class DesignerView(BaseView):
         super().__init__(
             *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
         )
+
+    @property
+    def items(self) -> list[ViewItem[V]]:
+        return self.children
+
+    @items.setter
+    def items(self, value: list[ViewItem[V]]) -> None:
+        self.children = value
 
     @classmethod
     def from_message(
@@ -951,7 +974,10 @@ class ViewStore:
         view._start_listening_from_store(self)
         for item in view.walk_children():
             if item.is_storable():
-                self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
+                self._views[(item.type.value, message_id, item.custom_id)] = (
+                    view,
+                    item,
+                )  # type: ignore
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
