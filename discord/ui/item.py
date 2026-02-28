@@ -68,12 +68,12 @@ class Item(Generic[T]):
         self.parent: Item | ItemInterface | None = None
 
     def to_component_dict(self) -> dict[str, Any]:
-        if not self._underlying:
+        if not self.underlying:
             raise NotImplementedError
-        return self._underlying.to_dict()
+        return self.underlying.to_dict()
 
     def refresh_component(self, component: Component) -> None:
-        self._underlying = component
+        self.underlying = component
 
     def refresh_state(self, interaction: Interaction) -> None:
         return None
@@ -83,10 +83,23 @@ class Item(Generic[T]):
         return cls()
 
     @property
+    def underlying(self) -> Component:
+        return self._underlying
+
+    @underlying.setter
+    def underlying(self, value: Component) -> None:
+        self._underlying = value
+
+    @property
     def type(self) -> ComponentType:
-        if not self._underlying:
+        if not self.underlying:
             raise NotImplementedError
-        return self._underlying.type
+        return self.underlying.type
+
+    def _generate_underlying(self, cls: type[Component]) -> Component:
+        if not self._underlying:
+            self._underlying = cls._raw_construct()
+        return self._underlying
 
     def is_dispatchable(self) -> bool:
         return False
@@ -117,13 +130,13 @@ class Item(Generic[T]):
         Optional[:class:`int`]
             The ID of this item, or ``None`` if the user didn't set one.
         """
-        return self._underlying and self._underlying.id
+        return self.underlying and self.underlying.id
 
     @id.setter
     def id(self, value) -> None:
-        if not self._underlying:
+        if not self.underlying:
             return
-        self._underlying.id = value
+        self.underlying.id = value
 
 
 class ViewItem(Item[V]):
@@ -152,50 +165,19 @@ class ViewItem(Item[V]):
     def __init__(self):
         super().__init__()
         self._view: V | None = None
-        self._row: int | None = None
-        self._rendered_row: int | None = None
         self.parent: ViewItem | BaseView | None = None
 
     @property
     def row(self) -> int | None:
-        """Gets or sets the row position of this item within its parent view.
-
-        The row position determines the vertical placement of the item in the UI.
-        The value must be an integer between 0 and 39 (inclusive), or ``None`` to indicate
-        that no specific row is set.
-
-        Returns
-        -------
-        Optional[:class:`int`]
-            The row position of the item, or ``None`` if not explicitly set.
-
-        Raises
-        ------
-        ValueError
-            If the row value is not ``None`` and is outside the range [0, 39].
-        """
-        return self._row
+        warn_deprecated("Accessing .row from CV2 Items", since="2.7.1", removed="3.0")
+        return None
 
     @row.setter
-    def row(self, value: int | None):
-        if value is None:
-            self._row = None
-        elif 39 > value >= 0:
-            self._row = value
-        else:
-            raise ValueError("row cannot be negative or greater than or equal to 39")
+    def row(self, value: int | None) -> None:
+        warn_deprecated("Setting .row on CV2 Items", since="2.7.1", removed="3.0")
 
     @property
     def width(self) -> int:
-        """Gets the width of the item in the UI layout.
-
-        The width determines how much horizontal space this item occupies within its row.
-
-        Returns
-        -------
-        :class:`int`
-            The width of the item. Defaults to 1.
-        """
         return 1
 
     @property

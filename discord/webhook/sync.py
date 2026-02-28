@@ -60,6 +60,8 @@ __all__ = (
     "SyncWebhookMessage",
 )
 
+from ..utils import warn_deprecated
+
 _log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -469,6 +471,7 @@ class SyncWebhookMessage(Message):
         files: list[File] = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         suppress: bool | None = MISSING,
+        suppress_embeds: bool | None = MISSING,
     ) -> SyncWebhookMessage:
         """Edits the message.
 
@@ -491,6 +494,12 @@ class SyncWebhookMessage(Message):
             See :meth:`.abc.Messageable.send` for more information.
         suppress: Optional[:class:`bool`]
             Whether to suppress embeds for the message.
+
+            .. deprecated:: 2.8
+        suppress_embeds: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -516,8 +525,13 @@ class SyncWebhookMessage(Message):
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
 
-        if suppress is MISSING:
-            suppress = self.flags.suppress_embeds
+        if suppress is not MISSING:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is MISSING:
+                suppress_embeds = suppress
+
+        if suppress_embeds is MISSING:
+            suppress_embeds = self.flags.suppress_embeds
 
         return self._state._webhook.edit_message(
             self.id,
@@ -528,7 +542,7 @@ class SyncWebhookMessage(Message):
             files=files,
             allowed_mentions=allowed_mentions,
             thread=thread,
-            suppress=suppress,
+            suppress=suppress_embeds,
         )
 
     def delete(self, *, delay: float | None = None) -> None:

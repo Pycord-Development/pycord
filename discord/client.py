@@ -42,6 +42,7 @@ from typing import (
 )
 
 import aiohttp
+from typing_extensions import deprecated
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -229,6 +230,10 @@ class Client:
             run :func:`fetch_emojis`.
 
         .. versionadded:: 2.7
+    cache_default_sounds: :class:`bool`
+        Whether to automatically fetch and cache the default soundboard sounds on startup. Defaults to ``True``.
+
+        .. versionadded:: 2.8
 
     Attributes
     -----------
@@ -594,7 +599,7 @@ class Client:
         The default modal error handler provided by the client.
         The default implementation prints the traceback to stderr.
 
-        This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+        This only fires for a modal if you did not define its :func:`~discord.ui.BaseModal.on_error`.
 
         Parameters
         ----------
@@ -1181,10 +1186,8 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
-    @utils.deprecated(
-        instead="Client.get_or_fetch(User, id)",
-        since="2.7",
-        removed="3.0",
+    @deprecated(
+        "Client.get_or_fetch_user is deprecated since version 2.7 and will be removed in version 3.0, consider using Client.get_or_fetch(User, id) instead."
     )
     async def get_or_fetch_user(self, id: int, /) -> User | None:  # TODO: Remove in 3.0
         """|coro|

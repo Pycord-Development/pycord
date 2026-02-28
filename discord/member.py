@@ -37,6 +37,7 @@ import discord.abc
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
+from .collectibles import Collectibles
 from .colour import Colour
 from .enums import Status, try_enum
 from .errors import InvalidArgument
@@ -44,6 +45,8 @@ from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
 from .primary_guild import PrimaryGuild
+from .role import RoleColours
+from .types.collectibles import AvatarDecoration
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
 
@@ -61,6 +64,7 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .types.activity import PartialPresenceUpdate
+    from .types.member import Member
     from .types.member import Member as MemberPayload
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
@@ -293,6 +297,7 @@ class Member(discord.abc.Messageable, _UserTag):
         "_banner",
         "communication_disabled_until",
         "flags",
+        "_avatar_decoration",
     )
 
     if TYPE_CHECKING:
@@ -313,6 +318,8 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
         primary_guild: PrimaryGuild | None
+        collectibles: Collectibles | None
+        avatar_decoration: Asset | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -337,6 +344,9 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
+        self._avatar_decoration: AvatarDecoration | None = data.get(
+            "avatar_decoration_data"
+        )
 
     def __str__(self) -> str:
         return str(self._user)
@@ -414,6 +424,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._banner = member._banner
         self.communication_disabled_until = member.communication_disabled_until
         self.flags = member.flags
+        self._avatar_decoration = member._avatar_decoration
 
         # Reference will not be copied unless necessary by PRESENCE_UPDATE
         # See below
@@ -445,6 +456,7 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags = MemberFlags._from_value(data.get("flags", 0))
+        self._avatar_decoration = data.get("avatar_decoration_data")
 
     def _presence_update(
         self, data: PartialPresenceUpdate, user: UserPayload
@@ -462,14 +474,34 @@ class Member(discord.abc.Messageable, _UserTag):
 
     def _update_inner_user(self, user: UserPayload) -> tuple[User, User] | None:
         u = self._user
-        original = (u.name, u._avatar, u.discriminator, u.global_name, u._public_flags)
+        original = (
+            u.name,
+            u._avatar,
+            u.discriminator,
+            u.global_name,
+            u._public_flags,
+            u.primary_guild,
+            u._collectibles,
+            u._avatar_decoration,
+        )
         # These keys seem to always be available
+        if (
+            new_primary_guild_data := user.get("primary_guild")
+        ) and new_primary_guild_data.get("identity_enabled"):
+            new_primary_guild: PrimaryGuild | None = PrimaryGuild(
+                new_primary_guild_data, state=self._state
+            )
+        else:
+            new_primary_guild = None
         modified = (
             user["username"],
             user["avatar"],
             user["discriminator"],
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
+            new_primary_guild,
+            user.get("collectibles") or u._collectibles,
+            user.get("avatar_decoration_data"),
         )
         if original != modified:
             to_return = User._copy(self._user)
@@ -479,6 +511,9 @@ class Member(discord.abc.Messageable, _UserTag):
                 u.discriminator,
                 u.global_name,
                 u._public_flags,
+                u.primary_guild,
+                u._collectibles,
+                u._avatar_decoration,
             ) = modified
             # Signal to dispatch on_user_update
             return to_return, u
@@ -529,11 +564,33 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def colour(self) -> Colour:
-        """A property that returns a colour denoting the rendered colour
+        """A property that returns a colour denoting the rendered primary colour
         for the member. If the default colour is the one rendered then an instance
         of :meth:`Colour.default` is returned.
 
-        There is an alias for this named :attr:`color`.
+        This is an alias for ``Member.colours.primary``.
+        """
+        return self.colours.primary
+
+    @property
+    def color(self) -> Colour:
+        """A property that returns a color denoting the primary rendered color for
+        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
+        is returned.
+
+        This is an alias for ``Member.colours.primary``.
+        """
+        return self.colours.primary
+
+    @property
+    def colours(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for
+        the member. If the default color is the one rendered then an instance of :meth:`RoleColours.default`
+        is returned.
+
+        There is an alias for this named :attr:`colors`.
+
+        .. versionadded:: 2.8
         """
 
         roles = self.roles[1:]  # remove @everyone
@@ -542,19 +599,21 @@ class Member(discord.abc.Messageable, _UserTag):
         # if the highest is the default colour then the next one with a colour
         # is chosen instead
         for role in reversed(roles):
-            if role.colour.value:
-                return role.colour
-        return Colour.default()
+            if role.colours.primary.value:
+                return role.colours
+        return RoleColours.default()
 
     @property
-    def color(self) -> Colour:
-        """A property that returns a color denoting the rendered color for
-        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
-        is returned.
+    def colors(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for the member.
+        If the default color is the one rendered then an instance
+        of :meth:`Colour.default` is returned.
 
-        There is an alias for this named :attr:`colour`.
+        This is an alias for :attr:`colours`.
+
+        .. versionadded:: 2.8
         """
-        return self.colour
+        return self.colours
 
     @property
     def roles(self) -> list[Role]:
@@ -610,6 +669,31 @@ class Member(discord.abc.Messageable, _UserTag):
             return None
         return Asset._from_guild_avatar(
             self._state, self.guild.id, self.id, self._avatar
+        )
+
+    @property
+    def display_avatar_decoration(self) -> Asset | None:
+        """Returns the member's displayed avatar decoration.
+
+        For regular members this is just their avatar decoration, but
+        if they have a guild specific avatar decoration then that
+        is returned instead.
+
+        .. versionadded:: 2.8
+        """
+        return self.guild_avatar_decoration or self._user.avatar_decoration
+
+    @property
+    def guild_avatar_decoration(self) -> Asset | None:
+        """Returns an :class:`Asset` for the guild specific avatar decoration
+        the member has. If unavailable, ``None`` is returned.
+
+        .. versionadded:: 2.8
+        """
+        if self._avatar_decoration is None:
+            return None
+        return Asset._from_avatar_decoration(
+            self._state, self.id, self._avatar_decoration.get("asset")
         )
 
     @property
