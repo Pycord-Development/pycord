@@ -1558,7 +1558,8 @@ def filter_params(params, **kwargs):
 
 
 def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
-    """Converts an iterable of users to a CSV file-like object for usage as Invite Target Users.
+    """Converts an iterable of users to a CSV file-like object for usage in
+    :meth:`~discord.abc.GuildChannel.create_invite` and :meth:`~discord.Invite.edit_target_users`.
 
     Parameters
     ----------
