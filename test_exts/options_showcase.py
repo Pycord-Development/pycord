@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum, IntEnum
-from typing import TYPE_CHECKING, Annotated, Literal, Optional, Union
+from typing import TYPE_CHECKING, Annotated, Literal
 
 import discord
 from discord import OptionChoice, option

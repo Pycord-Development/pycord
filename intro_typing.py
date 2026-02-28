@@ -421,7 +421,6 @@ def inspect_annotations(func: Callable[..., Any]) -> dict[str, InspectedAnnotati
 
 
 # --- TEST CASES FOR inspect_annotations ---
-from typing import Optional
 
 
 class MyEnum(Enum):
