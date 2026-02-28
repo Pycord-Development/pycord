@@ -68,6 +68,7 @@ from .utils import MISSING, async_all, find, get
 if TYPE_CHECKING:
     from .member import Member
 
+C = TypeVar("C", bound=MessageCommand | SlashCommand | UserCommand)
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar("CFT", bound=CoroFunc)
 
@@ -909,65 +910,74 @@ class ApplicationCommandMixin(ABC):
                 autocomplete_task.cancel()
 
     def slash_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`command` and adds it to
-        the internal command list via :meth:`add_application_command`.
-        This shortcut is made specifically for :class:`.SlashCommand`.
+        """A shortcut decorator for adding a slash command to the bot.
+        This is equivalent to using :meth:`application_command`, providing
+        the :class:`SlashCommand` class.
 
         .. versionadded:: 2.0
 
         Returns
         -------
         Callable[..., :class:`SlashCommand`]
-            A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot,
-            then returns it.
+            A decorator that converts the provided function into a :class:`.SlashCommand`,
+            adds it to the bot, and returns it.
         """
         return self.application_command(cls=SlashCommand, **kwargs)
 
     def user_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`command` and adds it to
-        the internal command list via :meth:`add_application_command`.
-        This shortcut is made specifically for :class:`.UserCommand`.
+        """A shortcut decorator for adding a user command to the bot.
+        This is equivalent to using :meth:`application_command`, providing
+        the :class:`UserCommand` class.
 
         .. versionadded:: 2.0
 
         Returns
         -------
         Callable[..., :class:`UserCommand`]
-            A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot,
-            then returns it.
+            A decorator that converts the provided function into a :class:`.UserCommand`,
+            adds it to the bot, and returns it.
         """
         return self.application_command(cls=UserCommand, **kwargs)
 
     def message_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`command` and adds it to
-        the internal command list via :meth:`add_application_command`.
-        This shortcut is made specifically for :class:`.MessageCommand`.
+        """A shortcut decorator for adding a message command to the bot.
+        This is equivalent to using :meth:`application_command`, providing
+        the :class:`MessageCommand` class.
 
         .. versionadded:: 2.0
 
         Returns
         -------
         Callable[..., :class:`MessageCommand`]
-            A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot,
-            then returns it.
+            A decorator that converts the provided function into a :class:`.MessageCommand`,
+            adds it to the bot, and returns it.
         """
         return self.application_command(cls=MessageCommand, **kwargs)
 
-    def application_command(self, **kwargs):
-        """A shortcut decorator that invokes :func:`command` and adds it to
+    def application_command(self, cls: type[C] = SlashCommand, **kwargs):
+        """A shortcut decorator that converts the provided function into
+        an application command via :func:`command` and adds it to
         the internal command list via :meth:`~.Bot.add_application_command`.
 
         .. versionadded:: 2.0
 
+        Parameters
+        ----------
+        cls: Type[:class:`ApplicationCommand`]
+            The factory class that will be used to create the command.
+            By default, this is :class:`.SlashCommand`. Should a custom
+            class be provided, it must be a subclass of either
+            :class:`SlashCommand`, :class:`MessageCommand` or :class:`UserCommand`.
+
         Returns
         -------
         Callable[..., :class:`ApplicationCommand`]
-            A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot,
-            then returns it.
+            A decorator that converts the provided function into an :class:`.ApplicationCommand`,
+            adds it to the bot, and returns it.
         """
 
-        def decorator(func) -> ApplicationCommand:
-            result = command(**kwargs)(func)
+        def decorator(func) -> C:
+            result = command(cls=cls, **kwargs)(func)
             self.add_application_command(result)
             return result
 
@@ -985,8 +995,8 @@ class ApplicationCommandMixin(ABC):
         Returns
         -------
         Callable[..., :class:`ApplicationCommand`]
-            A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot,
-            then returns it.
+            A decorator that converts the provided function into an :class:`.ApplicationCommand`,
+            adds it to the bot, and returns it.
         """
         return self.application_command(**kwargs)
 
