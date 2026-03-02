@@ -1142,6 +1142,7 @@ class ApplicationEventWebhookStatus(Enum):
     enabled = 2
     disabled_by_discord = 3
 
+
 class InviteTargetUsersJobStatusCode(Enum):
     unspecified = 0
     processing = 1
