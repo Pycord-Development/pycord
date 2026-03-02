@@ -85,6 +85,7 @@ __all__ = (
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
+    "InviteTargetUsersJobStatusCode",
 )
 
 
@@ -736,6 +737,9 @@ class ComponentType(Enum):
     container = 17
     label = 18
     file_upload = 19
+    radio_group = 21
+    checkbox_group = 22
+    checkbox = 23
 
     def __int__(self):
         return self.value
@@ -1137,6 +1141,13 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class InviteTargetUsersJobStatusCode(Enum):
+    unspecified = 0
+    processing = 1
+    completed = 2
+    failed = 3
 
 
 T = TypeVar("T")

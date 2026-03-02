@@ -27,14 +27,25 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Iterator, Literal, TypeVar, overload
 
+from ..components import (
+    CheckboxGroupOption,
+)
 from ..components import Label as LabelComponent
-from ..components import SelectDefaultValue, SelectOption, _component_factory
+from ..components import (
+    RadioGroupOption,
+    SelectDefaultValue,
+    SelectOption,
+    _component_factory,
+)
 from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
+from .checkbox import Checkbox
+from .checkbox_group import CheckboxGroup
 from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ItemCallbackType, ModalItem
+from .radio_group import RadioGroup
 from .select import Select
 
 __all__ = ("Label",)
@@ -61,6 +72,9 @@ class Label(ModalItem[M]):
     - :class:`discord.ui.Select`
     - :class:`discord.ui.InputText`
     - :class:`discord.ui.FileUpload`
+    - :class:`discord.ui.RadioGroup`
+    - :class:`discord.ui.CheckboxGroup`
+    - :class:`discord.ui.Checkbox`
 
     .. versionadded:: 2.7
 
@@ -390,6 +404,114 @@ class Label(ModalItem[M]):
         )
 
         return self.set_item(upload)
+
+    def set_radio_group(
+        self,
+        *,
+        custom_id: str | None = None,
+        options: list[RadioGroupOption] | None = None,
+        required: bool | None = True,
+        id: int | None = None,
+    ) -> Self:
+        """Set this label's item to a radio group.
+
+        To set a pre-existing :class:`RadioGroup`, use the
+        :meth:`set_item` method, instead.
+
+        Parameters
+        ----------
+        custom_id: Optional[:class:`str`]
+            The ID of the radio group that gets received during an interaction.
+        options: List[:class:`discord.RadioGroupOption`]
+            A list of options that can be selected from this group.
+        required: Optional[:class:`bool`]
+            Whether an option selection is required or not. Defaults to ``True``.
+        id: Optional[:class:`int`]
+            The radio group's ID.
+        """
+
+        radio = RadioGroup(
+            custom_id=custom_id,
+            option=options,
+            required=required,
+            id=id,
+        )
+
+        return self.set_item(radio)
+
+    def set_checkbox_group(
+        self,
+        *,
+        custom_id: str | None = None,
+        options: list[CheckboxGroupOption] | None = None,
+        min_values: int | None = None,
+        max_values: int | None = None,
+        required: bool | None = True,
+        id: int | None = None,
+    ) -> Self:
+        """Set this label's item to a checkbox group.
+
+        To set a pre-existing :class:`CheckboxGroup`, use the
+        :meth:`set_item` method, instead.
+
+        Parameters
+        ----------
+        custom_id: Optional[:class:`str`]
+            The ID of the checkbox group that gets received during an interaction.
+        options: List[:class:`discord.CheckboxGroupOption`]
+            A list of options that can be selected in this group.
+        min_values: Optional[:class:`int`]
+            The minimum number of options that must be selected.
+            Defaults to 0 and must be between 0 and 10, inclusive.
+        max_values: Optional[:class:`int`]
+            The maximum number of options that can be selected.
+            Must be between 1 and 10, inclusive.
+        required: Optional[:class:`bool`]
+            Whether an option selection is required or not. Defaults to ``True``.
+        id: Optional[:class:`int`]
+            The checkbox group's ID.
+        """
+
+        checkboxes = CheckboxGroup(
+            custom_id=custom_id,
+            option=options,
+            min_values=min_values,
+            max_values=max_values,
+            required=required,
+            id=id,
+        )
+
+        return self.set_item(checkboxes)
+
+    def set_checkbox(
+        self,
+        *,
+        custom_id: str | None = None,
+        default: bool | None = False,
+        id: int | None = None,
+    ) -> Self:
+        """Set this label's item to a checkbox.
+
+        To set a pre-existing :class:`Checkbox`, use the
+        :meth:`set_item` method, instead.
+
+        Parameters
+        ----------
+        custom_id: Optional[:class:`str`]
+            The ID of the checkbox that gets received during an interaction.
+        default: Optional[:class:`bool`]
+            Whether this checkbox is selected by default or not.
+        id: Optional[:class:`int`]
+            The checkbox's ID.
+        """
+
+        checkbox = Checkbox(
+            custom_id=custom_id,
+            default=default,
+            id=id,
+        )
+
+        return self.set_item(checkbox)
 
     @property
     def label(self) -> str:
