@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import datetime
 from typing import TYPE_CHECKING, Any
+import typing_extensions
 
 from . import utils
 from .asset import Asset
@@ -39,7 +40,7 @@ from .errors import ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
-from .utils import deprecated, warn_deprecated
+from .utils import warn_deprecated
 
 __all__ = (
     "ScheduledEvent",
@@ -312,7 +313,9 @@ class ScheduledEvent(Hashable):
         )
 
     @property
-    @deprecated(instead="entity_metadata.location", since="2.7", removed="3.0")
+    @typing_extensions.deprecated(
+        "location is deprecated since 2.7 and will be removed in 3.0, consider using entity_metadata instead",
+    )
     def location(self) -> ScheduledEventLocation | None:
         """Returns the location of the event."""
         if self.channel_id is None:
@@ -330,7 +333,9 @@ class ScheduledEvent(Hashable):
         return utils.snowflake_time(self.id)
 
     @property
-    @deprecated(instead="scheduled_start_time", since="2.7", removed="3.0")
+    @typing_extensions.deprecated(
+        "start_time is deprecated since 2.7 and will be removed in 3.0, consider using scheduled_start_time instead",
+    )
     def start_time(self) -> datetime.datetime:
         """
         Returns the scheduled start time of the event.
@@ -341,7 +346,9 @@ class ScheduledEvent(Hashable):
         return self.scheduled_start_time
 
     @property
-    @deprecated(instead="scheduled_end_time", since="2.7", removed="3.0")
+    @typing_extensions.deprecated(
+        "end_time is deprecated since 2.7 and will be removed in 3.0, consider using scheduled_end_time instead",
+    )
     def end_time(self) -> datetime.datetime | None:
         """
         Returns the scheduled end time of the event.
@@ -352,7 +359,9 @@ class ScheduledEvent(Hashable):
         return self.scheduled_end_time
 
     @property
-    @deprecated(instead="user_count", since="2.7", removed="3.0")
+    @typing_extensions.deprecated(
+        "subscriber_count is deprecated since 2.7 and will be removed in 3.0, consider using user_count instead",
+    )
     def subscriber_count(self) -> int | None:
         """
         Returns the number of users subscribed to the event.
@@ -363,7 +372,9 @@ class ScheduledEvent(Hashable):
         return self.user_count
 
     @property
-    @deprecated(instead="user_count", since="2.7", removed="3.0")
+    @typing_extensions.deprecated(
+        "interested is deprecated since 2.7 and will be removed in 3.0, consider using user_count instead",
+    )
     def interested(self) -> int | None:
         """An alias to :attr:`.user_count`"""
         return self.user_count
