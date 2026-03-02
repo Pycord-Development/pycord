@@ -265,7 +265,7 @@ class AppInfo:
         self.approximate_user_authorization_count: int | None = data.get(
             "approximate_user_authorization_count"
         )
-        self._flags: int | None = data.get("flags")
+        self._flags: int = data.get("flags", 0)
         self.redirect_uris: list[str] = data.get("redirect_uris", [])
         self.interactions_endpoint_url: str | None = data.get(
             "interactions_endpoint_url"
@@ -300,15 +300,13 @@ class AppInfo:
         )
 
     @property
-    def flags(self) -> ApplicationFlags | None:
-        """The public application flags, if set.
+    def flags(self) -> ApplicationFlags:
+        """The public application flags.
 
-        Returns an :class:`ApplicationFlags` instance or ``None`` when not present.
+        Returns an :class:`ApplicationFlags` instance.
 
         .. versionadded:: 2.8
         """
-        if self._flags is None:
-            return None
         return ApplicationFlags._from_value(self._flags)
 
     async def edit(
@@ -596,8 +594,8 @@ class IntegrationTypesConfig:
         guild: AppInstallParams | None = utils.MISSING,
         user: AppInstallParams | None = utils.MISSING,
     ) -> None:
-        self.guild = guild
-        self.user = user
+        self.guild: AppInstallParams | None = guild
+        self.user: AppInstallParams | None = user
 
     @staticmethod
     def _get_ctx(
