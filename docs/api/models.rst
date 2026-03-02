@@ -486,6 +486,24 @@ UI Components
     :members:
     :inherited-members:
 
+.. attributetable:: RadioGroup
+
+.. autoclass:: RadioGroup()
+    :members:
+    :inherited-members:
+
+.. attributetable:: CheckboxGroup
+
+.. autoclass:: CheckboxGroup()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Checkbox
+
+.. autoclass:: Checkbox()
+    :members:
+    :inherited-members:
+
 Emoji
 -----
 
