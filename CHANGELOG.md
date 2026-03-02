@@ -24,7 +24,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 - Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
   ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
-- Added a new event called `on_raw_member_update` that is dispatched when a member is
+- Added a new event called `on_raw_member_update` that is dispatched when a member is. ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
   updated, regardless of cache status.
 
 ### Changed
