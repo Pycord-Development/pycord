@@ -16,6 +16,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `MediaGallery` ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RadioGroup`, `CheckboxGroup`, and `Checkbox` for modals.
+  ([#3073](https://github.com/Pycord-Development/pycord/pull/3073))
 - Added the ability to respond to interactions with suppressed push and desktop
   notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 - Added `User.collectibles` property.
