@@ -218,7 +218,7 @@ def _transform_communication_disabled_until(
 
 
 def _transform_entity_metadata(
-    entry: AuditLogEntry, data: dict | str | None
+    entry: AuditLogEntry, data: dict[str, str] | str | None
 ) -> ScheduledEventEntityMetadata | None:
     from .scheduled_events import ScheduledEventEntityMetadata
 
