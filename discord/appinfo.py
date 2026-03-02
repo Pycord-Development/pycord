@@ -594,8 +594,8 @@ class IntegrationTypesConfig:
         guild: AppInstallParams | None = utils.MISSING,
         user: AppInstallParams | None = utils.MISSING,
     ) -> None:
-        self.guild: Guild = guild
-        self.user: User = user
+        self.guild: Guild | None = guild
+        self.user: User | None = user
 
     @staticmethod
     def _get_ctx(
