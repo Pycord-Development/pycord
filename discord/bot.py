@@ -411,6 +411,16 @@ class ApplicationCommandMixin(ABC):
                     return
                 return command
 
+    async def _get_command_defaults(self):
+        app_info = await self._bot.application_info()
+        integration_contexts = app_info.integration_types_config._to_payload().keys()
+
+        command_defaults = COMMAND_DEFAULTS.copy()
+        command_defaults["integration_types"] = DefaultSetComparison(
+            (MISSING, integration_contexts), lambda x, y: set(x) == set(y)
+        )
+        return command_defaults
+
     async def get_desynced_commands(
         self,
         guild_id: int | None = None,
@@ -442,6 +452,8 @@ class ApplicationCommandMixin(ABC):
             the action, including ``id``.
         """
 
+        updated_command_defaults = await self._get_command_defaults()
+
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
         def _check_command(cmd: ApplicationCommand, match: Mapping[str, Any]) -> bool:
             """Returns True If Commands Are Equivalent"""
@@ -456,7 +468,9 @@ class ApplicationCommandMixin(ABC):
                         return _check_command(subcommand, match_)
             else:
                 if cmd.parent is None:
-                    return _compare_defaults(cmd.to_dict(), match, COMMAND_DEFAULTS)
+                    return _compare_defaults(
+                        cmd.to_dict(), match, updated_command_defaults
+                    )
                 else:
                     return _compare_defaults(cmd.to_dict(), match, SUBCOMMAND_DEFAULTS)
 
