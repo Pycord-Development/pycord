@@ -86,6 +86,7 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+)
 
 
 def _create_value_cls(name, comparable):
