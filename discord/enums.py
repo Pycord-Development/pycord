@@ -84,6 +84,7 @@ __all__ = (
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
+    "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
 )
 
@@ -1062,7 +1063,7 @@ class EntitlementOwnerType(Enum):
 
 
 class IntegrationType(Enum):
-    """The application's integration type"""
+    """The application's integration type."""
 
     guild_install = 0
     user_install = 1
@@ -1132,6 +1133,14 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class ApplicationEventWebhookStatus(Enum):
+    """Represents the application event webhook status."""
+
+    disabled = 1
+    enabled = 2
+    disabled_by_discord = 3
 
 
 class InviteTargetUsersJobStatusCode(Enum):
