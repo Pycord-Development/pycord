@@ -1355,7 +1355,7 @@ class ConnectionState:
         # Always create or update the member object
         if old_member is not None:
             old_member._update(data)
-            new_member = old_member
+            new_member: Member = old_member
         else:
             new_member = Member(guild=guild, data=data, state=self)  # type: ignore
 
