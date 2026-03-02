@@ -94,6 +94,8 @@ ogp_image = "https://pycord.dev/static/img/logo.png"
 
 autodoc_member_order = "bysource"
 autodoc_typehints = "signature"
+# Disable overload signature injection to keep docs concise
+typehints_document_overloads = False
 # maybe consider this?
 # napoleon_attr_annotations = False
 
