@@ -84,6 +84,8 @@ __all__ = (
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
+    "ApplicationEventWebhookStatus",
+    "InviteTargetUsersJobStatusCode",
 )
 
 
@@ -667,7 +669,6 @@ class StickerFormatType(Enum):
             StickerFormatType.lottie: "json",
             StickerFormatType.gif: "gif",
         }
-        # TODO: Improve handling of unknown sticker format types if possible
         return lookup.get(self, "png")
 
 
@@ -736,6 +737,9 @@ class ComponentType(Enum):
     container = 17
     label = 18
     file_upload = 19
+    radio_group = 21
+    checkbox_group = 22
+    checkbox = 23
 
     def __int__(self):
         return self.value
@@ -1059,7 +1063,7 @@ class EntitlementOwnerType(Enum):
 
 
 class IntegrationType(Enum):
-    """The application's integration type"""
+    """The application's integration type."""
 
     guild_install = 0
     user_install = 1
@@ -1129,6 +1133,21 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class ApplicationEventWebhookStatus(Enum):
+    """Represents the application event webhook status."""
+
+    disabled = 1
+    enabled = 2
+    disabled_by_discord = 3
+
+
+class InviteTargetUsersJobStatusCode(Enum):
+    unspecified = 0
+    processing = 1
+    completed = 2
+    failed = 3
 
 
 T = TypeVar("T")

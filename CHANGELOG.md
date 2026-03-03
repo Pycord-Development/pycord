@@ -12,8 +12,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added support for community invites.
+  ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RadioGroup`, `CheckboxGroup`, and `Checkbox` for modals.
+  ([#3073](https://github.com/Pycord-Development/pycord/pull/3073))
 - Added the ability to respond to interactions with suppressed push and desktop
   notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 - Added `User.collectibles` property.
@@ -117,6 +121,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Attachment.read_chunked` and added optional `chunksize` argument to
   `Attachment.save` for retrieving attachments in chunks.
   ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
+- Added `AppInfo.edit()` method and missing `AppInfo` attributes.
+  ([#2994](https://github.com/Pycord-Development/pycord/pull/2994))
 - Added `Guild.fetch_roles_member_counts` method and `GuildRoleCounts` class.
   ([#3020](https://github.com/Pycord-Development/pycord/pull/3020))
 - Implemented `with_response` for interaction callbacks, adding

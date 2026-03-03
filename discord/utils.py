@@ -31,6 +31,7 @@ import collections.abc
 import datetime
 import functools
 import importlib.resources
+import io
 import itertools
 import json
 import logging
@@ -64,6 +65,8 @@ from typing import (
     overload,
 )
 
+from typing_extensions import deprecated as ext_deprecated
+
 if TYPE_CHECKING:
     from discord import (
         Client,
@@ -94,6 +97,7 @@ else:
 __all__ = (
     "parse_time",
     "warn_deprecated",
+    "deprecated",
     "oauth_url",
     "snowflake_time",
     "time_snowflake",
@@ -116,6 +120,7 @@ __all__ = (
     "basic_autocomplete",
     "filter_params",
     "MISSING",
+    "users_to_csv",
 )
 
 _log = logging.getLogger(__name__)
@@ -344,7 +349,9 @@ def warn_deprecated(
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
 
 
-<<<<<<< HEAD
+@ext_deprecated(
+    "deprecated is deprecated since version 2.8, consider using warnings.deprecated instead."
+)
 def deprecated(
     instead: str | None = None,
     since: str | None = None,
@@ -356,6 +363,9 @@ def deprecated(
 ) -> Callable[[Callable[P, T]], Callable[P, T]]:
     """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
     the decorated function is called.
+
+    .. deprecated:: 2.8
+        Deprecated in favor of :func:`warnings.deprecated`.
 
     Parameters
     ----------
@@ -396,8 +406,6 @@ def deprecated(
     return actual_decorator
 
 
-=======
->>>>>>> 0c1ed9a6bfbb2d8f38e815b580256ffb34891d6c
 def oauth_url(
     client_id: int | str,
     *,
@@ -1607,3 +1615,20 @@ def filter_params(params, **kwargs):
                 params[new_param] = params.pop(old_param)
 
     return params
+
+
+def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
+    """Converts an iterable of users to a CSV file-like object for usage in
+    :meth:`~discord.abc.GuildChannel.create_invite` and :meth:`~discord.Invite.edit_target_users`.
+
+    Parameters
+    ----------
+    users: Iterable[:class:`discord.abc.Snowflake`]
+        An iterable of users to convert.
+
+    Returns
+    -------
+    :class:`io.BytesIO`
+        A file-like object containing the CSV data.
+    """
+    return io.BytesIO("\n".join(map(lambda u: str(u.id), users)).encode("utf-8"))
