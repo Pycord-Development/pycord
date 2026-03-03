@@ -37,6 +37,7 @@ from typing import TYPE_CHECKING, Any, Callable, Literal, TypedDict, TypeVar
 
 try:
     import davey
+
     HAS_DAVEY = True
 except ImportError:
     HAS_DAVEY = False
