@@ -88,7 +88,7 @@ class AudioReader:
         self.client: VoiceClient = client
         self.after: AfterCallback | None = after
 
-        #self.sink._client = client
+        # self.sink._client = client
 
         self.active: bool = False
         self.error: Exception | None = None
@@ -164,8 +164,8 @@ class AudioReader:
 
     def set_sink(self, sink: Sink) -> Sink:
         old_sink = self.sink
-        #old_sink._client = None
-        #sink._client = self.client
+        # old_sink._client = None
+        # sink._client = self.client
         self.packet_router.set_sink(sink)
         self.sink = sink
         return old_sink
