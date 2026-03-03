@@ -43,7 +43,8 @@ __all__ = ("VoiceProtocol", "VoiceClient")
 if TYPE_CHECKING:
     from typing_extensions import deprecated
 
-    from discord.voice import VoiceClient as VoiceClientC, VoiceProtocol as VoiceProtocolC
+    from discord.voice import VoiceClient as VoiceClientC
+    from discord.voice import VoiceProtocol as VoiceProtocolC
 
     @deprecated(
         "discord.VoiceClient is deprecated in favour "

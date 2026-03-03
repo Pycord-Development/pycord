@@ -2040,6 +2040,7 @@ class Connectable(Protocol):
         if cls is MISSING:
             # if the user passes no cls, then actually import VoiceClient
             from .voice import VoiceClient
+
             cls = VoiceClient  # pyright: ignore[reportAssignmentType]
 
         key_id, _ = self._get_voice_client_key()
