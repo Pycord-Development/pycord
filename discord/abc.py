@@ -346,6 +346,10 @@ class GuildChannel:
         ): ...
 
     def __str__(self) -> str:
+        flags = getattr(self, "flags", None)
+        if flags is not None and getattr(flags, "obfuscated", False):
+            return f"Obfuscated Channel ({self.id})"
+
         return self.name
 
     @property
