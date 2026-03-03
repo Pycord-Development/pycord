@@ -35,7 +35,11 @@ import struct
 import sys
 from typing import TYPE_CHECKING, Any, Callable, Literal, TypedDict, TypeVar
 
-import davey
+try:
+    import davey
+    HAS_DAVEY = True
+except ImportError:
+    HAS_DAVEY = False
 
 from discord.voice.packets.rtp import FakePacket
 from discord.voice.utils.buffer import JitterBuffer
@@ -719,8 +723,9 @@ class PacketDecoder:
             else:
                 pcm = self._decoder.decode(None, fec=False)
 
-        if user_id is not None and in_dave and dave.can_passthrough(user_id):
-            _log.debug("User ID %s can passthrough, decrypting with DAVE", user_id)
-            pcm = dave.decrypt(user_id, davey.MediaType.audio, pcm)
+        if HAS_DAVEY:
+            if user_id is not None and in_dave and dave.can_passthrough(user_id):
+                _log.debug("User ID %s can passthrough, decrypting with DAVE", user_id)
+                pcm = dave.decrypt(user_id, davey.MediaType.audio, pcm)
 
         return packet, pcm
