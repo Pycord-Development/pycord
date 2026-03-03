@@ -34,6 +34,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 import davey
 
+from ..packets.core import OPUS_SILENCE
 from ..packets.rtp import RTCPPacket, ReceiverReportPacket, decode
 from .router import PacketRouter, SinkEventRouter
 
@@ -82,7 +83,7 @@ class AudioReader:
         self.client: VoiceClient = client
         self.after: AfterCallback | None = after
 
-        self.sink._client = client
+        #self.sink._client = client
 
         self.active: bool = False
         self.error: Exception | None = None
@@ -150,16 +151,16 @@ class AudioReader:
                     "An error ocurred while calling the after callback on audio reader"
                 )
 
-        for sink in self.sink.root.walk_children(with_self=True):
+        """for sink in self.sink.root.walk_children(with_self=True):
             try:
                 sink.cleanup()
             except Exception as exc:
-                _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)
+                _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)"""
 
     def set_sink(self, sink: Sink) -> Sink:
         old_sink = self.sink
-        old_sink._client = None
-        sink._client = self.client
+        #old_sink._client = None
+        #sink._client = self.client
         self.packet_router.set_sink(sink)
         self.sink = sink
         return old_sink
@@ -303,6 +304,8 @@ class PacketDecryptor:
                 except Exception as exc:
                     _log.debug("Ignoring exception while decoding DAVE packet", exc_info=exc)
                     packet.decrypted_data = OPUS_SILENCE
+
+        return packet.decrypted_data
 
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:

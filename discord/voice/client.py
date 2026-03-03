@@ -106,8 +106,6 @@ class VoiceClient(VoiceProtocol):
     or the library will not be able ot transmit audio.
     """
 
-    channel: VocalGuildChannel
-
     def __init__(
         self,
         client: Client,
@@ -153,7 +151,8 @@ class VoiceClient(VoiceProtocol):
     @property
     def guild(self) -> Guild:
         """Returns the guild the channel we're connecting to is bound to."""
-        return self.channel.guild
+        channel: VocalGuildChannel = self.channel
+        return channel.guild
 
     @property
     def user(self) -> ClientUser:
@@ -692,8 +691,10 @@ class VoiceClient(VoiceProtocol):
         r"""Start recording the audio from the current connected channel to the provided sink.
 
         .. versionadded:: 2.0
-        .. versionchanged:: 2.7
-            You can now have multiple concurrent recording sinks in the same voice client.
+
+        .. warning::
+
+            Recording may not work as expected due to the new DAVE (End-to-End Encryption) for voice calls.
 
         Parameters
         ----------
@@ -724,7 +725,7 @@ class VoiceClient(VoiceProtocol):
         TypeError
             You did not provide a Sink object.
         """
-
+        # TODO: remove warning in voice-recv fix PR
         if not self.is_connected():
             raise RecordingException("not connected to a voice channel")
         if not isinstance(sink, Sink):

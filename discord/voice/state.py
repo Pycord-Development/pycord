@@ -317,7 +317,7 @@ class VoiceConnectionState:
 
     @property
     def channel_id(self) -> int | None:
-        return self.client.channel and self.client.channel.id
+        return self.client.channel is not None and self.client.channel.id
 
     @property
     def guild_id(self) -> int:
@@ -729,7 +729,7 @@ class VoiceConnectionState:
         )
 
         self.state = ConnectionFlowState.disconnected
-        await self.client.channel.guild.change_voice_state(channel=None)
+        await self.client.channel.guild.change_voice_state(channel=None)  # pyright: ignore[reportAttributeAccessIssue]
         self._expecting_disconnect = True
         self._disconnected.clear()
 
@@ -903,13 +903,15 @@ class VoiceConnectionState:
             await previous_ws.close()
 
     async def _move_to(self, channel: abc.Snowflake) -> None:
-        await self.client.channel.guild.change_voice_state(channel=channel)
+        await self.client.channel.guild.change_voice_state(channel=channel)  # pyright: ignore[reportAttributeAccessIssue]
         self.state = ConnectionFlowState.set_guild_voice_state
 
     def _update_voice_channel(self, channel_id: int | None) -> None:
         self.client.channel = channel_id and self.guild.get_channel(channel_id)  # type: ignore
 
     async def reinit_dave_session(self) -> None:
+        assert self.channel_id
+
         if self.dave_protocol_version > 0:
             if self.dave_session:
                 self.dave_session.reinit(

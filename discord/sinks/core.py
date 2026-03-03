@@ -218,8 +218,12 @@ class Sink(Filters):
         self.vc: VoiceClient | None = None
         self.audio_data = {}
 
-    def init(self, vc):  # called under listen
-        self.vc: VoiceClient = vc
+    @property
+    def client(self) -> VoiceClient | None:
+        return self.vc
+
+    def init(self, vc: VoiceClient):  # called under listen
+        self.vc = vc
         super().init()
 
     @Filters.container
