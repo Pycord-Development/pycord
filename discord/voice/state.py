@@ -729,7 +729,9 @@ class VoiceConnectionState:
         )
 
         self.state = ConnectionFlowState.disconnected
-        await self.client.channel.guild.change_voice_state(channel=None)  # pyright: ignore[reportAttributeAccessIssue]
+        await self.client.channel.guild.change_voice_state(
+            channel=None
+        )  # pyright: ignore[reportAttributeAccessIssue]
         self._expecting_disconnect = True
         self._disconnected.clear()
 
@@ -903,7 +905,9 @@ class VoiceConnectionState:
             await previous_ws.close()
 
     async def _move_to(self, channel: abc.Snowflake) -> None:
-        await self.client.channel.guild.change_voice_state(channel=channel)  # pyright: ignore[reportAttributeAccessIssue]
+        await self.client.channel.guild.change_voice_state(
+            channel=channel
+        )  # pyright: ignore[reportAttributeAccessIssue]
         self.state = ConnectionFlowState.set_guild_voice_state
 
     def _update_voice_channel(self, channel_id: int | None) -> None:

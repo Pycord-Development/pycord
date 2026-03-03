@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING, Any, Literal
 import davey
 
 from ..packets.core import OPUS_SILENCE
-from ..packets.rtp import RTCPPacket, ReceiverReportPacket, decode
+from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
 from .router import PacketRouter, SinkEventRouter
 
 try:
