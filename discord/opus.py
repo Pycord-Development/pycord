@@ -42,9 +42,6 @@ try:
 except ImportError:
     HAS_DAVEY = False
 
-from discord.voice.utils.buffer import JitterBuffer
-from discord.voice.utils.wrapped import add_wrapped
-
 from .errors import DiscordException
 
 if TYPE_CHECKING:
@@ -583,6 +580,8 @@ class PacketDecoder:
         self.ssrc: int = ssrc
 
         self._decoder: Decoder | None = None if self.sink.is_opus() else Decoder()
+
+        from discord.voice.utils.buffer import JitterBuffer
         self._buffer: JitterBuffer = JitterBuffer()
         self._cached_id: int | None = None
 
@@ -653,6 +652,7 @@ class PacketDecoder:
 
     def _make_fakepacket(self) -> FakePacket:
         from discord.voice.packets import FakePacket
+        from discord.voice.utils.wrapped import add_wrapped
 
         seq = add_wrapped(self._last_seq, 1)
         ts = add_wrapped(self._last_ts, Decoder.SAMPLES_PER_FRAME, wrap=2**32)
