@@ -535,6 +535,15 @@ of :class:`enum.Enum`.
     .. attribute:: file_upload
 
         Represents a file upload component.
+    .. attribute:: radio_group
+
+        Represents a radio group component.
+    .. attribute:: checkbox_group
+
+        Represents a checkbox group component.
+    .. attribute:: checkbox
+
+        Represents a checkbox component.
 
 .. class:: ButtonStyle
 
@@ -1822,6 +1831,28 @@ of :class:`enum.Enum`.
 
         Note that your bot won't be verified if you provide users access to this
 
+.. class:: InviteTargetUsersJobStatusCode
+
+    Represents the status code for an invite target users processing job.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: unspecified
+
+        The job status is unspecified.
+
+    .. attribute:: processing
+
+        The job is currently processing.
+
+    .. attribute:: completed
+
+        The job has completed successfully.
+
+    .. attribute:: failed
+
+        The job has failed.
+
 .. class:: VideoQualityMode
 
     Represents the camera video quality mode for voice channel participants.
@@ -2633,3 +2664,20 @@ of :class:`enum.Enum`.
 
 .. autoclass:: RoleType
     :members:
+
+.. class:: ApplicationEventWebhookStatus
+
+    Represents the application event webhook status.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: disabled
+
+        The application webhook is disabled.
+
+    .. attribute:: enabled
+
+        The application webhook is enabled.
+
+    .. attribute:: disabled_by_discord
+        The application webhook is disabled by Discord.
