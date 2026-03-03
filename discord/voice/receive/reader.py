@@ -316,12 +316,8 @@ class PacketDecryptor:
                     )
                     packet.decrypted_data = OPUS_SILENCE
 
-<<<<<<< HEAD
         return packet.decrypted_data
 
-
-=======
->>>>>>> cd8f1081e2a705ac33a1be6e09b578533687d9e9
     def decrypt_rtcp(self, packet: bytes) -> bytes:
         data = self._decryptor_rtcp(packet)
 
