@@ -64,8 +64,8 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .types.activity import PartialPresenceUpdate
-    from .types.member import Member
     from .types.member import Member as MemberPayload
+    from .types.member import MemberUpdateEvent as MemberUpdateEventPayload
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
@@ -411,7 +411,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def _copy(cls: type[M], member: M) -> M:
         self: M = cls.__new__(cls)  # to bypass __init__
 
-        self._roles = utils.SnowflakeList(member._roles, is_sorted=True)
+        self._roles = utils.SnowflakeList(member._roles, is_sorted=True)  # type: ignore # the API is the same
         self.joined_at = member.joined_at
         self.premium_since = member.premium_since
         self._client_status = member._client_status.copy()
@@ -435,21 +435,21 @@ class Member(discord.abc.Messageable, _UserTag):
         ch = await self.create_dm()
         return ch
 
-    def _update(self, data: MemberPayload) -> None:
+    def _update(self, data: MemberPayload | MemberUpdateEventPayload) -> None:
         # the nickname change is optional,
         # if it isn't in the payload then it didn't change
         try:
-            self.nick = data["nick"]
+            self.nick = data["nick"]  # type: ignore # handled by the type-except
         except KeyError:
             pass
 
         try:
-            self.pending = data["pending"]
+            self.pending = data["pending"]  # type: ignore # handled by the type-except
         except KeyError:
             pass
 
         self.premium_since = utils.parse_time(data.get("premium_since"))
-        self._roles = utils.SnowflakeList(map(int, data["roles"]))
+        self._roles = utils.SnowflakeList(map(int, data["roles"]))  # type: ignore # the API is the same
         self._avatar = data.get("avatar")
         self._banner = data.get("banner")
         self.communication_disabled_until = utils.parse_time(
