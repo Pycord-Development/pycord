@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     from discord.sinks.core import Sink
     from discord.user import User
     from discord.voice.client import VoiceClient
-    from discord.voice.packets import VoiceData, FakePacket
+    from discord.voice.packets import FakePacket, VoiceData
     from discord.voice.packets.core import Packet
     from discord.voice.receive.router import PacketRouter
 
