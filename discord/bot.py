@@ -114,7 +114,7 @@ class DefaultComparison:
         self.defaults = defaults
         self.callback = callback
 
-    def _check_defaults(self, local, remote) -> bool | None:
+    def _check_defaults(self, local: Any, remote: Any) -> bool | None:
         defaults = (local in self.defaults) + (remote in self.defaults)
         if defaults == 2:
             # Both are COMMAND_DEFAULTS, so they can be counted as the same
@@ -126,7 +126,7 @@ class DefaultComparison:
             # Only one is a default, so the command must be out of sync
             return False
 
-    def check(self, local, remote) -> bool:
+    def check(self, local: Any, remote: Any) -> bool:
         """
         Compares the local and remote objects.
 
@@ -143,7 +143,7 @@ class DefaultComparison:
 
 class DefaultSetComparison(DefaultComparison):
     @override
-    def check(self, local, remote) -> bool:
+    def check(self, local: Any, remote: Any) -> bool:
         try:
             local = set(local)
         except TypeError:
@@ -180,7 +180,7 @@ def _compare_defaults(
 OPTION_DEFAULT_VALUES = ([], MISSING)
 
 
-def _option_comparison_check(local, remote) -> bool:
+def _option_comparison_check(local: Any, remote: Any) -> bool:
     matching = (local in OPTION_DEFAULT_VALUES) + (remote in OPTION_DEFAULT_VALUES)
     if matching == 2:
         return True
@@ -198,7 +198,7 @@ def _option_comparison_check(local, remote) -> bool:
 CHOICES_DEFAULT_VALUES = ([], MISSING)
 
 
-def _choices_comparison_check(local, remote) -> bool:
+def _choices_comparison_check(local: Any, remote: Any) -> bool:
     matching = (local in CHOICES_DEFAULT_VALUES) + (remote in CHOICES_DEFAULT_VALUES)
     if matching == 2:
         return True
@@ -521,8 +521,8 @@ class ApplicationCommandMixin(ABC):
                         "id": int(registered_commands_dict[cmd.name]["id"]),
                     }
                 )
+            # We have this command registered and it's the same
             else:
-                # We have this command registered and it's the same
                 return_value.append(
                     {"command": cmd, "action": None, "id": int(match["id"])}
                 )
