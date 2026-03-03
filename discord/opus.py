@@ -582,6 +582,7 @@ class PacketDecoder:
         self._decoder: Decoder | None = None if self.sink.is_opus() else Decoder()
 
         from discord.voice.utils.buffer import JitterBuffer
+
         self._buffer: JitterBuffer = JitterBuffer()
         self._cached_id: int | None = None
 
