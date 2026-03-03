@@ -168,6 +168,10 @@ class Client:
         If not given, defaults to a regularly constructed :class:`Intents` class.
 
         .. versionadded:: 1.5
+    capabilities: :class:`GatewayCapabilities`
+        Gateway capabilities to include with the IDENTIFY payload. Defaults to
+        :meth:`GatewayCapabilities.none`. These are mostly undocumented and may not
+        be supported for bot accounts.
     member_cache_flags: :class:`MemberCacheFlags`
         Allows for finer control over how the library caches members.
         If not given, defaults to cache as much as possible with the
