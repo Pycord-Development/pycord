@@ -82,7 +82,6 @@ class ApplicationCtl(TypedDict):
 __all__ = (
     "Encoder",
     "Decoder",
-    "DecodeManager",
     "OpusError",
     "OpusNotLoaded",
 )
