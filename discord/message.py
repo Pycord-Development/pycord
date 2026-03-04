@@ -2345,7 +2345,7 @@ class Message(Hashable):
                     return component
         return None
 
-    def get_view(self, cls: BaseView = DesignerView) -> DesignerView | BaseView | None:
+    def get_view(self, cls: BaseView | None = None) -> DesignerView | BaseView | None:
         """Retrieve this message's view from the ViewStore. If there is no stored view, a new view will be returned if :attr:`components` is not empty.
 
         Parameters
@@ -2363,9 +2363,10 @@ class Message(Hashable):
         """
         v = self._state.get_message_view(self.id)
         if not v and self.components:
-            from .ui.view import DesignerView
-
-            v = DesignerView.from_message(self)
+            if not cls:
+                from .ui.view import DesignerView
+                cls = DesignerView
+            v = cls.from_message(self)
         return v
 
 
