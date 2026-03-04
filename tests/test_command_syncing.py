@@ -1,10 +1,11 @@
 import copy
-from typing import Any
+from typing import Any, override
 
 import pytest
 
 import discord
 from discord import MISSING, Bot, SlashCommandGroup
+from discord.bot import COMMAND_DEFAULTS, DefaultSetComparison
 from discord.types.interactions import ApplicationCommand, ApplicationCommandOption
 
 pytestmark = pytest.mark.asyncio
@@ -56,10 +57,20 @@ remote_dummy_base: dict = {
 }
 
 
+class DummyBot(Bot):
+    @override
+    async def _get_command_defaults(self):
+        command_defaults = COMMAND_DEFAULTS.copy()
+        command_defaults["integration_types"] = DefaultSetComparison(
+            (MISSING, {0}), lambda x, y: set(x) == set(y)
+        )
+        return command_defaults
+
+
 async def edit_needed(
     local: SlashCommand | SlashCommandGroup, remote: ApplicationCommand
 ):
-    b = Bot()
+    b = DummyBot()
     b.add_application_command(local)
     r = await b.get_desynced_commands(prefetched=[remote])
     return r[0]["action"] == "edit"
@@ -954,7 +965,7 @@ class TestSubCommandSyncing:
         async def edit_needed(
             local: SlashCommand | SlashCommandGroup, remote: ApplicationCommand
         ):
-            b = Bot()
+            b = DummyBot()
             b.add_application_command(local)
             r = await b.get_desynced_commands(prefetched=[remote])
             return r[0]["action"] == "upsert" and r[1]["action"] == "delete"
