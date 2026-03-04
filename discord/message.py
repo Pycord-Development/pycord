@@ -2364,6 +2364,7 @@ class Message(Hashable):
         v = self._state.get_message_view(self.id)
         if not v and self.components:
             from .ui.view import DesignerView
+
             v = DesignerView.from_message(self)
         return v
 
