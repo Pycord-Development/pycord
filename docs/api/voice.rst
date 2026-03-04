@@ -8,13 +8,13 @@ Objects
 
 .. attributetable:: discord.voice.VoiceClient
 
-.. autoclass:: VoiceClient()
+.. autoclass:: discord.voice.VoiceClient()
     :members:
     :exclude-members: connect, on_voice_state_update, on_voice_server_update
 
 .. attributetable:: discord.voice.VoiceProtocol
 
-.. autoclass:: VoiceProtocol
+.. autoclass:: discord.voice.VoiceProtocol
     :members:
 
 .. attributetable:: AudioSource
