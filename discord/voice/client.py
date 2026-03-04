@@ -43,7 +43,7 @@ from discord.utils import MISSING
 from ._types import VoiceProtocol
 from .enums import OpCodes
 from .receive import AudioReader
-from .state import VoiceConnectionState
+from .state import VoiceConnectionState, has_davey
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -118,6 +118,13 @@ class VoiceClient(VoiceProtocol):
                 "dependencies."
             )
 
+        if not has_davey:
+            raise RuntimeError(
+                "davey library is needed in order to use voice related features, "
+                'you can run "pip install py-cord[voice]" to install all voice-related '
+                "dependencies."
+            )
+
         super().__init__(client, channel)
         state = client._connection
 
@@ -141,6 +148,7 @@ class VoiceClient(VoiceProtocol):
         self._reader: AudioReader = MISSING
 
     warn_nacl: bool = not has_nacl
+    warn_davey: bool = not has_davey
     supported_modes: tuple[SupportedModes, ...] = (
         "aead_xchacha20_poly1305_rtpsize",
         "xsalsa20_poly1305_lite",

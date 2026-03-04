@@ -32,19 +32,21 @@ from collections.abc import Callable
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
-import davey
-
 from ..packets.core import OPUS_SILENCE
+from ..state import has_davey
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
 from .router import PacketRouter, SinkEventRouter
+
+if has_davey:
+    import davey
 
 try:
     import nacl.secret
     from nacl.exceptions import CryptoError
-except ImportError as exc:
-    raise RuntimeError(
-        "can't use voice receiver without PyNaCl installed, please install it with the 'py-cord[voice]' extra."
-    ) from exc
+    
+    has_nacl = True
+except ImportError:
+    has_nacl = False
 
 
 if TYPE_CHECKING:

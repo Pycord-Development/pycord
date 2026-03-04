@@ -39,10 +39,10 @@ from discord.errors import ConnectionClosed
 
 try:
     import davey
+
+    has_davey = True
 except ImportError:
-    raise RuntimeError(
-        "Can not initialize a client without the davey package, please install it with the py-cord[voice] extra requirement."
-    )
+    has_davey = False
 
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
@@ -62,7 +62,11 @@ MISSING = utils.MISSING
 SocketReaderCallback = Callable[[bytes], Any]
 _log = logging.getLogger(__name__)
 _recv_log = logging.getLogger("discord.voice.receiver")
-DAVE_PROTOCOL_VERSION = davey.DAVE_PROTOCOL_VERSION
+
+if has_davey:
+    DAVE_PROTOCOL_VERSION = davey.DAVE_PROTOCOL_VERSION  # type: ignore
+else:
+    DAVE_PROTOCOL_VERSION = 0
 
 
 class SocketReader(threading.Thread):
