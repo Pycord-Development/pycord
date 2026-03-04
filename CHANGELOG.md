@@ -18,6 +18,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 - Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
   ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Added `Colour.light_theme()`, `Colour.ash_theme()`, and `Colour.onyx_theme()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 - Added `RadioGroup`, `CheckboxGroup`, and `Checkbox` for modals.
   ([#3073](https://github.com/Pycord-Development/pycord/pull/3073))
 - Added the ability to respond to interactions with suppressed push and desktop
@@ -36,6 +38,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Updated `Colour.dark_theme()` with Discord's new theme colours.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 - Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
   ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 - Changed `FileComponent.name` and `FileComponent.size` to be optional.
@@ -56,6 +60,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `is_available_for_purchase`, and `is_guild_connections_role` in favor of `type` for
   both `Role` and `RoleTags` .
   ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Deprecated `Colour.embed_background()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 - Deprecated the `suppress` parameter in all applicable message-related methods in favor
   of `suppress_embeds`.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
