@@ -34,7 +34,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    ClassVar,
     Coroutine,
     Generator,
     Sequence,
@@ -71,9 +70,9 @@ from .threads import Thread
 from .ui.view import BaseView
 from .user import ClientUser, User
 from .utils import _D, _FETCHABLE, MISSING
+from .voice import VoiceClient, VoiceProtocol
 from .webhook import Webhook
 from .widget import Widget
-from .voice import VoiceClient, VoiceProtocol
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime

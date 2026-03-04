@@ -33,8 +33,8 @@ from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
 from ..packets.core import OPUS_SILENCE
-from ..state import has_davey
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
+from ..state import has_davey
 from .router import PacketRouter, SinkEventRouter
 
 if has_davey:
@@ -43,7 +43,7 @@ if has_davey:
 try:
     import nacl.secret
     from nacl.exceptions import CryptoError
-    
+
     has_nacl = True
 except ImportError:
     has_nacl = False
