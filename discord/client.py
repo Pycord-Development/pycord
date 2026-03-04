@@ -73,6 +73,7 @@ from .user import ClientUser, User
 from .utils import _D, _FETCHABLE, MISSING
 from .webhook import Webhook
 from .widget import Widget
+from .voice import VoiceClient, VoiceProtocol
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
@@ -84,7 +85,6 @@ if TYPE_CHECKING:
     from .soundboard import SoundboardSound
     from .threads import Thread
     from .ui.item import ViewItem
-    from .voice import VoiceProtocol
 
 __all__ = ("Client",)
 
@@ -235,8 +235,6 @@ class Client:
         The event loop that the client uses for asynchronous operations.
     """
 
-    _warn_davey: ClassVar[bool] = True
-
     def __init__(
         self,
         *,
@@ -281,16 +279,12 @@ class Client:
         self._connection._get_client = lambda: self
         self._event_handlers: dict[str, list[Coro]] = {}
 
-        try:
-            from .voice import VoiceClient
-
-            if VoiceClient.warn_nacl:
-                VoiceClient.warn_nacl = False
-                _log.warning("PyNaCl is not installed, voice will NOT be supported")
-        except RuntimeError:
-            if self._warn_davey:
-                Client._warn_davey = False
-                _log.warning("davey is not installed, voice will NOT be supported")
+        if VoiceClient.warn_nacl:
+            VoiceClient.warn_nacl = False
+            _log.warning("PyNaCl is not installed, voice will NOT be supported")
+        if VoiceClient.warn_davey:
+            VoiceClient.warn_davey = False
+            _log.warning("davey is not installed, voice will NOT be supported")
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
         self._tasks = set()
