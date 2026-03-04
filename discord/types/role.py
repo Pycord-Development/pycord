@@ -56,7 +56,7 @@ class RoleTags(TypedDict, total=False):
     bot_id: NotRequired[Snowflake]
     integration_id: NotRequired[Snowflake]
     subscription_listing_id: NotRequired[Snowflake]
-    # For future reference, here a key being present and `None` means `True`, and it being missing means `False`
+    # Here a key being present and `None` means `True`, and it being missing means `False`
     premium_subscriber: NotRequired[Literal[None]]
     available_for_purchase: NotRequired[Literal[None]]
     guild_connections: NotRequired[Literal[None]]
