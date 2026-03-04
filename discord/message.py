@@ -60,7 +60,6 @@ from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
-from .ui.view import DesignerView
 from .utils import MISSING, escape_mentions, find, warn_deprecated
 
 if TYPE_CHECKING:
@@ -94,7 +93,7 @@ if TYPE_CHECKING:
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
-    from .ui.view import BaseView
+    from .ui.view import BaseView, DesignerView
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
@@ -2364,6 +2363,7 @@ class Message(Hashable):
         """
         v = self._state.get_message_view(self.id)
         if not v and self.components:
+            from .ui.view import DesignerView
             v = DesignerView.from_message(self)
         return v
 
