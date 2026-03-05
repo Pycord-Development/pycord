@@ -132,7 +132,7 @@ class PacketRouter(threading.Thread):
                 for decoder in self.waiter.items:
                     data = decoder.pop_data()
                     if data is not None:
-                        self.sink.write(data.source, data)
+                        self.sink.write(data, data.source)
 
 
 class SinkEventRouter(threading.Thread):
