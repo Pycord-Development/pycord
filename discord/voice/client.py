@@ -748,7 +748,7 @@ class VoiceClient(VoiceProtocol):
             )
         if sync_start is not MISSING:
             warnings.warn(
-                "'sync_tart' parameter is deprecated since 2.7 and will be removed in 3.0"
+                "'sync_start' parameter is deprecated since 2.7 and will be removed in 3.0"
             )
 
         self._reader = AudioReader(sink, self, after=callback, start=True)
