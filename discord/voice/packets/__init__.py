@@ -58,4 +58,4 @@ class VoiceData:
 
     @property
     def opus(self) -> bytes | None:
-        self.packet.decrypted_data
+        return self.packet.decrypted_data
