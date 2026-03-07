@@ -32,6 +32,9 @@ These changes are available on the `master` branch, but have not yet been releas
   updated, regardless of cache status.
   ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
 
+- Added recurrence rules for `ScheduledEvent` objects.
+  ([#2749](https://github.com/Pycord-Development/pycord/pull/2749))
+
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
