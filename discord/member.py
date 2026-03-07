@@ -650,7 +650,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_avatar(self) -> Asset:
         """Returns the member's display avatar.
 
-        For regular members this is just their avatar, but
+        This is just their avatar, but
         if they have a guild specific avatar then that
         is returned instead.
 
@@ -675,7 +675,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_avatar_decoration(self) -> Asset | None:
         """Returns the member's displayed avatar decoration.
 
-        For regular members this is just their avatar decoration, but
+        This is just their avatar decoration, but
         if they have a guild specific avatar decoration then that
         is returned instead.
 
@@ -700,7 +700,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_banner(self) -> Asset | None:
         """Returns the member's display banner.
 
-        For regular members this is just their banner, but
+        This is just their banner, but
         if they have a guild specific banner then that
         is returned instead.
 
