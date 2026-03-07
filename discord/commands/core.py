@@ -30,8 +30,6 @@ import datetime
 import functools
 import inspect
 import re
-import sys
-import types
 from collections import OrderedDict
 from enum import Enum
 from typing import (
@@ -42,7 +40,6 @@ from typing import (
     Generator,
     Generic,
     TypeVar,
-    Union,
 )
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
@@ -67,12 +64,7 @@ from ..threads import Thread
 from ..user import User
 from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_deprecated
 from .context import ApplicationContext, AutocompleteContext
-from .options import Option, OptionChoice
-
-if sys.version_info >= (3, 11):
-    from typing import Annotated, Literal, get_args, get_origin
-else:
-    from typing_extensions import Annotated, Literal, get_args, get_origin
+from .options import Option, OptionChoice, _get_options
 
 __all__ = (
     "_BaseCommand",
@@ -187,7 +179,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
@@ -756,9 +748,7 @@ class SlashCommand(ApplicationCommand):
 
         self.attached_to_group: bool = False
 
-        self._options_kwargs = kwargs.get("options", [])
-        self.options: list[Option] = []
-        self._validate_parameters()
+        self.options: list[Option] = kwargs.get("options", []) or self._parse_options()
 
         try:
             checks = func.__commands_checks__
@@ -770,13 +760,6 @@ class SlashCommand(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-
-    def _validate_parameters(self):
-        params = self._get_signature_parameters()
-        if kwop := self._options_kwargs:
-            self.options = self._match_option_param_names(params, kwop)
-        else:
-            self.options = self._parse_options(params)
 
     def _check_required_params(self, params):
         params = iter(params.items())
@@ -793,151 +776,41 @@ class SlashCommand(ApplicationCommand):
 
         return params
 
-    def _parse_options(self, params, *, check_params: bool = True) -> list[Option]:
-        if check_params:
-            params = self._check_required_params(params)
-        else:
-            params = iter(params.items())
-
-        final_options = []
-        for p_name, p_obj in params:
-            option = p_obj.annotation
-            if option == inspect.Parameter.empty:
-                option = str
-
-            option = Option._strip_none_type(option)
-            if self._is_typing_literal(option):
-                literal_values = get_args(option)
-                if not all(isinstance(v, (str, int, float)) for v in literal_values):
-                    raise TypeError(
-                        "Literal values for choices must be str, int, or float."
-                    )
-
-                value_type = type(literal_values[0])
-                if not all(isinstance(v, value_type) for v in literal_values):
-                    raise TypeError(
-                        "All Literal values for choices must be of the same type."
-                    )
-
-                option = Option(
-                    value_type,
-                    choices=[
-                        OptionChoice(name=str(v), value=v) for v in literal_values
-                    ],
-                )
-
-            if self._is_typing_annotated(option):
-                type_hint = get_args(option)[0]
-                metadata = option.__metadata__
-                # If multiple Options in metadata, the first will be used.
-                option_gen = (elem for elem in metadata if isinstance(elem, Option))
-                option = next(option_gen, Option())
-                # Handle Optional
-                if self._is_typing_optional(type_hint):
-                    option.input_type = SlashCommandOptionType.from_datatype(
-                        get_args(type_hint)[0]
-                    )
-                    option.default = None
-                else:
-                    option.input_type = SlashCommandOptionType.from_datatype(type_hint)
-
-            if self._is_typing_union(option):
-                if self._is_typing_optional(option):
-                    option = Option(option.__args__[0], default=None)
-                else:
-                    option = Option(option.__args__)
-
-            if not isinstance(option, Option):
-                if isinstance(p_obj.default, Option):
-                    if p_obj.default.input_type is None:
-                        p_obj.default.input_type = SlashCommandOptionType.from_datatype(
-                            option
-                        )
-                    option = p_obj.default
-                else:
-                    option = Option(option)
-
-            if option.default is None and not p_obj.default == inspect.Parameter.empty:
-                if isinstance(p_obj.default, Option):
-                    pass
-                elif isinstance(p_obj.default, type) and issubclass(
-                    p_obj.default, (DiscordEnum, Enum)
-                ):
-                    option = Option(p_obj.default)
-                else:
-                    option.default = p_obj.default
-                    option.required = False
-            if option.name is None:
-                option.name = p_name
-            if option.name != p_name or option._parameter_name is None:
-                option._parameter_name = p_name
-
-            _validate_names(option)
+    def _parse_options(self) -> list[Option]:
+        final_options = _get_options(
+            self.callback, cog=type(self.cog) if self.cog else None
+        )
+        for option in final_options.values():
+            _validate_names(option._param_name)
             _validate_descriptions(option)
 
-            final_options.append(option)
+        return list(final_options.values())
 
-        return final_options
-
-    def _match_option_param_names(self, params, options):
-        options = list(options)
-        params = self._check_required_params(params)
-
-        check_annotations: list[Callable[[Option, type], bool]] = [
-            lambda o, a: (
-                o.input_type == SlashCommandOptionType.string
-                and o.converter is not None
-            ),  # pass on converters
-            lambda o, a: isinstance(
-                o.input_type, SlashCommandOptionType
-            ),  # pass on slash cmd option type enums
-            lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
-            lambda o, a: (
-                self._is_typing_optional(a)
-                and not o.required
-                and o._raw_type in a.__args__
-            ),  # optional
-            lambda o, a: (
-                isinstance(a, type) and issubclass(a, o._raw_type)
-            ),  # 'normal' types
-        ]
-        for o in options:
-            _validate_names(o)
-            _validate_descriptions(o)
-            try:
-                p_name, p_obj = next(params)
-            except StopIteration:  # not enough params for all the options
-                raise ClientException("Too many arguments passed to the options kwarg.")
-            p_obj = p_obj.annotation
-
-            if not any(check(o, p_obj) for check in check_annotations):
-                raise TypeError(
-                    f"Parameter {p_name} does not match input type of {o.name}."
-                )
-            o._parameter_name = p_name
-
-        left_out_params = OrderedDict()
-        for k, v in params:
-            left_out_params[k] = v
-        options.extend(self._parse_options(left_out_params, check_params=False))
-
-        return options
-
-    def _is_typing_union(self, annotation):
-        return getattr(annotation, "__origin__", None) is Union or type(
-            annotation
-        ) is getattr(
-            types, "UnionType", Union
-        )  # type: ignore
-
-    def _is_typing_optional(self, annotation):
-        return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
-
-    def _is_typing_literal(self, annotation):
-        return get_origin(annotation) is Literal
-
-    def _is_typing_annotated(self, annotation):
-        return get_origin(annotation) is Annotated
+    # def _match_option_param_names(self, params, options):
+    #    options = list(options)
+    #    params = self._check_required_params(params)
+    #
+    #    for o in options:
+    #        _validate_names(o)
+    #        _validate_descriptions(o)
+    #        try:
+    #            p_name, p_obj = next(params)
+    #        except StopIteration:  # not enough params for all the options
+    #            raise ClientException("Too many arguments passed to the options kwarg.")
+    #        p_obj = p_obj.annotation
+    #
+    #        if not any(check(o, p_obj) for check in check_annotations):
+    #            raise TypeError(
+    #                f"Parameter {p_name} does not match input type of {o.name}."
+    #            )
+    #        o._parameter_name = p_name
+    #
+    #    left_out_params = OrderedDict()
+    #    for k, v in params:
+    #        left_out_params[k] = v
+    #    options.extend(self._parse_options(left_out_params, check_params=False))
+    #
+    #    return options
 
     @property
     def cog(self):
@@ -954,7 +827,7 @@ class SlashCommand(ApplicationCommand):
             or value is None
             and old_cog is not None
         ):
-            self._validate_parameters()
+            self._parse_options()
 
     @property
     def is_subcommand(self) -> bool:
@@ -1001,7 +874,7 @@ class SlashCommand(ApplicationCommand):
             arg = arg["value"]
 
             # Checks if input_type is user, role or channel
-            if op.input_type in (
+            if op._api_type in (
                 SlashCommandOptionType.user,
                 SlashCommandOptionType.role,
                 SlashCommandOptionType.channel,
@@ -1010,7 +883,7 @@ class SlashCommand(ApplicationCommand):
             ):
                 resolved = ctx.interaction.data.get("resolved", {})
                 if (
-                    op.input_type
+                    op._api_type
                     in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
                     and (_data := resolved.get("members", {}).get(arg)) is not None
                 ):
@@ -1020,7 +893,7 @@ class SlashCommand(ApplicationCommand):
                         _data["user"] = _user_data
                     cache_flag = ctx.interaction._state.member_cache_flags.interaction
                     arg = ctx.guild._get_and_update_member(_data, int(arg), cache_flag)
-                elif op.input_type is SlashCommandOptionType.mentionable:
+                elif op._api_type is SlashCommandOptionType.mentionable:
                     if (_data := resolved.get("users", {}).get(arg)) is not None:
                         arg = User(state=ctx.interaction._state, data=_data)
                     elif (_data := resolved.get("roles", {}).get(arg)) is not None:
@@ -1030,9 +903,9 @@ class SlashCommand(ApplicationCommand):
                     else:
                         arg = Object(id=int(arg))
                 elif (
-                    _data := resolved.get(f"{op.input_type.name}s", {}).get(arg)
+                    _data := resolved.get(f"{op._api_type.name}s", {}).get(arg)
                 ) is not None:
-                    if op.input_type is SlashCommandOptionType.channel and (
+                    if op._api_type is SlashCommandOptionType.channel and (
                         int(arg) in ctx.guild._channels
                         or int(arg) in ctx.guild._threads
                     ):
@@ -1046,12 +919,12 @@ class SlashCommand(ApplicationCommand):
                     else:
                         obj_type = None
                         kw = {}
-                        if op.input_type is SlashCommandOptionType.user:
+                        if op._api_type is SlashCommandOptionType.user:
                             obj_type = User
-                        elif op.input_type is SlashCommandOptionType.role:
+                        elif op._api_type is SlashCommandOptionType.role:
                             obj_type = Role
                             kw["guild"] = ctx.guild
-                        elif op.input_type is SlashCommandOptionType.channel:
+                        elif op._api_type is SlashCommandOptionType.channel:
                             # NOTE:
                             # This is a fallback in case the channel/thread is not found in the
                             # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
@@ -1060,7 +933,7 @@ class SlashCommand(ApplicationCommand):
                             # flags, and more will be missing due to a lack of data sent by Discord.
                             obj_type = _threaded_guild_channel_factory(_data["type"])[0]
                             kw["guild"] = ctx.guild
-                        elif op.input_type is SlashCommandOptionType.attachment:
+                        elif op._api_type is SlashCommandOptionType.attachment:
                             obj_type = Attachment
                         arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
                 else:
@@ -1068,18 +941,12 @@ class SlashCommand(ApplicationCommand):
                     arg = Object(id=int(arg))
 
             elif (
-                op.input_type == SlashCommandOptionType.string
+                op._api_type == SlashCommandOptionType.string
                 and (converter := op.converter) is not None
             ):
-                from discord.ext.commands import Converter
+                arg = await converter.convert(ctx, arg)
 
-                if isinstance(converter, Converter):
-                    if isinstance(converter, type):
-                        arg = await converter().convert(ctx, arg)
-                    else:
-                        arg = await converter.convert(ctx, arg)
-
-            elif op._raw_type in (
+            elif op._api_type in (
                 SlashCommandOptionType.integer,
                 SlashCommandOptionType.number,
                 SlashCommandOptionType.string,
@@ -1087,20 +954,22 @@ class SlashCommand(ApplicationCommand):
             ):
                 pass
 
-            elif issubclass(op._raw_type, Enum):
+            elif inspect.isclass(op._param_type) and issubclass(
+                op._param_type, (Enum, DiscordEnum)
+            ):
                 if isinstance(arg, str) and arg.isdigit():
                     try:
-                        arg = op._raw_type(int(arg))
+                        arg = op._param_type(int(arg))
                     except ValueError:
-                        arg = op._raw_type(arg)
+                        arg = op._param_type(arg)
                 elif choice := find(lambda c: c.value == arg, op.choices):
-                    arg = getattr(op._raw_type, choice.name)
+                    arg = getattr(op._param_type, choice.name)
 
-            kwargs[op._parameter_name] = arg
+            kwargs[op._param_name] = arg
 
         for o in self.options:
-            if o._parameter_name not in kwargs:
-                kwargs[o._parameter_name] = o.default
+            if o._param_name not in kwargs:
+                kwargs[o._param_name] = o.default
 
         if self.cog is not None:
             await self.callback(self.cog, ctx, **kwargs)
@@ -1399,15 +1268,6 @@ class SlashCommandGroup(ApplicationCommand):
     def command(
         self, cls: type[T] = SlashCommand, **kwargs
     ) -> Callable[[Callable], SlashCommand]:
-        """A shortcut decorator for adding a subcommand to this slash command group.
-
-        Returns
-        -------
-        Callable[..., :class:`SlashCommand`]
-            A decorator that converts the provided function into a :class:`.SlashCommand`,
-            adds it to this group, then returns it.
-        """
-
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
             self.add_command(command)
@@ -1423,7 +1283,7 @@ class SlashCommandGroup(ApplicationCommand):
         **kwargs,
     ) -> SlashCommandGroup:
         """
-        Creates a new subgroup under this slash command group.
+        Creates a new subgroup for this SlashCommandGroup.
 
         Parameters
         ----------
