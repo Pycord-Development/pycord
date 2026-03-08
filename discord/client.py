@@ -71,7 +71,7 @@ from .threads import Thread
 from .ui.view import BaseView
 from .user import ClientUser, User
 from .utils import _D, _FETCHABLE, MISSING
-from .voice_client import VoiceClient
+from .voice import VoiceClient, VoiceProtocol
 from .webhook import Webhook
 from .widget import Widget
 
@@ -87,7 +87,6 @@ if TYPE_CHECKING:
     from .soundboard import SoundboardSound
     from .threads import Thread
     from .ui.item import ViewItem
-    from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
 
@@ -285,6 +284,9 @@ class Client:
         if VoiceClient.warn_nacl:
             VoiceClient.warn_nacl = False
             _log.warning("PyNaCl is not installed, voice will NOT be supported")
+        if VoiceClient.warn_davey:
+            VoiceClient.warn_davey = False
+            _log.warning("davey is not installed, voice will NOT be supported")
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
         self._tasks = set()
