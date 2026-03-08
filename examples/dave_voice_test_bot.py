@@ -159,7 +159,9 @@ async def on_ready() -> None:
 async def on_member_speaking_state_update(
     member: discord.Member, ssrc: int, speaking_state: Any
 ) -> None:
-    log.info("speaking-state member=%s ssrc=%s state=%s", member.id, ssrc, speaking_state)
+    log.info(
+        "speaking-state member=%s ssrc=%s state=%s", member.id, ssrc, speaking_state
+    )
 
 
 @bot.event
@@ -178,7 +180,9 @@ async def ping(ctx: commands.Context) -> None:
 
 
 @bot.command()
-async def join(ctx: commands.Context, *, channel: discord.VoiceChannel | None = None) -> None:
+async def join(
+    ctx: commands.Context, *, channel: discord.VoiceChannel | None = None
+) -> None:
     target = resolve_voice_channel(ctx, channel)
     if target is None:
         await ctx.send("No target voice channel. Join one or pass a channel.")
@@ -191,7 +195,12 @@ async def join(ctx: commands.Context, *, channel: discord.VoiceChannel | None = 
 
     vc = await target.connect()
     await ctx.send(f"Joined {target.mention}")
-    log.info("voice joined guild=%s channel=%s %s", ctx.guild and ctx.guild.id, target.id, summarize_dave(vc))
+    log.info(
+        "voice joined guild=%s channel=%s %s",
+        ctx.guild and ctx.guild.id,
+        target.id,
+        summarize_dave(vc),
+    )
 
 
 @bot.command()
@@ -362,4 +371,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
