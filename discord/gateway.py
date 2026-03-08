@@ -28,14 +28,12 @@ from __future__ import annotations
 import asyncio
 import concurrent.futures
 import logging
-import struct
 import sys
 import threading
 import time
 import traceback
 import zlib
-from collections import deque, namedtuple
-from typing import TYPE_CHECKING
+from collections import namedtuple
 
 import aiohttp
 

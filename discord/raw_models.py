@@ -863,7 +863,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
-            
+
 
 # this is for backwards compatibility because VoiceProtocol.on_voice_..._update
 # passed the raw payload instead of a raw object. Emit deprecation warning.
@@ -1048,6 +1048,7 @@ class RawVoiceServerUpdateEvent(_PayloadLike):
     def guild(self) -> Guild | None:
         """Returns the guild this server update is from."""
         return self._state._get_guild(self.guild_id)
+
 
 class RawSoundboardSoundDeleteEvent(_RawReprMixin):
     """Represents the payload for an :func:`on_raw_soundboard_sound_delete`.
