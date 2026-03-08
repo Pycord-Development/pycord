@@ -209,6 +209,7 @@ class Sink(Filters):
     ClientException
         Audio may only be formatted after recording is finished.
     """
+    __sink_listeners__: list[tuple[str, str]] = []
 
     def __init__(self, *, filters=None):
         if filters is None:
@@ -248,3 +249,4 @@ class Sink(Filters):
     def get_user_audio(self, user: snowflake.Snowflake):
         """Gets the audio file(s) of one specific user."""
         return os.path.realpath(self.audio_data.pop(user))
+

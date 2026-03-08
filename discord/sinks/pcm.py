@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from .core import Filters, Sink, default_filters
+from .core import Sink
 
 
 class PCMSink(Sink):
@@ -32,14 +32,10 @@ class PCMSink(Sink):
     """
 
     def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
-
         self.encoding = "pcm"
-        self.vc = None
-        self.audio_data = {}
+        super().__init__(filters=filters)
 
     def format_audio(self, audio):
         return
+
+

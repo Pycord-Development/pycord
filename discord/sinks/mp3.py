@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 import io
 import subprocess
 
-from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
+from .core import CREATE_NO_WINDOW, Sink
 from .errors import MP3SinkError
 
 
@@ -36,14 +36,8 @@ class MP3Sink(Sink):
     """
 
     def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
-
         self.encoding = "mp3"
-        self.vc = None
-        self.audio_data = {}
+        super().__init__(filters=filters)
 
     def format_audio(self, audio):
         """Formats the recorded audio.
@@ -55,7 +49,7 @@ class MP3Sink(Sink):
         MP3SinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.vc.is_recording():
             raise MP3SinkError(
                 "Audio may only be formatted after recording is finished."
             )
@@ -94,3 +88,6 @@ class MP3Sink(Sink):
         out.seek(0)
         audio.file = out
         audio.on_format(self.encoding)
+
+
+

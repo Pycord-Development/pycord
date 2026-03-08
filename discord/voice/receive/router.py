@@ -174,9 +174,10 @@ class SinkEventRouter(threading.Thread):
                 self._unregister_listeners(child)
 
     def _register_listeners(self, sink: Sink) -> None:
-        _log.debug("Registering events for %s: %s", sink, sink.__sink_listeners__)
+        listeners = getattr(sink, "__sink_listeners__", ())
+        _log.debug("Registering events for %s: %s", sink, listeners)
 
-        for name, method_name in sink.__sink_listeners__:
+        for name, method_name in listeners:
             func = getattr(sink, method_name)
             _log.debug("Registering event: %r (callback at %r)", name, method_name)
 
@@ -186,7 +187,8 @@ class SinkEventRouter(threading.Thread):
                 self._event_listeners[name] = [func]
 
     def _unregister_listeners(self, sink: Sink) -> None:
-        for name, method_name in sink.__sink_listeners__:
+        listeners = getattr(sink, "__sink_listeners__", ())
+        for name, method_name in listeners:
             func = getattr(sink, method_name)
 
             if name in self._event_listeners:
@@ -229,3 +231,4 @@ class SinkEventRouter(threading.Thread):
                 with self._lock:
                     with self.reader.packet_router._lock:
                         self._dispatch_to_listeners(event, *args, **kwargs)
+
