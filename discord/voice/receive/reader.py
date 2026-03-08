@@ -333,7 +333,11 @@ class PacketDecryptor:
                     _log.debug(
                         "Ignoring exception while decoding DAVE packet", exc_info=exc
                     )
-                    payload = OPUS_SILENCE
+                    if "UnencryptedWhenPassthroughDisabled" in str(exc):
+                        # Some packets may arrive unencrypted; keep original opus payload.
+                        pass
+                    else:
+                        payload = OPUS_SILENCE
 
         packet.decrypted_data = payload
         return payload

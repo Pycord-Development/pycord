@@ -57,9 +57,10 @@ class WaveSink(Sink):
         out = io.BytesIO()
 
         with wave.open(out, "wb") as f:
-            f.setnchannels(self.vc.decoder.CHANNELS)
-            f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
-            f.setframerate(self.vc.decoder.SAMPLING_RATE)
+            # Voice receive decode output is 48kHz, 16-bit, stereo PCM.
+            f.setnchannels(2)
+            f.setsampwidth(2)
+            f.setframerate(48000)
             f.writeframes(pcm_data)
 
         out.seek(0)
