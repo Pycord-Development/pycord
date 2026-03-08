@@ -137,8 +137,8 @@ class AudioReader:
 
         self.client._connection.remove_socket_listener(self.callback)
         self.speaking_timer.notify()
-        self._stop()
         self.active = False
+        self._stop()
 
     def _stop(self) -> None:
         try:
@@ -157,6 +157,12 @@ class AudioReader:
         self.speaking_timer.stop()
         self.keep_alive.stop()
 
+        try:
+            self.sink.cleanup()
+        except Exception as exc:
+            self.error = exc
+            _log.exception("An error ocurred while cleaning up sink.")
+
         if self.after:
             try:
                 self.after(self.error)
@@ -164,12 +170,6 @@ class AudioReader:
                 _log.exception(
                     "An error ocurred while calling the after callback on audio reader"
                 )
-
-        """for sink in self.sink.root.walk_children(with_self=True):
-            try:
-                sink.cleanup()
-            except Exception as exc:
-                _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)"""
 
     def set_sink(self, sink: Sink) -> Sink:
         old_sink = self.sink
