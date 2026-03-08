@@ -53,6 +53,7 @@ packages = [
     "discord.ext.pages",
     "discord.ext.bridge",
     "discord.bin",
+    "discord.voice",
 ]
 
 [tool.setuptools.dynamic]
@@ -130,6 +131,7 @@ env_list = ["3.13", "3.12", "3.11", "3.10"]
 description = "run unit tests"
 commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
 dependency_groups = ["test"]
+extras = ["voice"]
 
 # GitHub actions
 [tool.tox.gh.python]
