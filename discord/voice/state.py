@@ -660,7 +660,7 @@ class VoiceConnectionState:
         last_state = self.state
 
         try:
-            await self.wait_for(timeout=timeout)
+            await self._wait_for_state(ConnectionFlowState.connected, timeout=timeout)
         except asyncio.TimeoutError:
             _log.warning(
                 "Timed out trying to move to channel %s in guild %s",
