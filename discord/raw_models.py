@@ -97,6 +97,8 @@ __all__ = (
     "RawMessagePollVoteEvent",
     "RawSoundboardSoundDeleteEvent",
     "RawMemberUpdateEvent",
+    "RawVoiceStateUpdateEvent",
+    "RawVoiceServerUpdateEvent",
 )
 
 
