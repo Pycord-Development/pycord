@@ -95,6 +95,3 @@ class M4ASink(Sink):
         os.remove(m4a_file)
 
         audio.on_format(self.encoding)
-
-
-

@@ -37,5 +37,3 @@ class PCMSink(Sink):
 
     def format_audio(self, audio):
         return
-
-
