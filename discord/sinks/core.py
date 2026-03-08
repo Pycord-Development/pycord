@@ -57,6 +57,7 @@ default_filters = {
     "time": 0,
     "users": [],
     "max_size": 0,
+    "fill_silence": False,
 }
 
 
@@ -75,6 +76,7 @@ class Filters:
         self.filtered_users = kwargs.get("users", default_filters["users"])
         self.seconds = kwargs.get("time", default_filters["time"])
         self.max_size = kwargs.get("max_size", default_filters["max_size"])
+        self.fill_silence = kwargs.get("fill_silence", default_filters["fill_silence"])
         self.finished = False
 
     @staticmethod
@@ -219,6 +221,7 @@ class Sink(Filters):
         Filters.__init__(self, **self.filters)
         self.vc: VoiceClient | None = None
         self.audio_data = {}
+        self._last_packet_end_ts = {}
         self.parent: Sink | None = None
         self._children: list[Sink] = []
 
@@ -282,6 +285,15 @@ class Sink(Filters):
 
         return None
 
+    def _resolve_packet_timestamp(self, data):
+        packet = getattr(data, "packet", None)
+        if packet is None:
+            return None
+        ts = getattr(packet, "timestamp", None)
+        if isinstance(ts, int):
+            return ts
+        return None
+
     @Filters.container
     def write(self, data, user):
         payload = self._resolve_audio_payload(data)
@@ -293,6 +305,21 @@ class Sink(Filters):
             self.audio_data.update({user: AudioData(file)})
 
         file = self.audio_data[user]
+
+        if self.fill_silence and not self.is_opus():
+            ts = self._resolve_packet_timestamp(data)
+            if ts is not None:
+                # Opus @ 48kHz decoded PCM is 16-bit stereo: 4 bytes per sample.
+                bytes_per_sample = 4
+                payload_samples = len(payload) // bytes_per_sample
+                prev_end_ts = self._last_packet_end_ts.get(user)
+                if prev_end_ts is not None:
+                    gap_samples = ts - prev_end_ts
+                    if 0 < gap_samples <= 48000 * 5:
+                        file.write(b"\x00" * (gap_samples * bytes_per_sample))
+                if payload_samples > 0:
+                    self._last_packet_end_ts[user] = ts + payload_samples
+
         file.write(payload)
 
     def cleanup(self):
