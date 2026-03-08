@@ -48,6 +48,13 @@ try:
 except ImportError:
     has_nacl = False
 
+try:
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+    has_cryptography = True
+except ImportError:
+    has_cryptography = False
+
 
 if TYPE_CHECKING:
     from discord.member import Member
@@ -61,7 +68,7 @@ if TYPE_CHECKING:
     DecryptRTP = Callable[[RTPPacket], bytes]
     DecryptRTCP = Callable[[bytes], bytes]
     SpeakingEvent = Literal["member_speaking_start", "member_speaking_stop"]
-    EncryptionBox = nacl.secret.SecretBox | nacl.secret.Aead
+    EncryptionBox = nacl.secret.SecretBox | nacl.secret.Aead | AESGCM
 
 _log = logging.getLogger(__name__)
 
@@ -249,6 +256,7 @@ class AudioReader:
 
 class PacketDecryptor:
     supported_modes: list[SupportedModes] = [
+        *(["aead_aes256_gcm_rtpsize"] if has_cryptography else []),
         "aead_xchacha20_poly1305_rtpsize",
         "xsalsa20_poly1305",
         "xsalsa20_poly1305_lite",
@@ -270,6 +278,14 @@ class PacketDecryptor:
         self.box: EncryptionBox = self._make_box(secret_key)
 
     def _make_box(self, secret_key: bytes) -> EncryptionBox:
+        if self.mode == "aead_aes256_gcm_rtpsize":
+            if not has_cryptography:
+                raise RuntimeError(
+                    "aead_aes256_gcm_rtpsize requires 'cryptography'. "
+                    "Install with: pip install cryptography"
+                )
+            return AESGCM(secret_key)  # type: ignore[name-defined]
+
         if self.mode.startswith("aead"):
             return nacl.secret.Aead(secret_key)
         else:
@@ -295,30 +311,32 @@ class PacketDecryptor:
         state = self.client._connection
         dave = state.dave_session
 
-        raw_payload = self._decryptor_rtp(packet)
+        payload = self._decryptor_rtp(packet)
+        uid = state.ssrc_user_map.get(packet.ssrc)
 
-        if dave is not None and dave.ready:
-            uid = state.ssrc_user_map.get(packet.ssrc)
-            if uid:
+        if (
+            dave is not None
+            and dave.ready
+            and uid is not None
+            and payload != OPUS_SILENCE
+        ):
+            dave_ready = state.dave_protocol_version != 0
+            can_passthrough = dave.can_passthrough(uid)
+            if dave_ready or can_passthrough:
                 try:
-                    decrypted_audio = dave.decrypt(
+                    payload = dave.decrypt(
                         uid,
                         davey.MediaType.audio,
-                        raw_payload,
+                        payload,
                     )
-
-                    if packet.extended:
-                        offset = packet.update_extended_header(decrypted_audio)
-                        packet.decrypted_data = decrypted_audio[offset:]
-                    else:
-                        packet.decrypted_data = decrypted_audio
                 except Exception as exc:
                     _log.debug(
                         "Ignoring exception while decoding DAVE packet", exc_info=exc
                     )
-                    packet.decrypted_data = OPUS_SILENCE
+                    payload = OPUS_SILENCE
 
-        return packet.decrypted_data
+        packet.decrypted_data = payload
+        return payload
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:
         data = self._decryptor_rtcp(packet)
@@ -333,6 +351,9 @@ class PacketDecryptor:
                 break
 
             p_header = RTCPPacket.from_data(current_data)
+            packet_size = (p_header.length + 1) * 4
+            if packet_size <= 0:
+                break
 
             # the sender ssrc will always be at offset 4 of the current packet
             # doesn't matter if it is a sr or a rr
@@ -347,6 +368,7 @@ class PacketDecryptor:
                     davey.MediaType.audio,
                     current_data,
                 )
+            offset += packet_size
         return data
 
     def update_secret_key(self, secret_key: bytes) -> None:
@@ -420,7 +442,7 @@ class PacketDecryptor:
 
         try:
             result = self.box.decrypt(
-                packet.decrypted_data or packet.data,
+                packet.data,
                 bytes(packet.header),
                 nonce,
             )
@@ -429,9 +451,38 @@ class PacketDecryptor:
             raise CryptoError(exc)
 
         if packet.extended:
-            packet.update_extended_header(result)
+            offset = packet.update_extended_header(result)
+            result = result[offset:]
 
-        return result[8:]
+        return result
+
+    def _decrypt_rtp_aead_aes256_gcm_rtpsize(self, packet: RTPPacket) -> bytes:
+        packet.adjust_rtpsize()
+        nonce = packet.nonce + (b"\x00" * 8)
+
+        if not has_cryptography:
+            raise RuntimeError(
+                "aead_aes256_gcm_rtpsize requires 'cryptography'. "
+                "Install with: pip install cryptography"
+            )
+
+        assert isinstance(self.box, AESGCM)  # type: ignore[name-defined]
+
+        try:
+            result = self.box.decrypt(
+                nonce,
+                packet.data,
+                bytes(packet.header),
+            )
+        except Exception as exc:
+            _log.error("Critical error at AES-GCM AEAD: %s", exc)
+            raise CryptoError(exc)
+
+        if packet.extended:
+            offset = packet.update_extended_header(result)
+            result = result[offset:]
+
+        return result
 
     def _decrypt_rtcp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
         _log.debug("Decrypting RTCP AEAD XChaCha20 Poly1305 RTPSize")
@@ -442,6 +493,21 @@ class PacketDecryptor:
         assert isinstance(self.box, nacl.secret.Aead)
         result = self.box.decrypt(data[8:-4], bytes(header), bytes(nonce))
 
+        return header + result
+
+    def _decrypt_rtcp_aead_aes256_gcm_rtpsize(self, data: bytes) -> bytes:
+        nonce_counter = data[-4:]
+        nonce = nonce_counter + (b"\x00" * 8)
+        header = data[:8]
+
+        if not has_cryptography:
+            raise RuntimeError(
+                "aead_aes256_gcm_rtpsize requires 'cryptography'. "
+                "Install with: pip install cryptography"
+            )
+
+        assert isinstance(self.box, AESGCM)  # type: ignore[name-defined]
+        result = self.box.decrypt(nonce, data[8:-4], bytes(header))
         return header + result
 
 

@@ -279,6 +279,7 @@ class VoiceConnectionState:
         self.dave_session: davey.DaveSession | None = None
         self.dave_protocol_version: int = 0
         self.dave_pending_transition: dict[str, int] | None = None
+        self.dave_external_sender: bytes | None = None
         self.downgraded_dave = False
 
     @property
@@ -917,6 +918,31 @@ class VoiceConnectionState:
     def _update_voice_channel(self, channel_id: int | None) -> None:
         self.client.channel = channel_id and self.guild.get_channel(channel_id)  # type: ignore
 
+    async def send_dave_key_package(self) -> None:
+        if not self.dave_session:
+            return
+
+        await self.ws.send_as_bytes(
+            OpCodes.mls_key_package,
+            self.dave_session.get_serialized_key_package(),
+        )
+
+    async def apply_dave_external_sender(self, external_sender: bytes) -> None:
+        self.dave_external_sender = external_sender
+
+        if self.dave_protocol_version <= 0 or not self.dave_session:
+            return
+
+        try:
+            self.dave_session.set_external_sender(external_sender)
+        except Exception:
+            _log.debug(
+                "Failed to apply MLS external sender to DAVE session", exc_info=True
+            )
+            return
+
+        await self.send_dave_key_package()
+
     async def reinit_dave_session(self) -> None:
         assert self.channel_id
 
@@ -932,10 +958,11 @@ class VoiceConnectionState:
                     self.channel_id,
                 )
 
-            await self.ws.send_as_bytes(
-                OpCodes.mls_key_package,
-                self.dave_session.get_serialized_key_package(),
-            )
+            await self.send_dave_key_package()
+
+            # If OP25 arrived before we had an initialized session, apply it now.
+            if self.dave_external_sender is not None:
+                await self.apply_dave_external_sender(self.dave_external_sender)
         elif self.dave_session:
             self.dave_session.reset()
             self.dave_session.set_passthrough_mode(True, 10)
@@ -979,13 +1006,12 @@ class VoiceConnectionState:
             elif transition > 0 and self.downgraded_dave:
                 self.downgraded_dave = False
                 if session:
-                    session.set_passthrough_mode(True, 10)
+                    session.set_passthrough_mode(False, 10)
                 _log.info("Upgraded voice session to use DAVE")
+            self.dave_pending_transition = None
         else:
             _log.debug(
                 "Received an execute transition id %s when expected was %s, ignoring",
                 transition,
-                pending_proto,
+                pending_transition,
             )
-
-        self.dave_pending_transition = None

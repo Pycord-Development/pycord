@@ -78,6 +78,13 @@ try:
 except ImportError:
     has_nacl = False
 
+try:
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+    has_cryptography = True
+except ImportError:
+    has_cryptography = False
+
 __all__ = ("VoiceClient",)
 
 
@@ -150,6 +157,7 @@ class VoiceClient(VoiceProtocol):
     warn_nacl: bool = not has_nacl
     warn_davey: bool = not has_davey
     supported_modes: tuple[SupportedModes, ...] = (
+        *(("aead_aes256_gcm_rtpsize",) if has_cryptography else ()),
         "aead_xchacha20_poly1305_rtpsize",
         "xsalsa20_poly1305_lite",
         "xsalsa20_poly1305_suffix",
@@ -419,9 +427,20 @@ class VoiceClient(VoiceProtocol):
     # audio related
 
     def _get_voice_packet(self, data: Any) -> bytes:
-
         session = self._connection.dave_session
-        packet = session.encrypt_opus(data) if session and session.ready else data
+        packet = data
+
+        if (
+            session
+            and session.ready
+            and self._connection.dave_protocol_version != 0
+            and data != opus.OPUS_SILENCE
+        ):
+            try:
+                packet = session.encrypt_opus(data)
+            except Exception:
+                _log.debug("Failed to DAVE-encrypt opus frame", exc_info=True)
+                packet = data
 
         header = bytearray(12)
 
@@ -471,6 +490,21 @@ class VoiceClient(VoiceProtocol):
             + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext
             + nonce[:4]
         )
+
+    def _encrypt_aead_aes256_gcm_rtpsize(self, header: bytes, data: Any) -> bytes:
+        if not has_cryptography:
+            raise RuntimeError(
+                "aead_aes256_gcm_rtpsize requires 'cryptography'. "
+                "Install with: pip install cryptography"
+            )
+
+        key = bytes(self.secret_key)
+        box = AESGCM(key)  # type: ignore[name-defined]
+        counter = struct.pack("<I", self._incr_nonce)
+        self.checked_add("_incr_nonce", 1, 4294967295)
+        nonce = counter + (b"\x00" * 8)
+        ciphertext = box.encrypt(nonce, bytes(data), bytes(header))
+        return header + ciphertext + counter
 
     @overload
     def play(

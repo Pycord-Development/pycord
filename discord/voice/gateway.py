@@ -207,40 +207,37 @@ class VoiceWebSocket(DiscordWebSocket):
                 interval=min(interval, 5),
             )
             self._keep_alive.start()
-        elif state.dave_session:
-            if op == OpCodes.dave_prepare_transition:
-                _log.info(
-                    "Preparing to upgrade to a DAVE connection for channel %s for transition %d proto version %d",
-                    state.channel_id,
-                    data["transition_id"],
-                    data["protocol_version"],
-                )
-                state.dave_pending_transition = data
+        elif op == OpCodes.dave_prepare_transition:
+            _log.info(
+                "Preparing to upgrade to a DAVE connection for channel %s for transition %d proto version %d",
+                state.channel_id,
+                data["transition_id"],
+                data["protocol_version"],
+            )
+            state.dave_pending_transition = data
 
-                transition_id = data["transition_id"]
+            transition_id = data["transition_id"]
 
-                if transition_id == 0:
-                    await state.execute_dave_transition(data["transition_id"])
-                else:
-                    if data["protocol_version"] == 0 and state.dave_session:
-                        state.dave_session.set_passthrough_mode(True, 10)
-                    await self.send_dave_transition_ready(transition_id)
-            elif op == OpCodes.dave_execute_transition:
-                _log.info(
-                    "Upgrading to DAVE connection for channel %s", state.channel_id
-                )
+            if transition_id == 0:
                 await state.execute_dave_transition(data["transition_id"])
-            elif op == OpCodes.dave_prepare_epoch:
-                epoch = data["epoch"]
-                _log.debug(
-                    "Preparing for DAVE epoch in channel %s: %s",
-                    state.channel_id,
-                    epoch,
-                )
-                # if epoch is 1 then a new MLS group is to be created for the proto version
-                if epoch == 1:
-                    state.dave_protocol_version = data["protocol_version"]
-                    await state.reinit_dave_session()
+            else:
+                if data["protocol_version"] == 0 and state.dave_session:
+                    state.dave_session.set_passthrough_mode(True, 10)
+                await self.send_dave_transition_ready(transition_id)
+        elif op == OpCodes.dave_execute_transition:
+            _log.info("Upgrading to DAVE connection for channel %s", state.channel_id)
+            await state.execute_dave_transition(data["transition_id"])
+        elif op == OpCodes.dave_prepare_epoch:
+            epoch = data["epoch"]
+            _log.debug(
+                "Preparing for DAVE epoch in channel %s: %s",
+                state.channel_id,
+                epoch,
+            )
+            # if epoch is 1 then a new MLS group is to be created for the proto version
+            if epoch == 1:
+                state.dave_protocol_version = data["protocol_version"]
+                await state.reinit_dave_session()
         else:
             _log.debug("Unhandled op code: %s with data %s", op, data)
 
@@ -258,17 +255,20 @@ class VoiceWebSocket(DiscordWebSocket):
 
         state = self.state
 
+        if op == OpCodes.mls_external_sender_package:
+            _log.debug("Received MLS External Sender Package, applying to DAVE session")
+            await state.apply_dave_external_sender(msg[3:])
+            if state.dave_session:
+                _log.debug(
+                    "Applied MLS External Sender Package, user IDs available: %s",
+                    state.dave_session.get_user_ids(),
+                )
+            return
+
         if not state.dave_session:
             return
 
-        if op == OpCodes.mls_external_sender_package:
-            _log.debug("Received MLS External Sender Package, applying to DAVE session")
-            state.dave_session.set_external_sender(msg[3:])
-            _log.debug(
-                "Applied MLS External Sender Package, user IDs available: %s",
-                state.dave_session.get_user_ids(),
-            )
-        elif op == OpCodes.mls_proposals:
+        if op == OpCodes.mls_proposals:
             op_type = msg[3]
             result = state.dave_session.process_proposals(
                 (
