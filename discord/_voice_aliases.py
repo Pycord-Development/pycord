@@ -45,7 +45,7 @@ __all__ = ("VoiceProtocol", "VoiceClient")
 @deprecated(
     "discord.VoiceClient is deprecated in favour of discord.voice.VoiceClient since 2.7 and will be removed in 3.0",
 )
-def VoiceClient(*args: Any, **kwargs: Any) -> VoiceClientC:
+def VoiceClient(*args: Any, **kwargs: Any) -> "VoiceClientC":
     from discord.voice import VoiceClient as VoiceClientC
 
     return VoiceClientC(*args, **kwargs)
@@ -54,7 +54,7 @@ def VoiceClient(*args: Any, **kwargs: Any) -> VoiceClientC:
 @deprecated(
     "discord.VoiceProtocol is deprecated in favour of discord.voice.VoiceProtocol since 2.7 and will be removed in 3.0",
 )
-def VoiceProtocol(*args: Any, **kwargs: Any) -> VoiceProtocolC:
+def VoiceProtocol(*args: Any, **kwargs: Any) -> "VoiceProtocolC":
     from discord.voice import VoiceProtocol as VoiceProtocolC
 
     return VoiceProtocolC(*args, **kwargs)
