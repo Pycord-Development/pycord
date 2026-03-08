@@ -218,6 +218,19 @@ class Sink(Filters):
         Filters.__init__(self, **self.filters)
         self.vc: VoiceClient | None = None
         self.audio_data = {}
+        self.parent: Sink | None = None
+        self._children: list[Sink] = []
+
+    @property
+    def root(self) -> Sink:
+        sink = self
+        while sink.parent is not None:
+            sink = sink.parent
+        return sink
+
+    @property
+    def children(self) -> list[Sink]:
+        return self._children
 
     @property
     def client(self) -> VoiceClient | None:
@@ -226,21 +239,68 @@ class Sink(Filters):
     def init(self, vc: VoiceClient):  # called under listen
         self.vc = vc
         super().init()
+        for child in self._children:
+            child.init(vc)
+
+    def add_child(self, sink: Sink) -> Sink:
+        sink.parent = self
+        self._children.append(sink)
+        if self.vc is not None:
+            sink.init(self.vc)
+        return sink
+
+    def remove_child(self, sink: Sink) -> None:
+        try:
+            self._children.remove(sink)
+        except ValueError:
+            return
+        sink.parent = None
+
+    def walk_children(self, *, with_self: bool = False):
+        if with_self:
+            yield self
+        for child in self._children:
+            yield child
+            yield from child.walk_children()
+
+    def is_opus(self) -> bool:
+        return getattr(self, "encoding", "").lower() == "opus"
+
+    def _resolve_audio_payload(self, data) -> bytes | None:
+        if self.is_opus():
+            opus_data = getattr(data, "opus", None)
+            if isinstance(opus_data, (bytes, bytearray, memoryview)):
+                return bytes(opus_data)
+
+        pcm_data = getattr(data, "pcm", None)
+        if isinstance(pcm_data, (bytes, bytearray, memoryview)):
+            return bytes(pcm_data)
+
+        if isinstance(data, (bytes, bytearray, memoryview)):
+            return bytes(data)
+
+        return None
 
     @Filters.container
     def write(self, data, user):
+        payload = self._resolve_audio_payload(data)
+        if not payload:
+            return
+
         if user not in self.audio_data:
             file = io.BytesIO()
             self.audio_data.update({user: AudioData(file)})
 
         file = self.audio_data[user]
-        file.write(data)
+        file.write(payload)
 
     def cleanup(self):
         self.finished = True
         for file in self.audio_data.values():
             file.cleanup()
             self.format_audio(file)
+        for child in self._children:
+            child.cleanup()
 
     def get_all_audio(self):
         """Gets all audio files."""

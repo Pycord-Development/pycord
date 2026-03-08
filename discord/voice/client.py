@@ -785,6 +785,7 @@ class VoiceClient(VoiceProtocol):
                 "'sync_start' parameter is deprecated since 2.7 and will be removed in 3.0"
             )
 
+        sink.init(self)
         self._reader = AudioReader(sink, self, after=callback, start=True)
 
     start_listening = start_recording
