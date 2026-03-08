@@ -23,11 +23,13 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations
+from typing import TYPE_CHECKING, Any
 
-from typing import TYPE_CHECKING
+from typing_extensions import deprecated
 
-from .utils import deprecated
+if TYPE_CHECKING:
+    from discord.voice import VoiceClient as VoiceClientC
+    from discord.voice import VoiceProtocol as VoiceProtocolC
 
 """
 since discord.voice raises an error when importing it without having the
@@ -40,36 +42,19 @@ the error would still be raised, but at least here we have more freedom on how w
 __all__ = ("VoiceProtocol", "VoiceClient")
 
 
-if TYPE_CHECKING:
-    from typing_extensions import deprecated
-
+@deprecated(
+    "discord.VoiceClient is deprecated in favour of discord.voice.VoiceClient since 2.7 and will be removed in 3.0",
+)
+def VoiceClient(*args: Any, **kwargs: Any) -> VoiceClientC:
     from discord.voice import VoiceClient as VoiceClientC
+
+    return VoiceClientC(*args, **kwargs)
+
+
+@deprecated(
+    "discord.VoiceProtocol is deprecated in favour of discord.voice.VoiceProtocol since 2.7 and will be removed in 3.0",
+)
+def VoiceProtocol(*args: Any, **kwargs: Any) -> VoiceProtocolC:
     from discord.voice import VoiceProtocol as VoiceProtocolC
 
-    @deprecated(
-        "discord.VoiceClient is deprecated in favour "
-        "of discord.voice.VoiceClient since 2.7 and "
-        "will be removed in 3.0",
-    )
-    def VoiceClient(client, channel) -> VoiceClientC: ...
-
-    @deprecated(
-        "discord.VoiceProtocol is deprecated in favour "
-        "of discord.voice.VoiceProtocol since 2.7 and "
-        "will be removed in 3.0",
-    )
-    def VoiceProtocol(client, channel) -> VoiceProtocolC: ...
-
-else:
-
-    @deprecated("discord.VoiceClient", "discord.voice.VoiceClient", "2.7", "3.0")
-    def VoiceClient(client, channel):
-        from discord.voice import VoiceClient as VoiceClientC
-
-        return VoiceClientC(client, channel)
-
-    @deprecated("discord.VoiceProtocol", "discord.voice.VoiceProtocol", "2.7", "3.0")
-    def VoiceProtocol(client, channel):
-        from discord.voice import VoiceProtocol as VoiceProtocolC
-
-        return VoiceProtocolC(client, channel)
+    return VoiceProtocolC(*args, **kwargs)
