@@ -27,7 +27,7 @@ import os
 import subprocess
 import time
 
-from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
+from .core import CREATE_NO_WINDOW, Sink
 from .errors import MP4SinkError
 
 
@@ -38,14 +38,8 @@ class MP4Sink(Sink):
     """
 
     def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
-
         self.encoding = "mp4"
-        self.vc = None
-        self.audio_data = {}
+        super().__init__(filters=filters)
 
     def format_audio(self, audio):
         """Formats the recorded audio.
@@ -57,7 +51,7 @@ class MP4Sink(Sink):
         MP4SinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.vc.is_recording():
             raise MP4SinkError(
                 "Audio may only be formatted after recording is finished."
             )

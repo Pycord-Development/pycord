@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 import io
 import subprocess
 
-from .core import Filters, Sink, default_filters
+from .core import Sink
 from .errors import MKVSinkError
 
 
@@ -36,14 +36,8 @@ class MKVSink(Sink):
     """
 
     def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
-
         self.encoding = "mkv"
-        self.vc = None
-        self.audio_data = {}
+        super().__init__(filters=filters)
 
     def format_audio(self, audio):
         """Formats the recorded audio.
@@ -55,7 +49,7 @@ class MKVSink(Sink):
         MKVSinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.vc.is_recording():
             raise MKVSinkError(
                 "Audio may only be formatted after recording is finished."
             )

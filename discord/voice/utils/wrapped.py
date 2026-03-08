@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,18 +23,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from .core import Sink
+
+def gap_wrapped(a: int, b: int, *, wrap: int = 65536) -> int:
+    return (b - (a + 1) + wrap) % wrap
 
 
-class PCMSink(Sink):
-    """A special sink for .pcm files.
-
-    .. versionadded:: 2.0
-    """
-
-    def __init__(self, *, filters=None):
-        self.encoding = "pcm"
-        super().__init__(filters=filters)
-
-    def format_audio(self, audio):
-        return
+def add_wrapped(a: int, b: int, *, wrap: int = 65536) -> int:
+    return (a + b) % wrap

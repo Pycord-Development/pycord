@@ -37,7 +37,7 @@ from ..types import snowflake
 from .errors import SinkException
 
 if TYPE_CHECKING:
-    from ..voice_client import VoiceClient
+    from ..voice import VoiceClient
 
 __all__ = (
     "Filters",
@@ -57,6 +57,7 @@ default_filters = {
     "time": 0,
     "users": [],
     "max_size": 0,
+    "fill_silence": False,
 }
 
 
@@ -75,6 +76,7 @@ class Filters:
         self.filtered_users = kwargs.get("users", default_filters["users"])
         self.seconds = kwargs.get("time", default_filters["time"])
         self.max_size = kwargs.get("max_size", default_filters["max_size"])
+        self.fill_silence = kwargs.get("fill_silence", default_filters["fill_silence"])
         self.finished = False
 
     @staticmethod
@@ -210,6 +212,8 @@ class Sink(Filters):
         Audio may only be formatted after recording is finished.
     """
 
+    __sink_listeners__: list[tuple[str, str]] = []
+
     def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
@@ -217,25 +221,114 @@ class Sink(Filters):
         Filters.__init__(self, **self.filters)
         self.vc: VoiceClient | None = None
         self.audio_data = {}
+        self._last_packet_end_ts = {}
+        self.parent: Sink | None = None
+        self._children: list[Sink] = []
 
-    def init(self, vc):  # called under listen
-        self.vc: VoiceClient = vc
+    @property
+    def root(self) -> Sink:
+        sink = self
+        while sink.parent is not None:
+            sink = sink.parent
+        return sink
+
+    @property
+    def children(self) -> list[Sink]:
+        return self._children
+
+    @property
+    def client(self) -> VoiceClient | None:
+        return self.vc
+
+    def init(self, vc: VoiceClient):  # called under listen
+        self.vc = vc
         super().init()
+        for child in self._children:
+            child.init(vc)
+
+    def add_child(self, sink: Sink) -> Sink:
+        sink.parent = self
+        self._children.append(sink)
+        if self.vc is not None:
+            sink.init(self.vc)
+        return sink
+
+    def remove_child(self, sink: Sink) -> None:
+        try:
+            self._children.remove(sink)
+        except ValueError:
+            return
+        sink.parent = None
+
+    def walk_children(self, *, with_self: bool = False):
+        if with_self:
+            yield self
+        for child in self._children:
+            yield child
+            yield from child.walk_children()
+
+    def is_opus(self) -> bool:
+        return getattr(self, "encoding", "").lower() == "opus"
+
+    def _resolve_audio_payload(self, data) -> bytes | None:
+        if self.is_opus():
+            opus_data = getattr(data, "opus", None)
+            if isinstance(opus_data, (bytes, bytearray, memoryview)):
+                return bytes(opus_data)
+
+        pcm_data = getattr(data, "pcm", None)
+        if isinstance(pcm_data, (bytes, bytearray, memoryview)):
+            return bytes(pcm_data)
+
+        if isinstance(data, (bytes, bytearray, memoryview)):
+            return bytes(data)
+
+        return None
+
+    def _resolve_packet_timestamp(self, data):
+        packet = getattr(data, "packet", None)
+        if packet is None:
+            return None
+        ts = getattr(packet, "timestamp", None)
+        if isinstance(ts, int):
+            return ts
+        return None
 
     @Filters.container
     def write(self, data, user):
+        payload = self._resolve_audio_payload(data)
+        if not payload:
+            return
+
         if user not in self.audio_data:
             file = io.BytesIO()
             self.audio_data.update({user: AudioData(file)})
 
         file = self.audio_data[user]
-        file.write(data)
+
+        if self.fill_silence and not self.is_opus():
+            ts = self._resolve_packet_timestamp(data)
+            if ts is not None:
+                # Opus @ 48kHz decoded PCM is 16-bit stereo: 4 bytes per sample.
+                bytes_per_sample = 4
+                payload_samples = len(payload) // bytes_per_sample
+                prev_end_ts = self._last_packet_end_ts.get(user)
+                if prev_end_ts is not None:
+                    gap_samples = ts - prev_end_ts
+                    if 0 < gap_samples <= 48000 * 5:
+                        file.write(b"\x00" * (gap_samples * bytes_per_sample))
+                if payload_samples > 0:
+                    self._last_packet_end_ts[user] = ts + payload_samples
+
+        file.write(payload)
 
     def cleanup(self):
         self.finished = True
         for file in self.audio_data.values():
             file.cleanup()
             self.format_audio(file)
+        for child in self._children:
+            child.cleanup()
 
     def get_all_audio(self):
         """Gets all audio files."""
