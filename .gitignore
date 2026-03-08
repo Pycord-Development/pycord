@@ -194,3 +194,9 @@ docs/build/linkcheck
 /build/
 /vscode/
 remote-release.yml
+logs/
+recordings/
+*.ps1
+*.ogg
+*.mp3
+*.pcm
