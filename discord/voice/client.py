@@ -733,6 +733,12 @@ class VoiceClient(VoiceProtocol):
         TypeError
             You did not provide a Sink object.
         """
+        warnings.warn(
+            "Voice reception is currently broken due to Discord's DAVE (End-to-End Encryption) protocol. "
+            + "Follow development progress at https://github.com/Pycord-Development/pycord/issues/3139",
+            RuntimeWarning,
+            stacklevel=2,
+        )
         # TODO: remove warning in voice-recv fix PR
         if not self.is_connected():
             raise RecordingException("not connected to a voice channel")
@@ -765,6 +771,12 @@ class VoiceClient(VoiceProtocol):
         RecordingException
             You are not recording.
         """
+        warnings.warn(
+            "Voice reception is currently broken due to Discord's DAVE (End-to-End Encryption) protocol. "
+            + "Follow development progress at https://github.com/Pycord-Development/pycord/issues/3139",
+            RuntimeWarning,
+            stacklevel=2,
+        )
         if self._reader is not MISSING:
             self._reader.stop()
             self._reader = MISSING
@@ -786,6 +798,12 @@ class VoiceClient(VoiceProtocol):
 
         .. versionadded:: 2.7
         """
+        warnings.warn(
+            "Voice reception is currently broken due to Discord's DAVE (End-to-End Encryption) protocol. "
+            + "Follow development progress at https://github.com/Pycord-Development/pycord/issues/3139",
+            RuntimeWarning,
+            stacklevel=2,
+        )
         ssrc = self._id_to_ssrc.get(member.id)
         if ssrc is None:
             return None
