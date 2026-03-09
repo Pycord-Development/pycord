@@ -791,7 +791,7 @@ class VoiceConnectionState:
                     elif exc.code in (4014, 4022):
                         if self._disconnected.is_set():
                             _log.info(
-                                "Disconnectinf from voice by Discord, close code %d",
+                                "Disconnecting from voice by Discord, close code %d",
                                 exc.code,
                             )
                             await self.disconnect()
