@@ -22,9 +22,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import io
 import wave
 
-from .core import Filters, Sink, default_filters
+from .core import Sink
 from .errors import WaveSinkError
 
 
@@ -35,14 +36,8 @@ class WaveSink(Sink):
     """
 
     def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
-
         self.encoding = "wav"
-        self.vc = None
-        self.audio_data = {}
+        super().__init__(filters=filters)
 
     def format_audio(self, audio):
         """Formats the recorded audio.
@@ -54,16 +49,20 @@ class WaveSink(Sink):
         WaveSinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.vc.is_recording():
             raise WaveSinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        data = audio.file
+        pcm_data = audio.file.read()
+        out = io.BytesIO()
 
-        with wave.open(data, "wb") as f:
-            f.setnchannels(self.vc.decoder.CHANNELS)
-            f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
-            f.setframerate(self.vc.decoder.SAMPLING_RATE)
+        with wave.open(out, "wb") as f:
+            # Voice receive decode output is 48kHz, 16-bit, stereo PCM.
+            f.setnchannels(2)
+            f.setsampwidth(2)
+            f.setframerate(48000)
+            f.writeframes(pcm_data)
 
-        data.seek(0)
+        out.seek(0)
+        audio.file = out
         audio.on_format(self.encoding)

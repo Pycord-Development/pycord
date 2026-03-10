@@ -1,6 +1,7 @@
 """
 The MIT License (MIT)
 
+Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -21,19 +22,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
-from .core import Sink
-
-
-class PCMSink(Sink):
-    """A special sink for .pcm files.
-
-    .. versionadded:: 2.0
-    """
-
-    def __init__(self, *, filters=None):
-        self.encoding = "pcm"
-        super().__init__(filters=filters)
-
-    def format_audio(self, audio):
-        return
