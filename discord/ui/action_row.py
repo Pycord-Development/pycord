@@ -95,11 +95,7 @@ class ActionRow(ViewItem[V]):
 
         self.children: list[ViewItem] = []
 
-        self._underlying = ActionRowComponent._raw_construct(
-            type=ComponentType.action_row,
-            id=id,
-            children=[],
-        )
+        self._underlying = self._generate_underlying(id=id)
 
         for func in self.__row_children_items__:
             item: ViewItem = func.__discord_ui_model_type__(
@@ -111,13 +107,32 @@ class ActionRow(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    @property
+    def items(self) -> list[ViewItem]:
+        return self.children
+
+    @items.setter
+    def items(self, value: list[ViewItem]) -> None:
+        self.children = value
+
     def _add_component_from_item(self, item: ViewItem):
-        self._underlying.children.append(item._underlying)
+        self.underlying.children.append(item._generate_underlying())
 
     def _set_components(self, items: list[ViewItem]):
-        self._underlying.children.clear()
+        self.underlying.children.clear()
         for item in items:
             self._add_component_from_item(item)
+
+    def _generate_underlying(self, id: int | None = None) -> ActionRowComponent:
+        super()._generate_underlying(ActionRowComponent)
+        row = ActionRowComponent._raw_construct(
+            type=ComponentType.action_row,
+            id=id or self.id,
+            children=[],
+        )
+        for i in self.children:
+            row.children.append(i._generate_underlying())
+        return row
 
     def add_item(self, item: ViewItem) -> Self:
         """Adds an item to the action row.
@@ -159,9 +174,9 @@ class ActionRow(ViewItem[V]):
             item = self.get_item(item)
         try:
             self.children.remove(item)
+            item.parent = None
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def get_item(self, id: str | int) -> ViewItem | None:
@@ -296,7 +311,7 @@ class ActionRow(ViewItem[V]):
         id: int | None = None,
         default_values: Sequence[SelectDefaultValue] | None = None,
     ) -> Self:
-        """Adds a :class:`Select` to the container.
+        """Adds a :class:`Select` to the action row.
 
         To append a pre-existing :class:`Select`, use the
         :meth:`add_item` method instead.
@@ -358,7 +373,7 @@ class ActionRow(ViewItem[V]):
         return all(item.is_persistent() for item in self.children)
 
     def refresh_component(self, component: ActionRowComponent) -> None:
-        self._underlying = component
+        self.underlying = component
         for i, y in enumerate(component.components):
             x = self.children[i]
             x.refresh_component(y)
@@ -396,14 +411,14 @@ class ActionRow(ViewItem[V]):
         """Return the sum of the items' widths."""
         t = 0
         for item in self.children:
-            t += 1 if item._underlying.type is ComponentType.button else 5
+            t += 1 if item.underlying.type is ComponentType.button else 5
         return t
 
     def walk_items(self) -> Iterator[ViewItem]:
         yield from self.children
 
     def to_component_dict(self) -> ActionRowPayload:
-        self._set_components(self.children)
+        self._underlying = self._generate_underlying()
         return super().to_component_dict()
 
     @classmethod
