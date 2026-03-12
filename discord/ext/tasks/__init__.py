@@ -32,6 +32,7 @@ import datetime
 import inspect
 import sys
 import traceback
+import logging
 from collections.abc import Coroutine, Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
@@ -43,6 +44,7 @@ from discord.utils import MISSING
 
 __all__ = ("loop",)
 
+_log = logging.getLogger(__name__)
 T = TypeVar("T")
 _func = Callable[..., Awaitable[Any]]
 LF = TypeVar("LF", bound=_func)
