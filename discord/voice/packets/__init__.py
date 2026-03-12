@@ -3,6 +3,8 @@ discord.voice.packets
 ~~~~~~~~~~~~~~~~~~~~~
 
 Sink packet handlers.
+:copyright: (c) 2015-2021 Rapptz & 2021-present Pycord Development
+:license: MIT, see LICENSE for more details.
 """
 
 from __future__ import annotations
