@@ -79,12 +79,7 @@ from .widget import Widget
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import (
-        CategoryChannel,
         DMChannel,
-        ForumChannel,
-        StageChannel,
-        TextChannel,
-        VoiceChannel,
     )
     from .ext.tasks import Loop as TaskLoop
     from .interactions import Interaction
@@ -92,8 +87,8 @@ if TYPE_CHECKING:
     from .message import Message
     from .poll import Poll
     from .soundboard import SoundboardSound
-    from .threads import Thread, ThreadMember
-    from .ui.item import Item, ViewItem
+    from .threads import Thread
+    from .ui.item import ViewItem
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -1953,8 +1948,6 @@ class Client:
             Retrieving the information failed somehow.
         """
         data = await self.http.application_info()
-        if "rpc_origins" not in data:
-            data["rpc_origins"] = None
         return AppInfo(self._connection, data)
 
     async def fetch_user(self, user_id: int, /) -> User:
