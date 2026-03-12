@@ -30,9 +30,9 @@ import contextlib
 import contextvars
 import datetime
 import inspect
+import logging
 import sys
 import traceback
-import logging
 from collections.abc import Coroutine, Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
