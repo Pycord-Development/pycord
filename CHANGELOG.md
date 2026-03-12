@@ -16,6 +16,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 - Added `Colour.light_theme()`, `Colour.ash_theme()`, and `Colour.onyx_theme()`.
   ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 - Added `RadioGroup`, `CheckboxGroup`, and `Checkbox` for modals.
@@ -54,6 +56,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
+- Deprecated `is_bot_managed`, `is_premium_subscriber`, `is_integration`,
+  `is_available_for_purchase`, and `is_guild_connections_role` in favor of `type` for
+  both `Role` and `RoleTags` .
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 - Deprecated `Colour.embed_background()`.
   ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 - Deprecated the `suppress` parameter in all applicable message-related methods in favor

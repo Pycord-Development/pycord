@@ -92,7 +92,7 @@ class Checkbox(ModalItem):
         return CheckboxComponent._raw_construct(
             type=ComponentType.checkbox,
             custom_id=custom_id or self.custom_id,
-            required=default if default is not None else self.default,
+            default=default if default is not None else self.default,
             id=id or self.id,
         )
 
