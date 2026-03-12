@@ -12,8 +12,16 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added support for community invites.
+  ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Added `Colour.light_theme()`, `Colour.ash_theme()`, and `Colour.onyx_theme()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Added `RadioGroup`, `CheckboxGroup`, and `Checkbox` for modals.
+  ([#3073](https://github.com/Pycord-Development/pycord/pull/3073))
 - Added the ability to respond to interactions with suppressed push and desktop
   notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 - Added `User.collectibles` property.
@@ -22,11 +30,16 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 - Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
   ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
+- Added a new event called `on_raw_member_update` that is dispatched when a member is
+  updated, regardless of cache status.
+  ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
 
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Updated `Colour.dark_theme()` with Discord's new theme colours.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 - Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
   ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
 - Changed `FileComponent.name` and `FileComponent.size` to be optional.
@@ -43,6 +56,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
+- Deprecated `is_bot_managed`, `is_premium_subscriber`, `is_integration`,
+  `is_available_for_purchase`, and `is_guild_connections_role` in favor of `type` for
+  both `Role` and `RoleTags` .
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Deprecated `Colour.embed_background()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
 - Deprecated the `suppress` parameter in all applicable message-related methods in favor
   of `suppress_embeds`.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
@@ -117,6 +136,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Attachment.read_chunked` and added optional `chunksize` argument to
   `Attachment.save` for retrieving attachments in chunks.
   ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
+- Added `AppInfo.edit()` method and missing `AppInfo` attributes.
+  ([#2994](https://github.com/Pycord-Development/pycord/pull/2994))
 - Added `Guild.fetch_roles_member_counts` method and `GuildRoleCounts` class.
   ([#3020](https://github.com/Pycord-Development/pycord/pull/3020))
 - Implemented `with_response` for interaction callbacks, adding
