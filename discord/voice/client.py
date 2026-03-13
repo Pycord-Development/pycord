@@ -147,6 +147,13 @@ class VoiceClient(VoiceProtocol):
         self._event_listeners: dict[str, list] = {}
         self._reader: AudioReader = MISSING
 
+    @staticmethod
+    def _set_future_result_if_pending(
+        future: asyncio.Future[Any], result: Exception | None
+    ) -> None:
+        if not future.done():
+            future.set_result(result)
+
     warn_nacl: bool = not has_nacl
     warn_davey: bool = not has_davey
     supported_modes: tuple[SupportedModes, ...] = (
@@ -594,7 +601,9 @@ class VoiceClient(VoiceProtocol):
             def _after(exc: Exception | None) -> None:
                 if callable(after_callback):
                     after_callback(exc)
-                future.set_result(exc)
+                self.loop.call_soon_threadsafe(
+                    self._set_future_result_if_pending, future, exc
+                )
 
             after = _after
 
@@ -607,9 +616,9 @@ class VoiceClient(VoiceProtocol):
         if self._player:
             self._player.stop()
         if self._player_future:
-            for cb, _ in self._player_future._callbacks:
-                self._player_future.remove_done_callback(cb)
-            self._player_future.set_result(None)
+            self.loop.call_soon_threadsafe(
+                self._set_future_result_if_pending, self._player_future, None
+            )
         if self._reader is not MISSING:
             self._reader.stop()
             self._reader = MISSING
