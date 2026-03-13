@@ -123,7 +123,7 @@ class VoiceProtocol:
         data: :class:`dict`
             The raw `voice state payload`__.
 
-            .. _voice_state_update_payload: https://discord.com/developers/docs/resources/voice#voice-state-object
+            .. _voice_state_update_payload: https://docs.discord.com/developers/resources/voice#voice-state-object
 
             __ voice_state_update_payload_
         """
@@ -140,7 +140,7 @@ class VoiceProtocol:
         data: :class:`dict`
             The raw `voice server update payload`__.
 
-            .. _voice_server_update_payload: https://discord.com/developers/docs/topics/gateway#voice-server-update-voice-server-update-event-fields
+            .. _voice_server_update_payload: https://docs.discord.com/developers/events/gateway-events#voice-server-update-voice-server-update-event-fields
 
             __ voice_server_update_payload_
         """
