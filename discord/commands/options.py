@@ -191,10 +191,10 @@ class Option:
         If this argument is used, :attr:`input_type` will be ignored.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
 
     Examples
     --------
@@ -511,7 +511,7 @@ class OptionChoice:
         The value of the choice. If not provided, will use the value of ``name``.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this choice. The values of this should be ``"locale": "name"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     """
 
     def __init__(
