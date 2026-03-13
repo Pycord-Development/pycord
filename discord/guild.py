@@ -3804,7 +3804,7 @@ class Guild(Hashable):
 
         You must have the :attr:`~Permissions.view_audit_log` permission to use this.
 
-        See `API documentation <https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log>`_
+        See `API documentation <https://docs.discord.com/developers/resources/audit-log#get-guild-audit-log>`_
         for more information about the `before` and `after` parameters.
 
         Parameters
