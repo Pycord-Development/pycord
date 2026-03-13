@@ -496,7 +496,7 @@ linkcheck_ignore = [
     r"https://pycord.dev/.*",
     r"https://packages.debian.org/.*",
     r"https://github.com/Pycord-Development/pycord/issues/new?template=bug_report.yml",
-    r"https://discord.com/developers/.*#",    
+    r"https://discord.com/developers/.*#",
 ]
 
 linkcheck_exclude_documents = [
