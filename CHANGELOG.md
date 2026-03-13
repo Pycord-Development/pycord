@@ -1103,7 +1103,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2331](https://github.com/Pycord-Development/pycord/pull/2331))
 - Fixed application command options causing errors if declared through the option
   decorator or kwarg.
-  ([#2332](https://github.com/Pycord-Development/pycord/issues/2332))
+  ([#2332](https://github.com/Pycord-Development/pycord/pull/2332))
 - Fixed options declared using the parameter default value syntax always being optional.
   ([#2333](https://github.com/Pycord-Development/pycord/pull/2333))
 - Fixed `BridgeContext` type hints raising an exception for unsupported option type.
