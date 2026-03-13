@@ -98,7 +98,7 @@ class VoiceProtocol:
 
     These classes are passed to :meth:`abc.Connectable.connect <VoiceChannel.connect>`.
 
-    .. _Lavalink: https://github.com/freyacodes/Lavalink
+    .. _Lavalink: https://github.com/lavalink-devs/Lavalink
 
     Parameters
     ----------
