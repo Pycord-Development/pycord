@@ -43,7 +43,8 @@ from discord.utils import MISSING
 from ._types import VoiceProtocol
 from .enums import OpCodes
 from .receive import AudioReader
-from .state import VoiceConnectionState, has_davey
+from .state import VoiceConnectionState
+from .utils.dependencies import HAS_DAVEY, HAS_NACL, get_missing_voice_dependencies
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -67,16 +68,6 @@ if TYPE_CHECKING:
     P = ParamSpec("P")
 
 _log = logging.getLogger(__name__)
-
-has_nacl: bool
-
-try:
-    import nacl.secret
-    import nacl.utils
-
-    has_nacl = True
-except ImportError:
-    has_nacl = False
 
 __all__ = ("VoiceClient",)
 
@@ -111,16 +102,12 @@ class VoiceClient(VoiceProtocol):
         client: Client,
         channel: abc.Connectable,
     ) -> None:
-        if not has_nacl:
+        missing = get_missing_voice_dependencies()
+        if missing:
+            deps = ", ".join(missing)
             raise RuntimeError(
-                "PyNaCl library is needed in order to use voice related features, "
-                'you can run "pip install py-cord[voice]" to install all voice-related '
-                "dependencies."
-            )
-
-        if not has_davey:
-            raise RuntimeError(
-                "davey library is needed in order to use voice related features, "
+                f"{deps} {'library is' if len(missing) == 1 else 'libraries are'} needed "
+                "in order to use voice related features, "
                 'you can run "pip install py-cord[voice]" to install all voice-related '
                 "dependencies."
             )
@@ -154,8 +141,6 @@ class VoiceClient(VoiceProtocol):
         if not future.done():
             future.set_result(result)
 
-    warn_nacl: bool = not has_nacl
-    warn_davey: bool = not has_davey
     supported_modes: tuple[SupportedModes, ...] = (
         "aead_xchacha20_poly1305_rtpsize",
         "xsalsa20_poly1305_lite",

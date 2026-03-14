@@ -36,13 +36,7 @@ from typing import TYPE_CHECKING, Any
 from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.errors import ConnectionClosed
-
-try:
-    import davey
-
-    has_davey = True
-except ImportError:
-    has_davey = False
+from discord.voice.utils.dependencies import DAVE_PROTOCOL_VERSION, HAS_DAVEY
 
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
@@ -63,10 +57,8 @@ SocketReaderCallback = Callable[[bytes], Any]
 _log = logging.getLogger(__name__)
 _recv_log = logging.getLogger("discord.voice.receiver")
 
-if has_davey:
-    DAVE_PROTOCOL_VERSION = davey.DAVE_PROTOCOL_VERSION  # type: ignore
-else:
-    DAVE_PROTOCOL_VERSION = 0
+if HAS_DAVEY:
+    import davey
 
 
 class SocketReader(threading.Thread):
@@ -291,7 +283,7 @@ class VoiceConnectionState:
 
     @property
     def max_dave_proto_version(self) -> int:
-        return davey.DAVE_PROTOCOL_VERSION
+        return DAVE_PROTOCOL_VERSION
 
     @property
     def state(self) -> ConnectionFlowState:

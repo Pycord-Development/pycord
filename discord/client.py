@@ -71,7 +71,7 @@ from .threads import Thread
 from .ui.view import BaseView
 from .user import ClientUser, User
 from .utils import _D, _FETCHABLE, MISSING
-from .voice import VoiceClient
+from .voice.utils.dependencies import warn_if_voice_dependencies_missing
 from .webhook import Webhook
 from .widget import Widget
 
@@ -282,9 +282,7 @@ class Client:
         self._connection._get_client = lambda: self
         self._event_handlers: dict[str, list[Coro]] = {}
 
-        if VoiceClient.warn_nacl:
-            VoiceClient.warn_nacl = False
-            _log.warning("PyNaCl is not installed, voice will NOT be supported")
+        warn_if_voice_dependencies_missing()
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
         self._tasks = set()

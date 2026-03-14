@@ -34,19 +34,15 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from ..packets.core import OPUS_SILENCE
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
-from ..state import has_davey
+from ..utils.dependencies import HAS_DAVEY, HAS_NACL
 from .router import PacketRouter, SinkEventRouter
 
-if has_davey:
+if HAS_DAVEY:
     import davey
 
-try:
+if HAS_NACL:
     import nacl.secret
     from nacl.exceptions import CryptoError
-
-    has_nacl = True
-except ImportError:
-    has_nacl = False
 
 
 if TYPE_CHECKING:

@@ -35,7 +35,11 @@ from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-import davey
+
+from .utils.dependencies import HAS_DAVEY
+
+if HAS_DAVEY:
+    import davey
 
 from discord import utils
 from discord.enums import SpeakingState
