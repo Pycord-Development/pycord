@@ -906,6 +906,7 @@ class AudioPlayer(threading.Thread):
             self._speak(SpeakingState.none)
 
     def resume(self, *, update_speaking: bool = True) -> None:
+        self._played_frames_offset += self.loops
         self.loops = 0
         self._start = time.perf_counter()
         self._resumed.set()
