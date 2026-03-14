@@ -823,13 +823,13 @@ class _PayloadLike(_RawReprMixin):
     _raw_data: dict[str, Any]
 
     @deprecated(
-        "The attributes are deprecated since version 2.7 and will be removed in version 3.0",
+        "__getitem__ is deprecated since version 2.7 and will be removed in version 3.0. Consider using the attributes instead.",
     )
     def __getitem__(self, key: str) -> Any:
         return self._raw_data[key]
 
     @deprecated(
-        "The attributes are deprecated since version 2.7 and will be removed in version 3.0",
+        "get is deprecated since version 2.7 and will be removed in version 3.0. Consider using the attributes instead.",
     )
     def get(self, key: str, default: Any = None) -> Any:
         """Gets an item from this raw event, and returns its value or ``default``.
@@ -840,7 +840,7 @@ class _PayloadLike(_RawReprMixin):
         return self._raw_data.get(key, default)
 
     @deprecated(
-        "The attributes are deprecated since version 2.7 and will be removed in version 3.0",
+        "items is deprecated since version 2.7 and will be removed in version 3.0. Consider using the attributes instead.",
     )
     def items(self) -> ItemsView:
         """Returns the (key, value) pairs of this raw event.
@@ -851,7 +851,7 @@ class _PayloadLike(_RawReprMixin):
         return self._raw_data.items()
 
     @deprecated(
-        "The attributes are deprecated since version 2.7 and will be removed in version 3.0",
+        "values is deprecated since version 2.7 and will be removed in version 3.0. Consider using the attributes instead.",
     )
     def values(self) -> ValuesView:
         """Returns the values of this raw event.
@@ -862,7 +862,7 @@ class _PayloadLike(_RawReprMixin):
         return self._raw_data.values()
 
     @deprecated(
-        "The attributes are deprecated since version 2.7 and will be removed in version 3.0",
+        "keys is deprecated since version 2.7 and will be removed in version 3.0. Consider using the attributes instead.",
     )
     def keys(self) -> KeysView:
         """Returns the keys of this raw event.
