@@ -46,6 +46,10 @@ from .receive import AudioReader
 from .state import VoiceConnectionState
 from .utils.dependencies import HAS_DAVEY, HAS_NACL, get_missing_voice_dependencies
 
+if HAS_NACL:
+    import nacl.secret
+    import nacl.utils
+
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
