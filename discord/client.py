@@ -26,8 +26,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextlib
+import inspect
 import logging
-import signal
 import sys
 import traceback
 from types import TracebackType
@@ -80,6 +81,7 @@ if TYPE_CHECKING:
     from .channel import (
         DMChannel,
     )
+    from .ext.tasks import Loop as TaskLoop
     from .interactions import Interaction
     from .member import Member
     from .message import Message
@@ -132,11 +134,38 @@ def _cleanup_loop(loop: asyncio.AbstractEventLoop) -> None:
         loop.close()
 
 
+class LoopTaskSet:
+    def __init__(self) -> None:
+        self.tasks: set[TaskLoop] = set()
+        self.client: Client | None = None
+
+    def add_loop(self, loop: TaskLoop) -> None:
+        if self.client is not None:
+            running = asyncio.get_running_loop()
+            loop.loop = running
+            loop.start()
+        else:
+            self.tasks.add(loop)
+
+    def start(self, client: Client) -> None:
+        self.client = client
+        for task in self.tasks:
+            loop = client.loop
+            task.loop = loop
+            task.start()
+
+
 class Client:
     r"""Represents a client connection that connects to Discord.
     This class is used to interact with the Discord WebSocket and API.
 
     A number of options can be passed to the :class:`Client`.
+
+    .. container:: operations
+
+        .. describe:: async with x
+
+            Asynchronously initializes the client.
 
     Parameters
     -----------
@@ -238,6 +267,8 @@ class Client:
         The event loop that the client uses for asynchronous operations.
     """
 
+    _pending_loops = LoopTaskSet()
+
     def __init__(
         self,
         *,
@@ -246,9 +277,12 @@ class Client:
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
-        )
+
+        if loop is None:
+            with contextlib.suppress(RuntimeError):
+                loop = asyncio.get_running_loop()
+
+        self._loop: asyncio.AbstractEventLoop | None = loop
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
         )
@@ -264,7 +298,7 @@ class Client:
             proxy=proxy,
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
-            loop=self.loop,
+            loop=self._loop,
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
@@ -276,25 +310,46 @@ class Client:
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
         self._connection.shard_count = self.shard_count
-        self._closed: bool = False
+        self._closed: asyncio.Event = asyncio.Event()
+        self._closing_task: asyncio.Lock = asyncio.Lock()
         self._ready: asyncio.Event = asyncio.Event()
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
         self._event_handlers: dict[str, list[Coro]] = {}
+        self._setup_done: asyncio.Event = asyncio.Event()
+        self._setup_lock: asyncio.Lock = asyncio.Lock()
 
         warn_if_voice_dependencies_missing()
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
         self._tasks = set()
 
+    async def _async_setup(self) -> None:
+        async with self._setup_lock:
+            if self._setup_done.is_set():
+                return
+
+            if self._loop is None:
+                try:
+                    l = asyncio.get_running_loop()
+                except RuntimeError:
+                    # No event loop was found, this should not happen
+                    # because entering on this context manager means a
+                    # loop is already active, but we need to handle it
+                    # anyways just to prevent future errors.
+                    l = asyncio.new_event_loop()
+
+                self._loop = l
+                self.http.loop = l
+                self._connection.loop = l
+
+            self._ready = asyncio.Event()
+            self._closed = asyncio.Event()
+
+            self._setup_done.set()
+
     async def __aenter__(self) -> Client:
-        loop = asyncio.get_running_loop()
-        self.loop = loop
-        self.http.loop = loop
-        self._connection.loop = loop
-
-        self._ready = asyncio.Event()
-
+        await self._async_setup()
         return self
 
     async def __aexit__(
@@ -319,12 +374,27 @@ class Client:
             handlers=self._handlers,
             hooks=self._hooks,
             http=self.http,
-            loop=self.loop,
+            loop=self._loop,
             **options,
         )
 
     def _handle_ready(self) -> None:
         self._ready.set()
+
+    @property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        """The event loop that the client uses for asynchronous operations."""
+        if self._loop is None:
+            raise RuntimeError("loop is not set")
+        return self._loop
+
+    @loop.setter
+    def loop(self, value: asyncio.AbstractEventLoop) -> None:
+        if not isinstance(value, asyncio.AbstractEventLoop):
+            raise TypeError(
+                f"expected a AbstractEventLoop object, got {value.__class__.__name__!r} instead"
+            )
+        self._loop = value
 
     @property
     def latency(self) -> float:
@@ -483,7 +553,6 @@ class Client:
         return task
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
-        _log.debug("Dispatching event %s", event)
         method = f"on_{event}"
 
         listeners = self._listeners.get(event)
@@ -670,6 +739,7 @@ class Client:
                 f"token must be of type str, not {token.__class__.__name__}"
             )
 
+        await self._async_setup()
         _log.info("logging in using static token")
 
         data = await self.http.static_login(token.strip())
@@ -699,6 +769,8 @@ class Client:
         :exc:`ConnectionClosed`
             The WebSocket connection has been terminated.
         """
+
+        await self._async_setup()
 
         backoff = ExponentialBackoff()
         ws_params = {
@@ -778,23 +850,25 @@ class Client:
 
         Closes the connection to Discord.
         """
-        if self._closed:
-            return
+        async with self._closing_task:
+            if self.is_closed():
+                return
 
-        await self.http.close()
-        self._closed = True
+            await self.http.close()
 
-        for voice in self.voice_clients:
-            try:
-                await voice.disconnect(force=True)
-            except Exception:
-                # if an error happens during disconnects, disregard it.
-                pass
+            for voice in self.voice_clients:
+                try:
+                    await voice.disconnect(force=True)
+                except Exception:
+                    # if an error happens during disconnects, disregard it.
+                    pass
 
-        if self.ws is not None and self.ws.open:
-            await self.ws.close(code=1000)
+            if self.ws is not None and self.ws.open:
+                await self.ws.close(code=1000)
 
-        self._ready.clear()
+            self._ready.clear()
+            self._closed.set()
+            self._setup_done.clear()
 
     def clear(self) -> None:
         """Clears the internal state of the bot.
@@ -803,8 +877,9 @@ class Client:
         and :meth:`is_ready` both return ``False`` along with the bot's internal
         cache cleared.
         """
-        self._closed = False
+        self._closed.clear()
         self._ready.clear()
+        self._setup_done.clear()
         self._connection.clear()
         self.http.recreate()
 
@@ -821,7 +896,12 @@ class Client:
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
-    def run(self, *args: Any, **kwargs: Any) -> None:
+    def run(
+        self,
+        token: str,
+        *,
+        reconnect: bool = True,
+    ) -> None:
         """A blocking call that abstracts away the event loop
         initialisation from you.
 
@@ -832,12 +912,20 @@ class Client:
         Roughly Equivalent to: ::
 
             try:
-                loop.run_until_complete(start(*args, **kwargs))
+                asyncio.run(start(token))
             except KeyboardInterrupt:
-                loop.run_until_complete(close())
-                # cancel all tasks lingering
-            finally:
-                loop.close()
+                return
+
+        Parameters
+        ----------
+        token: :class:`str`
+            The authentication token. Do not prefix this token with
+            anything as the library will do it for you.
+        reconnect: :class:`bool`
+            If we should attempt reconnecting to the gateway, either due to internet
+            failure or a specific failure on Discord's part. Certain
+            disconnects that lead to bad state will not be handled (such as
+            invalid sharding payloads or bad tokens).
 
         .. warning::
 
@@ -845,47 +933,36 @@ class Client:
             is blocking. That means that registration of events or anything being
             called after this function call will not execute until it returns.
         """
-        loop = self.loop
-
-        try:
-            loop.add_signal_handler(signal.SIGINT, loop.stop)
-            loop.add_signal_handler(signal.SIGTERM, loop.stop)
-        except (NotImplementedError, RuntimeError):
-            pass
 
         async def runner():
-            try:
-                await self.start(*args, **kwargs)
-            finally:
-                if not self.is_closed():
-                    await self.close()
+            async with self:
+                await self.start(token=token, reconnect=reconnect)
 
-        def stop_loop_on_completion(f):
-            loop.stop()
-
-        future = asyncio.ensure_future(runner(), loop=loop)
-        future.add_done_callback(stop_loop_on_completion)
         try:
-            loop.run_forever()
-        except KeyboardInterrupt:
-            _log.info("Received signal to terminate bot and event loop.")
-        finally:
-            future.remove_done_callback(stop_loop_on_completion)
-            _log.info("Cleaning up tasks.")
-            _cleanup_loop(loop)
+            run = self.loop.run_until_complete
+            requires_cleanup = True
+        except RuntimeError:
+            run = asyncio.run
+            requires_cleanup = False
 
-        if not future.cancelled():
-            try:
-                return future.result()
-            except KeyboardInterrupt:
-                # I am unsure why this gets raised here but suppress it anyway
-                return None
+        try:
+            run(runner())
+        finally:
+            # Ensure the bot is closed
+            if not self.is_closed():
+                self.loop.run_until_complete(self.close())
+
+        # asyncio.run automatically does the cleanup tasks, so if we use
+        # it we don't need to clean up the tasks.
+        if requires_cleanup:
+            _log.info("Cleaning up tasks.")
+            _cleanup_loop(self.loop)
 
     # properties
 
     def is_closed(self) -> bool:
         """Indicates if the WebSocket connection is closed."""
-        return self._closed
+        return self._closed.is_set()
 
     @property
     def activity(self) -> ActivityTypes | None:
@@ -1390,7 +1467,7 @@ class Client:
         if not name.startswith("on_"):
             raise ValueError("The 'name' parameter must start with 'on_'")
 
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Listeners must be coroutines")
 
         if name in self._event_handlers:
@@ -1470,7 +1547,7 @@ class Client:
             self.add_listener(func, name)
             return func
 
-        if asyncio.iscoroutinefunction(name):
+        if inspect.iscoroutinefunction(name):
             coro = name
             name = coro.__name__
             return decorator(coro)
@@ -1505,7 +1582,7 @@ class Client:
                 print('Ready!')
         """
 
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("event registered must be a coroutine function")
 
         setattr(self, coro.__name__, coro)
