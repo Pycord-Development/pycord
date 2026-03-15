@@ -93,7 +93,7 @@ if TYPE_CHECKING:
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
-    from .ui.view import BaseView
+    from .ui.view import BaseView, DesignerView
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
@@ -2344,6 +2344,31 @@ class Message(Hashable):
                 if component := i.get_component(id):
                     return component
         return None
+
+    def get_view(self, cls: BaseView | None = None) -> DesignerView | BaseView | None:
+        """Retrieve this message's view from the ViewStore. If there is no stored view, a new view will be returned if :attr:`components` is not empty.
+
+        Parameters
+        ----------
+        cls
+            The class that will be used to generate the new view.
+            By default, this is :class:`discord.ui.DesignerView`. Should a custom
+            class be provided, it must inherit from :class:`discord.ui.BaseView`
+            and properly implement ``from_message``.
+
+        Returns
+        -------
+        Optional[Union[:class:`discord.ui.DesignerView`, :class:`discord.ui.BaseView`]]
+            The view belonging to this message, if it exists or there are components available to create a new view.
+        """
+        v = self._state.get_message_view(self.id)
+        if not v and self.components:
+            if not cls:
+                from .ui.view import DesignerView
+
+                cls = DesignerView
+            v = cls.from_message(self)
+        return v
 
 
 class PartialMessage(Hashable):

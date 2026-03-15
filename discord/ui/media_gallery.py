@@ -55,11 +55,6 @@ class MediaGallery(ViewItem[V]):
         The initial items contained in this gallery, up to 10.
     id: Optional[:class:`int`]
         The gallery's ID.
-
-    Attributes
-    ----------
-    items: List[:class:`~discord.MediaGalleryItem`]
-        The list of media items in this gallery.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -166,6 +161,22 @@ class MediaGallery(ViewItem[V]):
             self.items.pop(index)
         except IndexError:
             pass
+        return self
+
+    def replace_item(self, index: int, new_item: MediaGalleryItem) -> Self:
+        """Directly replace an item in this gallery by index.
+
+        Parameters
+        ----------
+        original_item: :class:`int`
+            The index of the item to replace in this gallery.
+        new_item: :class:`MediaGalleryItem`
+            The new item to insert into the gallery.
+        """
+
+        if not isinstance(new_item, MediaGalleryItem):
+            raise TypeError(f"expected MediaGalleryItem not {new_item.__class__!r}")
+        self._underlying.items[index] = new_item
         return self
 
     def to_component_dict(self) -> MediaGalleryComponentPayload:
