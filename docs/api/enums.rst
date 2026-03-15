@@ -2662,6 +2662,8 @@ of :class:`enum.Enum`.
 
         The default value is a user.
 
+.. autoclass:: RoleType
+    :members:
 
 .. class:: ApplicationEventWebhookStatus
 
