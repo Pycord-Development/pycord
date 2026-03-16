@@ -437,7 +437,7 @@ class DesignerModal(BaseModal):
     @classmethod
     def from_dict(
         cls,
-        data: ModalPayload],
+        data: ModalPayload,
         /,
         *,
         timeout: float | None = 180.0,
