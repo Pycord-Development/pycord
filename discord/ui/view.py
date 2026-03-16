@@ -996,7 +996,7 @@ class DesignerView(BaseView):
                 if before:
                     parent.items.insert(i, item)
                 else:
-                    parent.items.insert(i+1, item)
+                    parent.items.insert(i + 1, item)
             else:
                 ref.parent.add_item(item, before=before, after=after, into=into)
             return self
@@ -1029,9 +1029,13 @@ class DesignerView(BaseView):
         """
 
         if not original_item:
-            raise TypeError(f"expected original_item to be a valid ViewItem, str, or int, not {new_item.__class__!r}")
+            raise TypeError(
+                f"expected original_item to be a valid ViewItem, str, or int, not {new_item.__class__!r}"
+            )
         if not isinstance(new_item, ViewItem):
-            raise TypeError(f"expected new_item to be ViewItem, not {new_item.__class__!r}")
+            raise TypeError(
+                f"expected new_item to be ViewItem, not {new_item.__class__!r}"
+            )
 
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
