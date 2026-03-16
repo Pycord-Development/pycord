@@ -186,7 +186,9 @@ class Section(ViewItem[V]):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
 
         if before is not None or after is not None:
-            ref = self.get_item(before or after or 0)
+            ref = before or after or 0
+            if isinstance(ref, (int, str)):
+                ref = self.get_item(ref)
             try:
                 ref = self.get_item(before or after)
                 i = self.items.index(ref)

@@ -986,7 +986,9 @@ class DesignerView(BaseView):
             parent = into or self
 
         if before is not None or after is not None:
-            ref = parent.get_item(before or after or 0)
+            ref = before or after or 0
+            if isinstance(ref, (int, str)):
+                ref = parent.get_item(ref)
             try:
                 if ref.parent is parent:
                     i = parent.items.index(ref)

@@ -182,7 +182,9 @@ class ActionRow(ViewItem[V]):
 
         if before is not None or after is not None:
             try:
-                ref = self.get_item(before or after or 0)
+                ref = before or after or 0
+                if isinstance(ref, (int, str)):
+                    ref = self.get_item(ref)
                 i = self.children.index(ref)
                 item.parent = self
                 if before:

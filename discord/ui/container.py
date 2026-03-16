@@ -204,7 +204,9 @@ class Container(ViewItem[V]):
             parent = into or self
 
         if before or after:
-            ref = parent.get_item(before or after)
+            ref = before or after or 0
+            if isinstance(ref, (int, str)):
+                ref = parent.get_item(ref)
             try:
                 if ref.parent is parent:
                     i = parent.items.index(ref)
