@@ -274,7 +274,7 @@ class ActionRow(ViewItem[V]):
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
-        child = none
+        child = None
         if id:
             attr = "id" if isinstance(id, int) else "custom_id"
             if attrs:
