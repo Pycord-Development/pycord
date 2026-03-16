@@ -1135,8 +1135,6 @@ class Paginator(discord.ui.View):
             warn_deprecated("suppress", "suppress_embeds", "2.8")
             if suppress_embeds is None:
                 suppress_embeds = suppress
-        elif suppress_embeds is None:
-            suppress_embeds = False
 
         try:
             self.message = await message.edit(
