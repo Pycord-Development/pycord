@@ -455,7 +455,7 @@ class DesignerModal(BaseModal):
         *,
         description: str | None = None,
         id: int | None = None,
-    ) -> self:
+    ) -> Self:
         """Adds a :class:`Label` to the modal.
 
         To append a pre-existing :class:`Label`, use :meth:`add_item` instead.
