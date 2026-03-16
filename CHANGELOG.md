@@ -33,9 +33,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added a new event called `on_raw_member_update` that is dispatched when a member is
   updated, regardless of cache status.
   ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
-- Added support for Discord Audio & Video End-to-End Encryption (DAVE) for voice
-  audio-sending related features.
-  ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
+- Added support for Discord DAVE (Audio & Video E2EE) for voice-sending related
+  features. ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
 
 ### Changed
 
