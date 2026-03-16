@@ -41,6 +41,7 @@ if TYPE_CHECKING:
 
     from .view import View
 
+
 def _item_getter(iterable, **attrs) -> Item | None:
     _all = all
     attrget = attrgetter
