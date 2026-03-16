@@ -882,7 +882,7 @@ class DesignerView(BaseView):
         Returns
         -------
         :class:`View`
-            The converted view. This always returns a :class:`View` and not
+            The converted view. This always returns a :class:`DesignerView` and not
             one of its subclasses.
         """
         view = DesignerView(timeout=timeout)
@@ -910,7 +910,7 @@ class DesignerView(BaseView):
         Returns
         -------
         :class:`DesignerView`
-            The converted view. This always returns a :class:`View` and not
+            The converted view. This always returns a :class:`DesignerView` and not
             one of its subclasses.
         """
         view = DesignerView(timeout=timeout)

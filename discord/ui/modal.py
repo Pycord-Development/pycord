@@ -32,6 +32,7 @@ from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
+from ..components import _component_factory
 from ..enums import ComponentType
 from ..utils import find
 from .core import ItemInterface
@@ -40,6 +41,7 @@ from .item import ModalItem
 from .label import Label
 from .select import Select
 from .text_display import TextDisplay
+from .view import _component_to_item
 
 __all__ = (
     "BaseModal",
@@ -55,6 +57,7 @@ if TYPE_CHECKING:
     from ..interactions import Interaction
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
+    from ..types.components import Modal as ModalPayload
 
 M = TypeVar("M", bound="Modal", covariant=True)
 
@@ -430,6 +433,35 @@ class DesignerModal(BaseModal):
                     f"DesignerModal does not accept InputText directly. Use Label instead."
                 )
         self._children = value
+
+    @classmethod
+    def from_dict(
+        cls,
+        data: ModalPayload],
+        /,
+        *,
+        timeout: float | None = 180.0,
+    ) -> DesignerModal:
+        """Converts a modal dictionary into a :class:`DesignerModal`.
+
+        Parameters
+        ----------
+        data: ModalPayload
+            The dict representing a modal
+        timeout: Optional[:class:`float`]
+            The timeout of the converted modal.
+
+        Returns
+        -------
+        :class:`DesignerModal`
+            The converted view. This always returns a :class:`DesignerModal` and not
+            one of its subclasses.
+        """
+        modal = DesignerModal(timeout=timeout)
+        components = [_component_factory(d) for d in data.get("components", [])]
+        for component in components:
+            modal.add_item(_component_to_item(component))
+        return modal
 
     def add_item(self, item: ModalItem) -> Self:
         """Adds a component to the modal.
