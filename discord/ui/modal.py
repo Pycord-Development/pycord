@@ -448,6 +448,49 @@ class DesignerModal(BaseModal):
         super().add_item(item)
         return self
 
+    def add_label(
+        self,
+        label: str,
+        item: ModalItem = None,
+        *,
+        description: str | None = None,
+        id: int | None = None,
+    ) -> self:
+        """Adds a :class:`Label` to the modal.
+
+        To append a pre-existing :class:`Label`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        label: :class:`str`
+            The label text. Must be 45 characters or fewer.
+        item: :class:`ModalItem`
+            The initial item attached to this label.
+        description: Optional[:class:`str`]
+            The description for this label. Must be 100 characters or fewer.
+        id: Optional[:class:`int`]
+            The label's ID.
+        """
+
+        label = Label(label, item=item, description=description, id=id)
+
+        return self.add_item(label)
+
+    def add_text(self, content: str, id: int | None = None) -> Self:
+        """Adds a :class:`TextDisplay` to the modal.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The content of the TextDisplay
+        id: Optiona[:class:`int`]
+            The text display's ID.
+        """
+
+        text = TextDisplay(content, id=id)
+
+        return self.add_item(text)
+
     def refresh(self, interaction: Interaction, data: list[ComponentPayload]):
         for component, child in zip(data, self.children):
             child.refresh_from_modal(interaction, component)
