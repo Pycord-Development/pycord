@@ -864,7 +864,7 @@ class DesignerView(BaseView):
     @classmethod
     def from_message(
         cls, message: Message, /, *, timeout: float | None = 180.0
-    ) -> View:
+    ) -> DesignerView:
         """Converts a message's components into a :class:`DesignerView`.
 
         The :attr:`.Message.components` of a message are read-only
@@ -897,7 +897,7 @@ class DesignerView(BaseView):
         /,
         *,
         timeout: float | None = 180.0,
-    ) -> View:
+    ) -> DesignerView:
         """Converts a list of component dicts into a :class:`DesignerView`.
 
         Parameters
