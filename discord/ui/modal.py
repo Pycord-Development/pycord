@@ -440,7 +440,7 @@ class DesignerModal(BaseModal):
         data: ModalPayload,
         /,
         *,
-        timeout: float | None = 180.0,
+        timeout: float | None = None,
     ) -> DesignerModal:
         """Converts a modal dictionary into a :class:`DesignerModal`.
 
