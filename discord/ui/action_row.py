@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Iterator, Literal, TypeVar, overload, Any
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Literal, TypeVar, overload
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import SelectDefaultValue, SelectOption, _component_factory
