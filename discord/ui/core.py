@@ -150,8 +150,6 @@ class ItemInterface:
         Optional[:class:`Item`]
             The item with the matching ``custom_id``, ``id``, or ``attrs`` if it exists.
         """
-        if not (custom_id or attrs):
-            return None
         child = None
         if custom_id:
             attr = "id" if isinstance(custom_id, int) else "custom_id"
