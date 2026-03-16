@@ -863,7 +863,7 @@ Messages
     will return a :class:`Message` object that represents the message before the content was modified.
 
     Due to the inherently raw nature of this event, the data parameter coincides with
-    the raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway#message-update>`_.
+    the raw data given by the `gateway <https://docs.discord.com/developers/events/gateway-events#message-update>`_.
 
     Since the data payload can be partial, care must be taken when accessing stuff in the dictionary.
     One example of a common case of partial data is when the ``'content'`` key is inaccessible. This
@@ -1068,7 +1068,7 @@ Monetization
         Entitlements that no longer follow this behavior will have a type of :attr:`EntitlementType.purchase`.
         Those that follow the old behavior will have a type of :attr:`EntitlementType.application_subscription`.
 
-        `See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_
+        `See the Discord changelog. <https://docs.discord.com/developers/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_
 
     :param entitlement: The entitlement that was updated.
     :type entitlement: :class:`Entitlement`
