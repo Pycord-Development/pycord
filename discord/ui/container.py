@@ -286,7 +286,7 @@ class Container(ViewItem[V]):
         return self
 
     def get_item(self, id: str | int | None = None, **attrs: Any) -> ViewItem | None:
-        """Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
+        r"""Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
         If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.

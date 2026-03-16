@@ -41,13 +41,13 @@ if TYPE_CHECKING:
 
     from .view import View
 
+
 def _item_getter(iterable, id: str | int | None = None, **attrs) -> Item | None:
     _all = all
     attrget = attrgetter
     for i in iterable:
         converted = [
-            (attrget(attr.replace("__", ".")), value)
-            for attr, value in attrs.items()
+            (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
         ]
         try:
             if _all(pred(i) == value for pred, value in converted):

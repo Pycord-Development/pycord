@@ -257,7 +257,7 @@ class ActionRow(ViewItem[V]):
         return self
 
     def get_item(self, id: str | int | None = None, **attrs: Any) -> ViewItem | None:
-        """Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
+        r"""Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
         To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.

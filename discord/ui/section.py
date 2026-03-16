@@ -276,7 +276,7 @@ class Section(ViewItem[V]):
         return self
 
     def get_item(self, id: int | str | None = None, **attrs: Any) -> ViewItem | None:
-        """Get an item from this section. Alias for `utils.get(section.walk_items(), ...)`.
+        r"""Get an item from this section. Alias for `utils.get(section.walk_items(), ...)`.
         If an ``int`` is provided, it will be retrieved by ``id``, otherwise it will check the accessory's ``custom_id``.
         If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
         To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.
