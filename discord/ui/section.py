@@ -200,8 +200,10 @@ class Section(ViewItem[V]):
             The new item to insert into the section.
         """
 
+        if not original_item:
+            raise TypeError(f"expected original_item to be a valid ViewItem, str, or int, not {new_item.__class__!r}")
         if not isinstance(new_item, ViewItem):
-            raise TypeError(f"expected ViewItem not {new_item.__class__!r}")
+            raise TypeError(f"expected new_item to be ViewItem, not {new_item.__class__!r}")
 
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)

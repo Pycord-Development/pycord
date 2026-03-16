@@ -968,10 +968,43 @@ class DesignerView(BaseView):
         ):
             raise ValueError("Can only specify one of before, after, and index.")
 
+        if len(self.children) >= self.MAX_ITEMS:
+            raise ValueError("maximum number of children exceeded")
+
+        if not isinstance(item, ViewItem):
+            raise TypeError(f"expected item to be ViewItem, not {item.__class__!r}")
+
         if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
                 f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
+        if into and isinstance(into, (str, int)):
+            parent = self.get_item(into)
+            if not parent:
+                raise ValueError(f"Could not find into in view.")
+        else:
+            parent = into or self
+
+        if before or after:
+            ref = parent.get_item(before or after)
+            if ref.parent is parent:
+                try:
+                    i = parent.items.index(ref)
+                except:
+                    raise ValueError(f"Could not find before or after in view.")
+                item.parent = parent
+                if before:
+                    parent.items.insert(i, item)
+                else:
+                    parent.items.insert(i+1, item)
+            else:
+                ref.parent.add_item(item, before=before, after=after, into=into)
+            return self
+
+        elif index is not None:
+            item.parent = parent
+            parent.items.insert(index, item)
+            return self
 
         super().add_item(item)
         return self
@@ -995,8 +1028,10 @@ class DesignerView(BaseView):
             The view instance.
         """
 
+        if not original_item:
+            raise TypeError(f"expected original_item to be a valid ViewItem, str, or int, not {new_item.__class__!r}")
         if not isinstance(new_item, ViewItem):
-            raise TypeError(f"expected ViewItem not {new_item.__class__!r}")
+            raise TypeError(f"expected new_item to be ViewItem, not {new_item.__class__!r}")
 
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
