@@ -67,6 +67,12 @@ class Item(Generic[T]):
         self._provided_custom_id: bool = False
         self.parent: Item | ItemInterface | None = None
 
+    def __len__(self) -> int:
+        return 1
+
+    def __bool__(self) -> bool:
+        return True
+
     def to_component_dict(self) -> dict[str, Any]:
         if not self.underlying:
             raise NotImplementedError

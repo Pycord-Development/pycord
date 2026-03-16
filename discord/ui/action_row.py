@@ -107,6 +107,9 @@ class ActionRow(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    def __len__(self) -> int:
+        return len(self.children)
+
     @property
     def items(self) -> list[ViewItem]:
         return self.children

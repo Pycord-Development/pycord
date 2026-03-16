@@ -120,6 +120,9 @@ class Container(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    def __len__(self) -> int:
+        return sum(len(i) for i in self.items)
+
     def _add_component_from_item(self, item: ViewItem):
         self.underlying.components.append(item._generate_underlying())
 
@@ -146,19 +149,44 @@ class Container(ViewItem[V]):
             container.components.append(i._generate_underlying())
         return container
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(self, 
+        item: ViewItem,
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+        into: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the container.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the container.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`items`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        into: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **into** the specified item. This would be equivalent to `into.add_item(item)`, where `into` is a :class:`ViewItem`.
+            If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
         TypeError
             A :class:`ViewItem` was not passed.
         """
+        if (
+            before
+            and after
+            or before
+            and (index is not None)
+            or after
+            and (index is not None)
+        ):
+            raise ValueError("Can only specify one of before, after, and index.")
 
         if not isinstance(item, ViewItem):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
@@ -167,11 +195,39 @@ class Container(ViewItem[V]):
             raise TypeError(
                 f"{item.__class__!r} cannot be added directly. Use ActionRow instead."
             )
+        if into and isinstance(into, (str, int)):
+            parent = self.get_item(into)
+            if not parent:
+                raise ValueError(f"Could not find into in container.")
+        else:
+            parent = into or self
 
-        item.parent = self
+        if before or after:
+            ref = parent.get_item(before or after)
+            if ref.parent is parent:
+                try:
+                    i = parent.items.index(ref)
+                except:
+                    raise ValueError(f"Could not find before or after in container.")
+                item.parent = parent
+                if before:
+                    parent.items.insert(i, item)
+                else:
+                    parent.items.insert(i + 1, item)
+            else:
+                ref.parent.add_item(item, before=before, after=after)
+            self._underlying = self._generate_underlying()
+            return self
 
-        self.items.append(item)
-        self._add_component_from_item(item)
+        elif index is not None:
+            item.parent = parent
+            parent.items.insert(index, item)
+            self._underlying = self._generate_underlying()
+            return self
+
+        item.parent = parent
+        parent.items.append(item)
+        parent._add_component_from_item(item)
         return self
 
     def remove_item(self, item: ViewItem | str | int) -> Self:

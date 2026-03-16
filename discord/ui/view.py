@@ -257,7 +257,7 @@ class BaseView(ItemInterface):
             Maximum number of children has been exceeded
         """
 
-        if len(self.children) >= self.MAX_ITEMS:
+        if len(self) >= self.MAX_ITEMS:
             raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, ViewItem):
@@ -954,7 +954,7 @@ class DesignerView(BaseView):
         Raises
         ------
         TypeError
-            An :class:`ViewItem` was not passed.
+            A :class:`ViewItem` was not passed.
         ValueError
             Maximum number of items has been exceeded (40)
         """
@@ -968,7 +968,7 @@ class DesignerView(BaseView):
         ):
             raise ValueError("Can only specify one of before, after, and index.")
 
-        if len(self.children) >= self.MAX_ITEMS:
+        if len(self) >= self.MAX_ITEMS:
             raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, ViewItem):
@@ -998,7 +998,10 @@ class DesignerView(BaseView):
                 else:
                     parent.items.insert(i + 1, item)
             else:
-                ref.parent.add_item(item, before=before, after=after, into=into)
+                if isinstance(ref.parent.underlying, ContainerComponent):
+                    ref.parent.add_item(item, before=before, after=after, into=into)
+                else:
+                    ref.parent.add_item(item, before=before, after=after)
             return self
 
         elif index is not None:
@@ -1006,7 +1009,8 @@ class DesignerView(BaseView):
             parent.items.insert(index, item)
             return self
 
-        super().add_item(item)
+        item.parent = parent
+        parent.items.append(item)
         return self
 
     def replace_item(

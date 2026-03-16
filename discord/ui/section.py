@@ -115,6 +115,10 @@ class Section(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    def __len__(self) -> int:
+        r = sum(len(i) for i in self.items)
+        return (r+1) if self.accessory else r
+
     def _add_component_from_item(self, item: ViewItem):
         self.underlying.components.append(item.underlying)
 
@@ -137,13 +141,25 @@ class Section(ViewItem[V]):
             section.accessory = self.accessory._generate_underlying()
         return section
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(self, 
+        item: ViewItem,
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the section.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the section.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`items`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
@@ -152,12 +168,44 @@ class Section(ViewItem[V]):
         ValueError
             Maximum number of items has been exceeded (3).
         """
+        if (
+            before
+            and after
+            or before
+            and (index is not None)
+            or after
+            and (index is not None)
+        ):
+            raise ValueError("Can only specify one of before, after, and index.")
 
         if len(self.items) >= 3:
             raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, ViewItem):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
+
+        if before or after:
+            ref = self.get_item(before or after)
+            if ref.parent is self:
+                try:
+                    i = self.items.index(ref)
+                except:
+                    raise ValueError(f"Could not find before or after in container.")
+                item.parent = self
+                if before:
+                    self.items.insert(i, item)
+                else:
+                    self.items.insert(i + 1, item)
+            else:
+                ref.parent.add_item(item, before=before, after=after)
+            self._underlying = self._generate_underlying()
+            return self
+
+        elif index is not None:
+            item.parent = self
+            self.items.insert(index, item)
+            self._underlying = self._generate_underlying()
+            return self
 
         item.parent = self
         self.items.append(item)

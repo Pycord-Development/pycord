@@ -87,6 +87,12 @@ class ItemInterface:
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
 
+    def __len__(self) -> int:
+        return sum(len(i) for i in self.children)
+
+    def __bool__(self) -> bool:
+        return True
+
     async def _timeout_task_impl(self) -> None:
         while True:
             # Guard just in case someone changes the value of the timeout at runtime
