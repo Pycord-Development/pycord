@@ -121,7 +121,7 @@ class Container(ViewItem[V]):
             self.add_item(i)
 
     def __len__(self) -> int:
-        return sum(len(i) for i in self.items)
+        return sum(len(i) for i in self.items) + 1
 
     def _add_component_from_item(self, item: ViewItem):
         self.underlying.components.append(item._generate_underlying())
@@ -180,11 +180,11 @@ class Container(ViewItem[V]):
             A :class:`ViewItem` was not passed.
         """
         if (
-            before
-            and after
-            or before
+            before is not None
+            and after is not None
+            or before is not None
             and (index is not None)
-            or after
+            or after is not None
             and (index is not None)
         ):
             raise ValueError("Can only specify one of before, after, and index.")
@@ -205,18 +205,18 @@ class Container(ViewItem[V]):
 
         if before or after:
             ref = parent.get_item(before or after)
-            if ref.parent is parent:
-                try:
+            try:
+                if ref.parent is parent:
                     i = parent.items.index(ref)
-                except:
-                    raise ValueError(f"Could not find before or after in container.")
-                item.parent = parent
-                if before:
-                    parent.items.insert(i, item)
+                    item.parent = parent
+                    if before:
+                        parent.items.insert(i, item)
+                    else:
+                        parent.items.insert(i + 1, item)
                 else:
-                    parent.items.insert(i + 1, item)
-            else:
-                ref.parent.add_item(item, before=before, after=after)
+                    ref.parent.add_item(item, before=before, after=after)
+            except:
+                raise ValueError(f"Could not find before or after in container.")
             self._underlying = self._generate_underlying()
             return self
 

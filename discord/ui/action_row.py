@@ -108,7 +108,7 @@ class ActionRow(ViewItem[V]):
             self.add_item(i)
 
     def __len__(self) -> int:
-        return len(self.children)
+        return len(self.children) + 1
 
     @property
     def items(self) -> list[ViewItem]:
@@ -137,19 +137,41 @@ class ActionRow(ViewItem[V]):
             row.children.append(i._generate_underlying())
         return row
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(
+        self,
+        item: ViewItem,
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the action row.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the action row.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`children`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
         TypeError
             A :class:`ViewItem` was not passed.
         """
+        if (
+            before is not None
+            and after is not None
+            or before is not None
+            and (index is not None)
+            or after is not None
+            and (index is not None)
+        ):
+            raise ValueError("Can only specify one of before, after, and index.")
 
         if not isinstance(item, (Select, Button)):
             raise TypeError(f"expected Select or Button, not {item.__class__!r}")
@@ -158,8 +180,27 @@ class ActionRow(ViewItem[V]):
         if self.width + item.width > 5:
             raise ValueError(f"Not enough space left on this ActionRow")
 
-        item.parent = self
+        if before is not None or after is not None:
+            try:
+                ref = self.get_item(before or after or 0)
+                i = self.children.index(ref)
+                item.parent = self
+                if before:
+                    self.children.insert(i, item)
+                else:
+                    self.children.insert(i + 1, item)
+            except:
+                raise ValueError(f"Could not find before or after in row.")
+            self._underlying = self._generate_underlying()
+            return self
 
+        elif index is not None:
+            item.parent = self
+            self.children.insert(index, item)
+            self._underlying = self._generate_underlying()
+            return self
+
+        item.parent = self
         self.children.append(item)
         self._add_component_from_item(item)
         return self

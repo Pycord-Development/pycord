@@ -959,11 +959,11 @@ class DesignerView(BaseView):
             Maximum number of items has been exceeded (40)
         """
         if (
-            before
-            and after
-            or before
+            before is not None
+            and after is not None
+            or before is not None
             and (index is not None)
-            or after
+            or after is not None
             and (index is not None)
         ):
             raise ValueError("Can only specify one of before, after, and index.")
@@ -985,23 +985,23 @@ class DesignerView(BaseView):
         else:
             parent = into or self
 
-        if before or after:
-            ref = parent.get_item(before or after)
-            if ref.parent is parent:
-                try:
+        if before is not None or after is not None:
+            ref = parent.get_item(before or after or 0)
+            try:
+                if ref.parent is parent:
                     i = parent.items.index(ref)
-                except:
-                    raise ValueError(f"Could not find before or after in view.")
-                item.parent = parent
-                if before:
-                    parent.items.insert(i, item)
+                    item.parent = parent
+                    if before:
+                        parent.items.insert(i, item)
+                    else:
+                        parent.items.insert(i + 1, item)
                 else:
-                    parent.items.insert(i + 1, item)
-            else:
-                if isinstance(ref.parent.underlying, ContainerComponent):
-                    ref.parent.add_item(item, before=before, after=after, into=into)
-                else:
-                    ref.parent.add_item(item, before=before, after=after)
+                    if isinstance(ref.parent.underlying, ContainerComponent):
+                        ref.parent.add_item(item, before=before, after=after, into=into)
+                    else:
+                        ref.parent.add_item(item, before=before, after=after)
+            except:
+                raise ValueError(f"Could not find before or after in view.")
             return self
 
         elif index is not None:
