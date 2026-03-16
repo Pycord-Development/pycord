@@ -55,7 +55,7 @@ def _item_getter(iterable, **attrs) -> Item | None:
         except:
             pass
         if hasattr(i, "get_item"):
-            if child := i.get_item(None, **attrs):
+            if child := i.get_item(**attrs):
                 return child
     return None
 
