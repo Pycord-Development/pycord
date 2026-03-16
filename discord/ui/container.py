@@ -149,7 +149,8 @@ class Container(ViewItem[V]):
             container.components.append(i._generate_underlying())
         return container
 
-    def add_item(self, 
+    def add_item(
+        self,
         item: ViewItem,
         *,
         index: int | None = None,

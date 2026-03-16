@@ -117,7 +117,7 @@ class Section(ViewItem[V]):
 
     def __len__(self) -> int:
         r = sum(len(i) for i in self.items)
-        return (r+1) if self.accessory else r
+        return (r + 1) if self.accessory else r
 
     def _add_component_from_item(self, item: ViewItem):
         self.underlying.components.append(item.underlying)
@@ -141,7 +141,8 @@ class Section(ViewItem[V]):
             section.accessory = self.accessory._generate_underlying()
         return section
 
-    def add_item(self, 
+    def add_item(
+        self,
         item: ViewItem,
         *,
         index: int | None = None,
