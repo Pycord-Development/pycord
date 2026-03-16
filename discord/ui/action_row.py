@@ -193,7 +193,7 @@ class ActionRow(ViewItem[V]):
                 else:
                     self.children.insert(i + 1, item)
             except:
-                raise ValueError(f"Could not find before or after in row.")
+                raise ValueError(f"Could not find {before or after} in row.")
             self._underlying = self._generate_underlying()
             return self
 
@@ -246,14 +246,14 @@ class ActionRow(ViewItem[V]):
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
         if not original_item:
-            raise ValueError(f"Could not find original_item in row.")
+            raise ValueError(f"Could not find {original_item} in row.")
         try:
             i = self.children.index(original_item)
             new_item.parent = self
             self.children[i] = new_item
             original_item.parent = None
         except ValueError:
-            raise ValueError(f"Could not find original_item in row.")
+            raise ValueError(f"Could not find {original_item} in row.")
         return self
 
     def get_item(self, id: str | int | None = None, **attrs: Any) -> ViewItem | None:

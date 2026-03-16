@@ -981,7 +981,7 @@ class DesignerView(BaseView):
         if into and isinstance(into, (str, int)):
             parent = self.get_item(into)
             if not parent:
-                raise ValueError(f"Could not find into in view.")
+                raise ValueError(f"Could not find {into} in view.")
         else:
             parent = into or self
 
@@ -1003,7 +1003,7 @@ class DesignerView(BaseView):
                     else:
                         ref.parent.add_item(item, before=before, after=after)
             except:
-                raise ValueError(f"Could not find before or after in view.")
+                raise ValueError(f"Could not find {before or after} in view.")
             return self
 
         elif index is not None:
@@ -1046,7 +1046,7 @@ class DesignerView(BaseView):
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
         if not original_item:
-            raise ValueError(f"Could not find original_item in view.")
+            raise ValueError(f"Could not find {original_item} in view.")
         try:
             if original_item.parent is self:
                 i = self.children.index(original_item)
@@ -1056,7 +1056,7 @@ class DesignerView(BaseView):
             else:
                 original_item.parent.replace_item(original_item, new_item)
         except ValueError:
-            raise ValueError(f"Could not find original_item in view.")
+            raise ValueError(f"Could not find {original_item} in view.")
         return self
 
     def add_row(

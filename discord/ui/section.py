@@ -199,7 +199,7 @@ class Section(ViewItem[V]):
                 else:
                     self.items.insert(i + 1, item)
             except:
-                raise ValueError(f"Could not find before or after in section.")
+                raise ValueError(f"Could not find {before or after} in section.")
             self._underlying = self._generate_underlying()
             return self
 
@@ -262,7 +262,7 @@ class Section(ViewItem[V]):
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
         if not original_item:
-            raise ValueError(f"Could not find original_item in section.")
+            raise ValueError(f"Could not find {original_item} in section.")
         try:
             if original_item is self.accessory:
                 self.accessory = new_item
@@ -272,7 +272,7 @@ class Section(ViewItem[V]):
             original_item.parent = None
             new_item.parent = self
         except ValueError:
-            raise ValueError(f"Could not find original_item in section.")
+            raise ValueError(f"Could not find {original_item} in section.")
         return self
 
     def get_item(self, id: int | str | None = None, **attrs: Any) -> ViewItem | None:

@@ -200,7 +200,7 @@ class Container(ViewItem[V]):
         if into and isinstance(into, (str, int)):
             parent = self.get_item(into)
             if not parent:
-                raise ValueError(f"Could not find into in container.")
+                raise ValueError(f"Could not find {into} in container.")
         else:
             parent = into or self
 
@@ -219,7 +219,7 @@ class Container(ViewItem[V]):
                 else:
                     ref.parent.add_item(item, before=before, after=after)
             except:
-                raise ValueError(f"Could not find before or after in container.")
+                raise ValueError(f"Could not find {before or after} in container.")
             self._underlying = self._generate_underlying()
             return self
 
@@ -272,7 +272,7 @@ class Container(ViewItem[V]):
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
         if not original_item:
-            raise ValueError(f"Could not find original_item in container.")
+            raise ValueError(f"Could not find {original_item} in container.")
         try:
             if original_item.parent is self:
                 i = self.items.index(original_item)
@@ -282,7 +282,7 @@ class Container(ViewItem[V]):
             else:
                 original_item.parent.replace_item(original_item, new_item)
         except ValueError:
-            raise ValueError(f"Could not find original_item in container.")
+            raise ValueError(f"Could not find {original_item} in container.")
         return self
 
     def get_item(self, id: str | int | None = None, **attrs: Any) -> ViewItem | None:
