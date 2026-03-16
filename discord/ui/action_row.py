@@ -277,9 +277,11 @@ class ActionRow(ViewItem[V]):
         child = none
         if id:
             attr = "id" if isinstance(id, int) else "custom_id"
+            if attrs:
+                attrs[attr] = id
             child = find(lambda i: getattr(i, attr, None) == id, self.children)
         elif attrs:
-            child = _item_getter(self.children, id, **attrs)
+            child = _item_getter(self.children, **attrs)
 
         return child
 

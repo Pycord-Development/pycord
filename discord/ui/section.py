@@ -299,11 +299,13 @@ class Section(ViewItem[V]):
             iterr.append(self.accessory)
         if id:
             attr = "id" if isinstance(id, int) else "custom_id"
+            if attrs:
+                attrs[attr] = id
             if self.accessory and id == getattr(self.accessory, attr, None):
                 return self.accessory
             child = find(lambda i: getattr(i, attr, None) == id, self.items)
         elif attrs:
-            child = _item_getter(iterr, id, **attrs)
+            child = _item_getter(iterr, **attrs)
 
         return child
 

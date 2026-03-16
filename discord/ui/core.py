@@ -177,6 +177,8 @@ class ItemInterface:
         child = None
         if custom_id:
             attr = "id" if isinstance(custom_id, int) else "custom_id"
+            if attrs:
+                attrs[attr] = custom_id
             child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
             if not child:
                 for i in self.children:
@@ -184,7 +186,7 @@ class ItemInterface:
                         if child := i.get_item(custom_id):
                             return child
         elif attrs:
-            child = _item_getter(self.children, custom_id, **attrs)
+            child = _item_getter(self.children, **attrs)
 
         return child
 

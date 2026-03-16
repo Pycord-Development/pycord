@@ -307,6 +307,8 @@ class Container(ViewItem[V]):
         child = None
         if id:
             attr = "id" if isinstance(id, int) else "custom_id"
+            if attrs:
+                attrs[attr] = id
             child = find(lambda i: getattr(i, attr, None) == id, self.items)
             if not child:
                 for i in self.items:
@@ -314,7 +316,7 @@ class Container(ViewItem[V]):
                         if child := i.get_item(id):
                             return child
         elif attrs:
-            child = _item_getter(self.items, id, **attrs)
+            child = _item_getter(self.items, **attrs)
         return child
 
     def add_row(
