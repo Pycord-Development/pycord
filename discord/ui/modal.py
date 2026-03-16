@@ -457,7 +457,7 @@ class DesignerModal(BaseModal):
             The converted view. This always returns a :class:`DesignerModal` and not
             one of its subclasses.
         """
-        modal = DesignerModal(timeout=timeout)
+        modal = DesignerModal(title=data.get("title"), custom_id=data.get("custom_id", None), timeout=timeout)
         components = [_component_factory(d) for d in data.get("components", [])]
         for component in components:
             modal.add_item(_component_to_item(component))
