@@ -32,6 +32,7 @@ from ..components import _component_factory
 from ..enums import ComponentType
 from ..utils import find, get
 from .button import Button
+from .core import _item_getter
 from .item import ItemCallbackType, ViewItem
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
@@ -274,26 +275,36 @@ class Section(ViewItem[V]):
             raise ValueError(f"Could not find original_item in section.")
         return self
 
-    def get_item(self, id: int | str) -> ViewItem | None:
+    def get_item(self, id: int | str | None = None, **attrs: Any) -> ViewItem | None:
         """Get an item from this section. Alias for `utils.get(section.walk_items(), ...)`.
         If an ``int`` is provided, it will be retrieved by ``id``, otherwise it will check the accessory's ``custom_id``.
+        If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
+        To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.
 
         Parameters
         ----------
         id: Union[:class:`str`, :class:`int`]
             The id or custom_id of the item to get.
+        \*\*attrs
+            Keyword arguments that denote attributes to search with.
 
         Returns
         -------
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` if it exists.
         """
-        if not id:
-            return None
-        attr = "id" if isinstance(id, int) else "custom_id"
-        if self.accessory and id == getattr(self.accessory, attr, None):
-            return self.accessory
-        child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        child = None
+        iterr = self.items
+        if self.accessory:
+            iterr.append(self.accessory)
+        if id:
+            attr = "id" if isinstance(id, int) else "custom_id"
+            if self.accessory and id == getattr(self.accessory, attr, None):
+                return self.accessory
+            child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        elif attrs:
+            child = _item_getter(iterr, id, **attrs)
+
         return child
 
     def add_text(self, content: str, *, id: int | None = None) -> Self:

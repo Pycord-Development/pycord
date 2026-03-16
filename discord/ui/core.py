@@ -41,6 +41,24 @@ if TYPE_CHECKING:
 
     from .view import View
 
+def _item_getter(iterable, id: str | int | None = None, **attrs) -> Item | None:
+    _all = all
+    attrget = attrgetter
+    for i in iterable:
+        converted = [
+            (attrget(attr.replace("__", ".")), value)
+            for attr, value in attrs.items()
+        ]
+        try:
+            if _all(pred(i) == value for pred, value in converted):
+                return i
+        except:
+            pass
+        if hasattr(i, "get_item"):
+            if child := i.get_item(id, **attrs):
+                return child
+    return None
+
 
 class ItemInterface:
     """The base structure for classes that contain :class:`~discord.ui.Item`.
@@ -166,21 +184,7 @@ class ItemInterface:
                         if child := i.get_item(custom_id):
                             return child
         elif attrs:
-            _all = all
-            attrget = attrgetter
-            for i in self.children:
-                converted = [
-                    (attrget(attr.replace("__", ".")), value)
-                    for attr, value in attrs.items()
-                ]
-                try:
-                    if _all(pred(i) == value for pred, value in converted):
-                        return i
-                except:
-                    pass
-                if hasattr(i, "get_item"):
-                    if child := i.get_item(custom_id, **attrs):
-                        return child
+            child = _item_getter(self.children, custom_id, **attrs)
 
         return child
 

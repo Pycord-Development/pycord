@@ -33,6 +33,7 @@ from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find, get
 from .action_row import ActionRow
 from .button import Button
+from .core import _item_getter
 from .file import File
 from .item import ItemCallbackType, ViewItem
 from .media_gallery import MediaGallery
@@ -284,30 +285,36 @@ class Container(ViewItem[V]):
             raise ValueError(f"Could not find original_item in container.")
         return self
 
-    def get_item(self, id: str | int) -> ViewItem | None:
+    def get_item(self, id: str | int | None = None, **attrs: Any) -> ViewItem | None:
         """Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
+        If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
+        To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: Optional[Union[:class:`str`, :class:`int`]]
             The id or custom_id of the item to get.
+        \*\*attrs
+            Keyword arguments that denote attributes to search with.
 
         Returns
         -------
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
-        if not id:
-            return None
-        attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.items)
-        if not child:
-            for i in self.items:
-                if hasattr(i, "get_item"):
-                    if child := i.get_item(id):
-                        return child
+        child = None
+        if id:
+            attr = "id" if isinstance(id, int) else "custom_id"
+            child = find(lambda i: getattr(i, attr, None) == id, self.items)
+            if not child:
+                for i in self.items:
+                    if hasattr(i, "get_item"):
+                        if child := i.get_item(id):
+                            return child
+        elif attrs:
+            child = _item_getter(self.items, id, **attrs)
         return child
 
     def add_row(
