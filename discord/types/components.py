@@ -46,6 +46,7 @@ class BaseComponent(TypedDict):
     type: ComponentType
     id: NotRequired[int]
 
+
 class Modal(TypedDict):
     custom_id: str
     title: int
