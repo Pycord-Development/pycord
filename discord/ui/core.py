@@ -41,8 +41,7 @@ if TYPE_CHECKING:
 
     from .view import View
 
-
-def _item_getter(iterable, id: str | int | None = None, **attrs) -> Item | None:
+def _item_getter(iterable, **attrs) -> Item | None:
     _all = all
     attrget = attrgetter
     for i in iterable:
@@ -55,7 +54,7 @@ def _item_getter(iterable, id: str | int | None = None, **attrs) -> Item | None:
         except:
             pass
         if hasattr(i, "get_item"):
-            if child := i.get_item(id, **attrs):
+            if child := i.get_item(None, **attrs):
                 return child
     return None
 
