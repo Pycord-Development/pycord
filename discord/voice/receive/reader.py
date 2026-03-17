@@ -271,21 +271,6 @@ class PacketDecryptor:
         else:
             return nacl.secret.SecretBox(secret_key)
 
-    """def decrypt_rtp(self, packet: RTPPacket) -> bytes:
-        state = self.client._connection
-        dave = state.dave_session
-        data = self._decryptor_rtp(packet)
-
-        if dave is not None and dave.ready and packet.ssrc in state.ssrc_user_map:
-            data = dave.decrypt(
-                state.ssrc_user_map[packet.ssrc], davey.MediaType.audio, data
-            )
-
-        if packet.extended:
-            offset = packet.update_extended_header(data)
-            data = data[offset:]
-
-        return data"""
 
     def decrypt_rtp(self, packet: RTPPacket) -> bytes:
         state = self.client._connection
@@ -293,8 +278,32 @@ class PacketDecryptor:
 
         raw_payload = self._decryptor_rtp(packet)
 
+
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
+
+            if not uid:
+                # SSRC→user_id mapping not yet populated (race with member_connect).
+                # Try every user ID known to the DAVE session until one decrypts.
+                for candidate_uid in dave.get_user_ids():
+                    try:
+                        decrypted_audio = dave.decrypt(
+                            candidate_uid,
+                            davey.MediaType.audio,
+                            raw_payload,
+                        )
+                        # Successfully decrypted — cache the mapping for next time
+                        self.client._connection.user_ssrc_map[candidate_uid] = packet.ssrc
+                        uid = candidate_uid
+                        raw_payload = decrypted_audio
+                        _log.debug(
+                            "DAVE: inferred ssrc %s -> user_id %s from decryption",
+                            packet.ssrc, uid,
+                        )
+                        break
+                    except Exception:
+                        continue
+
             if uid:
                 try:
                     decrypted_audio = dave.decrypt(
@@ -302,16 +311,10 @@ class PacketDecryptor:
                         davey.MediaType.audio,
                         raw_payload,
                     )
-
-                    if packet.extended:
-                        offset = packet.update_extended_header(decrypted_audio)
-                        packet.decrypted_data = decrypted_audio[offset:]
-                    else:
-                        packet.decrypted_data = decrypted_audio
+                    # dave.decrypt() returns raw Opus — no extension headers.
+                    # The extension was already stripped by _decryptor_rtp above.
+                    packet.decrypted_data = decrypted_audio
                 except Exception as exc:
-                    _log.debug(
-                        "Ignoring exception while decoding DAVE packet", exc_info=exc
-                    )
                     packet.decrypted_data = OPUS_SILENCE
 
         return packet.decrypted_data
@@ -425,9 +428,10 @@ class PacketDecryptor:
             raise CryptoError(exc)
 
         if packet.extended:
-            packet.update_extended_header(result)
+            offset = packet.update_extended_header(result)
+            return result[offset:]
 
-        return result[8:]
+        return result
 
     def _decrypt_rtcp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
         _log.debug("Decrypting RTCP AEAD XChaCha20 Poly1305 RTPSize")
