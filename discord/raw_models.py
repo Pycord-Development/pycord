@@ -985,6 +985,7 @@ class RawVoiceServerUpdateEvent(_PayloadLike):
         self.guild_id: int = int(data["guild_id"])
         self.token: str = data["token"]
         self.endpoint: str | None = data["endpoint"]
+        self._raw_data: VoiceServerUpdateEvent = data
 
     @property
     def guild(self) -> Guild | None:

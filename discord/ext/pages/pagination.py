@@ -45,6 +45,8 @@ __all__ = (
     "Page",
 )
 
+from ...utils import warn_deprecated
+
 
 class PaginatorButton(discord.ui.Button):
     """Creates a button used to navigate the paginator.
@@ -1073,6 +1075,7 @@ class Paginator(discord.ui.View):
         self,
         message: discord.Message,
         suppress: bool | None = None,
+        suppress_embeds: bool = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         delete_after: float | None = None,
         user: User | Member | None = None,
@@ -1092,6 +1095,15 @@ class Paginator(discord.ui.View):
             all the embeds if set to ``True``. If set to ``False``
             this brings the embeds back if they were suppressed.
             Using this parameter requires :attr:`~.Permissions.manage_messages`.
+
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message. This removes
+            all the embeds if set to ``True``. If set to ``False``
+            this brings the embeds back if they were suppressed.
+            Using this parameter requires :attr:`~.Permissions.manage_messages`.
+
+            .. versionadded:: 2.8
         allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
             Controls the mentions being processed in this message. If this is
             passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
@@ -1127,6 +1139,11 @@ class Paginator(discord.ui.View):
         if not self.user:
             self.usercheck = False
 
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+
         try:
             self.message = await message.edit(
                 content=page_content.content,
@@ -1134,7 +1151,7 @@ class Paginator(discord.ui.View):
                 files=page_content.files,
                 attachments=[],
                 view=self,
-                suppress=suppress,
+                suppress_embeds=suppress_embeds,
                 allowed_mentions=allowed_mentions,
                 delete_after=delete_after,
             )
