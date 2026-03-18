@@ -1,5 +1,7 @@
 import copy
-from typing import Any, override
+from typing import Any
+
+from typing_extensions import override
 
 import pytest
 
