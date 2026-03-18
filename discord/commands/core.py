@@ -1980,6 +1980,7 @@ class MessageCommand(ContextMenuCommand):
 
 
 def slash_command(
+    *,
     checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
     cog: Cog | None = MISSING,
     contexts: set[InteractionContextType] | None = MISSING,
@@ -2026,6 +2027,7 @@ def slash_command(
 
 
 def user_command(
+    *,
     checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
     cog: Cog | None = MISSING,
     contexts: set[InteractionContextType] | None = MISSING,
@@ -2064,6 +2066,7 @@ def user_command(
 
 
 def message_command(
+    *,
     checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
     cog: Cog | None = MISSING,
     contexts: set[InteractionContextType] | None = MISSING,
@@ -2102,6 +2105,7 @@ def message_command(
 
 
 def application_command(
+    *,
     cls=SlashCommand,
     checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
     cog: Cog | None = MISSING,

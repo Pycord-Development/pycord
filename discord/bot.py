@@ -915,6 +915,7 @@ class ApplicationCommandMixin(ABC):
 
     def slash_command(
         self,
+        *,
         checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
         cog: Cog | None = MISSING,
         contexts: set[InteractionContextType] | None = MISSING,
@@ -964,6 +965,7 @@ class ApplicationCommandMixin(ABC):
 
     def user_command(
         self,
+        *,
         checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
         cog: Cog | None = MISSING,
         contexts: set[InteractionContextType] | None = MISSING,
@@ -1005,6 +1007,7 @@ class ApplicationCommandMixin(ABC):
 
     def message_command(
         self,
+        *,
         checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
         cog: Cog | None = MISSING,
         contexts: set[InteractionContextType] | None = MISSING,
@@ -1046,6 +1049,7 @@ class ApplicationCommandMixin(ABC):
 
     def application_command(
         self,
+        *,
         cls: type[C] = SlashCommand,
         checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
         cog: Cog | None = MISSING,
