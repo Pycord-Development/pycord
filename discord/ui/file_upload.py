@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from __future__ import annotations
 
 import os
@@ -23,7 +47,7 @@ class FileUpload(ModalItem):
     Parameters
     ----------
     custom_id: Optional[:class:`str`]
-        The ID of the input text field that gets received during an interaction.
+        The ID of the file upload field that gets received during an interaction.
     min_values: Optional[:class:`int`]
         The minimum number of files that must be uploaded.
         Defaults to 0 and must be between 0 and 10, inclusive.
@@ -57,7 +81,7 @@ class FileUpload(ModalItem):
         if min_values and (min_values < 0 or min_values > 10):
             raise ValueError("min_values must be between 0 and 10")
         if max_values and (max_values < 1 or max_values > 10):
-            raise ValueError("max_length must be between 1 and 10")
+            raise ValueError("max_values must be between 1 and 10")
         if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -65,49 +89,51 @@ class FileUpload(ModalItem):
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
+        self._attachments: list[Attachment] | None = None
 
-        self._underlying: FileUploadComponent = FileUploadComponent._raw_construct(
-            type=ComponentType.file_upload,
+        self._underlying: FileUploadComponent = self._generate_underlying(
             custom_id=custom_id,
             min_values=min_values,
             max_values=max_values,
             required=required,
             id=id,
         )
-        self._attachments: list[Attachment] | None = None
 
-    def __repr__(self) -> str:
-        attrs = " ".join(
-            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
+    def _generate_underlying(
+        self,
+        custom_id: str | None = None,
+        min_values: int | None = None,
+        max_values: int | None = None,
+        required: bool | None = None,
+        id: int | None = None,
+    ) -> FileUploadComponent:
+        super()._generate_underlying(FileUploadComponent)
+        return FileUploadComponent._raw_construct(
+            type=ComponentType.file_upload,
+            custom_id=custom_id or self.custom_id,
+            min_values=min_values if min_values is not None else self.min_values,
+            max_values=max_values if max_values is not None else self.max_values,
+            required=required if required is not None else self.required,
+            id=id or self.id,
         )
-        return f"<{self.__class__.__name__} {attrs}>"
-
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
-    def id(self) -> int | None:
-        """The ID of this component. If not provided by the user, it is set sequentially by Discord."""
-        return self._underlying.id
 
     @property
     def custom_id(self) -> str:
         """The custom id that gets received during an interaction."""
-        return self._underlying.custom_id
+        return self.underlying.custom_id
 
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f"custom_id must be None or str not {value.__class__.__name__}"
-            )
-        self._underlying.custom_id = value
+            raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
+        if len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
+        self.underlying.custom_id = value
 
     @property
     def min_values(self) -> int | None:
         """The minimum number of files that must be uploaded. Defaults to 0."""
-        return self._underlying.min_values
+        return self.underlying.min_values
 
     @min_values.setter
     def min_values(self, value: int | None):
@@ -115,12 +141,12 @@ class FileUpload(ModalItem):
             raise TypeError(f"min_values must be None or int not {value.__class__.__name__}")  # type: ignore
         if value and (value < 0 or value > 10):
             raise ValueError("min_values must be between 0 and 10")
-        self._underlying.min_values = value
+        self.underlying.min_values = value
 
     @property
     def max_values(self) -> int | None:
         """The maximum number of files that can be uploaded."""
-        return self._underlying.max_values
+        return self.underlying.max_values
 
     @max_values.setter
     def max_values(self, value: int | None):
@@ -128,26 +154,26 @@ class FileUpload(ModalItem):
             raise TypeError(f"max_values must be None or int not {value.__class__.__name__}")  # type: ignore
         if value and (value < 1 or value > 10):
             raise ValueError("max_values must be between 1 and 10")
-        self._underlying.max_values = value
+        self.underlying.max_values = value
 
     @property
     def required(self) -> bool:
         """Whether the input file upload is required or not. Defaults to ``True``."""
-        return self._underlying.required
+        return self.underlying.required
 
     @required.setter
     def required(self, value: bool):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
-        self._underlying.required = bool(value)
+        self.underlying.required = bool(value)
 
     @property
     def values(self) -> list[Attachment] | None:
-        """The files that were uploaded to the field."""
+        """The files that were uploaded to the field. This will be ``None`` if the file upload has not been submitted via a modal yet."""
         return self._attachments
 
     def to_component_dict(self) -> FileUploadComponentPayload:
-        return self._underlying.to_dict()
+        return self.underlying.to_dict()
 
     def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
         values = data.get("values", [])
@@ -158,3 +184,16 @@ class FileUpload(ModalItem):
             )
             for attachment_id in values
         ]
+
+    @classmethod
+    def from_component(
+        cls: type[FileUpload], component: FileUploadComponent
+    ) -> FileUpload:
+
+        return cls(
+            custom_id=component.custom_id,
+            min_values=component.min_values,
+            max_values=component.max_values,
+            required=component.required,
+            id=component.id,
+        )

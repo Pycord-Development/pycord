@@ -27,14 +27,25 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Iterator, Literal, TypeVar, overload
 
+from ..components import (
+    CheckboxGroupOption,
+)
 from ..components import Label as LabelComponent
-from ..components import SelectDefaultValue, SelectOption, _component_factory
+from ..components import (
+    RadioGroupOption,
+    SelectDefaultValue,
+    SelectOption,
+    _component_factory,
+)
 from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
+from .checkbox import Checkbox
+from .checkbox_group import CheckboxGroup
 from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ItemCallbackType, ModalItem
+from .radio_group import RadioGroup
 from .select import Select
 
 __all__ = ("Label",)
@@ -43,7 +54,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..emoji import AppEmoji, GuildEmoji
-    from ..interaction import Interaction
+    from ..interactions import Interaction
     from ..partial_emoji import PartialEmoji, _EmojiTag
     from ..types.components import LabelComponent as LabelComponentPayload
     from .modal import DesignerModal
@@ -61,6 +72,9 @@ class Label(ModalItem[M]):
     - :class:`discord.ui.Select`
     - :class:`discord.ui.InputText`
     - :class:`discord.ui.FileUpload`
+    - :class:`discord.ui.RadioGroup`
+    - :class:`discord.ui.CheckboxGroup`
+    - :class:`discord.ui.Checkbox`
 
     .. versionadded:: 2.7
 
@@ -74,6 +88,11 @@ class Label(ModalItem[M]):
         The description for this label. Must be 100 characters or fewer.
     id: Optional[:class:`int`]
         The label's ID.
+
+    Attributes
+    ----------
+    item: :class:`ViewItem`
+        The label's attached item.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -95,10 +114,8 @@ class Label(ModalItem[M]):
 
         self.item: ModalItem = None
 
-        self._underlying = LabelComponent._raw_construct(
-            type=ComponentType.label,
+        self._underlying = self._generate_underlying(
             id=id,
-            component=None,
             label=label,
             description=description,
         )
@@ -113,7 +130,26 @@ class Label(ModalItem[M]):
             self.item.modal = value
 
     def _set_component_from_item(self, item: ModalItem):
-        self._underlying.component = item._underlying
+        self.underlying.component = item._generate_underlying()
+
+    def _generate_underlying(
+        self,
+        label: str | None = None,
+        description: str | None = None,
+        id: int | None = None,
+    ) -> LabelComponent:
+        super()._generate_underlying(LabelComponent)
+        label = LabelComponent._raw_construct(
+            type=ComponentType.label,
+            id=id or self.id,
+            component=None,
+            label=label or self.label,
+            description=description or self.description,
+        )
+
+        if self.item:
+            label.component = self.item._generate_underlying()
+        return label
 
     def set_item(self, item: ModalItem) -> Self:
         """Set this label's item.
@@ -369,23 +405,131 @@ class Label(ModalItem[M]):
 
         return self.set_item(upload)
 
+    def set_radio_group(
+        self,
+        *,
+        custom_id: str | None = None,
+        options: list[RadioGroupOption] | None = None,
+        required: bool | None = True,
+        id: int | None = None,
+    ) -> Self:
+        """Set this label's item to a radio group.
+
+        To set a pre-existing :class:`RadioGroup`, use the
+        :meth:`set_item` method, instead.
+
+        Parameters
+        ----------
+        custom_id: Optional[:class:`str`]
+            The ID of the radio group that gets received during an interaction.
+        options: List[:class:`discord.RadioGroupOption`]
+            A list of options that can be selected from this group.
+        required: Optional[:class:`bool`]
+            Whether an option selection is required or not. Defaults to ``True``.
+        id: Optional[:class:`int`]
+            The radio group's ID.
+        """
+
+        radio = RadioGroup(
+            custom_id=custom_id,
+            option=options,
+            required=required,
+            id=id,
+        )
+
+        return self.set_item(radio)
+
+    def set_checkbox_group(
+        self,
+        *,
+        custom_id: str | None = None,
+        options: list[CheckboxGroupOption] | None = None,
+        min_values: int | None = None,
+        max_values: int | None = None,
+        required: bool | None = True,
+        id: int | None = None,
+    ) -> Self:
+        """Set this label's item to a checkbox group.
+
+        To set a pre-existing :class:`CheckboxGroup`, use the
+        :meth:`set_item` method, instead.
+
+        Parameters
+        ----------
+        custom_id: Optional[:class:`str`]
+            The ID of the checkbox group that gets received during an interaction.
+        options: List[:class:`discord.CheckboxGroupOption`]
+            A list of options that can be selected in this group.
+        min_values: Optional[:class:`int`]
+            The minimum number of options that must be selected.
+            Defaults to 0 and must be between 0 and 10, inclusive.
+        max_values: Optional[:class:`int`]
+            The maximum number of options that can be selected.
+            Must be between 1 and 10, inclusive.
+        required: Optional[:class:`bool`]
+            Whether an option selection is required or not. Defaults to ``True``.
+        id: Optional[:class:`int`]
+            The checkbox group's ID.
+        """
+
+        checkboxes = CheckboxGroup(
+            custom_id=custom_id,
+            option=options,
+            min_values=min_values,
+            max_values=max_values,
+            required=required,
+            id=id,
+        )
+
+        return self.set_item(checkboxes)
+
+    def set_checkbox(
+        self,
+        *,
+        custom_id: str | None = None,
+        default: bool | None = False,
+        id: int | None = None,
+    ) -> Self:
+        """Set this label's item to a checkbox.
+
+        To set a pre-existing :class:`Checkbox`, use the
+        :meth:`set_item` method, instead.
+
+        Parameters
+        ----------
+        custom_id: Optional[:class:`str`]
+            The ID of the checkbox that gets received during an interaction.
+        default: Optional[:class:`bool`]
+            Whether this checkbox is selected by default or not.
+        id: Optional[:class:`int`]
+            The checkbox's ID.
+        """
+
+        checkbox = Checkbox(
+            custom_id=custom_id,
+            default=default,
+            id=id,
+        )
+
+        return self.set_item(checkbox)
+
     @property
     def label(self) -> str:
         """The label text. Must be 45 characters or fewer."""
-        return self._underlying.label
+        return self.underlying.label
 
     @label.setter
     def label(self, value: str) -> None:
-        self._underlying.label = value
+        self.underlying.label = value
 
     @property
     def description(self) -> str | None:
         """The description for this label. Must be 100 characters or fewer."""
-        return self._underlying.description
+        return self.underlying.description
 
     @description.setter
     def description(self, value: str | None) -> None:
-        self._underlying.description = value
+        self.underlying.description = value
 
     def is_dispatchable(self) -> bool:
         return self.item.is_dispatchable()
@@ -394,7 +538,7 @@ class Label(ModalItem[M]):
         return self.item.is_persistent()
 
     def refresh_component(self, component: LabelComponent) -> None:
-        self._underlying = component
+        self.underlying = component
         self.item.refresh_component(component.component)
 
     def walk_items(self) -> Iterator[ModalItem]:
@@ -415,8 +559,8 @@ class Label(ModalItem[M]):
 
         item = _component_to_item(component.component)
         return cls(
-            item,
-            id=component.id,
             label=component.label,
+            item=item,
+            id=component.id,
             description=component.description,
         )

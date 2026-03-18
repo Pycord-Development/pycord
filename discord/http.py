@@ -29,7 +29,15 @@ import asyncio
 import logging
 import sys
 import weakref
-from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    Coroutine,
+    Iterable,
+    Sequence,
+    TypeVar,
+)
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -84,6 +92,9 @@ if TYPE_CHECKING:
         welcome_screen,
         widget,
     )
+    from .types.invite import (
+        InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
+    )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
 
@@ -95,16 +106,19 @@ if TYPE_CHECKING:
 API_VERSION: int = 10
 
 
-async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str:
-    text = await response.text(encoding="utf-8")
+async def parse_response(
+    response: aiohttp.ClientResponse,
+) -> dict[str, Any] | str | bytes:
     try:
         if response.headers["content-type"] == "application/json":
-            return utils._from_json(text)
+            return utils._from_json(await response.text(encoding="utf-8"))
+        elif response.headers["content-type"] == "text/csv":
+            return await response.read()
     except KeyError:
         # Thanks Cloudflare
         pass
 
-    return text
+    return await response.text(encoding="utf-8")
 
 
 class Route:
@@ -210,7 +224,7 @@ class HTTPClient:
             "proxy_auth": self.proxy_auth,
             "proxy": self.proxy,
             "max_msg_size": 0,
-            "timeout": 30.0,
+            "timeout": aiohttp.ClientWSTimeout(ws_close=30.0),
             "autoclose": False,
             "headers": {
                 "User-Agent": self.user_agent,
@@ -273,7 +287,7 @@ class HTTPClient:
             await self._global_over.wait()
 
         response: aiohttp.ClientResponse | None = None
-        data: dict[str, Any] | str | None = None
+        data: dict[str, Any] | str | bytes | None = None
         await lock.acquire()
         with MaybeUnlock(lock) as maybe_lock:
             for tries in range(5):
@@ -300,7 +314,7 @@ class HTTPClient:
                         )
 
                         # even errors have text involved in them so this is safe to call
-                        data = await json_or_text(response)
+                        data = await parse_response(response)
 
                         # check if we have rate limit header information
                         remaining = response.headers.get("X-Ratelimit-Remaining")
@@ -399,6 +413,21 @@ class HTTPClient:
         async with self.__session.get(url) as resp:
             if resp.status == 200:
                 return await resp.read()
+            elif resp.status == 404:
+                raise NotFound(resp, "asset not found")
+            elif resp.status == 403:
+                raise Forbidden(resp, "cannot retrieve asset")
+            else:
+                raise HTTPException(resp, "failed to get asset")
+
+    async def stream_from_cdn(self, url: str, chunksize: int) -> AsyncGenerator[bytes]:
+        if not isinstance(chunksize, int) or chunksize < 1:
+            raise InvalidArgument("The chunksize must be a positive integer.")
+
+        async with self.__session.get(url) as resp:
+            if resp.status == 200:
+                async for chunk in resp.content.iter_chunked(chunksize):
+                    yield chunk
             elif resp.status == 404:
                 raise NotFound(resp, "asset not found")
             elif resp.status == 403:
@@ -1475,18 +1504,6 @@ class HTTPClient:
             Route("GET", "/guilds/{guild_id}", guild_id=guild_id), params=params
         )
 
-    def delete_guild(self, guild_id: Snowflake) -> Response[None]:
-        return self.request(Route("DELETE", "/guilds/{guild_id}", guild_id=guild_id))
-
-    def create_guild(self, name: str, icon: str | None) -> Response[guild.Guild]:
-        payload = {
-            "name": name,
-        }
-        if icon:
-            payload["icon"] = icon
-
-        return self.request(Route("POST", "/guilds"), json=payload)
-
     def edit_guild(
         self, guild_id: Snowflake, *, reason: str | None = None, **fields: Any
     ) -> Response[guild.Guild]:
@@ -1494,7 +1511,6 @@ class HTTPClient:
             "name",
             "icon",
             "afk_timeout",
-            "owner_id",
             "afk_channel_id",
             "splash",
             "discovery_splash",
@@ -1517,15 +1533,6 @@ class HTTPClient:
         return self.request(
             Route("PATCH", "/guilds/{guild_id}", guild_id=guild_id),
             json=payload,
-            reason=reason,
-        )
-
-    def edit_guild_mfa(
-        self, guild_id: Snowflake, required: bool, *, reason: str | None
-    ) -> Response[guild.GuildMFAModify]:
-        return self.request(
-            Route("POST", "/guilds/{guild_id}/mfa", guild_id=guild_id),
-            json={"level": int(required)},
             reason=reason,
         )
 
@@ -1583,19 +1590,6 @@ class HTTPClient:
                 guild_id=guild_id,
                 code=code,
             )
-        )
-
-    def create_from_template(
-        self, code: str, name: str, icon: str | None
-    ) -> Response[guild.Guild]:
-        payload = {
-            "name": name,
-        }
-        if icon:
-            payload["icon"] = icon
-
-        return self.request(
-            Route("POST", "/guilds/templates/{code}", code=code), json=payload
         )
 
     def get_bans(
@@ -2058,9 +2052,10 @@ class HTTPClient:
         target_type: invite.InviteTargetType | None = None,
         target_user_id: Snowflake | None = None,
         target_application_id: Snowflake | None = None,
+        roles: list[Snowflake] | None = None,
+        target_users_file: File | None = None,
     ) -> Response[invite.Invite]:
-        r = Route("POST", "/channels/{channel_id}/invites", channel_id=channel_id)
-        payload = {
+        payload: dict[str, Any] = {
             "max_age": max_age,
             "max_uses": max_uses,
             "temporary": temporary,
@@ -2076,7 +2071,27 @@ class HTTPClient:
         if target_application_id:
             payload["target_application_id"] = str(target_application_id)
 
-        return self.request(r, reason=reason, json=payload)
+        if roles:
+            payload["role_ids"] = roles
+
+        route = Route("POST", "/channels/{channel_id}/invites", channel_id=channel_id)
+
+        if target_users_file is not None:
+            form = [
+                {
+                    "name": "target_users_file",
+                    "value": target_users_file.fp,
+                    "filename": target_users_file.filename,
+                    "content_type": "text/csv",
+                },
+                {
+                    "name": "payload_json",
+                    "value": utils._to_json(payload),
+                },
+            ]
+            return self.request(route, reason=reason, form=form)
+
+        return self.request(route, reason=reason, json=payload)
 
     def get_invite(
         self,
@@ -2096,6 +2111,46 @@ class HTTPClient:
 
         return self.request(
             Route("GET", "/invites/{invite_id}", invite_id=invite_id), params=params
+        )
+
+    def get_invite_target_users(
+        self,
+        invite_id: str,
+    ) -> Response[bytes]:
+        return self.request(
+            Route("GET", "/invites/{invite_id}/target-users", invite_id=invite_id)
+        )
+
+    def update_invite_target_users(
+        self,
+        invite_id: str,
+        *,
+        target_users_file: File,
+    ) -> Response[invite.Invite]:
+        form = [
+            {
+                "name": "target_users_file",
+                "value": target_users_file.fp,
+                "filename": target_users_file.filename,
+                "content_type": "text/csv",
+            },
+        ]
+
+        return self.request(
+            Route("PUT", "/invites/{invite_id}/target-users", invite_id=invite_id),
+            form=form,
+        )
+
+    def get_invite_target_users_job_status(
+        self,
+        invite_id: str,
+    ) -> Response[InviteTargetUsersJobStatusPayload]:
+        return self.request(
+            Route(
+                "GET",
+                "/invites/{invite_id}/target-users/job-status",
+                invite_id=invite_id,
+            ),
         )
 
     def invites_from(self, guild_id: Snowflake) -> Response[list[invite.Invite]]:
@@ -2121,6 +2176,11 @@ class HTTPClient:
 
     def get_roles(self, guild_id: Snowflake) -> Response[list[role.Role]]:
         return self.request(Route("GET", "/guilds/{guild_id}/roles", guild_id=guild_id))
+
+    def get_roles_member_counts(self, guild_id: Snowflake) -> Response[dict[str, int]]:
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/roles/member-counts", guild_id=guild_id)
+        )
 
     def get_role(self, guild_id: Snowflake, role_id: Snowflake) -> Response[role.Role]:
         return self.request(
@@ -3189,6 +3249,11 @@ class HTTPClient:
 
     def application_info(self) -> Response[appinfo.AppInfo]:
         return self.request(Route("GET", "/oauth2/applications/@me"))
+
+    def edit_current_application_info(
+        self, payload: dict[str, Any]
+    ) -> Response[appinfo.AppInfo]:
+        return self.request(Route("PATCH", "/applications/@me"), json=payload)
 
     def get_application(
         self, application_id: Snowflake, /

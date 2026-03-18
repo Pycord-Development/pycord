@@ -17,4 +17,3 @@ exclude .prettierrc
 exclude .readthedocs.yml
 exclude CHANGELOG.md
 exclude FUNDING.yml
-exclude requirements-dev.txt

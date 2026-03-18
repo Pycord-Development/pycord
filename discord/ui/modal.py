@@ -30,12 +30,11 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
 from ..enums import ComponentType
 from ..utils import find
 from .core import ItemInterface
-from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ModalItem
 from .label import Label
@@ -238,8 +237,6 @@ class BaseModal(ItemInterface):
         ----------
         error: :class:`Exception`
             The exception that was raised.
-        modal: :class:`BaseModal`
-            The modal that failed the dispatch.
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
@@ -250,6 +247,13 @@ class BaseModal(ItemInterface):
 
         A callback that is called when a modal's timeout elapses without being explicitly stopped.
         """
+
+    def walk_children(self) -> Iterator[ModalItem]:
+        for item in self.children:
+            if hasattr(item, "walk_items"):
+                yield from item.walk_items()
+            else:
+                yield item
 
 
 class Modal(BaseModal):

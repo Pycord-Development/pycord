@@ -27,14 +27,11 @@ for i, line in enumerate(changelog_lines):
         changelog_lines[i] = "[version guarantees]: version_guarantees.rst\n"
         break
 
-CHANGELOG_TEXT = (
-    "".join(changelog_lines)
-    + """
+CHANGELOG_TEXT = "".join(changelog_lines) + """
 ## Older Versions
 
 A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
 """
-)
 
 
 # Only write if it's changed to avoid recompiling the docs
@@ -97,6 +94,8 @@ ogp_image = "https://pycord.dev/static/img/logo.png"
 
 autodoc_member_order = "bysource"
 autodoc_typehints = "signature"
+# Disable overload signature injection to keep docs concise
+typehints_document_overloads = False
 # maybe consider this?
 # napoleon_attr_annotations = False
 
@@ -119,11 +118,11 @@ rst_prolog = """
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
 .. |gateway| replace:: |gateway_link|_
 .. |gateway_link| replace:: *gateway*
-.. _gateway_link: https://discord.com/developers/docs/topics/gateway-events
+.. _gateway_link: https://docs.discord.com/developers/events/gateway-events
 """
 
 # Add any paths that contain templates here, relative to this directory.
-# templates_path = ["_templates"]
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
 source_suffix = {
@@ -344,7 +343,18 @@ html_js_files = ["js/custom.js"]
 # html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+html_sidebars = {
+    "**": [
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/scroll-start.html",
+        "sidebar/navigation.html",
+        "sidebar/ethical-ads.html",
+        "sidebar/width-selector.html",
+        "sidebar/scroll-end.html",
+        "sidebar/variant-selector.html",
+    ]
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -477,7 +487,7 @@ texinfo_documents = [
 
 
 linkcheck_ignore = [
-    r"https://discord.com/developers/docs/.*#",
+    r"https://docs.discord.com/developers/.*#",
     r"https://support(?:-dev)?.discord.com/hc/en-us/articles/.*",
     r"https://dis.gd/contact",
     r"https://guide.pycord.dev/",
@@ -485,6 +495,8 @@ linkcheck_ignore = [
     r"https://pycord.dev/",
     r"https://pycord.dev/.*",
     r"https://packages.debian.org/.*",
+    r"https://github.com/Pycord-Development/pycord/issues/new\?template=bug_report.yml",
+    r"https://discord.com/developers/.*",
 ]
 
 linkcheck_exclude_documents = [

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -861,21 +861,35 @@ msgid ""
 "callable can either be a function or a coroutine."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:659 68bab2dab4884032ae4373ac62a556fc
+#: ../../ext/commands/commands.rst:659 bc6e115bf92b47b5a597e8b2014c2acb
+msgid ""
+"Flags can also be positional. This means that the flag does not require a"
+" corresponding value to be passed in by the user. This is useful for "
+"flags that are either optional or have a default value. For example, in "
+"the following code:"
+msgstr ""
+
+#: ../../ext/commands/commands.rst:670 3f399960182447d48e431a1d422b6ca0
+msgid ""
+"The ``members`` flag is marked as positional, meaning that the user can "
+"invoke the command without explicitly specifying the flag."
+msgstr ""
+
+#: ../../ext/commands/commands.rst:672 68bab2dab4884032ae4373ac62a556fc
 msgid ""
 "In order to customise the flag syntax we also have a few options that can"
 " be passed to the class parameter list:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:680 c3bf2a623f5648ab8aa15e111502969f
+#: ../../ext/commands/commands.rst:699 c3bf2a623f5648ab8aa15e111502969f
 msgid ""
 "Despite the similarities in these examples to command like arguments, the"
 " syntax and parser is not a command line parser. The syntax is mainly "
 "inspired by Discord's search bar input and as a result all flags need a "
-"corresponding value."
+"corresponding value unless a positional flag is provided."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:684 ed1aeaf64e074b11b91bcc233a505165
+#: ../../ext/commands/commands.rst:703 ed1aeaf64e074b11b91bcc233a505165
 msgid ""
 "The flag converter is similar to regular commands and allows you to use "
 "most types of converters (with the exception of "
@@ -883,46 +897,46 @@ msgid ""
 " is added for specific annotations as described below."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:689 1ffb1e24952f41ff8806882dd4a0d913
+#: ../../ext/commands/commands.rst:708 1ffb1e24952f41ff8806882dd4a0d913
 msgid "typing.List"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:691 737132d99ad74d6ea4e7b93155b9053c
+#: ../../ext/commands/commands.rst:710 737132d99ad74d6ea4e7b93155b9053c
 msgid ""
 "If a list is given as a flag annotation it tells the parser that the "
 "argument can be passed multiple times."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:693 71dfe029bdd44663a9c4c0a6a2e67965
+#: ../../ext/commands/commands.rst:712 71dfe029bdd44663a9c4c0a6a2e67965
 msgid "For example, augmenting the example above:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:715 35e687a664834729a0fd8e46ab8a3809
+#: ../../ext/commands/commands.rst:734 35e687a664834729a0fd8e46ab8a3809
 msgid "This is called by repeatedly specifying the flag:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:720 8b29c4c6720648d38f2a568216ddfb9e
+#: ../../ext/commands/commands.rst:739 8b29c4c6720648d38f2a568216ddfb9e
 msgid "typing.Tuple"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:722 885f6f663dfb47b4a25f4c3cc0a703d8
+#: ../../ext/commands/commands.rst:741 885f6f663dfb47b4a25f4c3cc0a703d8
 msgid ""
 "Since the above syntax can be a bit repetitive when specifying a flag "
 "many times, the :class:`py:tuple` type annotation allows for \"greedy-"
 "like\" semantics using a variadic tuple:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:736 843f4bf315a34e7cae7e40f5ee256109
+#: ../../ext/commands/commands.rst:755 843f4bf315a34e7cae7e40f5ee256109
 msgid "This allows the previous ``ban`` command to be called like this:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:740 40f2697e104e445c9fcc969725c14d4e
+#: ../../ext/commands/commands.rst:759 40f2697e104e445c9fcc969725c14d4e
 msgid ""
 "The :class:`py:tuple` annotation also allows for parsing of pairs. For "
 "example, given the following code:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:751 9db24b481c4d46e2bfa6afe2add40360
+#: ../../ext/commands/commands.rst:770 9db24b481c4d46e2bfa6afe2add40360
 msgid ""
 "Due to potential parsing ambiguities, the parser expects tuple arguments "
 "to be quoted if they require spaces. So if one of the inner types is "
@@ -930,29 +944,29 @@ msgid ""
 "to disambiguate it from the other element of the tuple."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:756 ba0ee993018246da96bd9c3e81676795
+#: ../../ext/commands/commands.rst:775 ba0ee993018246da96bd9c3e81676795
 msgid "typing.Dict"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:758 a8ae009b053846efa18a133112ab62a1
+#: ../../ext/commands/commands.rst:777 a8ae009b053846efa18a133112ab62a1
 msgid ""
 "A :class:`dict` annotation is functionally equivalent to ``List[Tuple[K, "
 "V]]`` except with the return type given as a :class:`dict` rather than a "
 ":class:`list`."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:765 bc61f9d1ddef4471be4891bddb9c09fa
+#: ../../ext/commands/commands.rst:784 bc61f9d1ddef4471be4891bddb9c09fa
 msgid "Error Handling"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:767 bf56a9433566476cb8376ca10f51d027
+#: ../../ext/commands/commands.rst:786 bf56a9433566476cb8376ca10f51d027
 msgid ""
 "When our commands fail to parse we will, by default, receive a noisy "
 "error in ``stderr`` of our console that tells us that an error has "
 "happened and has been silently ignored."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:770 2a05152d6bf84317ab95ae2560b075bb
+#: ../../ext/commands/commands.rst:789 2a05152d6bf84317ab95ae2560b075bb
 msgid ""
 "In order to handle our errors, we must use something called an error "
 "handler. There is a global error handler, called "
@@ -961,7 +975,7 @@ msgid ""
 "error reached."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:774 ef55bb05708d4afcbde2b1e63982f33d
+#: ../../ext/commands/commands.rst:793 ef55bb05708d4afcbde2b1e63982f33d
 msgid ""
 "Most of the time however, we want to handle an error local to the command"
 " itself. Luckily, commands come with local error handlers that allow us "
@@ -969,7 +983,7 @@ msgid ""
 ":meth:`.Command.error`:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:790 963d52d0558e4331b43c492f46fa70d7
+#: ../../ext/commands/commands.rst:809 963d52d0558e4331b43c492f46fa70d7
 msgid ""
 "The first parameter of the error handler is the :class:`.Context` while "
 "the second one is an exception that is derived from "
@@ -977,11 +991,11 @@ msgid ""
 ":ref:`ext_commands_api_errors` page of the documentation."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:794 80c197d18789467fb4a077f7dd6d612a
+#: ../../ext/commands/commands.rst:813 80c197d18789467fb4a077f7dd6d612a
 msgid "Checks"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:796 6385fb377ffb43d087b788f62480b7f8
+#: ../../ext/commands/commands.rst:815 6385fb377ffb43d087b788f62480b7f8
 msgid ""
 "There are cases when we don't want a user to use our commands. They don't"
 " have permissions to do so or maybe we blocked them from using our bot "
@@ -989,63 +1003,63 @@ msgid ""
 "in a concept called a :ref:`ext_commands_api_checks`."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:800 90ab3c4a75024d579205f055a8794bb7
+#: ../../ext/commands/commands.rst:819 90ab3c4a75024d579205f055a8794bb7
 msgid ""
 "A check is a basic predicate that can take in a :class:`.Context` as its "
 "sole parameter. Within it, you have the following options:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:803 a6623c48167943e79f6a8b60f467d264
+#: ../../ext/commands/commands.rst:822 a6623c48167943e79f6a8b60f467d264
 msgid "Return ``True`` to signal that the person can run the command."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:804 0dea62b4176043998aefe9cac5132676
+#: ../../ext/commands/commands.rst:823 0dea62b4176043998aefe9cac5132676
 msgid "Return ``False`` to signal that the person cannot run the command."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:805 87ac00a762c44d85aa555a32c00abbc2
+#: ../../ext/commands/commands.rst:824 87ac00a762c44d85aa555a32c00abbc2
 msgid ""
 "Raise a :exc:`~ext.commands.CommandError` derived exception to signal the"
 " person cannot run the command."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:807 ab29e9a85151443fba8fc98d3c272a56
+#: ../../ext/commands/commands.rst:826 ab29e9a85151443fba8fc98d3c272a56
 msgid ""
 "This allows you to have custom error messages for you to handle in the "
 ":ref:`error handlers <ext_commands_error_handler>`."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:810 bf9b734bf41d496a8cab527d2f5982a8
+#: ../../ext/commands/commands.rst:829 bf9b734bf41d496a8cab527d2f5982a8
 msgid ""
 "To register a check for a command, we would have two ways of doing so. "
 "The first is using the :meth:`~ext.commands.check` decorator. For "
 "example:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:824 78a6e2319b784e57b1564ecf7e34b49f
+#: ../../ext/commands/commands.rst:843 78a6e2319b784e57b1564ecf7e34b49f
 msgid ""
 "This would only evaluate the command if the function ``is_owner`` returns"
 " ``True``. Sometimes we re-use a check often and want to split it into "
 "its own decorator. To do that we can just add another level of depth:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:841 fec2c90754cb4ca19551a1fca47dae06
+#: ../../ext/commands/commands.rst:860 fec2c90754cb4ca19551a1fca47dae06
 msgid ""
 "Since an owner check is so common, the library provides it for you "
 "(:func:`~ext.commands.is_owner`):"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:851 731344d1c242492384f42d6376ad3b07
+#: ../../ext/commands/commands.rst:870 731344d1c242492384f42d6376ad3b07
 msgid "When multiple checks are specified, **all** of them must be ``True``:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:867 0a3c34ae9c0d4b6392a9b04d5d36f5dc
+#: ../../ext/commands/commands.rst:886 0a3c34ae9c0d4b6392a9b04d5d36f5dc
 msgid ""
 "If any of those checks fail in the example above, then the command will "
 "not be run."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:869 edec23dfc5b3498caef57c62a9315264
+#: ../../ext/commands/commands.rst:888 edec23dfc5b3498caef57c62a9315264
 msgid ""
 "When an error happens, the error is propagated to the :ref:`error "
 "handlers <ext_commands_error_handler>`. If you do not raise a custom "
@@ -1053,45 +1067,55 @@ msgid ""
 "wrapped up into a :exc:`~ext.commands.CheckFailure` exception as so:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:887 9447373776c540b194831a3f6b7d4f5d
+#: ../../ext/commands/commands.rst:906 9447373776c540b194831a3f6b7d4f5d
 msgid ""
 "If you want a more robust error system, you can derive from the exception"
 " and raise it instead of returning ``False``:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:913 cef95191baf442dea17daa9019db6a10
+#: ../../ext/commands/commands.rst:932 cef95191baf442dea17daa9019db6a10
 msgid ""
 "Since having a ``guild_only`` decorator is pretty common, it comes built-"
 "in via :func:`~ext.commands.guild_only`."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:916 30ab1860927f45f6a807fbfb9a671bed
+#: ../../ext/commands/commands.rst:935 30ab1860927f45f6a807fbfb9a671bed
 msgid "Global Checks"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:918 d6aa174f32114ba5bec3c650983fce91
+#: ../../ext/commands/commands.rst:937 d6aa174f32114ba5bec3c650983fce91
 msgid ""
 "Sometimes we want to apply a check to **every** command, not just certain"
 " commands. The library supports this as well using the global check "
 "concept."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:921 864c9abc219b4f689672f5e30a68d47b
+#: ../../ext/commands/commands.rst:940 864c9abc219b4f689672f5e30a68d47b
 msgid ""
 "Global checks work similarly to regular checks except they are registered"
 " with the :meth:`.Bot.check` decorator."
 msgstr ""
 
-#: ../../ext/commands/commands.rst:923 1ea11f45d1814ec8912e90d0390ef694
+#: ../../ext/commands/commands.rst:942 1ea11f45d1814ec8912e90d0390ef694
 msgid "For example, to block all DMs we could do the following:"
 msgstr ""
 
-#: ../../ext/commands/commands.rst:933 3a2a1fb8a3cf4b48b42209cf4f80bb61
+#: ../../ext/commands/commands.rst:952 3a2a1fb8a3cf4b48b42209cf4f80bb61
 msgid ""
 "Be careful on how you write your global checks, as it could also lock you"
 " out of your own bot."
 msgstr ""
 
 #~ msgid ":class:`Emoji`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Despite the similarities in these "
+#~ "examples to command like arguments, the"
+#~ " syntax and parser is not a "
+#~ "command line parser. The syntax is "
+#~ "mainly inspired by Discord's search bar"
+#~ " input and as a result all "
+#~ "flags need a corresponding value."
 #~ msgstr ""
 

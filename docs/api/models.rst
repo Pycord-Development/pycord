@@ -89,6 +89,16 @@ Messages
 .. autoclass:: Message()
     :members:
 
+.. attributetable:: MessageSnapshot
+
+.. autoclass:: MessageSnapshot()
+    :members:
+
+.. attributetable:: ForwardedMessage
+
+.. autoclass:: ForwardedMessage()
+    :members:
+
 .. attributetable:: DeletedReferencedMessage
 
 .. autoclass:: DeletedReferencedMessage()
@@ -213,6 +223,16 @@ Invites
 .. autoclass:: Invite()
     :members:
 
+.. attributetable:: InviteTargetUsers
+
+.. autoclass:: InviteTargetUsers()
+    :members:
+
+.. attributetable:: InviteTargetUsersJobStatus
+
+.. autoclass:: InviteTargetUsersJobStatus()
+    :members:
+
 Role
 ~~~~
 
@@ -229,6 +249,11 @@ Role
 .. attributetable:: RoleColours
 
 .. autoclass:: RoleColours
+    :members:
+
+.. attributetable:: GuildRoleCounts
+
+.. autoclass:: GuildRoleCounts()
     :members:
 
 Scheduled Event
@@ -458,6 +483,24 @@ UI Components
 .. attributetable:: FileUpload
 
 .. autoclass:: FileUpload()
+    :members:
+    :inherited-members:
+
+.. attributetable:: RadioGroup
+
+.. autoclass:: RadioGroup()
+    :members:
+    :inherited-members:
+
+.. attributetable:: CheckboxGroup
+
+.. autoclass:: CheckboxGroup()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Checkbox
+
+.. autoclass:: Checkbox()
     :members:
     :inherited-members:
 
@@ -697,6 +740,9 @@ Webhooks
 
 Collectibles
 ------------
+
+.. attributetable:: Collectibles
+.. autoclass:: Collectibles()
 
 .. attributetable:: Nameplate
 

@@ -37,9 +37,12 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    TypeVar,
     Union,
     overload,
 )
+
+from typing_extensions import override
 
 from . import abc, utils
 from .asset import Asset
@@ -94,7 +97,7 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
 
 MISSING = utils.MISSING
 
@@ -122,8 +125,8 @@ if TYPE_CHECKING:
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
-    from .types.voice import GuildVoiceState
-    from .voice_client import VoiceClient
+    from .types.voice import VoiceState as GuildVoiceState
+    from .voice import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -131,6 +134,8 @@ if TYPE_CHECKING:
         VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
     ]
     ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+
+T = TypeVar("T")
 
 
 class BanEntry(NamedTuple):
@@ -144,6 +149,81 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+class GuildRoleCounts(dict[int, int]):
+    """A dictionary subclass that maps role IDs to their member counts.
+
+    This class allows accessing member counts by either role ID (:class:`int`) or by
+    a Snowflake object (which has an ``.id`` attribute).
+
+    .. versionadded:: 2.7
+    """
+
+    @override
+    def __repr__(self):
+        return f"<GuildRoleCounts {super().__repr__()}>"
+
+    @override
+    def __getitem__(self, key: int | abc.Snowflake) -> int:
+        """Get the member count for a role.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+
+        Returns
+        -------
+        :class:`int`
+            The member count for the role.
+
+        Raises
+        ------
+        KeyError
+            The role ID was not found.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().__getitem__(key)
+
+    @override
+    def get(self, key: int | abc.Snowflake, default: T = None) -> int | T:
+        """Get the member count for a role, returning a default if not found.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+        default: Any
+            The value to return if the role ID is not found.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The member count for the role, or ``default`` if the role is not present.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().get(key, default)
+
+    @override
+    def __contains__(self, key: int | abc.Snowflake) -> bool:
+        """Check if a role ID or Snowflake object is in the counts.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+
+        Returns
+        -------
+        :class:`bool`
+            ``True`` if the role ID is present, ``False`` otherwise.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().__contains__(key)
 
 
 class Guild(Hashable):
@@ -1119,6 +1199,44 @@ class Guild(Hashable):
         """
         return self._roles.get(role_id)
 
+    async def fetch_roles_member_counts(self) -> GuildRoleCounts:
+        """|coro|
+        Fetches a mapping of role IDs to their member counts for this guild.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        :class:`GuildRoleCounts`
+            A mapping of role IDs to their member counts. Can be accessed
+            with either role IDs (:class:`int`) or Snowflake objects (e.g., :class:`Role`).
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Fetching the role member counts failed.
+
+        Examples
+        --------
+
+        Getting member counts using role IDs:
+
+        .. code-block:: python3
+
+            counts = await guild.fetch_roles_member_counts()
+            member_count = counts[123456789]
+
+        Using a role object:
+
+        .. code-block:: python3
+
+            counts = await guild.fetch_roles_member_counts()
+            role = guild.get_role(123456789)
+            member_count = counts[role]
+        """
+        r = await self._state.http.get_roles_member_counts(self.id)
+        return GuildRoleCounts({int(role_id): count for role_id, count in r.items()})
+
     @property
     def default_role(self) -> Role:
         """Gets the @everyone role that all members have by default."""
@@ -1964,43 +2082,6 @@ class Guild(Hashable):
         """
         await self._state.http.leave_guild(self.id)
 
-    async def delete(self) -> None:
-        """|coro|
-
-        Deletes the guild. You must be the guild owner to delete the
-        guild.
-
-        Raises
-        ------
-        HTTPException
-            Deleting the guild failed.
-        Forbidden
-            You do not have permissions to delete the guild.
-        """
-        await self._state.http.delete_guild(self.id)
-
-    async def set_mfa_required(self, required: bool, *, reason: str = None) -> None:
-        """|coro|
-
-        Set whether it is required to have MFA enabled on your account
-        to perform moderation actions. You must be the guild owner to do this.
-
-        Parameters
-        ----------
-        required: :class:`bool`
-            Whether MFA should be required to perform moderation actions.
-        reason: :class:`str`
-            The reason to show up in the audit log.
-
-        Raises
-        ------
-        HTTPException
-            The operation failed.
-        Forbidden
-            You are not the owner of the guild.
-        """
-        await self._state.http.edit_guild_mfa(self.id, required, reason=reason)
-
     async def edit(
         self,
         *,
@@ -2013,7 +2094,6 @@ class Guild(Hashable):
         discovery_splash: bytes | None = MISSING,
         community: bool = MISSING,
         afk_channel: VoiceChannel | None = MISSING,
-        owner: Snowflake = MISSING,
         afk_timeout: int = MISSING,
         default_notifications: NotificationLevel = MISSING,
         verification_level: VerificationLevel = MISSING,
@@ -2077,9 +2157,6 @@ class Guild(Hashable):
             The new channel that is the AFK channel. Could be ``None`` for no AFK channel.
         afk_timeout: :class:`int`
             The number of seconds until someone is moved to the AFK channel.
-        owner: :class:`Member`
-            The new owner of the guild to transfer ownership to. Note that you must
-            be owner of the guild to do this.
         verification_level: :class:`VerificationLevel`
             The new verification level for the guild.
         default_notifications: :class:`NotificationLevel`
@@ -2122,8 +2199,7 @@ class Guild(Hashable):
             Editing the guild failed.
         InvalidArgument
             The image format passed in to ``icon`` is invalid. It must be
-            PNG or JPG. This is also raised if you are not the owner of the
-            guild and request an ownership transfer.
+            PNG or JPG.
 
         Returns
         --------
@@ -2199,14 +2275,6 @@ class Guild(Hashable):
                 fields["public_updates_channel_id"] = public_updates_channel
             else:
                 fields["public_updates_channel_id"] = public_updates_channel.id
-
-        if owner is not MISSING:
-            if self.owner_id != self._state.self_id:
-                raise InvalidArgument(
-                    "To transfer ownership you must be the owner of the guild."
-                )
-
-            fields["owner_id"] = owner.id
 
         if verification_level is not MISSING:
             if not isinstance(verification_level, VerificationLevel):
@@ -3736,7 +3804,7 @@ class Guild(Hashable):
 
         You must have the :attr:`~Permissions.view_audit_log` permission to use this.
 
-        See `API documentation <https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log>`_
+        See `API documentation <https://docs.discord.com/developers/resources/audit-log#get-guild-audit-log>`_
         for more information about the `before` and `after` parameters.
 
         Parameters

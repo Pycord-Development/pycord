@@ -50,9 +50,7 @@ from ..enums import Enum as DiscordEnum
 from ..enums import (
     IntegrationType,
     InteractionContextType,
-    MessageType,
     SlashCommandOptionType,
-    try_enum,
 )
 from ..errors import (
     ApplicationCommandError,
@@ -62,7 +60,6 @@ from ..errors import (
     InvalidArgument,
     ValidationError,
 )
-from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
@@ -190,7 +187,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping
 
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
@@ -245,7 +242,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 "guild_only",
                 "contexts",
                 "2.6",
-                reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+                reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
             )
         if contexts and guild_only:
             raise InvalidArgument(
@@ -312,7 +309,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "guild_only",
             "contexts",
             "2.6",
-            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+            reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
         return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
 
@@ -322,7 +319,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "guild_only",
             "contexts",
             "2.6",
-            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+            reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
         if value:
             self.contexts = {InteractionContextType.guild}
@@ -712,10 +709,10 @@ class SlashCommand(ApplicationCommand):
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
-        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
         The type of installation this command should be available to. For instance, if set to
         :attr:`IntegrationType.user_install`, the command will only be available to users with
@@ -887,17 +884,22 @@ class SlashCommand(ApplicationCommand):
         params = self._check_required_params(params)
 
         check_annotations: list[Callable[[Option, type], bool]] = [
-            lambda o, a: o.input_type == SlashCommandOptionType.string
-            and o.converter is not None,  # pass on converters
+            lambda o, a: (
+                o.input_type == SlashCommandOptionType.string
+                and o.converter is not None
+            ),  # pass on converters
             lambda o, a: isinstance(
                 o.input_type, SlashCommandOptionType
             ),  # pass on slash cmd option type enums
             lambda o, a: isinstance(o._raw_type, tuple) and a == Union[o._raw_type],  # type: ignore # union types
-            lambda o, a: self._is_typing_optional(a)
-            and not o.required
-            and o._raw_type in a.__args__,  # optional
-            lambda o, a: isinstance(a, type)
-            and issubclass(a, o._raw_type),  # 'normal' types
+            lambda o, a: (
+                self._is_typing_optional(a)
+                and not o.required
+                and o._raw_type in a.__args__
+            ),  # optional
+            lambda o, a: (
+                isinstance(a, type) and issubclass(a, o._raw_type)
+            ),  # 'normal' types
         ]
         for o in options:
             _validate_names(o)
@@ -1121,7 +1123,7 @@ class SlashCommand(ApplicationCommand):
                 ctx.value = op.get("value")
                 ctx.options = values
 
-                if option.autocomplete._is_instance_method:
+                if option._autocomplete_is_instance_method:
                     instance = getattr(option.autocomplete, "__self__", ctx.cog)
                     result = option.autocomplete(instance, ctx)
                 else:
@@ -1212,10 +1214,10 @@ class SlashCommandGroup(ApplicationCommand):
         event.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
-        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
         The type of installation this command should be available to. For instance, if set to
         :attr:`IntegrationType.user_install`, the command will only be available to users with
@@ -1397,6 +1399,15 @@ class SlashCommandGroup(ApplicationCommand):
     def command(
         self, cls: type[T] = SlashCommand, **kwargs
     ) -> Callable[[Callable], SlashCommand]:
+        """A shortcut decorator for adding a subcommand to this slash command group.
+
+        Returns
+        -------
+        Callable[..., :class:`SlashCommand`]
+            A decorator that converts the provided function into a :class:`.SlashCommand`,
+            adds it to this group, then returns it.
+        """
+
         def wrap(func) -> T:
             command = cls(func, parent=self, **kwargs)
             self.add_command(command)
@@ -1412,7 +1423,7 @@ class SlashCommandGroup(ApplicationCommand):
         **kwargs,
     ) -> SlashCommandGroup:
         """
-        Creates a new subgroup for this SlashCommandGroup.
+        Creates a new subgroup under this slash command group.
 
         Parameters
         ----------
@@ -1439,10 +1450,10 @@ class SlashCommandGroup(ApplicationCommand):
             event.
         name_localizations: Dict[:class:`str`, :class:`str`]
             The name localizations for this command. The values of this should be ``"locale": "name"``. See
-            `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+            `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
         description_localizations: Dict[:class:`str`, :class:`str`]
             The description localizations for this command. The values of this should be ``"locale": "description"``.
-            See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+            See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
 
         Returns
         -------
@@ -1640,7 +1651,7 @@ class ContextMenuCommand(ApplicationCommand):
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
-        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
         The installation contexts where this command is available. Unapplicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
@@ -1780,7 +1791,7 @@ class UserCommand(ContextMenuCommand):
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
-        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
         The installation contexts where this command is available. Unapplicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
@@ -1895,7 +1906,7 @@ class MessageCommand(ContextMenuCommand):
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
-        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
         The installation contexts where this command is available. Unapplicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
@@ -2066,7 +2077,7 @@ def command(**kwargs):
     return application_command(**kwargs)
 
 
-docs = "https://discord.com/developers/docs"
+docs = "https://docs.discord.com/developers"
 valid_locales = [
     "id",
     "da",

@@ -191,10 +191,10 @@ class Option:
         If this argument is used, :attr:`input_type` will be ignored.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
 
     Examples
     --------
@@ -307,6 +307,7 @@ class Option:
         self.default = kwargs.pop("default", None)
 
         self._autocomplete: AutocompleteFunction | None = None
+        self._autocomplete_is_instance_method: bool = False
         self.autocomplete = kwargs.pop("autocomplete", None)
         if len(enum_choices) > 25:
             self.choices: list[OptionChoice] = []
@@ -483,13 +484,13 @@ class Option:
         self._autocomplete = value
         # this is done here so it does not have to be computed every time the autocomplete is invoked
         if self._autocomplete is not None:
-            self._autocomplete._is_instance_method = (  # pyright: ignore [reportFunctionMemberAccess]
+            self._autocomplete_is_instance_method = (
                 sum(
                     1
                     for param in inspect.signature(
                         self._autocomplete
                     ).parameters.values()
-                    if param.default == param.empty  # pyright: ignore[reportAny]
+                    if param.default == param.empty
                     and param.kind not in (param.VAR_POSITIONAL, param.VAR_KEYWORD)
                 )
                 == 2
@@ -510,7 +511,7 @@ class OptionChoice:
         The value of the choice. If not provided, will use the value of ``name``.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this choice. The values of this should be ``"locale": "name"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     """
 
     def __init__(

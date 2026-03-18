@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\n"
-"POT-Creation-Date: 2025-06-24 08:32-0000\n"
-"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -473,11 +473,17 @@ msgstr "For most use cases, no extra work is required to define flags. However, 
 msgid "This tells the parser that the ``members`` attribute is mapped to a flag named ``member`` and that the default value is an empty list. For greater customisability, the default can either be a value or a callable that takes the :class:`~ext.commands.Context` as a sole parameter. This callable can either be a function or a coroutine."
 msgstr "This tells the parser that the ``members`` attribute is mapped to a flag named ``member`` and that the default value is an empty list. For greater customisability, the default can either be a value or a callable that takes the :class:`~ext.commands.Context` as a sole parameter. This callable can either be a function or a coroutine."
 
+msgid "Flags can also be positional. This means that the flag does not require a corresponding value to be passed in by the user. This is useful for flags that are either optional or have a default value. For example, in the following code:"
+msgstr "Flags can also be positional. This means that the flag does not require a corresponding value to be passed in by the user. This is useful for flags that are either optional or have a default value. For example, in the following code:"
+
+msgid "The ``members`` flag is marked as positional, meaning that the user can invoke the command without explicitly specifying the flag."
+msgstr "The ``members`` flag is marked as positional, meaning that the user can invoke the command without explicitly specifying the flag."
+
 msgid "In order to customise the flag syntax we also have a few options that can be passed to the class parameter list:"
 msgstr "In order to customise the flag syntax we also have a few options that can be passed to the class parameter list:"
 
-msgid "Despite the similarities in these examples to command like arguments, the syntax and parser is not a command line parser. The syntax is mainly inspired by Discord's search bar input and as a result all flags need a corresponding value."
-msgstr "Despite the similarities in these examples to command like arguments, the syntax and parser is not a command line parser. The syntax is mainly inspired by Discord's search bar input and as a result all flags need a corresponding value."
+msgid "Despite the similarities in these examples to command like arguments, the syntax and parser is not a command line parser. The syntax is mainly inspired by Discord's search bar input and as a result all flags need a corresponding value unless a positional flag is provided."
+msgstr "Despite the similarities in these examples to command like arguments, the syntax and parser is not a command line parser. The syntax is mainly inspired by Discord's search bar input and as a result all flags need a corresponding value unless a positional flag is provided."
 
 msgid "The flag converter is similar to regular commands and allows you to use most types of converters (with the exception of :class:`~ext.commands.Greedy`) as the type annotation. Some extra support is added for specific annotations as described below."
 msgstr "The flag converter is similar to regular commands and allows you to use most types of converters (with the exception of :class:`~ext.commands.Greedy`) as the type annotation. Some extra support is added for specific annotations as described below."

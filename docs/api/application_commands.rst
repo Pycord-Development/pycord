@@ -48,6 +48,7 @@ Objects
 .. attributetable:: SlashCommand
 .. autoclass:: SlashCommand
     :members:
+    :exclude-members: cog
 
 .. attributetable:: SlashCommandGroup
 .. autoclass:: SlashCommandGroup

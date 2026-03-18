@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import contextlib
 from typing import List
 
 import discord
@@ -41,6 +42,8 @@ __all__ = (
     "PaginatorMenu",
     "Page",
 )
+
+from ...utils import warn_deprecated
 
 
 class PaginatorButton(discord.ui.Button):
@@ -418,17 +421,20 @@ class Paginator(discord.ui.View):
         self.default_page_group: int = 0
 
         if all(isinstance(pg, PageGroup) for pg in pages):
-            self.page_groups = self.pages if show_menu else None
-            if sum(pg.default is True for pg in self.page_groups) > 1:
+            if sum(pg.default is True for pg in pages) > 1:
                 raise ValueError("Only one PageGroup can be set as the default.")
-            for pg in self.page_groups:
+
+            default_pg_index = 0
+            for pg in pages:
                 if pg.default:
-                    self.default_page_group = self.page_groups.index(pg)
+                    default_pg_index = pages.index(pg)
                     break
+
             self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
+                pages[default_pg_index]
             )
 
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: list = custom_buttons
@@ -530,16 +536,20 @@ class Paginator(discord.ui.View):
         ) = (pages if pages is not None else self.pages)
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
-            self.page_groups = self.pages if self.show_menu else None
-            if sum(pg.default is True for pg in self.page_groups) > 1:
+            if sum(pg.default is True for pg in pages) > 1:
                 raise ValueError("Only one PageGroup can be set as the default.")
-            for pg in self.page_groups:
+
+            default_pg_index = 0
+            for pg in pages:
                 if pg.default:
-                    self.default_page_group = self.page_groups.index(pg)
+                    default_pg_index = pages.index(pg)
                     break
+
             self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
+                pages[default_pg_index]
             )
+
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
@@ -597,11 +607,12 @@ class Paginator(discord.ui.View):
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
-            await self.message.edit(
-                view=self,
-                files=files or [],
-                attachments=[],
-            )
+            with contextlib.suppress(discord.NotFound, discord.Forbidden):
+                await self.message.edit(
+                    view=self,
+                    files=files or [],
+                    attachments=[],
+                )
 
     async def disable(
         self,
@@ -709,7 +720,9 @@ class Paginator(discord.ui.View):
 
         try:
             if interaction:
-                await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+                await (
+                    interaction.response.defer()
+                )  # needed to force webhook message edit route for files kwarg support
                 await interaction.followup.edit_message(
                     message_id=self.message.id,
                     content=page.content,
@@ -898,7 +911,8 @@ class Paginator(discord.ui.View):
         """Updates the custom view shown on the paginator."""
         if isinstance(self.custom_view, discord.ui.View):
             for item in self.custom_view.children:
-                self.remove_item(item)
+                if item in self.children:
+                    self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
 
@@ -1053,6 +1067,7 @@ class Paginator(discord.ui.View):
         self,
         message: discord.Message,
         suppress: bool | None = None,
+        suppress_embeds: bool = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         delete_after: float | None = None,
         user: User | Member | None = None,
@@ -1072,6 +1087,15 @@ class Paginator(discord.ui.View):
             all the embeds if set to ``True``. If set to ``False``
             this brings the embeds back if they were suppressed.
             Using this parameter requires :attr:`~.Permissions.manage_messages`.
+
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message. This removes
+            all the embeds if set to ``True``. If set to ``False``
+            this brings the embeds back if they were suppressed.
+            Using this parameter requires :attr:`~.Permissions.manage_messages`.
+
+            .. versionadded:: 2.8
         allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
             Controls the mentions being processed in this message. If this is
             passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
@@ -1107,6 +1131,11 @@ class Paginator(discord.ui.View):
         if not self.user:
             self.usercheck = False
 
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+
         try:
             self.message = await message.edit(
                 content=page_content.content,
@@ -1114,7 +1143,7 @@ class Paginator(discord.ui.View):
                 files=page_content.files,
                 attachments=[],
                 view=self,
-                suppress=suppress,
+                suppress_embeds=suppress_embeds,
                 allowed_mentions=allowed_mentions,
                 delete_after=delete_after,
             )

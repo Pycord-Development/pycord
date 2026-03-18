@@ -684,7 +684,7 @@ class Permissions(BaseFlags):
     def bypass_slowmode(self) -> int:
         """:class:`bool`: Returns ``True`` if a user can bypass slowmode.
 
-        .. versionadded:: tbd
+        .. versionadded:: 2.7
         """
         return 1 << 52
 

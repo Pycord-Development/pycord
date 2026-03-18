@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout repository
         id: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v6
         id: setup-python
@@ -26,7 +26,7 @@ jobs:
         id: install-deps
         run: |
           python -m pip install -U pip
-          pip install ".[docs]"
+          pip install ".[docs,voice]"
           pip install beautifulsoup4
       - name: Build Sphinx HTML docs
         id: build-sphinx
@@ -35,7 +35,7 @@ jobs:
         id: generate-json
         run: python scripts/docs_json_exporter.py
       - name: Upload docs.json as artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v7.0.0
         id: artifact-upload
         with:
           name: Pycord Docs JSON

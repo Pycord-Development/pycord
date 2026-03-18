@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\n"
-"POT-Creation-Date: 2025-06-24 08:32-0000\n"
-"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -499,4 +499,10 @@ msgstr "See also :attr:`VoiceChannel.status`."
 
 msgid "The cover image of a :class:`ScheduledEvent`."
 msgstr "The cover image of a :class:`ScheduledEvent`."
+
+msgid "Until when a :class:`Member` will be timed out"
+msgstr "Until when a :class:`Member` will be timed out"
+
+msgid ":class:`datetime.datetime` | :data:`None`"
+msgstr ":class:`datetime.datetime` | :data:`None`"
 
