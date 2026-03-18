@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-python@v6
         id: setup-python
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: "pip"
           cache-dependency-path: "requirements/docs.txt"
           check-latest: true
@@ -45,7 +45,7 @@ jobs:
         run: |
           head -n 40 docs.json || tail -n 40 docs.json
       - name: Output artifact ID
-        run:  |
+        run: |
           echo "artifact-id=${{ steps.artifact-upload.outputs.artifact-id }}" >> $GITHUB_OUTPUT
           echo "artifact-url=${{ steps.artifact-upload.outputs.artifact-url }}" >> $GITHUB_OUTPUT
           echo "::notice::Artifact uploaded: ${{ steps.artifact-upload.outputs.artifact-url }}"
