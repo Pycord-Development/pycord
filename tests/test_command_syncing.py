@@ -1,7 +1,8 @@
 import copy
-from typing import Any, override
+from typing import Any
 
 import pytest
+from typing_extensions import override
 
 import discord
 from discord import MISSING, Bot, SlashCommandGroup

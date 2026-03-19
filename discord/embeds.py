@@ -251,7 +251,7 @@ class EmbedField:
 
         You can find out about this format in the `official Discord documentation`__.
 
-        .. _DiscordDocsEF: https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
+        .. _DiscordDocsEF: https://docs.discord.com/developers/resources/message#embed-object-embed-field-structure
 
         __ DiscordDocsEF_
 
@@ -315,7 +315,7 @@ class Embed:
         The type of embed. Usually "rich".
         This can be set during initialisation.
         Possible strings for embed types can be found on discord's
-        `api docs <https://discord.com/developers/docs/resources/channel#embed-object-embed-types>`_
+        `api docs <https://docs.discord.com/developers/resources/message#embed-object-embed-types>`_
     description: :class:`str`
         The description of the embed.
         This can be set during initialisation.
@@ -396,7 +396,7 @@ class Embed:
 
         You can find out about this format in the `official Discord documentation`__.
 
-        .. _DiscordDocs: https://discord.com/developers/docs/resources/channel#embed-object
+        .. _DiscordDocs: https://docs.discord.com/developers/resources/message#embed-object
 
         __ DiscordDocs_
 

@@ -704,7 +704,7 @@ Upgraded Dependencies
 Following v1.0 of the library, we've updated our requirements to :doc:`aiohttp <aio:index>` v2.0 or higher.
 
 Since this is a backwards incompatible change, it is recommended that you see the
-`changes <http://aiohttp.readthedocs.io/en/stable/changes.html#rc1-2017-03-15>`_
+`changes <https://docs.aiohttp.org/en/stable/changes.html#rc1-2017-03-15>`_
 and the :doc:`aio:migration_to_2xx` pages for details on the breaking changes in
 :doc:`aiohttp <aio:index>`.
 

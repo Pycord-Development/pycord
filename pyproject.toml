@@ -53,6 +53,7 @@ packages = [
     "discord.ext.pages",
     "discord.ext.bridge",
     "discord.bin",
+    "discord.voice",
 ]
 
 [tool.setuptools.dynamic]
@@ -70,7 +71,7 @@ dev = [
     "mypy~=1.19.1",
     "coverage~=7.10",
     "pre-commit==4.5.1",
-    "codespell==2.4.1",
+    "codespell==2.4.2",
     "bandit==1.9.4",
     "flake8==7.3.0",
     "tox>=4.27.0",
@@ -124,16 +125,26 @@ asyncio_default_fixture_loop_scope = "function"
 
 [tool.tox]
 requires = ["tox>=4"]
-env_list = ["3.13", "3.12", "3.11", "3.10"]
+env_list = ["3.13", "3.12", "3.11", "3.10", "3.13-novoice"]
 
 [tool.tox.env_run_base]
 description = "run unit tests"
 commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
 dependency_groups = ["test"]
+extras = ["voice"]
+
+[tool.tox.env."3.13-novoice"]
+description = "run import and warning tests without the voice extra"
+commands = [[
+    "pytest",
+    { replace = "posargs", default = ["tests/voice/test_dependency_behavior.py"], extend = true }
+]]
+dependency_groups = ["test"]
+extras = []
 
 # GitHub actions
 [tool.tox.gh.python]
-"3.13" = ["3.13"]
+"3.13" = ["3.13", "3.13-novoice"]
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
 "3.10" = ["3.10"]

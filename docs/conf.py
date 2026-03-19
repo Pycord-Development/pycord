@@ -118,7 +118,7 @@ rst_prolog = """
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
 .. |gateway| replace:: |gateway_link|_
 .. |gateway_link| replace:: *gateway*
-.. _gateway_link: https://discord.com/developers/docs/topics/gateway-events
+.. _gateway_link: https://docs.discord.com/developers/events/gateway-events
 """
 
 # Add any paths that contain templates here, relative to this directory.
@@ -487,7 +487,7 @@ texinfo_documents = [
 
 
 linkcheck_ignore = [
-    r"https://discord.com/developers/docs/.*#",
+    r"https://docs.discord.com/developers/.*#",
     r"https://support(?:-dev)?.discord.com/hc/en-us/articles/.*",
     r"https://dis.gd/contact",
     r"https://guide.pycord.dev/",
@@ -495,6 +495,8 @@ linkcheck_ignore = [
     r"https://pycord.dev/",
     r"https://pycord.dev/.*",
     r"https://packages.debian.org/.*",
+    r"https://github.com/Pycord-Development/pycord/issues/new\?template=bug_report.yml",
+    r"https://discord.com/developers/.*",
 ]
 
 linkcheck_exclude_documents = [
