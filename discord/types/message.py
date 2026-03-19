@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, List
+from typing import TYPE_CHECKING, List, Literal
 
 from .channel import ChannelType
 from .components import Component
@@ -230,7 +230,7 @@ class MessageSearch(TypedDict):
     slop: NotRequired[int]
     content: NotRequired[str]
     channel_id: NotRequired[SnowflakeList]
-    author_type: NotRequired[List[SearchAuthorTypes]]
+    author_type: NotRequired[list[SearchAuthorTypes]]
     author_id: NotRequired[SnowflakeList]
     mentions: NotRequired[SnowflakeList]
     mentions_role_id: NotRequired[SnowflakeList]
@@ -238,25 +238,25 @@ class MessageSearch(TypedDict):
     replied_to_user_id: NotRequired[SnowflakeList]
     replied_to_message_id: NotRequired[SnowflakeList]
     pinned: NotRequired[bool]
-    has: NotRequired[List[SearchHasTypes]]
-    embed_type: NotRequired[List[SearchEmbedTypes]]
-    embed_provider: NotRequired[List[str]]
-    link_hostname: NotRequired[List[str]]
-    attachment_filename: NotRequired[List[str]]
-    attachment_extension: NotRequired[List[str]]
+    has: NotRequired[list[SearchHasTypes]]
+    embed_type: NotRequired[list[SearchEmbedTypes]]
+    embed_provider: NotRequired[list[str]]
+    link_hostname: NotRequired[list[str]]
+    attachment_filename: NotRequired[list[str]]
+    attachment_extension: NotRequired[list[str]]
     sort_by: NotRequired[SearchSortModes]
     sort_order: NotRequired[SearchSortOrders]
     include_nsfw: NotRequired[bool]
     cursor: NotRequired[dict]
     command_id: NotRequired[Snowflake]
     command_name: NotRequired[str]
-    contents: NotRequired[List[str]]
+    contents: NotRequired[list[str]]
 
 
 class MessageSearchResults(TypedDict):
     doing_deep_historical_index: bool
     documents_indexed: NotRequired[int]
     total_results: int
-    messages: List[List[Message]]  # ?????
-    threads: NotRequired[List[Thread]]
-    members: NotRequired[List[ThreadMember]]
+    messages: list[list[Message]]  # ?????
+    threads: NotRequired[list[Thread]]
+    members: NotRequired[list[ThreadMember]]
