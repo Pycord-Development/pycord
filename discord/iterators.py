@@ -1328,10 +1328,10 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
         if self._get_retrieve():
             data = await self._retrieve_messages(self.retrieve)
             if not data["messages"]:
-                 # "Clients should not rely on the length of the `messages` array to paginate results"
+                # "Clients should not rely on the length of the `messages` array to paginate results"
                 self.limit = 0  # terminate the infinite loop
 
-            threads = data["threads"]
+            data["threads"]
             members = data["members"]  # do something here
 
             for element in data["messages"]:
@@ -1343,9 +1343,7 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
                     )
                     self.message_ids.append(int(element["id"]))
 
-    async def _retrieve_messages(
-        self, retrieve: int
-    ) -> list[MessagePayload]:
+    async def _retrieve_messages(self, retrieve: int) -> list[MessagePayload]:
         data: list[MessageSearchPayload] = await self.search(
             self.guild.id, **self.params
         )
