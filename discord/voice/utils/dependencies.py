@@ -22,52 +22,21 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-import logging
-
 try:
     import davey
+
+    _ = davey.DAVE_PROTOCOL_VERSION
 except ImportError:
-    HAS_DAVEY = False
-    DAVE_PROTOCOL_VERSION = 0
+    has_davey = False
+    dave_protocol_version = 0
 else:
-    HAS_DAVEY = True
-    DAVE_PROTOCOL_VERSION = davey.DAVE_PROTOCOL_VERSION
+    has_davey = True
+    dave_protocol_version = davey.DAVE_PROTOCOL_VERSION
 
 try:
-    import nacl.secret
-    import nacl.utils
+    import nacl.secret  # pyright: ignore[reportUnusedImport]
+    import nacl.utils  # pyright: ignore[reportUnusedImport]
 except ImportError:
-    HAS_NACL = False
+    has_nacl = False
 else:
-    HAS_NACL = True
-
-VOICE_DEPENDENCY_WARNING_EMITTED = False
-
-_log = logging.getLogger("discord.client")
-
-
-def get_missing_voice_dependencies() -> tuple[str, ...]:
-    missing: list[str] = []
-    if not HAS_NACL:
-        missing.append("PyNaCl")
-    if not HAS_DAVEY:
-        missing.append("davey")
-    return tuple(missing)
-
-
-def warn_if_voice_dependencies_missing() -> None:
-    global VOICE_DEPENDENCY_WARNING_EMITTED
-    if VOICE_DEPENDENCY_WARNING_EMITTED:
-        return
-
-    missing = get_missing_voice_dependencies()
-    if not missing:
-        return
-
-    VOICE_DEPENDENCY_WARNING_EMITTED = True
-    deps = ", ".join(missing)
-    _log.warning(
-        "%s %s not installed, voice will NOT be supported",
-        deps,
-        "is" if len(missing) == 1 else "are",
-    )
+    has_nacl = True

@@ -58,6 +58,7 @@ from typing import (
     Iterator,
     Literal,
     Mapping,
+    ParamSpec,
     Protocol,
     Sequence,
     TypeVar,
@@ -92,7 +93,6 @@ except ModuleNotFoundError:
     HAS_MSGSPEC = False
 else:
     HAS_MSGSPEC = True
-
 
 __all__ = (
     "parse_time",
@@ -140,7 +140,6 @@ except FileNotFoundError:
     )
     EMOJIS_MAP = {}
 
-
 UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
 
@@ -176,9 +175,10 @@ else:
     AutocompleteContext = Any
     OptionChoice = Any
 
-
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
+_MC_P = ParamSpec("_MC_P")
+_MC_T = TypeVar("_MC_T")
 _Iter = Union[Iterator[T], AsyncIterator[T]]
 
 
@@ -883,7 +883,11 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
     return (reset - now).total_seconds()
 
 
-async def maybe_coroutine(f, *args, **kwargs):
+async def maybe_coroutine(
+    f: Callable[_MC_P, _MC_T | Awaitable[_MC_T]],
+    *args: _MC_P.args,
+    **kwargs: _MC_P.kwargs,
+) -> _MC_T:
     value = f(*args, **kwargs)
     if _isawaitable(value):
         return await value
@@ -1632,3 +1636,40 @@ def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
         A file-like object containing the CSV data.
     """
     return io.BytesIO("\n".join(map(lambda u: str(u.id), users)).encode("utf-8"))
+
+
+def get_missing_voice_dependencies() -> tuple[str, ...]:
+    missing: list[str] = []
+    try:
+        import nacl.secret  # noqa: F401
+        import nacl.utils  # noqa: F401
+    except ImportError:
+        missing.append("PyNaCl")
+    try:
+        import davey
+
+        _ = davey.DAVE_PROTOCOL_VERSION
+    except ImportError:
+        missing.append("davey")
+    return tuple(missing)
+
+
+_voice_dep_warning_emitted = False
+
+
+def warn_if_voice_dependencies_missing() -> None:
+    global _voice_dep_warning_emitted
+    if _voice_dep_warning_emitted:
+        return
+
+    missing = get_missing_voice_dependencies()
+    if not missing:
+        return
+
+    _voice_dep_warning_emitted = True
+    deps = ", ".join(missing)
+    logging.getLogger("discord.client").warning(
+        "%s %s not installed, voice will NOT be supported",
+        deps,
+        "is" if len(missing) == 1 else "are",
+    )

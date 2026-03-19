@@ -121,33 +121,21 @@ class PacketRouter(threading.Thread):
             _log.exception("Error in %s loop", self)
             self.reader.error = exc
         finally:
-            self.reader.client.stop_recording()
+            try:
+                self.reader.client.stop_recording()
+            except Exception:
+                pass
             self.waiter.clear()
 
     def _do_run(self) -> None:
-        from discord.opus import OpusError
-        dave_warned = False
         while not self._end_thread.is_set():
             self.waiter.wait()
 
             with self._lock:
                 for decoder in self.waiter.items:
-                    try:
-                        data = decoder.pop_data()
-                        if data is not None:
-                            self.sink.write(data, data.source)
-                    except (OpusError, AssertionError) as exc:
-                        # Under DAVE E2E encryption, audio payloads are still
-                        # encrypted at the application layer — Opus decode fails.
-                        # Skip the packet gracefully instead of crashing.
-                        if not dave_warned:
-                            _log.warning(
-                                "Skipping DAVE-encrypted packet (OpusError: %s). "
-                                "Voice reception unavailable until py-cord adds DAVE decryption. "
-                                "See https://github.com/Pycord-Development/pycord/issues/3139",
-                                exc,
-                            )
-                            dave_warned = True
+                    data = decoder.pop_data()
+                    if data is not None:
+                        self.sink.write(data, data.source)
 
 
 class SinkEventRouter(threading.Thread):

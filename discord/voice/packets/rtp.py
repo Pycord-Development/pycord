@@ -26,13 +26,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import struct
-from collections import namedtuple
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, NamedTuple
 
 from .core import OPUS_SILENCE, Packet
-
-if TYPE_CHECKING:
-    from typing_extensions import Final
 
 MAX_UINT_32 = 0xFFFFFFFF
 MAX_UINT_16 = 0xFFFF
@@ -48,8 +44,8 @@ def decode(data: bytes) -> Packet:
 
 class FakePacket(Packet):
     data = b""
-    decrypted_data: bytes = b""
-    extension_data: dict = {}
+    decrypted_data: bytes | None = b""
+    extension_data: dict[int, bytes] = {}
 
     def __init__(
         self,
@@ -66,8 +62,8 @@ class FakePacket(Packet):
 
 
 class SilencePacket(Packet):
-    decrypted_data: Final = OPUS_SILENCE
-    extension_data: Final[dict[int, Any]] = {}
+    decrypted_data: bytes | None = OPUS_SILENCE
+    extension_data: dict[int, Any] = {}
     sequence: int = -1
 
     def __init__(self, ssrc: int, timestamp: int) -> None:
@@ -90,7 +86,12 @@ class RTPPacket(Packet):
     """
 
     _hstruct = struct.Struct(">xxHII")
-    _ext_header = namedtuple("Extension", "profile length values")
+
+    class _ext_header(NamedTuple):
+        profile: bytes
+        length: int
+        values: tuple[int, ...] | list[int]
+
     _ext_magic = b"\xbe\xde"
 
     def __init__(self, data: bytes) -> None:
@@ -210,7 +211,7 @@ class RTPPacket(Packet):
 class RTCPPacket(Packet):
     _header = struct.Struct(">BBH")
     _ssrc_fmt = struct.Struct(">I")
-    type = None
+    type: int | None = None
 
     def __init__(self, data: bytes) -> None:
         super().__init__(data)
@@ -234,18 +235,26 @@ def _parse_low(x: int, bitlen: int = 32) -> float:
     return x / 2.0**bitlen
 
 
-def _to_low(x: float, bitlen: int = 32) -> int:
-    return int(x * 2.0**bitlen)
-
-
 class SenderReportPacket(RTCPPacket):
     _info_fmt = struct.Struct(">5I")
     _report_fmt = struct.Struct(">IB3x4I")
     _24bit_int_fmt = struct.Struct(">4xI")
-    _info = namedtuple("RRSenderInfo", "ntp_ts rtp_ts packet_count octet_count")
-    _report = namedtuple(
-        "RReport", "ssrc perc_loss total_lost last_seq jitter lsr dlsr"
-    )
+
+    class _info(NamedTuple):
+        ntp_ts: float
+        rtp_ts: int
+        packet_count: int
+        octet_count: int
+
+    class _report(NamedTuple):
+        ssrc: int
+        perc_loss: int
+        total_lost: int
+        last_seq: int
+        jitter: int
+        lsr: int
+        dlsr: int
+
     type = 200
 
     if TYPE_CHECKING:
@@ -257,13 +266,12 @@ class SenderReportPacket(RTCPPacket):
         self.ssrc = self._ssrc_fmt.unpack_from(data, 4)[0]
         self.info = self._read_sender_info(data, 8)
 
-        _report = self._report
-        reports: list[_report] = []
+        reports: list[SenderReportPacket._report] = []
         for x in range(self.report_count):
             offset = 28 + 24 * x
             reports.append(self._read_report(data, offset))
 
-        self.reports: tuple[_report, ...] = tuple(reports)
+        self.reports: tuple[SenderReportPacket._report, ...] = tuple(reports)
         self.extension = None
         if len(data) > 28 + 24 * self.report_count:
             self.extension = data[28 + 24 * self.report_count :]
@@ -282,12 +290,17 @@ class SenderReportPacket(RTCPPacket):
 class ReceiverReportPacket(RTCPPacket):
     _report_fmt = struct.Struct(">IB3x4I")
     _24bit_int_fmt = struct.Struct(">4xI")
-    _report = namedtuple(
-        "RReport", "ssrc perc_loss total_loss last_seq jitter lsr dlsr"
-    )
-    type = 201
 
-    reports: tuple[_report, ...]
+    class _report(NamedTuple):
+        ssrc: int
+        perc_loss: int
+        total_loss: int
+        last_seq: int
+        jitter: int
+        lsr: int
+        dlsr: int
+
+    type = 201
 
     if TYPE_CHECKING:
         report_count: int
@@ -296,13 +309,12 @@ class ReceiverReportPacket(RTCPPacket):
         super().__init__(data)
         self.ssrc: int = self._ssrc_fmt.unpack_from(data, 4)[0]
 
-        _report = self._report
-        reports: list[_report] = []
+        reports: list[ReceiverReportPacket._report] = []
         for x in range(self.report_count):
             offset = 8 + 24 * x
             reports.append(self._read_report(data, offset))
 
-        self.reports = tuple(reports)
+        self.reports: tuple[ReceiverReportPacket._report, ...] = tuple(reports)
 
         self.extension: bytes | None = None
         if len(data) > 8 + 24 * self.report_count:

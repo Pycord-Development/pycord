@@ -35,11 +35,7 @@ from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-
-from .utils.dependencies import HAS_DAVEY
-
-if HAS_DAVEY:
-    import davey
+import davey
 
 from discord import utils
 from discord.enums import SpeakingState
@@ -60,7 +56,7 @@ _log = logging.getLogger(__name__)
 
 class KeepAliveHandler(KeepAliveHandlerBase):
     if TYPE_CHECKING:
-        ws: VoiceWebSocket
+        ws: VoiceWebSocket  # pyright: ignore[reportIncompatibleVariableOverride]
 
     def __init__(
         self,
@@ -129,24 +125,34 @@ class VoiceWebSocket(DiscordWebSocket):
             self._hook = hook or state.ws_hook  # type: ignore
 
     @property
-    def token(self) -> str | None:
+    def token(
+        self,
+    ) -> str | None:  # pyright: ignore[reportIncompatibleVariableOverride]
         return self.state.token
 
     @token.setter
-    def token(self, value: str | None) -> None:
+    def token(
+        self, value: str | None
+    ) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
         self.state.token = value
 
     @property
-    def session_id(self) -> str | None:
+    def session_id(
+        self,
+    ) -> str | None:  # pyright: ignore[reportIncompatibleVariableOverride]
         return self.state.session_id
 
     @session_id.setter
-    def session_id(self, value: str | None) -> None:
+    def session_id(
+        self, value: str | None
+    ) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
         self.state.session_id = value
 
     @property
     def self_id(self) -> int:
-        return self._connection.self_id
+        self_id = self._connection.self_id
+        assert self_id is not None
+        return self_id
 
     async def _hook(self, *args: Any) -> Any:
         pass
@@ -178,7 +184,7 @@ class VoiceWebSocket(DiscordWebSocket):
         }
         await self.send_as_json(payload)
 
-    async def received_message(self, msg: Any, /):
+    async def received_message(self, msg: Any, /) -> None:
         _log.debug("Voice websocket frame received: %s", msg)
         op = msg["op"]
         data = msg.get("d", {})  # this key should ALWAYS be given, but guard anyways
@@ -206,9 +212,11 @@ class VoiceWebSocket(DiscordWebSocket):
             await state.reinit_dave_session()
         elif op == OpCodes.hello:
             interval = data["heartbeat_interval"] / 1000.0
-            self._keep_alive = KeepAliveHandler(
-                ws=self,
-                interval=min(interval, 5),
+            self._keep_alive = (
+                KeepAliveHandler(  # pyright: ignore[reportIncompatibleVariableOverride]
+                    ws=self,
+                    interval=min(interval, 5),
+                )
             )
             self._keep_alive.start()
         elif state.dave_session:

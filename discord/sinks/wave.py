@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 import wave
 
+from ..opus import Decoder as OpusDecoder
 from .core import Filters, Sink, default_filters
 from .errors import WaveSinkError
 
@@ -54,16 +55,22 @@ class WaveSink(Sink):
         WaveSinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.recording:
             raise WaveSinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        data = audio.file
+        from io import BytesIO
 
-        with wave.open(data, "wb") as f:
-            f.setnchannels(self.vc.decoder.CHANNELS)
-            f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
-            f.setframerate(self.vc.decoder.SAMPLING_RATE)
+        audio.file.seek(0)
+        pcm_data = audio.file.read()
 
-        data.seek(0)
+        output = BytesIO()
+        with wave.open(output, "wb") as f:
+            f.setnchannels(OpusDecoder.CHANNELS)
+            f.setsampwidth(OpusDecoder.SAMPLE_SIZE // OpusDecoder.CHANNELS)
+            f.setframerate(OpusDecoder.SAMPLING_RATE)
+            f.writeframes(pcm_data)
+
+        output.seek(0)
+        audio.file = output
         audio.on_format(self.encoding)

@@ -70,8 +70,7 @@ from .template import Template
 from .threads import Thread
 from .ui.view import BaseView
 from .user import ClientUser, User
-from .utils import _D, _FETCHABLE, MISSING
-from .voice.utils.dependencies import warn_if_voice_dependencies_missing
+from .utils import _D, _FETCHABLE, MISSING, warn_if_voice_dependencies_missing
 from .webhook import Webhook
 from .widget import Widget
 

@@ -46,8 +46,8 @@ class Packet:
         ssrc: int
         sequence: int
         timestamp: int
-        type: int
-        decrypted_data: bytes
+        type: int | None
+        decrypted_data: bytes | None
 
     def __init__(self, data: bytes) -> None:
         self.data: bytes = data

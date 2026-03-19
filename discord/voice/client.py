@@ -30,7 +30,11 @@ import datetime
 import logging
 import struct
 import warnings
-from typing import TYPE_CHECKING, Any, Literal, overload
+from collections.abc import Callable, Coroutine
+from typing import TYPE_CHECKING, Any, Literal, cast, overload
+
+import nacl.secret
+import nacl.utils
 
 from discord import opus
 from discord.enums import SpeakingState, try_enum
@@ -40,15 +44,12 @@ from discord.sinks.core import Sink
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
+from ..errors import MissingVoiceDependencies
+from ..utils import get_missing_voice_dependencies
 from ._types import VoiceProtocol
 from .enums import OpCodes
 from .receive import AudioReader
 from .state import VoiceConnectionState
-from .utils.dependencies import HAS_DAVEY, HAS_NACL, get_missing_voice_dependencies
-
-if HAS_NACL:
-    import nacl.secret
-    import nacl.utils
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -76,7 +77,7 @@ _log = logging.getLogger(__name__)
 __all__ = ("VoiceClient",)
 
 
-class VoiceClient(VoiceProtocol):
+class VoiceClient(VoiceProtocol["Client"]):
     """Represents a Discord voice connection.
 
     You do not create these, you typically get them from e.g.
@@ -106,15 +107,8 @@ class VoiceClient(VoiceProtocol):
         client: Client,
         channel: abc.Connectable,
     ) -> None:
-        missing = get_missing_voice_dependencies()
-        if missing:
-            deps = ", ".join(missing)
-            raise RuntimeError(
-                f"{deps} {'library is' if len(missing) == 1 else 'libraries are'} needed "
-                "in order to use voice related features, "
-                'you can run "pip install py-cord[voice]" to install all voice-related '
-                "dependencies."
-            )
+        if missing := get_missing_voice_dependencies():
+            raise MissingVoiceDependencies(missing)
 
         super().__init__(client, channel)
         state = client._connection
@@ -135,7 +129,9 @@ class VoiceClient(VoiceProtocol):
 
         self._ssrc_to_id: dict[int, int] = {}
         self._id_to_ssrc: dict[int, int] = {}
-        self._event_listeners: dict[str, list] = {}
+        self._event_listeners: dict[
+            str, list[Callable[..., Coroutine[Any, Any, Any]]]
+        ] = {}
         self._reader: AudioReader = MISSING
 
     @staticmethod
@@ -155,7 +151,7 @@ class VoiceClient(VoiceProtocol):
     @property
     def guild(self) -> Guild:
         """Returns the guild the channel we're connecting to is bound to."""
-        channel: VocalGuildChannel = self.channel
+        channel = cast("VocalGuildChannel", self.channel)
         return channel.guild
 
     @property
@@ -258,7 +254,11 @@ class VoiceClient(VoiceProtocol):
         # maybe handle video and such things?
 
     async def _run_event(
-        self, coro, event_name: str, *args: Any, **kwargs: Any
+        self,
+        coro: Callable[..., Coroutine[Any, Any, None]],
+        event_name: str,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         try:
             await coro(*args, **kwargs)
@@ -268,8 +268,12 @@ class VoiceClient(VoiceProtocol):
             _log.exception("Error calling %s", event_name)
 
     def _schedule_event(
-        self, coro, event_name: str, *args: Any, **kwargs: Any
-    ) -> asyncio.Task:
+        self,
+        coro: Callable[..., Coroutine[Any, Any, None]],
+        event_name: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> asyncio.Task[None]:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return self.client.loop.create_task(
             wrapped, name=f"voice-receiver-event-dispatch: {event_name}"
@@ -432,6 +436,7 @@ class VoiceClient(VoiceProtocol):
         return encrypt_packet(header, packet)
 
     # encryption methods
+    # nacl is guaranteed to be available here because __init__ raises if missing
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data: Any) -> bytes:
         # deprecated
@@ -568,8 +573,10 @@ class VoiceClient(VoiceProtocol):
             raise ClientException("Not connected to voice")
         if self.is_playing():
             raise ClientException("Already playing audio")
-        if not isinstance(source, AudioSource):
-            raise TypeError(
+        if not isinstance(
+            source, AudioSource
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError(  # pyright: ignore[reportUnreachable]
                 f"Source must be an AudioSource, not {source.__class__.__name__}",
             )
         if not self.encoder and not source.is_opus():
@@ -635,8 +642,12 @@ class VoiceClient(VoiceProtocol):
 
     @source.setter
     def source(self, value: AudioSource) -> None:
-        if not isinstance(value, AudioSource):
-            raise TypeError(f"expected AudioSource, not {value.__class__.__name__}")
+        if not isinstance(
+            value, AudioSource
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError(
+                f"expected AudioSource, not {value.__class__.__name__}"
+            )  # pyright: ignore[reportUnreachable]
 
         if self._player is None:
             raise ValueError("the client is not playing anything")
@@ -698,10 +709,6 @@ class VoiceClient(VoiceProtocol):
 
         .. versionadded:: 2.0
 
-        .. warning::
-
-            Recording may not work as expected due to the new DAVE (End-to-End Encryption) for voice calls.
-
         Parameters
         ----------
         sink: :class:`~.Sink`
@@ -731,17 +738,12 @@ class VoiceClient(VoiceProtocol):
         TypeError
             You did not provide a Sink object.
         """
-        warnings.warn(
-            "Voice reception is currently broken due to Discord's DAVE (End-to-End Encryption) protocol. "
-            + "Follow development progress at https://github.com/Pycord-Development/pycord/issues/3139",
-            RuntimeWarning,
-            stacklevel=2,
-        )
-        # TODO: remove warning in voice-recv fix PR
         if not self.is_connected():
             raise RecordingException("not connected to a voice channel")
-        if not isinstance(sink, Sink):
-            raise TypeError(f"expected a Sink object, got {sink.__class__.__name__}")
+        if not isinstance(sink, Sink):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError(
+                f"expected a Sink object, got {sink.__class__.__name__}"
+            )  # pyright: ignore[reportUnreachable]
 
         if self.is_recording():
             raise ClientException("Already recording audio")
@@ -769,12 +771,6 @@ class VoiceClient(VoiceProtocol):
         RecordingException
             You are not recording.
         """
-        warnings.warn(
-            "Voice reception is currently broken due to Discord's DAVE (End-to-End Encryption) protocol. "
-            + "Follow development progress at https://github.com/Pycord-Development/pycord/issues/3139",
-            RuntimeWarning,
-            stacklevel=2,
-        )
         if self._reader is not MISSING:
             self._reader.stop()
             self._reader = MISSING
@@ -796,12 +792,6 @@ class VoiceClient(VoiceProtocol):
 
         .. versionadded:: 2.7
         """
-        warnings.warn(
-            "Voice reception is currently broken due to Discord's DAVE (End-to-End Encryption) protocol. "
-            + "Follow development progress at https://github.com/Pycord-Development/pycord/issues/3139",
-            RuntimeWarning,
-            stacklevel=2,
-        )
         ssrc = self._id_to_ssrc.get(member.id)
         if ssrc is None:
             return None

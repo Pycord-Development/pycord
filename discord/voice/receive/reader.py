@@ -32,18 +32,13 @@ from collections.abc import Callable
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
+import davey
+import nacl.secret
+from nacl.exceptions import CryptoError
+
 from ..packets.core import OPUS_SILENCE
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
-from ..utils.dependencies import HAS_DAVEY, HAS_NACL
 from .router import PacketRouter, SinkEventRouter
-
-if HAS_DAVEY:
-    import davey
-
-if HAS_NACL:
-    import nacl.secret
-    from nacl.exceptions import CryptoError
-
 
 if TYPE_CHECKING:
     from discord.member import Member
@@ -77,8 +72,10 @@ class AudioReader:
         after: AfterCallback | None = None,
         start: bool = False,
     ) -> None:
-        if after is not None and not callable(after):
-            raise TypeError(
+        if after is not None and not callable(
+            after
+        ):  # pyright: ignore[reportUnnecessaryComparison]
+            raise TypeError(  # pyright: ignore[reportUnreachable]
                 f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead"
             )
 
@@ -86,7 +83,7 @@ class AudioReader:
         self.client: VoiceClient = client
         self.after: AfterCallback | None = after
 
-        # self.sink._client = client
+        self.sink.init(client)
 
         self.active: bool = False
         self.error: Exception | None = None
@@ -124,10 +121,10 @@ class AudioReader:
             _log.debug("Reader is not active")
             return
 
+        self.active = False
         self.client._connection.remove_socket_listener(self.callback)
         self.speaking_timer.notify()
         self._stop()
-        self.active = False
 
     def _stop(self) -> None:
         try:
@@ -154,16 +151,13 @@ class AudioReader:
                     "An error ocurred while calling the after callback on audio reader"
                 )
 
-        """for sink in self.sink.root.walk_children(with_self=True):
-            try:
-                sink.cleanup()
-            except Exception as exc:
-                _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)"""
+        try:
+            self.sink.cleanup()
+        except Exception as exc:
+            _log.exception("Error calling cleanup() for %s", self.sink, exc_info=exc)
 
     def set_sink(self, sink: Sink) -> Sink:
         old_sink = self.sink
-        # old_sink._client = None
-        # sink._client = self.client
         self.packet_router.set_sink(sink)
         self.sink = sink
         return old_sink
@@ -271,53 +265,51 @@ class PacketDecryptor:
         else:
             return nacl.secret.SecretBox(secret_key)
 
-
     def decrypt_rtp(self, packet: RTPPacket) -> bytes:
         state = self.client._connection
         dave = state.dave_session
 
         raw_payload = self._decryptor_rtp(packet)
 
-
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
 
             if not uid:
-                # SSRC→user_id mapping not yet populated (race with member_connect).
+                # SSRC -> user_id mapping not yet populated (race with member_connect).
                 # Try every user ID known to the DAVE session until one decrypts.
                 for candidate_uid in dave.get_user_ids():
                     try:
+                        int_uid = int(candidate_uid)
                         decrypted_audio = dave.decrypt(
-                            candidate_uid,
+                            int_uid,
                             davey.MediaType.audio,
                             raw_payload,
                         )
-                        # Successfully decrypted — cache the mapping for next time
-                        self.client._connection.user_ssrc_map[candidate_uid] = packet.ssrc
-                        uid = candidate_uid
+                        # Successfully decrypted - cache the mapping for next time
+                        self.client._connection.user_ssrc_map[int_uid] = packet.ssrc
+                        uid = int_uid
                         raw_payload = decrypted_audio
                         _log.debug(
                             "DAVE: inferred ssrc %s -> user_id %s from decryption",
-                            packet.ssrc, uid,
+                            packet.ssrc,
+                            uid,
                         )
                         break
-                    except Exception:
+                    except ValueError:
                         continue
-
-            if uid:
+            elif uid:
                 try:
-                    decrypted_audio = dave.decrypt(
+                    raw_payload = dave.decrypt(
                         uid,
                         davey.MediaType.audio,
                         raw_payload,
                     )
-                    # dave.decrypt() returns raw Opus — no extension headers.
-                    # The extension was already stripped by _decryptor_rtp above.
-                    packet.decrypted_data = decrypted_audio
-                except Exception as exc:
-                    packet.decrypted_data = OPUS_SILENCE
+                except ValueError:
+                    raw_payload = OPUS_SILENCE
 
-        return packet.decrypted_data
+            packet.decrypted_data = raw_payload
+
+        return packet.decrypted_data or b""
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:
         data = self._decryptor_rtcp(packet)
