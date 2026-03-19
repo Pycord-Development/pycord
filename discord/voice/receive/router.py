@@ -34,6 +34,7 @@ from typing import TYPE_CHECKING, Any
 
 from discord.opus import PacketDecoder
 
+from ...sinks.errors import RecordingException
 from ..utils.multidataevent import MultiDataEvent
 
 if TYPE_CHECKING:
@@ -123,7 +124,7 @@ class PacketRouter(threading.Thread):
         finally:
             try:
                 self.reader.client.stop_recording()
-            except Exception:
+            except RecordingException:
                 pass
             self.waiter.clear()
 
