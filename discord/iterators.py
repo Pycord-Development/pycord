@@ -1327,7 +1327,7 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
 
         if self._get_retrieve():
             data = await self._retrieve_messages(self.retrieve)
-            if not data["messages"]
+            if not data["messages"]:
                  # "Clients should not rely on the length of the `messages` array to paginate results"
                 self.limit = 0  # terminate the infinite loop
 
