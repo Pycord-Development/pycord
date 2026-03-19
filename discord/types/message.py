@@ -210,7 +210,6 @@ class MessageSearch(TypedDict):
     min_id: NotRequired[Snowflake]
     slop: NotRequired[int]
     content: NotRequired[str]
-    contents: NotRequired[List[str]]
     channel_id: NotRequired[SnowflakeList]
     author_type: NotRequired[List[SearchAuthorTypes]]
     author_id: NotRequired[SnowflakeList]
@@ -232,6 +231,7 @@ class MessageSearch(TypedDict):
     cursor: NotRequired[dict]
     command_id: NotRequired[Snowflake]
     command_name: NotRequired[str]
+    contents: NotRequired[List[str]]
 
 
 class MessageSearchResults(TypedDict):
@@ -241,4 +241,3 @@ class MessageSearchResults(TypedDict):
     messages: List[List[Message]]  # ?????
     threads: NotRequired[List[Thread]]
     members: NotRequired[List[ThreadMember]]
-    

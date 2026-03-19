@@ -50,6 +50,7 @@ __all__ = (
     "AuditLogIterator",
     "GuildIterator",
     "MemberIterator",
+    "MessageSearchIterator",
     "ScheduledEventSubscribersIterator",
     "EntitlementIterator",
     "SubscriptionIterator",
@@ -68,6 +69,7 @@ if TYPE_CHECKING:
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
     from .types.message import MessagePin as MessagePinPayload
+    from .types.message import MessageSearch as MessageSearchPayload
     from .types.monetization import Entitlement as EntitlementPayload
     from .types.monetization import Subscription as SubscriptionPayload
     from .types.threads import Thread as ThreadPayload
@@ -1283,3 +1285,73 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
             reference="The documentation of pins()",
         )
         return self.retrieve_inner().__await__()
+
+
+class MessageSearchIterator(_AsyncIterator["Message"]):
+    """Iterator for receiving a guild's search results.
+    """
+
+    def __init__(
+        self,
+        guild,
+        limit,
+        params,
+    ):
+        self.guild = guild
+        self.limit = limit
+        self.params = params
+
+        self.state = self.guild._state
+        self.search = self.state.http.message_search
+        self.messages = asyncio.Queue()
+        self.message_ids = []
+
+    async def next(self) -> Message:
+        if self.messages.empty():
+            await self.fill_messages()
+
+        try:
+            return self.messages.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self) -> bool:
+        l = self.limit
+        if l is None or l > 25:
+            r = 25
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0 
+
+    async def fill_messages(self):
+
+        if self._get_retrieve():
+            data = await self._retrieve_messages(self.retrieve)
+            if not data["messages"]
+                 # "Clients should not rely on the length of the `messages` array to paginate results"
+                self.limit = 0  # terminate the infinite loop
+
+            threads = data["threads"]
+            members = data["members"]  # do something here
+
+            for element in data["messages"]:
+                if int(element["id"]) not in self.message_ids:
+                    ch = self.guild.get_channel(int(element["channel_id"]))
+                    channel = await ch._get_channel()
+                    await self.messages.put(
+                        self.state.create_message(channel=channel, data=element)
+                    )
+                    self.message_ids.append(int(element["id"]))
+
+    async def _retrieve_messages(
+        self, retrieve: int
+    ) -> list[MessagePayload]:
+        data: list[MessageSearchPayload] = await self.search(
+            self.guild.id, **self.params
+        )
+        self.params["offset"] = self.params.get("offset", 0) + retrieve
+        if data["messages"]:
+            if self.limit is not None:
+                self.limit -= retrieve
+        return data

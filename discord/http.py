@@ -962,7 +962,6 @@ class HTTPClient:
         max_id: Snowflake | None = None,
         slop: int | None = None,
         content: str | None = None,
-        contents: list[str] | None = None,
         channel_id: SnowflakeList | None = None,
         author_type: message.SearchAuthorTypes | None = None,
         author_id: SnowflakeList | None = None,
@@ -981,9 +980,6 @@ class HTTPClient:
         sort_by: message.SearchSortModes | None = None, 
         sort_order: message.SearchSortOrders | None = None,
         include_nsfw: bool | None = None,
-        cursor: dict | None = None,
-        command_id: Snowflake | None = None, 
-        command_name: str | None = None,
     ) -> Response[message.MessageSearchResults]:
 
         p = {
@@ -993,7 +989,6 @@ class HTTPClient:
             "max_id": max_id,
             "slop": slop,
             "content": content,
-            "contents": contents,
             "channel_id": channel_id,
             "author_type": author_type,
             "author_id": author_id,
@@ -1012,9 +1007,6 @@ class HTTPClient:
             "sort_by": sort_by,
             "sort_order": sort_order,
             "include_nsfw": include_nsfw,
-            "cursor": cursor,
-            "command_id": command_id,
-            "command_name": command_name,
         }
         params = {k:v for k, v in p.items() if v is not None}
         return self.request(

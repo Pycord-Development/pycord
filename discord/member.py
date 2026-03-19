@@ -1261,3 +1261,12 @@ class Member(discord.abc.Messageable, _UserTag):
             The role or ``None`` if not found in the member's roles.
         """
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
+
+    def search_messages(self, **params):
+        return self.guild.search(authors=[self], **params)
+
+    def search_replies(self, **params):
+        return self.guild.search(replied_to_users=[self], **params)
+
+    def search_mentions(self, **params):
+        return self.guild.search(mentions=[self], **params)
