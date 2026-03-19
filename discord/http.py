@@ -952,6 +952,76 @@ class HTTPClient:
             Route("GET", "/channels/{channel_id}/pins", channel_id=channel_id)
         )
 
+    def message_search(
+        self,
+        guild_id: Snowflake,
+        *, 
+        limit: int | None = None,
+        offset: int | None = None,
+        min_id: Snowflake | None = None, 
+        max_id: Snowflake | None = None,
+        slop: int | None = None,
+        content: str | None = None,
+        contents: list[str] | None = None,
+        channel_id: SnowflakeList | None = None,
+        author_type: message.SearchAuthorTypes | None = None,
+        author_id: SnowflakeList | None = None,
+        mentions: SnowflakeList | None = None,
+        mentions_role_id: SnowflakeList | None = None,
+        mention_everyone: bool | None = None,
+        replied_to_user_id: SnowflakeList | None = None,
+        replied_to_message_id: SnowflakeList | None = None,
+        pinned: bool | None = None,
+        has: list[message.SearchHasTypes] | None = None,
+        embed_type: list[SearchEmbedTypes] | None = None,
+        embed_provider: list[str] | None = None,
+        link_hostname: list[str] | None = None,
+        attachment_filename: list[str] | None = None,
+        attachment_extension: list[str] | None = None,
+        sort_by: message.SearchSortModes | None = None, 
+        sort_order: message.SearchSortOrders | None = None,
+        include_nsfw: bool | None = None,
+        cursor: dict | None = None,
+        command_id: Snowflake | None = None, 
+        command_name: str | None = None,
+    ) -> Response[message.MessageSearchResults]:
+
+        p = {
+            "limit": limit,
+            "offset": offset,
+            "min_id": min_id,
+            "max_id": max_id,
+            "slop": slop,
+            "content": content,
+            "contents": contents,
+            "channel_id": channel_id,
+            "author_type": author_type,
+            "author_id": author_id,
+            "mentions": mentions,
+            "mentions_role_id": mentions_role_id,
+            "mention_everyone": mention_everyone,
+            "replied_to_user_id": replied_to_user_id,
+            "replied_to_message_id": replied_to_message_id,
+            "pinned": pinned,
+            "has": has,
+            "embed_type": embed_type,
+            "embed_provider": embed_provider,
+            "link_hostname": link_hostname,
+            "attachment_filename": attachment_filename,
+            "attachment_extension": attachment_extension,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
+            "include_nsfw": include_nsfw,
+            "cursor": cursor,
+            "command_id": command_id,
+            "command_name": command_name,
+        }
+        params = {k:v for k, v in p.items() if v is not None}
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/messages/search", guild_id=guild_id),
+            params=params
+        )
+
     # Member management
 
     def kick(
