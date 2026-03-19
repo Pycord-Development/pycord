@@ -130,6 +130,8 @@ class AudioReader:
         try:
             if self.packet_router.is_alive():
                 self.packet_router.stop()
+                if threading.current_thread() is not self.packet_router:
+                    self.packet_router.join(timeout=5)
         except Exception as exc:
             self.error = exc
             _log.exception("An error ocurred while stopping packet router.")
