@@ -23,6 +23,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import wave
+from io import BytesIO
 
 from ..opus import Decoder as OpusDecoder
 from .core import Filters, Sink, default_filters
@@ -59,7 +60,6 @@ class WaveSink(Sink):
             raise WaveSinkError(
                 "Audio may only be formatted after recording is finished."
             )
-        from io import BytesIO
 
         audio.file.seek(0)
         pcm_data = audio.file.read()
