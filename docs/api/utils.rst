@@ -52,3 +52,5 @@ Utility Functions
 .. autofunction:: discord.utils.warn_deprecated
 
 .. autofunction:: discord.utils.deprecated
+
+.. autofunction:: discord.utils.users_to_csv

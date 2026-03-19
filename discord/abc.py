@@ -50,13 +50,13 @@ from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator, MessagePinIterator
 from .mentions import AllowedMentions
+from .object import Object
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
 from .utils import warn_deprecated
-from .voice_client import VoiceClient, VoiceProtocol
 
 __all__ = (
     "Snowflake",
@@ -67,8 +67,6 @@ __all__ = (
     "Connectable",
     "Mentionable",
 )
-
-T = TypeVar("T", bound=VoiceProtocol)
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -104,6 +102,10 @@ if TYPE_CHECKING:
     ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
+
+    from .voice import VoiceClient, VoiceProtocol
+
+    T = TypeVar("T", bound=VoiceProtocol)
 
 MISSING = utils.MISSING
 
@@ -1208,6 +1210,8 @@ class GuildChannel:
         target_type: InviteTarget | None = None,
         target_user: User | None = None,
         target_application_id: int | None = None,
+        roles: list[Role | Object] | None = None,
+        target_users_file: File | None = None,
     ) -> Invite:
         """|coro|
 
@@ -1259,6 +1263,20 @@ class GuildChannel:
 
             .. versionadded:: 2.0
 
+        roles: Optional[List[Union[:class:`.Role`, :class:`.Object`]]]
+            The roles to give a user when joining through this invite.
+
+            You must have the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
+
+            .. versionadded:: 2.8
+
+        target_users_file: Optional[:class:`File`]
+            A CSV file with a single column of user IDs for all the users able to accept this invite.
+
+            You can use :func:`utils.users_to_csv` to generate a virtual CSV file from a sequence of user IDs.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         :class:`~discord.Invite`
@@ -1283,8 +1301,11 @@ class GuildChannel:
             target_type=target_type.value if target_type else None,
             target_user_id=target_user.id if target_user else None,
             target_application_id=target_application_id,
+            roles=[str(r.id) for r in roles] if roles else None,
+            target_users_file=target_users_file,
         )
         invite = Invite.from_incomplete(data=data, state=self._state)
+
         if target_event:
             invite.set_scheduled_event(target_event)
         return invite
@@ -1983,6 +2004,7 @@ class Connectable(Protocol):
 
     __slots__ = ()
     _state: ConnectionState
+    id: int
 
     def _get_voice_client_key(self) -> tuple[int, str]:
         raise NotImplementedError
@@ -1995,7 +2017,7 @@ class Connectable(Protocol):
         *,
         timeout: float = 60.0,
         reconnect: bool = True,
-        cls: Callable[[Client, Connectable], T] = VoiceClient,
+        cls: Callable[[Client, Connectable], T] = MISSING,
     ) -> T:
         """|coro|
 
@@ -2030,6 +2052,16 @@ class Connectable(Protocol):
         ~discord.opus.OpusNotLoaded
             The opus library has not been loaded.
         """
+
+        # import directly from _types so if the user does not have davey
+        # it won't error here
+        from .voice._types import VoiceProtocol
+
+        if cls is MISSING:
+            # if the user passes no cls, then actually import VoiceClient
+            from .voice import VoiceClient
+
+            cls = VoiceClient  # pyright: ignore[reportAssignmentType]
 
         key_id, _ = self._get_voice_client_key()
         state = self._state
