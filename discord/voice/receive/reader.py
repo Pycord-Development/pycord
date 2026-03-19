@@ -308,6 +308,8 @@ class PacketDecryptor:
                     raw_payload = OPUS_SILENCE
 
             packet.decrypted_data = raw_payload
+        else:  # e.g., stage channels
+            packet.decrypted_data = raw_payload
 
         return packet.decrypted_data or b""
 
