@@ -1020,6 +1020,92 @@ class TestSubCommandSyncing:
         rd["options"] = []
         assert await edit_needed(s, rd)
 
+    async def test_multi_subcommand_diff(self):
+        # No Different
+        s = SlashCommandGroup("subcommand")
+        s.add_command(SlashCommand(parent=s))
+        s.add_command(SlashCommand(parent=s, name="another"))
+        rd = self.dict_factory({}, {})
+        rd["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert not await edit_needed(s, rd)
+
+        # First Local Different
+        s = SlashCommandGroup("subcommand")
+        s.add_command(SlashCommand(parent=s, description="different"))
+        s.add_command(SlashCommand(parent=s, name="another"))
+        rd = self.dict_factory({}, {})
+        rd["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert await edit_needed(s, rd)
+
+        # Second Local Different
+        s = SlashCommandGroup("subcommand")
+        s.add_command(SlashCommand(parent=s))
+        s.add_command(SlashCommand(parent=s, name="another", description="different"))
+        rd = self.dict_factory({}, {})
+        rd["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert await edit_needed(s, rd)
+
+        # First Remote Different
+        s = SlashCommandGroup("subcommand")
+        s.add_command(SlashCommand(parent=s))
+        s.add_command(SlashCommand(parent=s, name="another"))
+        rd = self.dict_factory({}, {"description": "different"})
+        rd["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert await edit_needed(s, rd)
+
+        # Second Remote Different
+        s = SlashCommandGroup("subcommand")
+        s.add_command(SlashCommand(parent=s))
+        s.add_command(SlashCommand(parent=s, name="another"))
+        rd = self.dict_factory({}, {})
+        rd["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="different",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert await edit_needed(s, rd)
+
 
 class TestSubSubCommandSyncing:
 
@@ -1090,4 +1176,95 @@ class TestSubSubCommandSyncing:
         ss.add_command(SlashCommand(parent=ss))
         rd = self.dict_factory({}, {})
         rd["options"][0]["options"] = []
+        assert await edit_needed(s, rd)
+
+    async def test_multi_subsubcommand_diff(self):
+        # No Different
+        s = SlashCommandGroup("subcommand")
+        ss = s.create_subgroup("testing", description="desc")
+        ss.add_command(SlashCommand(parent=ss))
+        ss.add_command(SlashCommand(parent=ss, name="another"))
+        rd = self.dict_factory({}, {})
+        rd["options"][0]["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert not await edit_needed(s, rd)
+
+        # First Local Different
+        s = SlashCommandGroup("subcommand")
+        ss = s.create_subgroup("testing", description="desc")
+        ss.add_command(SlashCommand(parent=ss, description="different"))
+        ss.add_command(SlashCommand(parent=ss, name="another"))
+        rd = self.dict_factory({}, {})
+        rd["options"][0]["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert await edit_needed(s, rd)
+
+        # Second Local Different
+        s = SlashCommandGroup("subcommand")
+        ss = s.create_subgroup("testing", description="desc")
+        ss.add_command(SlashCommand(parent=ss))
+        ss.add_command(SlashCommand(parent=ss, name="another", description="different"))
+        rd = self.dict_factory({}, {})
+        rd["options"][0]["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert await edit_needed(s, rd)
+
+        # First Remote Different
+        s = SlashCommandGroup("subcommand")
+        ss = s.create_subgroup("testing", description="desc")
+        ss.add_command(SlashCommand(parent=ss))
+        ss.add_command(SlashCommand(parent=ss, name="another"))
+        rd = self.dict_factory({}, {"description": "different"})
+        rd["options"][0]["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="desc",
+                description_localizations=None,
+                required=True,
+            )
+        )
+        assert await edit_needed(s, rd)
+
+        # Second Remote Different
+        s = SlashCommandGroup("subcommand")
+        ss = s.create_subgroup("testing", description="desc")
+        ss.add_command(SlashCommand(parent=ss))
+        ss.add_command(SlashCommand(parent=ss, name="another"))
+        rd = self.dict_factory({}, {})
+        rd["options"][0]["options"].append(
+            ApplicationCommandOption(
+                type=1,
+                name="another",
+                name_localizations=None,
+                description="different",
+                description_localizations=None,
+                required=True,
+            )
+        )
         assert await edit_needed(s, rd)
