@@ -40,7 +40,7 @@ SupportedModes = Literal[
 ]
 
 
-class _VoiceState(TypedDict):
+class VoiceState(TypedDict):
     member: NotRequired[MemberWithUser]
     self_stream: NotRequired[bool]
     user_id: Snowflake
@@ -51,15 +51,12 @@ class _VoiceState(TypedDict):
     self_mute: bool
     self_video: bool
     suppress: bool
-
-
-class GuildVoiceState(_VoiceState):
-    channel_id: Snowflake
-
-
-class VoiceState(_VoiceState, total=False):
+    request_to_speak_timestamp: str | None
     channel_id: Snowflake | None
-    guild_id: Snowflake
+    guild_id: NotRequired[Snowflake]
+
+
+GuildVoiceState = VoiceState
 
 
 class VoiceRegion(TypedDict):

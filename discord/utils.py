@@ -31,6 +31,7 @@ import collections.abc
 import datetime
 import functools
 import importlib.resources
+import io
 import itertools
 import json
 import logging
@@ -63,6 +64,8 @@ from typing import (
     Union,
     overload,
 )
+
+from typing_extensions import deprecated as ext_deprecated
 
 if TYPE_CHECKING:
     from discord import (
@@ -117,6 +120,7 @@ __all__ = (
     "basic_autocomplete",
     "filter_params",
     "MISSING",
+    "users_to_csv",
 )
 
 _log = logging.getLogger(__name__)
@@ -345,6 +349,9 @@ def warn_deprecated(
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
 
 
+@ext_deprecated(
+    "deprecated is deprecated since version 2.8, consider using warnings.deprecated instead."
+)
 def deprecated(
     instead: str | None = None,
     since: str | None = None,
@@ -353,9 +360,12 @@ def deprecated(
     stacklevel: int = 3,
     *,
     use_qualname: bool = True,
-) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
+) -> Callable[[Callable[P, T]], Callable[P, T]]:
     """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
     the decorated function is called.
+
+    .. deprecated:: 2.8
+        Deprecated in favor of :func:`warnings.deprecated`.
 
     Parameters
     ----------
@@ -378,7 +388,7 @@ def deprecated(
         will display as ``login``. Defaults to ``True``.
     """
 
-    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
+    def actual_decorator(func: Callable[P, T]) -> Callable[P, T]:
         @functools.wraps(func)
         def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
             warn_deprecated(
@@ -1605,3 +1615,20 @@ def filter_params(params, **kwargs):
                 params[new_param] = params.pop(old_param)
 
     return params
+
+
+def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
+    """Converts an iterable of users to a CSV file-like object for usage in
+    :meth:`~discord.abc.GuildChannel.create_invite` and :meth:`~discord.Invite.edit_target_users`.
+
+    Parameters
+    ----------
+    users: Iterable[:class:`discord.abc.Snowflake`]
+        An iterable of users to convert.
+
+    Returns
+    -------
+    :class:`io.BytesIO`
+        A file-like object containing the CSV data.
+    """
+    return io.BytesIO("\n".join(map(lambda u: str(u.id), users)).encode("utf-8"))

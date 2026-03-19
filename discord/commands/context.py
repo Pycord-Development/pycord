@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
     from ..ui import BaseView
     from ..user import User
-    from ..voice_client import VoiceClient
+    from ..voice import VoiceClient
     from ..webhook import WebhookMessage
     from .core import ApplicationCommand, Option
 
@@ -294,6 +294,8 @@ class ApplicationContext(discord.abc.Messageable):
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction | WebhookMessage: ...
 
     @overload
@@ -309,6 +311,8 @@ class ApplicationContext(discord.abc.Messageable):
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction | WebhookMessage: ...
 
     @discord.utils.copy_doc(Interaction.respond)

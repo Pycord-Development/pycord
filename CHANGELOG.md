@@ -12,17 +12,64 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added support for community invites.
+  ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `Member.colours` and `Member.colors` properties.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Added `Colour.light_theme()`, `Colour.ash_theme()`, and `Colour.onyx_theme()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Added `RadioGroup`, `CheckboxGroup`, and `Checkbox` for modals.
+  ([#3073](https://github.com/Pycord-Development/pycord/pull/3073))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `User.collectibles` property.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added the ability to compare instances of `Nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
+  ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
+- Added a new event called `on_raw_member_update` that is dispatched when a member is
+  updated, regardless of cache status.
+  ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
+- Added support for Discord DAVE (Audio & Video E2EE) for voice-sending related
+  features. ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
 
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Updated `Colour.dark_theme()` with Discord's new theme colours.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Changed `FileComponent.name` and `FileComponent.size` to be optional.
+  ([#3115](https://github.com/Pycord-Development/pycord/pull/3115))
 
 ### Fixed
 
+- Fixed some `Item` attributes not being set correctly.
+  ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
+- Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
+  event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
+
 ### Deprecated
+
+- Deprecated `is_bot_managed`, `is_premium_subscriber`, `is_integration`,
+  `is_available_for_purchase`, and `is_guild_connections_role` in favor of `type` for
+  both `Role` and `RoleTags` .
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Deprecated `Colour.embed_background()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Deprecated `discord.VoiceClient` and `discord.VoiceProtocol` in favor of
+  `discord.voice.VoiceClient` and `discord.voice.VoiceProtocol`.
+  ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
 
 ### Removed
 
@@ -39,9 +86,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added the ability to compare instances of `PrimaryGuild`.
   ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Added `cache_default_sounds` parameter to `Client` and its subclasses.
+  ([#3113](https://github.com/Pycord-Development/pycord/pull/3113))
 
 ### Changed
 
+- Migrated away from `utils.deprecated` in favor of `warnings.deprecated`. Added type
+  checker warnings support for function deprecations.
+  ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
 - Updated the docs' Sphinx version to v9.
@@ -89,6 +141,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Attachment.read_chunked` and added optional `chunksize` argument to
   `Attachment.save` for retrieving attachments in chunks.
   ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
+- Added `AppInfo.edit()` method and missing `AppInfo` attributes.
+  ([#2994](https://github.com/Pycord-Development/pycord/pull/2994))
 - Added `Guild.fetch_roles_member_counts` method and `GuildRoleCounts` class.
   ([#3020](https://github.com/Pycord-Development/pycord/pull/3020))
 - Implemented `with_response` for interaction callbacks, adding
@@ -1039,24 +1093,23 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `AttributeError` when serializing commands with `Annotated` type hints.
   ([#2243](https://github.com/Pycord-Development/pycord/pull/2243))
 - Fixed `Intents.all()` returning the wrong value.
-  ([#2257](https://github.com/Pycord-Development/pycord/issues/2257))
+  ([#2257](https://github.com/Pycord-Development/pycord/pull/2257))
 - Fixed `AuditLogIterator` not respecting the `after` parameter.
-  ([#2295](https://github.com/Pycord-Development/pycord/issues/2295))
+  ([#2295](https://github.com/Pycord-Development/pycord/pull/2295))
 - Fixed `AttributeError` when failing to establish initial websocket connection.
   ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 - Fixed `AttributeError` caused by `command.cog` being `MISSING`.
-  ([#2303](https://github.com/Pycord-Development/pycord/issues/2303))
+  ([#2303](https://github.com/Pycord-Development/pycord/pull/2303))
 - Fixed `self.use_default_buttons` being assumed truthy by `Paginator.update`.
   ([#2319](https://github.com/Pycord-Development/pycord/pull/2319))
 - Fixed `AttributeError` when comparing application commands with non-command objects.
-  ([#2299](https://github.com/Pycord-Development/pycord/issues/2299))
+  ([#2299](https://github.com/Pycord-Development/pycord/pull/2299))
 - Fixed `AttributeError` when copying groups on startup.
-  ([#2331](https://github.com/Pycord-Development/pycord/issues/2331))
+  ([#2331](https://github.com/Pycord-Development/pycord/pull/2331))
 - Fixed application command options causing errors if declared through the option
-  decorator or kwarg.
-  ([#2332](https://github.com/Pycord-Development/pycord/issues/2332))
+  decorator or kwarg. ([#2332](https://github.com/Pycord-Development/pycord/pull/2332))
 - Fixed options declared using the parameter default value syntax always being optional.
-  ([#2333](https://github.com/Pycord-Development/pycord/issues/2333))
+  ([#2333](https://github.com/Pycord-Development/pycord/pull/2333))
 - Fixed `BridgeContext` type hints raising an exception for unsupported option type.
   ([#2337](https://github.com/Pycord-Development/pycord/pull/2337))
 - Fixed `TypeError` due to `(Sync)WebhookMessage._thread_id` being set to `None`.

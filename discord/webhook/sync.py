@@ -60,6 +60,8 @@ __all__ = (
     "SyncWebhookMessage",
 )
 
+from ..utils import warn_deprecated
+
 _log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -469,6 +471,7 @@ class SyncWebhookMessage(Message):
         files: list[File] = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         suppress: bool | None = MISSING,
+        suppress_embeds: bool | None = MISSING,
     ) -> SyncWebhookMessage:
         """Edits the message.
 
@@ -491,6 +494,12 @@ class SyncWebhookMessage(Message):
             See :meth:`.abc.Messageable.send` for more information.
         suppress: Optional[:class:`bool`]
             Whether to suppress embeds for the message.
+
+            .. deprecated:: 2.8
+        suppress_embeds: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -516,8 +525,13 @@ class SyncWebhookMessage(Message):
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
 
-        if suppress is MISSING:
-            suppress = self.flags.suppress_embeds
+        if suppress is not MISSING:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is MISSING:
+                suppress_embeds = suppress
+
+        if suppress_embeds is MISSING:
+            suppress_embeds = self.flags.suppress_embeds
 
         return self._state._webhook.edit_message(
             self.id,
@@ -528,7 +542,7 @@ class SyncWebhookMessage(Message):
             files=files,
             allowed_mentions=allowed_mentions,
             thread=thread,
-            suppress=suppress,
+            suppress_embeds=suppress_embeds,
         )
 
     def delete(self, *, delay: float | None = None) -> None:
@@ -972,7 +986,8 @@ class SyncWebhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         wait: bool = False,
-        suppress: bool = False,
+        suppress: bool | None = None,
+        suppress_embeds: bool = None,
     ) -> SyncWebhookMessage | None:
         """Sends a message using the webhook.
 
@@ -1028,6 +1043,12 @@ class SyncWebhook(BaseWebhook):
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
 
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         Optional[:class:`SyncWebhookMessage`]
@@ -1064,6 +1085,13 @@ class SyncWebhook(BaseWebhook):
         if thread and thread_name:
             raise InvalidArgument("You cannot specify both a thread and a thread name")
 
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+        elif suppress_embeds is None:
+            suppress_embeds = False
+
         params = handle_message_parameters(
             content=content,
             username=username,
@@ -1075,7 +1103,7 @@ class SyncWebhook(BaseWebhook):
             embeds=embeds,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            suppress=suppress,
+            suppress_embeds=suppress_embeds,
             thread_name=thread_name,
         )
         adapter: WebhookAdapter = _get_webhook_adapter()
@@ -1157,7 +1185,8 @@ class SyncWebhook(BaseWebhook):
         files: list[File] = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         thread: Snowflake | None = MISSING,
-        suppress: bool = False,
+        suppress: bool | None = None,
+        suppress_embeds: bool = None,
     ) -> SyncWebhookMessage:
         """Edits a message owned by this webhook.
 
@@ -1187,6 +1216,14 @@ class SyncWebhook(BaseWebhook):
             See :meth:`.abc.Messageable.send` for more information.
         thread: Optional[:class:`~discord.abc.Snowflake`]
             The thread that contains the message.
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Raises
         ------
@@ -1210,6 +1247,12 @@ class SyncWebhook(BaseWebhook):
         previous_mentions: AllowedMentions | None = getattr(
             self._state, "allowed_mentions", None
         )
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+        elif suppress_embeds is None:
+            suppress_embeds = False
         params = handle_message_parameters(
             content=content,
             file=file,
@@ -1218,7 +1261,7 @@ class SyncWebhook(BaseWebhook):
             embeds=embeds,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            suppress=suppress,
+            suppress_embeds=suppress_embeds,
         )
         adapter: WebhookAdapter = _get_webhook_adapter()
 

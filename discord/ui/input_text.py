@@ -132,12 +132,6 @@ class InputText(ModalItem):
             id=id,
         )
 
-    def __repr__(self) -> str:
-        attrs = " ".join(
-            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
-        )
-        return f"<{self.__class__.__name__} {attrs}>"
-
     def _generate_underlying(
         self,
         style: InputTextStyle | None = None,
@@ -146,7 +140,7 @@ class InputText(ModalItem):
         placeholder: str | None = None,
         min_length: int | None = None,
         max_length: int | None = None,
-        required: bool | None = True,
+        required: bool | None = None,
         value: str | None = None,
         id: int | None = None,
     ) -> InputTextComponent:
@@ -157,9 +151,9 @@ class InputText(ModalItem):
             custom_id=custom_id or self.custom_id,
             label=label or self.label,
             placeholder=placeholder or self.placeholder,
-            min_length=min_length or self.min_length,
-            max_length=max_length or self.max_length,
-            required=required or self.required,
+            min_length=min_length if min_length is not None else self.min_length,
+            max_length=max_length if max_length is not None else self.max_length,
+            required=required if required is not None else self.required,
             value=value or self.value,
             id=id or self.id,
         )
@@ -185,9 +179,9 @@ class InputText(ModalItem):
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f"custom_id must be None or str not {value.__class__.__name__}"
-            )
+            raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
+        if len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         self.underlying.custom_id = value
 
     @property
