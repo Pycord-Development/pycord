@@ -57,11 +57,11 @@ def test_voice_modules_imports_without_voice_dependencies():
 
     __import__("discord")
 
-    with pytes.raises(MissingVoiceDependencies):
+    with pytest.raises(MissingVoiceDependencies):
         __import__("discord.voice")
 
-    with pytes.raises(MissingVoiceDependencies):
+    with pytest.raises(MissingVoiceDependencies):
         __import__("discord.voice.gateway")
 
-    with pytes.raises(MissingVoiceDependencies):
+    with pytest.raises(MissingVoiceDependencies):
         __import__("discord.voice.receive.reader")
