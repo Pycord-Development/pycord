@@ -1288,8 +1288,7 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
 
 
 class MessageSearchIterator(_AsyncIterator["Message"]):
-    """Iterator for receiving a guild's search results.
-    """
+    """Iterator for receiving a guild's search results."""
 
     def __init__(
         self,
@@ -1322,7 +1321,7 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
         else:
             r = l
         self.retrieve = r
-        return r > 0 
+        return r > 0
 
     async def fill_messages(self):
 

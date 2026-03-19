@@ -1170,8 +1170,8 @@ class SearchSortOrder(Enum):
 
     def __str__(self):
         return self.value
-      
-      
+
+
 class RoleType(IntEnum):
     """Represents the type of role.
 

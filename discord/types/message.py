@@ -197,7 +197,26 @@ class AllowedMentions(TypedDict):
 
 
 SearchAuthorTypes = Literal["user", "bot", "webhook", "-user", "-bot", "-webhook"]
-SearchHasTypes = Literal["image", "sound", "video", "file", "sticker", "embed", "link", "poll", "snapshot", "-image", "-sound", "-video", "-file", "-sticker", "-embed", "-link", "-poll", "-snapshot"]
+SearchHasTypes = Literal[
+    "image",
+    "sound",
+    "video",
+    "file",
+    "sticker",
+    "embed",
+    "link",
+    "poll",
+    "snapshot",
+    "-image",
+    "-sound",
+    "-video",
+    "-file",
+    "-sticker",
+    "-embed",
+    "-link",
+    "-poll",
+    "-snapshot",
+]
 SearchEmbedTypes = Literal["image", "video", "gif", "sound", "article"]
 SearchSortModes = Literal["relevance", "timestamp"]
 SearchSortOrders = Literal["asc", "desc"]

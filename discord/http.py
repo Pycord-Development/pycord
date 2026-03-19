@@ -961,10 +961,10 @@ class HTTPClient:
     def message_search(
         self,
         guild_id: Snowflake,
-        *, 
+        *,
         limit: int | None = None,
         offset: int | None = None,
-        min_id: Snowflake | None = None, 
+        min_id: Snowflake | None = None,
         max_id: Snowflake | None = None,
         slop: int | None = None,
         content: str | None = None,
@@ -983,7 +983,7 @@ class HTTPClient:
         link_hostname: list[str] | None = None,
         attachment_filename: list[str] | None = None,
         attachment_extension: list[str] | None = None,
-        sort_by: message.SearchSortModes | None = None, 
+        sort_by: message.SearchSortModes | None = None,
         sort_order: message.SearchSortOrders | None = None,
         include_nsfw: bool | None = None,
     ) -> Response[message.MessageSearchResults]:
@@ -1014,10 +1014,10 @@ class HTTPClient:
             "sort_order": sort_order,
             "include_nsfw": include_nsfw,
         }
-        params = {k:v for k, v in p.items() if v is not None}
+        params = {k: v for k, v in p.items() if v is not None}
         return self.request(
             Route("GET", "/guilds/{guild_id}/messages/search", guild_id=guild_id),
-            params=params
+            params=params,
         )
 
     # Member management
