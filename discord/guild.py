@@ -4835,7 +4835,7 @@ class Guild(Hashable):
             params["max_id"] = before.id
 
         if slop is not None:
-            if not 0 >= slop >= 100:
+            if slop > 100 or slop < 0:
                 raise ValueError("slop must be between 0 and 100")
             params["slop"] = int(slop)
 
