@@ -978,7 +978,7 @@ class HTTPClient:
         replied_to_message_id: SnowflakeList | None = None,
         pinned: bool | None = None,
         has: list[message.SearchHasTypes] | None = None,
-        embed_type: list[SearchEmbedTypes] | None = None,
+        embed_type: list[message.SearchEmbedTypes] | None = None,
         embed_provider: list[str] | None = None,
         link_hostname: list[str] | None = None,
         attachment_filename: list[str] | None = None,

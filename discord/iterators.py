@@ -1335,13 +1335,14 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
             members = data["members"]  # do something here
 
             for element in data["messages"]:
-                if int(element["id"]) not in self.message_ids:
-                    ch = self.guild.get_channel(int(element["channel_id"]))
+                message = element[0]
+                if int(message["id"]) not in self.message_ids:
+                    ch = self.guild.get_channel(int(message["channel_id"]))
                     channel = await ch._get_channel()
                     await self.messages.put(
-                        self.state.create_message(channel=channel, data=element)
+                        self.state.create_message(channel=channel, data=message)
                     )
-                    self.message_ids.append(int(element["id"]))
+                    self.message_ids.append(int(message["id"]))
 
     async def _retrieve_messages(self, retrieve: int) -> list[MessagePayload]:
         data: list[MessageSearchPayload] = await self.search(
