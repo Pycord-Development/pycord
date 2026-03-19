@@ -159,7 +159,7 @@ class Parsable:
     # idk this kinda sucks lmao
     def __init__(self, **values):
         self._values = values
-        for k, v in values:
+        for k, v in values.items():
             setattr(self, k, v)
 
     def parse(self) -> list[str]:
