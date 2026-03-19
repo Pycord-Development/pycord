@@ -8,6 +8,12 @@ Voice support for the Discord API.
 :license: MIT, see LICENSE for more details.
 """
 
+from ..errors import MissingVoiceDependencies
+from .utils.dependencies import get_missing_voice_dependencies
+
+if missing := get_missing_voice_dependencies():
+    raise MissingVoiceDependencies(missing=missing)
+
 from ._types import *
 from .client import *
 from .packets import *

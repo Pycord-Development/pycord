@@ -64,6 +64,7 @@ __all__ = (
     "ApplicationCommandError",
     "CheckFailure",
     "ApplicationCommandInvokeError",
+    "MissingVoiceDependencies",
 )
 
 
@@ -410,4 +411,16 @@ class ApplicationCommandInvokeError(ApplicationCommandError):
         self.original: Exception = e
         super().__init__(
             f"Application Command raised an exception: {e.__class__.__name__}: {e}"
+        )
+
+
+class MissingVoiceDependencies(RuntimeError):
+    """Raised when required voice dependencies are not installed."""
+
+    def __init__(self, missing: tuple[str, ...]) -> None:
+        self.missing = missing
+        deps = ", ".join(missing)
+        super().__init__(
+            f"{deps} {'is' if len(missing) == 1 else 'are'} required for voice support. "
+            'Install them with "pip install py-cord[voice]".'
         )
