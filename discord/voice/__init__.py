@@ -9,7 +9,7 @@ Voice support for the Discord API.
 """
 
 from ..errors import MissingVoiceDependencies
-from .utils.dependencies import get_missing_voice_dependencies
+from ..utils import get_missing_voice_dependencies
 
 if missing := get_missing_voice_dependencies():
     raise MissingVoiceDependencies(missing=missing)
