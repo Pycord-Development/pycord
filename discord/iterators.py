@@ -1331,7 +1331,7 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
                 # "Clients should not rely on the length of the `messages` array to paginate results"
                 self.limit = 0  # terminate the infinite loop
 
-            threads = data.get("threads", [])
+            data.get("threads", [])
             members = data.get("members", [])  # do something here
 
             for element in data["messages"]:
