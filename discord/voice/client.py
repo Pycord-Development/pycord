@@ -52,6 +52,8 @@ from .receive import AudioReader
 from .state import VoiceConnectionState
 
 if TYPE_CHECKING:
+    from typing import TypeVar
+
     from typing_extensions import ParamSpec
 
     from discord import abc
@@ -71,6 +73,7 @@ if TYPE_CHECKING:
     from .receive.reader import AfterCallback
 
     P = ParamSpec("P")
+    T = TypeVar("T")
 
 _log = logging.getLogger(__name__)
 
@@ -255,10 +258,10 @@ class VoiceClient(VoiceProtocol["Client"]):
 
     async def _run_event(
         self,
-        coro: Callable[..., Coroutine[Any, Any, None]],
+        coro: Callable[..., Coroutine[P, None]],
         event_name: str,
-        *args: Any,
-        **kwargs: Any,
+        *args: P.args,
+        **kwargs: P.kwargs,
     ) -> None:
         try:
             await coro(*args, **kwargs)
@@ -269,11 +272,11 @@ class VoiceClient(VoiceProtocol["Client"]):
 
     def _schedule_event(
         self,
-        coro: Callable[..., Coroutine[Any, Any, None]],
+        coro: Callable[..., Coroutine[Any, Any, T]],
         event_name: str,
         *args: Any,
         **kwargs: Any,
-    ) -> asyncio.Task[None]:
+    ) -> asyncio.Task[T]:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
         return self.client.loop.create_task(
             wrapped, name=f"voice-receiver-event-dispatch: {event_name}"
