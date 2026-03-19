@@ -1000,10 +1000,10 @@ class HTTPClient:
             "author_id": author_id,
             "mentions": mentions,
             "mentions_role_id": mentions_role_id,
-            "mention_everyone": mention_everyone,
+            "mention_everyone": bool(mention_everyone),
             "replied_to_user_id": replied_to_user_id,
             "replied_to_message_id": replied_to_message_id,
-            "pinned": pinned,
+            "pinned": bool(pinned),
             "has": has,
             "embed_type": embed_type,
             "embed_provider": embed_provider,
@@ -1012,7 +1012,7 @@ class HTTPClient:
             "attachment_extension": attachment_extension,
             "sort_by": sort_by,
             "sort_order": sort_order,
-            "include_nsfw": include_nsfw,
+            "include_nsfw": bool(include_nsfw),
         }
         params = {k: v for k, v in p.items() if v is not None}
         return self.request(
