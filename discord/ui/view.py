@@ -1095,7 +1095,6 @@ class DesignerView(BaseView):
         ----------
         *items: :class:`ViewItem`
             The items contained in this container.
-        accessory: Optional[:class:`ViewItem`]
         id: Optional[:class:`int`]
             The container's ID.
         """
@@ -1172,7 +1171,7 @@ class DesignerView(BaseView):
         return self.add_item(g)
 
     def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> Self:
-        """Adds a :class:`TextDisplay` to the view.
+        """Adds a :class:`File` to the view.
 
         Parameters
         ----------
