@@ -1299,6 +1299,9 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
         self.guild = guild
         self.limit = limit
         self.params = params
+        if "limit" in params:
+            if params["limit"] is None or params["limit"] > 25:
+                params["limit"] = 25
 
         self.state = self.guild._state
         self.search = self.state.http.message_search
