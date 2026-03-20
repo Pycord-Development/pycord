@@ -4927,7 +4927,7 @@ class Guild(Hashable):
                     raise ValueError(
                         f"attachment_extension {a!r} must be up to 256 characters."
                     )
-            params["attachment_extensions"] = attachment_extensions
+            params["attachment_extension"] = attachment_extensions
 
         if sort_by:
             params["sort_by"] = str(sort_by)
