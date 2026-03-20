@@ -64,7 +64,7 @@ __all__ = (
     "ApplicationCommandError",
     "CheckFailure",
     "ApplicationCommandInvokeError",
-    "MissingVoiceDependencies",
+    "MissingVoiceDependenciesError",
 )
 
 
@@ -414,11 +414,19 @@ class ApplicationCommandInvokeError(ApplicationCommandError):
         )
 
 
-class MissingVoiceDependencies(RuntimeError):
-    """Raised when required voice dependencies are not installed."""
+class MissingVoiceDependenciesError(RuntimeError, DiscordException):
+    """Raised when required voice dependencies are not installed.
+
+    .. note::
+        This exception inherits from both :exc:`RuntimeError` and :exc:`DiscordException`.
+
+    Attributes:
+        missing: tuple[str, ...]
+            The missing dependencies that are required for voice support.
+    """
 
     def __init__(self, missing: tuple[str, ...]) -> None:
-        self.missing = missing
+        self.missing: tuple[str, ...] = missing
         deps = ", ".join(missing)
         super().__init__(
             f"{deps} {'is' if len(missing) == 1 else 'are'} required for voice support. "
