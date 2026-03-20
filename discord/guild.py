@@ -101,7 +101,7 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts", "SearchHas", "SearchAuthors")
 
 MISSING = utils.MISSING
 
