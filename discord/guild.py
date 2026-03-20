@@ -4850,12 +4850,12 @@ class Guild(Hashable):
             params["channel_id"] = [c.id for c in channels]
 
         if author_types:
-            param["author_type"] = author_types.parse()
+            params["author_type"] = author_types.parse()
 
         if authors:
             if len(authors) > 100:
                 raise ValueError("can only specify up to 100 authors")
-            param["author_id"] = [a.id for a in authors]
+            params["author_id"] = [a.id for a in authors]
 
         if mentions:
             if len(mentions) > 100:
