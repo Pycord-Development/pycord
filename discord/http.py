@@ -1000,7 +1000,9 @@ class HTTPClient:
             "author_id": author_id,
             "mentions": mentions,
             "mentions_role_id": mentions_role_id,
-            "mention_everyone": int(mention_everyone) if mention_everyone is not None else None,
+            "mention_everyone": (
+                int(mention_everyone) if mention_everyone is not None else None
+            ),
             "replied_to_user_id": replied_to_user_id,
             "replied_to_message_id": replied_to_message_id,
             "pinned": int(pinned) if pinned is not None else None,
