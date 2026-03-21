@@ -24,6 +24,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Removed
 
 ## [2.8.0rc1] - 2026-03-21
+
 ### Added
 
 - Added support for community invites.
@@ -91,6 +92,7 @@ These changes are available on the `master` branch, but have not yet been releas
   restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
   - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
     `Template.create_guild`, and `Client.create_guild`.
+
 ## [2.7.1] - 2026-02-09
 
 ### Added
