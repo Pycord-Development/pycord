@@ -1042,7 +1042,7 @@ class UnfurledMediaItem(AssetMixin):
         return await self._state.http.get_from_cdn(self.url)
 
     async def to_file(
-        self, filename: str, *, description: str | None = None, spoiler: bool = False
+        self, filename: str | None = None, *, description: str | None = None, spoiler: bool = False
     ) -> File:
         """|coro|
 
@@ -1052,7 +1052,7 @@ class UnfurledMediaItem(AssetMixin):
         Parameters
         ----------
         filename: :class:`str`
-            The name to initialize this file with.
+            The name to initialize this file with. Defaults to the resolved name if available.
         description: Optional[:class:`str`]
             The description of this file.
         spoiler: :class:`bool`
@@ -1074,11 +1074,14 @@ class UnfurledMediaItem(AssetMixin):
         ValueError
             You attempted to download from a local ``attachment://`` URL.
         """
+        name = filename or self.resolved_name
+        if not name:
+            raise ValueError("no resolved_name available, please provide filename manually.")
 
         data = await self.read()
         return File(
             io.BytesIO(data),
-            filename=filename,
+            filename=name,
             spoiler=spoiler,
             description=description,
         )
