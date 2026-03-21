@@ -2345,7 +2345,7 @@ class Message(Hashable):
                     return component
         return None
 
-    def get_view(self, cls: BaseView | None = None) -> DesignerView | BaseView | None:
+    def get_view(self, cls: BaseView | None = None, force: bool = False) -> DesignerView | BaseView | None:
         """Retrieve this message's view from the ViewStore. If there is no stored view, a new view will be returned if :attr:`components` is not empty.
 
         Parameters
@@ -2355,13 +2355,15 @@ class Message(Hashable):
             By default, this is :class:`discord.ui.DesignerView`. Should a custom
             class be provided, it must inherit from :class:`discord.ui.BaseView`
             and properly implement ``from_message``.
+        force: :class:`bool`
+            When set to ``True``, this will ignore the ViewStore and forcibly create a new view.
 
         Returns
         -------
         Optional[Union[:class:`discord.ui.DesignerView`, :class:`discord.ui.BaseView`]]
             The view belonging to this message, if it exists or there are components available to create a new view.
         """
-        v = self._state.get_message_view(self.id)
+        v = self._state.get_message_view(self.id) if not force else None
         if not v and self.components:
             if not cls:
                 from .ui.view import DesignerView

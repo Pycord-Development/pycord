@@ -26,6 +26,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
+import io
+from os import PathLike
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -38,6 +40,7 @@ from .enums import (
     SeparatorSpacingSize,
     try_enum,
 )
+from .file import File
 from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, find, get_slots
@@ -954,6 +957,116 @@ class UnfurledMediaItem(AssetMixin):
         self._url = value
         self._static_url = (
             value if value and value.startswith("attachment://") else None
+        )
+
+    async def save(
+        self,
+        fp: io.BufferedIOBase | PathLike,
+        *,
+        seek_begin: bool = True,
+    ) -> int:
+        """|coro|
+
+        Saves this media into a file-like object.
+
+        Parameters
+        ----------
+        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+            The file-like object to save this media to or the filename
+            to use. If a filename is passed then a file is created with that
+            filename and used instead.
+        seek_begin: :class:`bool`
+            Whether to seek to the beginning of the file after saving is
+            successfully done.
+
+        Returns
+        -------
+        :class:`int`
+            The number of bytes written.
+
+        Raises
+        ------
+        HTTPException
+            Saving the media failed.
+        NotFound
+            The media was deleted.
+        ValueError
+            You attempted to download from a local ``attachment://`` URL.
+        """
+        data = await self.read(use_cached=use_cached)
+
+        if isinstance(fp, io.BufferedIOBase):
+            written = fp.write(data)
+            if seek_begin:
+                fp.seek(0)
+            return written
+        else:
+            with open(fp, "wb") as f:
+                return f.write(data)
+
+    async def read(self) -> bytes:
+        """|coro|
+
+        Retrieves the content of this media as a :class:`bytes` object.
+
+        Returns
+        -------
+        :class:`bytes`
+            The contents of the media.
+
+        Raises
+        ------
+        HTTPException
+            Downloading the media failed.
+        Forbidden
+            You do not have permissions to access this media.
+        NotFound
+            The media was deleted.
+        ValueError
+            You attempted to download from a local ``attachment://`` URL.
+        """
+        if self.url.startswith("attachment://"):
+            raise ValueError("cannot download a local media URL.")
+        return await self._state.http.get_from_cdn(self.url)
+
+    async def to_file(self, *, filename: str, description: str | None = None, spoiler: bool = False) -> File:
+        """|coro|
+
+        Converts the media into a :class:`discord.File` suitable for sending via
+        :meth:`abc.Messageable.send`.
+
+        Parameters
+        ----------
+        filename: :class:`str`
+            The name to initialize this file with.
+        description: Optional[:class:`str`]
+            The description of this file.
+        spoiler: :class:`bool`
+            Whether the file is a spoiler.
+
+        Returns
+        -------
+        :class:`File`
+            The media as a file suitable for sending.
+
+        Raises
+        ------
+        HTTPException
+            Downloading the media failed.
+        Forbidden
+            You do not have permissions to access this media
+        NotFound
+            The media was deleted.
+        ValueError
+            You attempted to download from a local ``attachment://`` URL.
+        """
+
+        data = await self.read()
+        return File(
+            io.BytesIO(data),
+            filename=filename,
+            spoiler=spoiler,
+            description=description,
         )
 
     @classmethod
