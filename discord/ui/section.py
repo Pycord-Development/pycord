@@ -226,6 +226,8 @@ class Section(ViewItem[V]):
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
+            if not item:
+                return self
         try:
             if item is self.accessory:
                 self.accessory = None

@@ -219,6 +219,8 @@ class ActionRow(ViewItem[V]):
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
+            if not item:
+                return self
         try:
             self.children.remove(item)
             item.parent = None

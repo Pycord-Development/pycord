@@ -245,6 +245,8 @@ class Container(ViewItem[V]):
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
+            if not item:
+                return self
         try:
             if item.parent is self:
                 self.items.remove(item)

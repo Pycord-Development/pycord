@@ -1003,7 +1003,7 @@ class UnfurledMediaItem(AssetMixin):
         ValueError
             You attempted to download from a local ``attachment://`` URL.
         """
-        data = await self.read(use_cached=use_cached)
+        data = await self.read()
 
         if isinstance(fp, io.BufferedIOBase):
             written = fp.write(data)
