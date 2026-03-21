@@ -1042,7 +1042,11 @@ class UnfurledMediaItem(AssetMixin):
         return await self._state.http.get_from_cdn(self.url)
 
     async def to_file(
-        self, filename: str | None = None, *, description: str | None = None, spoiler: bool = False
+        self,
+        filename: str | None = None,
+        *,
+        description: str | None = None,
+        spoiler: bool = False,
     ) -> File:
         """|coro|
 
@@ -1076,7 +1080,9 @@ class UnfurledMediaItem(AssetMixin):
         """
         name = filename or self.resolved_name
         if not name:
-            raise ValueError("no resolved_name available, please provide filename manually.")
+            raise ValueError(
+                "no resolved_name available, please provide filename manually."
+            )
 
         data = await self.read()
         return File(
