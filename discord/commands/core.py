@@ -30,8 +30,6 @@ import datetime
 import functools
 import inspect
 import re
-import sys
-import types
 from collections import OrderedDict
 from enum import Enum
 from typing import (
@@ -42,7 +40,6 @@ from typing import (
     Generator,
     Generic,
     TypeVar,
-    Union,
 )
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
@@ -94,7 +91,9 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
+
+CoroT = TypeVar("CoroT")
+Coro = Coroutine[Any, Any, CoroT]
 
 if TYPE_CHECKING:
     P = ParamSpec("P")
@@ -275,7 +274,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         arguments in.
         """
         if self.cog is not None:
-            return await self.callback(self.cog, ctx, *args, **kwargs)
+            return await self.callback(self.cog, ctx, *args, **kwargs)  # pyright: ignore[reportCallIssue]
         return await self.callback(ctx, *args, **kwargs)
 
     @property
@@ -285,6 +284,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]]
         | Callable[Concatenate[ApplicationContext, P], Coro[T]]
     ):
+        if not self._callback:
+            raise ClientException("Callback has not been set for command {self.name}.")
+
         return self._callback
 
     @callback.setter
@@ -789,6 +791,7 @@ class SlashCommand(ApplicationCommand):
             _validate_descriptions(option)
 
         return list(final_options.values())
+    
 
     # def _match_option_param_names(self, params, options):
     #    options = list(options)
