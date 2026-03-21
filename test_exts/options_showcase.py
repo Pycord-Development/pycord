@@ -41,9 +41,7 @@ class OptionShowcase(commands.Cog):
         ratio: float,
         flag: bool,
     ) -> None:
-        await ctx.respond(
-            f"text={text} count={count} ratio={ratio} flag={flag}"
-        )
+        await ctx.respond(f"text={text} count={count} ratio={ratio} flag={flag}")
 
     @commands.slash_command(name="opt_choices")
     @option("color", description="Pick a color", choices=["red", "green", "blue"])
@@ -85,8 +83,8 @@ class OptionShowcase(commands.Cog):
     async def opt_optional(
         self,
         ctx: discord.ApplicationContext,
-        note: Optional[str] = None,
-        amount: Optional[int] = None,
+        note: str | None = None,
+        amount: int | None = None,
     ) -> None:
         await ctx.respond(f"note={note} amount={amount}")
 
@@ -94,12 +92,10 @@ class OptionShowcase(commands.Cog):
     async def opt_channels(
         self,
         ctx: discord.ApplicationContext,
-        channel: Union[discord.TextChannel, discord.VoiceChannel],
+        channel: discord.TextChannel | discord.VoiceChannel,
         thread: discord.Thread,
     ) -> None:
-        await ctx.respond(
-            f"channel={channel.mention} thread={thread.mention}"
-        )
+        await ctx.respond(f"channel={channel.mention} thread={thread.mention}")
 
     @commands.slash_command(name="opt_channeltypes")
     @option(
@@ -134,7 +130,7 @@ class OptionShowcase(commands.Cog):
     async def opt_union_user(
         self,
         ctx: discord.ApplicationContext,
-        target: Union[discord.Member, discord.User],
+        target: discord.Member | discord.User,
     ) -> None:
         await ctx.respond(f"target={target.mention}")
 

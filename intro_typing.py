@@ -1,17 +1,18 @@
 from __future__ import annotations
-from collections.abc import Awaitable, Iterable, Callable
-from enum import Enum, IntEnum
+
+import inspect
 import logging
 import sys
-import types
+from collections.abc import Awaitable, Callable, Iterable
+from enum import Enum, IntEnum
 from typing import Annotated, Any, Literal, TypeVar, Union, get_args, get_origin
-import discord
-from discord.enums import SlashCommandOptionType, Enum as DiscordEnum
-from discord.commands import AutocompleteContext
-from discord.ext.commands import Converter
-from discord.cog import Cog
-import inspect
 
+import discord
+from discord.cog import Cog
+from discord.commands import AutocompleteContext
+from discord.enums import Enum as DiscordEnum
+from discord.enums import SlashCommandOptionType
+from discord.ext.commands import Converter
 
 PY_310 = sys.version_info >= (3, 10)  # for UnionType
 PY_311 = sys.version_info >= (3, 11)  # for StrEnum
@@ -196,9 +197,7 @@ class Option:
 
         if (
             isinstance(param_type, type)
-            and (
-                issubclass(param_type, (Enum, DiscordEnum))  # type: ignore
-            )
+            and (issubclass(param_type, (Enum, DiscordEnum)))  # type: ignore
             and not self.choices
         ):
             self._parse_choices_from_enum(param_type)
@@ -430,11 +429,11 @@ class MyEnum(Enum):
     B = 2
 
 
-def test_optional(a: Optional[int] = None):
+def test_optional(a: int | None = None):
     pass
 
 
-def test_union(b: Union[int, str]):
+def test_union(b: int | str):
     pass
 
 
@@ -458,7 +457,7 @@ def test_thread(g: discord.Thread):
     pass
 
 
-def test_member_user(h: Union[discord.Member, discord.User]):
+def test_member_user(h: discord.Member | discord.User):
     pass
 
 
@@ -489,19 +488,17 @@ for func in test_functions:
 
 
 # --- MULTI-PARAMETER TEST CASES ---
-def test_multi_1(a: int, b: Optional[str] = None, c: Literal[1, 2, 3] = 1):
+def test_multi_1(a: int, b: str | None = None, c: Literal[1, 2, 3] = 1):
     pass
 
 
 def test_multi_2(
-    x: Union[discord.TextChannel, discord.VoiceChannel], y: MyEnum, z: Converter
+    x: discord.TextChannel | discord.VoiceChannel, y: MyEnum, z: Converter
 ):
     pass
 
 
-def test_multi_3(
-    p: discord.Member, q: Union[discord.Member, discord.User], r: float = 3.14
-):
+def test_multi_3(p: discord.Member, q: discord.Member | discord.User, r: float = 3.14):
     pass
 
 

@@ -66,7 +66,6 @@ from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_depr
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice, _get_options
 
-
 __all__ = (
     "_BaseCommand",
     "ApplicationCommand",
@@ -274,7 +273,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         arguments in.
         """
         if self.cog is not None:
-            return await self.callback(self.cog, ctx, *args, **kwargs)  # pyright: ignore[reportCallIssue]
+            return await self.callback(
+                self.cog, ctx, *args, **kwargs
+            )  # pyright: ignore[reportCallIssue]
         return await self.callback(ctx, *args, **kwargs)
 
     @property
@@ -791,7 +792,6 @@ class SlashCommand(ApplicationCommand):
             _validate_descriptions(option)
 
         return list(final_options.values())
-    
 
     # def _match_option_param_names(self, params, options):
     #    options = list(options)
@@ -991,9 +991,9 @@ class SlashCommand(ApplicationCommand):
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update({
-                    i["name"]: i["value"] for i in ctx.interaction.data["options"]
-                })
+                values.update(
+                    {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
+                )
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
