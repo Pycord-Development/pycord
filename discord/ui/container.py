@@ -306,7 +306,7 @@ class Container(ViewItem[V]):
         return self.add_item(g)
 
     def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> Self:
-        """Adds a :class:`TextDisplay` to the container.
+        """Adds a :class:`File` to the container.
 
         Parameters
         ----------

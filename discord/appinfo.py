@@ -79,8 +79,7 @@ class AppInfo:
         A list of RPC origin URLs, if RPC is enabled.
 
     verify_key: :class:`str`
-        The hex encoded key for verification in interactions and the
-        GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_.
+        The hex encoded key for verification in interactions.
 
         .. versionadded:: 1.3
 
@@ -464,7 +463,7 @@ class AppInfo:
         utils.warn_deprecated(
             "summary",
             "description",
-            reference="https://discord.com/developers/docs/resources/application#application-object-application-structure",
+            reference="https://docs.discord.com/developers/resources/application#application-object-application-structure",
         )
         return self._summary
 
@@ -488,8 +487,7 @@ class PartialAppInfo:
         If this application is a game sold on Discord,
         this field will be the summary field for the store page of its primary SKU.
     verify_key: :class:`str`
-        The hex encoded key for verification in interactions and the
-        GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_.
+        The hex encoded key for verification in interactions.
     terms_of_service_url: Optional[:class:`str`]
         The application's terms of service URL, if set.
     privacy_policy_url: Optional[:class:`str`]
