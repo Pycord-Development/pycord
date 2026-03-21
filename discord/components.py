@@ -25,9 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
 import io
 from os import PathLike
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -1029,7 +1029,9 @@ class UnfurledMediaItem(AssetMixin):
             raise ValueError("cannot download a local media URL.")
         return await self._state.http.get_from_cdn(self.url)
 
-    async def to_file(self, *, filename: str, description: str | None = None, spoiler: bool = False) -> File:
+    async def to_file(
+        self, *, filename: str, description: str | None = None, spoiler: bool = False
+    ) -> File:
         """|coro|
 
         Converts the media into a :class:`discord.File` suitable for sending via
