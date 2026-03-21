@@ -30,6 +30,8 @@ import datetime
 import functools
 import inspect
 import re
+import sys
+import types
 from collections import OrderedDict
 from enum import Enum
 from typing import (
@@ -40,6 +42,7 @@ from typing import (
     Generator,
     Generic,
     TypeVar,
+    Union,
 )
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
@@ -65,6 +68,7 @@ from ..user import User
 from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_deprecated
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice, _get_options
+
 
 __all__ = (
     "_BaseCommand",
@@ -984,9 +988,9 @@ class SlashCommand(ApplicationCommand):
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update(
-                    {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
-                )
+                values.update({
+                    i["name"]: i["value"] for i in ctx.interaction.data["options"]
+                })
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
