@@ -26,8 +26,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import io
-from os import PathLike
+from os import path, PathLike
 from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
+from urllib.parse import urlparse
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -959,6 +960,15 @@ class UnfurledMediaItem(AssetMixin):
             value if value and value.startswith("attachment://") else None
         )
 
+    @property
+    def resolved_name(self) -> str | None:
+        """Attempts to return the filename within this URL."""
+        try:
+            parsed = urlparse(self.url)
+            return path.basename(parsed.path)
+        except:
+            return None
+
     async def save(
         self,
         fp: io.BufferedIOBase | PathLike,
@@ -1030,7 +1040,7 @@ class UnfurledMediaItem(AssetMixin):
         return await self._state.http.get_from_cdn(self.url)
 
     async def to_file(
-        self, *, filename: str, description: str | None = None, spoiler: bool = False
+        self, filename: str, *, description: str | None = None, spoiler: bool = False
     ) -> File:
         """|coro|
 
@@ -1164,6 +1174,11 @@ class MediaGalleryItem:
         self.media: UnfurledMediaItem = UnfurledMediaItem(url)
         self.description: str | None = description
         self.spoiler: bool = spoiler
+
+    def __repr__(self) -> str:
+        return (
+            f"<MediaGalleryItem url={self.url!r} spoiler={self.spoiler!r}>"
+        )
 
     @property
     def url(self) -> str:
