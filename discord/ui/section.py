@@ -296,7 +296,7 @@ class Section(ViewItem[V]):
             The item with the matching ``id`` if it exists.
         """
         child = None
-        iterr = self.items
+        iterr = self.items[:]
         if self.accessory:
             iterr.append(self.accessory)
         if id:
