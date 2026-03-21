@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import io
-from os import path, PathLike
+from os import PathLike, path
 from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
 from urllib.parse import urlparse
 
@@ -1176,9 +1176,7 @@ class MediaGalleryItem:
         self.spoiler: bool = spoiler
 
     def __repr__(self) -> str:
-        return (
-            f"<MediaGalleryItem url={self.url!r} spoiler={self.spoiler!r}>"
-        )
+        return f"<MediaGalleryItem url={self.url!r} spoiler={self.spoiler!r}>"
 
     @property
     def url(self) -> str:
