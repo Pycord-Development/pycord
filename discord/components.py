@@ -962,7 +962,7 @@ class UnfurledMediaItem(AssetMixin):
 
     @property
     def resolved_name(self) -> str | None:
-        """Attempts to return the filename within this URL."""
+        """Attempts to return the filename within this media's URL, if present."""
         try:
             parsed = urlparse(self.url)
             return path.basename(parsed.path)
