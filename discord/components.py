@@ -1037,6 +1037,8 @@ class UnfurledMediaItem(AssetMixin):
         """
         if self.url.startswith("attachment://"):
             raise ValueError("cannot download a local media URL.")
+        if not self._state:
+            raise RuntimeError("can only read when media is received from Discord.")
         return await self._state.http.get_from_cdn(self.url)
 
     async def to_file(
