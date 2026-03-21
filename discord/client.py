@@ -43,7 +43,7 @@ from typing import (
 )
 
 import aiohttp
-from typing_extensions import deprecated
+from typing_extensions import Self, deprecated
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -71,8 +71,7 @@ from .template import Template
 from .threads import Thread
 from .ui.view import BaseView
 from .user import ClientUser, User
-from .utils import _D, _FETCHABLE, MISSING
-from .voice_client import VoiceClient
+from .utils import _D, _FETCHABLE, MISSING, warn_if_voice_dependencies_missing
 from .webhook import Webhook
 from .widget import Widget
 
@@ -89,12 +88,11 @@ if TYPE_CHECKING:
     from .soundboard import SoundboardSound
     from .threads import Thread
     from .ui.item import ViewItem
-    from .voice_client import VoiceProtocol
+    from .voice import VoiceProtocol
 
 __all__ = ("Client",)
 
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
-
 
 _log = logging.getLogger(__name__)
 
@@ -319,9 +317,7 @@ class Client:
         self._setup_done: asyncio.Event = asyncio.Event()
         self._setup_lock: asyncio.Lock = asyncio.Lock()
 
-        if VoiceClient.warn_nacl:
-            VoiceClient.warn_nacl = False
-            _log.warning("PyNaCl is not installed, voice will NOT be supported")
+        warn_if_voice_dependencies_missing()
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
         self._tasks = set()
@@ -491,7 +487,7 @@ class Client:
         return self._connection.private_channels
 
     @property
-    def voice_clients(self) -> list[VoiceProtocol]:
+    def voice_clients(self) -> list[VoiceProtocol[Self]]:
         """Represents a list of voice connections.
 
         These are usually :class:`.VoiceClient` instances.

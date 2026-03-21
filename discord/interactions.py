@@ -619,7 +619,7 @@ class Interaction:
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            suppress=suppress_embeds,
+            suppress_embeds=suppress_embeds,
         )
         if view and self.message:
             self._state.prevent_view_updates_for(self.message.id)
@@ -1622,6 +1622,7 @@ class InteractionMessage(Message):
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
+        suppress_embeds: bool | None = MISSING,
     ) -> InteractionMessage:
         """|coro|
 
@@ -1657,6 +1658,12 @@ class InteractionMessage(Message):
         suppress: Optional[:class:`bool`]
             Whether to suppress embeds for the message.
 
+            .. deprecated:: 2.8
+        suppress_embeds: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         :class:`InteractionMessage`
@@ -1675,8 +1682,15 @@ class InteractionMessage(Message):
         """
         if attachments is MISSING:
             attachments = self.attachments or MISSING
-        if suppress is MISSING:
-            suppress = self.flags.suppress_embeds
+
+        if suppress is not MISSING:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is MISSING:
+                suppress_embeds = suppress
+
+        if suppress_embeds is MISSING:
+            suppress_embeds = self.flags.suppress_embeds
+
         return await self._state._interaction.edit_original_response(
             content=content,
             embeds=embeds,
@@ -1687,7 +1701,7 @@ class InteractionMessage(Message):
             view=view,
             allowed_mentions=allowed_mentions,
             delete_after=delete_after,
-            suppress=suppress,
+            suppress_embeds=suppress_embeds,
         )
 
     async def delete(self, *, delay: float | None = None) -> None:
