@@ -12,6 +12,18 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.8.0rc1] - 2026-03-21
+
+### Added
+
 - Added support for community invites.
   ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `Member.colours` and `Member.colors` properties.
@@ -1651,7 +1663,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...HEAD
+[2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.8.0rc1
 [2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2

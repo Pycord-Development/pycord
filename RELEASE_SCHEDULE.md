@@ -1,6 +1,6 @@
 # Pycord Release Schedule
 
-Status: Draft
+Status: Active
 
 Authors: <Paillat-dev paillat@pycord.dev>
 
@@ -18,7 +18,9 @@ v2.4.1 and v2.5.0).
 
 ## Release Guarantees
 
-> [!NOTE] For an up to date list of Pycord's release guarantees, please visit
+<!-- prettier-ignore -->
+> [!NOTE]
+> For an up to date list of Pycord's release guarantees, please visit
 > https://docs.pycord.dev/en/stable/version_guarantees.html.
 
 The library follows the [semantic versioning principle](https://semver.org/) which means

@@ -22,8 +22,6 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-import logging
-
 try:
     import davey
 except ImportError:
@@ -40,34 +38,3 @@ except ImportError:
     HAS_NACL = False
 else:
     HAS_NACL = True
-
-VOICE_DEPENDENCY_WARNING_EMITTED = False
-
-_log = logging.getLogger("discord.client")
-
-
-def get_missing_voice_dependencies() -> tuple[str, ...]:
-    missing: list[str] = []
-    if not HAS_NACL:
-        missing.append("PyNaCl")
-    if not HAS_DAVEY:
-        missing.append("davey")
-    return tuple(missing)
-
-
-def warn_if_voice_dependencies_missing() -> None:
-    global VOICE_DEPENDENCY_WARNING_EMITTED
-    if VOICE_DEPENDENCY_WARNING_EMITTED:
-        return
-
-    missing = get_missing_voice_dependencies()
-    if not missing:
-        return
-
-    VOICE_DEPENDENCY_WARNING_EMITTED = True
-    deps = ", ".join(missing)
-    _log.warning(
-        "%s %s not installed, voice will NOT be supported",
-        deps,
-        "is" if len(missing) == 1 else "are",
-    )
