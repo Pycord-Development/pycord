@@ -288,7 +288,7 @@ class PacketDecryptor:
                             raw_payload,
                         )
                         # Successfully decrypted - cache the mapping for next time
-                        self.client._connection.user_ssrc_map[int_uid] = packet.ssrc
+                        self.client._connection.ssrc_user_map[packet.ssrc] = int_uid
                         uid = int_uid
                         raw_payload = decrypted_audio
                         _log.debug(
@@ -299,6 +299,10 @@ class PacketDecryptor:
                         break
                     except ValueError:
                         continue
+                else:
+                    # All candidates failed to decrypt; return silence to avoid
+                    # passing encrypted audio data downstream.
+                    return OPUS_SILENCE
             elif uid:
                 try:
                     raw_payload = dave.decrypt(
