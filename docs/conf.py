@@ -74,7 +74,6 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.duration",
     "sphinxcontrib_trio",
-    # "details",
     "exception_hierarchy",
     "attributetable",
     "resourcelinks",
