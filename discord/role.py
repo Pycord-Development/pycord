@@ -630,7 +630,10 @@ class Role(Hashable):
 
         .. versionadded:: 2.7
         """
-        return self.tags is not None and self.tags.type == RoleType.PREMIUM_SUBSCRIPTION_TIER
+        return (
+            self.tags is not None
+            and self.tags.type == RoleType.PREMIUM_SUBSCRIPTION_TIER
+        )
 
     @deprecated(
         "Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead."
