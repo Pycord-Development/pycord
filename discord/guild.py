@@ -61,6 +61,7 @@ from .enums import (
     NotificationLevel,
     NSFWLevel,
     OnboardingMode,
+    RoleType,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     SortOrder,
@@ -68,7 +69,6 @@ from .enums import (
     VideoQualityMode,
     VoiceRegion,
     try_enum,
-    RoleType
 )
 from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
@@ -129,7 +129,6 @@ if TYPE_CHECKING:
     from .types.voice import VoiceState as GuildVoiceState
     from .voice import VoiceClient
     from .webhook import Webhook
-
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
     GuildChannel = Union[
