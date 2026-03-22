@@ -650,10 +650,9 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_avatar(self) -> Asset:
         """Returns the member's display avatar.
 
-        This is just their avatar, but
-        if they have a guild specific avatar then that
-        is returned instead.
-
+        Returns the user's guild avatar.
+        If the user does not have a guild avatar, their global avatar is returned instead.
+        
         .. versionadded:: 2.0
         """
         return self.guild_avatar or self._user.avatar or self._user.default_avatar
@@ -675,9 +674,8 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_avatar_decoration(self) -> Asset | None:
         """Returns the member's displayed avatar decoration.
 
-        This is just their avatar decoration, but
-        if they have a guild specific avatar decoration then that
-        is returned instead.
+        Returns the user's guild avatar decoration.
+        If the user does not have a guild avatar decoration, their global avatar decoration is returned instead.
 
         .. versionadded:: 2.8
         """
@@ -700,10 +698,9 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_banner(self) -> Asset | None:
         """Returns the member's display banner.
 
-        This is just their banner, but
-        if they have a guild specific banner then that
-        is returned instead.
-
+        Returns the user's guild banner.
+        If the user does not have a guild banner, their global banner is returned instead.
+        
         .. versionadded:: 2.7
         """
         return self.guild_banner or self._user.banner
