@@ -15,7 +15,8 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Changed
 
 ### Fixed
-
+- Fixed internal use of deprecated role type methods.
+  ([#3167](https://github.com/Pycord-Development/pycord/pull/3167))
 ### Deprecated
 
 ### Removed
