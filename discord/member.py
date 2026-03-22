@@ -652,7 +652,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Returns the user's guild avatar.
         If the user does not have a guild avatar, their global avatar is returned instead.
-        
+
         .. versionadded:: 2.0
         """
         return self.guild_avatar or self._user.avatar or self._user.default_avatar
@@ -700,7 +700,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Returns the user's guild banner.
         If the user does not have a guild banner, their global banner is returned instead.
-        
+
         .. versionadded:: 2.7
         """
         return self.guild_banner or self._user.banner
