@@ -254,7 +254,7 @@ base_colors = {
     "blue-4": "#003eaa",
     "blue-5": "#002275",
     "blue-6": "#000f40",
-    "blurple": "#7289da",
+    "blurple": "#5865F2",
 }
 
 html_theme_options = {
