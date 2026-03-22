@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import ast
-import importlib
 import inspect
 import logging
 import sys
@@ -13,7 +11,6 @@ from typing import (
     TYPE_CHECKING,
     Annotated,
     Any,
-    ForwardRef,
     Literal,
     TypeVar,
     Union,
@@ -158,7 +155,9 @@ class OptionChoice:
         self.value: str | int | float = value if value is not None else name
         self.name_localizations: dict[str, str] = name_localizations
 
-        if not isinstance(self.value, (str, int, float)):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if not isinstance(
+            self.value, (str, int, float)
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(
                 f"Option choice value must be of type str, int, or float, not {type(self.value)}."
             )
@@ -333,12 +332,16 @@ class Option:
                 self._parse_choices_from_enum(param_type)
             elif issubclass(param_type, Converter):  # type: ignore
                 self.converter = param_type()  # type: ignore
-        elif isinstance(param_type, Converter):  # pyright: ignore[reportUnnecessaryIsInstance]
+        elif isinstance(
+            param_type, Converter
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             self.converter = param_type
         elif origin is Annotated:
             self._handle_type(args[0])
             return
-        elif get_origin(param_type) is Union:  # pyright: ignore[reportUnnecessaryComparison]
+        elif (
+            get_origin(param_type) is Union
+        ):  # pyright: ignore[reportUnnecessaryComparison]
             union_args = get_args(param_type)
             non_none_args = normalise_optional_params(union_args)[:-1]
             if len(non_none_args) == 1:
@@ -356,7 +359,9 @@ class Option:
             ):
                 self._api_type = SlashCommandOptionType.user
                 return
-        elif get_origin(param_type) is Literal:  # pyright: ignore[reportUnnecessaryComparison]
+        elif (
+            get_origin(param_type) is Literal
+        ):  # pyright: ignore[reportUnnecessaryComparison]
             literal_args = get_args(param_type)
             if all(isinstance(arg, str) for arg in literal_args):
                 self._api_type = SlashCommandOptionType.string
@@ -385,14 +390,20 @@ class Option:
 
         final_choices: list[OptionChoice] = []
 
-        if isinstance(choices, type) and (issubclass(choices, (Enum, DiscordEnum))):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if isinstance(choices, type) and (
+            issubclass(choices, (Enum, DiscordEnum))
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             return self._parse_choices_from_enum(choices)
 
-        if isinstance(choices, Iterable):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if isinstance(
+            choices, Iterable
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             for choice in choices:
                 if isinstance(choice, OptionChoice):
                     final_choices.append(choice)
-                elif isinstance(choice, (str, int, float)):  # pyright: ignore[reportUnnecessaryIsInstance]
+                elif isinstance(
+                    choice, (str, int, float)
+                ):  # pyright: ignore[reportUnnecessaryIsInstance]
                     final_choices.append(OptionChoice(name=str(choice), value=choice))
                 else:
                     raise TypeError(
@@ -449,9 +460,9 @@ class Option:
                 type(first_member_type)
             )
 
-        return self._handle_choices([
-            OptionChoice(name=member.name, value=member.value) for member in enum_cls
-        ])
+        return self._handle_choices(
+            [OptionChoice(name=member.name, value=member.value) for member in enum_cls]
+        )
 
     def to_dict(self) -> dict[str, Any]:
         if not self._api_type:
@@ -576,7 +587,9 @@ def _get_options(  # pyright: ignore[reportUnusedFunction]
                 if option.name is None:
                     option.name = param_name
                 if option._param_name is None:  # pyright: ignore[reportPrivateUsage]
-                    option._param_name = param_name  # pyright: ignore[reportPrivateUsage]
+                    option._param_name = (
+                        param_name  # pyright: ignore[reportPrivateUsage]
+                    )
             else:
                 if annotation is None:
                     annotation = str
@@ -800,7 +813,9 @@ def options(**options: Option) -> Callable[[CallableT], CallableT]:
     """
 
     def inner(func: CallableT) -> CallableT:
-        if not all(isinstance(opt, Option) for opt in options.values()):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if not all(
+            isinstance(opt, Option) for opt in options.values()
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(
                 "All values passed to @options must be instances of Option."
             )
