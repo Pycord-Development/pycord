@@ -462,7 +462,7 @@ texinfo_documents = [
         "Pycord Documentation",
         "Pycord Development",
         "Pycord",
-        "One line description of project.",
+        "An async Discord API wrapper for Python.",
         "Miscellaneous",
     ),
 ]
