@@ -144,107 +144,21 @@ OPTION_TYPE_TO_SLASH_OPTION_TYPE: dict[ValidOptionType, SlashCommandOptionType] 
 }
 
 
-def _type_from_str(type_str: str | ForwardRef) -> type | None:
-    type_str = type_str if isinstance(type_str, str) else type_str.__forward_arg__
-    type_str = type_str.lower().lstrip("discord.")
-    channels: dict[str, Any] = {
-        "textchannel": TextChannel,
-        "voicechannel": VoiceChannel,
-        "stagechannel": StageChannel,
-        "categorychannel": CategoryChannel,
-        "forumchannel": ForumChannel,
-        "thread": Thread,
-        "mediachannel": MediaChannel,
-        "dmchannel": DMChannel,
-    }
-    base_types: dict[str, Any] = {
-        "str": str,
-        "string": str,
-        "bool": bool,
-        "boolean": bool,
-        "int": int,
-        "integer": int,
-        "float": float,
-        "attachment": Attachment,
-        "role": Role,
-        "member": Member,
-        "user": User,
-    }
-    return channels.get(type_str, base_types.get(type_str, None))
-
-
 _log = logging.getLogger(__name__)
-
-
-def _is_type_checking_statement(node: ast.AST) -> bool:
-    if isinstance(node, ast.Name):
-        return node.id == "TYPE_CHECKING"
-    if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
-        return node.value.id == "typing" and node.attr == "TYPE_CHECKING"
-    return False
-
-
-def _get_type_checking_locals(func: Callable[..., Any]) -> dict[str, Any]:
-    module = inspect.getmodule(func)
-    module_file = getattr(module, "__file__", None)
-    module_name = getattr(module, "__name__", None)
-    if module is None or module_file is None or module_name is None:
-        return {}
-
-    try:
-        with open(module_file, encoding="utf-8") as f:
-            tree = ast.parse(f.read(), filename=module_file)
-    except Exception:
-        return {}
-
-    resolved: dict[str, Any] = {}
-    for node in tree.body:
-        if not isinstance(node, ast.If) or not _is_type_checking_statement(node.test):
-            continue
-
-        for stmt in node.body:
-            if isinstance(stmt, ast.Import):
-                for alias in stmt.names:
-                    try:
-                        imported = importlib.import_module(alias.name)
-                    except Exception:
-                        continue
-                    resolved[alias.asname or alias.name.split(".")[-1]] = imported
-            elif isinstance(stmt, ast.ImportFrom):
-                if stmt.module is None:
-                    continue
-                try:
-                    imported_module = importlib.import_module(
-                        stmt.module, package=module_name
-                    )
-                except Exception:
-                    continue
-                for alias in stmt.names:
-                    if alias.name == "*":
-                        continue
-                    if not hasattr(imported_module, alias.name):
-                        continue
-                    resolved[alias.asname or alias.name] = getattr(
-                        imported_module, alias.name
-                    )
-
-    return resolved
 
 
 class OptionChoice:
     def __init__(
         self,
         name: str,
-        value: str | int | float | None = None,
+        value: str | float | None = None,
         name_localizations: dict[str, str] = MISSING,
     ) -> None:
         self.name: str = name
         self.value: str | int | float = value if value is not None else name
         self.name_localizations: dict[str, str] = name_localizations
 
-        if not isinstance(
-            self.value, (str, int, float)
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if not isinstance(self.value, (str, int, float)):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(
                 f"Option choice value must be of type str, int, or float, not {type(self.value)}."
             )
@@ -276,11 +190,11 @@ class Option:
         description: str | None = None,
         description_localizations: dict[str, str] | None = None,
         required: bool = True,
-        default: int | str | float | None = None,
+        default: str | float | None = None,
         choices: ValidChoicesType | None = None,
         channel_types: list[ChannelType] | None = None,
-        min_value: int | float | None = None,
-        max_value: int | float | None = None,
+        min_value: float | None = None,
+        max_value: float | None = None,
         min_length: int | None = None,
         max_length: int | None = None,
         autocomplete: AutocompleteFunction | None = None,
@@ -419,16 +333,12 @@ class Option:
                 self._parse_choices_from_enum(param_type)
             elif issubclass(param_type, Converter):  # type: ignore
                 self.converter = param_type()  # type: ignore
-        elif isinstance(
-            param_type, Converter
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        elif isinstance(param_type, Converter):  # pyright: ignore[reportUnnecessaryIsInstance]
             self.converter = param_type
         elif origin is Annotated:
             self._handle_type(args[0])
             return
-        elif (
-            get_origin(param_type) is Union
-        ):  # pyright: ignore[reportUnnecessaryComparison]
+        elif get_origin(param_type) is Union:  # pyright: ignore[reportUnnecessaryComparison]
             union_args = get_args(param_type)
             non_none_args = normalise_optional_params(union_args)[:-1]
             if len(non_none_args) == 1:
@@ -446,9 +356,7 @@ class Option:
             ):
                 self._api_type = SlashCommandOptionType.user
                 return
-        elif (
-            get_origin(param_type) is Literal
-        ):  # pyright: ignore[reportUnnecessaryComparison]
+        elif get_origin(param_type) is Literal:  # pyright: ignore[reportUnnecessaryComparison]
             literal_args = get_args(param_type)
             if all(isinstance(arg, str) for arg in literal_args):
                 self._api_type = SlashCommandOptionType.string
@@ -477,20 +385,14 @@ class Option:
 
         final_choices: list[OptionChoice] = []
 
-        if isinstance(choices, type) and (
-            issubclass(choices, (Enum, DiscordEnum))
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if isinstance(choices, type) and (issubclass(choices, (Enum, DiscordEnum))):  # pyright: ignore[reportUnnecessaryIsInstance]
             return self._parse_choices_from_enum(choices)
 
-        if isinstance(
-            choices, Iterable
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if isinstance(choices, Iterable):  # pyright: ignore[reportUnnecessaryIsInstance]
             for choice in choices:
                 if isinstance(choice, OptionChoice):
                     final_choices.append(choice)
-                elif isinstance(
-                    choice, (str, int, float)
-                ):  # pyright: ignore[reportUnnecessaryIsInstance]
+                elif isinstance(choice, (str, int, float)):  # pyright: ignore[reportUnnecessaryIsInstance]
                     final_choices.append(OptionChoice(name=str(choice), value=choice))
                 else:
                     raise TypeError(
@@ -547,9 +449,9 @@ class Option:
                 type(first_member_type)
             )
 
-        return self._handle_choices(
-            [OptionChoice(name=member.name, value=member.value) for member in enum_cls]
-        )
+        return self._handle_choices([
+            OptionChoice(name=member.name, value=member.value) for member in enum_cls
+        ])
 
     def to_dict(self) -> dict[str, Any]:
         if not self._api_type:
@@ -615,7 +517,7 @@ class ThreadOption(Option):
             "private": ChannelType.private_thread,
             "news": ChannelType.news_thread,
         }
-        return super().__init__(
+        super().__init__(
             Thread,
             channel_types=[type_map.get(thread_type, thread_type)],  # type: ignore
         )
@@ -662,8 +564,11 @@ def _get_options(  # pyright: ignore[reportUnusedFunction]
                     annotation, func.__globals__, func.__globals__, {}
                 )
             except NameError:
-                if isinstance(annotation, str) or isinstance(annotation, ForwardRef):
-                    annotation = _type_from_str(annotation)
+                raise TypeError(
+                    f"Error resolving type for parameter '{param_name}' of function '{func.__name__}'."
+                    " Make sure all types are available at runtime. E,g. no `from __future__ import annotations` "
+                    "or if using it, all types must be resolvable from the function's global namespace."
+                )
 
             if isinstance(annotation, Option):
                 annotation_is_option = True
@@ -671,9 +576,7 @@ def _get_options(  # pyright: ignore[reportUnusedFunction]
                 if option.name is None:
                     option.name = param_name
                 if option._param_name is None:  # pyright: ignore[reportPrivateUsage]
-                    option._param_name = (
-                        param_name  # pyright: ignore[reportPrivateUsage]
-                    )
+                    option._param_name = param_name  # pyright: ignore[reportPrivateUsage]
             else:
                 if annotation is None:
                     annotation = str
@@ -697,7 +600,7 @@ def _get_options(  # pyright: ignore[reportUnusedFunction]
             ) from e
 
     if existing_options:
-        for param_name in existing_options:
+        for param_name in existing_options:  # noqa: PLC0206
             raise ValueError(
                 f"Option '{existing_options[param_name].name}' specified for parameter "
                 f"'{param_name}' in function '{func.__name__}' was not found in the function. "
@@ -765,11 +668,11 @@ def option(
     description: str | None = MISSING,
     description_localizations: dict[str, str] | None = None,
     required: bool = True,
-    default: int | str | float | None = None,
+    default: str | float | None = None,
     choices: ValidChoicesType | None = None,
     channel_types: list[ChannelType] | None = None,
-    min_value: int | float | None = None,
-    max_value: int | float | None = None,
+    min_value: float | None = None,
+    max_value: float | None = None,
     min_length: int | None = None,
     max_length: int | None = None,
     autocomplete: AutocompleteFunction | None = None,
@@ -800,7 +703,7 @@ def option(
     required: :class:`bool`
         Whether the option is required. Defaults to ``True``. If a default value is provided,
         this will be set to ``False``.
-    default: Optional[Union[:class:`int`, :class:`str`, :class:`float`]]
+    default: Optional[Union[:class:`str`, :class:`float`]]
         The default value for the option. If provided, the option will not be required.
     choices: Optional[
         Union[
@@ -819,9 +722,9 @@ def option(
     channel_types: Optional[List[:class:`ChannelType`]]
         A list of channel types to limit a channel option to. Only applicable if the option type is a
         channel or a union of channel types.
-    min_value: Optional[Union[:class:`int`, :class:`float`]]
+    min_value: Optional[:class:`float`]
         The minimum value for the option. Only applicable for int and float option types.
-    max_value: Optional[Union[:class:`int`, :class:`float`]]
+    max_value: Optional[:class:`float`]
         The maximum value for the option. Only applicable for int and float option types.
     min_length: Optional[:class:`int`]
         The minimum length for the option. Only applicable for string option types.
@@ -897,9 +800,7 @@ def options(**options: Option) -> Callable[[CallableT], CallableT]:
     """
 
     def inner(func: CallableT) -> CallableT:
-        if not all(
-            isinstance(opt, Option) for opt in options.values()
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if not all(isinstance(opt, Option) for opt in options.values()):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(
                 "All values passed to @options must be instances of Option."
             )
@@ -912,7 +813,7 @@ def options(**options: Option) -> Callable[[CallableT], CallableT]:
                 if name in existing_options:
                     raise ValueError(
                         f"Duplicate option metadata for parameter '{name}' in function '{func.__name__}'. "
-                        "Please don't use both @option and @options decorators to specify metadata for the same parameter."
+                        "Please don't use both @option and @options to specify metadata for the same parameter."
                     )
                 existing_options[name] = opt
 
