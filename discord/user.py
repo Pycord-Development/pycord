@@ -251,7 +251,8 @@ class BaseUser(_UserTag):
     def display_avatar(self) -> Asset:
         """Returns the user's display avatar.
 
-        This is just their default avatar or uploaded avatar.
+        Returns the user's uploaded avatar.
+        If the user has not uploaded any avatar, their default avatar is returned instead.
 
         .. versionadded:: 2.0
         """
