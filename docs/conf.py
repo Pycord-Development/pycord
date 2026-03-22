@@ -64,7 +64,6 @@ sys.path.append(os.path.abspath("extensions"))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # "builder",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.autosummary",
@@ -214,10 +213,6 @@ nitpick_ignore_files = [
 
 # -- Options for HTML output ----------------------------------------------
 
-html_experimental_html5_writer = True
-
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
 html_theme = "furo"
 
 html_context = {
