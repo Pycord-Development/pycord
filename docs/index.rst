@@ -1,7 +1,7 @@
 .. pycord documentation master file, created by
-   sphinx-quickstart on Fri Aug 21 05:43:30 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+sphinx-quickstart on Fri Aug 21 05:43:30 2015.
+You can adapt this file completely to your liking, but it should at least
+contain the root `toctree` directive.
 
 Welcome to Pycord
 =================
@@ -25,7 +25,7 @@ Getting started
 
 Is this your first time using the library? This is the place to get started!
 
-- **First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`
+- **First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :doc:`faq` | :resource:`Guide <guide>`
 - **Working with Discord:** :doc:`discord` | :doc:`intents`
 - **Examples:** Many examples are available in the :resource:`repository <examples>`.
 
