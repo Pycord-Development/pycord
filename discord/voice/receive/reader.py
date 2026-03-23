@@ -279,6 +279,8 @@ class PacketDecryptor:
             if not uid:
                 # SSRC -> user_id mapping not yet populated (race with member_connect).
                 # Try every user ID known to the DAVE session until one decrypts.
+                # This is ugly but I didn't manage to get it to work otherwise. If you have a better implementation,
+                # please open a PR.
                 for candidate_uid in dave.get_user_ids():
                     try:
                         int_uid = int(candidate_uid)
@@ -299,14 +301,20 @@ class PacketDecryptor:
                         break
                     except ValueError:
                         continue
-            elif uid:
+            else:
                 try:
                     raw_payload = dave.decrypt(
                         uid,
                         davey.MediaType.audio,
                         raw_payload,
                     )
-                except ValueError:
+                except ValueError as e:
+                    # UnencryptedWhenPassthroughDisabled here is actually misleading, we can't passthrough,
+                    # it gives a corrupted stream.
+                    _log.debug(
+                        "DAVE: Decryption failed, falling back to OPUS_SILENCE",
+                        exc_info=True,
+                    )
                     raw_payload = OPUS_SILENCE
 
             packet.decrypted_data = raw_payload
