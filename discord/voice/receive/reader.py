@@ -308,7 +308,7 @@ class PacketDecryptor:
                         davey.MediaType.audio,
                         raw_payload,
                     )
-                except ValueError as e:
+                except ValueError:
                     # UnencryptedWhenPassthroughDisabled here is actually misleading, we can't passthrough,
                     # it gives a corrupted stream.
                     _log.debug(
