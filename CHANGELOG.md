@@ -15,6 +15,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Changed
 
 ### Fixed
+
 - Fixed a `TypeError` when using `Label.set_select` and not providing `default_values`.
   ([#3171](https://github.com/Pycord-Development/pycord/pull/3171))
 
