@@ -1251,7 +1251,7 @@ class Guild(Hashable):
         .. versionadded:: 1.6
         """
         for role in self._roles.values():
-            if role.type == RoleType.BOOSTER:
+            if role.type is RoleType.BOOSTER:
                 return role
         return None
 
