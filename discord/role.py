@@ -600,10 +600,10 @@ class Role(Hashable):
         .. versionadded:: 1.6
         """
         return self.type in (
-        RoleType.INTEGRATION,
-        RoleType.PREMIUM_SUBSCRIPTION_TIER,
-        RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER
-    )
+            RoleType.INTEGRATION,
+            RoleType.PREMIUM_SUBSCRIPTION_TIER,
+            RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER,
+        )
 
     def is_assignable(self) -> bool:
         """Whether the role is able to be assigned or removed by the bot. This checks whether all of the following conditions are true:
