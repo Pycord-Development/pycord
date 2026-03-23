@@ -92,7 +92,6 @@ __all__ = ("Client",)
 
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
-
 _log = logging.getLogger(__name__)
 
 

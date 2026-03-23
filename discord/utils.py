@@ -1638,37 +1638,36 @@ def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
     return io.BytesIO("\n".join(map(lambda u: str(u.id), users)).encode("utf-8"))
 
 
+voice_dependency_warning_emitted = False
+
+
 def get_missing_voice_dependencies() -> tuple[str, ...]:
     missing: list[str] = []
     try:
-        import nacl.secret  # noqa: F401
-        import nacl.utils  # noqa: F401
+        import nacl.secret
+        import nacl.utils
     except ImportError:
         missing.append("PyNaCl")
+
     try:
         import davey
-
-        _ = davey.DAVE_PROTOCOL_VERSION
     except ImportError:
         missing.append("davey")
     return tuple(missing)
 
 
-_voice_dep_warning_emitted = False
-
-
 def warn_if_voice_dependencies_missing() -> None:
-    global _voice_dep_warning_emitted
-    if _voice_dep_warning_emitted:
+    global voice_dependency_warning_emitted
+    if voice_dependency_warning_emitted:
         return
 
     missing = get_missing_voice_dependencies()
     if not missing:
         return
 
-    _voice_dep_warning_emitted = True
+    voice_dependency_warning_emitted = True
     deps = ", ".join(missing)
-    logging.getLogger("discord.client").warning(
+    _log.warning(
         "%s %s not installed, voice will NOT be supported",
         deps,
         "is" if len(missing) == 1 else "are",

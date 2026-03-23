@@ -27,15 +27,13 @@ import logging
 import pytest
 
 import discord
-import discord.utils
-from discord.utils import get_missing_voice_dependencies
 
 
 def test_client_does_not_warn_when_voice_dependencies_are_available(caplog):
-    if get_missing_voice_dependencies():
+    if discord.utils.get_missing_voice_dependencies():
         pytest.skip("requires an environment with the voice extra")
 
-    discord.utils._voice_dep_warning_emitted = False
+    discord.utils.voice_dependency_warning_emitted = False
 
     with caplog.at_level(logging.WARNING, logger="discord.client"):
         discord.Client()
@@ -49,7 +47,7 @@ def test_client_does_not_warn_when_voice_dependencies_are_available(caplog):
 
 
 def test_voice_modules_import_with_voice_extra():
-    if get_missing_voice_dependencies():
+    if discord.utils.get_missing_voice_dependencies():
         pytest.skip("requires an environment with the voice extra")
 
     __import__("discord.voice")

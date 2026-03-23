@@ -44,12 +44,16 @@ from discord.sinks.core import Sink
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
-from ..errors import MissingVoiceDependencies
 from ..utils import get_missing_voice_dependencies
 from ._types import VoiceProtocol
 from .enums import OpCodes
 from .receive import AudioReader
 from .state import VoiceConnectionState
+from .utils.dependencies import HAS_DAVEY, HAS_NACL
+
+if HAS_NACL:
+    import nacl.secret
+    import nacl.utils
 
 if TYPE_CHECKING:
     from typing import TypeVar
