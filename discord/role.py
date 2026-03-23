@@ -639,9 +639,7 @@ class Role(Hashable):
 
         .. versionadded:: 2.7
         """
-        return (
-            self.type is RoleType.PREMIUM_SUBSCRIPTION_TIER
-        )
+        return self.type is RoleType.PREMIUM_SUBSCRIPTION_TIER
 
     @deprecated(
         "Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead."
