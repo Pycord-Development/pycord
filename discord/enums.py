@@ -1156,7 +1156,8 @@ class RoleType(IntEnum):
 
         .. note::
             This is not possible to determine at times because role tags seem to be missing altogether, notably when
-            a role is fetched. In such cases :attr:`Role.type` and :attr:`Role.tags` will both be :data:`None`.
+            a guild product role is fetched.
+            In such cases :attr:`Role.type` will be :attr:`RoleType.NORMAL` and :attr:`Role.tags` will be :data:`None`.
     PREMIUM_SUBSCRIPTION_BASE: :class:`int`
         The role is a base subscription role.
 
