@@ -213,41 +213,49 @@ class RoleTags:
         return RoleType.UNKNOWN
 
     @deprecated(
-        "RoleTags.is_bot_managed is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_bot_managed is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.APPLICATION instead."
     )
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.APPLICATION`` instead.
         """
         return self.bot_id is not None
 
     @deprecated(
-        "RoleTags.is_premium_subscriber is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_premium_subscriber is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.BOOSTER instead."
     )
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.BOOSTER`` instead.
         """
         return self._premium_subscriber is True
 
     @deprecated(
-        "RoleTags.is_integration is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_integration is deprecated since version 2.8,"
+        + " consider using RoleTags.type in"
+        + " (RoleType.INTEGRATION, RoleType.PREMIUM_SUBSCRIPTION_TIER,"
+        + " RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER) instead."
     )
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type in (RoleType.INTEGRATION,
+            RoleType.PREMIUM_SUBSCRIPTION_TIER,
+            RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER)`` instead.
         """
         return self.integration_id is not None
 
     @deprecated(
-        "RoleTags.is_available_for_purchase is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_available_for_purchase is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.PREMIUM_SUBSCRIPTION_TIER instead."
     )
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
@@ -257,20 +265,21 @@ class RoleTags:
         is not linked to a guild subscription.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.PREMIUM_SUBSCRIPTION_TIER`` instead.
 
         .. versionadded:: 2.7
         """
         return self._available_for_purchase is True
 
     @deprecated(
-        "RoleTags.is_guild_connections_role is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_guild_connections_role is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.CONNECTION instead."
     )
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.CONNECTION`` instead.
 
         .. versionadded:: 2.7
         """
