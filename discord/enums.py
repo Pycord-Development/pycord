@@ -1139,7 +1139,7 @@ class SelectDefaultValueType(Enum):
 class RoleType(IntEnum):
     """Represents the type of role.
 
-    This is NOT provided by Discord but is rather computed based on :attr:`Role.tags`.
+    This is NOT provided by Discord but is rather computed from :attr:`Role.tags`.
 
     .. versionadded:: 2.8
 
