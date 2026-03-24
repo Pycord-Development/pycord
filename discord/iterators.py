@@ -41,8 +41,6 @@ from typing import (
 
 from typing_extensions import deprecated, override
 
-from discord.abc import MessageableChannel
-
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
