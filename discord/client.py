@@ -265,9 +265,7 @@ class Client:
         proxy: str | None = options.pop("proxy", None)
         proxy_auth: aiohttp.BasicAuth | None = options.pop("proxy_auth", None)
         unsync_clock: bool = options.pop("assume_unsync_clock", True)
-        max_ratelimit_timeout: float | None = options.pop(
-            "max_ratelimit_timeout", None
-        )
+        max_ratelimit_timeout: float | None = options.pop("max_ratelimit_timeout", None)
         self.http: HTTPClient = HTTPClient(
             connector,
             proxy=proxy,
