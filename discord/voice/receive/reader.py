@@ -301,6 +301,8 @@ class PacketDecryptor:
                         break
                     except ValueError:
                         continue
+                else:
+                    raw_payload = OPUS_SILENCE
             else:
                 try:
                     raw_payload = dave.decrypt(
