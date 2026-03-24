@@ -51,6 +51,7 @@ from .errors import (
     InvalidArgument,
     LoginFailure,
     NotFound,
+    RateLimited,
 )
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
@@ -190,6 +191,7 @@ class HTTPClient:
         proxy_auth: aiohttp.BasicAuth | None = None,
         loop: asyncio.AbstractEventLoop | None = None,
         unsync_clock: bool = True,
+        max_ratelimit_timeout: float | None = None,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
@@ -204,6 +206,7 @@ class HTTPClient:
         self.proxy: str | None = proxy
         self.proxy_auth: aiohttp.BasicAuth | None = proxy_auth
         self.use_clock: bool = not unsync_clock
+        self.max_ratelimit_timeout: float | None = max_ratelimit_timeout
 
         user_agent = (
             "DiscordBot (https://pycord.dev, {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
@@ -331,6 +334,18 @@ class HTTPClient:
                                 bucket,
                                 delta,
                             )
+                            if (
+                                self.max_ratelimit_timeout is not None
+                                and delta > self.max_ratelimit_timeout
+                            ):
+                                _log.warning(
+                                    "Pre-emptive rate limit delta (%.2f seconds)"
+                                    " exceeds max_ratelimit_timeout (%.2f seconds),"
+                                    " raising RateLimited.",
+                                    delta,
+                                    self.max_ratelimit_timeout,
+                                )
+                                raise RateLimited(delta)
                             maybe_lock.defer()
                             self.loop.call_later(delta, lock.release)
 
@@ -356,6 +371,22 @@ class HTTPClient:
 
                             # check if it's a global rate limit
                             is_global = data.get("global", False)
+
+                            # if the retry is too long, raise instead of waiting
+                            if (
+                                self.max_ratelimit_timeout is not None
+                                and not is_global
+                                and retry_after > self.max_ratelimit_timeout
+                            ):
+                                _log.warning(
+                                    "Rate limit retry_after (%.2f seconds) exceeds"
+                                    " max_ratelimit_timeout (%.2f seconds),"
+                                    " raising RateLimited.",
+                                    retry_after,
+                                    self.max_ratelimit_timeout,
+                                )
+                                raise RateLimited(retry_after)
+
                             if is_global:
                                 _log.warning(
                                     (

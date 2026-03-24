@@ -227,6 +227,14 @@ class Client:
         Whether to automatically fetch and cache the default soundboard sounds on startup. Defaults to ``True``.
 
         .. versionadded:: 2.8
+    max_ratelimit_timeout: Optional[:class:`float`]
+        The maximum number of seconds to wait when a non-global rate limit is encountered.
+        If a rate limit has a ``retry_after`` that exceeds this value, a :exc:`RateLimited`
+        exception is raised instead of silently waiting. This is useful for rate limits with
+        very long cooldowns (e.g., channel name edits which have a 10-minute cooldown).
+        By default, this is ``None`` which means the library will always wait.
+
+        .. versionadded:: 2.8
 
     Attributes
     -----------
@@ -257,11 +265,15 @@ class Client:
         proxy: str | None = options.pop("proxy", None)
         proxy_auth: aiohttp.BasicAuth | None = options.pop("proxy_auth", None)
         unsync_clock: bool = options.pop("assume_unsync_clock", True)
+        max_ratelimit_timeout: float | None = options.pop(
+            "max_ratelimit_timeout", None
+        )
         self.http: HTTPClient = HTTPClient(
             connector,
             proxy=proxy,
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
+            max_ratelimit_timeout=max_ratelimit_timeout,
             loop=self.loop,
         )
 
