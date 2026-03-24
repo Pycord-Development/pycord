@@ -114,8 +114,6 @@ class VoiceClient(VoiceProtocol["Client"]):
         client: Client,
         channel: abc.Connectable,
     ) -> None:
-        if missing := get_missing_voice_dependencies():
-            raise MissingVoiceDependencies(missing)
 
         super().__init__(client, channel)
         state = client._connection
