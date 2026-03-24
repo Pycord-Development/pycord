@@ -311,7 +311,7 @@ class Label(ModalItem[M]):
         channel_types: list[ChannelType] | None = None,
         required: bool = True,
         id: int | None = None,
-        default_values: Sequence[SelectDefaultValue] | None = ...,
+        default_values: Sequence[SelectDefaultValue] | None = None,
     ) -> Self:
         """Set this label's item to a select menu.
 
