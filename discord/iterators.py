@@ -57,6 +57,7 @@ __all__ = (
     "ScheduledEventSubscribersIterator",
     "EntitlementIterator",
     "SubscriptionIterator",
+    "MessagePinIterator",
 )
 
 if TYPE_CHECKING:
