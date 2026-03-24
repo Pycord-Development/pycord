@@ -29,7 +29,7 @@ of :class:`enum.Enum`.
         A string.
     .. attribute:: integer
 
-        An integer between -2⁵³ and 2⁵³.
+        An integer between :math:`-{2}^{53}` and :math:`{2}^{53}`.
 
         .. note::
 
@@ -52,7 +52,7 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating-point number between -2⁵³ and 2⁵³.
+        A floating-point number between :math:`-{2}^{53}` and :math:`{2}^{53}`.
 
         .. note::
 
