@@ -47,6 +47,11 @@ jobs:
 
             const author = pr.user.login;
 
+            if (pr.locked) {
+              core.info(`PR #${prNumber} is already locked; skipping enforcement.`);
+              return;
+            }
+
             const skipAuthors = [
               'renovate[bot]',
               'renovate-bot',
@@ -149,6 +154,18 @@ jobs:
                 pull_number: prNumber,
                 state: 'closed',
               });
+            }
+
+            try {
+              await github.rest.issues.lock({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                lock_reason: 'spam',
+              });
+              core.info('Locked PR conversation.');
+            } catch (lockError) {
+              core.warning(`Failed to lock issue/PR #${prNumber}: ${lockError.message}`);
             }
 
             core.setFailed('PR does not follow the required template.');
