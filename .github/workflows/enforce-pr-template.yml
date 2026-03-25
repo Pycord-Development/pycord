@@ -1,0 +1,140 @@
+name: Enforce PR Template
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+  workflow_dispatch: 
+
+permissions:
+  pull-requests: write
+  contents: read
+  issues: write
+
+jobs:
+  enforce-template:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if author is org member
+        id: org_check
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const org = 'Pycord-Development';
+            const username = context.payload.pull_request.user.login;
+
+            try {
+              // Succeeds if user is a member; throws 404 if not
+              await github.rest.orgs.checkMembershipForUser({
+                org,
+                username,
+              });
+              core.setOutput('is_member', 'true');
+            } catch (error) {
+              if (error.status === 404) {
+                core.setOutput('is_member', 'false');
+              } else {
+                throw error;
+              }
+            }
+
+      - name: Skip enforcement for org members
+        if: steps.org_check.outputs.is_member == 'true'
+        run: echo "Author is org member; skipping template enforcement."
+
+      - name: Validate PR body against template
+        if: steps.org_check.outputs.is_member == 'false'
+        id: validate
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const body = (pr.body || '').trim();
+
+            const problems = [];
+
+            // Basic length check – tune as you like
+            if (body.length < 150) {
+              problems.push('PR description is too short (expected more content based on the template).');
+            }
+
+            // Required headings from PULL_REQUEST_TEMPLATE.md
+            const requiredHeadings = [
+              '## Summary',
+              '## Information',
+              '## Checklist',
+            ];
+
+            for (const heading of requiredHeadings) {
+              if (!body.includes(heading)) {
+                problems.push(`Missing required section: "${heading}"`);
+              }
+            }
+
+            // Enforce AI disclosure line
+            if (!body.includes('AI Usage has been disclosed')) {
+              problems.push('The line "AI Usage has been disclosed." is missing.');
+            }
+
+            if (problems.length > 0) {
+              core.setOutput('valid', 'false');
+              core.setOutput('problems', problems.join('\n'));
+            } else {
+              core.setOutput('valid', 'true');
+            }
+
+      - name: Handle invalid PR
+        if: steps.org_check.outputs.is_member == 'false' && steps.validate.outputs.valid == 'false'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const problems = core.getInput('problems');
+
+            const INVALID_LABEL = 'invalid';
+
+            // 1) Add 'invalid' label if not present
+            const existingLabels = (pr.labels || []).map(l => l.name);
+            if (!existingLabels.includes(INVALID_LABEL)) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: [INVALID_LABEL],
+              });
+            }
+
+            // 2) Comment with reason
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: [
+                'This pull request does not follow the required pull request template.',
+                '',
+                'Please use the default template (`PULL_REQUEST_TEMPLATE.md`) and fill out all required sections.',
+                '',
+                'Problems detected:',
+                '',
+                '```',
+                problems,
+                '```',
+              ].join('\n'),
+            });
+
+            // 3) Close PR
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              state: 'closed',
+            });
+
+            core.setFailed('PR does not follow the required template and has been closed.');
+
+      - name: Validation passed
+        if: steps.org_check.outputs.is_member == 'false' && steps.validate.outputs.valid == 'true'
+        run: echo "PR template validation passed for non-org member."
