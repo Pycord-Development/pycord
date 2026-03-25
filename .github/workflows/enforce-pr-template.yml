@@ -1,0 +1,154 @@
+name: Enforce PR Template
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull request number to validate'
+        required: true
+        type: number
+
+permissions:
+  pull-requests: write
+  contents: read
+  issues: write
+
+jobs:
+  enforce-template:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Determine PR number
+        id: pr
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "number=${{ inputs.pr_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "number=${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Enforce template
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = Number('${{ steps.pr.outputs.number }}');
+            const org = 'Pycord-Development';
+            const INVALID_LABEL = 'invalid';
+
+            // 1) Load PR
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            const author = pr.user.login;
+
+            const skipAuthors = [
+              'renovate[bot]',
+              'renovate-bot',
+              'dependabot[bot]',
+              'github-actions[bot]',
+              'github-copilot[bot]',
+              'copilot[bot]',
+              'copilot'
+            ];
+
+            if (skipAuthors.includes(author)) {
+              core.info(`Author ${author} is in skip list; skipping enforcement.`);
+              return;
+            }
+
+            // 2) Check org membership
+            let isMember = false;
+            try {
+              await github.rest.orgs.checkMembershipForUser({ org, username: author });
+              isMember = true;
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+            }
+
+            if (isMember) {
+              core.info(`Author ${author} is in org ${org}; skipping enforcement.`);
+              return;
+            }
+
+            // 3) Validate body
+            const body = (pr.body || '').trim();
+            const problems = [];
+
+            // Basic length check – tune as needed
+            if (body.length < 150) {
+              problems.push('PR description is too short (expected more content based on the template).');
+            }
+
+            // Required headings from PULL_REQUEST_TEMPLATE.md
+            const requiredHeadings = [
+              '## Summary',
+              '## Information',
+              '## Checklist',
+            ];
+
+            for (const heading of requiredHeadings) {
+              if (!body.includes(heading)) {
+                problems.push(`Missing required section: "${heading}"`);
+              }
+            }
+
+            // Enforce AI disclosure line
+            if (!body.includes('AI Usage has been disclosed')) {
+              problems.push('The line "AI Usage has been disclosed." is missing.');
+            }
+
+            if (problems.length === 0) {
+              core.info('PR body passed template validation.');
+              return;
+            }
+
+            // 4) If invalid: label, comment, close, and fail
+            core.info('Template validation failed. Applying actions.');
+
+            const existingLabels = (pr.labels || []).map(l => l.name);
+            if (!existingLabels.includes(INVALID_LABEL)) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                labels: [INVALID_LABEL],
+              });
+            }
+
+            const problemsBlock = problems.join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: [
+                'This pull request does not follow the required pull request template.',
+                '',
+                'Please use the default template (`PULL_REQUEST_TEMPLATE.md`) and fill out all required sections.',
+                '',
+                'Problems detected:',
+                '',
+                '```',
+                problemsBlock,
+                '```',
+              ].join('\n'),
+            });
+
+            if (pr.state === 'open') {
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                state: 'closed',
+              });
+            }
+
+            core.setFailed('PR does not follow the required template.');
