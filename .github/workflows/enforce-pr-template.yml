@@ -47,6 +47,21 @@ jobs:
 
             const author = pr.user.login;
 
+            const skipAuthors = [
+              'renovate[bot]',
+              'renovate-bot',
+              'dependabot[bot]',
+              'github-actions[bot]',
+              'github-copilot[bot]',
+              'copilot[bot]',
+              'copilot'
+            ];
+
+            if (skipAuthors.includes(author)) {
+              core.info(`Author ${author} is in skip list; skipping enforcement.`);
+              return;
+            }
+
             // 2) Check org membership
             let isMember = false;
             try {
