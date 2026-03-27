@@ -29,7 +29,8 @@ import collections
 import collections.abc
 import sys
 import traceback
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
+from collections.abc import Callable, Coroutine, Iterable
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord
 

@@ -27,14 +27,10 @@ from __future__ import annotations
 
 import asyncio
 import datetime
+from collections.abc import AsyncIterator, Awaitable, Callable, Generator
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Generator,
-    List,
     TypeVar,
     Union,
 )
@@ -137,7 +133,7 @@ def _identity(x):
     return x
 
 
-class _ChunkedAsyncIterator(_AsyncIterator[List[T]]):
+class _ChunkedAsyncIterator(_AsyncIterator[list[T]]):
     def __init__(self, iterator, max_size):
         self.iterator = iterator
         self.max_size = max_size

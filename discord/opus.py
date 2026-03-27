@@ -33,7 +33,8 @@ import math
 import os.path
 import struct
 import sys
-from typing import TYPE_CHECKING, Any, Callable, Literal, TypedDict, TypeVar
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Literal, TypedDict, TypeVar
 
 try:
     import davey

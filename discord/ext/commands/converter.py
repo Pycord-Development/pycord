@@ -27,12 +27,11 @@ from __future__ import annotations
 
 import inspect
 import re
+from collections.abc import Iterable
 from typing import (
     TYPE_CHECKING,
     Any,
     Generic,
-    Iterable,
-    List,
     Literal,
     Protocol,
     TypeVar,
@@ -1023,7 +1022,7 @@ class clean_content(Converter[str]):
         return discord.utils.escape_mentions(result)
 
 
-class Greedy(List[T]):
+class Greedy(list[T]):
     r"""A special converter that greedily consumes arguments until it can't.
     As a consequence of this behaviour, most input errors are silently discarded,
     since it is used as an indicator of when to stop parsing.
@@ -1100,7 +1099,7 @@ def get_converter(param: inspect.Parameter) -> Any:
     return converter
 
 
-_GenericAlias = type(List[T])
+_GenericAlias = type(list[T])
 
 
 def is_generic_type(tp: Any, *, _GenericAlias: type = _GenericAlias) -> bool:

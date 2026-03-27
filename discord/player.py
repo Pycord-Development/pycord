@@ -37,8 +37,9 @@ import sys
 import threading
 import time
 import warnings
+from collections.abc import Callable
 from math import floor
-from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
+from typing import IO, TYPE_CHECKING, Any, Generic, TypeVar
 
 from .enums import SpeakingState
 from .errors import ClientException

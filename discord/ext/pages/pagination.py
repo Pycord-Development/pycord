@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import contextlib
-from typing import List
 
 import discord
 from discord.errors import DiscordException
@@ -935,7 +934,7 @@ class Paginator(discord.ui.View):
             return Page(content=None, embeds=[], files=[page])
         elif isinstance(page, discord.ui.View):
             return Page(content=None, embeds=[], files=[], custom_view=page)
-        elif isinstance(page, List):
+        elif isinstance(page, list):
             if all(isinstance(x, discord.Embed) for x in page):
                 return Page(content=None, embeds=page, files=[])
             if all(isinstance(x, discord.File) for x in page):

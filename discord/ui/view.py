@@ -30,14 +30,13 @@ import contextlib
 import os
 import sys
 import time
+from collections.abc import Iterator, Sequence
 from functools import partial
 from itertools import groupby
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Iterator,
-    Sequence,
     TypeVar,
 )
 
