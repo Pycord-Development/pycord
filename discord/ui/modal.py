@@ -519,7 +519,7 @@ class DesignerModal(BaseModal):
         ----------
         content: :class:`str`
             The content of the TextDisplay
-        id: Optiona[:class:`int`]
+        id: Optional[:class:`int`]
             The text display's ID.
         """
 
