@@ -82,8 +82,11 @@ class JitterBuffer(BaseBuff[PacketT]):
     _threshold: int = 10000
 
     def __init__(
-        self, max_size: int = 10, *, pref_size: int = 1, prefill: int = 1
+        self, max_size: int = 200, *, pref_size: int = 1, prefill: int = 1
     ) -> None:
+        # max_size=200 provides ~4 seconds of headroom at 50 packets/sec.
+        # A smaller buffer (e.g. 10) causes severe packet loss because the
+        # consumer thread can't drain fast enough during decode bursts.
         if max_size < 1:
             raise ValueError(f"max_size must be greater than 1, not {max_size}")
 
@@ -119,18 +122,9 @@ class JitterBuffer(BaseBuff[PacketT]):
             self._has_item.clear()
             return
 
-        next_packet = self._buffer[0]
-        sequential = add_wrapped(self._last_tx_seq, 1) == next_packet.sequence
-        positive_seq = self._last_tx_seq >= 0
-
-        if (
-            (sequential and positive_seq)
-            or not positive_seq
-            or len(self._buffer) >= self.max_size
-        ):
-            self._has_item.set()
-        else:
-            self._has_item.clear()
+        # Always signal when we have data ready — don't wait for sequential packets
+        # Non-sequential packets will be reordered by the heap anyway
+        self._has_item.set()
 
     def _cleanup(self) -> None:
         while len(self._buffer) > self.max_size:

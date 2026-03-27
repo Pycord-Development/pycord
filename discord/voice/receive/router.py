@@ -121,7 +121,8 @@ class PacketRouter(threading.Thread):
             _log.exception("Error in %s loop", self)
             self.reader.error = exc
         finally:
-            self.reader.client.stop_recording()
+            # Don't auto-stop recording on thread exit — let the user control it
+            _log.debug("PacketRouter thread exiting")
             self.waiter.clear()
 
     def _do_run(self) -> None:
@@ -130,9 +131,16 @@ class PacketRouter(threading.Thread):
 
             with self._lock:
                 for decoder in self.waiter.items:
-                    data = decoder.pop_data()
-                    if data is not None:
-                        self.sink.write(data, data.source)
+                    # Per-packet exception handling: one bad decode must not
+                    # crash the router thread and kill the entire recording.
+                    try:
+                        data = decoder.pop_data()
+                        if data is not None:
+                            audio_bytes = data.pcm if data.pcm else (getattr(data, 'opus', None) or b"")
+                            if audio_bytes:
+                                self.sink.write(audio_bytes, data.source)
+                    except Exception as exc:
+                        _log.debug("Error processing packet from decoder: %s", exc)
 
 
 class SinkEventRouter(threading.Thread):
@@ -164,19 +172,20 @@ class SinkEventRouter(threading.Thread):
     def register_events(self) -> None:
         with self._lock:
             self._register_listeners(self.sink)
-            for child in self.sink.walk_children():
+            for child in getattr(self.sink, 'walk_children', lambda: [])():
                 self._register_listeners(child)
 
     def unregister_events(self) -> None:
         with self._lock:
             self._unregister_listeners(self.sink)
-            for child in self.sink.walk_children():
+            for child in getattr(self.sink, 'walk_children', lambda: [])():
                 self._unregister_listeners(child)
 
     def _register_listeners(self, sink: Sink) -> None:
-        _log.debug("Registering events for %s: %s", sink, sink.__sink_listeners__)
+        listeners = getattr(sink, '__sink_listeners__', [])
+        _log.debug("Registering events for %s: %s", sink, listeners)
 
-        for name, method_name in sink.__sink_listeners__:
+        for name, method_name in listeners:
             func = getattr(sink, method_name)
             _log.debug("Registering event: %r (callback at %r)", name, method_name)
 
@@ -186,7 +195,7 @@ class SinkEventRouter(threading.Thread):
                 self._event_listeners[name] = [func]
 
     def _unregister_listeners(self, sink: Sink) -> None:
-        for name, method_name in sink.__sink_listeners__:
+        for name, method_name in getattr(sink, '__sink_listeners__', []):
             func = getattr(sink, method_name)
 
             if name in self._event_listeners:

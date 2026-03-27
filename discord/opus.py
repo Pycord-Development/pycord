@@ -663,16 +663,17 @@ class PacketDecoder:
         from discord.object import Object
         from discord.voice import VoiceData
 
-        assert self.sink.client
+        vc = self.sink.client or getattr(self.router, 'reader', None) and self.router.reader.client
 
         pcm = None
 
         member = self._get_cached_member()
 
-        if member is None:
-            self._cached_id = self.sink.client._ssrc_to_id.get(self.ssrc)
+        if member is None and vc is not None:
+            ssrc_map = getattr(vc, '_ssrc_to_id', {})
+            self._cached_id = ssrc_map.get(self.ssrc)
             member = self._get_cached_member()
-        else:
+        elif member is not None:
             self._cached_id = member.id
 
         # yet still none, use Object
@@ -690,44 +691,22 @@ class PacketDecoder:
 
     def _decode_packet(self, packet: Packet) -> tuple[Packet, bytes]:
         assert self._decoder is not None
-        assert self.sink.client
 
-        user_id: int | None = self._cached_id
-        dave: davey.DaveSession | None = self.sink.client._connection.dave_session
-        in_dave = dave is not None
+        # DAVE decryption already happened in PacketDecryptor.decrypt_rtp()
+        # packet.decrypted_data contains plain opus bytes ready for decoding
 
-        _log.debug(
-            "Decrypting packet for user %s (DAVE enabled: %s). Has decrypted data?: %s",
-            user_id,
-            in_dave,
-            packet.decrypted_data is not None,
-        )
-
-        # personally, the best variable
-        other_code = True
-
-        if packet:
-            other_code = False
-            pcm = self._decoder.decode(packet.decrypted_data, fec=False)
-
-        if other_code:
-            next_packet = self._buffer.peek_next()
-
-            if next_packet is not None:
-                nextdata: bytes = next_packet.decrypted_data  # type: ignore
-
-                _log.debug(
-                    "Generating fec packet: fake=%s, fec=%s",
-                    packet.sequence,
-                    next_packet.sequence,
-                )
-                pcm = self._decoder.decode(nextdata, fec=True)
-            else:
-                pcm = self._decoder.decode(None, fec=False)
-
-        if HAS_DAVEY:
-            if user_id is not None and in_dave and dave.can_passthrough(user_id):
-                _log.debug("User ID %s can passthrough, decrypting with DAVE", user_id)
-                pcm = dave.decrypt(user_id, davey.MediaType.audio, pcm)
+        try:
+            if packet:  # real packet
+                pcm = self._decoder.decode(packet.decrypted_data, fec=False)
+            else:  # fake/lost packet — attempt FEC recovery
+                next_packet = self._buffer.peek_next()
+                if next_packet is not None:
+                    pcm = self._decoder.decode(next_packet.decrypted_data, fec=True)
+                else:
+                    pcm = self._decoder.decode(None, fec=False)
+        except OpusError as exc:
+            _log.debug("Opus decode error for packet seq=%s: %s", getattr(packet, 'sequence', '?'), exc)
+            # Generate silence frame to keep audio stream continuous
+            pcm = b"\x00" * Decoder.FRAME_SIZE
 
         return packet, pcm

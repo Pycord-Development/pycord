@@ -210,6 +210,8 @@ class Sink(Filters):
         Audio may only be formatted after recording is finished.
     """
 
+    __sink_listeners__: list = []
+
     def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
@@ -225,6 +227,14 @@ class Sink(Filters):
     def init(self, vc: VoiceClient):  # called under listen
         self.vc = vc
         super().init()
+
+    def is_opus(self) -> bool:
+        """Whether this sink expects opus data instead of PCM."""
+        return False
+
+    def walk_children(self):
+        """Yields child sinks, if any."""
+        return iter([])
 
     @Filters.container
     def write(self, data, user):

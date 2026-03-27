@@ -200,9 +200,8 @@ class AudioReader:
             )
         finally:
             if self.error:
-                _log.debug("Callback errored out, stopping: %s", self.error)
-                self.stop()
-                return
+                _log.debug("Callback had a previous error: %s (continuing anyway)", self.error)
+                self.error = None  # Clear error to keep processing packets
             if not packet:
                 _log.debug("No packet found after callback")
                 return
@@ -271,50 +270,41 @@ class PacketDecryptor:
         else:
             return nacl.secret.SecretBox(secret_key)
 
-    """def decrypt_rtp(self, packet: RTPPacket) -> bytes:
-        state = self.client._connection
-        dave = state.dave_session
-        data = self._decryptor_rtp(packet)
-
-        if dave is not None and dave.ready and packet.ssrc in state.ssrc_user_map:
-            data = dave.decrypt(
-                state.ssrc_user_map[packet.ssrc], davey.MediaType.audio, data
-            )
-
-        if packet.extended:
-            offset = packet.update_extended_header(data)
-            data = data[offset:]
-
-        return data"""
-
     def decrypt_rtp(self, packet: RTPPacket) -> bytes:
+        """Decrypt an RTP packet through two layers.
+
+        Layer 1: NaCl transport decryption (mode-specific, strips extension headers).
+        Layer 2: DAVE E2E decryption (if active, decrypts opus payload using MLS keys).
+
+        The result is stored in ``packet.decrypted_data`` as plain opus bytes
+        ready for the opus decoder.
+        """
         state = self.client._connection
         dave = state.dave_session
 
-        raw_payload = self._decryptor_rtp(packet)
+        # Layer 1: NaCl transport decryption + extension header stripping
+        opus_payload = self._decryptor_rtp(packet)
 
+        # Layer 2: DAVE E2E decryption (if active)
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
-            if uid:
-                try:
-                    decrypted_audio = dave.decrypt(
-                        uid,
-                        davey.MediaType.audio,
-                        raw_payload,
-                    )
+            if uid is not None:
+                if not dave.can_passthrough(uid):
+                    try:
+                        opus_payload = dave.decrypt(
+                            uid,
+                            davey.MediaType.audio,
+                            opus_payload,
+                        )
+                    except Exception as exc:
+                        _log.debug(
+                            "DAVE decrypt failed for ssrc %s: %s",
+                            packet.ssrc, exc,
+                        )
+                        opus_payload = OPUS_SILENCE
 
-                    if packet.extended:
-                        offset = packet.update_extended_header(decrypted_audio)
-                        packet.decrypted_data = decrypted_audio[offset:]
-                    else:
-                        packet.decrypted_data = decrypted_audio
-                except Exception as exc:
-                    _log.debug(
-                        "Ignoring exception while decoding DAVE packet", exc_info=exc
-                    )
-                    packet.decrypted_data = OPUS_SILENCE
-
-        return packet.decrypted_data
+        packet.decrypted_data = opus_payload
+        return opus_payload
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:
         data = self._decryptor_rtcp(packet)
@@ -425,9 +415,10 @@ class PacketDecryptor:
             raise CryptoError(exc)
 
         if packet.extended:
-            packet.update_extended_header(result)
+            offset = packet.update_extended_header(result)
+            return result[offset:]
 
-        return result[8:]
+        return result
 
     def _decrypt_rtcp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
         _log.debug("Decrypting RTCP AEAD XChaCha20 Poly1305 RTPSize")
