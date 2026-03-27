@@ -1670,6 +1670,9 @@ def warn_if_voice_dependencies_missing() -> None:
 def _get_event_loop() -> asyncio.AbstractEventLoop:
     """Get the current event loop, creating one if necessary.
 
+    If no event loop is running and none is set, a new event loop
+    is created and set as the current event loop.
+
     Returns
     -------
     asyncio.AbstractEventLoop
