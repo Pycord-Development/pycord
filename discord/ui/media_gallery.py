@@ -227,8 +227,8 @@ class MediaGallery(ViewItem[V]):
         for f in files:
             gallery.add_item(
                 url=f"attachment://{f.filename}",
-                description=a.description,
-                spoiler=a.spoiler,
+                description=f.description,
+                spoiler=f.spoiler,
             )
         return gallery
 
