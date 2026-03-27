@@ -202,7 +202,7 @@ class MediaGallery(ViewItem[V]):
             If ``True``, uses local ``attachment://`` URLs instead of the CDN URLs. Ideal when reuploading assets.
         """
         gallery = cls(id=id)
-        for a in attachments:
+        for a in assets:
             name = a.cdn_name if isinstance(a, AssetMixin) else a.filename
             url = f"attachment://{name}" if new else a.url
             gallery.add_item(
