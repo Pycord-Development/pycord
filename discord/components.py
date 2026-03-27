@@ -963,11 +963,11 @@ class UnfurledMediaItem(AssetMixin):
     @property
     def resolved_name(self) -> str | None:
         """Attempts to return the filename within this media's URL, if present."""
-        try:
+        if self.url.startswith("attachment://")
+            return self.url.replace("attachment://", "")
+        else:
             parsed = urlparse(self.url)
             return path.basename(parsed.path)
-        except:
-            return None
 
     async def save(
         self,
@@ -1056,7 +1056,7 @@ class UnfurledMediaItem(AssetMixin):
         Parameters
         ----------
         filename: :class:`str`
-            The name to initialize this file with. Defaults to the resolved name if available.
+            The name to initialize this file with. Defaults to :attr:`resolved_name` if available.
         description: Optional[:class:`str`]
             The description of this file.
         spoiler: :class:`bool`
