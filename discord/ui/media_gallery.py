@@ -28,6 +28,7 @@ from typing import TYPE_CHECKING, TypeVar
 
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import MediaGalleryItem
+from ..asset import AssetMixin
 from ..enums import ComponentType
 from .item import ViewItem
 
@@ -37,6 +38,8 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
+    from ..file import File
+    from ..message import Attachment
     from .view import DesignerView
 
 
@@ -109,7 +112,7 @@ class MediaGallery(ViewItem[V]):
         """
 
         if len(self.items) >= 10:
-            raise ValueError("maximum number of items exceeded")
+            raise ValueError("maximum number of items exceeded (10)")
 
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
@@ -140,9 +143,6 @@ class MediaGallery(ViewItem[V]):
         ValueError
             Maximum number of items has been exceeded (10).
         """
-
-        if len(self.items) >= 10:
-            raise ValueError("maximum number of items exceeded (10)")
 
         item = MediaGalleryItem(url, description=description, spoiler=spoiler)
 
@@ -182,6 +182,47 @@ class MediaGallery(ViewItem[V]):
     def to_component_dict(self) -> MediaGalleryComponentPayload:
         self._underlying = self._generate_underlying()
         return super().to_component_dict()
+
+    @classmethod
+    def from_assets(cls: type[M], *assets: Attachment | AssetMixin, id: int | None = None, new: bool = False) -> M:
+        """Converts a list of :class:`discord.Attachment` or :class:`discord.Asset` to a gallery.
+
+        Parameters
+        ----------
+        \*assets: Union[:class:`discord.Attachment`, :class:`discord.AssetMixin`]
+            An argument list of assets to add to the gallery. These can be attachments, emojis, stickers, avatars, or anything other model served by Discord.
+        id: Optional[:class:`int`]
+            The gallery's ID.
+        new: :class:`bool`
+            If ``True``, uses local ``attachment://`` URLs instead of the CDN URLs. Ideal when reuploading assets.
+        """
+        gallery = cls(id=id)
+        for a in attachments:
+            name = a.cdn_name if isinstance(a, AssetMixin) else a.filename
+            url = f"attachment://{name}" if new else a.url
+            gallery.add_item(url=url, description=getattr(a, "description", None), spoiler=getattr(a, "spoiler", False))
+        return gallery
+
+    @classmethod
+    def from_files(cls: type[M], *files: File, id: int | None = None) -> M:
+        """Converts a list of local :class:`discord.File` to a gallery.
+
+        Parameters
+        ----------
+        \*files: :class:`discord.File`
+            An argument list of :class:`discord.File` to add to the gallery.
+        id: Optional[:class:`int`]
+            The gallery's ID.
+        """
+        gallery = cls(id=id)
+        for f in files:
+            gallery.add_item(url=f"attachment://{f.filename}", description=a.description, spoiler=a.spoiler)
+        return gallery
+
+    async def to_files(self) -> list[File]:
+        """Converts this gallery to a list of :class:`discord.File` for use with :func:`discord.Messageable.send`.
+        """
+        return [await f.media.to_file() for f in self.items]
 
     @classmethod
     def from_component(cls: type[M], component: MediaGalleryComponent) -> M:

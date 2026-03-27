@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import io
 import os
+from urllib.parse import urlparse
 from typing import TYPE_CHECKING, Any, Literal
 
 import yarl
@@ -121,6 +122,12 @@ class AssetMixin:
         else:
             with open(fp, "wb") as f:
                 return f.write(data)
+
+    @property
+    def cdn_name(self) -> str | None:
+        """Attempts to return the filename within this asset's URL, if present."""
+        parsed = urlparse(self.url)
+        return os.path.basename(parsed.path)
 
 
 class Asset(AssetMixin):
