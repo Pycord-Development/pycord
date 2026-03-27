@@ -168,7 +168,7 @@ class MediaGallery(ViewItem[V]):
 
         Parameters
         ----------
-        original_item: :class:`int`
+        index: :class:`int`
             The index of the item to replace in this gallery.
         new_item: :class:`MediaGalleryItem`
             The new item to insert into the gallery.
