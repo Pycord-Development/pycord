@@ -67,10 +67,10 @@ class ItemInterface:
 
     .. container:: operations
 
-    .. describe:: len(x)
+        .. describe:: len(x)
 
-        Returns the total count of all items in this interface.
-        This includes items that contain other items, which count towards Discord's component limits.
+            Returns the total count of all items in this interface.
+            This includes items that contain other items, which count towards Discord's component limits.
 
     Parameters
     ----------

@@ -63,10 +63,12 @@ class ActionRow(ViewItem[V]):
 
     .. versionadded:: 2.7
 
-    .. describe:: len(x)
+    .. container:: operations
 
-        Returns the total count of all items in this row.
-        This includes the row itself, counting towards Discord's component limits.
+        .. describe:: len(x)
+
+            Returns the total count of all items in this row.
+            This includes the row itself, counting towards Discord's component limits.
 
     Parameters
     ----------

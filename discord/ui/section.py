@@ -55,10 +55,12 @@ class Section(ViewItem[V]):
 
     .. versionadded:: 2.7
 
-    .. describe:: len(x)
+    .. container:: operations
 
-        Returns the total count of all items in this section.
-        This includes the section itself, counting towards Discord's component limits.
+        .. describe:: len(x)
+
+            Returns the total count of all items in this section.
+            This includes the section itself, counting towards Discord's component limits.
 
     Parameters
     ----------
