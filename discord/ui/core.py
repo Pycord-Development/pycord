@@ -52,7 +52,7 @@ def _item_getter(iterable, **attrs) -> Item | None:
         try:
             if _all(pred(i) == value for pred, value in converted):
                 return i
-        except:
+        except AttributeError:
             pass
         if hasattr(i, "get_item"):
             if child := i.get_item(**attrs):
