@@ -49,7 +49,7 @@ class BaseComponent(TypedDict):
 
 class Modal(TypedDict):
     custom_id: str
-    title: int
+    title: str
     components: list[AllowedModalComponents]
 
 
