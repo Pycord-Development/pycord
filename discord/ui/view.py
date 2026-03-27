@@ -960,14 +960,7 @@ class DesignerView(BaseView):
         ValueError
             Maximum number of items has been exceeded (40)
         """
-        if (
-            before is not None
-            and after is not None
-            or before is not None
-            and (index is not None)
-            or after is not None
-            and (index is not None)
-        ):
+        if sum(x is not None for x in (before, after, index)) > 1:
             raise ValueError("Can only specify one of before, after, and index.")
 
         if len(self) >= self.MAX_ITEMS:
