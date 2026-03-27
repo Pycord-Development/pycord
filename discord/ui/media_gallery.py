@@ -26,9 +26,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypeVar
 
+from ..asset import AssetMixin
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import MediaGalleryItem
-from ..asset import AssetMixin
 from ..enums import ComponentType
 from .item import ViewItem
 
@@ -37,9 +37,9 @@ __all__ = ("MediaGallery",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from ..file import File
     from ..message import Attachment
+    from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .view import DesignerView
 
 
@@ -184,8 +184,13 @@ class MediaGallery(ViewItem[V]):
         return super().to_component_dict()
 
     @classmethod
-    def from_assets(cls: type[M], *assets: Attachment | AssetMixin, id: int | None = None, new: bool = False) -> M:
-        """Converts a list of :class:`discord.Attachment` or :class:`discord.Asset` to a gallery.
+    def from_assets(
+        cls: type[M],
+        *assets: Attachment | AssetMixin,
+        id: int | None = None,
+        new: bool = False,
+    ) -> M:
+        r"""Converts a list of :class:`discord.Attachment` or :class:`discord.Asset` to a gallery.
 
         Parameters
         ----------
@@ -200,12 +205,16 @@ class MediaGallery(ViewItem[V]):
         for a in attachments:
             name = a.cdn_name if isinstance(a, AssetMixin) else a.filename
             url = f"attachment://{name}" if new else a.url
-            gallery.add_item(url=url, description=getattr(a, "description", None), spoiler=getattr(a, "spoiler", False))
+            gallery.add_item(
+                url=url,
+                description=getattr(a, "description", None),
+                spoiler=getattr(a, "spoiler", False),
+            )
         return gallery
 
     @classmethod
     def from_files(cls: type[M], *files: File, id: int | None = None) -> M:
-        """Converts a list of local :class:`discord.File` to a gallery.
+        r"""Converts a list of local :class:`discord.File` to a gallery.
 
         Parameters
         ----------
@@ -216,12 +225,15 @@ class MediaGallery(ViewItem[V]):
         """
         gallery = cls(id=id)
         for f in files:
-            gallery.add_item(url=f"attachment://{f.filename}", description=a.description, spoiler=a.spoiler)
+            gallery.add_item(
+                url=f"attachment://{f.filename}",
+                description=a.description,
+                spoiler=a.spoiler,
+            )
         return gallery
 
     async def to_files(self) -> list[File]:
-        """Converts this gallery to a list of :class:`discord.File` for use with :func:`discord.Messageable.send`.
-        """
+        """Converts this gallery to a list of :class:`discord.File` for use with :func:`discord.Messageable.send`."""
         return [await f.media.to_file() for f in self.items]
 
     @classmethod

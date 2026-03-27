@@ -27,8 +27,8 @@ from __future__ import annotations
 
 import io
 import os
-from urllib.parse import urlparse
 from typing import TYPE_CHECKING, Any, Literal
+from urllib.parse import urlparse
 
 import yarl
 
