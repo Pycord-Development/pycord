@@ -142,7 +142,7 @@ class MediaGallery(ViewItem[V]):
         """
 
         if len(self.items) >= 10:
-            raise ValueError("maximum number of items exceeded")
+            raise ValueError("maximum number of items exceeded (10)")
 
         item = MediaGalleryItem(url, description=description, spoiler=spoiler)
 

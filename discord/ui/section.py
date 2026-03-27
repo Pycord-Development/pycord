@@ -182,7 +182,7 @@ class Section(ViewItem[V]):
             raise ValueError("Can only specify one of before, after, and index.")
 
         if len(self.items) >= 3:
-            raise ValueError("maximum number of children exceeded")
+            raise ValueError("maximum number of children exceeded (3)")
 
         if not isinstance(item, ViewItem):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")

@@ -964,8 +964,8 @@ class DesignerView(BaseView):
         if sum(x is not None for x in (before, after, index)) > 1:
             raise ValueError("Can only specify one of before, after, and index.")
 
-        if len(self) >= self.MAX_ITEMS:
-            raise ValueError("maximum number of children exceeded")
+        if len(self) + len(item) > self.MAX_ITEMS:
+            raise ValueError("maximum number of children exceeded (40)")
 
         if not isinstance(item, ViewItem):
             raise TypeError(f"expected item to be ViewItem, not {item.__class__!r}")
