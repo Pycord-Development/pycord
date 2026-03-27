@@ -58,6 +58,11 @@ class Item(Generic[T]):
 
     .. versionchanged:: 2.7
         Now used as base class for :class:`ViewItem` and :class:`ModalItem`.
+
+    .. describe:: len(x)
+
+        Returns how much this item counts towards Discord's component limits.
+        This is 1 for all items, plus 1 for each child item.
     """
 
     __item_repr_attributes__: tuple[str, ...] = ("id",)
