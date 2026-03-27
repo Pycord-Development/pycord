@@ -175,7 +175,8 @@ class Section(ViewItem[V]):
         TypeError
             An :class:`ViewItem` was not passed.
         ValueError
-            Maximum number of items has been exceeded (3).
+            Maximum number of items has been exceeded (3),
+            or a searched item could not be found in the section.
         """
         if sum(x is not None for x in (before, after, index)) > 1:
             raise ValueError("Can only specify one of before, after, and index.")
@@ -191,14 +192,13 @@ class Section(ViewItem[V]):
             if isinstance(ref, (int, str)):
                 ref = self.get_item(ref)
             try:
-                ref = self.get_item(before or after)
                 i = self.items.index(ref)
                 item.parent = self
                 if before:
                     self.items.insert(i, item)
                 else:
                     self.items.insert(i + 1, item)
-            except:
+            except ValueError:
                 raise ValueError(f"Could not find {before or after} in section.")
             self._underlying = self._generate_underlying()
             return self

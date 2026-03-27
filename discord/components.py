@@ -963,7 +963,7 @@ class UnfurledMediaItem(AssetMixin):
     @property
     def resolved_name(self) -> str | None:
         """Attempts to return the filename within this media's URL, if present."""
-        if self.url.startswith("attachment://")
+        if self.url.startswith("attachment://"):
             return self.url.replace("attachment://", "")
         else:
             parsed = urlparse(self.url)

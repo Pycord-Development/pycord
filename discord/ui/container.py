@@ -186,6 +186,8 @@ class Container(ViewItem[V]):
         ------
         TypeError
             A :class:`ViewItem` was not passed.
+        ValueError
+            A searched item could not be found in the container.
         """
         if sum(x is not None for x in (before, after, index)) > 1:
             raise ValueError("Can only specify one of before, after, and index.")
@@ -218,7 +220,7 @@ class Container(ViewItem[V]):
                         parent.items.insert(i + 1, item)
                 else:
                     ref.parent.add_item(item, before=before, after=after)
-            except:
+            except (ValueError, AttributeError):
                 raise ValueError(f"Could not find {before or after} in container.")
             self._underlying = self._generate_underlying()
             return self

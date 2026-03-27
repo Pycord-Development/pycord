@@ -170,6 +170,9 @@ class ActionRow(ViewItem[V]):
         ------
         TypeError
             A :class:`ViewItem` was not passed.
+        ValueError
+            Maximum number of items has been exceeded (5 buttons or 1 select),
+            or a searched item could not be found in the row.
         """
         if sum(x is not None for x in (before, after, index)) > 1:
             raise ValueError("Can only specify one of before, after, and index.")
@@ -192,7 +195,7 @@ class ActionRow(ViewItem[V]):
                     self.children.insert(i, item)
                 else:
                     self.children.insert(i + 1, item)
-            except:
+            except ValueError:
                 raise ValueError(f"Could not find {before or after} in row.")
             self._underlying = self._generate_underlying()
             return self

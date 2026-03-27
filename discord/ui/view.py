@@ -958,7 +958,8 @@ class DesignerView(BaseView):
         TypeError
             A :class:`ViewItem` was not passed.
         ValueError
-            Maximum number of items has been exceeded (40)
+            Maximum number of items has been exceeded (40),
+            or a searched item could not be found in the view.
         """
         if sum(x is not None for x in (before, after, index)) > 1:
             raise ValueError("Can only specify one of before, after, and index.")
@@ -997,7 +998,7 @@ class DesignerView(BaseView):
                         ref.parent.add_item(item, before=before, after=after, into=into)
                     else:
                         ref.parent.add_item(item, before=before, after=after)
-            except:
+            except (ValueError, AttributeError):
                 raise ValueError(f"Could not find {before or after} in view.")
             return self
 
