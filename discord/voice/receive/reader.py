@@ -200,7 +200,9 @@ class AudioReader:
             )
         finally:
             if self.error:
-                _log.debug("Callback had a previous error: %s (continuing anyway)", self.error)
+                _log.debug(
+                    "Callback had a previous error: %s (continuing anyway)", self.error
+                )
                 self.error = None  # Clear error to keep processing packets
             if not packet:
                 _log.debug("No packet found after callback")
@@ -299,7 +301,8 @@ class PacketDecryptor:
                     except Exception as exc:
                         _log.debug(
                             "DAVE decrypt failed for ssrc %s: %s",
-                            packet.ssrc, exc,
+                            packet.ssrc,
+                            exc,
                         )
                         opus_payload = OPUS_SILENCE
 

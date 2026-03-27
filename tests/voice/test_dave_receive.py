@@ -15,7 +15,6 @@ from discord.sinks.core import Sink
 from discord.voice.packets.core import OPUS_SILENCE
 from discord.voice.utils.buffer import JitterBuffer
 
-
 # ---------------------------------------------------------------------------
 # Lightweight fakes — no unittest.mock
 # ---------------------------------------------------------------------------
@@ -179,7 +178,9 @@ def test_decrypt_rtp_with_dave(packet):
 
 def test_decrypt_rtp_dave_passthrough(packet):
     """When can_passthrough() is True, DAVE decrypt is skipped."""
-    dave = FakeDaveSession(ready=True, passthrough=True, decrypt_result=b"should_not_appear")
+    dave = FakeDaveSession(
+        ready=True, passthrough=True, decrypt_result=b"should_not_appear"
+    )
     decryptor = _make_decryptor(
         dave_session=dave,
         ssrc_user_map={packet.ssrc: 12345},

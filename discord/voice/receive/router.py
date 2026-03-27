@@ -136,7 +136,11 @@ class PacketRouter(threading.Thread):
                     try:
                         data = decoder.pop_data()
                         if data is not None:
-                            audio_bytes = data.pcm if data.pcm else (getattr(data, 'opus', None) or b"")
+                            audio_bytes = (
+                                data.pcm
+                                if data.pcm
+                                else (getattr(data, "opus", None) or b"")
+                            )
                             if audio_bytes:
                                 self.sink.write(audio_bytes, data.source)
                     except Exception as exc:
@@ -172,17 +176,17 @@ class SinkEventRouter(threading.Thread):
     def register_events(self) -> None:
         with self._lock:
             self._register_listeners(self.sink)
-            for child in getattr(self.sink, 'walk_children', lambda: [])():
+            for child in getattr(self.sink, "walk_children", lambda: [])():
                 self._register_listeners(child)
 
     def unregister_events(self) -> None:
         with self._lock:
             self._unregister_listeners(self.sink)
-            for child in getattr(self.sink, 'walk_children', lambda: [])():
+            for child in getattr(self.sink, "walk_children", lambda: [])():
                 self._unregister_listeners(child)
 
     def _register_listeners(self, sink: Sink) -> None:
-        listeners = getattr(sink, '__sink_listeners__', [])
+        listeners = getattr(sink, "__sink_listeners__", [])
         _log.debug("Registering events for %s: %s", sink, listeners)
 
         for name, method_name in listeners:
@@ -195,7 +199,7 @@ class SinkEventRouter(threading.Thread):
                 self._event_listeners[name] = [func]
 
     def _unregister_listeners(self, sink: Sink) -> None:
-        for name, method_name in getattr(sink, '__sink_listeners__', []):
+        for name, method_name in getattr(sink, "__sink_listeners__", []):
             func = getattr(sink, method_name)
 
             if name in self._event_listeners:

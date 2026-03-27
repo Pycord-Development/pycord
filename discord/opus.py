@@ -663,14 +663,18 @@ class PacketDecoder:
         from discord.object import Object
         from discord.voice import VoiceData
 
-        vc = self.sink.client or getattr(self.router, 'reader', None) and self.router.reader.client
+        vc = (
+            self.sink.client
+            or getattr(self.router, "reader", None)
+            and self.router.reader.client
+        )
 
         pcm = None
 
         member = self._get_cached_member()
 
         if member is None and vc is not None:
-            ssrc_map = getattr(vc, '_ssrc_to_id', {})
+            ssrc_map = getattr(vc, "_ssrc_to_id", {})
             self._cached_id = ssrc_map.get(self.ssrc)
             member = self._get_cached_member()
         elif member is not None:
@@ -705,7 +709,11 @@ class PacketDecoder:
                 else:
                     pcm = self._decoder.decode(None, fec=False)
         except OpusError as exc:
-            _log.debug("Opus decode error for packet seq=%s: %s", getattr(packet, 'sequence', '?'), exc)
+            _log.debug(
+                "Opus decode error for packet seq=%s: %s",
+                getattr(packet, "sequence", "?"),
+                exc,
+            )
             # Generate silence frame to keep audio stream continuous
             pcm = b"\x00" * Decoder.FRAME_SIZE
 
