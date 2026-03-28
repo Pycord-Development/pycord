@@ -18,7 +18,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed a `TypeError` when using `Label.set_select` and not providing `default_values`.
   ([#3171](https://github.com/Pycord-Development/pycord/pull/3171))
-- Fixed `View.from_dict()` always returning `None` due to a missing `return` statement.
+- Fixed `View.from_dict()` incorrectly returning `None`.
   ([#3181](https://github.com/Pycord-Development/pycord/pull/3181))
 
 ### Deprecated
