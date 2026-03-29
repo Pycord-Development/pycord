@@ -10,5 +10,7 @@
   "pip_requirements": {
     "managerFilePatterns": ["requirements/*.txt"]
   },
-  "pinDigests": true
+  "github-actions": {
+    "pinDigests": true
+  }
 }
