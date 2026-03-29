@@ -1680,7 +1680,7 @@ def _get_event_loop() -> asyncio.AbstractEventLoop:
     """
     if sys.version_info >= (3, 14):
         try:
-            loop = asyncio.get_running_loop()
+            loop = asyncio.get_event_loop()
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
