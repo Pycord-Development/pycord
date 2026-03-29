@@ -9,5 +9,6 @@
   "assigneesFromCodeOwners": true,
   "pip_requirements": {
     "managerFilePatterns": ["requirements/*.txt"]
-  }
+  },
+  "pinDigests": true
 }
