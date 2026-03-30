@@ -20,6 +20,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3171](https://github.com/Pycord-Development/pycord/pull/3171))
 - Fixed `View.from_dict()` incorrectly returning `None`.
   ([#3181](https://github.com/Pycord-Development/pycord/pull/3181))
+- Fixed internal use of deprecated _PayloadLike dict operations.
+  ([#3189](https://github.com/Pycord-Development/pycord/pull/3189))
 
 ### Deprecated
 
