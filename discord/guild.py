@@ -61,6 +61,7 @@ from .enums import (
     NotificationLevel,
     NSFWLevel,
     OnboardingMode,
+    RoleType,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     SearchEmbedType,
@@ -1312,7 +1313,7 @@ class Guild(Hashable):
         .. versionadded:: 1.6
         """
         for role in self._roles.values():
-            if role.is_premium_subscriber():
+            if role.type is RoleType.BOOSTER:
                 return role
         return None
 
