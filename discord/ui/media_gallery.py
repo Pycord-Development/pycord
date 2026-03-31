@@ -233,7 +233,7 @@ class MediaGallery(ViewItem[V]):
         return gallery
 
     async def to_files(self) -> list[File]:
-        """Converts this gallery to a list of :class:`discord.File` for use with :func:`discord.Messageable.send`."""
+        """Converts this gallery to a list of :class:`discord.File` for use with :meth:`abc.Messageable.send`."""
         return [await f.media.to_file() for f in self.items]
 
     @classmethod
