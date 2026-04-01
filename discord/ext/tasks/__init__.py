@@ -26,12 +26,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import contextvars
 import datetime
 import inspect
+import logging
 import sys
 import traceback
-from collections.abc import Sequence
+from collections.abc import Coroutine, Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
 import aiohttp
@@ -42,12 +44,13 @@ from discord.utils import MISSING
 
 __all__ = ("loop",)
 
+_log = logging.getLogger(__name__)
 T = TypeVar("T")
 _func = Callable[..., Awaitable[Any]]
 LF = TypeVar("LF", bound=_func)
 FT = TypeVar("FT", bound=_func)
 ET = TypeVar("ET", bound=Callable[[Any, BaseException], Awaitable[Any]])
-_current_loop_ctx: contextvars.ContextVar[int] = contextvars.ContextVar(
+_current_loop_ctx: contextvars.ContextVar[int | None] = contextvars.ContextVar(
     "_current_loop_ctx", default=None
 )
 
@@ -59,18 +62,21 @@ class SleepHandle:
         self, dt: datetime.datetime, *, loop: asyncio.AbstractEventLoop
     ) -> None:
         self.loop = loop
-        self.future = future = loop.create_future()
+        self.future = loop.create_future()
         relative_delta = discord.utils.compute_timedelta(dt)
-        self.handle = loop.call_later(relative_delta, future.set_result, True)
+        self.handle = loop.call_later(relative_delta, self._safe_result, self.future)
 
-    def _set_result_safe(self):
-        if not self.future.done():
-            self.future.set_result(True)
+    @staticmethod
+    def _safe_result(future: asyncio.Future[Any]) -> None:
+        if not future.done():
+            future.set_result(None)
 
     def recalculate(self, dt: datetime.datetime) -> None:
         self.handle.cancel()
         relative_delta = discord.utils.compute_timedelta(dt)
-        self.handle = self.loop.call_later(relative_delta, self._set_result_safe)
+        self.handle = self.loop.call_later(
+            relative_delta, self._safe_result, self.future
+        )
 
     def wait(self) -> asyncio.Future[Any]:
         return self.future
@@ -98,12 +104,28 @@ class Loop(Generic[LF]):
         time: datetime.time | Sequence[datetime.time],
         count: int | None,
         reconnect: bool,
-        loop: asyncio.AbstractEventLoop,
+        loop: asyncio.AbstractEventLoop | None,
+        create_loop: bool,
+        name: str | None,
         overlap: bool | int,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
-        self.loop: asyncio.AbstractEventLoop = loop
+
+        if loop is None:
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                if create_loop:
+                    loop = asyncio.new_event_loop()
+
+        self.loop: asyncio.AbstractEventLoop | None = loop
+
+        self.name: str = (
+            f"pycord-ext-task ({id(self):#x}): {coro.__qualname__}"
+            if name in (None, MISSING)
+            else name
+        )
         self.overlap: bool | int = overlap
         self.count: int | None = count
         self._current_loop = 0
@@ -117,6 +139,7 @@ class Loop(Generic[LF]):
             aiohttp.ClientError,
             asyncio.TimeoutError,
         )
+        self._create_loop = create_loop
 
         self._before_loop = None
         self._after_loop = None
@@ -139,6 +162,10 @@ class Loop(Generic[LF]):
             raise TypeError(
                 f"Expected coroutine function, not {type(self.coro).__name__!r}."
             )
+
+        if loop is None and not create_loop:
+            discord.Client._pending_loops.add_loop(self)
+
         if isinstance(overlap, bool):
             if overlap:
                 self._run_with_semaphore = self._run_direct
@@ -154,7 +181,7 @@ class Loop(Generic[LF]):
         """Run the coroutine directly."""
         await self.coro(*args, **kwargs)
 
-    def _semaphore_runner_factory(self) -> Callable[..., Awaitable[None]]:
+    def _semaphore_runner_factory(self) -> Callable[..., Coroutine[Any, Any, None]]:
         """Return a function that runs the coroutine with a semaphore."""
 
         async def runner(*args: Any, **kwargs: Any) -> None:
@@ -179,8 +206,15 @@ class Loop(Generic[LF]):
         if name.endswith("_loop"):
             setattr(self, f"_{name}_running", False)
 
+    def _create_task(self, *args: Any, **kwargs: Any) -> asyncio.Task[None]:
+        if self.loop is None:
+            meth = asyncio.create_task
+        else:
+            meth = self.loop.create_task
+        return meth(self._loop(*args, **kwargs), name=self.name)
+
     def _try_sleep_until(self, dt: datetime.datetime):
-        self._handle = SleepHandle(dt=dt, loop=self.loop)
+        self._handle = SleepHandle(dt=dt, loop=asyncio.get_running_loop())
         return self._handle.wait()
 
     async def _loop(self, *args: Any, **kwargs: Any) -> None:
@@ -194,7 +228,9 @@ class Loop(Generic[LF]):
         else:
             self._next_iteration = datetime.datetime.now(datetime.timezone.utc)
         try:
-            await self._try_sleep_until(self._next_iteration)
+            if self._stop_next_iteration:
+                return
+
             while True:
                 if not self._last_iteration_failed:
                     self._last_iteration = self._next_iteration
@@ -237,9 +273,10 @@ class Loop(Generic[LF]):
 
         except asyncio.CancelledError:
             self._is_being_cancelled = True
-            for task in self._tasks:
-                task.cancel()
-            await asyncio.gather(*self._tasks, return_exceptions=True)
+            if self._tasks:
+                for task in self._tasks:
+                    task.cancel()
+                await asyncio.gather(*self._tasks, return_exceptions=True)
             raise
         except Exception as exc:
             self._has_failed = True
@@ -266,7 +303,9 @@ class Loop(Generic[LF]):
             count=self.count,
             reconnect=self.reconnect,
             loop=self.loop,
+            name=self.name,
             overlap=self.overlap,
+            create_loop=self._create_loop,
         )
         copy._injected = obj
         copy._before_loop = self._before_loop
@@ -318,11 +357,7 @@ class Loop(Generic[LF]):
     @property
     def current_loop(self) -> int:
         """The current iteration of the loop."""
-        return (
-            _current_loop_ctx.get()
-            if _current_loop_ctx.get() is not None
-            else self._current_loop
-        )
+        return self._current_loop if (clc := _current_loop_ctx.get()) is None else clc
 
     @property
     def next_iteration(self) -> datetime.datetime | None:
@@ -356,8 +391,13 @@ class Loop(Generic[LF]):
 
         return await self.coro(*args, **kwargs)
 
-    def start(self, *args: Any, **kwargs: Any) -> asyncio.Task[None]:
+    def start(self, *args: Any, **kwargs: Any) -> asyncio.Task[None] | None:
         r"""Starts the internal task in the event loop.
+
+        If this loop was created with the ``create_loop`` parameter set as ``False`` and
+        no running loop is found (eg this method is not called from an async context),
+        then this task will be started automatically when any kind of :class:`~discord.Client`
+        (subclasses included) starts.
 
         Parameters
         ------------
@@ -377,16 +417,31 @@ class Loop(Generic[LF]):
             The task that has been created.
         """
 
+        loop = None
+        with contextlib.suppress(RuntimeError):
+            loop = asyncio.get_running_loop()
+
+        if loop:
+            self.loop = loop
+
+        if self.loop is None:
+            _log.warning(
+                f"The task {self.name} has been set to be bound to a discord.Client instance, and will start running automatically "
+                "when the client starts. If you want this task to be executed without it being bound to a discord.Client, "
+                "set the create_loop parameter in the decorator to True, and don't forget to set the client.loop to the loop.loop"
+            )
+            return None
+
         if self._task is not MISSING and not self._task.done():
             raise RuntimeError("Task is already launched and is not completed.")
 
         if self._injected is not None:
             args = (self._injected, *args)
 
-        if self.loop is MISSING:
-            self.loop = asyncio.get_event_loop()
-
-        self._task = self.loop.create_task(self._loop(*args, **kwargs))
+        self._task = asyncio.ensure_future(
+            self.loop.create_task(self._loop(*args, **kwargs), name=self.name),
+            loop=self.loop,
+        )
         return self._task
 
     def stop(self) -> None:
@@ -412,13 +467,20 @@ class Loop(Generic[LF]):
 
     def _can_be_cancelled(self) -> bool:
         return bool(
-            not self._is_being_cancelled and self._task and not self._task.done()
+            not self._is_being_cancelled
+            and (
+                (self._task is not MISSING and (self._task and not self._task.done()))
+                or self._tasks
+            )
         )
 
     def cancel(self) -> None:
         """Cancels the internal task, if it is running."""
         if self._can_be_cancelled():
-            self._task.cancel()
+            if self._task is not MISSING:
+                self._task.cancel()
+            for task in self._tasks:
+                task.cancel()
 
     def restart(self, *args: Any, **kwargs: Any) -> None:
         r"""A convenience method to restart the internal task.
@@ -769,15 +831,9 @@ class Loop(Generic[LF]):
             self._time = self._get_time_parameter(time)
             self._sleep = self._seconds = self._minutes = self._hours = MISSING
 
-        if self.is_running() and not (
-            self._before_loop_running or self._after_loop_running
-        ):
-            if self._time is not MISSING:
-                # prepare the next time index starting from after the last iteration
-                self._prepare_time_index(now=self._last_iteration)
-
+        if self.is_running() and self._last_iteration is not MISSING:
             self._next_iteration = self._get_next_sleep_time()
-            if not self._handle.done():
+            if self._handle and not self._handle.done():
                 # the loop is sleeping, recalculate based on new interval
                 self._handle.recalculate(self._next_iteration)
 
@@ -790,8 +846,10 @@ def loop(
     time: datetime.time | Sequence[datetime.time] = MISSING,
     count: int | None = None,
     reconnect: bool = True,
-    loop: asyncio.AbstractEventLoop = MISSING,
+    loop: asyncio.AbstractEventLoop | None = None,
+    name: str | None = MISSING,
     overlap: bool | int = False,
+    create_loop: bool = False,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
     optional reconnect logic. The decorator returns a :class:`Loop`.
@@ -824,9 +882,25 @@ def loop(
         Whether to handle errors and restart the task
         using an exponential back-off algorithm similar to the
         one used in :meth:`discord.Client.connect`.
-    loop: :class:`asyncio.AbstractEventLoop`
-        The loop to use to register the task, if not given
-        defaults to :func:`asyncio.get_event_loop`.
+    loop: Optional[:class:`asyncio.AbstractEventLoop`]
+        The loop to use to register the task, defaults to ``None``.
+
+        .. versionchanged:: 2.7
+            This can now be ``None``
+    name: Optional[:class:`str`]
+        The name to create the task with, defaults to ``None``.
+
+        .. versionadded:: 2.7
+    create_loop: :class:`bool`
+        Whether this task should create its own :class:`asyncio.AbstractEventLoop` to run if
+        no already running one is found.
+
+        Loops must be in an async context in order to run, this means :meth:`Loop.start` should be
+        called from an async context (e.g. coroutines).
+
+        Defaults to ``False``.
+
+        .. versionadded:: 2.7
     overlap: Union[:class:`bool`, :class:`int`]
         Controls whether overlapping executions of the task loop are allowed.
         Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.
@@ -851,8 +925,10 @@ def loop(
             count=count,
             time=time,
             reconnect=reconnect,
+            name=name,
             loop=loop,
             overlap=overlap,
+            create_loop=create_loop,
         )
 
     return decorator
