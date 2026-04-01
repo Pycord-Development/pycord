@@ -1296,8 +1296,8 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         return [p.message for p in pins]
 
     @deprecated(
-        "Messageable.pins() returning a list of Message is deprecated since version 2.7 and will be removed in 2.8."
-        + "See the documentation of Messageable.pins() for more information."
+        "Messageable.pins() returning a list of Message is deprecated since version 2.7 and will be removed in 2.9."
+        + " See the documentation of Messageable.pins() for more information."
     )
     def __await__(self) -> Generator[Any, Any, list[Message]]:
         return self.retrieve_inner().__await__()
