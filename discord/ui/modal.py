@@ -28,12 +28,13 @@ import asyncio
 import os
 import sys
 import time
+from collections.abc import Iterator
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from ..enums import ComponentType
-from ..utils import find
+from ..utils import _get_event_loop, find
 from .core import ItemInterface
 from .input_text import InputText
 from .item import ModalItem
@@ -91,7 +92,7 @@ class BaseModal(ItemInterface):
         for item in children:
             self.add_item(item)
         self._title = title
-        self.loop = asyncio.get_event_loop()
+        self.loop = _get_event_loop()
 
     def __repr__(self) -> str:
         attrs = " ".join(

@@ -28,13 +28,11 @@ from __future__ import annotations
 import asyncio
 import copy
 import time
+from collections.abc import Callable, Iterable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Iterable,
     Protocol,
-    Sequence,
     TypeVar,
     Union,
     overload,

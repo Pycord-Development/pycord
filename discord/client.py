@@ -30,14 +30,11 @@ import logging
 import signal
 import sys
 import traceback
+from collections.abc import Callable, Coroutine, Generator, Sequence
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Generator,
-    Sequence,
     TypeVar,
 )
 
@@ -70,7 +67,13 @@ from .template import Template
 from .threads import Thread
 from .ui.view import BaseView
 from .user import ClientUser, User
-from .utils import _D, _FETCHABLE, MISSING, warn_if_voice_dependencies_missing
+from .utils import (
+    _D,
+    _FETCHABLE,
+    MISSING,
+    _get_event_loop,
+    warn_if_voice_dependencies_missing,
+)
 from .webhook import Webhook
 from .widget import Widget
 
@@ -147,7 +150,7 @@ class Client:
     loop: Optional[:class:`asyncio.AbstractEventLoop`]
         The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations.
         Defaults to ``None``, in which case the default event loop is used via
-        :func:`asyncio.get_event_loop()`.
+        :func:`asyncio.get_event_loop()` if it exists or one is created via :func:`asyncio.new_event_loop()`.
     connector: Optional[:class:`aiohttp.BaseConnector`]
         The connector to use for connection pooling.
     proxy: Optional[:class:`str`]
@@ -245,7 +248,7 @@ class Client:
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
         self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
+            _get_event_loop() if loop is None else loop
         )
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}

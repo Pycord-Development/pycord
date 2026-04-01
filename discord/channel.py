@@ -26,14 +26,11 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Iterable,
-    Mapping,
     NamedTuple,
-    Sequence,
     TypeVar,
     overload,
 )

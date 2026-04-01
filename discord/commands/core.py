@@ -33,13 +33,11 @@ import re
 import sys
 import types
 from collections import OrderedDict
+from collections.abc import Callable, Coroutine, Generator
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Generator,
     Generic,
     TypeVar,
     Union,
@@ -72,7 +70,7 @@ from .options import Option, OptionChoice
 if sys.version_info >= (3, 11):
     from typing import Annotated, Literal, get_args, get_origin
 else:
-    from typing_extensions import Annotated, Literal, get_args, get_origin
+    from typing import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -90,7 +88,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec
+    from typing import Concatenate
+
+    from typing_extensions import ParamSpec
 
     from .. import Permissions
     from ..cog import Cog

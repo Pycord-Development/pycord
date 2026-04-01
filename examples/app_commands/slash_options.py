@@ -47,7 +47,7 @@ async def hello(
 )
 async def select_channel(
     ctx: discord.ApplicationContext,
-    channel: Union[discord.TextChannel, discord.VoiceChannel],
+    channel: discord.TextChannel | discord.VoiceChannel,
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
 

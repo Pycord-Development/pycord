@@ -32,7 +32,7 @@ from discord.interactions import Interaction, InteractionMessage, InteractionRes
 from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
-    from typing import Awaitable, Callable
+    from collections.abc import Awaitable, Callable
 
     from typing_extensions import ParamSpec
 
