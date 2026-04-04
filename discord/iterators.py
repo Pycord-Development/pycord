@@ -38,12 +38,19 @@ from typing import (
     TypeVar,
     Union,
 )
+
 from typing_extensions import Self
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
-from .utils import maybe_coroutine, snowflake_time, time_snowflake, warn_deprecated, MISSING
+from .utils import (
+    MISSING,
+    maybe_coroutine,
+    snowflake_time,
+    time_snowflake,
+    warn_deprecated,
+)
 
 __all__ = (
     "ReactionIterator",
@@ -1339,7 +1346,7 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
                 # "Clients should not rely on the length of the `messages` array to paginate results"
                 self.limit = 0  # terminate the infinite loop
 
-            threads = data.get("threads", [])
+            data.get("threads", [])
             members = data.get("members", [])  # do something here
 
             for element in data["messages"]:
