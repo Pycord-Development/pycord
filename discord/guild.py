@@ -4814,7 +4814,7 @@ class Guild(Hashable):
         sort_by: SearchSortMode | None = None,
         sort_order: SearchSortOrder | None = SearchSortOrder.desc,
         include_nsfw: bool | None = False,
-    ) -> list[Message]:
+    ) -> MessageSearchIterator:
         """etc..."""
 
         params = {}

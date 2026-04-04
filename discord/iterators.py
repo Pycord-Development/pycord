@@ -38,11 +38,12 @@ from typing import (
     TypeVar,
     Union,
 )
+from typing_extensions import Self
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
-from .utils import maybe_coroutine, snowflake_time, time_snowflake, warn_deprecated
+from .utils import maybe_coroutine, snowflake_time, time_snowflake, warn_deprecated, MISSING
 
 __all__ = (
     "ReactionIterator",
@@ -1308,6 +1309,10 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
         self.messages = asyncio.Queue()
         self.message_ids = []
 
+        self.doing_deep_historical_index: bool = MISSING
+        self.documents_indexed: int | None = MISSING
+        self.total_results: int = MISSING
+
     async def next(self) -> Message:
         if self.messages.empty():
             await self.fill_messages()
@@ -1334,7 +1339,7 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
                 # "Clients should not rely on the length of the `messages` array to paginate results"
                 self.limit = 0  # terminate the infinite loop
 
-            data.get("threads", [])
+            threads = data.get("threads", [])
             members = data.get("members", [])  # do something here
 
             for element in data["messages"]:
@@ -1351,8 +1356,18 @@ class MessageSearchIterator(_AsyncIterator["Message"]):
         data: list[MessageSearchPayload] = await self.search(
             self.guild.id, **self.params
         )
+        self.total_results = data.get("total_results")
+        self.doing_deep_historical_index = data.get("doing_deep_historical_index")
+        self.documents_indexed = data.get("documents_indexed")
         self.params["offset"] = self.params.get("offset", 0) + retrieve
         if data["messages"]:
             if self.limit is not None:
                 self.limit -= retrieve
         return data
+
+    async def retrieve_inner(self) -> Self:
+        await self.fill_messages()
+        return self
+
+    def __await__(self) -> Generator[Any, Any, MessagePin]:
+        return self.retrieve_inner().__await__()
