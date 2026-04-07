@@ -32,11 +32,11 @@ from collections.abc import Callable
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
-import davey
 import nacl.secret
 from nacl.exceptions import CryptoError
 
-from ..packets.core import OPUS_SILENCE
+import davey
+
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
 from .router import PacketRouter, SinkEventRouter
 
@@ -290,7 +290,7 @@ class PacketDecryptor:
                             raw_payload,
                         )
                         # Successfully decrypted - cache the mapping for next time
-                        self.client._connection.user_ssrc_map[int_uid] = packet.ssrc
+                        self.client._add_ssrc(int_uid, packet.ssrc)
                         uid = int_uid
                         raw_payload = decrypted_audio
                         _log.debug(
@@ -302,7 +302,7 @@ class PacketDecryptor:
                     except ValueError:
                         continue
                 else:
-                    raw_payload = OPUS_SILENCE
+                    raw_payload = b""
             else:
                 try:
                     raw_payload = dave.decrypt(
@@ -311,13 +311,13 @@ class PacketDecryptor:
                         raw_payload,
                     )
                 except ValueError:
-                    # UnencryptedWhenPassthroughDisabled here is actually misleading, we can't passthrough,
-                    # it gives a corrupted stream.
+                    # UnencryptedWhenPassthroughDisabled — drop the packet so the opus
+                    # decoder uses PLC/FEC instead of decoding an explicit silence frame.
                     _log.debug(
-                        "DAVE: Decryption failed, falling back to OPUS_SILENCE",
+                        "DAVE: Decryption failed, dropping packet for PLC",
                         exc_info=True,
                     )
-                    raw_payload = OPUS_SILENCE
+                    raw_payload = b""
 
             packet.decrypted_data = raw_payload
         else:  # e.g., stage channels
@@ -328,30 +328,25 @@ class PacketDecryptor:
     def decrypt_rtcp(self, packet: bytes) -> bytes:
         data = self._decryptor_rtcp(packet)
 
-        # parse the rtcp packet to its respective report type
-        offset = 0
+        if len(data) < 8:
+            return data
 
-        while offset < len(data):
-            # offset will allow us to read the compund packets
-            current_data = data[offset:]
-            if len(current_data) < 8:
-                break
+        p_header = RTCPPacket.from_data(data)
+        ssrc = p_header.ssrc
 
-            p_header = RTCPPacket.from_data(current_data)
+        state = self.client._connection
+        dave = state.dave_session
 
-            # the sender ssrc will always be at offset 4 of the current packet
-            # doesn't matter if it is a sr or a rr
-            ssrc = p_header.ssrc
-
-            state = self.client._connection
-            dave = state.dave_session
-
-            if dave is not None and dave.ready and ssrc in state.ssrc_user_map:
+        if dave is not None and dave.ready and ssrc in state.ssrc_user_map:
+            try:
                 return dave.decrypt(
                     state.ssrc_user_map[ssrc],
                     davey.MediaType.audio,
-                    current_data,
+                    data,
                 )
+            except ValueError:
+                _log.debug("DAVE: RTCP decryption failed", exc_info=True)
+
         return data
 
     def update_secret_key(self, secret_key: bytes) -> None:
