@@ -701,6 +701,7 @@ class View(BaseView):
         components = [_component_factory(d) for d in data]
         for component in _walk_all_components(components):
             view.add_item(_component_to_item(component))
+        return view
 
     def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the view. Attempting to add a :class:`~discord.ui.ActionRow` will add its children instead.

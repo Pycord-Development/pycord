@@ -572,7 +572,7 @@ class Role(Hashable):
 
         .. versionadded:: 1.6
         """
-        return self.tags is not None and self.tags.is_bot_managed()
+        return self.type is RoleType.APPLICATION
 
     @deprecated(
         "Role.is_premium_subscriber is deprecated since version 2.8, consider using Role.type instead."
@@ -585,7 +585,7 @@ class Role(Hashable):
 
         .. versionadded:: 1.6
         """
-        return self.tags is not None and self.tags.is_premium_subscriber()
+        return self.type is RoleType.BOOSTER
 
     @deprecated(
         "Role.is_integration is deprecated since version 2.8, consider using Role.type instead."
@@ -599,7 +599,11 @@ class Role(Hashable):
 
         .. versionadded:: 1.6
         """
-        return self.tags is not None and self.tags.is_integration()
+        return self.type in (
+            RoleType.INTEGRATION,
+            RoleType.PREMIUM_SUBSCRIPTION_TIER,
+            RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER,
+        )
 
     def is_assignable(self) -> bool:
         """Whether the role is able to be assigned or removed by the bot. This checks whether all of the following conditions are true:
@@ -639,7 +643,7 @@ class Role(Hashable):
 
         .. versionadded:: 2.7
         """
-        return self.tags is not None and self.tags.is_available_for_purchase()
+        return self.type is RoleType.PREMIUM_SUBSCRIPTION_TIER
 
     @deprecated(
         "Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead."
@@ -652,7 +656,7 @@ class Role(Hashable):
 
         .. versionadded:: 2.7
         """
-        return self.tags is not None and self.tags.is_guild_connections_role()
+        return self.type is RoleType.CONNECTION
 
     @property
     def permissions(self) -> Permissions:
