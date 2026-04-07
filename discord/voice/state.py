@@ -345,7 +345,7 @@ class VoiceConnectionState:
                 await self.disconnect()
             return
 
-        self.session_id = data["session_id"]
+        self.session_id = data.session_id
 
         if self.state in (
             ConnectionFlowState.set_guild_voice_state,
