@@ -1389,7 +1389,7 @@ class Message(Hashable):
             "interaction",
             "interaction_metadata",
             "2.6",
-            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+            reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
         return self._interaction
 
@@ -1399,7 +1399,7 @@ class Message(Hashable):
             "interaction",
             "interaction_metadata",
             "2.6",
-            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+            reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
         self._interaction = value
 

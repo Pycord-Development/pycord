@@ -31,6 +31,7 @@ import collections.abc
 import datetime
 import functools
 import importlib.resources
+import io
 import itertools
 import json
 import logging
@@ -64,6 +65,8 @@ from typing import (
     overload,
 )
 
+from typing_extensions import deprecated as ext_deprecated
+
 if TYPE_CHECKING:
     from discord import (
         Client,
@@ -90,10 +93,10 @@ except ModuleNotFoundError:
 else:
     HAS_MSGSPEC = True
 
-
 __all__ = (
     "parse_time",
     "warn_deprecated",
+    "deprecated",
     "oauth_url",
     "snowflake_time",
     "time_snowflake",
@@ -116,6 +119,7 @@ __all__ = (
     "basic_autocomplete",
     "filter_params",
     "MISSING",
+    "users_to_csv",
 )
 
 _log = logging.getLogger(__name__)
@@ -134,7 +138,6 @@ except FileNotFoundError:
         "Couldn't find emojis.json. Is the package data missing? Discord emojis names will not work.",
     )
     EMOJIS_MAP = {}
-
 
 UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
@@ -170,7 +173,6 @@ if TYPE_CHECKING:
 else:
     AutocompleteContext = Any
     OptionChoice = Any
-
 
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
@@ -342,6 +344,63 @@ def warn_deprecated(
         message += f" See {reference} for more information."
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
+
+
+@ext_deprecated(
+    "deprecated is deprecated since version 2.8, consider using warnings.deprecated instead."
+)
+def deprecated(
+    instead: str | None = None,
+    since: str | None = None,
+    removed: str | None = None,
+    reference: str | None = None,
+    stacklevel: int = 3,
+    *,
+    use_qualname: bool = True,
+) -> Callable[[Callable[P, T]], Callable[P, T]]:
+    """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
+    the decorated function is called.
+
+    .. deprecated:: 2.8
+        Deprecated in favor of :func:`warnings.deprecated`.
+
+    Parameters
+    ----------
+    instead: Optional[:class:`str`]
+        A recommended alternative to the function.
+    since: Optional[:class:`str`]
+        The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
+        the patch version is optional.
+    removed: Optional[:class:`str`]
+        The version in which the function is planned to be removed. This should be in the format
+        ``major.minor(.patch)``, where the patch version is optional.
+    reference: Optional[:class:`str`]
+        A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
+        issue/PR.
+    stacklevel: :class:`int`
+        The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
+    use_qualname: :class:`bool`
+        Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of
+        the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__
+        will display as ``login``. Defaults to ``True``.
+    """
+
+    def actual_decorator(func: Callable[P, T]) -> Callable[P, T]:
+        @functools.wraps(func)
+        def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
+            warn_deprecated(
+                name=func.__qualname__ if use_qualname else func.__name__,
+                instead=instead,
+                since=since,
+                removed=removed,
+                reference=reference,
+                stacklevel=stacklevel,
+            )
+            return func(*args, **kwargs)
+
+        return decorated
+
+    return actual_decorator
 
 
 def oauth_url(
@@ -1553,3 +1612,56 @@ def filter_params(params, **kwargs):
                 params[new_param] = params.pop(old_param)
 
     return params
+
+
+def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
+    """Converts an iterable of users to a CSV file-like object for usage in
+    :meth:`~discord.abc.GuildChannel.create_invite` and :meth:`~discord.Invite.edit_target_users`.
+
+    Parameters
+    ----------
+    users: Iterable[:class:`discord.abc.Snowflake`]
+        An iterable of users to convert.
+
+    Returns
+    -------
+    :class:`io.BytesIO`
+        A file-like object containing the CSV data.
+    """
+    return io.BytesIO("\n".join(map(lambda u: str(u.id), users)).encode("utf-8"))
+
+
+voice_dependency_warning_emitted = False
+
+
+def get_missing_voice_dependencies() -> tuple[str, ...]:
+    missing: list[str] = []
+    try:
+        import nacl.secret
+        import nacl.utils
+    except ImportError:
+        missing.append("PyNaCl")
+
+    try:
+        import davey
+    except ImportError:
+        missing.append("davey")
+    return tuple(missing)
+
+
+def warn_if_voice_dependencies_missing() -> None:
+    global voice_dependency_warning_emitted
+    if voice_dependency_warning_emitted:
+        return
+
+    missing = get_missing_voice_dependencies()
+    if not missing:
+        return
+
+    voice_dependency_warning_emitted = True
+    deps = ", ".join(missing)
+    _log.warning(
+        "%s %s not installed, voice will NOT be supported",
+        deps,
+        "is" if len(missing) == 1 else "are",
+    )

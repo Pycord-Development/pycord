@@ -901,6 +901,7 @@ class WebhookMessage(Message):
         view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         suppress: bool | None = MISSING,
+        suppress_embeds: bool | None = MISSING,
     ) -> WebhookMessage:
         """|coro|
 
@@ -945,6 +946,12 @@ class WebhookMessage(Message):
         suppress: Optional[:class:`bool`]
             Whether to suppress embeds for the message.
 
+            .. deprecated:: 2.8
+        suppress_embeds: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         :class:`WebhookMessage`
@@ -974,8 +981,13 @@ class WebhookMessage(Message):
         if attachments is MISSING:
             attachments = self.attachments or MISSING
 
-        if suppress is MISSING:
-            suppress = self.flags.suppress_embeds
+        if suppress is not MISSING:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is MISSING:
+                suppress_embeds = suppress
+
+        if suppress_embeds is MISSING:
+            suppress_embeds = self.flags.suppress_embeds
 
         return await self._state._webhook.edit_message(
             self.id,
@@ -988,7 +1000,7 @@ class WebhookMessage(Message):
             view=view,
             allowed_mentions=allowed_mentions,
             thread=thread,
-            suppress=suppress,
+            suppress_embeds=suppress_embeds,
         )
 
     async def delete(self, *, delay: float | None = None) -> None:
@@ -1897,7 +1909,7 @@ class Webhook(BaseWebhook):
             previous_allowed_mentions=previous_mentions,
             thread_name=thread_name,
             silent=silent,
-            suppress=suppress_embeds,
+            suppress_embeds=suppress_embeds,
         )
         adapter = async_context.get()
         thread_id: int | None = None
@@ -2009,7 +2021,8 @@ class Webhook(BaseWebhook):
         view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         thread: Snowflake | None = MISSING,
-        suppress: bool = False,
+        suppress: bool | None = None,
+        suppress_embeds: bool = None,
     ) -> WebhookMessage:
         """|coro|
 
@@ -2060,6 +2073,12 @@ class Webhook(BaseWebhook):
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
 
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         :class:`WebhookMessage`
@@ -2104,6 +2123,12 @@ class Webhook(BaseWebhook):
         previous_mentions: AllowedMentions | None = getattr(
             self._state, "allowed_mentions", None
         )
+        if suppress is not None:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+        elif suppress_embeds is None:
+            suppress_embeds = False
         params = handle_message_parameters(
             content=content,
             file=file,
@@ -2114,7 +2139,7 @@ class Webhook(BaseWebhook):
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            suppress=suppress,
+            suppress_embeds=suppress_embeds,
         )
 
         thread_id: int | None = None
