@@ -32,10 +32,9 @@ from collections.abc import Callable
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
+import davey
 import nacl.secret
 from nacl.exceptions import CryptoError
-
-import davey
 
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
 from .router import PacketRouter, SinkEventRouter

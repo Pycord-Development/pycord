@@ -35,8 +35,8 @@ from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-
 import davey
+
 from discord import utils
 from discord.enums import SpeakingState
 from discord.errors import ConnectionClosed

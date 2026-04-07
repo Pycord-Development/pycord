@@ -34,6 +34,7 @@ from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import davey
+
 from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.errors import ConnectionClosed
