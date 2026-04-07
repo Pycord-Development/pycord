@@ -34,7 +34,6 @@ from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import davey
-
 from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.errors import ConnectionClosed
@@ -278,7 +277,7 @@ class VoiceConnectionState:
 
     @property
     def ssrc_user_map(self) -> dict[int, int]:
-        return {v: k for k, v in self.user_ssrc_map.items()}
+        return self.client._ssrc_to_id
 
     @property
     def max_dave_proto_version(self) -> int:
