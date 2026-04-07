@@ -66,9 +66,9 @@ class WaveSink(Sink):
 
         data = BytesIO()
         with wave.open(data, "wb") as f:
-            f.setnchannels(self.vc.decoder.CHANNELS)
-            f.setsampwidth(self.vc.decoder.SAMPLE_SIZE // self.vc.decoder.CHANNELS)
-            f.setframerate(self.vc.decoder.SAMPLING_RATE)
+            f.setnchannels(OpusDecoder.CHANNELS)
+            f.setsampwidth(OpusDecoder.SAMPLE_SIZE // OpusDecoder.CHANNELS)
+            f.setframerate(OpusDecoder.SAMPLING_RATE)
             f.writeframes(pcm_data)
         data.seek(0)
         audio.file = data
