@@ -35,6 +35,7 @@ from typing import TYPE_CHECKING, Any, Literal, cast, overload
 
 import nacl.secret
 import nacl.utils
+from typing_extensions import Never, Unpack
 
 from discord import opus
 from discord.enums import SpeakingState, try_enum
@@ -44,7 +45,6 @@ from discord.sinks.core import Sink
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
-from ..utils import get_missing_voice_dependencies
 from ._types import VoiceProtocol
 from .enums import OpCodes
 from .receive import AudioReader
@@ -58,7 +58,7 @@ if has_nacl:
 if TYPE_CHECKING:
     from typing import TypeVar
 
-    from typing_extensions import ParamSpec
+    from typing_extensions import ParamSpec, TypeVarTuple
 
     from discord import abc
     from discord.client import Client
@@ -78,6 +78,7 @@ if TYPE_CHECKING:
 
     P = ParamSpec("P")
     T = TypeVar("T")
+    Ts = TypeVarTuple("Ts")
 
 _log = logging.getLogger(__name__)
 
@@ -137,7 +138,7 @@ class VoiceClient(VoiceProtocol["Client"]):
         self._event_listeners: dict[
             str, list[Callable[..., Coroutine[Any, Any, Any]]]
         ] = {}
-        self._reader: AudioReader = MISSING
+        self._reader: AudioReader[Any] = MISSING
 
     @staticmethod
     def _set_future_result_if_pending(
@@ -703,11 +704,29 @@ class VoiceClient(VoiceProtocol["Client"]):
             return datetime.timedelta(milliseconds=self._player.played_frames() * 20)
         return datetime.timedelta()
 
+    @overload
     def start_recording(
         self,
         sink: Sink,
-        callback: AfterCallback | None = None,
-        *args: Any,
+        callback: None = None,
+        *args: None,
+        sync_start: bool = MISSING,
+    ) -> None: ...
+
+    @overload
+    def start_recording(
+        self,
+        sink: Sink,
+        callback: AfterCallback[Unpack[Ts]],
+        *args: tuple[Unpack[Ts]],
+        sync_start: bool = MISSING,
+    ) -> None: ...
+
+    def start_recording(
+        self,
+        sink: Sink,
+        callback: AfterCallback[Unpack[Ts]] | None = None,
+        *args: tuple[Unpack[Ts]] | None,
         sync_start: bool = MISSING,
     ) -> None:
         r"""Start recording the audio from the current connected channel to the provided sink.
@@ -718,17 +737,11 @@ class VoiceClient(VoiceProtocol["Client"]):
         ----------
         sink: :class:`~.Sink`
             A Sink in which all audio packets will be processed in.
-        callback: Callable[[:class:`Exception` | None], Any]
-            A function which is called after the bot has stopped recording. This must take exactly one positonal(-only)
-            parameter, ``exception``, which is the exception that was raised during the recording of the Sink.
-
-            .. versionchanged:: 2.7
-                This parameter is now optional, and must take exactly one parameter, ``exception``.
+        callback:
+            A (potentially async) function which is called after the bot has stopped recording.
+            The function must take the sink as its first parameter.
         \*args:
-            The arguments to pass to the callback coroutine.
-
-            .. deprecated:: 2.7
-                Passing custom arguments to the callback is now deprecated and ignored.
+            Any additional positional arguments to pass to the callback coroutine.
         sync_start: :class:`bool`
             If ``True``, the recordings of subsequent users will start with silence.
             This is useful for recording audio just as it was heard.
@@ -762,7 +775,9 @@ class VoiceClient(VoiceProtocol["Client"]):
                 "'sync_start' parameter is deprecated since 2.7 and will be removed in 3.0"
             )
 
-        self._reader = AudioReader(sink, self, after=callback, start=True)
+        self._reader = AudioReader(
+            sink, self, after=callback, args=args, start=True
+        )  # pyright: ignore[reportCallIssue, reportAttributeAccessIssue, reportArgumentType]
 
     start_listening = start_recording
 

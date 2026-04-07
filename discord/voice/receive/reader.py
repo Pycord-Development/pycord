@@ -28,13 +28,14 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Generic, Literal, Protocol, overload
 
 import davey
 import nacl.secret
 from nacl.exceptions import CryptoError
+from typing_extensions import TypeVarTuple, Unpack
 
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
 from .router import PacketRouter, SinkEventRouter
@@ -47,11 +48,21 @@ if TYPE_CHECKING:
     from ..client import VoiceClient
     from ..packets import RTPPacket
 
-    AfterCallback = Callable[[Exception | None], Any]
     DecryptRTP = Callable[[RTPPacket], bytes]
     DecryptRTCP = Callable[[bytes], bytes]
     SpeakingEvent = Literal["member_speaking_start", "member_speaking_stop"]
     EncryptionBox = nacl.secret.SecretBox | nacl.secret.Aead
+
+Ts = TypeVarTuple("Ts")
+
+
+class AfterCallback(Protocol, Generic[Unpack[Ts]]):
+    def __call__(
+        self,
+        sink: Sink,
+        *args: Unpack[Ts],
+    ) -> Coroutine[Any, Any, Any] | Any: ...
+
 
 _log = logging.getLogger(__name__)
 
@@ -62,13 +73,36 @@ def is_rtcp(data: bytes) -> bool:
     return 200 <= data[1] <= 204
 
 
-class AudioReader:
+class AudioReader(Generic[Unpack[Ts]]):
+    @overload
     def __init__(
         self,
         sink: Sink,
         client: VoiceClient,
         *,
-        after: AfterCallback | None = None,
+        after: None = None,
+        args: None = None,
+        start: bool = False,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback[Unpack[Ts]],
+        args: tuple[Unpack[Ts]],
+        start: bool = False,
+    ) -> None: ...
+
+    def __init__(
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback[Unpack[Ts]] | None = None,
+        args: tuple[Unpack[Ts]] | None = None,
         start: bool = False,
     ) -> None:
         if after is not None and not callable(
@@ -80,7 +114,8 @@ class AudioReader:
 
         self.sink: Sink = sink
         self.client: VoiceClient = client
-        self.after: AfterCallback | None = after
+        self.after: AfterCallback[Unpack[Ts]] | None = after
+        self.args: tuple[Unpack[Ts]] | None = args
 
         self.sink.init(client)
 
@@ -91,7 +126,7 @@ class AudioReader:
         self.decryptor: PacketDecryptor = PacketDecryptor(
             client.mode, bytes(client.secret_key), client
         )
-        self.speaking_timer: SpeakingTimer = SpeakingTimer(self)
+        self.speaking_timer: SpeakingTimer[Unpack[Ts]] = SpeakingTimer(self)
         self.keep_alive: UDPKeepAlive = UDPKeepAlive(client)
 
         if start:
@@ -144,9 +179,13 @@ class AudioReader:
         self.speaking_timer.stop()
         self.keep_alive.stop()
 
-        if self.after:
+        if self.after and self.args:
             try:
-                self.after(self.error)
+                r = self.after(self.sink, *self.args)
+                if isinstance(r, Coroutine):
+                    self.client.loop.create_task(
+                        r
+                    )  # pyright: ignore[reportUnknownArgumentType]
             except Exception:
                 _log.exception(
                     "An error ocurred while calling the after callback on audio reader"
@@ -445,14 +484,14 @@ class PacketDecryptor:
         return header + result
 
 
-class SpeakingTimer(threading.Thread):
-    def __init__(self, reader: AudioReader) -> None:
+class SpeakingTimer(threading.Thread, Generic[Unpack[Ts]]):
+    def __init__(self, reader: AudioReader[Unpack[Ts]]) -> None:
         super().__init__(
             daemon=True,
             name=f"voice-receiver-speaking-timer:{id(self):#x}",
         )
 
-        self.reader: AudioReader = reader
+        self.reader: AudioReader[Unpack[Ts]] = reader
         self.client: VoiceClient = reader.client
         self.speaking_timeout_delay: float = 0.2
         self.last_speaking_state: dict[int, bool] = {}

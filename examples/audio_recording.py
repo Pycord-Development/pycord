@@ -46,7 +46,7 @@ async def start(ctx: discord.ApplicationContext, sink: Sinks):
         ctx.channel,
     )
 
-    await ctx.respond("The recording has started!")
+    await ctx.respond("The reacording has started!")
 
 
 @bot.command()
