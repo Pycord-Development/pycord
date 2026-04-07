@@ -35,8 +35,8 @@ from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-import davey
 
+import davey
 from discord import utils
 from discord.enums import SpeakingState
 from discord.errors import ConnectionClosed
@@ -235,7 +235,7 @@ class VoiceWebSocket(DiscordWebSocket):
                     await state.execute_dave_transition(data["transition_id"])
                 else:
                     if data["protocol_version"] == 0 and state.dave_session:
-                        state.dave_session.set_passthrough_mode(True, 10)
+                        state.dave_session.set_passthrough_mode(True, 120)
                     await self.send_dave_transition_ready(transition_id)
             elif op == OpCodes.dave_execute_transition:
                 _log.info(
