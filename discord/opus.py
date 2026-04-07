@@ -708,7 +708,15 @@ class PacketDecoder:
 
         if packet:
             other_code = False
-            pcm = self._decoder.decode(packet.decrypted_data, fec=False)
+            try:
+                pcm = self._decoder.decode(packet.decrypted_data, fec=False)
+            except OpusError:
+                _log.warning(
+                    "Opus decode failed for packet seq=%s, using PLC",
+                    packet.sequence,
+                    exc_info=True,
+                )
+                pcm = self._decoder.decode(None, fec=False)
 
         if other_code:
             next_packet = self._buffer.peek_next()
