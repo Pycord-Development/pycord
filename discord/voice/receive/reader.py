@@ -314,6 +314,14 @@ class PacketDecryptor:
                     )
                     packet.decrypted_data = OPUS_SILENCE
 
+        if packet.decrypted_data is None:
+            # DAVE not ready or SSRC not yet mapped — fall back to raw decrypted payload
+            if packet.extended:
+                offset = packet.update_extended_header(raw_payload)
+                packet.decrypted_data = raw_payload[offset:]
+            else:
+                packet.decrypted_data = raw_payload
+
         return packet.decrypted_data
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:
