@@ -86,7 +86,7 @@ class AudioReader:
         self.client: VoiceClient = client
         self.after: AfterCallback | None = after
 
-        # self.sink._client = client
+        self.sink.init(client)
 
         self.active: bool = False
         self.error: Exception | None = None
@@ -312,7 +312,7 @@ class PacketDecryptor:
                     _log.debug(
                         "Ignoring exception while decoding DAVE packet", exc_info=exc
                     )
-                    packet.decrypted_data = OPUS_SILENCE
+                    # Leave decrypted_data as None so the fallback below uses raw_payload
 
         if packet.decrypted_data is None:
             # DAVE not ready or SSRC not yet mapped — fall back to raw decrypted payload
