@@ -359,11 +359,11 @@ class PacketDecryptor:
                             raw_payload[:16].hex(),
                         )
 
-                    if packet.extended:
-                        offset = packet.update_extended_header(decrypted_audio)
-                        packet.decrypted_data = decrypted_audio[offset:]
-                    else:
-                        packet.decrypted_data = decrypted_audio
+                    # DAVE output is pure Opus — extension header was already
+                    # stripped during outer XChaCha decryption. Do NOT call
+                    # update_extended_header here; it would misinterpret Opus
+                    # bytes as extension values and corrupt the frame.
+                    packet.decrypted_data = decrypted_audio
                 except Exception as exc:
                     fail_count = self._dave_failure.get(packet.ssrc, 0) + 1
                     self._dave_failure[packet.ssrc] = fail_count
@@ -378,15 +378,23 @@ class PacketDecryptor:
                             dave_input[:8].hex(), gen, dave.epoch, exc,
                         )
                         seen.add(gen)
-                    # Leave decrypted_data as None so the fallback below uses raw_payload
+                    # DAVE decrypt failed — use Opus silence so the decoder doesn't
+                    # crash with "corrupted stream" and kill the router thread.
+                    packet.decrypted_data = b'\xf8\xff\xfe'
 
         if packet.decrypted_data is None:
-            # DAVE not ready or SSRC not yet mapped — fall back to raw decrypted payload
-            if packet.extended:
-                offset = packet.update_extended_header(raw_payload)
-                packet.decrypted_data = raw_payload[offset:]
+            if dave is None:
+                # Non-DAVE mode: outer-decrypted bytes ARE the Opus payload.
+                if packet.extended:
+                    offset = packet.update_extended_header(raw_payload)
+                    packet.decrypted_data = raw_payload[offset:]
+                else:
+                    packet.decrypted_data = raw_payload
             else:
-                packet.decrypted_data = raw_payload
+                # DAVE mode but session not ready yet / SSRC not mapped.
+                # Use Opus silence to avoid crashing the Opus decoder with
+                # DAVE-ciphertext garbage during MLS handshake window.
+                packet.decrypted_data = b'\xf8\xff\xfe'
 
         return packet.decrypted_data
 
