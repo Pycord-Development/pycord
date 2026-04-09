@@ -66,6 +66,8 @@ from .user import User
 from .utils import MISSING, async_all, find, get
 
 if TYPE_CHECKING:
+    from typing_extensions import Never
+
     from .cog import Cog
     from .commands import Option
     from .ext.commands import Cooldown
@@ -930,7 +932,7 @@ class ApplicationCommandMixin(ABC):
         nsfw: bool = False,
         options: list[Option] | None = MISSING,
         parent: SlashCommandGroup | None = MISSING,
-        **kwargs: Any,
+        **kwargs: Never,
     ) -> Callable[[...], SlashCommand]:
         """A shortcut decorator for adding a slash command to the bot.
         This is equivalent to using :meth:`application_command`, providing
@@ -976,7 +978,7 @@ class ApplicationCommandMixin(ABC):
         name: str | None = MISSING,
         name_localizations: dict[str, str] | None = MISSING,
         nsfw: bool = False,
-        **kwargs: Any,
+        **kwargs: Never,
     ) -> Callable[..., UserCommand]:
         """A shortcut decorator for adding a user command to the bot.
         This is equivalent to using :meth:`application_command`, providing
@@ -1018,7 +1020,7 @@ class ApplicationCommandMixin(ABC):
         name: str | None = MISSING,
         name_localizations: dict[str, str] | None = MISSING,
         nsfw: bool = False,
-        **kwargs: Any,
+        **kwargs: Never,
     ) -> Callable[..., MessageCommand]:
         """A shortcut decorator for adding a message command to the bot.
         This is equivalent to using :meth:`application_command`, providing
@@ -1065,7 +1067,7 @@ class ApplicationCommandMixin(ABC):
         nsfw: bool = False,
         options: list[Option] | None = MISSING,
         parent: SlashCommandGroup | None = MISSING,
-        **kwargs: Any,
+        **kwargs: Never,
     ) -> Callable[..., C]:
         """A shortcut decorator that converts the provided function into
         an application command via :func:`command` and adds it to

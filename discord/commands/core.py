@@ -90,7 +90,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec
+    from typing_extensions import Concatenate, Never, ParamSpec
 
     from .. import Permissions
     from ..bot import C
@@ -1995,7 +1995,7 @@ def slash_command(
     nsfw: bool = False,
     options: list[Option] | None = MISSING,
     parent: SlashCommandGroup | None = MISSING,
-    **kwargs: Any,
+    **kwargs: Never,
 ) -> Callable[[...], SlashCommand]:
     """Decorator for slash commands that invokes :func:`application_command`.
 
@@ -2038,7 +2038,7 @@ def user_command(
     name: str | None = MISSING,
     name_localizations: dict[str, str] | None = MISSING,
     nsfw: bool = False,
-    **kwargs: Any,
+    **kwargs: Never,
 ) -> Callable[..., UserCommand]:
     """Decorator for user commands that invokes :func:`application_command`.
 
@@ -2077,7 +2077,7 @@ def message_command(
     name: str | None = MISSING,
     name_localizations: dict[str, str] | None = MISSING,
     nsfw: bool = False,
-    **kwargs: Any,
+    **kwargs: Never,
 ) -> Callable[..., MessageCommand]:
     """Decorator for message commands that invokes :func:`application_command`.
 
@@ -2121,7 +2121,7 @@ def application_command(
     nsfw: bool = False,
     options: list[Option] | None = MISSING,
     parent: SlashCommandGroup | None = MISSING,
-    **kwargs: Any,
+    **kwargs: Never,
 ) -> Callable[..., C]:
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
     usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
