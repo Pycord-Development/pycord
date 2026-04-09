@@ -287,11 +287,58 @@ class PacketDecryptor:
 
         return data"""
 
+    # Per-SSRC success/failure counters for DAVE decrypt diagnostics
+    _dave_success: dict[int, int] = {}
+    _dave_failure: dict[int, int] = {}
+    # Track which generations we've seen per SSRC to avoid log spam
+    _dave_seen_generations: dict[int, set] = {}
+
+    @staticmethod
+    def _parse_dave_generation(data: bytes) -> int:
+        """Extract key generation (epoch) from DAVE frame supplemental data.
+
+        DAVE frame layout (from end):
+          [...ciphertext][auth_tag(8B)][nonce(LEB128)][supp_size(1B)][magic(0xFAFA, 2B)]
+        supp_size = total bytes of block including supp_size+magic.
+        generation = (truncatedNonce >> 24) & 0xFF
+        """
+        if len(data) < 12:  # minimum: auth_tag(8)+nonce(1)+supp_size(1)+magic(2)
+            return -1
+        if data[-2:] != b'\xfa\xfa':
+            return -1
+        supp_size = data[-3]
+        if supp_size < 11 or supp_size > len(data):
+            return -1
+        block_start = len(data) - supp_size
+        nonce_pos = block_start + 8  # skip auth_tag (8B)
+        nonce_end = len(data) - 3   # supp_size byte position
+        # Decode LEB128 nonce
+        nonce = 0
+        shift = 0
+        for i in range(nonce_pos, nonce_end):
+            b = data[i]
+            nonce |= (b & 0x7F) << shift
+            shift += 7
+            if not (b & 0x80):
+                break
+        return (nonce >> 24) & 0xFF
+
     def decrypt_rtp(self, packet: RTPPacket) -> bytes:
         state = self.client._connection
         dave = state.dave_session
 
         raw_payload = self._decryptor_rtp(packet)
+
+        # For extended RTP packets (which Discord always sends for audio),
+        # _decryptor_rtp returns result[8:] which already strips the 8-byte
+        # RTP extension values that precede the DAVE frame. davey.decrypt()
+        # must receive ONLY the DAVE frame (no extension values prepended).
+        # For non-extended packets result[8:] is wrong so fall back to the
+        # full outer-decrypted frame.
+        if packet.extended:
+            dave_input = raw_payload  # result[8:] = DAVE frame only
+        else:
+            dave_input = getattr(packet, '_outer_decrypted', raw_payload)
 
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
@@ -300,8 +347,17 @@ class PacketDecryptor:
                     decrypted_audio = dave.decrypt(
                         uid,
                         davey.MediaType.audio,
-                        raw_payload,
+                        dave_input,
                     )
+
+                    self._dave_success[packet.ssrc] = self._dave_success.get(packet.ssrc, 0) + 1
+                    total = self._dave_success.get(packet.ssrc, 0)
+                    if total == 1:
+                        _log.info(
+                            "DAVE decrypt FIRST SUCCESS ssrc=%s uid=%s raw_len=%d out_len=%d raw_head=%s",
+                            packet.ssrc, uid, len(raw_payload), len(decrypted_audio),
+                            raw_payload[:16].hex(),
+                        )
 
                     if packet.extended:
                         offset = packet.update_extended_header(decrypted_audio)
@@ -309,9 +365,19 @@ class PacketDecryptor:
                     else:
                         packet.decrypted_data = decrypted_audio
                 except Exception as exc:
-                    _log.debug(
-                        "Ignoring exception while decoding DAVE packet", exc_info=exc
-                    )
+                    fail_count = self._dave_failure.get(packet.ssrc, 0) + 1
+                    self._dave_failure[packet.ssrc] = fail_count
+                    gen = self._parse_dave_generation(dave_input)
+                    seen = self._dave_seen_generations.setdefault(packet.ssrc, set())
+                    # Log on first 3 failures per SSRC, then only when a NEW generation appears
+                    if fail_count <= 3 or gen not in seen:
+                        _log.warning(
+                            "DAVE decrypt FAIL #%d ssrc=%s uid=%s dave_input_len=%d "
+                            "dave_head=%s frame_gen=%s bot_epoch=%s err=%s",
+                            fail_count, packet.ssrc, uid, len(dave_input),
+                            dave_input[:8].hex(), gen, dave.epoch, exc,
+                        )
+                        seen.add(gen)
                     # Leave decrypted_data as None so the fallback below uses raw_payload
 
         if packet.decrypted_data is None:
@@ -434,6 +500,11 @@ class PacketDecryptor:
 
         if packet.extended:
             packet.update_extended_header(result)
+
+        # Store the full outer-decrypted result so that DAVE decrypt can
+        # receive the complete DAVE frame (including its 8-byte header).
+        # The caller strips result[8:] for the non-DAVE fallback path.
+        packet._outer_decrypted = result
 
         return result[8:]
 

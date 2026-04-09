@@ -274,6 +274,7 @@ class VoiceWebSocket(DiscordWebSocket):
             )
         elif op == OpCodes.mls_proposals:
             op_type = msg[3]
+            epoch_before = state.dave_session.epoch
             result = state.dave_session.process_proposals(
                 (
                     davey.ProposalsOperationType.append
@@ -281,6 +282,11 @@ class VoiceWebSocket(DiscordWebSocket):
                     else davey.ProposalsOperationType.revoke
                 ),
                 msg[4:],
+            )
+            _log.info(
+                "process_proposals done — epoch %s→%s ready=%s result=%s",
+                epoch_before, state.dave_session.epoch,
+                state.dave_session.ready, type(result).__name__,
             )
 
             if isinstance(result, davey.CommitWelcome):
@@ -294,49 +300,102 @@ class VoiceWebSocket(DiscordWebSocket):
                     OpCodes.mls_commit_welcome,
                     data,
                 )
+                # Apply our own commit immediately so we use the same epoch key
+                # material that Discord will forward to other participants.
+                # This avoids the mismatch when Discord sends us mls_welcome (op30)
+                # for a different group context.
+                try:
+                    state.dave_session.process_commit(result.commit)
+                    auth = state.dave_session.get_epoch_authenticator()
+                    _log.info(
+                        "Self-applied CommitWelcome.commit — epoch=%s ready=%s user_ids=%s privacy_code=%s epoch_auth=%s",
+                        state.dave_session.epoch,
+                        state.dave_session.ready,
+                        state.dave_session.get_user_ids(),
+                        state.dave_session.voice_privacy_code,
+                        auth.hex() if auth else None,
+                    )
+                except Exception as exc:
+                    _log.warning("Self-commit failed (non-fatal): %s", exc)
             _log.debug("Processed MLS proposals for current dave session: %r", result)
         elif op == OpCodes.mls_commit_transition:
             transt_id = struct.unpack_from(">H", msg, 3)[0]
-            try:
-                state.dave_session.process_commit(msg[5:])
+            # If session is already ready (self-commit was applied), skip re-processing.
+            if state.dave_session.ready:
+                _log.info(
+                    "mls_commit_transition (transition %s) skipped — session already ready epoch=%s",
+                    transt_id, state.dave_session.epoch,
+                )
                 if transt_id != 0:
                     state.dave_pending_transition = {
                         "transition_id": transt_id,
                         "protocol_version": state.dave_protocol_version,
                     }
-                    _log.debug(
-                        "Sending DAVE transition ready from MLS commit transition with data: %s",
-                        state.dave_pending_transition,
-                    )
                     await self.send_dave_transition_ready(transt_id)
-                _log.debug("Processed MLS commit for transition %s", transt_id)
-            except Exception as exc:
-                _log.debug(
-                    "An exception ocurred while processing a MLS commit, this should be safe to ignore: %s",
-                    exc,
-                )
-                await state.recover_dave_from_invalid_commit(transt_id)
+            else:
+                try:
+                    state.dave_session.process_commit(msg[5:])
+                    auth = state.dave_session.get_epoch_authenticator()
+                    _log.info(
+                        "MLS commit processed (transition %s) — dave.ready=%s epoch=%s user_ids=%s privacy_code=%s epoch_auth=%s",
+                        transt_id,
+                        state.dave_session.ready,
+                        state.dave_session.epoch,
+                        state.dave_session.get_user_ids(),
+                        state.dave_session.voice_privacy_code,
+                        auth.hex() if auth else None,
+                    )
+                    if transt_id != 0:
+                        state.dave_pending_transition = {
+                            "transition_id": transt_id,
+                            "protocol_version": state.dave_protocol_version,
+                        }
+                        _log.debug(
+                            "Sending DAVE transition ready from MLS commit transition with data: %s",
+                            state.dave_pending_transition,
+                        )
+                        await self.send_dave_transition_ready(transt_id)
+                    _log.debug("Processed MLS commit for transition %s", transt_id)
+                except Exception as exc:
+                    _log.debug(
+                        "An exception ocurred while processing a MLS commit, this should be safe to ignore: %s",
+                        exc,
+                    )
+                    await state.recover_dave_from_invalid_commit(transt_id)
         elif op == OpCodes.mls_welcome:
             transt_id = struct.unpack_from(">H", msg, 3)[0]
-            try:
-                state.dave_session.process_welcome(msg[5:])
+            # If session is already ready (self-commit was applied), skip re-processing.
+            if state.dave_session.ready:
+                _log.info(
+                    "mls_welcome (transition %s) skipped — session already ready epoch=%s",
+                    transt_id, state.dave_session.epoch,
+                )
                 if transt_id != 0:
                     state.dave_pending_transition = {
                         "transition_id": transt_id,
                         "protocol_version": state.dave_protocol_version,
                     }
-                    _log.debug(
-                        "Sending DAVE transition ready from MLS welcome with data: %s",
-                        state.dave_pending_transition,
-                    )
                     await self.send_dave_transition_ready(transt_id)
-                _log.debug("Processed MLS welcome for transition %s", transt_id)
-            except Exception as exc:
-                _log.debug(
-                    "An exception ocurred while processing a MLS welcome, this should be safe to ignore: %s",
-                    exc,
-                )
-                await state.recover_dave_from_invalid_commit(transt_id)
+            else:
+                try:
+                    state.dave_session.process_welcome(msg[5:])
+                    if transt_id != 0:
+                        state.dave_pending_transition = {
+                            "transition_id": transt_id,
+                            "protocol_version": state.dave_protocol_version,
+                        }
+                        _log.debug(
+                            "Sending DAVE transition ready from MLS welcome with data: %s",
+                            state.dave_pending_transition,
+                        )
+                        await self.send_dave_transition_ready(transt_id)
+                    _log.debug("Processed MLS welcome for transition %s", transt_id)
+                except Exception as exc:
+                    _log.debug(
+                        "An exception ocurred while processing a MLS welcome, this should be safe to ignore: %s",
+                        exc,
+                    )
+                    await state.recover_dave_from_invalid_commit(transt_id)
 
     async def ready(self, data: dict[str, Any]) -> None:
         state = self.state
