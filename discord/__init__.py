@@ -87,8 +87,6 @@ if TYPE_CHECKING:
     from discord.voice import VoiceClient as VoiceClientC
     from discord.voice import VoiceProtocol as VoiceProtocolC
 
-    from .client import Client
-
     C = TypeVar("C", bound=Client)
 
     @deprecated(
