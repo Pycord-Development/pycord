@@ -1,4 +1,3 @@
-.. pycord documentation master file, created by
 
 Welcome to Pycord
 =================
