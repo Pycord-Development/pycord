@@ -290,6 +290,8 @@ class PacketDecryptor:
     # Per-SSRC success/failure counters for DAVE decrypt diagnostics
     _dave_success: dict[int, int] = {}
     _dave_failure: dict[int, int] = {}
+    _dave_consecutive_failures: dict[int, int] = {}
+    _dave_last_success_time: dict[int, float] = {}
     # Track which generations we've seen per SSRC to avoid log spam
     _dave_seen_generations: dict[int, set] = {}
 
@@ -352,11 +354,21 @@ class PacketDecryptor:
 
                     self._dave_success[packet.ssrc] = self._dave_success.get(packet.ssrc, 0) + 1
                     total = self._dave_success.get(packet.ssrc, 0)
+                    prev_consec_fail = self._dave_consecutive_failures.get(packet.ssrc, 0)
+                    self._dave_consecutive_failures[packet.ssrc] = 0
+                    now = time.perf_counter()
+                    self._dave_last_success_time[packet.ssrc] = now
+
                     if total == 1:
                         _log.info(
                             "DAVE decrypt FIRST SUCCESS ssrc=%s uid=%s raw_len=%d out_len=%d raw_head=%s",
                             packet.ssrc, uid, len(raw_payload), len(decrypted_audio),
                             raw_payload[:16].hex(),
+                        )
+                    elif prev_consec_fail > 0:
+                        _log.info(
+                            "DAVE decrypt RECOVERED ssrc=%s uid=%s seq=%s after %d consec failures",
+                            packet.ssrc, uid, getattr(packet, 'sequence', '?'), prev_consec_fail,
                         )
 
                     # DAVE output is pure Opus — extension header was already
@@ -367,20 +379,65 @@ class PacketDecryptor:
                 except Exception as exc:
                     fail_count = self._dave_failure.get(packet.ssrc, 0) + 1
                     self._dave_failure[packet.ssrc] = fail_count
+                    consec = self._dave_consecutive_failures.get(packet.ssrc, 0) + 1
+                    self._dave_consecutive_failures[packet.ssrc] = consec
                     gen = self._parse_dave_generation(dave_input)
                     seen = self._dave_seen_generations.setdefault(packet.ssrc, set())
-                    # Log on first 3 failures per SSRC, then only when a NEW generation appears
-                    if fail_count <= 3 or gen not in seen:
+                    now = time.perf_counter()
+                    last_ok = self._dave_last_success_time.get(packet.ssrc)
+                    since_ok = f"{now - last_ok:.3f}s" if last_ok is not None else "never"
+                    exc_type = type(exc).__name__
+                    # Log first failure in a new run, first 3 ever, or on new generation
+                    if consec == 1 or fail_count <= 3 or gen not in seen:
+                        # For UnencryptedWhenPassthroughDisabled: log full outer result
+                        # and extension header so we can determine the actual Opus offset.
+                        outer = getattr(packet, '_outer_decrypted', None)
+                        ext_hdr_hex = packet.header[-4:].hex() if hasattr(packet, 'header') else '?'
+                        outer_head = outer[:16].hex() if outer else '?'
                         _log.warning(
-                            "DAVE decrypt FAIL #%d ssrc=%s uid=%s dave_input_len=%d "
-                            "dave_head=%s frame_gen=%s bot_epoch=%s err=%s",
-                            fail_count, packet.ssrc, uid, len(dave_input),
-                            dave_input[:8].hex(), gen, dave.epoch, exc,
+                            "DAVE decrypt FAIL #%d (consec=%d) ssrc=%s uid=%s seq=%s "
+                            "since_last_ok=%s dave_input_len=%d "
+                            "dave_head=%s dave_tail=%s frame_gen=%s bot_epoch=%s err=%s(%s) "
+                            "ext_hdr=%s outer_head=%s raw_payload_head=%s raw_payload_tail=%s",
+                            fail_count, consec, packet.ssrc, uid,
+                            getattr(packet, 'sequence', '?'),
+                            since_ok, len(dave_input),
+                            dave_input[:8].hex(), dave_input[-8:].hex(),
+                            gen, dave.epoch, exc_type, exc,
+                            ext_hdr_hex, outer_head, raw_payload[:16].hex(),
+                            raw_payload[-8:].hex(),
                         )
                         seen.add(gen)
-                    # DAVE decrypt failed — use Opus silence so the decoder doesn't
-                    # crash with "corrupted stream" and kill the router thread.
-                    packet.decrypted_data = b'\xf8\xff\xfe'
+                    # UnencryptedWhenPassthroughDisabled: Discord sent a passthrough
+                    # frame. These frames have the format:
+                    #   [raw_opus][dave_supp_block(supp_size bytes)][rtp_padding]
+                    # dave_supp_block ends with supp_size(1B) + 0xFAFA(2B); supp_size
+                    # counts the entire block including itself and the magic bytes.
+                    # RTP padding (if set): last byte = N, strip N bytes from end.
+                    # Strip padding then the DAVE block to recover raw Opus.
+                    if "UnencryptedWhenPassthroughDisabled" in str(exc):
+                        # Passthrough frames: [raw_opus][dave_supp_block][rtp_padding]
+                        # Strip RTP padding, then DAVE block (ends with supp_size+fafa).
+                        # If fafa not found → not a valid passthrough frame → silence.
+                        opus_data = raw_payload
+                        if packet.padding and opus_data:
+                            pad_n = opus_data[-1]
+                            if 0 < pad_n < len(opus_data):
+                                opus_data = opus_data[:-pad_n]
+                        if len(opus_data) >= 3 and opus_data[-2:] == b'\xfa\xfa':
+                            supp_size = opus_data[-3]
+                            if 3 <= supp_size < len(opus_data):
+                                opus_data = opus_data[:-supp_size]
+                                packet.decrypted_data = opus_data if len(opus_data) >= 3 else b'\xf8\xff\xfe'
+                            else:
+                                packet.decrypted_data = b'\xf8\xff\xfe'
+                        else:
+                            # No DAVE trailer (e.g. all-0xff placeholder frame) → silence
+                            packet.decrypted_data = b'\xf8\xff\xfe'
+                    else:
+                        # Real decrypt failure — use Opus silence so the decoder
+                        # doesn't crash with "corrupted stream".
+                        packet.decrypted_data = b'\xf8\xff\xfe'
 
         if packet.decrypted_data is None:
             if dave is None:
@@ -506,15 +563,18 @@ class PacketDecryptor:
             _log.error("Critical error at AEAD: %s", exc)
             raise CryptoError(exc)
 
+        # update_extended_header returns the actual payload offset into result.
+        # For Discord DAVE frames the extension has length=2 (8 bytes) → offset=8.
+        # For passthrough/unencrypted frames the extension has length=1 (4 bytes)
+        # → offset=4.  Hardcoding result[8:] would strip 4 bytes too many for
+        # passthrough frames and hand invalid bytes to davey / the Opus decoder.
         if packet.extended:
-            packet.update_extended_header(result)
+            offset = packet.update_extended_header(result)
+        else:
+            offset = 0
 
-        # Store the full outer-decrypted result so that DAVE decrypt can
-        # receive the complete DAVE frame (including its 8-byte header).
-        # The caller strips result[8:] for the non-DAVE fallback path.
         packet._outer_decrypted = result
-
-        return result[8:]
+        return result[offset:]
 
     def _decrypt_rtcp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
         _log.debug("Decrypting RTCP AEAD XChaCha20 Poly1305 RTPSize")
