@@ -2128,7 +2128,7 @@ def application_command(
     nsfw: bool = False,
     options: list[Option] | None = MISSING,
     parent: SlashCommandGroup | None = MISSING,
-    **kwargs: Never,
+    **kwargs: Any,
 ) -> Callable[..., C]:
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
     usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class

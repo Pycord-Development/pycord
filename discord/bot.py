@@ -1074,7 +1074,7 @@ class ApplicationCommandMixin(ABC):
         nsfw: bool = False,
         options: list[Option] | None = MISSING,
         parent: SlashCommandGroup | None = MISSING,
-        **kwargs: Never,
+        **kwargs: Any,
     ) -> Callable[..., C]:
         """A shortcut decorator that converts the provided function into
         an application command via :func:`command` and adds it to
