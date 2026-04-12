@@ -285,8 +285,10 @@ class VoiceWebSocket(DiscordWebSocket):
             )
             _log.info(
                 "process_proposals done — epoch %s→%s ready=%s result=%s",
-                epoch_before, state.dave_session.epoch,
-                state.dave_session.ready, type(result).__name__,
+                epoch_before,
+                state.dave_session.epoch,
+                state.dave_session.ready,
+                type(result).__name__,
             )
 
             if isinstance(result, davey.CommitWelcome):
@@ -324,7 +326,8 @@ class VoiceWebSocket(DiscordWebSocket):
             if state.dave_session.ready:
                 _log.info(
                     "mls_commit_transition (transition %s) skipped — session already ready epoch=%s",
-                    transt_id, state.dave_session.epoch,
+                    transt_id,
+                    state.dave_session.epoch,
                 )
                 if transt_id != 0:
                     state.dave_pending_transition = {
@@ -368,7 +371,8 @@ class VoiceWebSocket(DiscordWebSocket):
             if state.dave_session.ready:
                 _log.info(
                     "mls_welcome (transition %s) skipped — session already ready epoch=%s",
-                    transt_id, state.dave_session.epoch,
+                    transt_id,
+                    state.dave_session.epoch,
                 )
                 if transt_id != 0:
                     state.dave_pending_transition = {

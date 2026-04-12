@@ -302,14 +302,14 @@ class PacketDecryptor:
         """
         if len(data) < 12:
             return -1
-        if data[-2:] != b'\xfa\xfa':
+        if data[-2:] != b"\xfa\xfa":
             return -1
         supp_size = data[-3]
         if supp_size < 11 or supp_size > len(data):
             return -1
         block_start = len(data) - supp_size
         nonce_pos = block_start + 8  # skip auth_tag (8B)
-        nonce_end = len(data) - 3   # position of supp_size byte
+        nonce_end = len(data) - 3  # position of supp_size byte
         nonce = 0
         shift = 0
         for i in range(nonce_pos, nonce_end):
@@ -333,7 +333,7 @@ class PacketDecryptor:
         if packet.extended:
             dave_input = raw_payload
         else:
-            dave_input = getattr(packet, '_outer_decrypted', raw_payload)
+            dave_input = getattr(packet, "_outer_decrypted", raw_payload)
 
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
@@ -351,11 +351,15 @@ class PacketDecryptor:
                     self._dave_consecutive_failures[packet.ssrc] = 0
 
                     if success_count == 1:
-                        _log.debug("DAVE decrypt active ssrc=%s uid=%s", packet.ssrc, uid)
+                        _log.debug(
+                            "DAVE decrypt active ssrc=%s uid=%s", packet.ssrc, uid
+                        )
                     elif prev_fails > 0:
                         _log.info(
                             "DAVE decrypt recovered ssrc=%s uid=%s after %d frame(s)",
-                            packet.ssrc, uid, prev_fails,
+                            packet.ssrc,
+                            uid,
+                            prev_fails,
                         )
 
                     # DAVE output is pure Opus — do NOT call update_extended_header;
@@ -372,7 +376,11 @@ class PacketDecryptor:
                     if consec == 1 or gen not in seen:
                         _log.warning(
                             "DAVE decrypt failed ssrc=%s uid=%s frame_gen=%s epoch=%s err=%s",
-                            packet.ssrc, uid, gen, dave.epoch, type(exc).__name__,
+                            packet.ssrc,
+                            uid,
+                            gen,
+                            dave.epoch,
+                            type(exc).__name__,
                         )
                         seen.add(gen)
 
@@ -391,11 +399,13 @@ class PacketDecryptor:
                             pad_n = opus_data[-1]
                             if 0 < pad_n < len(opus_data):
                                 opus_data = opus_data[:-pad_n]
-                        if len(opus_data) >= 3 and opus_data[-2:] == b'\xfa\xfa':
+                        if len(opus_data) >= 3 and opus_data[-2:] == b"\xfa\xfa":
                             supp_size = opus_data[-3]
                             if 3 <= supp_size < len(opus_data):
                                 opus_data = opus_data[:-supp_size]
-                                packet.decrypted_data = opus_data if len(opus_data) >= 3 else OPUS_SILENCE
+                                packet.decrypted_data = (
+                                    opus_data if len(opus_data) >= 3 else OPUS_SILENCE
+                                )
                             else:
                                 packet.decrypted_data = OPUS_SILENCE
                         else:
