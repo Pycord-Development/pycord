@@ -42,7 +42,7 @@ from typing import (
 )
 
 import aiohttp
-from typing_extensions import deprecated
+from typing_extensions import Self, deprecated
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -60,7 +60,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
-from .monetization import SKU, Entitlement
+from .monetization import SKU
 from .object import Object
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
@@ -70,34 +70,33 @@ from .template import Template
 from .threads import Thread
 from .ui.view import BaseView
 from .user import ClientUser, User
-from .utils import _D, _FETCHABLE, MISSING
-from .voice_client import VoiceClient
+from .utils import (
+    _D,
+    _FETCHABLE,
+    MISSING,
+    _get_event_loop,
+    warn_if_voice_dependencies_missing,
+)
 from .webhook import Webhook
 from .widget import Widget
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import (
-        CategoryChannel,
         DMChannel,
-        ForumChannel,
-        StageChannel,
-        TextChannel,
-        VoiceChannel,
     )
     from .interactions import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
     from .soundboard import SoundboardSound
-    from .threads import Thread, ThreadMember
-    from .ui.item import Item, ViewItem
-    from .voice_client import VoiceProtocol
+    from .threads import Thread
+    from .ui.item import ViewItem
+    from .voice import VoiceProtocol
 
 __all__ = ("Client",)
 
 Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
-
 
 _log = logging.getLogger(__name__)
 
@@ -154,7 +153,7 @@ class Client:
     loop: Optional[:class:`asyncio.AbstractEventLoop`]
         The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations.
         Defaults to ``None``, in which case the default event loop is used via
-        :func:`asyncio.get_event_loop()`.
+        :func:`asyncio.get_event_loop()` if it exists or one is created via :func:`asyncio.new_event_loop()`.
     connector: Optional[:class:`aiohttp.BaseConnector`]
         The connector to use for connection pooling.
     proxy: Optional[:class:`str`]
@@ -252,7 +251,7 @@ class Client:
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
         self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
+            _get_event_loop() if loop is None else loop
         )
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
@@ -287,9 +286,7 @@ class Client:
         self._connection._get_client = lambda: self
         self._event_handlers: dict[str, list[Coro]] = {}
 
-        if VoiceClient.warn_nacl:
-            VoiceClient.warn_nacl = False
-            _log.warning("PyNaCl is not installed, voice will NOT be supported")
+        warn_if_voice_dependencies_missing()
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
         self._tasks = set()
@@ -426,7 +423,7 @@ class Client:
         return self._connection.private_channels
 
     @property
-    def voice_clients(self) -> list[VoiceProtocol]:
+    def voice_clients(self) -> list[VoiceProtocol[Self]]:
         """Represents a list of voice connections.
 
         These are usually :class:`.VoiceClient` instances.
@@ -1876,8 +1873,6 @@ class Client:
             Retrieving the information failed somehow.
         """
         data = await self.http.application_info()
-        if "rpc_origins" not in data:
-            data["rpc_origins"] = None
         return AppInfo(self._connection, data)
 
     async def fetch_user(self, user_id: int, /) -> User:

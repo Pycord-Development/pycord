@@ -62,6 +62,7 @@ from .enums import (
     NSFWLevel,
     OnboardingMode,
     ScheduledEventEntityType,
+    RoleType,
     ScheduledEventPrivacyLevel,
     SortOrder,
     VerificationLevel,
@@ -135,8 +136,8 @@ if TYPE_CHECKING:
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
-    from .types.voice import GuildVoiceState
-    from .voice_client import VoiceClient
+    from .types.voice import VoiceState as GuildVoiceState
+    from .voice import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -1260,7 +1261,7 @@ class Guild(Hashable):
         .. versionadded:: 1.6
         """
         for role in self._roles.values():
-            if role.is_premium_subscriber():
+            if role.type is RoleType.BOOSTER:
                 return role
         return None
 
@@ -3814,7 +3815,7 @@ class Guild(Hashable):
 
         You must have the :attr:`~Permissions.view_audit_log` permission to use this.
 
-        See `API documentation <https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log>`_
+        See `API documentation <https://docs.discord.com/developers/resources/audit-log#get-guild-audit-log>`_
         for more information about the `before` and `after` parameters.
 
         Parameters

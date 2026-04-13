@@ -89,6 +89,11 @@ Messages
 .. autoclass:: Message()
     :members:
 
+.. attributetable:: MessagePin
+
+.. autoclass:: MessagePin()
+    :members:
+
 .. attributetable:: MessageSnapshot
 
 .. autoclass:: MessageSnapshot()

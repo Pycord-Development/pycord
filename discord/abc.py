@@ -35,6 +35,7 @@ from typing import (
     Iterable,
     Protocol,
     Sequence,
+    TypeAlias,
     TypeVar,
     Union,
     overload,
@@ -57,7 +58,6 @@ from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
 from .utils import warn_deprecated
-from .voice_client import VoiceClient, VoiceProtocol
 
 __all__ = (
     "Snowflake",
@@ -68,8 +68,6 @@ __all__ = (
     "Connectable",
     "Mentionable",
 )
-
-T = TypeVar("T", bound=VoiceProtocol)
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -100,11 +98,20 @@ if TYPE_CHECKING:
     from .ui.view import BaseView
     from .user import ClientUser
 
-    PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
-    ]
-    MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
+    PartialMessageableChannel: TypeAlias = (
+        TextChannel
+        | VoiceChannel
+        | StageChannel
+        | Thread
+        | DMChannel
+        | PartialMessageable
+    )
+    MessageableChannel: TypeAlias = PartialMessageableChannel | GroupChannel
     SnowflakeTime = Union["Snowflake", datetime]
+
+    from .voice import VoiceClient, VoiceProtocol
+
+    T = TypeVar("T", bound=VoiceProtocol)
 
 MISSING = utils.MISSING
 
@@ -2003,6 +2010,7 @@ class Connectable(Protocol):
 
     __slots__ = ()
     _state: ConnectionState
+    id: int
 
     def _get_voice_client_key(self) -> tuple[int, str]:
         raise NotImplementedError
@@ -2015,7 +2023,7 @@ class Connectable(Protocol):
         *,
         timeout: float = 60.0,
         reconnect: bool = True,
-        cls: Callable[[Client, Connectable], T] = VoiceClient,
+        cls: Callable[[Client, Connectable], T] = MISSING,
     ) -> T:
         """|coro|
 
@@ -2050,6 +2058,16 @@ class Connectable(Protocol):
         ~discord.opus.OpusNotLoaded
             The opus library has not been loaded.
         """
+
+        # import directly from _types so if the user does not have davey
+        # it won't error here
+        from .voice._types import VoiceProtocol
+
+        if cls is MISSING:
+            # if the user passes no cls, then actually import VoiceClient
+            from .voice import VoiceClient
+
+            cls = VoiceClient  # pyright: ignore[reportAssignmentType]
 
         key_id, _ = self._get_voice_client_key()
         state = self._state

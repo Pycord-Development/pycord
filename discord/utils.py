@@ -93,7 +93,6 @@ except ModuleNotFoundError:
 else:
     HAS_MSGSPEC = True
 
-
 __all__ = (
     "parse_time",
     "warn_deprecated",
@@ -140,7 +139,6 @@ except FileNotFoundError:
     )
     EMOJIS_MAP = {}
 
-
 UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
 
@@ -175,7 +173,6 @@ if TYPE_CHECKING:
 else:
     AutocompleteContext = Any
     OptionChoice = Any
-
 
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
@@ -360,7 +357,7 @@ def deprecated(
     stacklevel: int = 3,
     *,
     use_qualname: bool = True,
-) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
+) -> Callable[[Callable[P, T]], Callable[P, T]]:
     """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
     the decorated function is called.
 
@@ -388,7 +385,7 @@ def deprecated(
         will display as ``login``. Defaults to ``True``.
     """
 
-    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
+    def actual_decorator(func: Callable[P, T]) -> Callable[P, T]:
         @functools.wraps(func)
         def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
             warn_deprecated(
@@ -1632,3 +1629,60 @@ def users_to_csv(users: Iterable[Snowflake]) -> io.BytesIO:
         A file-like object containing the CSV data.
     """
     return io.BytesIO("\n".join(map(lambda u: str(u.id), users)).encode("utf-8"))
+
+
+voice_dependency_warning_emitted = False
+
+
+def get_missing_voice_dependencies() -> tuple[str, ...]:
+    missing: list[str] = []
+    try:
+        import nacl.secret
+        import nacl.utils
+    except ImportError:
+        missing.append("PyNaCl")
+
+    try:
+        import davey
+    except ImportError:
+        missing.append("davey")
+    return tuple(missing)
+
+
+def warn_if_voice_dependencies_missing() -> None:
+    global voice_dependency_warning_emitted
+    if voice_dependency_warning_emitted:
+        return
+
+    missing = get_missing_voice_dependencies()
+    if not missing:
+        return
+
+    voice_dependency_warning_emitted = True
+    deps = ", ".join(missing)
+    _log.warning(
+        "%s %s not installed, voice will NOT be supported",
+        deps,
+        "is" if len(missing) == 1 else "are",
+    )
+
+
+def _get_event_loop() -> asyncio.AbstractEventLoop:
+    """Get the current event loop, creating one if necessary.
+
+    If no event loop is running and none is set, a new event loop
+    is created and set as the current event loop.
+
+    Returns
+    -------
+    asyncio.AbstractEventLoop
+        The current event loop.
+    """
+    if sys.version_info >= (3, 14):
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        return loop
+    return asyncio.get_event_loop()

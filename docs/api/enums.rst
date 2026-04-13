@@ -29,7 +29,7 @@ of :class:`enum.Enum`.
         A string.
     .. attribute:: integer
 
-        An integer between -2⁵³ and 2⁵³.
+        An integer where :math:`-2^{53} < x < 2^{53}`.
 
         .. note::
 
@@ -52,7 +52,7 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating-point number between -2⁵³ and 2⁵³.
+        A floating-point number where :math:`-2^{53} < x < 2^{53}`.
 
         .. note::
 
@@ -2661,3 +2661,23 @@ of :class:`enum.Enum`.
     .. attribute:: user
 
         The default value is a user.
+
+.. autoclass:: RoleType
+    :members:
+
+.. class:: ApplicationEventWebhookStatus
+
+    Represents the application event webhook status.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: disabled
+
+        The application webhook is disabled.
+
+    .. attribute:: enabled
+
+        The application webhook is enabled.
+
+    .. attribute:: disabled_by_discord
+        The application webhook is disabled by Discord.

@@ -85,11 +85,12 @@ if TYPE_CHECKING:
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
     from .types.guild import Guild as GuildPayload
+    from .types.member import MemberUpdateEvent
     from .types.message import Message as MessagePayload
     from .types.poll import Poll as PollPayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
-    from .voice_client import VoiceClient
+    from .voice import VoiceProtocol
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
@@ -287,7 +288,7 @@ class ConnectionState:
         if views:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)
-        self._voice_clients: dict[int, VoiceClient] = {}
+        self._voice_clients: dict[int, VoiceProtocol] = {}
         self._sounds: dict[int, SoundboardSound] = {}
 
         # LRU of max size 128
@@ -341,14 +342,14 @@ class ConnectionState:
         return ret
 
     @property
-    def voice_clients(self) -> list[VoiceClient]:
+    def voice_clients(self) -> list[VoiceProtocol]:
         return list(self._voice_clients.values())
 
-    def _get_voice_client(self, guild_id: int | None) -> VoiceClient | None:
+    def _get_voice_client(self, guild_id: int | None) -> VoiceProtocol | None:
         # the keys of self._voice_clients are ints
         return self._voice_clients.get(guild_id)  # type: ignore
 
-    def _add_voice_client(self, guild_id: int, voice: VoiceClient) -> None:
+    def _add_voice_client(self, guild_id: int, voice: VoiceProtocol) -> None:
         self._voice_clients[guild_id] = voice
 
     def _remove_voice_client(self, guild_id: int) -> None:
@@ -918,7 +919,11 @@ class ConnectionState:
                     counts[answer.id].count += 1
                 else:
                     counts[answer.id] = PollAnswerCount(
-                        {"id": answer.id, "count": 1, "me_voted": False}
+                        {
+                            "id": answer.id,
+                            "count": 1,
+                            "me_voted": False,
+                        }
                     )
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
@@ -1329,10 +1334,8 @@ class ConnectionState:
             )
         self.dispatch("raw_member_remove", raw)
 
-    def parse_guild_member_update(self, data) -> None:
+    def parse_guild_member_update(self, data: MemberUpdateEvent) -> None:
         guild = self._get_guild(int(data["guild_id"]))
-        user = data["user"]
-        user_id = int(user["id"])
         if guild is None:
             _log.debug(
                 "GUILD_MEMBER_UPDATE referencing an unknown guild ID: %s. Discarding.",
@@ -1340,29 +1343,41 @@ class ConnectionState:
             )
             return
 
-        member = guild.get_member(user_id)
-        if member is not None:
-            old_member = Member._copy(member)
-            member._update(data)
-            user_update = member._update_inner_user(user)
-            if user_update:
-                self.dispatch("user_update", user_update[0], user_update[1])
+        user = data["user"]
+        user_id = int(user["id"])
 
-            self.dispatch("member_update", old_member, member)
+        # Try to get the old member from cache
+        old_member: Member | None = guild.get_member(user_id)
+        old_member_copy: Member | None = (
+            Member._copy(old_member) if old_member is not None else None
+        )
+
+        # Always create or update the member object
+        if old_member is not None:
+            old_member._update(data)
+            new_member: Member = old_member
+        else:
+            new_member = Member(guild=guild, data=data, state=self)  # type: ignore
+
+        raw = RawMemberUpdateEvent(data, new_member)
+        raw.cached_member = old_member_copy
+        self.dispatch("raw_member_update", raw)
+
+        # Update the user cache if needed
+        user_update = None
+        if old_member_copy is not None:
+            user_update = old_member_copy._update_inner_user(user)
+        else:
+            user_update = new_member._update_inner_user(user)
+
+        if user_update:
+            self.dispatch("user_update", user_update[0], user_update[1])
+
+        if old_member_copy is not None:
+            self.dispatch("member_update", old_member_copy, new_member)
         else:
             if self.member_cache_flags.joined:
-                member = Member(data=data, guild=guild, state=self)
-
-                # Force an update on the inner user if necessary
-                user_update = member._update_inner_user(user)
-                if user_update:
-                    self.dispatch("user_update", user_update[0], user_update[1])
-
-                guild._add_member(member)
-            _log.debug(
-                "GUILD_MEMBER_UPDATE referencing an unknown member ID: %s. Discarding.",
-                user_id,
-            )
+                guild._add_member(new_member)
 
     def parse_guild_emojis_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
@@ -1879,7 +1894,8 @@ class ConnectionState:
             if int(data["user_id"]) == self_id:
                 voice = self._get_voice_client(guild.id)
                 if voice is not None:
-                    coro = voice.on_voice_state_update(data)
+                    payload = RawVoiceStateUpdateEvent(data=data, state=self)
+                    coro = voice.on_voice_state_update(payload)
                     asyncio.create_task(
                         logging_coroutine(
                             coro, info="Voice Protocol voice state update handler"
@@ -1916,8 +1932,9 @@ class ConnectionState:
             key_id = int(data["channel_id"])
 
         vc = self._get_voice_client(key_id)
+        payload = RawVoiceServerUpdateEvent(data=data, state=self)
         if vc is not None:
-            coro = vc.on_voice_server_update(data)
+            coro = vc.on_voice_server_update(payload)
             asyncio.create_task(
                 logging_coroutine(
                     coro, info="Voice Protocol voice server update handler"
