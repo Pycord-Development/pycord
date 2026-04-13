@@ -4329,7 +4329,7 @@ class Guild(Hashable):
         entity_type: ScheduledEventEntityType = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
         channel_id: int = MISSING,
-        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        privacy_level: ScheduledEventPrivacyLevel = MISSING,
         reason: str | None = None,
         image: bytes = MISSING,
         start_time: datetime.datetime = MISSING,
@@ -4384,9 +4384,16 @@ class Guild(Hashable):
         payload: dict[str, str | int] = {
             "name": name,
             "scheduled_start_time": scheduled_start_time.isoformat(),
-            "privacy_level": int(privacy_level),
             "entity_type": int(entity_type),
         }
+
+        if privacy_level is not MISSING:
+            warn_deprecated(
+                "privacy_level",
+                None,
+                "3.0",
+                extra="It is ignored by the API and will be removed in a future version.",
+            )
         if location is MISSING and entity_type is MISSING:
             raise TypeError("Either location or entity_type must be provided.")
         if start_time is MISSING and scheduled_start_time is MISSING:
