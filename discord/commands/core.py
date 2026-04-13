@@ -1993,11 +1993,11 @@ def slash_command(
     integration_types: set[IntegrationType] | None = MISSING,
     name: str | None = MISSING,
     name_localizations: dict[str, str] | None = MISSING,
-    nsfw: bool = False,
+    nsfw: bool | None = MISSING,
     options: list[Option] | None = MISSING,
     parent: SlashCommandGroup | None = MISSING,
     **kwargs: Never,
-) -> Callable[[...], SlashCommand]:
+) -> Callable[..., SlashCommand]:
     """Decorator for slash commands that invokes :func:`application_command`.
 
     .. versionadded:: 2.0
@@ -2040,7 +2040,7 @@ def user_command(
     integration_types: set[IntegrationType] | None = MISSING,
     name: str | None = MISSING,
     name_localizations: dict[str, str] | None = MISSING,
-    nsfw: bool = False,
+    nsfw: bool | None = MISSING,
     **kwargs: Never,
 ) -> Callable[..., UserCommand]:
     """Decorator for user commands that invokes :func:`application_command`.
@@ -2081,7 +2081,7 @@ def message_command(
     integration_types: set[IntegrationType] | None = MISSING,
     name: str | None = MISSING,
     name_localizations: dict[str, str] | None = MISSING,
-    nsfw: bool = False,
+    nsfw: bool | None = MISSING,
     **kwargs: Never,
 ) -> Callable[..., MessageCommand]:
     """Decorator for message commands that invokes :func:`application_command`.
@@ -2112,7 +2112,7 @@ def message_command(
 
 def application_command(
     *,
-    cls=SlashCommand,
+    cls: type[C] = SlashCommand,
     checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
     cog: Cog | None = MISSING,
     contexts: set[InteractionContextType] | None = MISSING,
@@ -2125,7 +2125,7 @@ def application_command(
     integration_types: set[IntegrationType] | None = MISSING,
     name: str | None = MISSING,
     name_localizations: dict[str, str] | None = MISSING,
-    nsfw: bool = False,
+    nsfw: bool | None = MISSING,
     options: list[Option] | None = MISSING,
     parent: SlashCommandGroup | None = MISSING,
     **kwargs: Any,

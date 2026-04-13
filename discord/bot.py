@@ -930,11 +930,11 @@ class ApplicationCommandMixin(ABC):
         integration_types: set[IntegrationType] | None = MISSING,
         name: str | None = MISSING,
         name_localizations: dict[str, str] | None = MISSING,
-        nsfw: bool = False,
+        nsfw: bool | None = MISSING,
         options: list[Option] | None = MISSING,
         parent: SlashCommandGroup | None = MISSING,
         **kwargs: Never,
-    ) -> Callable[[...], SlashCommand]:
+    ) -> Callable[..., SlashCommand]:
         """A shortcut decorator for adding a slash command to the bot.
         This is equivalent to using :meth:`application_command`, providing
         the :class:`SlashCommand` class.
@@ -980,7 +980,7 @@ class ApplicationCommandMixin(ABC):
         integration_types: set[IntegrationType] | None = MISSING,
         name: str | None = MISSING,
         name_localizations: dict[str, str] | None = MISSING,
-        nsfw: bool = False,
+        nsfw: bool | None = MISSING,
         **kwargs: Never,
     ) -> Callable[..., UserCommand]:
         """A shortcut decorator for adding a user command to the bot.
@@ -1024,7 +1024,7 @@ class ApplicationCommandMixin(ABC):
         integration_types: set[IntegrationType] | None = MISSING,
         name: str | None = MISSING,
         name_localizations: dict[str, str] | None = MISSING,
-        nsfw: bool = False,
+        nsfw: bool | None = MISSING,
         **kwargs: Never,
     ) -> Callable[..., MessageCommand]:
         """A shortcut decorator for adding a message command to the bot.
@@ -1071,7 +1071,7 @@ class ApplicationCommandMixin(ABC):
         integration_types: set[IntegrationType] | None = MISSING,
         name: str | None = MISSING,
         name_localizations: dict[str, str] | None = MISSING,
-        nsfw: bool = False,
+        nsfw: bool | None = MISSING,
         options: list[Option] | None = MISSING,
         parent: SlashCommandGroup | None = MISSING,
         **kwargs: Any,
