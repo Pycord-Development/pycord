@@ -708,7 +708,15 @@ class PacketDecoder:
 
         if packet:
             other_code = False
-            pcm = self._decoder.decode(packet.decrypted_data, fec=False)
+            try:
+                pcm = self._decoder.decode(packet.decrypted_data, fec=False)
+            except OpusError:
+                _log.warning(
+                    "Opus decode failed for packet seq=%s, using PLC",
+                    packet.sequence,
+                    exc_info=True,
+                )
+                pcm = self._decoder.decode(None, fec=False)
 
         if other_code:
             next_packet = self._buffer.peek_next()
@@ -724,10 +732,5 @@ class PacketDecoder:
                 pcm = self._decoder.decode(nextdata, fec=True)
             else:
                 pcm = self._decoder.decode(None, fec=False)
-
-        if HAS_DAVEY:
-            if user_id is not None and in_dave and dave.can_passthrough(user_id):
-                _log.debug("User ID %s can passthrough, decrypting with DAVE", user_id)
-                pcm = dave.decrypt(user_id, davey.MediaType.audio, pcm)
 
         return packet, pcm

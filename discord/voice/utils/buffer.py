@@ -28,57 +28,16 @@ from __future__ import annotations
 import heapq
 import logging
 import threading
-from typing import Protocol, TypeVar
 
 from ..packets import Packet
 from .wrapped import add_wrapped, gap_wrapped
 
-__all__ = (
-    "Buffer",
-    "JitterBuffer",
-)
+__all__ = ("JitterBuffer",)
 
-
-T = TypeVar("T")
-PacketT = TypeVar("PacketT", bound=Packet)
 _log = logging.getLogger(__name__)
 
 
-class Buffer(Protocol[T]):
-    def __len__(self) -> int: ...
-    def push(self, item: T) -> None: ...
-    def pop(self) -> T | None: ...
-    def peek(self) -> T | None: ...
-    def flush(self) -> list[T]: ...
-    def reset(self) -> None: ...
-
-
-class BaseBuff(Buffer[PacketT]):
-    def __init__(self) -> None:
-        self._buffer: list[PacketT] = []
-
-    def __len__(self) -> int:
-        return len(self._buffer)
-
-    def push(self, item: PacketT) -> None:
-        self._buffer.append(item)
-
-    def pop(self) -> PacketT | None:
-        return self._buffer.pop()
-
-    def peek(self) -> PacketT | None:
-        return self._buffer[-1] if self._buffer else None
-
-    def flush(self) -> list[PacketT]:
-        buf = self._buffer.copy()
-        self._buffer.clear()
-        return buf
-
-    def reset(self) -> None:
-        self._buffer.clear()
-
-
-class JitterBuffer(BaseBuff[PacketT]):
+class JitterBuffer:
     _threshold: int = 10000
 
     def __init__(
@@ -96,8 +55,10 @@ class JitterBuffer(BaseBuff[PacketT]):
         self._prefill: int = prefill
         self._last_tx_seq: int = -1
         self._has_item: threading.Event = threading.Event()
-        # self._lock: threading.Lock = threading.Lock()
         self._buffer: list[Packet] = []
+
+    def __len__(self) -> int:
+        return len(self._buffer)
 
     def _push(self, packet: Packet) -> None:
         heapq.heappush(self._buffer, packet)

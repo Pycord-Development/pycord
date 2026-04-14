@@ -28,22 +28,17 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Generic, Literal, Protocol, overload
 
-from ..packets.core import OPUS_SILENCE
+import davey
+import nacl.secret
+from nacl.exceptions import CryptoError
+from typing_extensions import TypeVarTuple, Unpack
+
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
-from ..utils.dependencies import HAS_DAVEY, HAS_NACL
 from .router import PacketRouter, SinkEventRouter
-
-if HAS_DAVEY:
-    import davey
-
-if HAS_NACL:
-    import nacl.secret
-    from nacl.exceptions import CryptoError
-
 
 if TYPE_CHECKING:
     from discord.member import Member
@@ -53,11 +48,21 @@ if TYPE_CHECKING:
     from ..client import VoiceClient
     from ..packets import RTPPacket
 
-    AfterCallback = Callable[[Exception | None], Any]
     DecryptRTP = Callable[[RTPPacket], bytes]
     DecryptRTCP = Callable[[bytes], bytes]
     SpeakingEvent = Literal["member_speaking_start", "member_speaking_stop"]
     EncryptionBox = nacl.secret.SecretBox | nacl.secret.Aead
+
+Ts = TypeVarTuple("Ts")
+
+
+class AfterCallback(Protocol, Generic[Unpack[Ts]]):
+    def __call__(
+        self,
+        sink: Sink,
+        *args: Unpack[Ts],
+    ) -> Coroutine[Any, Any, Any] | Any: ...
+
 
 _log = logging.getLogger(__name__)
 
@@ -68,25 +73,51 @@ def is_rtcp(data: bytes) -> bool:
     return 200 <= data[1] <= 204
 
 
-class AudioReader:
+class AudioReader(Generic[Unpack[Ts]]):
+    @overload
     def __init__(
         self,
         sink: Sink,
         client: VoiceClient,
         *,
-        after: AfterCallback | None = None,
+        after: None = None,
+        args: None = None,
+        start: bool = False,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback[Unpack[Ts]],
+        args: tuple[Unpack[Ts]],
+        start: bool = False,
+    ) -> None: ...
+
+    def __init__(
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback[Unpack[Ts]] | None = None,
+        args: tuple[Unpack[Ts]] | None = None,
         start: bool = False,
     ) -> None:
-        if after is not None and not callable(after):
-            raise TypeError(
+        if after is not None and not callable(
+            after
+        ):  # pyright: ignore[reportUnnecessaryComparison]
+            raise TypeError(  # pyright: ignore[reportUnreachable]
                 f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead"
             )
 
         self.sink: Sink = sink
         self.client: VoiceClient = client
-        self.after: AfterCallback | None = after
+        self.after: AfterCallback[Unpack[Ts]] | None = after
+        self.args: tuple[Unpack[Ts]] | None = args
 
-        # self.sink._client = client
+        self.sink.init(client)
 
         self.active: bool = False
         self.error: Exception | None = None
@@ -95,7 +126,7 @@ class AudioReader:
         self.decryptor: PacketDecryptor = PacketDecryptor(
             client.mode, bytes(client.secret_key), client
         )
-        self.speaking_timer: SpeakingTimer = SpeakingTimer(self)
+        self.speaking_timer: SpeakingTimer[Unpack[Ts]] = SpeakingTimer(self)
         self.keep_alive: UDPKeepAlive = UDPKeepAlive(client)
 
         if start:
@@ -124,15 +155,17 @@ class AudioReader:
             _log.debug("Reader is not active")
             return
 
+        self.active = False
         self.client._connection.remove_socket_listener(self.callback)
         self.speaking_timer.notify()
         self._stop()
-        self.active = False
 
     def _stop(self) -> None:
         try:
             if self.packet_router.is_alive():
                 self.packet_router.stop()
+                if threading.current_thread() is not self.packet_router:
+                    self.packet_router.join(timeout=5)
         except Exception as exc:
             self.error = exc
             _log.exception("An error ocurred while stopping packet router.")
@@ -146,24 +179,25 @@ class AudioReader:
         self.speaking_timer.stop()
         self.keep_alive.stop()
 
-        if self.after:
+        if self.after and self.args:
             try:
-                self.after(self.error)
+                r = self.after(self.sink, *self.args)
+                if isinstance(r, Coroutine):
+                    self.client.loop.create_task(
+                        r
+                    )  # pyright: ignore[reportUnknownArgumentType]
             except Exception:
                 _log.exception(
                     "An error ocurred while calling the after callback on audio reader"
                 )
 
-        """for sink in self.sink.root.walk_children(with_self=True):
-            try:
-                sink.cleanup()
-            except Exception as exc:
-                _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)"""
+        try:
+            self.sink.cleanup()
+        except Exception as exc:
+            _log.exception("Error calling cleanup() for %s", self.sink, exc_info=exc)
 
     def set_sink(self, sink: Sink) -> Sink:
         old_sink = self.sink
-        # old_sink._client = None
-        # sink._client = self.client
         self.packet_router.set_sink(sink)
         self.sink = sink
         return old_sink
@@ -271,22 +305,6 @@ class PacketDecryptor:
         else:
             return nacl.secret.SecretBox(secret_key)
 
-    """def decrypt_rtp(self, packet: RTPPacket) -> bytes:
-        state = self.client._connection
-        dave = state.dave_session
-        data = self._decryptor_rtp(packet)
-
-        if dave is not None and dave.ready and packet.ssrc in state.ssrc_user_map:
-            data = dave.decrypt(
-                state.ssrc_user_map[packet.ssrc], davey.MediaType.audio, data
-            )
-
-        if packet.extended:
-            offset = packet.update_extended_header(data)
-            data = data[offset:]
-
-        return data"""
-
     def decrypt_rtp(self, packet: RTPPacket) -> bytes:
         state = self.client._connection
         dave = state.dave_session
@@ -295,54 +313,78 @@ class PacketDecryptor:
 
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
-            if uid:
+
+            if not uid:
+                # SSRC -> user_id mapping not yet populated (race with member_connect).
+                # Try every user ID known to the DAVE session until one decrypts.
+                # This is ugly but I didn't manage to get it to work otherwise. If you have a better implementation,
+                # please open a PR.
+                for candidate_uid in dave.get_user_ids():
+                    try:
+                        int_uid = int(candidate_uid)
+                        decrypted_audio = dave.decrypt(
+                            int_uid,
+                            davey.MediaType.audio,
+                            raw_payload,
+                        )
+                        # Successfully decrypted - cache the mapping for next time
+                        self.client._add_ssrc(int_uid, packet.ssrc)
+                        uid = int_uid
+                        raw_payload = decrypted_audio
+                        _log.debug(
+                            "DAVE: inferred ssrc %s -> user_id %s from decryption",
+                            packet.ssrc,
+                            uid,
+                        )
+                        break
+                    except ValueError:
+                        continue
+                else:
+                    raw_payload = b""
+            else:
                 try:
-                    decrypted_audio = dave.decrypt(
+                    raw_payload = dave.decrypt(
                         uid,
                         davey.MediaType.audio,
                         raw_payload,
                     )
-
-                    if packet.extended:
-                        offset = packet.update_extended_header(decrypted_audio)
-                        packet.decrypted_data = decrypted_audio[offset:]
-                    else:
-                        packet.decrypted_data = decrypted_audio
-                except Exception as exc:
+                except ValueError:
+                    # UnencryptedWhenPassthroughDisabled — drop the packet so the opus
+                    # decoder uses PLC/FEC instead of decoding an explicit silence frame.
                     _log.debug(
-                        "Ignoring exception while decoding DAVE packet", exc_info=exc
+                        "DAVE: Decryption failed, dropping packet for PLC",
+                        exc_info=True,
                     )
-                    packet.decrypted_data = OPUS_SILENCE
+                    raw_payload = b""
 
-        return packet.decrypted_data
+            packet.decrypted_data = raw_payload
+        else:  # e.g., stage channels
+            packet.decrypted_data = raw_payload
+
+        return packet.decrypted_data or b""
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:
         data = self._decryptor_rtcp(packet)
 
-        # parse the rtcp packet to its respective report type
-        offset = 0
+        if len(data) < 8:
+            return data
 
-        while offset < len(data):
-            # offset will allow us to read the compund packets
-            current_data = data[offset:]
-            if len(current_data) < 8:
-                break
+        p_header = RTCPPacket.from_data(data)
+        ssrc = p_header.ssrc
 
-            p_header = RTCPPacket.from_data(current_data)
+        state = self.client._connection
+        dave = state.dave_session
 
-            # the sender ssrc will always be at offset 4 of the current packet
-            # doesn't matter if it is a sr or a rr
-            ssrc = p_header.ssrc
-
-            state = self.client._connection
-            dave = state.dave_session
-
-            if dave is not None and dave.ready and ssrc in state.ssrc_user_map:
+        if dave is not None and dave.ready and ssrc in state.ssrc_user_map:
+            try:
                 return dave.decrypt(
                     state.ssrc_user_map[ssrc],
                     davey.MediaType.audio,
-                    current_data,
+                    data,
                 )
+            except ValueError:
+                _log.debug("DAVE: RTCP decryption failed", exc_info=True)
+
         return data
 
     def update_secret_key(self, secret_key: bytes) -> None:
@@ -425,9 +467,10 @@ class PacketDecryptor:
             raise CryptoError(exc)
 
         if packet.extended:
-            packet.update_extended_header(result)
+            offset = packet.update_extended_header(result)
+            return result[offset:]
 
-        return result[8:]
+        return result
 
     def _decrypt_rtcp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
         _log.debug("Decrypting RTCP AEAD XChaCha20 Poly1305 RTPSize")
@@ -441,14 +484,14 @@ class PacketDecryptor:
         return header + result
 
 
-class SpeakingTimer(threading.Thread):
-    def __init__(self, reader: AudioReader) -> None:
+class SpeakingTimer(threading.Thread, Generic[Unpack[Ts]]):
+    def __init__(self, reader: AudioReader[Unpack[Ts]]) -> None:
         super().__init__(
             daemon=True,
             name=f"voice-receiver-speaking-timer:{id(self):#x}",
         )
 
-        self.reader: AudioReader = reader
+        self.reader: AudioReader[Unpack[Ts]] = reader
         self.client: VoiceClient = reader.client
         self.speaking_timeout_delay: float = 0.2
         self.last_speaking_state: dict[int, bool] = {}

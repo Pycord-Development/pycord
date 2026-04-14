@@ -34,6 +34,7 @@ from typing import TYPE_CHECKING, Any
 
 from discord.opus import PacketDecoder
 
+from ...sinks.errors import RecordingException
 from ..utils.multidataevent import MultiDataEvent
 
 if TYPE_CHECKING:
@@ -121,7 +122,10 @@ class PacketRouter(threading.Thread):
             _log.exception("Error in %s loop", self)
             self.reader.error = exc
         finally:
-            self.reader.client.stop_recording()
+            try:
+                self.reader.client.stop_recording()
+            except RecordingException:
+                pass
             self.waiter.clear()
 
     def _do_run(self) -> None:
