@@ -16,7 +16,7 @@ jobs:
     environment: release
     steps:
       - name: "Security Check"
-        uses: Pycord-Development/execute-whitelist-action@v2.1.0
+        uses: Pycord-Development/execute-whitelist-action@v2.1.1
         with:
           whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -215,7 +215,7 @@ jobs:
           python3 -m build --sdist
           python3 -m build --wheel
       - name: "Create GitHub Release"
-        uses: softprops/action-gh-release@v2.5.0
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         id: gh-release
         with:
           tag_name: "v${{ inputs.version }}"
@@ -232,7 +232,7 @@ jobs:
           target_commitish: ${{ github.ref_name }}
 
       - name: "Publish package distributions to PyPI"
-        uses: pypa/gh-action-pypi-publish@v1.13.0
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
         env:
           name: "pypi"
           url: "https://pypi.org/p/py-cord"
@@ -288,7 +288,7 @@ jobs:
   determine_milestone_id:
     runs-on: ubuntu-latest
     needs: [lib_release, pre_config]
-    if: ${{ !contains(needs.pre_config.outputs.version, '-') }}
+    if: ${{ !contains(needs.pre_config.outputs.version, '-') && false }}
     outputs:
       old_milestone_version: ${{ steps.extract_version.outputs.old_milestone_version }}
       new_milestone_version: ${{ steps.extract_version.outputs.new_milestone_version }}
@@ -311,7 +311,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [determine_milestone_id, pre_config]
     if: ${{ !contains(needs.pre_config.outputs.version, 'rc') &&
-      endsWith(needs.pre_config.outputs.version, '.0') }}
+      endsWith(needs.pre_config.outputs.version, '.0') && false }}
     environment: release
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
