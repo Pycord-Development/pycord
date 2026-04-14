@@ -1441,7 +1441,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         this bot.
 
         If an :attr:`owner_id` is not set, it is fetched automatically
-        through the use of :meth:`~.Bot.application_info`, returning 
+        through the use of :meth:`~.Bot.application_info`, returning
         the application owner, or all non read-only team members.
 
         .. versionchanged:: 1.3
@@ -1498,7 +1498,7 @@ class Bot(BotBase, Client):
     owner_ids: Optional[Collection[:class:`int`]]
         The user IDs that owns the bot. This is similar to :attr:`owner_id`.
         If this is not set and the application is team based, then it is
-        fetched automatically using :meth:`~.Bot.application_info`, 
+        fetched automatically using :meth:`~.Bot.application_info`,
         returning all non read-only team members.
         For performance reasons it is recommended to use a :class:`set`
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
