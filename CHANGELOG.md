@@ -34,6 +34,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3178](https://github.com/Pycord-Development/pycord/pull/3178))
 - Fixed a `KeyError` when fetching an app's information or checking for app ownership
   with `is_owner`.
+- Fixed certain scenarios where received components could crash the app.
+  ([#3059](https://github.com/Pycord-Development/pycord/pull/3059))
 
 ### Deprecated
 
