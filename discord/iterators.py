@@ -39,7 +39,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import deprecated, override, Self
+from typing_extensions import Self, deprecated, override
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
