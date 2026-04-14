@@ -1465,7 +1465,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         else:
             app = await self.application_info()  # type: ignore
             if app.team:
-                self.owner_ids = ids = {m.id for m in app.team.members}
+                self.owner_ids = ids = {m.id for m in app.team.members if m.role != "read_only"}
                 return user.id in ids
             else:
                 self.owner_id = owner_id = app.owner.id
