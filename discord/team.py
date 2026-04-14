@@ -147,7 +147,11 @@ class TeamMember(BaseUser):
         self.membership_state: TeamMembershipState = try_enum(
             TeamMembershipState, data["membership_state"]
         )
-        self.role: TeamRole = TeamRole.owner if team.owner_id == int(data["user"]["id"]) else try_enum(TeamRole, data["role"])
+        self.role: TeamRole = (
+            TeamRole.owner
+            if team.owner_id == int(data["user"]["id"])
+            else try_enum(TeamRole, data["role"])
+        )
         super().__init__(state=state, data=data["user"])
 
     def __repr__(self) -> str:
