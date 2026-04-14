@@ -2630,3 +2630,25 @@ of :class:`enum.Enum`.
     .. attribute:: user
 
         The default value is a user.
+
+
+.. class:: TeamRole
+    Represents a app team role.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: owner
+
+        Represents the team owner role.
+
+    .. attribute:: admin
+
+        Represents the team admin role.
+
+    .. attribute:: developer
+
+        Represents the team developer role.
+
+    .. attribute:: read_only
+
+        Represents the team read only role.

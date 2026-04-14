@@ -8,19 +8,27 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
-These changes are available on the `cherry/2.7.1` branch, but have not yet been released.
+These changes are available on the `fix-remove-permissions-field-271` branch, but have
+not yet been released.
 
 ### Added
 
 ### Changed
 
+- `read_only` team members aren't considered as owners anymore when checking for app
+  ownership permissions.
+
 ### Fixed
+
+- Fixed a `KeyError` when fetching an app's information or checking for app ownership
+  with `is_owner`.
 
 ### Deprecated
 
 ### Removed
 
 ## [2.7.1] - 2026-02-09
+
 ### Added
 
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
@@ -67,6 +75,7 @@ These changes are available on the `cherry/2.7.1` branch, but have not yet been 
   ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
 - Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
   ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
+
 ## [2.7.0] - 2025-12-24
 
 ### Added
