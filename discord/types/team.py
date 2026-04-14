@@ -34,7 +34,7 @@ from .user import PartialUser
 class TeamMember(TypedDict):
     user: PartialUser
     membership_state: int
-    permissions: list[str]
+    role: str
     team_id: Snowflake
 
 
