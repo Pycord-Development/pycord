@@ -55,7 +55,7 @@ from .errors import (
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .soundboard import PartialSoundboardSound, SoundboardSound
-from .utils import MISSING
+from .utils import MISSING, _get_event_loop
 
 _log = logging.getLogger(__name__)
 
@@ -192,7 +192,7 @@ class HTTPClient:
         unsync_clock: bool = True,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
+            _get_event_loop() if loop is None else loop
         )
         self.connector = connector
         self.__session: aiohttp.ClientSession = MISSING  # filled in static_login

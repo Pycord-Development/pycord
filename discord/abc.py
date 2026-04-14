@@ -35,6 +35,7 @@ from typing import (
     Iterable,
     Protocol,
     Sequence,
+    TypeAlias,
     TypeVar,
     Union,
     overload,
@@ -97,10 +98,15 @@ if TYPE_CHECKING:
     from .ui.view import BaseView
     from .user import ClientUser
 
-    PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
-    ]
-    MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
+    PartialMessageableChannel: TypeAlias = (
+        TextChannel
+        | VoiceChannel
+        | StageChannel
+        | Thread
+        | DMChannel
+        | PartialMessageable
+    )
+    MessageableChannel: TypeAlias = PartialMessageableChannel | GroupChannel
     SnowflakeTime = Union["Snowflake", datetime]
 
     from .voice import VoiceClient, VoiceProtocol

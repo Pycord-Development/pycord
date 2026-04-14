@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING
 
 from . import utils
 from .asset import Asset
-from .enums import TeamMembershipState, try_enum
+from .enums import TeamMembershipState, TeamRole, try_enum
 from .user import BaseUser
 
 if TYPE_CHECKING:
@@ -136,16 +136,22 @@ class TeamMember(BaseUser):
         The team that the member is from.
     membership_state: :class:`TeamMembershipState`
         The membership state of the member (e.g. invited or accepted)
+    role: :class:`TeamRole`
+        The role of the team member (e.g. admin, developer, read_only).
     """
 
-    __slots__ = ("team", "membership_state", "permissions")
+    __slots__ = ("team", "membership_state", "role")
 
     def __init__(self, team: Team, state: ConnectionState, data: TeamMemberPayload):
         self.team: Team = team
         self.membership_state: TeamMembershipState = try_enum(
             TeamMembershipState, data["membership_state"]
         )
-        self.permissions: list[str] = data["permissions"]
+        self.role: TeamRole = (
+            TeamRole.owner
+            if team.owner_id == int(data["user"]["id"])
+            else try_enum(TeamRole, data["role"])
+        )
         super().__init__(state=state, data=data["user"])
 
     def __repr__(self) -> str:

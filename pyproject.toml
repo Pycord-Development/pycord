@@ -12,7 +12,7 @@ authors = [
 ]
 description = "A Python wrapper for the Discord API"
 readme = { content-type = "text/x-rst", file = "README.rst" }
-requires-python = ">=3.10, <3.14"
+requires-python = ">=3.10, <3.15"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -67,7 +68,7 @@ voice = { file = "requirements/voice.txt" }
 
 [dependency-groups]
 dev = [
-    "pylint~=3.3.8",
+    "pylint~=4.0.5",
     "mypy~=1.20.0",
     "coverage~=7.10",
     "pre-commit==4.5.1",
@@ -84,7 +85,7 @@ test = [
 [tool.setuptools_scm]
 
 [tool.black]
-target-version = ['py310', 'py311', 'py312', 'py313']
+target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
 
 [tool.isort]
 profile = "black"
@@ -125,7 +126,7 @@ asyncio_default_fixture_loop_scope = "function"
 
 [tool.tox]
 requires = ["tox>=4"]
-env_list = ["3.13", "3.12", "3.11", "3.10", "3.13-novoice"]
+env_list = ["3.14", "3.13", "3.12", "3.11", "3.10", "3.14-novoice"]
 
 [tool.tox.env_run_base]
 description = "run unit tests"
@@ -133,7 +134,7 @@ commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true
 dependency_groups = ["test"]
 extras = ["voice"]
 
-[tool.tox.env."3.13-novoice"]
+[tool.tox.env."3.14-novoice"]
 description = "run import and warning tests without the voice extra"
 commands = [[
     "pytest",
@@ -144,7 +145,8 @@ extras = []
 
 # GitHub actions
 [tool.tox.gh.python]
-"3.13" = ["3.13", "3.13-novoice"]
+"3.14" = ["3.14", "3.14-novoice"]
+"3.13" = ["3.13"]
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
 "3.10" = ["3.10"]

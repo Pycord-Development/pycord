@@ -102,6 +102,7 @@ if TYPE_CHECKING:
 __all__ = (
     "Attachment",
     "Message",
+    "MessagePin",
     "PartialMessage",
     "MessageReference",
     "MessageCall",

@@ -39,7 +39,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import Self
+from typing_extensions import deprecated, override, Self
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
@@ -62,12 +62,13 @@ __all__ = (
     "ScheduledEventSubscribersIterator",
     "EntitlementIterator",
     "SubscriptionIterator",
+    "MessagePinIterator",
 )
 
 if TYPE_CHECKING:
-    from .abc import Snowflake
-    from .channel import MessageableChannel
+    from .abc import MessageableChannel, Snowflake
     from .guild import BanEntry, Guild
+    from .http import HTTPClient
     from .member import Member
     from .message import Message, MessagePin
     from .monetization import Entitlement, Subscription
@@ -1220,9 +1221,13 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         limit: int | None,
         before: Snowflake | datetime.datetime | None = None,
     ):
-        self._channel = channel
-        self.limit = limit
-        self.http = channel._state.http
+        self._channel: MessageableChannel = channel
+        self.channel: MessageableChannel | Object | None = None
+
+        self.limit: int | None = limit
+        self.http: HTTPClient = (
+            channel._state.http  # pyright: ignore[reportPrivateUsage]
+        )
 
         self.before: str | None
         if before is None:
@@ -1234,11 +1239,10 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
 
         self.update_before: Callable[[MessagePinPayload], str] = self.get_last_pinned
 
-        self.endpoint = self.http.pins_from
-
         self.queue: asyncio.Queue[MessagePin] = asyncio.Queue()
         self.has_more: bool = True
 
+    @override
     async def next(self) -> MessagePin:
         if self.queue.empty():
             await self.fill_queue()
@@ -1256,12 +1260,16 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         if not self.has_more:
             raise NoMoreItems()
 
-        if not hasattr(self, "channel"):
-            channel = await self._channel._get_channel()
+        if self.channel is None:
+            channel = (
+                await self._channel._get_channel()  # pyright: ignore[reportPrivateUsage]
+            )
             self.channel = channel
 
         limit = 50 if self.limit is None else min(self.limit, 50)
-        data = await self.endpoint(self.channel.id, before=self.before, limit=limit)
+        data = await self.http.pins_from(
+            self.channel.id, before=self.before, limit=limit
+        )
 
         pins: list[MessagePinPayload] = data.get("items", [])
         for d in pins:
@@ -1279,19 +1287,27 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
     def create_pin(self, data: MessagePinPayload) -> MessagePin:
         from .message import MessagePin
 
-        return MessagePin(state=self.channel._state, channel=self.channel, data=data)
+        if self.channel is None:
+            raise RuntimeError("Channel is None, cannot create pin")
+
+        if isinstance(self.channel, Object):
+            raise RuntimeError("Cannot create pin for Object channel")
+
+        return MessagePin(
+            state=self.channel._state,  # pyright: ignore[reportPrivateUsage]
+            channel=self.channel,
+            data=data,
+        )
 
     async def retrieve_inner(self) -> list[Message]:
         pins = await self.flatten()
         return [p.message for p in pins]
 
-    def __await__(self) -> Generator[Any, Any, MessagePin]:
-        warn_deprecated(
-            f"Messageable.pins() returning a list of Message",
-            since="2.7",
-            removed="3.0",
-            reference="The documentation of pins()",
-        )
+    @deprecated(
+        "Messageable.pins() returning a list of Message is deprecated since version 2.7 and will be removed in 2.9."
+        + " See the documentation of Messageable.pins() for more information."
+    )
+    def __await__(self) -> Generator[Any, Any, list[Message]]:
         return self.retrieve_inner().__await__()
 
 
