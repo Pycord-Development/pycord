@@ -17,6 +17,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Changed that `read_only` team members aren't considered as owner.
+
 ### Fixed
 
 - Fixed internal use of deprecated role type methods.
@@ -29,6 +31,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3189](https://github.com/Pycord-Development/pycord/pull/3189))
 - Fixed incorrect type hints for `MessagePinIterator`.
   ([#3178](https://github.com/Pycord-Development/pycord/pull/3178))
+- Fixed team `permissions` keyerror by replacing deprecated permissions with `role`.
 
 ### Deprecated
 
