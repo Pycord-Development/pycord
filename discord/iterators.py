@@ -49,7 +49,6 @@ from .utils import (
     maybe_coroutine,
     snowflake_time,
     time_snowflake,
-    warn_deprecated,
 )
 
 __all__ = (
