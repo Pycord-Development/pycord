@@ -2681,3 +2681,24 @@ of :class:`enum.Enum`.
 
     .. attribute:: disabled_by_discord
         The application webhook is disabled by Discord.
+
+.. class:: TeamRole
+    Represents a app team role.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: owner
+
+        Represents the team owner role.
+
+    .. attribute:: admin
+
+        Represents the team admin role.
+
+    .. attribute:: developer
+
+        Represents the team developer role.
+
+    .. attribute:: read_only
+
+        Represents the team read only role.
