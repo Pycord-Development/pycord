@@ -8,11 +8,19 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
-These changes are available on the `fix-remove-permissions-field-271` branch, but have
-not yet been released.
+These changes are available on the `fix-removed-permissions-field-271` branch, but have not yet been released.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.7.2] - 2026-04-14
 ### Changed
 
 - `read_only` team members aren't considered as owners anymore when checking for app
@@ -22,11 +30,6 @@ not yet been released.
 
 - Fixed a `KeyError` when fetching an app's information or checking for app ownership
   with `is_owner`.
-
-### Deprecated
-
-### Removed
-
 ## [2.7.1] - 2026-02-09
 
 ### Added
@@ -1593,7 +1596,8 @@ not yet been released.
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...HEAD
+[2.7.2]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
