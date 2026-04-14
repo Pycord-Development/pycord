@@ -5,11 +5,11 @@ on:
     paths:
       - "discord/**"
       - "docs/**"
-    branches: [master]
+    branches: [ master ]
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * 1"
-  
+
 permissions: write-all
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
       - name: "Install Python"
         uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: "pip"
           cache-dependency-path: "requirements/_locale.txt"
       - name: "Install Dependencies"
