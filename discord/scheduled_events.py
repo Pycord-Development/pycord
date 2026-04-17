@@ -294,7 +294,6 @@ class ScheduledEvent(Hashable):
         self.user_count: int | None = data.get("user_count")
         self.creator_id: int | None = utils._get_as_snowflake(data, "creator_id")
         self.creator: Member | None = creator
-        self.channel_id = data.get("channel_id", None)
 
     def __str__(self) -> str:
         return self.name
@@ -306,10 +305,10 @@ class ScheduledEvent(Hashable):
             f"description={self.description} "
             f"start_time={self.scheduled_start_time} "
             f"end_time={self.scheduled_end_time} "
-            f"location={self.location!r} "
+            f"entity_metadata={self.entity_metadata!r} "
             f"status={self.status.name} "
             f"user_count={self.user_count} "
-            f"creator_id={self.creator_id}>"
+            f"creator_id={self.creator_id} "
             f"channel_id={self.channel_id}>"
         )
 
@@ -320,13 +319,12 @@ class ScheduledEvent(Hashable):
     def location(self) -> ScheduledEventLocation | None:
         """Returns the location of the event."""
         if self.channel_id is None:
-            self.location = ScheduledEventLocation(
+            if self.entity_metadata is None:
+                return None
+            return ScheduledEventLocation(
                 state=self._state, value=self.entity_metadata.location
             )
-        else:
-            self.location = ScheduledEventLocation(
-                state=self._state, value=self.channel_id
-            )
+        return ScheduledEventLocation(state=self._state, value=self.channel_id)
 
     @property
     def created_at(self) -> datetime.datetime:
@@ -507,12 +505,14 @@ class ScheduledEvent(Hashable):
         if location is not MISSING:
             warn_deprecated("location", "entity_metadata", "2.7", "3.0")
             if entity_metadata is MISSING:
-                if not isinstance(location, (ScheduledEventLocation)):
+                if not isinstance(location, ScheduledEventLocation):
                     location = ScheduledEventLocation(state=self._state, value=location)
-                    if entity_type is MISSING:
-                        entity_type = location.type
+                if entity_type is MISSING:
+                    entity_type = location.type
                 if location.type == ScheduledEventEntityType.external:
                     entity_metadata = ScheduledEventEntityMetadata(str(location))
+                else:
+                    payload["channel_id"] = location.value.id
 
         if cover is not MISSING:
             warn_deprecated("cover", "image", "2.7", "3.0")
@@ -546,11 +546,11 @@ class ScheduledEvent(Hashable):
         ):
             if entity_metadata is MISSING or entity_metadata is None:
                 raise ValidationError(
-                    "entity_metadata with a location is required when entity_type is EXTERNAL."
+                    "entity_metadata with a location is required when entity_type is external."
                 )
             if not entity_metadata.location:
                 raise ValidationError(
-                    "entity_metadata.location cannot be empty for EXTERNAL events."
+                    "entity_metadata.location cannot be empty for external events."
                 )
 
             has_end_time = (
@@ -558,7 +558,7 @@ class ScheduledEvent(Hashable):
             )
             if not has_end_time:
                 raise ValidationError(
-                    "scheduled_end_time is required for EXTERNAL events."
+                    "scheduled_end_time is required for external events."
                 )
 
             payload["channel_id"] = None

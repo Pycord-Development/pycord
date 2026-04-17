@@ -956,7 +956,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
 
     async def _fill_from_cache(self):
         """Fill subscribers queue from cached user IDs."""
-        cached_user_ids = list(self.event._cached_subscribers.keys())
+        cached_user_ids = list(self.event._cached_subscribers)
 
         for user_id in itertools.islice(iter(cached_user_ids), self.retrieve):
             member = self.event.guild.get_member(user_id)

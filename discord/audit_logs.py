@@ -381,6 +381,7 @@ class AuditLogChanges:
                 if transformer:
                     after = transformer(entry, after)
 
+            setattr(self.before, attr, before)
             setattr(self.after, attr, after)
             if attr == "location":
                 setattr(self.after, "entity_metadata", after)

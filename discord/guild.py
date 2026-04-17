@@ -4382,12 +4382,6 @@ class Guild(Hashable):
         ValidationError
             Invalid parameters for the event type.
         """
-        payload: dict[str, str | int] = {
-            "name": name,
-            "scheduled_start_time": scheduled_start_time.isoformat(),
-            "entity_type": int(entity_type),
-        }
-
         if privacy_level is not MISSING:
             warn_deprecated(
                 "privacy_level",
@@ -4414,12 +4408,20 @@ class Guild(Hashable):
         if location is not MISSING:
             warn_deprecated("location", "entity_metadata", "2.7", "3.0")
             if entity_metadata is MISSING:
-                if not isinstance(location, (ScheduledEventLocation)):
+                if not isinstance(location, ScheduledEventLocation):
                     location = ScheduledEventLocation(state=self._state, value=location)
-                    if entity_type is MISSING:
-                        entity_type = location.type
+                if entity_type is MISSING:
+                    entity_type = location.type
                 if location.type == ScheduledEventEntityType.external:
                     entity_metadata = ScheduledEventEntityMetadata(str(location))
+                else:
+                    channel_id = location.value.id
+
+        payload: dict[str, str | int] = {
+            "name": name,
+            "scheduled_start_time": scheduled_start_time.isoformat(),
+            "entity_type": int(entity_type),
+        }
 
         if scheduled_end_time is not MISSING:
             payload["scheduled_end_time"] = scheduled_end_time.isoformat()
@@ -4433,15 +4435,15 @@ class Guild(Hashable):
         if entity_type == ScheduledEventEntityType.external:
             if entity_metadata is MISSING or entity_metadata is None:
                 raise ValidationError(
-                    "entity_metadata with a location is required for EXTERNAL events."
+                    "entity_metadata with a location is required for external events."
                 )
             if not entity_metadata.location:
                 raise ValidationError(
-                    "entity_metadata.location cannot be empty for EXTERNAL events."
+                    "entity_metadata.location cannot be empty for external events."
                 )
             if scheduled_end_time is MISSING:
                 raise ValidationError(
-                    "scheduled_end_time is required for EXTERNAL events."
+                    "scheduled_end_time is required for external events."
                 )
 
             payload["channel_id"] = None
@@ -4449,7 +4451,7 @@ class Guild(Hashable):
         else:
             if channel_id is MISSING:
                 raise ValidationError(
-                    "channel_id is required for STAGE_INSTANCE and VOICE events."
+                    "channel_id is required for stage_instance and voice events."
                 )
 
             payload["channel_id"] = channel_id
