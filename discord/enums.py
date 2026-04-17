@@ -45,6 +45,7 @@ __all__ = (
     "ActivityType",
     "NotificationLevel",
     "TeamMembershipState",
+    "TeamRole",
     "WebhookType",
     "ExpireBehaviour",
     "ExpireBehavior",
@@ -628,6 +629,15 @@ class TeamMembershipState(Enum):
 
     invited = 1
     accepted = 2
+
+
+class TeamRole(Enum):
+    """Role of a team member."""
+
+    owner = "owner"
+    admin = "admin"
+    developer = "developer"
+    read_only = "read_only"
 
 
 class WebhookType(Enum):
