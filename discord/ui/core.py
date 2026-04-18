@@ -38,6 +38,7 @@ __all__ = ("ItemInterface",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
+    from ..components import Component
     from .view import View
 
 
@@ -114,6 +115,10 @@ class ItemInterface:
 
     def to_components(self) -> list[dict[str, Any]]:
         return [item.to_component_dict() for item in self.children]
+
+    def to_component_instances(self) -> list[Component]:
+        """Converts this interface's items into component class instances."""
+        return [item._generate_underlying() for item in self.children]
 
     def get_item(self, custom_id: str | int) -> Item | None:
         """Gets an item from this structure. Roughly equal to `utils.get(self.children, ...)`.
