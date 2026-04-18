@@ -27,6 +27,7 @@ import pytest
 import discord
 from discord.components import ActionRow as ActionRowComponent
 from discord.components import Container as ContainerComponent
+from discord.components import InputText as InputTextComponent
 
 
 @pytest.mark.asyncio
@@ -76,3 +77,15 @@ async def test_existing_dict_roundtrip_unchanged():
 
     assert restored.timeout is None
     assert restored.to_components() == payload
+
+
+@pytest.mark.asyncio
+async def test_modal_component_instances_support():
+    modal = discord.ui.Modal(title="Modal snapshot")
+    modal.add_item(discord.ui.InputText(label="Name", custom_id="name"))
+
+    components = modal.to_component_instances()
+
+    assert len(components) == 1
+    assert isinstance(components[0], InputTextComponent)
+    assert components[0].custom_id == "name"
