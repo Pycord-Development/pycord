@@ -304,6 +304,19 @@ class BaseView(ItemInterface):
         self.children.clear()
         return self
 
+    def to_component_instances(self) -> list[Component]:
+        """Converts this view's items into component class instances.
+
+        This is useful for in-memory state snapshots and later restoration with
+        :meth:`from_components`.
+
+        Returns
+        -------
+        List[:class:`.Component`]
+            The converted component instances.
+        """
+        return super().to_component_instances()
+
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
 
@@ -728,6 +741,8 @@ class View(BaseView):
         /,
         *,
         timeout: float | None = 180.0,
+        disable_on_timeout: bool = False,
+        store: bool = True,
     ) -> View:
         """Converts component class instances into a :class:`View`.
 
@@ -737,6 +752,12 @@ class View(BaseView):
             The components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
+        disable_on_timeout: :class:`bool`
+            Whether to disable the view when the timeout is reached.
+            Defaults to ``False``.
+        store: :class:`bool`
+            Whether this view should be stored for callback listening.
+            Defaults to ``True``.
 
         Returns
         -------
@@ -744,13 +765,14 @@ class View(BaseView):
             The converted view. This always returns a :class:`View` and not
             one of its subclasses.
         """
-        view = View(timeout=timeout)
+        view = View(
+            timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
+        )
         for row_index, component in enumerate(components):
             if isinstance(component, ActionRowComponent):
                 for child in component.children:
                     item = _component_to_item(child)
-                    with contextlib.suppress(AttributeError, ValueError):
-                        item.row = row_index
+                    item.row = row_index
                     view.add_item(item)
                 continue
 
@@ -988,19 +1010,6 @@ class DesignerView(BaseView):
 
         super().add_item(item)
         return self
-
-    def to_component_instances(self) -> list[Component]:
-        """Converts this view's items into component class instances.
-
-        This is useful for in-memory state snapshots and later restoration with
-        :meth:`from_components`.
-
-        Returns
-        -------
-        List[:class:`.Component`]
-            The converted component instances.
-        """
-        return [_component_factory(component) for component in self.to_components()]
 
     @classmethod
     def from_components(
