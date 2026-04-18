@@ -765,9 +765,7 @@ class View(BaseView):
             The converted view. This always returns a :class:`View` and not
             one of its subclasses.
         """
-        view = View(
-            timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
-        )
+        view = View(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
         for row_index, component in enumerate(components):
             if isinstance(component, ActionRowComponent):
                 for child in component.children:
