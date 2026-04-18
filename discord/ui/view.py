@@ -959,7 +959,9 @@ class DesignerView(BaseView):
             The converted view. This always returns a :class:`DesignerView` and not
             one of its subclasses.
         """
-        view = DesignerView(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
+        view = DesignerView(
+            timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
+        )
         components = [_component_factory(d) for d in data]
         for component in components:
             view.add_item(_component_to_item(component))
