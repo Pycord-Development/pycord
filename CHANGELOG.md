@@ -14,7 +14,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Support for **Python 3.14**.
   ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
-- Methods to store and restore states of UI components. 
+- Methods to store and restore states of UI components.
   ([#3208](https://github.com/Pycord-Development/pycord/pull/3208))
 
 ### Changed
