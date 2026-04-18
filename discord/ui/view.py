@@ -648,6 +648,21 @@ class View(BaseView):
 
         return components
 
+    def to_component_instances(self) -> list[Component]:
+        """Converts this view's items into component class instances.
+
+        This is useful for in-memory state snapshots and later restoration with
+        :meth:`from_components`.
+
+        Returns
+        -------
+        List[:class:`.Component`]
+            The converted component instances. For :class:`View`, the returned
+            list contains top-level :class:`~discord.components.ActionRow`
+            components with their children attached.
+        """
+        return [_component_factory(component) for component in self.to_components()]
+
     @classmethod
     def from_message(
         cls, message: Message, /, *, timeout: float | None = 180.0
@@ -702,6 +717,34 @@ class View(BaseView):
         """
         view = View(timeout=timeout)
         components = [_component_factory(d) for d in data]
+        for component in _walk_all_components(components):
+            view.add_item(_component_to_item(component))
+        return view
+
+    @classmethod
+    def from_components(
+        cls,
+        components: list[Component],
+        /,
+        *,
+        timeout: float | None = 180.0,
+    ) -> View:
+        """Converts component class instances into a :class:`View`.
+
+        Parameters
+        ----------
+        components: List[:class:`.Component`]
+            The components to convert into a view.
+        timeout: Optional[:class:`float`]
+            The timeout of the converted view.
+
+        Returns
+        -------
+        :class:`View`
+            The converted view. This always returns a :class:`View` and not
+            one of its subclasses.
+        """
+        view = View(timeout=timeout)
         for component in _walk_all_components(components):
             view.add_item(_component_to_item(component))
         return view
@@ -937,6 +980,47 @@ class DesignerView(BaseView):
 
         super().add_item(item)
         return self
+
+    def to_component_instances(self) -> list[Component]:
+        """Converts this view's items into component class instances.
+
+        This is useful for in-memory state snapshots and later restoration with
+        :meth:`from_components`.
+
+        Returns
+        -------
+        List[:class:`.Component`]
+            The converted component instances.
+        """
+        return [_component_factory(component) for component in self.to_components()]
+
+    @classmethod
+    def from_components(
+        cls,
+        components: list[Component],
+        /,
+        *,
+        timeout: float | None = 180.0,
+    ) -> DesignerView:
+        """Converts component class instances into a :class:`DesignerView`.
+
+        Parameters
+        ----------
+        components: List[:class:`.Component`]
+            The components to convert into a view.
+        timeout: Optional[:class:`float`]
+            The timeout of the converted view.
+
+        Returns
+        -------
+        :class:`DesignerView`
+            The converted view. This always returns a :class:`DesignerView` and
+            not one of its subclasses.
+        """
+        view = DesignerView(timeout=timeout)
+        for component in components:
+            view.add_item(_component_to_item(component))
+        return view
 
     def _refresh(self, components: list[Component]):
         # Refreshes view data using discord's values
