@@ -745,7 +745,15 @@ class View(BaseView):
             one of its subclasses.
         """
         view = View(timeout=timeout)
-        for component in _walk_all_components(components):
+        for row_index, component in enumerate(components):
+            if isinstance(component, ActionRowComponent):
+                for child in component.children:
+                    item = _component_to_item(child)
+                    with contextlib.suppress(AttributeError, ValueError):
+                        item.row = row_index
+                    view.add_item(item)
+                continue
+
             view.add_item(_component_to_item(component))
         return view
 
