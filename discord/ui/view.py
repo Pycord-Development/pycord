@@ -553,7 +553,10 @@ class BaseView(ItemInterface):
 
     @classmethod
     def from_message(
-        cls, message: Message, /, *,
+        cls,
+        message: Message,
+        /,
+        *,
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
         store: bool = True,
@@ -664,7 +667,10 @@ class View(BaseView):
 
     @classmethod
     def from_message(
-        cls, message: Message, /, *,
+        cls,
+        message: Message,
+        /,
+        *,
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
         store: bool = True,
@@ -875,7 +881,10 @@ class DesignerView(BaseView):
 
     @classmethod
     def from_message(
-        cls, message: Message, /, *,
+        cls,
+        message: Message,
+        /,
+        *,
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
         store: bool = True,
@@ -900,7 +909,9 @@ class DesignerView(BaseView):
             The converted view. This always returns a :class:`DesignerView` and not
             one of its subclasses.
         """
-        view = DesignerView(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
+        view = DesignerView(
+            timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
+        )
         for component in message.components:
             view.add_item(_component_to_item(component))
         return view
