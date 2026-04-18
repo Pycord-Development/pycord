@@ -553,9 +553,12 @@ class BaseView(ItemInterface):
 
     @classmethod
     def from_message(
-        cls, message: Message, /, *, timeout: float | None = 180.0
+        cls, message: Message, /, *,
+        timeout: float | None = 180.0,
+        disable_on_timeout: bool = False,
+        store: bool = True,
     ) -> BaseView:
-        view = cls(timeout=timeout)
+        view = cls(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
         for component in message.components:
             view.add_item(_component_to_item(component))
         return view
@@ -661,7 +664,10 @@ class View(BaseView):
 
     @classmethod
     def from_message(
-        cls, message: Message, /, *, timeout: float | None = 180.0
+        cls, message: Message, /, *,
+        timeout: float | None = 180.0,
+        disable_on_timeout: bool = False,
+        store: bool = True,
     ) -> View:
         """Converts a message's components into a :class:`View`.
 
@@ -683,7 +689,7 @@ class View(BaseView):
             The converted view. This always returns a :class:`View` and not
             one of its subclasses.
         """
-        view = View(timeout=timeout)
+        view = View(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
         for component in _walk_all_components(message.components):
             view.add_item(_component_to_item(component))
         return view
@@ -869,7 +875,10 @@ class DesignerView(BaseView):
 
     @classmethod
     def from_message(
-        cls, message: Message, /, *, timeout: float | None = 180.0
+        cls, message: Message, /, *,
+        timeout: float | None = 180.0,
+        disable_on_timeout: bool = False,
+        store: bool = True,
     ) -> DesignerView:
         """Converts a message's components into a :class:`DesignerView`.
 
@@ -891,7 +900,7 @@ class DesignerView(BaseView):
             The converted view. This always returns a :class:`DesignerView` and not
             one of its subclasses.
         """
-        view = DesignerView(timeout=timeout)
+        view = DesignerView(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
         for component in message.components:
             view.add_item(_component_to_item(component))
         return view
