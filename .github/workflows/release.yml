@@ -129,7 +129,7 @@ jobs:
           git fetch origin
           if ! git show-ref --verify --quiet refs/heads/$VERSION_BRANCH; then
             git checkout -b $VERSION_BRANCH
-            git push origin $VERSION_BRANCH
+            git push origin $VERSION_BRANCH -f
           fi
           git checkout $VERSION_BRANCH
       - name: "Setup Python"

@@ -27,6 +27,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from typing_extensions import deprecated
+
 from . import utils
 from .asset import Asset
 from .enums import TeamMembershipState, TeamRole, try_enum
@@ -169,3 +171,10 @@ class TeamMember(BaseUser):
             f"<{self.__class__.__name__} id={self.id} name={self.name!r} "
             f"discriminator={self.discriminator!r} membership_state={self.membership_state!r}>"
         )
+
+    @property
+    @deprecated(
+        "TeamMember.permissions is deprecated and will return an empty list. Use TeamMember.role instead."
+    )
+    def permissions(self) -> list[str]:
+        return []
