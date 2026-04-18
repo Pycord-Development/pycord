@@ -585,6 +585,8 @@ class View(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    disable_on_timeout: :class:`bool`
+        Whether to disable the view when the timeout is reached. Defaults to ``False``.
     store: Optional[:class:`bool`]
         Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
@@ -595,8 +597,6 @@ class View(BaseView):
         If ``None`` then there is no timeout.
     children: List[:class:`ViewItem`]
         The list of children attached to this view.
-    disable_on_timeout: :class:`bool`
-        Whether to disable the view when the timeout is reached. Defaults to ``False``.
     message: Optional[:class:`.Message`]
         The message that this view is attached to.
         If ``None`` then the view has not been sent with a message.
@@ -688,6 +688,10 @@ class View(BaseView):
             The message with components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
+        disable_on_timeout: :class:`bool`
+            Whether to disable the view when the timeout is reached. Defaults to ``False``.
+        store: Optional[:class:`bool`]
+            Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
         Returns
         -------
@@ -707,6 +711,8 @@ class View(BaseView):
         /,
         *,
         timeout: float | None = 180.0,
+        disable_on_timeout: bool = False,
+        store: bool = True,
     ) -> View:
         """Converts a list of component dicts into a :class:`View`.
 
@@ -716,6 +722,10 @@ class View(BaseView):
             The list of components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
+        disable_on_timeout: :class:`bool`
+            Whether to disable the view when the timeout is reached. Defaults to ``False``.
+        store: Optional[:class:`bool`]
+            Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
         Returns
         -------
@@ -723,7 +733,7 @@ class View(BaseView):
             The converted view. This always returns a :class:`View` and not
             one of its subclasses.
         """
-        view = View(timeout=timeout)
+        view = View(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
         components = [_component_factory(d) for d in data]
         for component in _walk_all_components(components):
             view.add_item(_component_to_item(component))
@@ -830,6 +840,8 @@ class DesignerView(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    disable_on_timeout: :class:`bool`
+        Whether to disable the view's items when the timeout is reached. Defaults to ``False``.
     store: Optional[:class:`bool`]
         Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
@@ -840,8 +852,6 @@ class DesignerView(BaseView):
         If ``None`` then there is no timeout.
     children: List[:class:`ViewItem`]
         The list of items attached to this view.
-    disable_on_timeout: :class:`bool`
-        Whether to disable the view's items when the timeout is reached. Defaults to ``False``.
     message: Optional[:class:`.Message`]
         The message that this view is attached to.
         If ``None`` then the view has not been sent with a message.
@@ -902,6 +912,10 @@ class DesignerView(BaseView):
             The message with components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
+        disable_on_timeout: :class:`bool`
+            Whether to disable the view when the timeout is reached. Defaults to ``False``.
+        store: Optional[:class:`bool`]
+            Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
         Returns
         -------
@@ -923,6 +937,8 @@ class DesignerView(BaseView):
         /,
         *,
         timeout: float | None = 180.0,
+        disable_on_timeout: bool = False,
+        store: bool = True,
     ) -> DesignerView:
         """Converts a list of component dicts into a :class:`DesignerView`.
 
@@ -932,6 +948,10 @@ class DesignerView(BaseView):
             The list of components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
+        disable_on_timeout: :class:`bool`
+            Whether to disable the view when the timeout is reached. Defaults to ``False``.
+        store: Optional[:class:`bool`]
+            Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
         Returns
         -------
@@ -939,7 +959,7 @@ class DesignerView(BaseView):
             The converted view. This always returns a :class:`DesignerView` and not
             one of its subclasses.
         """
-        view = DesignerView(timeout=timeout)
+        view = DesignerView(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
         components = [_component_factory(d) for d in data]
         for component in components:
             view.add_item(_component_to_item(component))

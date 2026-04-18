@@ -79,6 +79,8 @@ class ItemInterface:
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this interface should be stored for callback listening. Setting it to ``False`` will ignore callbacks and prevent item values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
@@ -87,8 +89,6 @@ class ItemInterface:
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this structure.
-    store: Optional[:class:`bool`]
-        Whether this interface should be stored for callback listening. Setting it to ``False`` will ignore callbacks and prevent item values from being refreshed. Defaults to ``True``.
     """
 
     def __init__(
