@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-python@v6
         id: setup-python
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: "pip"
           cache-dependency-path: "requirements/docs.txt"
           check-latest: true
@@ -35,7 +35,7 @@ jobs:
         id: generate-json
         run: python scripts/docs_json_exporter.py
       - name: Upload docs.json as artifact
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         id: artifact-upload
         with:
           name: Pycord Docs JSON
@@ -45,7 +45,7 @@ jobs:
         run: |
           head -n 40 docs.json || tail -n 40 docs.json
       - name: Output artifact ID
-        run:  |
+        run: |
           echo "artifact-id=${{ steps.artifact-upload.outputs.artifact-id }}" >> $GITHUB_OUTPUT
           echo "artifact-url=${{ steps.artifact-upload.outputs.artifact-url }}" >> $GITHUB_OUTPUT
           echo "::notice::Artifact uploaded: ${{ steps.artifact-upload.outputs.artifact-url }}"
