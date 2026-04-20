@@ -194,9 +194,9 @@ class ForumTag(Hashable):
 
     def to_dict(self) -> dict[str, Any]:
         payload: dict[str, Any] = {
-                                      "name": self.name,
-                                      "moderated": self.moderated,
-                                  } | self.emoji._to_forum_reaction_payload()
+            "name": self.name,
+            "moderated": self.moderated,
+        } | self.emoji._to_forum_reaction_payload()
 
         if self.id:
             payload["id"] = self.id
@@ -804,12 +804,10 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         default_thread_slowmode_delay: int = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> TextChannel | None:
-        ...
+    ) -> TextChannel | None: ...
 
     @overload
-    async def edit(self) -> TextChannel | None:
-        ...
+    async def edit(self) -> TextChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -949,7 +947,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
                 self.id,
                 name=name,
                 auto_archive_duration=auto_archive_duration
-                                      or self.default_auto_archive_duration,
+                or self.default_auto_archive_duration,
                 type=type.value,
                 rate_limit_per_user=slowmode_delay or 0,
                 invitable=invitable,
@@ -961,7 +959,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
                 message.id,
                 name=name,
                 auto_archive_duration=auto_archive_duration
-                                      or self.default_auto_archive_duration,
+                or self.default_auto_archive_duration,
                 rate_limit_per_user=slowmode_delay or 0,
                 reason=reason,
             )
@@ -1112,7 +1110,7 @@ class ForumChannel(_TextChannel):
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
         default_auto_archive_duration: (
-                ThreadArchiveDuration | ThreadArchiveDurationEnum
+            ThreadArchiveDuration | ThreadArchiveDurationEnum
         ) = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
@@ -1120,12 +1118,10 @@ class ForumChannel(_TextChannel):
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> ForumChannel | None:
-        ...
+    ) -> ForumChannel | None: ...
 
     @overload
-    async def edit(self) -> ForumChannel | None:
-        ...
+    async def edit(self) -> ForumChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -1319,7 +1315,7 @@ class ForumChannel(_TextChannel):
 
         if allowed_mentions is None:
             allowed_mentions = (
-                    state.allowed_mentions and state.allowed_mentions.to_dict()
+                state.allowed_mentions and state.allowed_mentions.to_dict()
             )
         elif state.allowed_mentions is not None:
             allowed_mentions = state.allowed_mentions.merge(allowed_mentions).to_dict()
@@ -1379,7 +1375,7 @@ class ForumChannel(_TextChannel):
                 stickers=stickers,
                 components=components,
                 auto_archive_duration=auto_archive_duration
-                                      or self.default_auto_archive_duration,
+                or self.default_auto_archive_duration,
                 rate_limit_per_user=slowmode_delay or self.slowmode_delay,
                 applied_tags=applied_tags,
                 flags=flags.value,
@@ -1503,8 +1499,7 @@ class MediaChannel(ForumChannel):
         require_tag: bool = ...,
         hide_media_download_options: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> ForumChannel | None:
-        ...
+    ) -> ForumChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -1658,7 +1653,9 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
             self.nsfw: bool = data.get("nsfw", False)
             self._fill_overwrites(data)
 
-    def _update_status(self, *, status: str | None = MISSING, voice_start_time: int | None = MISSING):
+    def _update_status(
+        self, *, status: str | None = MISSING, voice_start_time: int | None = MISSING
+    ):
         if status is not MISSING:
             self.status = status
         if voice_start_time is not MISSING:
@@ -2107,12 +2104,10 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         slowmode_delay: int = ...,
         nsfw: bool = ...,
         reason: str | None = ...,
-    ) -> VoiceChannel | None:
-        ...
+    ) -> VoiceChannel | None: ...
 
     @overload
-    async def edit(self) -> VoiceChannel | None:
-        ...
+    async def edit(self) -> VoiceChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -2405,8 +2400,8 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             member
             for member in self.members
             if member.voice
-               and not member.voice.suppress
-               and member.voice.requested_to_speak_at is None
+            and not member.voice.suppress
+            and member.voice.requested_to_speak_at is None
         ]
 
     @property
@@ -2804,12 +2799,10 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         reason: str | None = ...,
-    ) -> StageChannel | None:
-        ...
+    ) -> StageChannel | None: ...
 
     @overload
-    async def edit(self) -> StageChannel | None:
-        ...
+    async def edit(self) -> StageChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -2978,12 +2971,10 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         position: int = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         reason: str | None = ...,
-    ) -> CategoryChannel | None:
-        ...
+    ) -> CategoryChannel | None: ...
 
     @overload
-    async def edit(self) -> CategoryChannel | None:
-        ...
+    async def edit(self) -> CategoryChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -3551,8 +3542,7 @@ class VoiceChannelEffectAnimation(NamedTuple):
     type: VoiceChannelEffectAnimationType
 
 
-class VoiceChannelSoundEffect(PartialSoundboardSound):
-    ...
+class VoiceChannelSoundEffect(PartialSoundboardSound): ...
 
 
 class VoiceChannelEffectSendEvent:
@@ -3655,9 +3645,9 @@ def _channel_factory(channel_type: int):
 def _threaded_channel_factory(channel_type: int):
     cls, value = _channel_factory(channel_type)
     if value in (
-            ChannelType.private_thread,
-            ChannelType.public_thread,
-            ChannelType.news_thread,
+        ChannelType.private_thread,
+        ChannelType.public_thread,
+        ChannelType.news_thread,
     ):
         return Thread, value
     return cls, value
@@ -3666,9 +3656,9 @@ def _threaded_channel_factory(channel_type: int):
 def _threaded_guild_channel_factory(channel_type: int):
     cls, value = _guild_channel_factory(channel_type)
     if value in (
-            ChannelType.private_thread,
-            ChannelType.public_thread,
-            ChannelType.news_thread,
+        ChannelType.private_thread,
+        ChannelType.public_thread,
+        ChannelType.news_thread,
     ):
         return Thread, value
     return cls, value
