@@ -3960,7 +3960,7 @@ class Guild(Hashable):
 
         Requests all channel statuses for this guild over the websocket.
 
-        .. versionadded:: 1.5
+        .. versionadded:: 2.9
 
         Parameters
         ----------

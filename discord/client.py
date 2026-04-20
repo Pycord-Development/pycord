@@ -236,7 +236,7 @@ class Client:
     cache_channel_info: :class:`bool`
         Whether to automatically request and cache channel statuses on startup. Defaults to ``False``.
 
-        .. versionadded:: 2.8
+        .. versionadded:: 2.9
 
     Attributes
     -----------

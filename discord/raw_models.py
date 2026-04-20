@@ -490,36 +490,6 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
         self.data: VoiceChannelStatusUpdateEvent = data
 
 
-class RawVoiceChannelStartTimeUpdateEvent(_RawReprMixin):
-    """Represents the payload for an :func:`on_raw_voice_channel_start_time_update` event.
-
-    .. versionadded:: 2.5
-
-    Attributes
-    ----------
-    id: :class:`int`
-        The channel ID where the voice channel start time update originated from.
-    guild_id: :class:`int`
-        The guild ID where the voice channel start time update originated from.
-    voice_start_time: Optional[:class:`datetime.datetime`]
-        The new new voice channel start time.
-    data: :class:`dict`
-        The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#voice-channel-start-time-update>`__.
-    """
-
-    __slots__ = ("id", "guild_id", "voice_start_time", "data")
-
-    def __init__(self, data: VoiceChannelStartTimeUpdateEvent) -> None:
-        self.id: int = int(data["id"])
-        self.guild_id: int = int(data["guild_id"])
-        self.voice_start_time: datetime.datetime | None = (
-            datetime.datetime.fromtimestamp(data["voice_start_time"], tz=datetime.UTC)
-            if data.get("voice_start_time")
-            else None
-        )
-        self.data: VoiceChannelStartTimeUpdateEvent = data
-
-
 class RawTypingEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_typing` event.
 
@@ -1065,10 +1035,40 @@ class RawMemberUpdateEvent(_RawReprMixin):
         self.member: Member = member
 
 
+class RawVoiceChannelStartTimeUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_voice_channel_start_time_update` event.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The channel ID where the voice channel start time update originated from.
+    guild_id: :class:`int`
+        The guild ID where the voice channel start time update originated from.
+    voice_start_time: Optional[:class:`datetime.datetime`]
+        The new new voice channel start time.
+    data: :class:`dict`
+        The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#voice-channel-start-time-update>`__.
+    """
+
+    __slots__ = ("id", "guild_id", "voice_start_time", "data")
+
+    def __init__(self, data: VoiceChannelStartTimeUpdateEvent) -> None:
+        self.id: int = int(data["id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.voice_start_time: datetime.datetime | None = (
+            datetime.datetime.fromtimestamp(data["voice_start_time"], tz=datetime.UTC)
+            if data.get("voice_start_time")
+            else None
+        )
+        self.data: VoiceChannelStartTimeUpdateEvent = data
+
+
 class ChannelInfo(_RawReprMixin):
     """Represents the gateway response to a request for channel information.
 
-    .. versionadded:: 2.8
+    .. versionadded:: 2.9
 
     Attributes
     ----------
