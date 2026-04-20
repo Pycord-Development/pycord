@@ -101,6 +101,7 @@ __all__ = (
     "RawVoiceStateUpdateEvent",
     "RawVoiceChannelStartTimeUpdateEvent",
     "RawMemberUpdateEvent",
+    "ChannelInfo",
 )
 
 
