@@ -31,10 +31,9 @@ import inspect
 import itertools
 import logging
 import os
-from asyncio import Future
 from collections import OrderedDict, deque
 from typing import (
-    overload, TYPE_CHECKING,
+    TYPE_CHECKING,
     Any,
     Callable,
     Coroutine,
@@ -42,6 +41,7 @@ from typing import (
     Sequence,
     TypeVar,
     Union,
+    overload,
 )
 
 from . import utils
@@ -174,9 +174,15 @@ class ChannelInfoRequest:
                 existing = guild.get_channel(channel.id)
                 # check voice_start_time
                 # since stage channels can have that, but not status
-                if existing is not None and channel.voice_start_time is not utils.MISSING:
+                if (
+                    existing is not None
+                    and channel.voice_start_time is not utils.MISSING
+                ):
                     try:
-                        existing._update_status(status=channel.status, voice_start_time=channel.voice_start_time)
+                        existing._update_status(
+                            status=channel.status,
+                            voice_start_time=channel.voice_start_time,
+                        )
                     except AttributeError:
                         # Failsafe, discord sends *all* channels, not just voice
                         # so if this runs on say, a text channel, we just ignore it
@@ -248,7 +254,7 @@ class ConnectionState:
         allowed_mentions = options.get("allowed_mentions")
 
         if allowed_mentions is not None and not isinstance(
-                allowed_mentions, AllowedMentions
+            allowed_mentions, AllowedMentions
         ):
             raise TypeError("allowed_mentions parameter must be AllowedMentions")
 
@@ -373,7 +379,9 @@ class ConnectionState:
         for key in removed:
             del self._chunk_requests[key]
 
-    def process_info_requests(self, guild_id: int, channel_info: list[ChannelInfo]) -> None:
+    def process_info_requests(
+        self, guild_id: int, channel_info: list[ChannelInfo]
+    ) -> None:
         removed = []
         for key, request in self._channel_info_requests.items():
             if request.guild_id == guild_id:
@@ -615,9 +623,9 @@ class ConnectionState:
     def _guild_needs_chunking(self, guild: Guild) -> bool:
         # If presences are enabled then we get back the old guild.large behaviour
         return (
-                self._chunk_guilds
-                and not guild.chunked
-                and not (self._intents.presences and not guild.large)
+            self._chunk_guilds
+            and not guild.chunked
+            and not (self._intents.presences and not guild.large)
         )
 
     def _get_guild_channel(
@@ -707,16 +715,22 @@ class ConnectionState:
                 except asyncio.TimeoutError:
                     break
                 else:
-                    if (needs_chunk := self._guild_needs_chunking(guild)) or self._request_channel_info:
+                    if (
+                        needs_chunk := self._guild_needs_chunking(guild)
+                    ) or self._request_channel_info:
                         if needs_chunk and self._request_channel_info:
                             chunk_future = await self.chunk_guild(guild, wait=False)
-                            info_future = await self.request_guild_channel_info(guild, wait=False)
+                            info_future = await self.request_guild_channel_info(
+                                guild, wait=False
+                            )
                             states.append((guild, chunk_future, info_future))
                         elif needs_chunk:
                             future = await self.chunk_guild(guild, wait=False)
                             states.append((guild, future, None))
                         else:
-                            future = await self.request_guild_channel_info(guild, wait=False)
+                            future = await self.request_guild_channel_info(
+                                guild, wait=False
+                            )
                             states.append((guild, None, future))
                     elif guild.unavailable is False:
                         self.dispatch("guild_available", guild)
@@ -847,10 +861,10 @@ class ConnectionState:
             self._messages.append(message)
         # we ensure that the channel is either a TextChannel, VoiceChannel, StageChannel, or Thread
         if channel and channel.__class__ in (
-                TextChannel,
-                VoiceChannel,
-                StageChannel,
-                Thread,
+            TextChannel,
+            VoiceChannel,
+            StageChannel,
+            Thread,
         ):
             channel.last_message_id = message.id  # type: ignore
 
@@ -1535,22 +1549,31 @@ class ConnectionState:
         return request.get_future()
 
     @overload
-    async def request_guild_channel_info(self, guild: Guild, *, wait: bool = True, cache: bool | None = None) -> list[ChannelInfo]:
-        ...
+    async def request_guild_channel_info(
+        self, guild: Guild, *, wait: bool = True, cache: bool | None = None
+    ) -> list[ChannelInfo]: ...
 
     @overload
-    async def request_guild_channel_info(self, guild: Guild, *, wait: bool = False, cache: bool | None = None) -> asyncio.Future[list[ChannelInfo]]:
-        ...
+    async def request_guild_channel_info(
+        self, guild: Guild, *, wait: bool = False, cache: bool | None = None
+    ) -> asyncio.Future[list[ChannelInfo]]: ...
 
-    async def request_guild_channel_info(self, guild: Guild, *, wait: bool = True, cache: bool | None = None) -> asyncio.Future[list[ChannelInfo]] | list[ChannelInfo]:
+    async def request_guild_channel_info(
+        self, guild: Guild, *, wait: bool = True, cache: bool | None = None
+    ) -> asyncio.Future[list[ChannelInfo]] | list[ChannelInfo]:
         cache = cache or self.cache_channel_info
         request = self._channel_info_requests.get(guild.id)
         if request is None:
             self._channel_info_requests[guild.id] = request = ChannelInfoRequest(
-                guild.id, self.loop, self._get_guild, cache=cache,
+                guild.id,
+                self.loop,
+                self._get_guild,
+                cache=cache,
             )
             ws = self._get_websocket(guild.id)  # This is ignored upstream
-            await ws.request_channel_info(guild.id, fields=["status", "voice_start_time"])
+            await ws.request_channel_info(
+                guild.id, fields=["status", "voice_start_time"]
+            )
 
         if wait:
             return await request.wait()
@@ -1750,7 +1773,11 @@ class ConnectionState:
     def parse_channel_info(self, data) -> None:
         guild_id = int(data["guild_id"])
         channel_info = [ChannelInfo(c) for c in data["channels"]]
-        _log.debug("Processed channel info for %s channels in guild ID %s.", len(channel_info), guild_id)
+        _log.debug(
+            "Processed channel info for %s channels in guild ID %s.",
+            len(channel_info),
+            guild_id,
+        )
         self.process_info_requests(guild_id, channel_info)
 
     def parse_guild_scheduled_event_create(self, data) -> None:
@@ -2020,9 +2047,9 @@ class ConnectionState:
             if member is not None:
                 if flags.voice:
                     if (
-                            channel_id is None
-                            and flags._voice_only
-                            and member.id != self_id
+                        channel_id is None
+                        and flags._voice_only
+                        and member.id != self_id
                     ):
                         # Only remove from cache if we only have the voice flag enabled
                         # Member doesn't meet the Snowflake protocol currently
@@ -2091,7 +2118,10 @@ class ConnectionState:
                 old_voice_start_time = channel.voice_start_time
                 channel._update_status(voice_start_time=data.get("voice_start_time"))
                 self.dispatch(
-                    "voice_channel_start_time_update", channel, old_voice_start_time, channel.voice_start_time
+                    "voice_channel_start_time_update",
+                    channel,
+                    old_voice_start_time,
+                    channel.voice_start_time,
                 )
             else:
                 _log.debug(

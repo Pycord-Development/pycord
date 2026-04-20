@@ -52,8 +52,8 @@ if TYPE_CHECKING:
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.member import MemberUpdateEvent
     from .types.raw_models import (
-        AuditLogEntryEvent, VoiceChannelStartTimeUpdateEvent,
-)
+        AuditLogEntryEvent,
+    )
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
@@ -70,6 +70,7 @@ if TYPE_CHECKING:
         ThreadMembersUpdateEvent,
         ThreadUpdateEvent,
         TypingEvent,
+        VoiceChannelStartTimeUpdateEvent,
         VoiceChannelStatusUpdateEvent,
         VoiceServerUpdateEvent,
         VoiceStateEvent,
@@ -510,7 +511,11 @@ class RawVoiceChannelStartTimeUpdateEvent(_RawReprMixin):
     def __init__(self, data: VoiceChannelStartTimeUpdateEvent) -> None:
         self.id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
-        self.voice_start_time: datetime.datetime | None = datetime.datetime.fromtimestamp(data["voice_start_time"], tz=datetime.UTC) if data.get("voice_start_time") else None
+        self.voice_start_time: datetime.datetime | None = (
+            datetime.datetime.fromtimestamp(data["voice_start_time"], tz=datetime.UTC)
+            if data.get("voice_start_time")
+            else None
+        )
         self.data: VoiceChannelStartTimeUpdateEvent = data
 
 
@@ -1073,6 +1078,7 @@ class ChannelInfo(_RawReprMixin):
     voice_start_time: :class:`int` | None
         The Unix timestamp (in seconds) of when the voice session started.
     """
+
     def __init__(self, data):
         self.id: int = int(data["id"])
         self.status: str | None = data.get("status", utils.MISSING)
