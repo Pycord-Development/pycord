@@ -38,21 +38,21 @@ if TYPE_CHECKING:
     ColourLike = Union[Colour, str, int]
 
 
-def _coerce_colour(value: "ColourLike") -> str:
+def _coerce_colour(value: ColourLike) -> str:
     if isinstance(value, Colour):
         return f"{value.value:0>6x}"
     if isinstance(value, int):
         return f"{value:0>6x}"
     if isinstance(value, str):
         stripped = value.lstrip("#")
-        if len(stripped) != 6 or any(c not in "0123456789abcdefABCDEF" for c in stripped):
+        if len(stripped) != 6 or any(
+            c not in "0123456789abcdefABCDEF" for c in stripped
+        ):
             raise ValueError(
                 f"{value!r} is not a valid hexadecimal color (expected format: 'rrggbb')"
             )
         return stripped.lower()
-    raise TypeError(
-        f"colors must be Colour, str, or int, not {type(value).__name__}"
-    )
+    raise TypeError(f"colors must be Colour, str, or int, not {type(value).__name__}")
 
 
 class SharedClientTheme:
@@ -80,7 +80,7 @@ class SharedClientTheme:
 
     def __init__(
         self,
-        colors: Iterable["ColourLike"],
+        colors: Iterable[ColourLike],
         *,
         gradient_angle: int,
         base_mix: int,
@@ -105,9 +105,7 @@ class SharedClientTheme:
         if base_theme is not None and not isinstance(
             base_theme, SharedClientThemeBaseType
         ):
-            raise TypeError(
-                "base_theme must be a SharedClientThemeBaseType or None"
-            )
+            raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
 
         self.colors: list[str] = normalized
         self.gradient_angle: int = gradient_angle
