@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Support for **Python 3.14**.
   ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
+- Added `SharedClientTheme` support for sending client themes.
+  ([#3209](https://github.com/Pycord-Development/pycord/pull/3209))
 
 ### Changed
 
