@@ -52,8 +52,8 @@ if TYPE_CHECKING:
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.member import MemberUpdateEvent
     from .types.raw_models import (
-        AuditLogEntryEvent,
-    )
+        AuditLogEntryEvent, VoiceChannelStartTimeUpdateEvent,
+)
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
@@ -98,6 +98,7 @@ __all__ = (
     "RawSoundboardSoundDeleteEvent",
     "RawVoiceServerUpdateEvent",
     "RawVoiceStateUpdateEvent",
+    "RawVoiceChannelStartTimeUpdateEvent",
     "RawMemberUpdateEvent",
 )
 
@@ -485,6 +486,32 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
         self.guild_id: int = int(data["guild_id"])
         self.status: str | None = data.get("status")
         self.data: VoiceChannelStatusUpdateEvent = data
+
+
+class RawVoiceChannelStartTimeUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_voice_channel_start_time_update` event.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The channel ID where the voice channel start time update originated from.
+    guild_id: :class:`int`
+        The guild ID where the voice channel start time update originated from.
+    voice_start_time: Optional[:class:`datetime.datetime`]
+        The new new voice channel start time.
+    data: :class:`dict`
+        The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#voice-channel-start-time-update>`__.
+    """
+
+    __slots__ = ("id", "guild_id", "voice_start_time", "data")
+
+    def __init__(self, data: VoiceChannelStartTimeUpdateEvent) -> None:
+        self.id: int = int(data["id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.voice_start_time: datetime.datetime | None = datetime.datetime.fromtimestamp(data["voice_start_time"], tz=datetime.UTC) if data.get("voice_start_time") else None
+        self.data: VoiceChannelStartTimeUpdateEvent = data
 
 
 class RawTypingEvent(_RawReprMixin):
@@ -1030,3 +1057,23 @@ class RawMemberUpdateEvent(_RawReprMixin):
         self.data: MemberUpdateEvent = data
         self.cached_member: Member | None = None
         self.member: Member = member
+
+
+class ChannelInfo(_RawReprMixin):
+    """Represents the gateway response to a request for channel information.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The ID of the channel this info is associated with.
+    status: :class:`str` | None
+        The voice channel status.
+    voice_start_time: :class:`int` | None
+        The Unix timestamp (in seconds) of when the voice session started.
+    """
+    def __init__(self, data):
+        self.id: int = int(data["id"])
+        self.status: str | None = data.get("status", utils.MISSING)
+        self.voice_start_time: int | None = data.get("voice_start_time", utils.MISSING)
