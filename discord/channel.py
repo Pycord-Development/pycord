@@ -2246,6 +2246,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         Sets the status of the voice channel.
 
         You must have the :attr:`~Permissions.set_voice_channel_status` permission to use this.
+        If the bot is not connected to the voice channel, this also requires :attr:`~Permissions.manage_channels`.
 
         Parameters
         ----------
