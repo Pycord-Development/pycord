@@ -1659,7 +1659,6 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
             self._fill_overwrites(data)
 
     def _update_status(self, *, status: str | None = MISSING, voice_start_time: int | None = MISSING):
-        print(f"Updating status for {self.id}", status, voice_start_time)
         if status is not MISSING:
             self.status = status
         if voice_start_time is not MISSING:
