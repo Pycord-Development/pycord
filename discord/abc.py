@@ -1581,7 +1581,7 @@ class Messageable:
         shared_client_theme: :class:`SharedClientTheme`
             The shared client theme to send.
 
-            .. versionadded:: 2.8
+            .. versionadded:: 2.9
 
         Returns
         -------

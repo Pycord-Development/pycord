@@ -1216,7 +1216,7 @@ class InviteTargetUsersJobStatusCode(Enum):
 class SharedClientThemeBaseType(Enum):
     """The base theme mode of a :class:`SharedClientTheme`.
 
-    .. versionadded:: 2.8
+    .. versionadded:: 2.9
 
     .. note::
 

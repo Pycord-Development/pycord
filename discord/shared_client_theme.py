@@ -61,7 +61,7 @@ class SharedClientTheme:
     A shared client theme lets users transmit a customized Discord client
     appearance (colors, gradient, and base mode) through a message.
 
-    .. versionadded:: 2.8
+    .. versionadded:: 2.9
 
     Attributes
     ----------

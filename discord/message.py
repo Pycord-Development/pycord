@@ -1044,7 +1044,7 @@ class Message(Hashable):
     shared_client_theme: Optional[:class:`SharedClientTheme`]
         The shared client theme transmitted via this message, if applicable.
 
-        .. versionadded:: 2.8
+        .. versionadded:: 2.9
     call: Optional[:class:`MessageCall`]
         The call information associated with this message, if applicable.
 
