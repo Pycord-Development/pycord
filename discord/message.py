@@ -58,6 +58,7 @@ from .object import Object
 from .partial_emoji import PartialEmoji
 from .poll import Poll
 from .reaction import Reaction
+from .shared_client_theme import SharedClientTheme
 from .sticker import StickerItem
 from .threads import Thread
 from .utils import MISSING, escape_mentions, find, warn_deprecated
@@ -90,6 +91,7 @@ if TYPE_CHECKING:
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
+    from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
@@ -1039,6 +1041,10 @@ class Message(Hashable):
         The poll associated with this message, if applicable.
 
         .. versionadded:: 2.6
+    shared_client_theme: Optional[:class:`SharedClientTheme`]
+        The shared client theme transmitted via this message, if applicable.
+
+        .. versionadded:: 2.8
     call: Optional[:class:`MessageCall`]
         The call information associated with this message, if applicable.
 
@@ -1087,6 +1093,7 @@ class Message(Hashable):
         "_poll",
         "call",
         "snapshots",
+        "shared_client_theme",
     )
 
     if TYPE_CHECKING:
@@ -1217,6 +1224,14 @@ class Message(Hashable):
         except KeyError:
             self.call = None
 
+        self.shared_client_theme: SharedClientTheme | None
+        try:
+            self.shared_client_theme = SharedClientTheme.from_dict(
+                data["shared_client_theme"]
+            )
+        except KeyError:
+            self.shared_client_theme = None
+
         for handler in ("author", "member", "mentions", "mention_roles"):
             try:
                 getattr(self, f"_handle_{handler}")(data[handler])
@@ -1327,6 +1342,9 @@ class Message(Hashable):
     def _handle_poll(self, value: PollPayload) -> None:
         self._poll = Poll.from_dict(value, self)
         self._state.store_poll(self._poll, self.id)
+
+    def _handle_shared_client_theme(self, value: SharedClientThemePayload) -> None:
+        self.shared_client_theme = SharedClientTheme.from_dict(value)
 
     def _handle_author(self, author: UserPayload) -> None:
         self.author = self._state.store_user(author)

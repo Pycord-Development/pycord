@@ -58,6 +58,7 @@ from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
 from .utils import warn_deprecated
+from .shared_client_theme import SharedClientThemeBaseType
 
 __all__ = (
     "Snowflake",
@@ -89,6 +90,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
     from .poll import Poll
+    from .shared_client_theme import SharedClientTheme
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -1388,6 +1390,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1410,6 +1413,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1432,6 +1436,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1454,6 +1459,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     async def send(
@@ -1477,6 +1483,7 @@ class Messageable:
         suppress=None,
         suppress_embeds=None,
         silent=None,
+        shared_client_theme=None,
     ):
         """|coro|
 
@@ -1495,6 +1502,9 @@ class Messageable:
         single :class:`~discord.Embed` object. To upload multiple embeds, the ``embeds``
         parameter should be used with a :class:`list` of :class:`~discord.Embed` objects.
         **Specifying both parameters will lead to an exception**.
+
+        To upload a shared client theme, the ``shared_client_theme`` parameter should be used
+        with a :class:`~discord.SharedClientTheme` object.
 
         Parameters
         ----------
@@ -1568,6 +1578,10 @@ class Messageable:
             The poll to send.
 
             .. versionadded:: 2.6
+        shared_client_theme: :class:`SharedClientTheme`
+            The shared client theme to send.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1585,12 +1599,34 @@ class Messageable:
             you specified both ``file`` and ``files``,
             or you specified both ``embed`` and ``embeds``,
             or the ``reference`` object is not a :class:`~discord.Message`,
-            :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`.
+            :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`,
+            or the ``shared_client_theme`` object does not meet the required criteria.
         """
 
         channel = await self._get_channel()
         state = self._state
         content = str(content) if content is not None else None
+
+        if shared_client_theme is not None:
+            if shared_client_theme.colors is None or len(shared_client_theme.colors) == 0:
+                raise InvalidArgument("shared_client_theme must have at least one color")
+            if len(shared_client_theme.colors) > 5:
+                raise InvalidArgument("shared_client_theme cannot have more than 5 colors")
+            
+            if shared_client_theme.gradient_angle is None :
+                raise InvalidArgument("shared_client_theme must have a gradient angle")
+            if shared_client_theme.gradient_angle < 0 or shared_client_theme.gradient_angle > 360:
+                raise InvalidArgument("shared_client_theme gradient angle must be between 0 and 360 degrees")
+            
+            if shared_client_theme.base_mix is None :
+                raise InvalidArgument("shared_client_theme must have a base mix value")
+            if shared_client_theme.base_mix < 0 or shared_client_theme.base_mix > 100 :
+                raise InvalidArgument("shared_client_theme base mix must be between 0 and 100")
+            
+            if shared_client_theme.base_theme is not None and not isinstance(shared_client_theme.base_theme, SharedClientThemeBaseType):
+                raise InvalidArgument("shared_client_theme base theme must be a SharedClientThemeBaseType enum value")
+            
+            shared_client_theme = shared_client_theme.to_dict()
 
         if embed is not None and embeds is not None:
             raise InvalidArgument(
@@ -1706,6 +1742,7 @@ class Messageable:
                     components=components,
                     flags=flags.value,
                     poll=poll,
+                    shared_client_theme=shared_client_theme,
                 )
             finally:
                 for f in files:
@@ -1725,6 +1762,7 @@ class Messageable:
                 components=components,
                 flags=flags.value,
                 poll=poll,
+                shared_client_theme=shared_client_theme,
             )
 
         ret = state.create_message(channel=channel, data=data)

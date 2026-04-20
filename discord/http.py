@@ -84,6 +84,9 @@ if TYPE_CHECKING:
         poll,
         role,
         scheduled_events,
+    )
+    from .types import shared_client_theme as shared_client_theme_type
+    from .types import (
         sticker,
         template,
         threads,
@@ -507,6 +510,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
+        shared_client_theme: shared_client_theme_type.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -547,6 +551,9 @@ class HTTPClient:
         if poll:
             payload["poll"] = poll
 
+        if shared_client_theme:
+            payload["shared_client_theme"] = shared_client_theme
+
         return self.request(r, json=payload)
 
     def send_typing(self, channel_id: Snowflake) -> Response[None]:
@@ -571,6 +578,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
+        shared_client_theme: shared_client_theme_type.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         form = []
 
@@ -597,6 +605,9 @@ class HTTPClient:
             payload["flags"] = flags
         if poll:
             payload["poll"] = poll
+
+        if shared_client_theme:
+            payload["shared_client_theme"] = shared_client_theme
 
         attachments = []
         form.append({"name": "payload_json"})
@@ -641,6 +652,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
+        shared_client_theme: shared_client_theme_type.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
@@ -658,6 +670,7 @@ class HTTPClient:
             components=components,
             flags=flags,
             poll=poll,
+            shared_client_theme=shared_client_theme,
         )
 
     def edit_multipart_helper(
