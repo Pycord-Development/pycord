@@ -71,7 +71,7 @@ dev = [
     "pylint~=4.0.5",
     "mypy~=1.20.0",
     "coverage~=7.10",
-    "pre-commit==4.5.1",
+    "pre-commit==4.6.0",
     "codespell==2.4.2",
     "bandit==1.9.4",
     "flake8==7.3.0",
