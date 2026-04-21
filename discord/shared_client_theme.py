@@ -81,9 +81,9 @@ class SharedClientTheme:
     def __init__(
         self,
         colors: Iterable[ColourLike],
-        *,
         gradient_angle: int,
         base_mix: int,
+        *,
         base_theme: SharedClientThemeBaseType | None = None,
     ):
         normalized = [_coerce_colour(c) for c in colors]
