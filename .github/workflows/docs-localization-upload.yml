@@ -44,7 +44,7 @@ jobs:
           sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
         working-directory: ./docs
       - name: "Crowdin"
-        uses: crowdin/github-action@v2.16.0
+        uses: crowdin/github-action@c4603c03221bf738306d907d28d4942da99a0afa # v2.16.1
         with:
           upload_sources: true
           upload_translations: false
