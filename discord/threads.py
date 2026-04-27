@@ -32,9 +32,7 @@ from .enums import (
     ChannelType,
 )
 from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
-from .enums import (
-    try_enum,
-)
+from .enums import try_enum
 from .errors import ClientException
 from .flags import ChannelFlags
 from .mixins import Hashable
