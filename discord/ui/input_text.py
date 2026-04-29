@@ -106,18 +106,18 @@ class InputText(ModalItem):
                 f"label must be {ComponentLimits.text_input_label_max.value} characters or fewer"
             )
         if min_length and (
-            min_length < ComponentLimits.text_input_min_length_max.value
-            or min_length > ComponentLimits.text_input_max_length_max.value
+            min_length < ComponentLimits.text_input_min_length_min.value
+            or min_length > ComponentLimits.text_input_min_length_max.value
         ):
             raise ValueError(
-                f"min_length must be between {ComponentLimits.text_input_min_length_max.value} and {ComponentLimits.text_input_max_length_max.value}"
+                f"min_length must be between {ComponentLimits.text_input_min_length_min.value} and {ComponentLimits.text_input_min_length_max.value}"
             )
         if max_length and (
-            max_length < ComponentLimits.text_input_min_length_max.value
+            max_length < ComponentLimits.text_input_max_length_min.value
             or max_length > ComponentLimits.text_input_max_length_max.value
         ):
             raise ValueError(
-                f"max_length must be between {ComponentLimits.text_input_min_length_max.value} and {ComponentLimits.text_input_max_length_max.value}"
+                f"max_length must be between {ComponentLimits.text_input_max_length_min.value} and {ComponentLimits.text_input_max_length_max.value}"
             )
         if value and len(str(value)) > ComponentLimits.text_input_max_length_max.value:
             raise ValueError(
@@ -249,11 +249,11 @@ class InputText(ModalItem):
                 f"min_length must be None or int not {value.__class__.__name__}"
             )  # type: ignore
         if value and (
-            value < ComponentLimits.text_input_min_length_max.value
-            or value > ComponentLimits.text_input_max_length_max.value
+            value < ComponentLimits.text_input_min_length_min.value
+            or value > ComponentLimits.text_input_min_length_max.value
         ):
             raise ValueError(
-                f"min_length must be between {ComponentLimits.text_input_min_length_max.value} and {ComponentLimits.text_input_max_length_max.value}"
+                f"min_length must be between {ComponentLimits.text_input_min_length_min.value} and {ComponentLimits.text_input_min_length_max.value}"
             )
         self.underlying.min_length = value
 
@@ -269,7 +269,7 @@ class InputText(ModalItem):
                 f"max_length must be None or int not {value.__class__.__name__}"
             )  # type: ignore
         if value and (
-            value <= ComponentLimits.text_input_max_length_min.value
+            value < ComponentLimits.text_input_max_length_min.value
             or value > ComponentLimits.text_input_max_length_max.value
         ):
             raise ValueError(

@@ -266,18 +266,18 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
         if (
-            min_values < ComponentLimits.select_min_value_min
-            or min_values > ComponentLimits.select_min_value_max
+            min_values < ComponentLimits.select_min_value_min.value
+            or min_values > ComponentLimits.select_min_value_max.value
         ):
             raise ValueError(
-                f"min_values must be between {ComponentLimits.select_min_value_min} and {ComponentLimits.select_min_value_max}"
+                f"min_values must be between {ComponentLimits.select_min_value_min.value} and {ComponentLimits.select_min_value_max.value}"
             )
         if (
-            max_values < ComponentLimits.select_max_value_min
-            or max_values > ComponentLimits.select_max_value_max
+            max_values < ComponentLimits.select_max_value_min.value
+            or max_values > ComponentLimits.select_max_value_max.value
         ):
             raise ValueError(
-                f"max_values must be between {ComponentLimits.select_max_value_min} and {ComponentLimits.select_max_value_max}"
+                f"max_values must be between {ComponentLimits.select_max_value_min.value} and {ComponentLimits.select_max_value_max.value}"
             )
         if (
             placeholder
@@ -685,7 +685,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if self.underlying.type is not ComponentType.string_select:
             raise Exception("options can only be set on string selects")
 
-        if len(self.underlying.options) > ComponentLimits.select_options_max.value:
+        if len(self.underlying.options) >= ComponentLimits.select_options_max.value:
             raise ValueError("maximum number of options already provided")
 
         self.underlying.options.append(option)
