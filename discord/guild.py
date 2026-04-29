@@ -4417,6 +4417,11 @@ class Guild(Hashable):
                 else:
                     channel_id = location.value.id
 
+        if entity_type is MISSING:
+            raise TypeError(
+                "entity_type could not be resolved. Pass entity_type explicitly "
+                "or provide a location with a resolvable type."
+            )
         payload: dict[str, str | int] = {
             "name": name,
             "scheduled_start_time": scheduled_start_time.isoformat(),
