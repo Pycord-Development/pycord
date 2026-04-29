@@ -28,7 +28,7 @@ import os
 from typing import TYPE_CHECKING
 
 from ..components import FileUpload as FileUploadComponent
-from ..enums import ComponentType
+from ..enums import ComponentLimits, ComponentType
 from ..message import Attachment
 from .item import ModalItem
 
@@ -78,10 +78,20 @@ class FileUpload(ModalItem):
         id: int | None = None,
     ):
         super().__init__()
-        if min_values and (min_values < 0 or min_values > 10):
-            raise ValueError("min_values must be between 0 and 10")
-        if max_values and (max_values < 1 or max_values > 10):
-            raise ValueError("max_values must be between 1 and 10")
+        if min_values and (
+            min_values < ComponentLimits.file_upload_min_files.value
+            or min_values > ComponentLimits.file_upload_max_files.value
+        ):
+            raise ValueError(
+                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+            )
+        if max_values and (
+            max_values < ComponentLimits.file_upload_min_files.value
+            or max_values > ComponentLimits.file_upload_max_files.value
+        ):
+            raise ValueError(
+                f"max_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+            )
         if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -126,8 +136,10 @@ class FileUpload(ModalItem):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
-        if len(value) > 100:
-            raise ValueError("custom_id must be 100 characters or fewer")
+        if len(value) > ComponentLimits.custom_id_max.value:
+            raise ValueError(
+                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+            )
         self.underlying.custom_id = value
 
     @property
@@ -138,9 +150,16 @@ class FileUpload(ModalItem):
     @min_values.setter
     def min_values(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"min_values must be None or int not {value.__class__.__name__}")  # type: ignore
-        if value and (value < 0 or value > 10):
-            raise ValueError("min_values must be between 0 and 10")
+            raise TypeError(
+                f"min_values must be None or int not {value.__class__.__name__}"
+            )  # type: ignore
+        if value and (
+            value < ComponentLimits.file_upload_min_files.value
+            or value > ComponentLimits.file_upload_max_files.value
+        ):
+            raise ValueError(
+                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+            )
         self.underlying.min_values = value
 
     @property
@@ -151,9 +170,16 @@ class FileUpload(ModalItem):
     @max_values.setter
     def max_values(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"max_values must be None or int not {value.__class__.__name__}")  # type: ignore
-        if value and (value < 1 or value > 10):
-            raise ValueError("max_values must be between 1 and 10")
+            raise TypeError(
+                f"max_values must be None or int not {value.__class__.__name__}"
+            )  # type: ignore
+        if value and (
+            value < ComponentLimits.file_upload_min_files.value
+            or value > ComponentLimits.file_upload_max_files.value
+        ):
+            raise ValueError(
+                f"max_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+            )
         self.underlying.max_values = value
 
     @property

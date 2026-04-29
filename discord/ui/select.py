@@ -36,7 +36,7 @@ from typing_extensions import Self, TypeVar
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectDefaultValue, SelectMenu, SelectOption
 from ..emoji import AppEmoji, GuildEmoji
-from ..enums import ChannelType, ComponentType, SelectDefaultValueType
+from ..enums import ChannelType, ComponentLimits, ComponentType, SelectDefaultValueType
 from ..errors import InvalidArgument
 from ..interactions import Interaction
 from ..member import Member
@@ -265,12 +265,27 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
-        if min_values < 0 or min_values > 25:
-            raise ValueError("min_values must be between 0 and 25")
-        if max_values < 1 or max_values > 25:
-            raise ValueError("max_values must be between 1 and 25")
-        if placeholder and len(placeholder) > 150:
-            raise ValueError("placeholder must be 150 characters or fewer")
+        if (
+            min_values < ComponentLimits.select_min_value_min
+            or min_values > ComponentLimits.select_min_value_max
+        ):
+            raise ValueError(
+                f"min_values must be between {ComponentLimits.select_min_value_min} and {ComponentLimits.select_min_value_max}"
+            )
+        if (
+            max_values < ComponentLimits.select_max_value_min
+            or max_values > ComponentLimits.select_max_value_max
+        ):
+            raise ValueError(
+                f"max_values must be between {ComponentLimits.select_max_value_min} and {ComponentLimits.select_max_value_max}"
+            )
+        if (
+            placeholder
+            and len(placeholder) > ComponentLimits.select_placeholder_max.value
+        ):
+            raise ValueError(
+                f"placeholder must be {ComponentLimits.select_placeholder_max.value} characters or fewer"
+            )
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -377,8 +392,10 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError("custom_id must be None or str")
-        if len(value) > 100:
-            raise ValueError("custom_id must be 100 characters or fewer")
+        if len(value) > ComponentLimits.custom_id_max.value:
+            raise ValueError(
+                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+            )
         self.underlying.custom_id = value
         self._provided_custom_id = value is not None
 
@@ -391,8 +408,10 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     def placeholder(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise TypeError("placeholder must be None or str")
-        if value and len(value) > 150:
-            raise ValueError("placeholder must be 150 characters or fewer")
+        if value and len(value) > ComponentLimits.select_placeholder_max.value:
+            raise ValueError(
+                f"placeholder must be {ComponentLimits.select_placeholder_max.value} characters or fewer"
+            )
 
         self.underlying.placeholder = value
 
@@ -403,8 +422,13 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
     @min_values.setter
     def min_values(self, value: int):
-        if value < 0 or value > 25:
-            raise ValueError("min_values must be between 0 and 25")
+        if (
+            value < ComponentLimits.select_min_value_min.value
+            or value > ComponentLimits.select_min_value_max.value
+        ):
+            raise ValueError(
+                f"min_values must be between {ComponentLimits.select_min_value_min.value} and {ComponentLimits.select_min_value_max.value}"
+            )
         self.underlying.min_values = int(value)
 
     @property
@@ -414,8 +438,13 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
     @max_values.setter
     def max_values(self, value: int):
-        if value < 1 or value > 25:
-            raise ValueError("max_values must be between 1 and 25")
+        if (
+            value < ComponentLimits.select_max_value_min.value
+            or value > ComponentLimits.select_max_value_max.value
+        ):
+            raise ValueError(
+                f"max_values must be between {ComponentLimits.select_max_value_min.value} and {ComponentLimits.select_max_value_max.value}"
+            )
         self.underlying.max_values = int(value)
 
     @property
@@ -575,8 +604,10 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if self.type is ComponentType.string_select:
             raise TypeError("string_select selects do not allow default_values")
 
-        if len(self.default_values) >= 25:
-            raise ValueError("maximum number of default values exceeded (25)")
+        if len(self.default_values) >= ComponentLimits.select_default_values_max.value:
+            raise ValueError(
+                f"maximum number of default values exceeded ({ComponentLimits.select_default_values_max.value})"
+            )
 
         if not isinstance(value, SelectDefaultValue):
             value = SelectDefaultValue._handle_model(value)
@@ -654,7 +685,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if self.underlying.type is not ComponentType.string_select:
             raise Exception("options can only be set on string selects")
 
-        if len(self.underlying.options) > 25:
+        if len(self.underlying.options) > ComponentLimits.select_options_max.value:
             raise ValueError("maximum number of options already provided")
 
         self.underlying.options.append(option)

@@ -31,7 +31,7 @@ from typing_extensions import Self
 
 from ..components import RadioGroup as RadioGroupComponent
 from ..components import RadioGroupOption
-from ..enums import ComponentType
+from ..enums import ComponentLimits, ComponentType
 from ..utils import MISSING
 from .item import ModalItem
 
@@ -118,8 +118,8 @@ class RadioGroup(ModalItem):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
-        if len(value) > 100:
-            raise ValueError("custom_id must be 100 characters or fewer")
+        if len(value) > ComponentLimits.custom_id_max.value:
+            raise ValueError(f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer")
         self.underlying.custom_id = value
 
     @property
@@ -212,8 +212,8 @@ class RadioGroup(ModalItem):
             The number of options exceeds 10.
         """
 
-        if len(self.underlying.options) >= 10:
-            raise ValueError("maximum number of options already provided")
+        if len(self.underlying.options) >= ComponentLimits.radio_options_max.value:
+            raise ValueError(f"maximum number of options already provided ({ComponentLimits.radio_options_max.value})")
 
         self.underlying.options.append(option)
         return self

@@ -35,16 +35,13 @@ from ..components import (
     RadioGroupOption,
     SelectDefaultValue,
     SelectOption,
-    _component_factory,
 )
-from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
-from ..utils import find, get
-from .button import Button
+from ..enums import ChannelType, ComponentType, InputTextStyle
 from .checkbox import Checkbox
 from .checkbox_group import CheckboxGroup
 from .file_upload import FileUpload
 from .input_text import InputText
-from .item import ItemCallbackType, ModalItem
+from .item import ModalItem
 from .radio_group import RadioGroup
 from .select import Select
 
@@ -53,9 +50,7 @@ __all__ = ("Label",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..emoji import AppEmoji, GuildEmoji
     from ..interactions import Interaction
-    from ..partial_emoji import PartialEmoji, _EmojiTag
     from ..types.components import LabelComponent as LabelComponentPayload
     from .modal import DesignerModal
 
@@ -168,7 +163,7 @@ class Label(ModalItem[M]):
         if not isinstance(item, ModalItem):
             raise TypeError(f"expected ModalItem not {item.__class__!r}")
         if isinstance(item, InputText) and item.label:
-            raise ValueError(f"InputText.label cannot be set inside Label")
+            raise ValueError("InputText.label cannot be set inside Label")
         if self.modal:
             item.modal = self.modal
         item.parent = self

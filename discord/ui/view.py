@@ -62,7 +62,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..enums import ChannelType, SeparatorSpacingSize
+from ..enums import ChannelType, ComponentLimits, SeparatorSpacingSize
 from ..errors import Forbidden, NotFound
 from ..utils import find
 from .core import ItemInterface
@@ -598,8 +598,8 @@ class View(BaseView):
                 if hasattr(member, "__discord_ui_model_type__"):
                     children.append(member)
 
-        if len(children) > 40:
-            raise TypeError("View cannot have more than 40 children")
+        if len(children) > ComponentLimits.view_children_max.value:
+            raise TypeError(f"View cannot have more than {ComponentLimits.view_children_max.value} children")
 
         cls.__view_children_items__ = children
 

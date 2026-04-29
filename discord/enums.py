@@ -1232,9 +1232,12 @@ class ComponentLimits(Enum):
 
     # Select constraints
     select_placeholder_max = 150
+    select_min_value_min = 0
     select_min_value_max = 25
+    select_max_value_min = 1
     select_max_value_max = 25
     select_options_max = 25
+    select_default_values_max = 25
 
     # Select option constraints
     select_option_label_max = 100
@@ -1263,6 +1266,24 @@ class ComponentLimits(Enum):
     # Custom ID constraints
     custom_id_min = 1
     custom_id_max = 100
+
+    # RadioGroup constraints
+    radio_options_max = 10
+
+    # CheckboxGroup constraints
+    checkbox_options_max = 10
+    checkbox_min_values_min = 0
+    checkbox_min_values_max = 10
+    checkbox_max_values_min = 1
+    checkbox_max_values_max = 10
+
+    # FileUpload constraints
+    file_upload_min_files = 0
+    file_upload_max_files = 10
+
+    # Modal constraints
+    modal_title_max = 45
+    modal_rows_max = 5
 
 
 class EmbedLimits(Enum):

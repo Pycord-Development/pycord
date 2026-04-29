@@ -32,6 +32,7 @@ from .colour import Colour
 from .enums import (
     ButtonStyle,
     ChannelType,
+    ComponentLimits,
     ComponentType,
     InputTextStyle,
     SelectDefaultValueType,
@@ -724,14 +725,14 @@ class SelectOption:
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         default: bool = False,
     ) -> None:
-        if len(label) > 100:
-            raise ValueError("label must be 100 characters or fewer")
+        if len(label) > ComponentLimits.select_option_label_max.value:
+            raise ValueError(f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer")
 
-        if value is not MISSING and len(value) > 100:
-            raise ValueError("value must be 100 characters or fewer")
+        if value is not MISSING and len(value) > ComponentLimits.select_option_value_max.value:
+            raise ValueError(f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer")
 
-        if description is not None and len(description) > 100:
-            raise ValueError("description must be 100 characters or fewer")
+        if description is not None and len(description) > ComponentLimits.select_option_description_max.value:
+            raise ValueError(f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer")
 
         self.label = label
         self.value = label if value is MISSING else value
@@ -1527,14 +1528,14 @@ class RadioGroupOption:
         description: str | None = None,
         default: bool = False,
     ) -> None:
-        if len(label) > 100:
-            raise ValueError("label must be 100 characters or fewer")
+        if len(label) > ComponentLimits.select_option_label_max.value:
+            raise ValueError(f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer")
 
-        if value is not MISSING and len(value) > 100:
-            raise ValueError("value must be 100 characters or fewer")
+        if value is not MISSING and len(value) > ComponentLimits.select_option_value_max.value:
+            raise ValueError(f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer")
 
-        if description is not None and len(description) > 100:
-            raise ValueError("description must be 100 characters or fewer")
+        if description is not None and len(description) > ComponentLimits.select_option_description_max.value:
+            raise ValueError(f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer")
 
         self.label = label
         self.value = label if value is MISSING else value
@@ -1687,14 +1688,14 @@ class CheckboxGroupOption:
         description: str | None = None,
         default: bool = False,
     ) -> None:
-        if len(label) > 100:
-            raise ValueError("label must be 100 characters or fewer")
+        if len(label) > ComponentLimits.select_option_label_max.value:
+            raise ValueError(f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer")
 
-        if value is not MISSING and len(value) > 100:
-            raise ValueError("value must be 100 characters or fewer")
+        if value is not MISSING and len(value) > ComponentLimits.select_option_value_max.value:
+            raise ValueError(f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer")
 
-        if description is not None and len(description) > 100:
-            raise ValueError("description must be 100 characters or fewer")
+        if description is not None and len(description) > ComponentLimits.select_option_description_max.value:
+            raise ValueError(f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer")
 
         self.label = label
         self.value = label if value is MISSING else value
