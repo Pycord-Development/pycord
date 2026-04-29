@@ -119,7 +119,9 @@ class RadioGroup(ModalItem):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
         if len(value) > ComponentLimits.custom_id_max.value:
-            raise ValueError(f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer")
+            raise ValueError(
+                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+            )
         self.underlying.custom_id = value
 
     @property
@@ -213,7 +215,9 @@ class RadioGroup(ModalItem):
         """
 
         if len(self.underlying.options) >= ComponentLimits.radio_options_max.value:
-            raise ValueError(f"maximum number of options already provided ({ComponentLimits.radio_options_max.value})")
+            raise ValueError(
+                f"maximum number of options already provided ({ComponentLimits.radio_options_max.value})"
+            )
 
         self.underlying.options.append(option)
         return self

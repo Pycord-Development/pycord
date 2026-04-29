@@ -726,13 +726,25 @@ class SelectOption:
         default: bool = False,
     ) -> None:
         if len(label) > ComponentLimits.select_option_label_max.value:
-            raise ValueError(f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer")
+            raise ValueError(
+                f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer"
+            )
 
-        if value is not MISSING and len(value) > ComponentLimits.select_option_value_max.value:
-            raise ValueError(f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer")
+        if (
+            value is not MISSING
+            and len(value) > ComponentLimits.select_option_value_max.value
+        ):
+            raise ValueError(
+                f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer"
+            )
 
-        if description is not None and len(description) > ComponentLimits.select_option_description_max.value:
-            raise ValueError(f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer")
+        if (
+            description is not None
+            and len(description) > ComponentLimits.select_option_description_max.value
+        ):
+            raise ValueError(
+                f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer"
+            )
 
         self.label = label
         self.value = label if value is MISSING else value
@@ -1529,13 +1541,25 @@ class RadioGroupOption:
         default: bool = False,
     ) -> None:
         if len(label) > ComponentLimits.select_option_label_max.value:
-            raise ValueError(f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer")
+            raise ValueError(
+                f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer"
+            )
 
-        if value is not MISSING and len(value) > ComponentLimits.select_option_value_max.value:
-            raise ValueError(f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer")
+        if (
+            value is not MISSING
+            and len(value) > ComponentLimits.select_option_value_max.value
+        ):
+            raise ValueError(
+                f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer"
+            )
 
-        if description is not None and len(description) > ComponentLimits.select_option_description_max.value:
-            raise ValueError(f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer")
+        if (
+            description is not None
+            and len(description) > ComponentLimits.select_option_description_max.value
+        ):
+            raise ValueError(
+                f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer"
+            )
 
         self.label = label
         self.value = label if value is MISSING else value
@@ -1689,13 +1713,25 @@ class CheckboxGroupOption:
         default: bool = False,
     ) -> None:
         if len(label) > ComponentLimits.select_option_label_max.value:
-            raise ValueError(f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer")
+            raise ValueError(
+                f"label must be {ComponentLimits.select_option_label_max.value} characters or fewer"
+            )
 
-        if value is not MISSING and len(value) > ComponentLimits.select_option_value_max.value:
-            raise ValueError(f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer")
+        if (
+            value is not MISSING
+            and len(value) > ComponentLimits.select_option_value_max.value
+        ):
+            raise ValueError(
+                f"value must be {ComponentLimits.select_option_value_max.value} characters or fewer"
+            )
 
-        if description is not None and len(description) > ComponentLimits.select_option_description_max.value:
-            raise ValueError(f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer")
+        if (
+            description is not None
+            and len(description) > ComponentLimits.select_option_description_max.value
+        ):
+            raise ValueError(
+                f"description must be {ComponentLimits.select_option_description_max.value} characters or fewer"
+            )
 
         self.label = label
         self.value = label if value is MISSING else value

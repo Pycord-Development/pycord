@@ -106,7 +106,9 @@ class Checkbox(ModalItem):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
         if len(value) > ComponentLimits.custom_id_max.value:
-            raise ValueError(f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer")
+            raise ValueError(
+                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+            )
         self.underlying.custom_id = value
 
     @property
