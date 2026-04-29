@@ -269,10 +269,11 @@ class InputText(ModalItem):
                 f"max_length must be None or int not {value.__class__.__name__}"
             )  # type: ignore
         if value and (
-            value <= 0 or value > ComponentLimits.text_input_max_length_max.value
+            value <= ComponentLimits.text_input_max_length_min.value
+            or value > ComponentLimits.text_input_max_length_max.value
         ):
             raise ValueError(
-                f"max_length must be between 1 and {ComponentLimits.text_input_max_length_max.value}"
+                f"max_length must be between {ComponentLimits.text_input_max_length_min.value} and {ComponentLimits.text_input_max_length_max.value}"
             )
         self.underlying.max_length = value
 

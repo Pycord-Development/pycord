@@ -88,16 +88,18 @@ class CheckboxGroup(ModalItem):
     ):
         super().__init__()
         if min_values and (
-            min_values < 0 or min_values > ComponentLimits.checkbox_options_max.value
+            min_values < ComponentLimits.checkbox_min_values_min.value
+            or min_values > ComponentLimits.checkbox_min_values_max.value
         ):
             raise ValueError(
-                f"min_values must be between 0 and {ComponentLimits.checkbox_options_max.value}"
+                f"min_values must be between {ComponentLimits.checkbox_min_values_min.value} and {ComponentLimits.checkbox_min_values_max.value}"
             )
         if max_values and (
-            max_values < 1 or max_values > ComponentLimits.checkbox_options_max.value
+            max_values < ComponentLimits.checkbox_max_values_min.value
+            or max_values > ComponentLimits.checkbox_max_values_max.value
         ):
             raise ValueError(
-                f"max_values must be between 1 and {ComponentLimits.checkbox_options_max.value}"
+                f"max_values must be between {ComponentLimits.checkbox_max_values_min.value} and {ComponentLimits.checkbox_max_values_max.value}"
             )
         if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(

@@ -1253,7 +1253,9 @@ class ComponentLimits(Enum):
     text_input_max_count = 5
     text_input_label_max = 45
     text_input_placeholder_max = 100
+    text_input_min_length_min = 0
     text_input_min_length_max = 4000
+    text_input_max_length_min = 1
     text_input_max_length_max = 4000
     text_input_value_max = 4000
 
