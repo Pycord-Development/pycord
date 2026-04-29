@@ -96,21 +96,17 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value <= other.value
+        cls.__le__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value <= other.value
         )
-        cls.__ge__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value >= other.value
+        cls.__ge__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value >= other.value
         )
-        cls.__lt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value < other.value
+        cls.__lt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value < other.value
         )
-        cls.__gt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value > other.value
+        cls.__gt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value > other.value
         )
     return cls
 
@@ -289,29 +285,18 @@ class MessageType(Enum):
 class VoiceRegion(Enum):
     """Voice region"""
 
-    us_west = "us-west"
-    us_east = "us-east"
-    us_south = "us-south"
-    us_central = "us-central"
-    eu_west = "eu-west"
-    eu_central = "eu-central"
-    singapore = "singapore"
-    london = "london"
-    sydney = "sydney"
-    amsterdam = "amsterdam"
-    frankfurt = "frankfurt"
     brazil = "brazil"
     hongkong = "hongkong"
-    russia = "russia"
-    japan = "japan"
-    southafrica = "southafrica"
-    south_korea = "south-korea"
     india = "india"
-    europe = "europe"
-    dubai = "dubai"
-    vip_us_east = "vip-us-east"
-    vip_us_west = "vip-us-west"
-    vip_amsterdam = "vip-amsterdam"
+    japan = "japan"
+    rotterdam = "rotterdam"
+    singapore = "singapore"
+    southafrica = "southafrica"
+    sydney = "sydney"
+    us_central = "us-central"
+    us_east = "us-east"
+    us_south = "us-south"
+    us_west = "us-west"
 
     def __str__(self):
         return self.value
