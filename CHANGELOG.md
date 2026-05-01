@@ -22,6 +22,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix VoiceRegion enum with current voice regions from Discord API.
+  ([#3216](https://github.com/Pycord-Development/pycord/pull/3216))
 - Fixed internal use of deprecated role type methods.
   ([#3167](https://github.com/Pycord-Development/pycord/pull/3167))
 - Fixed a `TypeError` when using `Label.set_select` and not providing `default_values`.
