@@ -97,8 +97,10 @@ class Item(Generic[T]):
             raise NotImplementedError
         return self.underlying.type
 
-    def _generate_underlying(self, cls: type[Component]) -> Component:
+    def _generate_underlying(self, cls: type[Component] | None = None) -> Component:
         if not self._underlying:
+            if cls is None:
+                raise NotImplementedError
             self._underlying = cls._raw_construct()
         return self._underlying
 
