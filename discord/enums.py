@@ -88,6 +88,7 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+    "SharedClientThemeBaseType",
 )
 
 
@@ -1210,6 +1211,23 @@ class InviteTargetUsersJobStatusCode(Enum):
     processing = 1
     completed = 2
     failed = 3
+
+
+class SharedClientThemeBaseType(Enum):
+    """The base theme mode of a :class:`SharedClientTheme`.
+
+    .. versionadded:: 2.9
+
+    .. note::
+
+        ``unset`` is treated as equivalent to ``dark`` by Discord.
+    """
+
+    unset = 0
+    dark = 1
+    light = 2
+    darker = 3
+    midnight = 4
 
 
 T = TypeVar("T")
