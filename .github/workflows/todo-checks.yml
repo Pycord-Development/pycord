@@ -21,9 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: "Track TODO Action"
-        uses: ribtoks/tdg-github-action@v0.4.16-beta
+        uses: ribtoks/tdg-github-action@f093b9309d79281ff459a7e19793d64b96b03e2e # v0.4.16-beta
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
