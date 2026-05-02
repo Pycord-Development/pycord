@@ -12,6 +12,18 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `replace_item` to `DesignerView`, `Section`, `Container`, `ActionRow`, &
+  `MediaGallery` ([#3093](https://github.com/Pycord-Development/pycord/pull/3093))
+- Added `index`, `before`, and `after` to `add_item` functions
+  ([#3093](https://github.com/Pycord-Development/pycord/pull/3093))
+- Added arbitrary kwarg support to `get_item` functions
+  ([#3093](https://github.com/Pycord-Development/pycord/pull/3093))
+- Added `Message.get_view`
+  ([#3093](https://github.com/Pycord-Development/pycord/pull/3093))
+- Added `from_dict`, `add_label`, & `add_text` to `DesignerModal`
+  ([#3093](https://github.com/Pycord-Development/pycord/pull/3093))
+- Added `read`, `save`, and `to_file` to `UnfurledMediaItem`
+  ([#3093](https://github.com/Pycord-Development/pycord/pull/3093))
 - Support for **Python 3.14**.
   ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
 

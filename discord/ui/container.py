@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
 from ..colour import Colour
 from ..components import Container as ContainerComponent
@@ -33,6 +33,7 @@ from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find, get
 from .action_row import ActionRow
 from .button import Button
+from .core import _item_getter
 from .file import File
 from .item import ItemCallbackType, ViewItem
 from .media_gallery import MediaGallery
@@ -67,6 +68,13 @@ class Container(ViewItem[V]):
     - :class:`discord.ui.Separator`
 
     .. versionadded:: 2.7
+
+    .. container:: operations
+
+        .. describe:: len(x)
+
+            Returns the total count of all items in this container.
+            This includes the container itself, counting towards Discord's component limits.
 
     Parameters
     ----------
@@ -120,6 +128,9 @@ class Container(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    def __len__(self) -> int:
+        return sum(len(i) for i in self.items) + 1
+
     def _add_component_from_item(self, item: ViewItem):
         self.underlying.components.append(item._generate_underlying())
 
@@ -146,19 +157,40 @@ class Container(ViewItem[V]):
             container.components.append(i._generate_underlying())
         return container
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(
+        self,
+        item: ViewItem,
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+        into: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the container.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the container.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`items`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        into: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **into** the specified item. This would be equivalent to `into.add_item(item)`, where `into` is a :class:`ViewItem`.
+            If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
         TypeError
             A :class:`ViewItem` was not passed.
+        ValueError
+            A searched item could not be found in the container.
         """
+        if sum(x is not None for x in (before, after, index)) > 1:
+            raise ValueError("Can only specify one of before, after, and index.")
 
         if not isinstance(item, ViewItem):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
@@ -167,11 +199,41 @@ class Container(ViewItem[V]):
             raise TypeError(
                 f"{item.__class__!r} cannot be added directly. Use ActionRow instead."
             )
+        if into and isinstance(into, (str, int)):
+            parent = self.get_item(into)
+            if not parent:
+                raise ValueError(f"Could not find {into} in container.")
+        else:
+            parent = into or self
 
-        item.parent = self
+        if before or after:
+            ref = before or after or 0
+            if isinstance(ref, (int, str)):
+                ref = parent.get_item(ref)
+            try:
+                if ref.parent is parent:
+                    i = parent.items.index(ref)
+                    item.parent = parent
+                    if before:
+                        parent.items.insert(i, item)
+                    else:
+                        parent.items.insert(i + 1, item)
+                else:
+                    ref.parent.add_item(item, before=before, after=after)
+            except (ValueError, AttributeError):
+                raise ValueError(f"Could not find {before or after} in container.")
+            self._underlying = self._generate_underlying()
+            return self
 
-        self.items.append(item)
-        self._add_component_from_item(item)
+        elif index is not None:
+            item.parent = parent
+            parent.items.insert(index, item)
+            self._underlying = self._generate_underlying()
+            return self
+
+        item.parent = parent
+        parent.items.append(item)
+        parent._add_component_from_item(item)
         return self
 
     def remove_item(self, item: ViewItem | str | int) -> Self:
@@ -185,6 +247,8 @@ class Container(ViewItem[V]):
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
+            if not item:
+                return self
         try:
             if item.parent is self:
                 self.items.remove(item)
@@ -195,30 +259,68 @@ class Container(ViewItem[V]):
             pass
         return self
 
-    def get_item(self, id: str | int) -> ViewItem | None:
-        """Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
-        If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
-        This method will also search for nested items.
+    def replace_item(
+        self, original_item: ViewItem | str | int, new_item: ViewItem
+    ) -> Self:
+        """Directly replace an item in this container.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+            The item, item ``id``, or item ``custom_id`` to replace in the container.
+        new_item: :class:`ViewItem`
+            The new item to insert into the container.
+        """
+
+        if isinstance(original_item, (str, int)):
+            original_item = self.get_item(original_item)
+        if not original_item:
+            raise ValueError(f"Could not find {original_item} in container.")
+        try:
+            if original_item.parent is self:
+                i = self.items.index(original_item)
+                new_item.parent = self
+                self.items[i] = new_item
+                original_item.parent = None
+            else:
+                original_item.parent.replace_item(original_item, new_item)
+        except ValueError:
+            raise ValueError(f"Could not find {original_item} in container.")
+        return self
+
+    def get_item(self, id: str | int | None = None, **attrs: Any) -> ViewItem | None:
+        r"""Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
+        If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
+        This method will also search for nested items.
+        If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
+        To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.
+
+        Parameters
+        ----------
+        id: Optional[Union[:class:`str`, :class:`int`]]
             The id or custom_id of the item to get.
+        \*\*attrs
+            Keyword arguments that denote attributes to search with.
 
         Returns
         -------
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
-        if not id:
-            return None
-        attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.items)
-        if not child:
-            for i in self.items:
-                if hasattr(i, "get_item"):
-                    if child := i.get_item(id):
-                        return child
+        child = None
+        if id:
+            attr = "id" if isinstance(id, int) else "custom_id"
+            if attrs:
+                attrs[attr] = id
+            child = find(lambda i: getattr(i, attr, None) == id, self.items)
+            if not child:
+                for i in self.items:
+                    if hasattr(i, "get_item"):
+                        if child := i.get_item(id):
+                            return child
+        elif attrs:
+            child = _item_getter(self.items, **attrs)
         return child
 
     def add_row(

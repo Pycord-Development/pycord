@@ -80,10 +80,10 @@ class Label(ModalItem[M]):
 
     Parameters
     ----------
-    item: :class:`ModalItem`
-        The initial item attached to this label.
     label: :class:`str`
         The label text. Must be 45 characters or fewer.
+    item: :class:`ModalItem`
+        The initial item attached to this label.
     description: Optional[:class:`str`]
         The description for this label. Must be 100 characters or fewer.
     id: Optional[:class:`int`]
