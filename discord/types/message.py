@@ -35,7 +35,7 @@ from .member import Member, UserWithMember
 from .poll import Poll
 from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
-from .threads import Thread
+from .threads import Thread, ThreadMember
 from .user import User
 
 if TYPE_CHECKING:
@@ -194,3 +194,69 @@ class AllowedMentions(TypedDict):
     roles: SnowflakeList
     users: SnowflakeList
     replied_user: bool
+
+
+SearchAuthorTypes = Literal["user", "bot", "webhook", "-user", "-bot", "-webhook"]
+SearchHasTypes = Literal[
+    "image",
+    "sound",
+    "video",
+    "file",
+    "sticker",
+    "embed",
+    "link",
+    "poll",
+    "snapshot",
+    "-image",
+    "-sound",
+    "-video",
+    "-file",
+    "-sticker",
+    "-embed",
+    "-link",
+    "-poll",
+    "-snapshot",
+]
+SearchEmbedTypes = Literal["image", "video", "gif", "sound", "article"]
+SearchSortModes = Literal["relevance", "timestamp"]
+SearchSortOrders = Literal["asc", "desc"]
+
+
+class MessageSearch(TypedDict):
+    limit: NotRequired[int]
+    offset: NotRequired[int]
+    max_id: NotRequired[Snowflake]
+    min_id: NotRequired[Snowflake]
+    slop: NotRequired[int]
+    content: NotRequired[str]
+    channel_id: NotRequired[SnowflakeList]
+    author_type: NotRequired[list[SearchAuthorTypes]]
+    author_id: NotRequired[SnowflakeList]
+    mentions: NotRequired[SnowflakeList]
+    mentions_role_id: NotRequired[SnowflakeList]
+    mention_everyone: NotRequired[bool]
+    replied_to_user_id: NotRequired[SnowflakeList]
+    replied_to_message_id: NotRequired[SnowflakeList]
+    pinned: NotRequired[bool]
+    has: NotRequired[list[SearchHasTypes]]
+    embed_type: NotRequired[list[SearchEmbedTypes]]
+    embed_provider: NotRequired[list[str]]
+    link_hostname: NotRequired[list[str]]
+    attachment_filename: NotRequired[list[str]]
+    attachment_extension: NotRequired[list[str]]
+    sort_by: NotRequired[SearchSortModes]
+    sort_order: NotRequired[SearchSortOrders]
+    include_nsfw: NotRequired[bool]
+    cursor: NotRequired[dict]
+    command_id: NotRequired[Snowflake]
+    command_name: NotRequired[str]
+    contents: NotRequired[list[str]]
+
+
+class MessageSearchResults(TypedDict):
+    doing_deep_historical_index: bool
+    documents_indexed: NotRequired[int]
+    total_results: int
+    messages: list[list[Message]]  # ?????
+    threads: NotRequired[list[Thread]]
+    members: NotRequired[list[ThreadMember]]

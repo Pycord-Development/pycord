@@ -2276,6 +2276,9 @@ class Message(Hashable):
 
         return message
 
+    def search_replies(self, **params):
+        return self.guild.search(replied_to_messages=[self], **params)
+
     def to_reference(
         self, *, fail_if_not_exists: bool = True, type: MessageReferenceType = None
     ) -> MessageReference:

@@ -39,12 +39,17 @@ from typing import (
     Union,
 )
 
-from typing_extensions import deprecated, override
+from typing_extensions import Self, deprecated, override
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
-from .utils import maybe_coroutine, snowflake_time, time_snowflake
+from .utils import (
+    MISSING,
+    maybe_coroutine,
+    snowflake_time,
+    time_snowflake,
+)
 
 __all__ = (
     "ReactionIterator",
@@ -52,6 +57,7 @@ __all__ = (
     "AuditLogIterator",
     "GuildIterator",
     "MemberIterator",
+    "MessageSearchIterator",
     "ScheduledEventSubscribersIterator",
     "EntitlementIterator",
     "SubscriptionIterator",
@@ -71,6 +77,7 @@ if TYPE_CHECKING:
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
     from .types.message import MessagePin as MessagePinPayload
+    from .types.message import MessageSearch as MessageSearchPayload
     from .types.monetization import Entitlement as EntitlementPayload
     from .types.monetization import Subscription as SubscriptionPayload
     from .types.threads import Thread as ThreadPayload
@@ -1300,4 +1307,89 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         + " See the documentation of Messageable.pins() for more information."
     )
     def __await__(self) -> Generator[Any, Any, list[Message]]:
+        return self.retrieve_inner().__await__()
+
+
+class MessageSearchIterator(_AsyncIterator["Message"]):
+    """Iterator for receiving a guild's search results."""
+
+    def __init__(
+        self,
+        guild,
+        limit,
+        params,
+    ):
+        self.guild = guild
+        self.limit = limit
+        self.params = params
+        if "limit" in params:
+            if params["limit"] is None or params["limit"] > 25:
+                params["limit"] = 25
+
+        self.state = self.guild._state
+        self.search = self.state.http.message_search
+        self.messages = asyncio.Queue()
+        self.message_ids = []
+
+        self.doing_deep_historical_index: bool = MISSING
+        self.documents_indexed: int | None = MISSING
+        self.total_results: int = MISSING
+
+    async def next(self) -> Message:
+        if self.messages.empty():
+            await self.fill_messages()
+
+        try:
+            return self.messages.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self) -> bool:
+        l = self.limit
+        if l is None or l > 25:
+            r = 25
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
+
+    async def fill_messages(self):
+
+        if self._get_retrieve():
+            data = await self._retrieve_messages(self.retrieve)
+            if not data["messages"]:
+                # "Clients should not rely on the length of the `messages` array to paginate results"
+                self.limit = 0  # terminate the infinite loop
+
+            data.get("threads", [])
+            members = data.get("members", [])  # do something here
+
+            for element in data["messages"]:
+                message = element[0]
+                if int(message["id"]) not in self.message_ids:
+                    ch = self.guild.get_channel(int(message["channel_id"]))
+                    channel = await ch._get_channel()
+                    await self.messages.put(
+                        self.state.create_message(channel=channel, data=message)
+                    )
+                    self.message_ids.append(int(message["id"]))
+
+    async def _retrieve_messages(self, retrieve: int) -> list[MessagePayload]:
+        data: list[MessageSearchPayload] = await self.search(
+            self.guild.id, **self.params
+        )
+        self.total_results = data.get("total_results")
+        self.doing_deep_historical_index = data.get("doing_deep_historical_index")
+        self.documents_indexed = data.get("documents_indexed")
+        self.params["offset"] = self.params.get("offset", 0) + retrieve
+        if data["messages"]:
+            if self.limit is not None:
+                self.limit -= retrieve
+        return data
+
+    async def retrieve_inner(self) -> Self:
+        await self.fill_messages()
+        return self
+
+    def __await__(self) -> Generator[Any, Any, MessagePin]:
         return self.retrieve_inner().__await__()

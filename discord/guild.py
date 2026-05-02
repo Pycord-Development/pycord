@@ -64,6 +64,9 @@ from .enums import (
     RoleType,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
+    SearchEmbedType,
+    SearchSortMode,
+    SearchSortOrder,
     SortOrder,
     VerificationLevel,
     VideoQualityMode,
@@ -81,6 +84,7 @@ from .iterators import (
     BanIterator,
     EntitlementIterator,
     MemberIterator,
+    MessageSearchIterator,
 )
 from .member import Member, VoiceState
 from .mixins import Hashable
@@ -98,7 +102,7 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts", "SearchHas", "SearchAuthors")
 
 MISSING = utils.MISSING
 
@@ -150,6 +154,64 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+class Parsable:
+    # idk this kinda sucks lmao
+    def __init__(self, **values):
+        self._values = values
+        for k, v in values.items():
+            setattr(self, k, v)
+
+    def parse(self) -> list[str]:
+        true, false = [], []
+        for k, v in self._values.items():
+            if v:
+                true.append(k)
+            elif v is False:
+                false.append(f"-{k}")
+        return true + false
+
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} resolved={self.parse()!r}>"
+
+
+class SearchAuthors(Parsable):
+    def __init__(
+        self,
+        *,
+        user: bool | None = None,
+        bot: bool | None = None,
+        webhook: bool | None = None,
+    ):
+        super().__init__(user=user, bot=bot, webhook=webhook)
+
+
+class SearchHas(Parsable):
+    def __init__(
+        self,
+        *,
+        image: bool | None = None,
+        sound: bool | None = None,
+        video: bool | None = None,
+        file: bool | None = None,
+        sticker: bool | None = None,
+        embed: bool | None = None,
+        link: bool | None = None,
+        poll: bool | None = None,
+        snapshot: bool | None = None,
+    ):
+        super().__init__(
+            image=image,
+            sound=sound,
+            video=video,
+            file=file,
+            sticker=sticker,
+            embed=embed,
+            link=link,
+            poll=poll,
+            snapshot=snapshot,
+        )
 
 
 class GuildRoleCounts(dict[int, int]):
@@ -4724,3 +4786,157 @@ class Guild(Hashable):
             The sound or ``None`` if not found.
         """
         return self._sounds.get(sound_id)
+
+    def search(
+        self,
+        *,
+        limit: int | None = 25,
+        offset: int | None = None,
+        after: Snowflake | None = None,
+        before: Snowflake | None = None,
+        slop: int | None = 2,
+        content: str | None = None,
+        channels: list[Snowflake] | None = None,
+        author_types: SearchAuthors | None = None,
+        authors: list[Snowflake] | None = None,
+        mentions: list[Snowflake] | None = None,
+        mentions_roles: list[Snowflake] | None = None,
+        mention_everyone: bool | None = None,
+        replied_to_users: list[Snowflake] | None = None,
+        replied_to_messages: list[Snowflake] | None = None,
+        pinned: bool | None = None,
+        has: SearchHas | None = None,
+        embed_types: list[SearchEmbedType] | None = None,
+        embed_providers: list[str] | None = None,
+        link_hostnames: list[str] | None = None,
+        attachment_filenames: list[str] | None = None,
+        attachment_extensions: list[str] | None = None,
+        sort_by: SearchSortMode | None = None,
+        sort_order: SearchSortOrder | None = SearchSortOrder.desc,
+        include_nsfw: bool | None = False,
+    ) -> MessageSearchIterator:
+        """etc..."""
+
+        params = {}
+
+        if limit:
+            if limit <= 0:
+                raise ValueError("limit must be above 1")
+            params["limit"] = limit if limit <= 25 else limit
+
+        if offset is not None:
+            if offset > 9975 or offset < 0:
+                raise ValueError("offset must be between 0 and 9975")
+            params["offset"] = offset
+
+        if after:
+            params["min_id"] = after.id
+
+        if before:
+            params["max_id"] = before.id
+
+        if slop is not None:
+            if slop > 100 or slop < 0:
+                raise ValueError("slop must be between 0 and 100")
+            params["slop"] = int(slop)
+
+        if content:
+            if len(content) > 1024:
+                raise ValueError("content must be under 1024 characters")
+            params["content"] = content
+
+        if channels:
+            if len(channels) > 500:
+                raise ValueError("can only specify up to 500 channels")
+            params["channel_id"] = [c.id for c in channels]
+
+        if author_types:
+            params["author_type"] = author_types.parse()
+
+        if authors:
+            if len(authors) > 100:
+                raise ValueError("can only specify up to 100 authors")
+            params["author_id"] = [a.id for a in authors]
+
+        if mentions:
+            if len(mentions) > 100:
+                raise ValueError("can only specify up to 100 mentions")
+            params["mentions"] = [m.id for m in mentions]
+
+        if mentions_roles:
+            if len(mentions_roles) > 100:
+                raise ValueError("can only specify up to 100 mentions_roles")
+            params["mentions_role_id"] = [m.id for m in mentions_roles]
+
+        if mention_everyone is not None:
+            params["mention_everyone"] = mention_everyone
+
+        if replied_to_users:
+            if len(replied_to_users) > 100:
+                raise ValueError("can only specify up to 100 replied_to_users")
+            params["replied_to_user_id"] = [u.id for u in replied_to_users]
+
+        if replied_to_messages:
+            if len(replied_to_messages) > 100:
+                raise ValueError("can only specify up to 100 replied_to_messages")
+            params["replied_to_message_id"] = [m.id for u in replied_to_messages]
+
+        if pinned is not None:
+            params["pinned"] = pinned
+
+        if has:
+            params["has"] = has.parse()
+
+        if embed_types:
+            params["embed_type"] = [str(t) for t in embed_types]
+
+        if embed_providers:
+            if len(embed_providers) > 100:
+                raise ValueError("can only specify up to 100 embed_providers")
+            for e in embed_providers:
+                if len(e) > 256:
+                    raise ValueError(
+                        f"embed_provider {e!r} must be up to 256 characters."
+                    )
+            params["embed_provider"] = embed_providers
+
+        if link_hostnames:
+            if len(link_hostnames) > 100:
+                raise ValueError("can only specify up to 100 link_hostnames")
+            for l in link_hostnames:
+                if len(l) > 256:
+                    raise ValueError(
+                        f"link_hostname {l!r} must be up to 256 characters."
+                    )
+            params["link_hostname"] = link_hostnames
+
+        if attachment_filenames:
+            if len(attachment_filenames) > 100:
+                raise ValueError("can only specify up to 100 attachment_filenames")
+            for a in attachment_filenames:
+                if len(a) > 1024:
+                    raise ValueError(
+                        f"attachment_filename {a!r} must be up to 1024 characters."
+                    )
+            params["attachment_filename"] = attachment_filenames
+
+        if attachment_extensions:
+            if len(attachment_extensions) > 100:
+                raise ValueError("can only specify up to 100 attachment_extensions")
+            for a in attachment_extensions:
+                if len(a) > 256:
+                    raise ValueError(
+                        f"attachment_extension {a!r} must be up to 256 characters."
+                    )
+            params["attachment_extension"] = attachment_extensions
+
+        if sort_by:
+            params["sort_by"] = str(sort_by)
+
+        if sort_order:
+            params["sort_order"] = str(sort_order)
+
+        if include_nsfw is not None:
+            params["include_nsfw"] = include_nsfw
+
+        return MessageSearchIterator(self, limit, params)
