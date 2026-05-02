@@ -87,6 +87,7 @@ from .mixins import Hashable
 from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
+from .raw_models import ChannelInfo
 from .role import Role, RoleColours
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 from .soundboard import SoundboardSound
@@ -3953,6 +3954,25 @@ class Guild(Hashable):
 
         if not self._state.is_guild_evicted(self):
             return await self._state.chunk_guild(self, cache=cache)
+
+    async def request_channel_info(
+        self, *, cache: bool = True
+    ) -> None | list[ChannelInfo]:
+        """|coro|
+
+        Requests all channel statuses for this guild over the websocket.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        cache: :class:`bool`
+            Whether to cache the channel statuses as well.
+        """
+
+        if not self._state.is_guild_evicted(self):
+            return await self._state.request_guild_channel_info(self, cache=cache)
+        return None
 
     async def query_members(
         self,

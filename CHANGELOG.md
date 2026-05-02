@@ -14,6 +14,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Support for **Python 3.14**.
   ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
+- Added the ability to fetch and cache voice channel status and start time on demand,
+  and at startup. ([#3210](https://github.com/Pycord-Development/pycord/pull/3210))
+- Added `voice_start_time` to `VoiceChannel` and `StageChannel`, as well as the
+  corresponding `on_voice_channel_start_time_update`.
+  ([#3210](https://github.com/Pycord-Development/pycord/pull/3210))
 
 ### Changed
 

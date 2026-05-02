@@ -39,8 +39,10 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 import aiohttp
 
 from . import utils
+from .abc import Snowflake
 from .activity import BaseActivity
 from .errors import ConnectionClosed, InvalidArgument
+from .types.channel import RequestChannelInfoField
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -283,6 +285,7 @@ class DiscordWebSocket:
     HEARTBEAT_ACK = 11
     GUILD_SYNC = 12
     REQUEST_SOUNDBOARD_SOUNDS = 31
+    REQUEST_CHANNEL_INFO = 43
 
     if TYPE_CHECKING:
         token: str | None
@@ -770,6 +773,21 @@ class DiscordWebSocket:
         }
 
         _log.debug("Requesting soundboard sounds for guilds %s.", guild_ids)
+        await self.send_as_json(payload)
+
+    async def request_channel_info(
+        self, guild_id: int, fields: list[RequestChannelInfoField]
+    ):
+        payload = {
+            "op": self.REQUEST_CHANNEL_INFO,
+            "d": {"guild_id": guild_id, "fields": fields},
+        }
+
+        _log.debug(
+            "Requesting channel info for guild %s with fields %s.",
+            guild_id,
+            ", ".join(fields),
+        )
         await self.send_as_json(payload)
 
     async def close(self, code: int = 4000) -> None:

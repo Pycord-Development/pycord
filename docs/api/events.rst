@@ -1415,6 +1415,28 @@ Voice Channel Status Update
     :param payload: The raw voice channel status update payload.
     :type payload: :class:`RawVoiceChannelStatusUpdateEvent`
 
+.. function:: on_voice_channel_start_time_update(channel, before, after)
+
+    Called when the start time for a voice channel is updated.
+
+    .. versionadded:: 2.9
+
+    :param channel: The channel where the voice channel start time update originated from.
+    :type channel: :class:`abc.GuildChannel`
+    :param before: The old voice channel start time.
+    :type before: Optional[:class:`datetime.datetime`]
+    :param after: The new voice channel start time.
+    :type after: Optional[:class:`datetime.datetime`]
+
+.. function:: on_raw_voice_channel_start_time_update(payload)
+
+    Called when the start time for a voice channel is updated.
+
+    .. versionadded:: 2.9
+
+    :param payload: The raw voice channel start time update payload.
+    :type payload: :class:`RawVoiceChannelStartTimeUpdateEvent`
+
 Voice Channel Effects
 ---------------------
 .. function:: on_voice_channel_effect_send(event)

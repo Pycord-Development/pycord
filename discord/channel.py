@@ -1603,6 +1603,8 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "last_message_id",
         "flags",
         "nsfw",
+        "status",
+        "_voice_start_time",
     )
 
     def __init__(
@@ -1615,6 +1617,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
         self._update(guild, data)
+        self._update_status(status=data.get("status", MISSING))
 
     def _get_voice_client_key(self) -> tuple[int, str]:
         return self.guild.id, "guild_id"
@@ -1649,6 +1652,24 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
             self.nsfw: bool = data.get("nsfw", False)
             self._fill_overwrites(data)
+
+    def _update_status(
+        self, *, status: str | None = MISSING, voice_start_time: int | None = MISSING
+    ):
+        if status is not MISSING:
+            self.status = status
+        if voice_start_time is not MISSING:
+            self._voice_start_time = voice_start_time
+
+    @property
+    def voice_start_time(self) -> datetime.datetime | None:
+        """:class:`datetime.datetime` | :class:`None`: The time that the voice session started.
+
+        .. versionadded:: 2.9
+        """
+        if self._voice_start_time is None:
+            return None
+        return datetime.datetime.fromtimestamp(self._voice_start_time, tz=datetime.UTC)
 
     @property
     def _sorting_bucket(self) -> int:
@@ -1781,12 +1802,8 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         data: VoiceChannelPayload,
     ):
         self.status: str | None = None
+        self._voice_start_time: int | None = None
         super().__init__(state=state, guild=guild, data=data)
-
-    def _update(self, guild: Guild, data: VoiceChannelPayload):
-        super()._update(guild, data)
-        if data.get("status"):
-            self.status = data.get("status")
 
     def __repr__(self) -> str:
         attrs = [
@@ -2233,6 +2250,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         Sets the status of the voice channel.
 
         You must have the :attr:`~Permissions.set_voice_channel_status` permission to use this.
+        If the bot is not connected to the voice channel, this also requires :attr:`~Permissions.manage_channels`.
 
         Parameters
         ----------
@@ -2338,6 +2356,16 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     """
 
     __slots__ = ("topic",)
+
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        guild: Guild,
+        data: StageChannelPayload,
+    ):
+        self._voice_start_time: int | None = None
+        super().__init__(state=state, guild=guild, data=data)
 
     def _update(self, guild: Guild, data: StageChannelPayload) -> None:
         super()._update(guild, data)
