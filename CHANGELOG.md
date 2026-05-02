@@ -69,6 +69,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for Discord DAVE (Audio & Video E2EE) for voice-sending related
   features. ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
 
+- Added recurrence rules for `ScheduledEvent` objects.
+  ([#2749](https://github.com/Pycord-Development/pycord/pull/2749))
+
 ### Changed
 
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
