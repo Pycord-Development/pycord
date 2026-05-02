@@ -2682,6 +2682,162 @@ of :class:`enum.Enum`.
     .. attribute:: disabled_by_discord
         The application webhook is disabled by Discord.
 
+.. class:: ComponentLimits
+
+    Represents the limits for various Discord UI components.
+
+    .. versionadded:: 2.8.1
+
+    .. attribute:: view_children_max
+
+        The maximum number of children a View can have (40).
+
+    .. attribute:: action_row_children_max
+
+        The maximum number of children an ActionRow can have (5).
+
+    .. attribute:: button_label_max
+
+        The maximum length of a button label (80).
+
+    .. attribute:: container_children_max
+
+        The maximum number of children a Container can have (no limit).
+
+    .. attribute:: media_gallery_items_min
+
+        The minimum number of items in a MediaGallery (1).
+
+    .. attribute:: media_gallery_items_max
+
+        The maximum number of items in a MediaGallery (10).
+
+    .. attribute:: media_gallery_item_description_max
+
+        The maximum length of a MediaGalleryItem description (256).
+
+    .. attribute:: select_placeholder_max
+
+        The maximum length of a select placeholder (150).
+
+    .. attribute:: select_min_value_max
+
+        The maximum value for select's minimum value constraint (25).
+
+    .. attribute:: select_max_value_max
+
+        The maximum value for select's maximum value constraint (25).
+
+    .. attribute:: select_options_max
+
+        The maximum number of options in a select menu (25).
+
+    .. attribute:: select_option_label_max
+
+        The maximum length of a select option label (100).
+
+    .. attribute:: select_option_value_max
+
+        The maximum length of a select option value (100).
+
+    .. attribute:: select_option_description_max
+
+        The maximum length of a select option description (100).
+
+    .. attribute:: section_accessory_max
+
+        The maximum number of accessories in a Section (1).
+
+    .. attribute:: section_children_min
+
+        The minimum number of children in a Section (1).
+
+    .. attribute:: section_children_max
+
+        The maximum number of children in a Section (3).
+
+    .. attribute:: text_input_max_count
+
+        The maximum number of TextInputs in a modal (5).
+
+    .. attribute:: text_input_label_max
+
+        The maximum length of a TextInput label (45).
+
+    .. attribute:: text_input_placeholder_max
+
+        The maximum length of a TextInput placeholder (100).
+
+    .. attribute:: text_input_min_length_max
+
+        The maximum value for TextInput's minimum length (4000).
+
+    .. attribute:: text_input_max_length_max
+
+        The maximum value for TextInput's maximum length (4000).
+
+    .. attribute:: text_input_value_max
+
+        The maximum length of a TextInput value (4000).
+
+    .. attribute:: text_display_content_max
+
+        The maximum length of TextDisplay content (4000).
+
+    .. attribute:: thumbnail_description_max
+
+        The maximum length of a Thumbnail description (256).
+
+    .. attribute:: custom_id_min
+
+        The minimum length of a custom ID (1).
+
+    .. attribute:: custom_id_max
+
+        The maximum length of a custom ID (100).
+
+.. class:: EmbedLimits
+
+    Represents the limits for Discord embeds.
+
+    .. note::
+
+        The sum of all characters in an embed must be ≤ 6000.
+
+    .. versionadded:: 2.8.1
+
+    .. attribute:: fields_max
+
+        The maximum number of embed fields (25).
+
+    .. attribute:: field_name_max
+
+        The maximum length of a field name/title (256).
+
+    .. attribute:: field_value_max
+
+        The maximum length of a field value (1024).
+
+    .. attribute:: description_max
+
+        The maximum length of an embed description (4096).
+
+    .. attribute:: footer_text_max
+
+        The maximum length of an embed footer text (2048).
+
+    .. attribute:: author_name_max
+
+        The maximum length of an embed author name (256).
+
+    .. attribute:: title_max
+
+        The maximum length of an embed title (256).
+
+    .. attribute:: total_max
+
+        The maximum total character limit for an entire embed (6000).
+
 .. class:: TeamRole
     Represents a app team role.
 

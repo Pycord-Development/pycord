@@ -88,6 +88,8 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+    "ComponentLimits",
+    "EmbedLimits",
 )
 
 
@@ -96,21 +98,17 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value <= other.value
+        cls.__le__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value <= other.value
         )
-        cls.__ge__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value >= other.value
+        cls.__ge__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value >= other.value
         )
-        cls.__lt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value < other.value
+        cls.__lt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value < other.value
         )
-        cls.__gt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value > other.value
+        cls.__gt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value > other.value
         )
     return cls
 
@@ -1210,6 +1208,106 @@ class InviteTargetUsersJobStatusCode(Enum):
     processing = 1
     completed = 2
     failed = 3
+
+
+class ComponentLimits(Enum):
+    # View constraints
+    view_children_max = 40
+
+    # ActionRow constraints
+    action_row_children_max = 5
+
+    # Button constraints
+    button_label_max = 80
+
+    # Container constraints
+    container_children_max = float("inf")  # No limit
+
+    # MediaGallery constraints
+    media_gallery_items_min = 1
+    media_gallery_items_max = 10
+
+    # MediaGalleryItem constraints
+    media_gallery_item_description_max = 256
+
+    # Select constraints
+    select_placeholder_max = 150
+    select_min_value_min = 0
+    select_min_value_max = 25
+    select_max_value_min = 1
+    select_max_value_max = 25
+    select_options_max = 25
+    select_default_values_max = 25
+
+    # Select option constraints
+    select_option_label_max = 100
+    select_option_value_max = 100
+    select_option_description_max = 100
+
+    # Section constraints
+    section_accessory_max = 1
+    section_children_min = 1
+    section_children_max = 3
+
+    # TextInput constraints
+    text_input_max_count = 5
+    text_input_label_max = 45
+    text_input_placeholder_max = 100
+    text_input_min_length_min = 0
+    text_input_min_length_max = 4000
+    text_input_max_length_min = 1
+    text_input_max_length_max = 4000
+    text_input_value_max = 4000
+
+    # TextDisplay constraints
+    text_display_content_max = 4000
+
+    # Thumbnail constraints
+    thumbnail_description_max = 256
+
+    # Custom ID constraints
+    custom_id_min = 1
+    custom_id_max = 100
+
+    # RadioGroup constraints
+    radio_options_max = 10
+
+    # CheckboxGroup constraints
+    checkbox_options_max = 10
+    checkbox_min_values_min = 0
+    checkbox_min_values_max = 10
+    checkbox_max_values_min = 1
+    checkbox_max_values_max = 10
+
+    # FileUpload constraints
+    file_upload_min_files = 0
+    file_upload_max_files = 10
+
+    # Modal constraints
+    modal_title_max = 45
+    modal_rows_max = 5
+
+
+class EmbedLimits(Enum):
+    # Embed field constraints
+    fields_max = 25
+
+    # Field title/name constraints
+    field_name_max = 256
+
+    # Field value constraints
+    field_value_max = 1024
+
+    # Embed description constraints
+    description_max = 4096
+
+    # Embed footer constraints
+    footer_text_max = 2048
+
+    # Embed author constraints
+    author_name_max = 256
+    title_max = 256
+    total_max = 6000
 
 
 T = TypeVar("T")
