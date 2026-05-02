@@ -3955,7 +3955,7 @@ class Guild(Hashable):
         if not self._state.is_guild_evicted(self):
             return await self._state.chunk_guild(self, cache=cache)
 
-    async def channel_info(self, *, cache: bool = True) -> None | list[ChannelInfo]:
+    async def request_channel_info(self, *, cache: bool = True) -> None | list[ChannelInfo]:
         """|coro|
 
         Requests all channel statuses for this guild over the websocket.
@@ -3967,10 +3967,6 @@ class Guild(Hashable):
         cache: :class:`bool`
             Whether to cache the channel statuses as well.
 
-        Raises
-        ------
-        ClientException
-            The members intent is not enabled.
         """
 
         if not self._state.is_guild_evicted(self):

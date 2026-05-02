@@ -1570,7 +1570,7 @@ class ConnectionState:
                 self._get_guild,
                 cache=cache,
             )
-            ws = self._get_websocket(guild.id)  # This is ignored upstream
+            ws = self._get_websocket(guild.id) 
             await ws.request_channel_info(
                 guild.id, fields=["status", "voice_start_time"]
             )
