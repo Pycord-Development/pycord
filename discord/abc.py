@@ -1502,10 +1502,6 @@ class Messageable:
         single :class:`~discord.Embed` object. To upload multiple embeds, the ``embeds``
         parameter should be used with a :class:`list` of :class:`~discord.Embed` objects.
         **Specifying both parameters will lead to an exception**.
-
-        To upload a shared client theme, the ``shared_client_theme`` parameter should be used
-        with a :class:`~discord.SharedClientTheme` object.
-
         Parameters
         ----------
         content: Optional[:class:`str`]
