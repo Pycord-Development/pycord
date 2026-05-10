@@ -1502,6 +1502,7 @@ class Messageable:
         single :class:`~discord.Embed` object. To upload multiple embeds, the ``embeds``
         parameter should be used with a :class:`list` of :class:`~discord.Embed` objects.
         **Specifying both parameters will lead to an exception**.
+
         Parameters
         ----------
         content: Optional[:class:`str`]
