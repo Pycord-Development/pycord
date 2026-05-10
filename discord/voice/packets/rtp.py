@@ -126,6 +126,7 @@ class RTPPacket(Packet):
             offset = struct.calcsize(fmt) + 12
             self.csrcs = struct.unpack(fmt, data[12:offset])
             self.data = data[offset:]
+            self.header = data[:offset]
 
     def adjust_rtpsize(self) -> None:
         """Automatically adjusts this packet header and data based on the rtpsize format."""
@@ -171,6 +172,16 @@ class RTPPacket(Packet):
             offset -= 4
 
         return max(0, min(offset, len(data)))
+
+    def strip_padding(self, payload: bytes) -> bytes:
+        if not self.padding or not payload:
+            return payload
+
+        pad_len = payload[-1]
+        if 0 < pad_len <= len(payload):
+            return payload[:-pad_len]
+
+        return payload
 
     def _parse_bede_header(self, data: bytes, length: int) -> None:
         offset = 4

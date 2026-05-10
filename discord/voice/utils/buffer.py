@@ -116,6 +116,9 @@ class JitterBuffer:
         self._update_has_item()
         return True
 
+    def is_ready(self) -> bool:
+        return self._has_item.is_set()
+
     def pop(self, *, timeout: float | None = 0) -> Packet | None:
         ok = self._has_item.wait(timeout)
         if not ok:

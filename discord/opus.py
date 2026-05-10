@@ -49,7 +49,7 @@ if TYPE_CHECKING:
     from discord.sinks.core import Sink
     from discord.user import User
     from discord.voice.client import VoiceClient
-    from discord.voice.packets import FakePacket, VoiceData
+    from discord.voice.packets import VoiceData
     from discord.voice.packets.core import Packet
     from discord.voice.receive.router import PacketRouter
 
@@ -600,7 +600,7 @@ class PacketDecoder:
         return self._get_user(self._cached_id) if self._cached_id else None
 
     def _flag_ready_state(self) -> None:
-        if self._buffer.peek():
+        if self._buffer.is_ready():
             self.router.waiter.register(self)
         else:
             self.router.waiter.unregister(self)
@@ -632,31 +632,7 @@ class PacketDecoder:
         self._flag_ready_state()
 
     def _get_next_packet(self, timeout: float) -> Packet | None:
-        packet = self._buffer.pop(timeout=timeout)
-
-        if packet is None:
-            if self._buffer:
-                packets = self._buffer.flush()
-                if any(packets[1:]):
-                    _log.warning(
-                        "%s packets were lost being flushed in decoder-%s",
-                        len(packets) - 1,
-                        self.ssrc,
-                    )
-                return packets[0]
-            return
-        elif not packet:
-            _log.debug("Making fake packet")
-            packet = self._make_fakepacket()
-        return packet
-
-    def _make_fakepacket(self) -> FakePacket:
-        from discord.voice.packets import FakePacket
-        from discord.voice.utils.wrapped import add_wrapped
-
-        seq = add_wrapped(self._last_seq, 1)
-        ts = add_wrapped(self._last_ts, Decoder.SAMPLES_PER_FRAME, wrap=2**32)
-        return FakePacket(self.ssrc, seq, ts)
+        return self._buffer.pop(timeout=timeout)
 
     def _process_packet(self, packet: Packet) -> VoiceData:
         _log.debug("Processing packet %s", packet)
@@ -703,34 +679,14 @@ class PacketDecoder:
             packet.decrypted_data is not None,
         )
 
-        # personally, the best variable
-        other_code = True
-
-        if packet:
-            other_code = False
-            try:
-                pcm = self._decoder.decode(packet.decrypted_data, fec=False)
-            except OpusError:
-                _log.warning(
-                    "Opus decode failed for packet seq=%s, using PLC",
-                    packet.sequence,
-                    exc_info=True,
-                )
-                pcm = self._decoder.decode(None, fec=False)
-
-        if other_code:
-            next_packet = self._buffer.peek_next()
-
-            if next_packet is not None:
-                nextdata: bytes = next_packet.decrypted_data  # type: ignore
-
-                _log.debug(
-                    "Generating fec packet: fake=%s, fec=%s",
-                    packet.sequence,
-                    next_packet.sequence,
-                )
-                pcm = self._decoder.decode(nextdata, fec=True)
-            else:
-                pcm = self._decoder.decode(None, fec=False)
+        try:
+            pcm = self._decoder.decode(packet.decrypted_data, fec=False)
+        except OpusError:
+            _log.warning(
+                "Opus decode failed for packet seq=%s, using PLC",
+                packet.sequence,
+                exc_info=True,
+            )
+            pcm = self._decoder.decode(None, fec=False)
 
         return packet, pcm

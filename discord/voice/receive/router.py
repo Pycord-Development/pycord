@@ -68,6 +68,7 @@ class PacketRouter(threading.Thread):
     def feed_rtp(self, packet: RTPPacket) -> None:
         if packet.ssrc in self._dropped_ssrcs:
             _log.debug("Ignoring packet from dropped ssrc %s", packet.ssrc)
+            return
 
         with self._lock:
             decoder = self.get_decoder(packet.ssrc)
@@ -122,6 +123,7 @@ class PacketRouter(threading.Thread):
             _log.exception("Error in %s loop", self)
             self.reader.error = exc
         finally:
+            self._drain_all_decoders()
             try:
                 self.reader.client.stop_recording()
             except RecordingException:
@@ -137,6 +139,19 @@ class PacketRouter(threading.Thread):
                     data = decoder.pop_data()
                     if data is not None:
                         self.sink.write(data, data.source)
+
+    def _drain_all_decoders(self) -> None:
+        with self._lock:
+            for decoder in list(self.decoders.values()):
+                try:
+                    for packet in decoder._buffer.flush():
+                        data = decoder._process_packet(packet)
+                        self.sink.write(data, data.source)
+                except Exception:
+                    _log.exception(
+                        "Error draining decoder for ssrc=%s at end-of-recording",
+                        decoder.ssrc,
+                    )
 
 
 class SinkEventRouter(threading.Thread):
