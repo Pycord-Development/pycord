@@ -35,7 +35,7 @@ __all__ = ("SharedClientTheme",)
 if TYPE_CHECKING:
     from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
 
-    ColourLike = Union[Colour, str, int]
+    ColourLike = Colour | str | int
 
 
 def _coerce_colour(value: ColourLike) -> str:
