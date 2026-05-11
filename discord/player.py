@@ -38,7 +38,7 @@ import threading
 import time
 import warnings
 from math import floor
-from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
+from typing import IO, TYPE_CHECKING, Any, Callable, Generic, Literal, TypeVar, overload
 
 from .enums import SpeakingState
 from .errors import ClientException
@@ -309,6 +309,11 @@ class FFmpegAudio(AudioSource):
         self._process = self._stdout = self._stdin = self._stderr = MISSING
 
 
+DEFAULT_PROTOCOL_WHITELIST: set[str] = frozenset(
+    {"file", "http", "https", "tcp", "tls", "crypto", "pipe", "fd", "cache"}
+)
+
+
 class FFmpegPCMAudio(FFmpegAudio):
     """An audio source from FFmpeg (or AVConv).
 
@@ -325,6 +330,16 @@ class FFmpegPCMAudio(FFmpegAudio):
         The input that ffmpeg will take and convert to PCM bytes.
         If ``pipe`` is ``True`` then this is a file-like object that is
         passed to the stdin of ffmpeg.
+
+        .. warning::
+
+            The ``source`` parameter is passed directly to your executable's ``-i`` flag and
+            interpreted through its full protocol machinery. This means it can accept
+            ``file://`` paths (local file read), ``http(s)://`` to internal services
+            (SSRF), ``concat:`` (multi-file read), and other dangerous schemes.
+            You should never pass attacker-controlled values (e.g. raw user input from a chat
+            command) to ``source`` without validation.
+
     executable: :class:`str`
         The executable name (and path) to use. Defaults to ``ffmpeg``.
 
@@ -342,12 +357,44 @@ class FFmpegPCMAudio(FFmpegAudio):
         Extra command line arguments to pass to ffmpeg before the ``-i`` flag.
     options: Optional[:class:`str`]
         Extra command line arguments to pass to ffmpeg after the ``-i`` flag.
+    protocol_whitelist: Optional[:class:`str`]
+        A comma-separated list of protocols that ffmpeg is allowed to use.
+        Defaults to ``"file,http,https,tcp,tls,crypto,pipe,fd,cache"``, which
+        blocks dangerous schemes such as ``concat:``, ``subfile:``, ``data:``,
+        and ``gopher:``. Set to ``None`` to disable the whitelist entirely
+        (not recommended unless you are certain of the input source).
 
     Raises
     ------
     ClientException
         The subprocess failed to be created.
     """
+
+    @overload
+    def __init__(
+        self,
+        source: io.BufferedIOBase,
+        *,
+        executable: str = ...,
+        pipe: Literal[True] = ...,
+        stderr: IO[bytes] | None = ...,
+        before_options: str | None = ...,
+        options: str | None = ...,
+        protocol_whitelist: set[str] | None = ...,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        source: str,
+        *,
+        executable: str = ...,
+        pipe: Literal[False] = ...,
+        stderr: IO[bytes] | None = ...,
+        before_options: str | None = ...,
+        options: str | None = ...,
+        protocol_whitelist: set[str] | None = ...,
+    ) -> None: ...
 
     def __init__(
         self,
@@ -358,6 +405,7 @@ class FFmpegPCMAudio(FFmpegAudio):
         stderr: IO[bytes] | None = None,
         before_options: str | None = None,
         options: str | None = None,
+        protocol_whitelist: set[str] | None = DEFAULT_PROTOCOL_WHITELIST,
     ) -> None:
         args = []
         subprocess_kwargs = {
@@ -367,6 +415,9 @@ class FFmpegPCMAudio(FFmpegAudio):
 
         if isinstance(before_options, str):
             args.extend(shlex.split(before_options))
+
+        if protocol_whitelist is not None:
+            args.extend(["-protocol_whitelist", ",".join(protocol_whitelist)])
 
         args.append("-i")
         args.append("-" if pipe else source)
@@ -430,6 +481,16 @@ class FFmpegOpusAudio(FFmpegAudio):
         The input that ffmpeg will take and convert to Opus bytes.
         If ``pipe`` is ``True`` then this is a file-like object that is
         passed to the stdin of ffmpeg.
+
+        .. warning::
+
+            The ``source`` parameter is passed directly to your executable's ``-i`` flag and
+            interpreted through its full protocol machinery. This means it can accept
+            ``file://`` paths (local file read), ``http(s)://`` to internal services
+            (SSRF), ``concat:`` (multi-file read), and other dangerous schemes.
+            You should never pass attacker-controlled values (e.g. raw user input from a chat
+            command) to ``source`` without validation.
+
     bitrate: :class:`int`
         The bitrate in kbps to encode the output to.  Defaults to ``128``.
     codec: Optional[:class:`str`]
@@ -456,12 +517,48 @@ class FFmpegOpusAudio(FFmpegAudio):
         Extra command line arguments to pass to ffmpeg before the ``-i`` flag.
     options: Optional[:class:`str`]
         Extra command line arguments to pass to ffmpeg after the ``-i`` flag.
+    protocol_whitelist: Optional[:class:`set[str]`]
+        A set of protocols that ffmpeg is allowed to use.
+        Defaults to ``{"file", "http", "https", "tcp", "tls", "crypto", "pipe", "fd", "cache"}``, which
+        blocks dangerous schemes such as ``concat:``, ``subfile:``, ``data:``,
+        and ``gopher:``. Set to ``None`` to disable the whitelist entirely
+        (not recommended unless you are certain of the input source).
 
     Raises
     ------
     ClientException
         The subprocess failed to be created.
     """
+
+    @overload
+    def __init__(
+        self,
+        source: io.BufferedIOBase,
+        *,
+        bitrate: int | None = None,
+        codec: str | None = None,
+        executable: str = ...,
+        pipe: Literal[True] = ...,
+        stderr: IO[bytes] | None = ...,
+        before_options: str | None = ...,
+        options: str | None = ...,
+        protocol_whitelist: set[str] | None = ...,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        source: str,
+        *,
+        bitrate: int | None = None,
+        codec: str | None = None,
+        executable: str = ...,
+        pipe: Literal[False] = ...,
+        stderr: IO[bytes] | None = ...,
+        before_options: str | None = ...,
+        options: str | None = ...,
+        protocol_whitelist: set[str] | None = ...,
+    ) -> None: ...
 
     def __init__(
         self,
@@ -474,6 +571,7 @@ class FFmpegOpusAudio(FFmpegAudio):
         stderr: IO[bytes] | None = None,
         before_options: str | None = None,
         options: str | None = None,
+        protocol_whitelist: set[str] | None = DEFAULT_PROTOCOL_WHITELIST,
     ) -> None:
         args = []
         subprocess_kwargs = {
@@ -483,6 +581,9 @@ class FFmpegOpusAudio(FFmpegAudio):
 
         if isinstance(before_options, str):
             args.extend(shlex.split(before_options))
+
+        if protocol_whitelist is not None:
+            args.extend(["-protocol_whitelist", ",".join(protocol_whitelist)])
 
         args.append("-i")
         args.append("-" if pipe else source)
