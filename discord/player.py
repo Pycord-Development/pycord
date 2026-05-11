@@ -357,7 +357,7 @@ class FFmpegPCMAudio(FFmpegAudio):
         Extra command line arguments to pass to ffmpeg before the ``-i`` flag.
     options: Optional[:class:`str`]
         Extra command line arguments to pass to ffmpeg after the ``-i`` flag.
-    protocol_whitelist: Optional[:class:`str`]
+    protocol_whitelist: Optional[:class:`set[str]`]
         A comma-separated list of protocols that ffmpeg is allowed to use.
         Defaults to ``"file,http,https,tcp,tls,crypto,pipe,fd,cache"``, which
         blocks dangerous schemes such as ``concat:``, ``subfile:``, ``data:``,
