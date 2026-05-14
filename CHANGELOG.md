@@ -43,6 +43,18 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Removed
 
+## [2.8.0rc2] - 2026-04-14
+
+### Changed
+
+- `read_only` team members aren't considered as owners anymore when checking for app
+  ownership permissions.
+
+### Fixed
+
+- Fixed a `KeyError` when fetching an app's information or checking for app ownership
+  with `is_owner`.
+
 ## [2.8.0rc1] - 2026-03-21
 
 ### Added
@@ -112,6 +124,18 @@ These changes are available on the `master` branch, but have not yet been releas
   restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
   - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
     `Template.create_guild`, and `Client.create_guild`.
+
+## [2.7.2] - 2026-04-14
+
+### Changed
+
+- `read_only` team members aren't considered as owners anymore when checking for app
+  ownership permissions.
+
+### Fixed
+
+- Fixed a `KeyError` when fetching an app's information or checking for app ownership
+  with `is_owner`.
 
 ## [2.7.1] - 2026-02-09
 
