@@ -1221,7 +1221,7 @@ class ComponentLimits(Enum):
     button_label_max = 80
 
     # Container constraints
-    container_children_max = float("inf")  # No limit
+    container_children_max = -1  # No limit
 
     # MediaGallery constraints
     media_gallery_items_min = 1
