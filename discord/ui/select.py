@@ -685,7 +685,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if self.underlying.type is not ComponentType.string_select:
             raise Exception("options can only be set on string selects")
 
-        if len(self.underlying.options) >= ComponentLimits.select_options_max.value:
+        if len(self.underlying.options) > ComponentLimits.select_options_max.value:
             raise ValueError("maximum number of options already provided")
 
         self.underlying.options.append(option)
