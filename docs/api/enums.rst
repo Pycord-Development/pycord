@@ -2720,9 +2720,17 @@ of :class:`enum.Enum`.
 
         The maximum length of a select placeholder (150).
 
+    .. attribute:: select_min_value_min
+
+        The minimum value for select's minimum value constraint (0).
+
     .. attribute:: select_min_value_max
 
         The maximum value for select's minimum value constraint (25).
+
+    .. attribute:: select_max_value_min
+
+        The minimum value for select's maximum value constraint (1).
 
     .. attribute:: select_max_value_max
 
@@ -2731,6 +2739,10 @@ of :class:`enum.Enum`.
     .. attribute:: select_options_max
 
         The maximum number of options in a select menu (25).
+
+    .. attribute:: select_default_values_max
+
+        The maximum number of default values in a select menu (25).
 
     .. attribute:: select_option_label_max
 
@@ -2768,6 +2780,10 @@ of :class:`enum.Enum`.
 
         The maximum length of a TextInput placeholder (100).
 
+    .. attribute:: text_input_min_length_min
+
+        The minimum value for TextInput's minimum length (0).
+
     .. attribute:: text_input_min_length_max
 
         The maximum value for TextInput's minimum length (4000).
@@ -2795,6 +2811,50 @@ of :class:`enum.Enum`.
     .. attribute:: custom_id_max
 
         The maximum length of a custom ID (100).
+
+    .. attribute:: radio_options_max
+
+        The maximum number of options in a RadioGroup (10).
+
+    .. attribute:: checkbox_options_max
+
+        The maximum number of options in a CheckboxGroup (10).
+
+    .. attribute:: checkbox_min_values_min
+
+        The minimum value for checkbox's minimum value constraint (0).
+
+    .. attribute:: checkbox_min_values_max
+
+        The maximum value for checkbox's minimum value constraint (10).
+
+    .. attribute:: checkbox_max_values_min
+
+        The minimum value for checkbox's maximum value constraint (1).
+
+    .. attribute:: checkbox_max_values_max
+
+        The maximum value for checkbox's maximum value constraint (10).
+
+    .. attribute:: file_upload_min_files
+
+        The minimum number of files that can be uploaded (0).
+
+    .. attribute:: file_upload_max_files_max
+
+        The maximum number of files that can be uploaded (10).
+
+    .. attribute:: file_upload_max_values_min
+
+        The minimum value for file upload's maximum value constraint (1).
+
+    .. attribute:: modal_title_max
+
+        The maximum length of a modal title (45).
+
+    .. attribute:: modal_rows_max
+
+        The maximum number of rows in a modal (5).
 
 .. class:: EmbedLimits
 

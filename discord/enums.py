@@ -1281,7 +1281,8 @@ class ComponentLimits(Enum):
 
     # FileUpload constraints
     file_upload_min_files = 0
-    file_upload_max_files = 10
+    file_upload_max_files_max = 10
+    file_upload_max_values_min = 1
 
     # Modal constraints
     modal_title_max = 45

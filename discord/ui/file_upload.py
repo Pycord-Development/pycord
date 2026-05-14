@@ -80,17 +80,17 @@ class FileUpload(ModalItem):
         super().__init__()
         if min_values and (
             min_values < ComponentLimits.file_upload_min_files.value
-            or min_values > ComponentLimits.file_upload_max_files.value
+            or min_values > ComponentLimits.file_upload_max_files_max.value
         ):
             raise ValueError(
-                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files_max.value}"
             )
         if max_values and (
-            max_values < ComponentLimits.file_upload_min_files.value
-            or max_values > ComponentLimits.file_upload_max_files.value
+            max_values < ComponentLimits.file_upload_max_values_min.value
+            or max_values > ComponentLimits.file_upload_max_files_max.value
         ):
             raise ValueError(
-                f"max_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+                f"max_values must be between {ComponentLimits.file_upload_max_values_min.value} and {ComponentLimits.file_upload_max_files_max.value}"
             )
         if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(
@@ -155,10 +155,10 @@ class FileUpload(ModalItem):
             )  # type: ignore
         if value and (
             value < ComponentLimits.file_upload_min_files.value
-            or value > ComponentLimits.file_upload_max_files.value
+            or value > ComponentLimits.file_upload_max_files_max.value
         ):
             raise ValueError(
-                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files_max.value}"
             )
         self.underlying.min_values = value
 
@@ -174,11 +174,11 @@ class FileUpload(ModalItem):
                 f"max_values must be None or int not {value.__class__.__name__}"
             )  # type: ignore
         if value and (
-            value < ComponentLimits.file_upload_min_files.value
-            or value > ComponentLimits.file_upload_max_files.value
+            value < ComponentLimits.file_upload_max_values_min.value
+            or value > ComponentLimits.file_upload_max_files_max.value
         ):
             raise ValueError(
-                f"max_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files.value}"
+                f"max_values must be between {ComponentLimits.file_upload_max_values_min.value} and {ComponentLimits.file_upload_max_files_max.value}"
             )
         self.underlying.max_values = value
 
