@@ -151,14 +151,6 @@ Poll
 .. autoclass:: PollResults
     :members:
 
-Shared Client Theme
-~~~~~~~~~~~~~~~~~~~
-
-.. attributetable:: SharedClientTheme
-
-.. autoclass:: SharedClientTheme
-    :members:
-
 
 
 Flags
