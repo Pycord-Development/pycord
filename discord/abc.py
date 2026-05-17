@@ -1596,8 +1596,7 @@ class Messageable:
             you specified both ``file`` and ``files``,
             or you specified both ``embed`` and ``embeds``,
             or the ``reference`` object is not a :class:`~discord.Message`,
-            :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`,
-            or the ``shared_client_theme`` object does not meet the required criteria.
+            :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`.
         """
 
         channel = await self._get_channel()

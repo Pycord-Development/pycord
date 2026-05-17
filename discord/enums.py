@@ -1214,15 +1214,6 @@ class InviteTargetUsersJobStatusCode(Enum):
 
 
 class SharedClientThemeBaseType(Enum):
-    """The base theme mode of a :class:`SharedClientTheme`.
-
-    .. versionadded:: 2.9
-
-    .. note::
-
-        ``unset`` is treated as equivalent to ``dark`` by Discord.
-    """
-
     unset = 0
     dark = 1
     light = 2

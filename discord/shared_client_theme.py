@@ -38,21 +38,21 @@ if TYPE_CHECKING:
     ColourLike = Colour | str | int
 
 
-def _coerce_colour(value: ColourLike) -> str:
+def _coerce_colour(value: ColourLike) -> Colour:
     if isinstance(value, Colour):
-        return f"{value.value:0>6x}"
+        return value
     if isinstance(value, int):
-        return f"{value:0>6x}"
+        return Colour(value)
     if isinstance(value, str):
         stripped = value.lstrip("#")
         if len(stripped) != 6 or any(
             c not in "0123456789abcdefABCDEF" for c in stripped
         ):
             raise ValueError(
-                f"{value!r} is not a valid hexadecimal color (expected format: 'rrggbb')"
+                f"{value!r} is not a valid hexadecimal colour (expected format: 'rrggbb')"
             )
-        return stripped.lower()
-    raise TypeError(f"colors must be Colour, str, or int, not {type(value).__name__}")
+        return Colour(int(stripped, 16))
+    raise TypeError(f"colours must be Colour, str, or int, not {type(value).__name__}")
 
 
 class SharedClientTheme:
@@ -65,8 +65,10 @@ class SharedClientTheme:
 
     Attributes
     ----------
-    colors: List[:class:`str`]
-        The hexadecimal-encoded colors of the theme. A maximum of 5 colors.
+    colours: List[:class:`Colour`]
+        The colours of the theme. A maximum of 5 colours.
+    colors: List[:class:`Colour`]
+        Alias for :attr:`colours`.
     gradient_angle: :class:`int`
         The direction of the theme's colors, in degrees. Must be between ``0`` and ``360``.
     base_mix: :class:`int`
@@ -76,29 +78,29 @@ class SharedClientTheme:
         which Discord treats as :attr:`SharedClientThemeBaseType.dark`.
     """
 
-    __slots__ = ("colors", "gradient_angle", "base_mix", "base_theme")
+    __slots__ = ("colours", "gradient_angle", "base_mix", "base_theme")
 
     def __init__(
         self,
-        colors: Iterable[ColourLike],
         gradient_angle: int,
         base_mix: int,
+        colors: Iterable[ColourLike] | None = None,
+        colours: Iterable[ColourLike] | None = None,
         *,
         base_theme: SharedClientThemeBaseType | None = None,
     ):
-        normalized = [_coerce_colour(c) for c in colors]
-        if not normalized:
-            raise ValueError("colors must contain at least one color")
-        if len(normalized) > 5:
-            raise ValueError("colors must contain at most 5 colors")
+        if colors is None and colours is None:
+            raise ValueError("colors or colours must be provided")
+        if colours is None:
+            colours = colors
 
-        if not isinstance(gradient_angle, int) or isinstance(gradient_angle, bool):
-            raise TypeError("gradient_angle must be an int")
+        normalized = [_coerce_colour(c) for c in colours]
+        if len(normalized) > 5:
+            raise ValueError("colours must contain at most 5 colours")
+
         if not 0 <= gradient_angle <= 360:
             raise ValueError("gradient_angle must be between 0 and 360")
 
-        if not isinstance(base_mix, int) or isinstance(base_mix, bool):
-            raise TypeError("base_mix must be an int")
         if not 0 <= base_mix <= 100:
             raise ValueError("base_mix must be between 0 and 100")
 
@@ -107,21 +109,25 @@ class SharedClientTheme:
         ):
             raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
 
-        self.colors: list[str] = normalized
+        self.colours: list[Colour] = normalized
         self.gradient_angle: int = gradient_angle
         self.base_mix: int = base_mix
         self.base_theme: SharedClientThemeBaseType | None = base_theme
 
+    @property
+    def colors(self) -> list[Colour]:
+        return self.colours
+
     def __repr__(self) -> str:
         return (
-            f"<SharedClientTheme colors={self.colors!r} "
+            f"<SharedClientTheme colours={self.colours!r} "
             f"gradient_angle={self.gradient_angle} base_mix={self.base_mix} "
             f"base_theme={self.base_theme!r}>"
         )
 
     def to_dict(self) -> SharedClientThemePayload:
         payload: SharedClientThemePayload = {
-            "colors": list(self.colors),
+            "colors": [f"{c.value:0>6x}" for c in self.colours],
             "gradient_angle": self.gradient_angle,
             "base_mix": self.base_mix,
         }
@@ -133,7 +139,7 @@ class SharedClientTheme:
     def from_dict(cls, data: SharedClientThemePayload) -> SharedClientTheme:
         base_theme_value = data.get("base_theme")
         return cls(
-            colors=data.get("colors", []),
+            colours=data.get("colors", []),
             gradient_angle=data["gradient_angle"],
             base_mix=data["base_mix"],
             base_theme=(

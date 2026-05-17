@@ -85,7 +85,6 @@ if TYPE_CHECKING:
         role,
         scheduled_events,
     )
-    from .types import shared_client_theme as shared_client_theme_type
     from .types import (
         sticker,
         template,
@@ -94,6 +93,7 @@ if TYPE_CHECKING:
         webhook,
         welcome_screen,
         widget,
+        shared_client_theme,
     )
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
@@ -510,7 +510,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
-        shared_client_theme: shared_client_theme_type.SharedClientTheme | None = None,
+        shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -578,7 +578,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
-        shared_client_theme: shared_client_theme_type.SharedClientTheme | None = None,
+        shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         form = []
 
@@ -652,7 +652,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
-        shared_client_theme: shared_client_theme_type.SharedClientTheme | None = None,
+        shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
