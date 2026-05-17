@@ -84,8 +84,7 @@ if TYPE_CHECKING:
         poll,
         role,
         scheduled_events,
-    )
-    from .types import (
+        shared_client_theme,
         sticker,
         template,
         threads,
@@ -93,7 +92,6 @@ if TYPE_CHECKING:
         webhook,
         welcome_screen,
         widget,
-        shared_client_theme,
     )
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
