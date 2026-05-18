@@ -16,6 +16,7 @@ released.
 ### Changed
 
 ### Fixed
+
 - Include `bypass_slowmode` in `permissions.all()`.
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
 
