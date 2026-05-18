@@ -8,7 +8,8 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
-These changes are available on the `cherry/2.8.0` branch, but have not yet been released.
+These changes are available on the `cherry/2.8.0` branch, but have not yet been
+released.
 
 ### Added
 
@@ -52,8 +53,6 @@ These changes are available on the `cherry/2.8.0` branch, but have not yet been 
 
 ### Changed
 
-- `read_only` team members aren't considered as owners anymore when checking for app
-  ownership permissions.
 - `read_only` team members aren't considered as owners anymore when checking for app
   ownership permissions.
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
