@@ -54,8 +54,6 @@ These changes are available on the `cherry/2.8.0` branch, but have not yet been 
 
 - `read_only` team members aren't considered as owners anymore when checking for app
   ownership permissions.
-- `read_only` team members aren't considered as owners anymore when checking for app
-  ownership permissions.
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
   ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 - Updated `Colour.dark_theme()` with Discord's new theme colours.
