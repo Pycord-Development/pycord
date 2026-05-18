@@ -21,6 +21,7 @@ These changes are available on the `cherry/2.8.0` branch, but have not yet been 
 ### Removed
 
 ## [2.8.0] - 2026-05-18
+
 ### Added
 
 - Support for **Python 3.14**.
@@ -110,6 +111,7 @@ These changes are available on the `cherry/2.8.0` branch, but have not yet been 
   restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
   - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
     `Template.create_guild`, and `Client.create_guild`.
+
 ## [2.8.0rc2] - 2026-04-14
 
 ### Changed
@@ -1778,8 +1780,10 @@ These changes are available on the `cherry/2.8.0` branch, but have not yet been 
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
 [unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...HEAD
-[2.8.0]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0
-[2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.8.0rc1
+[2.8.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0
+[2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0rc2
+[2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0rc1
+[2.7.2]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
