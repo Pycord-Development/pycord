@@ -17,7 +17,7 @@ released.
 
 ### Fixed
 
-- Include `bypass_slowmode` in `:meth:Permissions.all`.
+- Include `bypass_slowmode` in `Permissions.all`.
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
 
 ### Deprecated
