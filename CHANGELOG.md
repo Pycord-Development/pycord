@@ -8,17 +8,61 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
-These changes are available on the `master` branch, but have not yet been released.
+These changes are available on the `cherry/2.8.0` branch, but have not yet been released.
 
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.8.0] - 2026-05-18
 ### Added
 
 - Support for **Python 3.14**.
   ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
+- Added support for community invites.
+  ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
+- Added `Member.colours` and `Member.colors` properties.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Added `Colour.light_theme()`, `Colour.ash_theme()`, and `Colour.onyx_theme()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Added `RadioGroup`, `CheckboxGroup`, and `Checkbox` for modals.
+  ([#3073](https://github.com/Pycord-Development/pycord/pull/3073))
+- Added the ability to respond to interactions with suppressed push and desktop
+  notifications. ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `User.collectibles` property.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added the ability to compare instances of `Nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Added `Member.display_avatar_decoration` and `Member.guild_avatar_decoration`.
+  ([#3109](https://github.com/Pycord-Development/pycord/pull/3109))
+- Added a new event called `on_raw_member_update` that is dispatched when a member is
+  updated, regardless of cache status.
+  ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
+- Added support for Discord DAVE (Audio & Video E2EE) for voice-sending related
+  features. ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
 
 ### Changed
 
 - `read_only` team members aren't considered as owners anymore when checking for app
   ownership permissions.
+- `read_only` team members aren't considered as owners anymore when checking for app
+  ownership permissions.
+- Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
+- Updated `Colour.dark_theme()` with Discord's new theme colours.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Changed `User.nameplate` to be an alias for `User.collectibles.nameplate`.
+  ([#3107](https://github.com/Pycord-Development/pycord/pull/3107))
+- Changed `FileComponent.name` and `FileComponent.size` to be optional.
+  ([#3115](https://github.com/Pycord-Development/pycord/pull/3115))
 
 ### Fixed
 
@@ -36,11 +80,36 @@ These changes are available on the `master` branch, but have not yet been releas
   with `is_owner`.
 - Fixed certain scenarios where received components could crash the app.
   ([#3059](https://github.com/Pycord-Development/pycord/pull/3059))
+- Fixed a `KeyError` when fetching an app's information or checking for app ownership
+  with `is_owner`.
+- Fixed some `Item` attributes not being set correctly.
+  ([#3102](https://github.com/Pycord-Development/pycord/pull/3102))
+- Fixed use of deprecated `float` type for `timeout=...` in `ws_connect()`.
+  ([#3105](https://github.com/Pycord-Development/pycord/pull/3105))
+- Fixed the update of a user's `avatar_decoration` to now cause an `on_user_update`
+  event to fire. ([#3103](https://github.com/Pycord-Development/pycord/pull/3103))
 
 ### Deprecated
 
+- Deprecated `is_bot_managed`, `is_premium_subscriber`, `is_integration`,
+  `is_available_for_purchase`, and `is_guild_connections_role` in favor of `type` for
+  both `Role` and `RoleTags` .
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Deprecated `Colour.embed_background()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+- Deprecated the `suppress` parameter in all applicable message-related methods in favor
+  of `suppress_embeds`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Deprecated `discord.VoiceClient` and `discord.VoiceProtocol` in favor of
+  `discord.voice.VoiceClient` and `discord.voice.VoiceProtocol`.
+  ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
+
 ### Removed
 
+- Removed the guild creation and ownership-related methods and arguments due to updated
+  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+    `Template.create_guild`, and `Client.create_guild`.
 ## [2.8.0rc2] - 2026-04-14
 
 ### Changed
@@ -1708,7 +1777,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...HEAD
+[2.8.0]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0
 [2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.8.0rc1
 [2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
