@@ -1232,7 +1232,7 @@ class ConnectionState:
                             "join_timestamp": data["thread_metadata"][
                                 "create_timestamp"
                             ],
-                            "flags": utils.utils.MISSING,
+                            "flags": utils.MISSING,
                         },
                     )
                 )
@@ -1561,7 +1561,7 @@ class ConnectionState:
     async def request_guild_channel_info(
         self, guild: Guild, *, wait: bool = True, cache: bool | None = None
     ) -> asyncio.Future[list[ChannelInfo]] | list[ChannelInfo]:
-        cache = cache or self.cache_channel_info
+        cache = cache if cache is not None else self.cache_channel_info
         request = self._channel_info_requests.get(guild.id)
         if request is None:
             self._channel_info_requests[guild.id] = request = ChannelInfoRequest(
@@ -2108,7 +2108,7 @@ class ConnectionState:
             )
 
     def parse_voice_channel_start_time_update(self, data) -> None:
-        raw = RawVoiceChannelStatusUpdateEvent(data)
+        raw = RawVoiceChannelStartTimeUpdateEvent(data)
         self.dispatch("raw_voice_channel_start_time_update", raw)
         guild = self._get_guild(int(data["guild_id"]))
         channel_id = int(data["id"])

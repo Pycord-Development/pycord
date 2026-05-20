@@ -1082,5 +1082,5 @@ class ChannelInfo(_RawReprMixin):
 
     def __init__(self, data):
         self.id: int = int(data["id"])
-        self.status: str | None = data.get("status", utils.MISSING)
-        self.voice_start_time: int | None = data.get("voice_start_time", utils.MISSING)
+        self.status: str | None = data.get("status")
+        self.voice_start_time: int | None = data.get("voice_start_time")

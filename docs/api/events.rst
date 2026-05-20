@@ -1422,7 +1422,7 @@ Voice Channel Status Update
     .. versionadded:: 2.9
 
     :param channel: The channel where the voice channel start time update originated from.
-    :type channel: :class:`abc.GuildChannel`
+    :type channel: :class:`VoiceChannel` | :class:`StageChannel`
     :param before: The old voice channel start time.
     :type before: Optional[:class:`datetime.datetime`]
     :param after: The new voice channel start time.
