@@ -43,6 +43,7 @@ from typing import (
     Generic,
     TypeVar,
     Union,
+    get_type_hints,
 )
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
@@ -800,9 +801,14 @@ class SlashCommand(ApplicationCommand):
         else:
             params = iter(params.items())
 
+        try:
+            hints = get_type_hints(self.callback, include_extras=True)
+        except Exception:
+            hints = {}
+
         final_options = []
         for p_name, p_obj in params:
-            option = p_obj.annotation
+            option = hints.get(p_name, p_obj.annotation)
             if option == inspect.Parameter.empty:
                 option = str
 
@@ -884,6 +890,11 @@ class SlashCommand(ApplicationCommand):
         options = list(options)
         params = self._check_required_params(params)
 
+        try:
+            hints = get_type_hints(self.callback, include_extras=True)
+        except Exception:
+            hints = {}
+
         check_annotations: list[Callable[[Option, type], bool]] = [
             lambda o, a: (
                 o.input_type == SlashCommandOptionType.string
@@ -909,7 +920,7 @@ class SlashCommand(ApplicationCommand):
                 p_name, p_obj = next(params)
             except StopIteration:  # not enough params for all the options
                 raise ClientException("Too many arguments passed to the options kwarg.")
-            p_obj = p_obj.annotation
+            p_obj = hints.get(p_name, p_obj.annotation)
 
             if not any(check(o, p_obj) for check in check_annotations):
                 raise TypeError(
@@ -1088,7 +1099,7 @@ class SlashCommand(ApplicationCommand):
             ):
                 pass
 
-            elif issubclass(op._raw_type, Enum):
+            elif isinstance(op._raw_type, type) and issubclass(op._raw_type, Enum):
                 if isinstance(arg, str) and arg.isdigit():
                     try:
                         arg = op._raw_type(int(arg))
