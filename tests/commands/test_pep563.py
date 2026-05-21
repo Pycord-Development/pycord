@@ -32,7 +32,6 @@ from discord.commands import SlashCommand
 from discord.commands.options import Option
 from discord.enums import SlashCommandOptionType
 
-
 # ---------------------------------------------------------------------------
 # Callbacks — defined here so their __annotations__ are PEP-563 strings.
 # ---------------------------------------------------------------------------
@@ -54,7 +53,9 @@ async def _ann_role(ctx, role: Option(discord.Role, "A role")):
     pass
 
 
-async def _ann_not_required(ctx, user: Option(discord.Member, "optional", required=False)):
+async def _ann_not_required(
+    ctx, user: Option(discord.Member, "optional", required=False)
+):
     pass
 
 
@@ -66,13 +67,17 @@ async def _plain_int(ctx, count: int):
     pass
 
 
-async def _default_member(ctx, user: discord.Member = Option(discord.Member, "A member")):
+async def _default_member(
+    ctx, user: discord.Member = Option(discord.Member, "A member")
+):
     pass
 
 
 async def _default_not_required(
     ctx,
-    user: discord.Member = Option(discord.Member, "optional", required=False, default=None),
+    user: discord.Member = Option(
+        discord.Member, "optional", required=False, default=None
+    ),
 ):
     pass
 
@@ -113,9 +118,9 @@ class TestOptionAsAnnotation:
         for func in (_ann_member, _ann_str, _ann_int, _ann_role):
             cmd = SlashCommand(func, name="test")
             raw = cmd.options[0]._raw_type
-            assert isinstance(raw, (type, SlashCommandOptionType)), (
-                f"{func.__name__}: _raw_type={raw!r} should be a class, not a string"
-            )
+            assert isinstance(
+                raw, (type, SlashCommandOptionType)
+            ), f"{func.__name__}: _raw_type={raw!r} should be a class, not a string"
 
 
 # ---------------------------------------------------------------------------
@@ -136,9 +141,9 @@ class TestPlainAnnotationRegression:
         for func in (_plain_str, _plain_int):
             cmd = SlashCommand(func, name="test")
             raw = cmd.options[0]._raw_type
-            assert isinstance(raw, (type, SlashCommandOptionType)), (
-                f"{func.__name__}: _raw_type={raw!r} should be a class, not a string"
-            )
+            assert isinstance(
+                raw, (type, SlashCommandOptionType)
+            ), f"{func.__name__}: _raw_type={raw!r} should be a class, not a string"
 
 
 # ---------------------------------------------------------------------------
