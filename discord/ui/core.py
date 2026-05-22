@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
 from __future__ import annotations
 
 import asyncio
@@ -44,9 +43,6 @@ class ComponentLimits:
 
     # Button constraints
     BUTTON_LABEL_MAX = 80
-
-    # Container constraints
-    CONTAINER_CHILDREN_MAX = None  # No limit
 
     # MediaGallery constraints
     MEDIA_GALLERY_ITEMS_MIN = 1
