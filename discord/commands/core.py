@@ -37,13 +37,12 @@ from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Generator,
     Generic,
     TypeVar,
     Union,
 )
+
+from collections.abc import Callable, Coroutine, Generator
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
@@ -72,7 +71,7 @@ from .options import Option, OptionChoice
 if sys.version_info >= (3, 11):
     from typing import Annotated, Literal, get_args, get_origin
 else:
-    from typing_extensions import Annotated, Literal, get_args, get_origin
+    from typing import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -90,7 +89,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, Never, ParamSpec
+    from typing_extensions import Never, ParamSpec
+
+    from typing import Concatenate
 
     from .. import Permissions
     from ..bot import C

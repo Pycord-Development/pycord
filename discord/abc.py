@@ -31,16 +31,15 @@ import time
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Iterable,
     Protocol,
-    Sequence,
     TypeAlias,
     TypeVar,
     Union,
     overload,
     runtime_checkable,
 )
+
+from collections.abc import Callable, Iterable, Sequence
 
 from . import utils
 from .context_managers import Typing
