@@ -28,6 +28,7 @@ from __future__ import annotations
 import asyncio
 import copy
 import time
+from collections.abc import Callable, Iterable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -38,8 +39,6 @@ from typing import (
     overload,
     runtime_checkable,
 )
-
-from collections.abc import Callable, Iterable, Sequence
 
 from . import utils
 from .context_managers import Typing

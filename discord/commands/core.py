@@ -33,6 +33,7 @@ import re
 import sys
 import types
 from collections import OrderedDict
+from collections.abc import Callable, Coroutine, Generator
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -41,8 +42,6 @@ from typing import (
     TypeVar,
     Union,
 )
-
-from collections.abc import Callable, Coroutine, Generator
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
@@ -89,9 +88,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Never, ParamSpec
-
     from typing import Concatenate
+
+    from typing_extensions import Never, ParamSpec
 
     from .. import Permissions
     from ..bot import C
