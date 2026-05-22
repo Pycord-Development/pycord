@@ -32,9 +32,8 @@ from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
-from ..enums import ComponentLimits
 from ..utils import _get_event_loop
-from .core import ItemInterface
+from .core import ComponentLimits, ItemInterface
 from .input_text import InputText
 from .item import ModalItem
 
@@ -81,9 +80,9 @@ class BaseModal(ItemInterface):
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
         self._custom_id: str | None = custom_id or os.urandom(16).hex()
-        if len(title) > ComponentLimits.modal_title_max.value:
+        if len(title) > ComponentLimits.MODAL_TITLE_MAX:
             raise ValueError(
-                f"title must be {ComponentLimits.modal_title_max.value} characters or fewer"
+                f"title must be {ComponentLimits.MODAL_TITLE_MAX} characters or fewer"
             )
         self._children: list[ModalItem] = []
         super().__init__(timeout=timeout, store=store)
@@ -124,9 +123,9 @@ class BaseModal(ItemInterface):
 
     @title.setter
     def title(self, value: str):
-        if len(value) > ComponentLimits.modal_title_max.value:
+        if len(value) > ComponentLimits.MODAL_TITLE_MAX:
             raise ValueError(
-                f"title must be {ComponentLimits.modal_title_max.value} characters or fewer"
+                f"title must be {ComponentLimits.MODAL_TITLE_MAX} characters or fewer"
             )
         if not isinstance(value, str):
             raise TypeError(f"expected title to be str, not {value.__class__.__name__}")
@@ -158,9 +157,9 @@ class BaseModal(ItemInterface):
             raise TypeError(
                 f"expected custom_id to be str, not {value.__class__.__name__}"
             )
-        if len(value) > ComponentLimits.custom_id_max.value:
+        if len(value) > ComponentLimits.CUSTOM_ID_MAX:
             raise ValueError(
-                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+                f"custom_id must be {ComponentLimits.CUSTOM_ID_MAX} characters or fewer"
             )
         self._custom_id = value
 
@@ -186,9 +185,9 @@ class BaseModal(ItemInterface):
             The item to add to the modal
         """
 
-        if len(self._children) >= ComponentLimits.modal_rows_max.value:
+        if len(self._children) >= ComponentLimits.MODAL_ROWS_MAX:
             raise ValueError(
-                f"You can only have up to {ComponentLimits.modal_rows_max.value} items in a modal."
+                f"You can only have up to {ComponentLimits.MODAL_ROWS_MAX} items in a modal."
             )
 
         if not isinstance(item, ModalItem):

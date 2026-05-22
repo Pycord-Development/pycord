@@ -28,7 +28,8 @@ import os
 from typing import TYPE_CHECKING
 
 from ..components import Checkbox as CheckboxComponent
-from ..enums import ComponentLimits, ComponentType
+from .core import ComponentLimits
+from ..enums import ComponentType
 from .item import ModalItem
 
 __all__ = ("Checkbox",)
@@ -105,9 +106,9 @@ class Checkbox(ModalItem):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
-        if len(value) > ComponentLimits.custom_id_max.value:
+        if len(value) > ComponentLimits.CUSTOM_ID_MAX:
             raise ValueError(
-                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+                f"custom_id must be {ComponentLimits.CUSTOM_ID_MAX} characters or fewer"
             )
         self.underlying.custom_id = value
 

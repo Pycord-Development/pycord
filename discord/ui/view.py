@@ -596,9 +596,9 @@ class View(BaseView):
                 if hasattr(member, "__discord_ui_model_type__"):
                     children.append(member)
 
-        if len(children) > ComponentLimits.view_children_max.value:
+        if len(children) > ComponentLimits.VIEW_CHILDREN_MAX:
             raise TypeError(
-                f"View cannot have more than {ComponentLimits.view_children_max.value} children"
+                f"View cannot have more than {ComponentLimits.VIEW_CHILDREN_MAX} children"
             )
 
         cls.__view_children_items__ = children

@@ -113,16 +113,16 @@ class Button(ViewItem[V]):
         self._row: int | None = None
         self._rendered_row: int | None = None
         super().__init__()
-        if label and len(str(label)) > ComponentLimits.button_label_max.value:
+        if label and len(str(label)) > ComponentLimits.BUTTON_LABEL_MAX:
             raise ValueError(
-                f"label must be {ComponentLimits.button_label_max.value} characters or fewer"
+                f"label must be {ComponentLimits.BUTTON_LABEL_MAX} characters or fewer"
             )
         if (
             custom_id is not None
-            and len(str(custom_id)) > ComponentLimits.custom_id_max.value
+            and len(str(custom_id)) > ComponentLimits.CUSTOM_ID_MAX
         ):
             raise ValueError(
-                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+                f"custom_id must be {ComponentLimits.CUSTOM_ID_MAX} characters or fewer"
             )
         if custom_id is not None and url is not None:
             raise TypeError("cannot mix both url and custom_id with Button")
@@ -213,9 +213,9 @@ class Button(ViewItem[V]):
     def custom_id(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise TypeError("custom_id must be None or str")
-        if value and len(value) > ComponentLimits.custom_id_max.value:
+        if value and len(value) > ComponentLimits.CUSTOM_ID_MAX:
             raise ValueError(
-                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+                f"custom_id must be {ComponentLimits.CUSTOM_ID_MAX} characters or fewer"
             )
         self.underlying.custom_id = value
         self._provided_custom_id = value is not None
@@ -247,9 +247,9 @@ class Button(ViewItem[V]):
 
     @label.setter
     def label(self, value: str | None):
-        if value and len(str(value)) > ComponentLimits.button_label_max.value:
+        if value and len(str(value)) > ComponentLimits.BUTTON_LABEL_MAX:
             raise ValueError(
-                f"label must be {ComponentLimits.button_label_max.value} characters or fewer"
+                f"label must be {ComponentLimits.BUTTON_LABEL_MAX} characters or fewer"
             )
         self.underlying.label = str(value) if value is not None else value
 

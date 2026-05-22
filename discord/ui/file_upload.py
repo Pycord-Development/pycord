@@ -28,8 +28,9 @@ import os
 from typing import TYPE_CHECKING
 
 from ..components import FileUpload as FileUploadComponent
-from ..enums import ComponentLimits, ComponentType
 from ..message import Attachment
+from .core import ComponentLimits
+from ..enums import ComponentType
 from .item import ModalItem
 
 __all__ = ("FileUpload",)
@@ -79,18 +80,18 @@ class FileUpload(ModalItem):
     ):
         super().__init__()
         if min_values and (
-            min_values < ComponentLimits.file_upload_min_files.value
-            or min_values > ComponentLimits.file_upload_max_files_max.value
+            min_values < ComponentLimits.FILE_UPLOAD_MIN_FILES
+            or min_values > ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX
         ):
             raise ValueError(
-                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files_max.value}"
+                f"min_values must be between {ComponentLimits.FILE_UPLOAD_MIN_FILES} and {ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX}"
             )
         if max_values and (
-            max_values < ComponentLimits.file_upload_max_values_min.value
-            or max_values > ComponentLimits.file_upload_max_files_max.value
+            max_values < ComponentLimits.FILE_UPLOAD_MAX_FILES_MIN
+            or max_values > ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX
         ):
             raise ValueError(
-                f"max_values must be between {ComponentLimits.file_upload_max_values_min.value} and {ComponentLimits.file_upload_max_files_max.value}"
+                f"max_values must be between {ComponentLimits.FILE_UPLOAD_MAX_FILES_MIN} and {ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX}"
             )
         if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(
@@ -136,9 +137,9 @@ class FileUpload(ModalItem):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
-        if len(value) > ComponentLimits.custom_id_max.value:
+        if len(value) > ComponentLimits.CUSTOM_ID_MAX:
             raise ValueError(
-                f"custom_id must be {ComponentLimits.custom_id_max.value} characters or fewer"
+                f"custom_id must be {ComponentLimits.CUSTOM_ID_MAX} characters or fewer"
             )
         self.underlying.custom_id = value
 
@@ -154,11 +155,11 @@ class FileUpload(ModalItem):
                 f"min_values must be None or int not {value.__class__.__name__}"
             )  # type: ignore
         if value and (
-            value < ComponentLimits.file_upload_min_files.value
-            or value > ComponentLimits.file_upload_max_files_max.value
+            value < ComponentLimits.FILE_UPLOAD_MIN_FILES
+            or value > ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX
         ):
             raise ValueError(
-                f"min_values must be between {ComponentLimits.file_upload_min_files.value} and {ComponentLimits.file_upload_max_files_max.value}"
+                f"min_values must be between {ComponentLimits.FILE_UPLOAD_MIN_FILES} and {ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX}"
             )
         self.underlying.min_values = value
 
@@ -174,11 +175,11 @@ class FileUpload(ModalItem):
                 f"max_values must be None or int not {value.__class__.__name__}"
             )  # type: ignore
         if value and (
-            value < ComponentLimits.file_upload_max_values_min.value
-            or value > ComponentLimits.file_upload_max_files_max.value
+            value < ComponentLimits.FILE_UPLOAD_MAX_FILES_MIN
+            or value > ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX
         ):
             raise ValueError(
-                f"max_values must be between {ComponentLimits.file_upload_max_values_min.value} and {ComponentLimits.file_upload_max_files_max.value}"
+                f"max_values must be between {ComponentLimits.FILE_UPLOAD_MAX_FILES_MIN} and {ComponentLimits.FILE_UPLOAD_MAX_FILES_MAX}"
             )
         self.underlying.max_values = value
 
