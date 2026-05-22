@@ -364,7 +364,7 @@ class Modal(BaseModal):
             pass
         return self
 
-    def refresh(self, interaction: Interaction, data: list[ComponentPayload]):
+    def _refresh(self, interaction: Interaction, data: list[ComponentPayload]):
         components = [
             component
             for parent_component in data
@@ -448,7 +448,7 @@ class DesignerModal(BaseModal):
         super().add_item(item)
         return self
 
-    def refresh(self, interaction: Interaction, data: list[ComponentPayload]):
+    def _refresh(self, interaction: Interaction, data: list[ComponentPayload]):
         for component, child in zip(data, self.children):
             child.refresh_from_modal(interaction, component)
 
@@ -520,7 +520,7 @@ class ModalStore:
 
         try:
             components = interaction.data["components"]
-            modal.refresh(interaction, components)
+            modal._refresh(interaction, components)
             await modal.callback(interaction)
             self.remove_modal(modal, user_id)
         except Exception as e:
