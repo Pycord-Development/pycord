@@ -496,7 +496,7 @@ class SpeakingTimer(threading.Thread, Generic[Unpack[Ts]]):
         self.speaking_timeout_delay: float = 0.2
         self.last_speaking_state: dict[int, bool] = {}
         self.speaking_cache: dict[int, float] = {}
-        self.speaking_timer_event: threading.Event = threading.Event()
+        self.speaking_timer: threading.Condition = threading.Condition()
         self._end_thread: threading.Event = threading.Event()
 
     def _lookup_member(self, ssrc: int) -> Member | None:
@@ -517,17 +517,19 @@ class SpeakingTimer(threading.Thread, Generic[Unpack[Ts]]):
         self.client._dispatch_sink(event, member)
 
     def notify(self, ssrc: int | None = None) -> None:
-        if ssrc is not None:
-            self.last_speaking_state[ssrc] = True
-            self.maybe_dispatch_speaking_start(ssrc)
-            self.speaking_cache[ssrc] = time.perf_counter()
+        with self.speaking_timer:
+            if ssrc is not None:
+                self.last_speaking_state[ssrc] = True
+                self.maybe_dispatch_speaking_start(ssrc)
+                self.speaking_cache[ssrc] = time.perf_counter()
 
-        self.speaking_timer_event.set()
-        self.speaking_timer_event.clear()
+            self.speaking_timer.notify()
 
     def drop_ssrc(self, ssrc: int) -> None:
-        self.speaking_cache.pop(ssrc, None)
-        state = self.last_speaking_state.pop(ssrc, None)
+        with self.speaking_timer:
+            self.speaking_cache.pop(ssrc, None)
+            state = self.last_speaking_state.pop(ssrc, None)
+
         if state:
             self.dispatch("member_speaking_stop", ssrc)
         self.notify()
@@ -549,25 +551,31 @@ class SpeakingTimer(threading.Thread, Generic[Unpack[Ts]]):
                     return ssrc, tlast
             return None, None
 
-        self.speaking_timer_event.wait()
         while not self._end_thread.is_set():
-            if not self.speaking_cache:
-                self.speaking_timer_event.wait()
+            stopped_ssrc = None
 
-            tnow = time.perf_counter()
-            ssrc, tlast = get_next_entry()
+            with self.speaking_timer:
+                if not self.speaking_cache:
+                    self.speaking_timer.wait()
+                    continue
 
-            if ssrc is None or tlast is None:
-                self.speaking_timer_event.wait()
-                continue
+                tnow = time.perf_counter()
+                ssrc, tlast = get_next_entry()
 
-            self.speaking_timer_event.wait(tlast + self.speaking_timeout_delay - tnow)
+                if ssrc is None or tlast is None:
+                    self.speaking_timer.wait()
+                    continue
 
-            if time.perf_counter() < tlast + self.speaking_timeout_delay:
-                continue
+                delay = tlast + self.speaking_timeout_delay - tnow
+                if delay > 0:
+                    self.speaking_timer.wait(delay)
+                    continue
 
-            self.dispatch("member_speaking_stop", ssrc)
-            self.last_speaking_state[ssrc] = False
+                self.last_speaking_state[ssrc] = False
+                stopped_ssrc = ssrc
+
+            if stopped_ssrc is not None:
+                self.dispatch("member_speaking_stop", stopped_ssrc)
 
 
 class UDPKeepAlive(threading.Thread):

@@ -72,8 +72,14 @@ class PacketRouter(threading.Thread):
 
         with self._lock:
             decoder = self.get_decoder(packet.ssrc)
-            if decoder is not None:
+            if decoder is None:
+                return
+
+            if self.sink.is_opus():
                 decoder.push_packet(packet)
+            else:
+                data = decoder.process_packet(packet)
+                self.sink.write(data, data.source)
 
     def feed_rtcp(self, packet: RTCPPacket) -> None:
         guild = self.sink.client.guild if self.sink.client else None
@@ -145,7 +151,7 @@ class PacketRouter(threading.Thread):
             for decoder in list(self.decoders.values()):
                 try:
                     for packet in decoder._buffer.flush():
-                        data = decoder._process_packet(packet)
+                        data = decoder.process_packet(packet)
                         self.sink.write(data, data.source)
                 except Exception:
                     _log.exception(

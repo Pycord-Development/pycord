@@ -609,6 +609,9 @@ class PacketDecoder:
         self._buffer.push(packet)
         self._flag_ready_state()
 
+    def process_packet(self, packet: Packet) -> VoiceData:
+        return self._process_packet(packet)
+
     def pop_data(self, *, timeout: float = 0) -> VoiceData | None:
         packet = self._get_next_packet(timeout)
         self._flag_ready_state()
