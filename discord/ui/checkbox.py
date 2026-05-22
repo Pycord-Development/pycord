@@ -28,8 +28,8 @@ import os
 from typing import TYPE_CHECKING
 
 from ..components import Checkbox as CheckboxComponent
-from .core import ComponentLimits
 from ..enums import ComponentType
+from .core import ComponentLimits
 from .item import ModalItem
 
 __all__ = ("Checkbox",)

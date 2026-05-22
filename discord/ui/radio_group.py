@@ -31,9 +31,9 @@ from typing_extensions import Self
 
 from ..components import RadioGroup as RadioGroupComponent
 from ..components import RadioGroupOption
+from ..enums import ComponentType
 from ..utils import MISSING
 from .core import ComponentLimits
-from ..enums import ComponentType
 from .item import ModalItem
 
 __all__ = ("RadioGroup",)

@@ -40,8 +40,8 @@ from .enums import (
 )
 from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, find, get_slots
 from .ui.core import ComponentLimits
+from .utils import MISSING, find, get_slots
 
 if TYPE_CHECKING:
     from . import abc

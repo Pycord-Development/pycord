@@ -66,6 +66,7 @@ class EmbedLimits:
     TITLE_MAX = 256
     TOTAL_MAX = 6000
 
+
 if TYPE_CHECKING:
     from discord.types.embed import Embed as EmbedData
     from discord.types.embed import EmbedType

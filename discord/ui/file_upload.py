@@ -28,9 +28,9 @@ import os
 from typing import TYPE_CHECKING
 
 from ..components import FileUpload as FileUploadComponent
+from ..enums import ComponentType
 from ..message import Attachment
 from .core import ComponentLimits
-from ..enums import ComponentType
 from .item import ModalItem
 
 __all__ = ("FileUpload",)

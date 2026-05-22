@@ -28,8 +28,8 @@ import os
 from typing import TYPE_CHECKING
 
 from ..components import InputText as InputTextComponent
-from .core import ComponentLimits
 from ..enums import ComponentType, InputTextStyle
+from .core import ComponentLimits
 from .item import ModalItem
 
 __all__ = ("InputText", "TextInput")

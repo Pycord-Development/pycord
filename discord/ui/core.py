@@ -23,7 +23,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-import math
+
 import asyncio
 import time
 from itertools import groupby

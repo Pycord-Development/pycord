@@ -280,10 +280,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             raise ValueError(
                 f"max_values must be between {ComponentLimits.SELECT_MAX_VALUE_MIN} and {ComponentLimits.SELECT_MAX_VALUE_MAX}"
             )
-        if (
-            placeholder
-            and len(placeholder) > ComponentLimits.SELECT_PLACEHOLDER_MAX
-        ):
+        if placeholder and len(placeholder) > ComponentLimits.SELECT_PLACEHOLDER_MAX:
             raise ValueError(
                 f"placeholder must be {ComponentLimits.SELECT_PLACEHOLDER_MAX} characters or fewer"
             )
