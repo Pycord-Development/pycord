@@ -69,7 +69,7 @@ voice = { file = "requirements/voice.txt" }
 [dependency-groups]
 dev = [
     "pylint~=4.0.5",
-    "mypy~=1.20.0",
+    "mypy~=2.1.0",
     "coverage~=7.10",
     "pre-commit==4.6.0",
     "codespell==2.4.2",
