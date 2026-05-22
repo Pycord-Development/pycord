@@ -32,7 +32,7 @@ Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for D
 Note
 ----
 
-Pycord supports Python ``3.10`` - ``3.13``
+Pycord supports Python ``3.10`` - ``3.14``
 
 Key Features
 ------------
