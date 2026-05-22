@@ -42,26 +42,24 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
-from collections.abc import (
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Coroutine,
-    Iterable,
-    Iterator,
-    Mapping,
-    Sequence,
-)
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
     Any,
+    AsyncIterator,
+    Awaitable,
+    Callable,
+    Coroutine,
     ForwardRef,
     Generic,
+    Iterable,
+    Iterator,
     Literal,
+    Mapping,
     Protocol,
+    Sequence,
     TypeVar,
     Union,
     overload,
@@ -1672,6 +1670,9 @@ def warn_if_voice_dependencies_missing() -> None:
 def _get_event_loop() -> asyncio.AbstractEventLoop:
     """Get the current event loop, creating one if necessary.
 
+    If no event loop is running and none is set, a new event loop
+    is created and set as the current event loop.
+
     Returns
     -------
     asyncio.AbstractEventLoop
@@ -1679,7 +1680,7 @@ def _get_event_loop() -> asyncio.AbstractEventLoop:
     """
     if sys.version_info >= (3, 14):
         try:
-            loop = asyncio.get_running_loop()
+            loop = asyncio.get_event_loop()
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)

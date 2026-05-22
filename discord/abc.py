@@ -28,11 +28,14 @@ from __future__ import annotations
 import asyncio
 import copy
 import time
-from collections.abc import Callable, Iterable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
+    Iterable,
     Protocol,
+    Sequence,
+    TypeAlias,
     TypeVar,
     Union,
     overload,
@@ -95,10 +98,15 @@ if TYPE_CHECKING:
     from .ui.view import BaseView
     from .user import ClientUser
 
-    PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
-    ]
-    MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
+    PartialMessageableChannel: TypeAlias = (
+        TextChannel
+        | VoiceChannel
+        | StageChannel
+        | Thread
+        | DMChannel
+        | PartialMessageable
+    )
+    MessageableChannel: TypeAlias = PartialMessageableChannel | GroupChannel
     SnowflakeTime = Union["Snowflake", datetime]
 
     from .voice import VoiceClient, VoiceProtocol
@@ -1724,7 +1732,7 @@ class Messageable:
             if view.is_dispatchable():
                 state.store_view(view, ret.id)
             view.message = ret
-            view.refresh(ret.components)
+            view._refresh(ret.components)
 
         if delete_after is not None:
             await ret.delete(delay=delete_after)

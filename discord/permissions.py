@@ -181,7 +181,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         permissions set to ``True``.
         """
-        return cls(~(~1 << 51))
+        return cls(~(~1 << 52))
 
     @classmethod
     def all_channel(cls: type[P]) -> P:
