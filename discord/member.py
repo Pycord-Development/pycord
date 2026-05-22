@@ -132,18 +132,18 @@ class VoiceState:
     )
 
     def __init__(
-            self,
-            *,
-            data: VoiceStatePayload | GuildVoiceStatePayload,
-            channel: VocalGuildChannel | None = None,
+        self,
+        *,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None = None,
     ):
         self.session_id: str = data.get("session_id")
         self._update(data, channel)
 
     def _update(
-            self,
-            data: VoiceStatePayload | GuildVoiceStatePayload,
-            channel: VocalGuildChannel | None,
+        self,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None,
     ):
         self.self_mute: bool = data.get("self_mute", False)
         self.self_deaf: bool = data.get("self_deaf", False)
@@ -187,7 +187,7 @@ class VoiceState:
 
 def flatten_user(cls):
     for attr, value in itertools.chain(
-            BaseUser.__dict__.items(), User.__dict__.items()
+        BaseUser.__dict__.items(), User.__dict__.items()
     ):
         # ignore private/special methods
         if attr.startswith("_"):
@@ -335,7 +335,7 @@ class Member(discord.abc.Messageable, _UserTag):
         avatar_decoration: Asset | None
 
     def __init__(
-            self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
+        self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
     ):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
@@ -405,11 +405,11 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @classmethod
     def _try_upgrade(
-            cls: type[M],
-            *,
-            data: UserWithMemberPayload,
-            guild: Guild,
-            state: ConnectionState,
+        cls: type[M],
+        *,
+        data: UserWithMemberPayload,
+        guild: Guild,
+        state: ConnectionState,
     ) -> User | M:
         # A User object with a 'member' key
         try:
@@ -472,7 +472,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._avatar_decoration = data.get("avatar_decoration_data")
 
     def _presence_update(
-            self, data: PartialPresenceUpdate, user: UserPayload
+        self, data: PartialPresenceUpdate, user: UserPayload
     ) -> tuple[User, User] | None:
         self.activities = tuple(map(create_activity, data["activities"]))
         self._client_status = {
@@ -499,7 +499,7 @@ class Member(discord.abc.Messageable, _UserTag):
         )
         # These keys seem to always be available
         if (
-                new_primary_guild_data := user.get("primary_guild")
+            new_primary_guild_data := user.get("primary_guild")
         ) and new_primary_guild_data.get("identity_enabled"):
             new_primary_guild: PrimaryGuild | None = PrimaryGuild(
                 new_primary_guild_data, state=self._state
@@ -823,16 +823,16 @@ class Member(discord.abc.Messageable, _UserTag):
         .. versionadded:: 2.0
         """
         return (
-                self.communication_disabled_until is not None
-                and self.communication_disabled_until
-                > datetime.datetime.now(datetime.timezone.utc)
+            self.communication_disabled_until is not None
+            and self.communication_disabled_until
+            > datetime.datetime.now(datetime.timezone.utc)
         )
 
     async def ban(
-            self,
-            *,
-            delete_message_seconds: int | None = None,
-            reason: str | None = None,
+        self,
+        *,
+        delete_message_seconds: int | None = None,
+        reason: str | None = None,
     ) -> None:
         """|coro|
 
@@ -859,20 +859,20 @@ class Member(discord.abc.Messageable, _UserTag):
         await self.guild.kick(self, reason=reason)
 
     async def edit(
-            self,
-            *,
-            nick: str | None = MISSING,
-            mute: bool = MISSING,
-            deafen: bool = MISSING,
-            suppress: bool = MISSING,
-            roles: list[discord.abc.Snowflake] = MISSING,
-            voice_channel: VocalGuildChannel | None = MISSING,
-            reason: str | None = None,
-            communication_disabled_until: datetime.datetime | None = MISSING,
-            bypass_verification: bool | None = MISSING,
-            banner: bytes | None = MISSING,
-            avatar: bytes | None = MISSING,
-            bio: str | None = MISSING,
+        self,
+        *,
+        nick: str | None = MISSING,
+        mute: bool = MISSING,
+        deafen: bool = MISSING,
+        suppress: bool = MISSING,
+        roles: list[discord.abc.Snowflake] = MISSING,
+        voice_channel: VocalGuildChannel | None = MISSING,
+        reason: str | None = None,
+        communication_disabled_until: datetime.datetime | None = MISSING,
+        bypass_verification: bool | None = MISSING,
+        banner: bytes | None = MISSING,
+        avatar: bytes | None = MISSING,
+        bio: str | None = MISSING,
     ) -> Member | None:
         """|coro|
 
@@ -1075,7 +1075,7 @@ class Member(discord.abc.Messageable, _UserTag):
         return Member(data=data, guild=self.guild, state=self._state)
 
     async def timeout(
-            self, until: datetime.datetime | None, *, reason: str | None = None
+        self, until: datetime.datetime | None, *, reason: str | None = None
     ) -> None:
         """|coro|
 
@@ -1100,7 +1100,7 @@ class Member(discord.abc.Messageable, _UserTag):
         await self.edit(communication_disabled_until=until, reason=reason)
 
     async def timeout_for(
-            self, duration: datetime.timedelta, *, reason: str | None = None
+        self, duration: datetime.timedelta, *, reason: str | None = None
     ) -> None:
         """|coro|
 
@@ -1185,7 +1185,7 @@ class Member(discord.abc.Messageable, _UserTag):
             await self._state.http.edit_my_voice_state(self.guild.id, payload)
 
     async def move_to(
-            self, channel: VocalGuildChannel | None, *, reason: str | None = None
+        self, channel: VocalGuildChannel | None, *, reason: str | None = None
     ) -> None:
         """|coro|
 
@@ -1210,7 +1210,7 @@ class Member(discord.abc.Messageable, _UserTag):
         await self.edit(voice_channel=channel, reason=reason)
 
     async def add_roles(
-            self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
+        self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
     ) -> None:
         r"""|coro|
 
@@ -1253,7 +1253,7 @@ class Member(discord.abc.Messageable, _UserTag):
                 await req(guild_id, user_id, role.id, reason=reason)
 
     async def remove_roles(
-            self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
+        self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
     ) -> None:
         r"""|coro|
 

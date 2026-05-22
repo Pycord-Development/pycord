@@ -99,7 +99,7 @@ class BaseUser(_UserTag):
         collectibles: Collectibles
 
     def __init__(
-            self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
+        self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
     ) -> None:
         self._state = state
         self._update(data)
@@ -465,11 +465,11 @@ class ClientUser(BaseUser):
 
     # TODO: Username might not be able to edit anymore.
     async def edit(
-            self,
-            *,
-            username: str = MISSING,
-            avatar: bytes = MISSING,
-            banner: bytes = MISSING,
+        self,
+        *,
+        username: str = MISSING,
+        avatar: bytes = MISSING,
+        banner: bytes = MISSING,
     ) -> ClientUser:
         """|coro|
 
@@ -684,12 +684,12 @@ class User(BaseUser, discord.abc.Messageable):
         return Entitlement(data=data, state=self._state)
 
     def entitlements(
-            self,
-            skus: list[Snowflake] | None = None,
-            before: SnowflakeTime | None = None,
-            after: SnowflakeTime | None = None,
-            limit: int | None = 100,
-            exclude_ended: bool = False,
+        self,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        exclude_ended: bool = False,
     ) -> EntitlementIterator:
         """Returns an :class:`.AsyncIterator` that enables fetching the user's entitlements.
 
