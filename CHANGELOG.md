@@ -29,9 +29,9 @@ released.
 ### Added
 
 - Support for **Python 3.14**.
-  ([#2948](https://github.com/Pycord-Development/pycord/pull/2948)) <<<<<<< enum-limit
+  ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
 - Added `ComponentLimits` and `EmbedLimits` enums for Discord API constraints.
-  ([#3217](https://github.com/Pycord-Development/pycord/pull/3217)) =======
+  ([#3217](https://github.com/Pycord-Development/pycord/pull/3217))
 - Added support for community invites.
   ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `Member.colours` and `Member.colors` properties.
@@ -55,7 +55,6 @@ released.
   ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
 - Added support for Discord DAVE (Audio & Video E2EE) for voice-sending related
   features. ([#3143](https://github.com/Pycord-Development/pycord/pull/3143))
-  > > > > > > > master
 
 ### Changed
 
