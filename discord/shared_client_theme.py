@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, Iterable
 from .colour import Colour
 from .enums import SharedClientThemeBaseType, try_enum
 from .utils import MISSING
+from typing_extensions import Self
 
 __all__ = ("SharedClientTheme",)
 
@@ -116,7 +117,7 @@ class SharedClientTheme:
         return payload
 
     @classmethod
-    def from_dict(cls, data: SharedClientThemePayload) -> SharedClientTheme:
+    def from_dict(cls, data: SharedClientThemePayload) -> Self:
         base_theme_value = data.get("base_theme")
         colours = [Colour(int(c, 16)) for c in data.get("colors", [])]
         return cls(
