@@ -56,10 +56,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .state import ConnectionState
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
-else:
-    ConnectionState = None
-    StageChannel = None
-    VoiceChannel = None
+
 
 MISSING = utils.MISSING
 
@@ -100,10 +97,12 @@ class ScheduledEventLocation:
         *,
         state: ConnectionState | None = None,
         value: str | int | StageChannel | VoiceChannel | None = None,
+        _suppress_deprecation: bool = False,
     ) -> None:
-        warn_deprecated("ScheduledEventLocation", "ScheduledEventEntityMetadata", "2.7")
+        if not _suppress_deprecation:
+            warn_deprecated("ScheduledEventLocation", "ScheduledEventEntityMetadata", "2.7")
         self._state: ConnectionState | None = state
-        self.value: str | StageChannel | VoiceChannel | Object | None
+        self.value: str | "StageChannel" | "VoiceChannel" | Object | None
         if value is None:
             self.value = None
         elif isinstance(value, int):
@@ -161,12 +160,12 @@ class ScheduledEventEntityMetadata:
     def __str__(self) -> str:
         return self.location or ""
 
-    def to_payload(self) -> dict[str, str]:
+    def to_payload(self) -> dict[str, str | None]:
         """Converts the entity metadata to a Discord API payload.
 
         Returns
         -------
-        dict[str, str]
+        dict[str, str | None]
             A dictionary with the entity metadata fields for the API.
         """
         return {"location": self.location}
@@ -322,9 +321,9 @@ class ScheduledEvent(Hashable):
             if self.entity_metadata is None:
                 return None
             return ScheduledEventLocation(
-                state=self._state, value=self.entity_metadata.location
+                state=self._state, value=self.entity_metadata.location, _suppress_deprecation=True
             )
-        return ScheduledEventLocation(state=self._state, value=self.channel_id)
+        return ScheduledEventLocation(state=self._state, value=self.channel_id, _suppress_deprecation=True)
 
     @property
     def created_at(self) -> datetime.datetime:
@@ -422,6 +421,8 @@ class ScheduledEvent(Hashable):
         privacy_level: ScheduledEventPrivacyLevel = MISSING,
         entity_type: ScheduledEventEntityType = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
+        start_time: datetime.datetime = MISSING,
+        end_time: datetime.datetime = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
 
@@ -519,6 +520,16 @@ class ScheduledEvent(Hashable):
             if image is MISSING:
                 image = cover
 
+        if start_time is not MISSING:
+            warn_deprecated("start_time", "scheduled_start_time", "2.7", "3.0")
+            if scheduled_start_time is MISSING:
+                scheduled_start_time = start_time
+
+        if end_time is not MISSING:
+            warn_deprecated("end_time", "scheduled_end_time", "2.7", "3.0")
+            if scheduled_end_time is MISSING:
+                scheduled_end_time = end_time
+
         if entity_type is not MISSING:
             payload["entity_type"] = int(entity_type)
 
@@ -563,12 +574,13 @@ class ScheduledEvent(Hashable):
 
             payload["channel_id"] = None
 
-        data = await self._state.http.edit_scheduled_event(
-            self.guild.id, self.id, **payload, reason=reason
-        )
-        return ScheduledEvent(
-            data=data, guild=self.guild, creator=self.creator, state=self._state
-        )
+        if payload != {}:
+            data = await self._state.http.edit_scheduled_event(
+                self.guild.id, self.id, **payload, reason=reason
+            )
+            return ScheduledEvent(
+                data=data, guild=self.guild, creator=self.creator, state=self._state
+            )
 
     async def delete(self) -> None:
         """|coro|

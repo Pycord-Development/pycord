@@ -4330,7 +4330,7 @@ class Guild(Hashable):
         entity_type: ScheduledEventEntityType = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
         channel_id: int = MISSING,
-        privacy_level: ScheduledEventPrivacyLevel = MISSING,
+        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
         image: bytes = MISSING,
         start_time: datetime.datetime = MISSING,
@@ -4382,13 +4382,6 @@ class Guild(Hashable):
         ValidationError
             Invalid parameters for the event type.
         """
-        if privacy_level is not MISSING:
-            warn_deprecated(
-                "privacy_level",
-                None,
-                "3.0",
-                extra="It is ignored by the API and will be removed in a future version.",
-            )
         if location is MISSING and entity_type is MISSING:
             raise TypeError("Either location or entity_type must be provided.")
         if start_time is MISSING and scheduled_start_time is MISSING:
@@ -4396,12 +4389,12 @@ class Guild(Hashable):
                 "Either start_time or scheduled_start_time must be provided."
             )
         if start_time is not MISSING:
-            warn_deprecated("start_time", "scheduled_start_time", "2.7")
+            warn_deprecated("start_time", "scheduled_start_time", "2.7", "3.0")
             if scheduled_start_time is MISSING:
                 scheduled_start_time = start_time
 
         if end_time is not MISSING:
-            warn_deprecated("end_time", "scheduled_end_time", "2.7")
+            warn_deprecated("end_time", "scheduled_end_time", "2.7", "3.0")
             if scheduled_end_time is MISSING:
                 scheduled_end_time = end_time
 
@@ -4422,10 +4415,12 @@ class Guild(Hashable):
                 "entity_type could not be resolved. Pass entity_type explicitly "
                 "or provide a location with a resolvable type."
             )
+        
         payload: dict[str, str | int] = {
             "name": name,
             "scheduled_start_time": scheduled_start_time.isoformat(),
             "entity_type": int(entity_type),
+            "privacy_level": int(privacy_level),
         }
 
         if scheduled_end_time is not MISSING:
