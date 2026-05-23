@@ -1224,14 +1224,13 @@ class Message(Hashable):
         except KeyError:
             self.call = None
 
-        self.shared_client_theme: SharedClientTheme | None
-        try:
-            self.shared_client_theme = SharedClientTheme.from_dict(
-                data["shared_client_theme"]
+        if shared_client_theme := data.get("shared_client_theme"):
+            self.shared_client_theme: SharedClientTheme | None = SharedClientTheme.from_dict(
+                shared_client_theme
             )
-        except KeyError:
-            self.shared_client_theme = None
-
+        else:
+        	self.shared_client_theme = None
+    
         for handler in ("author", "member", "mentions", "mention_roles"):
             try:
                 getattr(self, f"_handle_{handler}")(data[handler])
