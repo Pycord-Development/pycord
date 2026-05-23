@@ -100,9 +100,11 @@ class ScheduledEventLocation:
         _suppress_deprecation: bool = False,
     ) -> None:
         if not _suppress_deprecation:
-            warn_deprecated("ScheduledEventLocation", "ScheduledEventEntityMetadata", "2.7")
+            warn_deprecated(
+                "ScheduledEventLocation", "ScheduledEventEntityMetadata", "2.7"
+            )
         self._state: ConnectionState | None = state
-        self.value: str | "StageChannel" | "VoiceChannel" | Object | None
+        self.value: str | StageChannel | VoiceChannel | Object | None
         if value is None:
             self.value = None
         elif isinstance(value, int):
@@ -321,9 +323,13 @@ class ScheduledEvent(Hashable):
             if self.entity_metadata is None:
                 return None
             return ScheduledEventLocation(
-                state=self._state, value=self.entity_metadata.location, _suppress_deprecation=True
+                state=self._state,
+                value=self.entity_metadata.location,
+                _suppress_deprecation=True,
             )
-        return ScheduledEventLocation(state=self._state, value=self.channel_id, _suppress_deprecation=True)
+        return ScheduledEventLocation(
+            state=self._state, value=self.channel_id, _suppress_deprecation=True
+        )
 
     @property
     def created_at(self) -> datetime.datetime:

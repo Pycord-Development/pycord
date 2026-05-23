@@ -34,6 +34,7 @@ from .item import Item, ItemCallbackType
 
 __all__ = ("ItemInterface",)
 
+
 class ComponentLimits:
     # View constraints
     VIEW_CHILDREN_MAX = 40
