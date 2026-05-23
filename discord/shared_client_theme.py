@@ -24,10 +24,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING, Sequence
-
 from typing_extensions import Self
+from dataclasses import dataclass, field
 
 from .colour import Colour
 from .enums import SharedClientThemeBaseType, try_enum
@@ -66,7 +65,7 @@ class SharedClientTheme:
 
     gradient_angle: int = 0
     base_mix: int = 0
-    colours: list[Colour] = MISSING
+    colours: list[Colour] = field(default_factory=list)
     base_theme: SharedClientThemeBaseType | None = SharedClientThemeBaseType.unset
 
     def __init__(
@@ -95,13 +94,11 @@ class SharedClientTheme:
             base_theme, SharedClientThemeBaseType
         ):
             raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
-
-        super().__init__(
-            gradient_angle=gradient_angle,
-            base_mix=base_mix,
-            colours=list(colours),
-            base_theme=base_theme,
-        )
+        
+        self.gradient_angle = gradient_angle
+        self.base_mix = base_mix
+        self.colours = list(colours)
+        self.base_theme = base_theme
 
     @property
     def colors(self) -> list[Colour]:
