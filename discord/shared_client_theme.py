@@ -105,13 +105,6 @@ class SharedClientTheme:
     def colors(self) -> list[Colour]:
         return self.colours
 
-    def __repr__(self) -> str:
-        return (
-            f"<SharedClientTheme colours={self.colours!r} "
-            f"gradient_angle={self.gradient_angle} base_mix={self.base_mix} "
-            f"base_theme={self.base_theme!r}>"
-        )
-
     def to_dict(self) -> SharedClientThemePayload:
         payload: SharedClientThemePayload = {
             "colors": [f"{c.value:0>6x}" for c in self.colours],
