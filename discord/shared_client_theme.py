@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Sequence
 
 from typing_extensions import Self
@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
 
 
-@dataclass
+@dataclass(init=False)
 class SharedClientTheme:
     """Represents a shared client theme that can be sent in a message.
 
@@ -66,7 +66,7 @@ class SharedClientTheme:
 
     gradient_angle: int = 0
     base_mix: int = 0
-    colours: list[Colour] = field(default_factory=list)
+    colours: list[Colour]
     base_theme: SharedClientThemeBaseType | None = SharedClientThemeBaseType.unset
 
     def __init__(
@@ -77,7 +77,7 @@ class SharedClientTheme:
         colours: Sequence[Colour] = MISSING,
         *,
         base_theme: SharedClientThemeBaseType = SharedClientThemeBaseType.unset,
-    ):
+    ) -> None :
         colours = colours if colours is not MISSING else colors
 
         if len(colours or []) > 5:
