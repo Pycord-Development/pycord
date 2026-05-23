@@ -123,7 +123,7 @@ Messages
 
 .. attributetable:: SharedClientTheme
 
-.. autoclass:: SharedClientTheme
+.. autoclass:: SharedClientTheme()
     :members:
 
 Monetization
