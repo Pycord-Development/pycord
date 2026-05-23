@@ -32,79 +32,8 @@ from typing import TYPE_CHECKING, Any, Callable
 from ..utils import find, get
 from .item import Item, ItemCallbackType
 
-__all__ = ("ItemInterface", "ComponentLimits")
+__all__ = ("ItemInterface")
 
-
-class ComponentLimits:
-    # View constraints
-    VIEW_CHILDREN_MAX = 40
-
-    # ActionRow constraints
-    ACTION_ROW_CHILDREN_MAX = 5
-
-    # Button constraints
-    BUTTON_LABEL_MAX = 80
-
-    # MediaGallery constraints
-    MEDIA_GALLERY_ITEMS_MIN = 1
-    MEDIA_GALLERY_ITEMS_MAX = 10
-
-    # MediaGalleryItem constraints
-    MEDIA_GALLERY_ITEM_DESCRIPTION_MAX = 256
-
-    # Select constraints
-    SELECT_PLACEHOLDER_MAX = 150
-    SELECT_OPTIONS_MAX = 25
-    SELECT_DEFAULT_VALUES_MAX = 25
-
-    # Select option constraints
-    SELECT_OPTION_LABEL_MAX = 100
-    SELECT_OPTION_VALUE_MAX = 100
-    SELECT_OPTION_DESCRIPTION_MAX = 100
-
-    # Section constraints
-    SECTION_ACCESSORY_MAX = 1
-    SECTION_CHILDREN_MIN = 1
-    SECTION_CHILDREN_MAX = 3
-
-    # TextInput constraints
-    TEXT_INPUT_MAX_COUNT = 5
-    TEXT_INPUT_LABEL_MAX = 45
-    TEXT_INPUT_PLACEHOLDER_MAX = 100
-    TEXT_INPUT_MIN_LENGTH_MIN = 0
-    TEXT_INPUT_MIN_LENGTH_MAX = 4000
-    TEXT_INPUT_MAX_LENGTH_MIN = 1
-    TEXT_INPUT_MAX_LENGTH_MAX = 4000
-    TEXT_INPUT_VALUE_MAX = 4000
-
-    # TextDisplay constraints
-    TEXT_DISPLAY_CONTENT_MAX = 4000
-
-    # Thumbnail constraints
-    THUMBNAIL_DESCRIPTION_MAX = 256
-
-    # Custom ID constraints
-    CUSTOM_ID_MIN = 1
-    CUSTOM_ID_MAX = 100
-
-    # RadioGroup constraints
-    RADIO_OPTIONS_MAX = 10
-
-    # CheckboxGroup constraints
-    CHECKBOX_OPTIONS_MAX = 10
-    CHECKBOX_MIN_VALUES_MIN = 0
-    CHECKBOX_MIN_VALUES_MAX = 10
-    CHECKBOX_MAX_VALUES_MIN = 1
-    CHECKBOX_MAX_VALUES_MAX = 10
-
-    # FileUpload constraints
-    FILE_UPLOAD_MIN_FILES = 0
-    FILE_UPLOAD_MAX_FILES_MIN = 1
-    FILE_UPLOAD_MAX_FILES_MAX = 10
-
-    # Modal constraints
-    MODAL_TITLE_MAX = 45
-    MODAL_ROWS_MAX = 5
 
 
 if TYPE_CHECKING:

@@ -33,7 +33,7 @@ from ..components import CheckboxGroup as CheckboxGroupComponent
 from ..components import CheckboxGroupOption
 from ..enums import ComponentType
 from ..utils import MISSING
-from .core import ComponentLimits
+from .constant import ComponentLimits
 from .item import ModalItem
 
 __all__ = ("CheckboxGroup",)

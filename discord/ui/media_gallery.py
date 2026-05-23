@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import MediaGalleryItem
 from ..enums import ComponentType
-from .core import ComponentLimits
+from .constant import ComponentLimits
 from .item import ViewItem
 
 __all__ = ("MediaGallery",)

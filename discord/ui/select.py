@@ -45,7 +45,7 @@ from ..role import Role
 from ..threads import Thread
 from ..user import User
 from ..utils import MISSING
-from .core import ComponentLimits
+from .constant import ComponentLimits
 from .item import ItemCallbackType, ModalItem, ViewItem
 
 __all__ = (
