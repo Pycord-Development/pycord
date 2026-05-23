@@ -24,9 +24,10 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Sequence
-from typing_extensions import Self
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Sequence
+
+from typing_extensions import Self
 
 from .colour import Colour
 from .enums import SharedClientThemeBaseType, try_enum
@@ -94,7 +95,7 @@ class SharedClientTheme:
             base_theme, SharedClientThemeBaseType
         ):
             raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
-        
+
         self.gradient_angle = gradient_angle
         self.base_mix = base_mix
         self.colours = list(colours)
