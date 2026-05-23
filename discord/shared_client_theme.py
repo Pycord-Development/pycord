@@ -28,31 +28,13 @@ from typing import TYPE_CHECKING, Iterable
 
 from .colour import Colour
 from .enums import SharedClientThemeBaseType, try_enum
+from .utils import MISSING
 
 __all__ = ("SharedClientTheme",)
 
 
 if TYPE_CHECKING:
     from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
-
-    ColourLike = Colour | str | int
-
-
-def _coerce_colour(value: ColourLike) -> Colour:
-    if isinstance(value, Colour):
-        return value
-    if isinstance(value, int):
-        return Colour(value)
-    if isinstance(value, str):
-        stripped = value.lstrip("#")
-        if len(stripped) != 6 or any(
-            c not in "0123456789abcdefABCDEF" for c in stripped
-        ):
-            raise ValueError(
-                f"{value!r} is not a valid hexadecimal colour (expected format: 'rrggbb')"
-            )
-        return Colour(int(stripped, 16))
-    raise TypeError(f"colours must be Colour, str, or int, not {type(value).__name__}")
 
 
 class SharedClientTheme:
@@ -82,21 +64,19 @@ class SharedClientTheme:
 
     def __init__(
         self,
-        gradient_angle: int,
-        base_mix: int,
-        colors: Iterable[ColourLike] | None = None,
-        colours: Iterable[ColourLike] | None = None,
+        gradient_angle: int = 0,
+        base_mix: int = 0,
+        colors: Iterable[Colour] = MISSING,
+        colours: Iterable[Colour] = MISSING,
         *,
-        base_theme: SharedClientThemeBaseType | None = None,
+        base_theme: SharedClientThemeBaseType = SharedClientThemeBaseType.unset,
     ):
-        if colors is None and colours is None:
-            raise ValueError("colors or colours must be provided")
-        if colours is None:
-            colours = colors
+        colours = colours if colours is not MISSING else colors
 
-        normalized = [_coerce_colour(c) for c in colours]
-        if len(normalized) > 5:
-            raise ValueError("colours must contain at most 5 colours")
+        if len(colours or []) > 5:
+            raise ValueError("colors or colours must contain at most 5 colours")
+        if colours is MISSING:
+            raise TypeError("colors or colours must be provided")
 
         if not 0 <= gradient_angle <= 360:
             raise ValueError("gradient_angle must be between 0 and 360")
@@ -109,7 +89,7 @@ class SharedClientTheme:
         ):
             raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
 
-        self.colours: list[Colour] = normalized
+        self.colours: list[Colour] = colours
         self.gradient_angle: int = gradient_angle
         self.base_mix: int = base_mix
         self.base_theme: SharedClientThemeBaseType | None = base_theme
@@ -138,8 +118,9 @@ class SharedClientTheme:
     @classmethod
     def from_dict(cls, data: SharedClientThemePayload) -> SharedClientTheme:
         base_theme_value = data.get("base_theme")
+        colours = [Colour(int(c, 16)) for c in data.get("colors", [])]
         return cls(
-            colours=data.get("colors", []),
+            colours=colours,
             gradient_angle=data["gradient_angle"],
             base_mix=data["base_mix"],
             base_theme=(
