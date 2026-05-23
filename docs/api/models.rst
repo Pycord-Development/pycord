@@ -121,11 +121,6 @@ Messages
 .. autoclass:: ReactionCountDetails()
     :members:
 
-.. attributetable:: SharedClientTheme
-
-.. autoclass:: SharedClientTheme()
-    :members:
-
 Monetization
 ------------
 

@@ -24,7 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING, Sequence
+from dataclasses import dataclass
 
 from .colour import Colour
 from .enums import SharedClientThemeBaseType, try_enum
@@ -37,7 +38,7 @@ __all__ = ("SharedClientTheme",)
 if TYPE_CHECKING:
     from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
 
-
+@dataclass
 class SharedClientTheme:
     """Represents a shared client theme that can be sent in a message.
 
@@ -60,15 +61,18 @@ class SharedClientTheme:
         The mode of the theme. Defaults to :attr:`SharedClientThemeBaseType.unset`,
         which Discord treats as :attr:`SharedClientThemeBaseType.dark`.
     """
-
-    __slots__ = ("colours", "gradient_angle", "base_mix", "base_theme")
+    
+    gradient_angle: int = 0
+    base_mix: int = 0
+    colours: list[Colour] = MISSING
+    base_theme: SharedClientThemeBaseType | None = SharedClientThemeBaseType.unset
 
     def __init__(
         self,
         gradient_angle: int = 0,
         base_mix: int = 0,
-        colors: Iterable[Colour] = MISSING,
-        colours: Iterable[Colour] = MISSING,
+        colors: Sequence[Colour] = MISSING,
+        colours: Sequence[Colour] = MISSING,
         *,
         base_theme: SharedClientThemeBaseType = SharedClientThemeBaseType.unset,
     ):
@@ -89,11 +93,13 @@ class SharedClientTheme:
             base_theme, SharedClientThemeBaseType
         ):
             raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
-
-        self.colours: list[Colour] = colours
-        self.gradient_angle: int = gradient_angle
-        self.base_mix: int = base_mix
-        self.base_theme: SharedClientThemeBaseType | None = base_theme
+        
+        super().__init__(
+            gradient_angle=gradient_angle,
+            base_mix=base_mix,
+            colours=list(colours),
+            base_theme=base_theme,
+        )
 
     @property
     def colors(self) -> list[Colour]:
