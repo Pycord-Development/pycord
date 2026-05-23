@@ -24,19 +24,21 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Sequence
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, Sequence
+
+from typing_extensions import Self
 
 from .colour import Colour
 from .enums import SharedClientThemeBaseType, try_enum
 from .utils import MISSING
-from typing_extensions import Self
 
 __all__ = ("SharedClientTheme",)
 
 
 if TYPE_CHECKING:
     from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
+
 
 @dataclass
 class SharedClientTheme:
@@ -61,7 +63,7 @@ class SharedClientTheme:
         The mode of the theme. Defaults to :attr:`SharedClientThemeBaseType.unset`,
         which Discord treats as :attr:`SharedClientThemeBaseType.dark`.
     """
-    
+
     gradient_angle: int = 0
     base_mix: int = 0
     colours: list[Colour] = MISSING
@@ -93,7 +95,7 @@ class SharedClientTheme:
             base_theme, SharedClientThemeBaseType
         ):
             raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
-        
+
         super().__init__(
             gradient_angle=gradient_angle,
             base_mix=base_mix,
