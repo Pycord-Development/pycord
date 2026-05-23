@@ -77,7 +77,7 @@ class SharedClientTheme:
         colours: Sequence[Colour] = MISSING,
         *,
         base_theme: SharedClientThemeBaseType = SharedClientThemeBaseType.unset,
-    ) -> None :
+    ) -> None:
         colours = colours if colours is not MISSING else colors
 
         if len(colours or []) > 5:
