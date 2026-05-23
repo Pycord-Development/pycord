@@ -33,8 +33,8 @@ from itertools import groupby
 from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
 from ..utils import _get_event_loop
-from .core import ItemInterface
 from .constant import ComponentLimits
+from .core import ItemInterface
 from .input_text import InputText
 from .item import ModalItem
 

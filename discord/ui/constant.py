@@ -26,6 +26,7 @@ from __future__ import annotations
 
 __all__ = ("ComponentLimits",)
 
+
 class ComponentLimits:
     # View constraints
     VIEW_CHILDREN_MAX = 40
