@@ -1225,12 +1225,12 @@ class Message(Hashable):
             self.call = None
 
         if shared_client_theme := data.get("shared_client_theme"):
-            self.shared_client_theme: SharedClientTheme | None = SharedClientTheme.from_dict(
-                shared_client_theme
+            self.shared_client_theme: SharedClientTheme | None = (
+                SharedClientTheme.from_dict(shared_client_theme)
             )
         else:
-        	self.shared_client_theme = None
-    
+            self.shared_client_theme = None
+
         for handler in ("author", "member", "mentions", "mention_roles"):
             try:
                 getattr(self, f"_handle_{handler}")(data[handler])
