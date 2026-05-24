@@ -26,13 +26,14 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Iterator, Literal, TypeVar, overload
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Literal, TypeVar, overload
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import SelectDefaultValue, SelectOption, _component_factory
 from ..enums import ButtonStyle, ChannelType, ComponentType
 from ..utils import find, get
 from .button import Button
+from .core import _item_getter
 from .file import File
 from .item import ItemCallbackType, ViewItem
 from .select import Select
@@ -61,6 +62,13 @@ class ActionRow(ViewItem[V]):
     - :class:`discord.ui.Button`
 
     .. versionadded:: 2.7
+
+    .. container:: operations
+
+        .. describe:: len(x)
+
+            Returns the total count of all items in this row.
+            This includes the row itself, counting towards Discord's component limits.
 
     Parameters
     ----------
@@ -107,6 +115,9 @@ class ActionRow(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    def __len__(self) -> int:
+        return len(self.children) + 1
+
     @property
     def items(self) -> list[ViewItem]:
         return self.children
@@ -134,19 +145,37 @@ class ActionRow(ViewItem[V]):
             row.children.append(i._generate_underlying())
         return row
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(
+        self,
+        item: ViewItem,
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the action row.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the action row.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`children`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
         TypeError
             A :class:`ViewItem` was not passed.
+        ValueError
+            Maximum number of items has been exceeded (5 buttons or 1 select),
+            or a searched item could not be found in the row.
         """
+        if sum(x is not None for x in (before, after, index)) > 1:
+            raise ValueError("Can only specify one of before, after, and index.")
 
         if not isinstance(item, (Select, Button)):
             raise TypeError(f"expected Select or Button, not {item.__class__!r}")
@@ -155,8 +184,29 @@ class ActionRow(ViewItem[V]):
         if self.width + item.width > 5:
             raise ValueError(f"Not enough space left on this ActionRow")
 
-        item.parent = self
+        if before is not None or after is not None:
+            try:
+                ref = before or after or 0
+                if isinstance(ref, (int, str)):
+                    ref = self.get_item(ref)
+                i = self.children.index(ref)
+                item.parent = self
+                if before:
+                    self.children.insert(i, item)
+                else:
+                    self.children.insert(i + 1, item)
+            except ValueError:
+                raise ValueError(f"Could not find {before or after} in row.")
+            self._underlying = self._generate_underlying()
+            return self
 
+        elif index is not None:
+            item.parent = self
+            self.children.insert(index, item)
+            self._underlying = self._generate_underlying()
+            return self
+
+        item.parent = self
         self.children.append(item)
         self._add_component_from_item(item)
         return self
@@ -172,6 +222,8 @@ class ActionRow(ViewItem[V]):
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
+            if not item:
+                return self
         try:
             self.children.remove(item)
             item.parent = None
@@ -179,24 +231,63 @@ class ActionRow(ViewItem[V]):
             pass
         return self
 
-    def get_item(self, id: str | int) -> ViewItem | None:
-        """Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
+    def replace_item(
+        self, original_item: ViewItem | str | int, new_item: ViewItem
+    ) -> Self:
+        """Directly replace an item in this row.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
+
+        Parameters
+        ----------
+        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+            The item, item ``id``, or item ``custom_id`` to replace in the row.
+        new_item: :class:`ViewItem`
+            The new item to insert into the row.
+        """
+
+        if not isinstance(new_item, (Select, Button)):
+            raise TypeError(f"expected Select or Button, not {new_item.__class__!r}")
+
+        if isinstance(original_item, (str, int)):
+            original_item = self.get_item(original_item)
+        if not original_item:
+            raise ValueError(f"Could not find {original_item} in row.")
+        try:
+            i = self.children.index(original_item)
+            new_item.parent = self
+            self.children[i] = new_item
+            original_item.parent = None
+        except ValueError:
+            raise ValueError(f"Could not find {original_item} in row.")
+        return self
+
+    def get_item(self, id: str | int | None = None, **attrs: Any) -> ViewItem | None:
+        r"""Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
+        If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
+        To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.
 
         Parameters
         ----------
         id: Union[:class:`str`, :class:`int`]
             The id or custom_id of the item to get.
+        \*\*attrs
+            Keyword arguments that denote attributes to search with.
 
         Returns
         -------
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
-        if not id:
-            return None
-        attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.children)
+        child = None
+        if id:
+            attr = "id" if isinstance(id, int) else "custom_id"
+            if attrs:
+                attrs[attr] = id
+            child = find(lambda i: getattr(i, attr, None) == id, self.children)
+        elif attrs:
+            child = _item_getter(self.children, **attrs)
+
         return child
 
     def add_button(

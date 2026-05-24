@@ -47,7 +47,7 @@ class RadioGroup(ModalItem):
 
     .. versionadded:: 2.8
 
-    Attributes
+    Parameters
     ----------
     custom_id: Optional[:class:`str`]
         The ID of the radio group that gets received during an interaction.

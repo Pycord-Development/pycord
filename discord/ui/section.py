@@ -25,13 +25,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
 
 from ..components import Section as SectionComponent
 from ..components import _component_factory
 from ..enums import ComponentType
 from ..utils import find, get
 from .button import Button
+from .core import _item_getter
 from .item import ItemCallbackType, ViewItem
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
@@ -53,6 +54,13 @@ class Section(ViewItem[V]):
     """Represents a UI section. Sections must have 1-3 (inclusive) items and an accessory set.
 
     .. versionadded:: 2.7
+
+    .. container:: operations
+
+        .. describe:: len(x)
+
+            Returns the total count of all items in this section.
+            This includes the section itself, counting towards Discord's component limits.
 
     Parameters
     ----------
@@ -115,6 +123,10 @@ class Section(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    def __len__(self) -> int:
+        r = sum(len(i) for i in self.items) + 1
+        return (r + 1) if self.accessory else r
+
     def _add_component_from_item(self, item: ViewItem):
         self.underlying.components.append(item.underlying)
 
@@ -137,27 +149,65 @@ class Section(ViewItem[V]):
             section.accessory = self.accessory._generate_underlying()
         return section
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(
+        self,
+        item: ViewItem,
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the section.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the section.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`items`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
         TypeError
             An :class:`ViewItem` was not passed.
         ValueError
-            Maximum number of items has been exceeded (3).
+            Maximum number of items has been exceeded (3),
+            or a searched item could not be found in the section.
         """
+        if sum(x is not None for x in (before, after, index)) > 1:
+            raise ValueError("Can only specify one of before, after, and index.")
 
         if len(self.items) >= 3:
-            raise ValueError("maximum number of children exceeded")
+            raise ValueError("maximum number of children exceeded (3)")
 
         if not isinstance(item, ViewItem):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
+
+        if before is not None or after is not None:
+            ref = before or after or 0
+            if isinstance(ref, (int, str)):
+                ref = self.get_item(ref)
+            try:
+                i = self.items.index(ref)
+                item.parent = self
+                if before:
+                    self.items.insert(i, item)
+                else:
+                    self.items.insert(i + 1, item)
+            except ValueError:
+                raise ValueError(f"Could not find {before or after} in section.")
+            self._underlying = self._generate_underlying()
+            return self
+
+        elif index is not None:
+            item.parent = self
+            self.items.insert(index, item)
+            self._underlying = self._generate_underlying()
+            return self
 
         item.parent = self
         self.items.append(item)
@@ -176,6 +226,8 @@ class Section(ViewItem[V]):
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
+            if not item:
+                return self
         try:
             if item is self.accessory:
                 self.accessory = None
@@ -186,26 +238,77 @@ class Section(ViewItem[V]):
             pass
         return self
 
-    def get_item(self, id: int | str) -> ViewItem | None:
-        """Get an item from this section. Alias for `utils.get(section.walk_items(), ...)`.
+    def replace_item(
+        self, original_item: ViewItem | str | int, new_item: ViewItem
+    ) -> Self:
+        """Directly replace an item in this section.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
+
+        Parameters
+        ----------
+        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+            The item, item ``id``, or item ``custom_id`` to replace in the section.
+        new_item: :class:`ViewItem`
+            The new item to insert into the section.
+        """
+
+        if not original_item:
+            raise TypeError(
+                f"expected original_item to be a valid ViewItem, str, or int, not {new_item.__class__!r}"
+            )
+        if not isinstance(new_item, ViewItem):
+            raise TypeError(
+                f"expected new_item to be ViewItem, not {new_item.__class__!r}"
+            )
+
+        if isinstance(original_item, (str, int)):
+            original_item = self.get_item(original_item)
+        if not original_item:
+            raise ValueError(f"Could not find {original_item} in section.")
+        try:
+            if original_item is self.accessory:
+                self.accessory = new_item
+            else:
+                i = self.items.index(original_item)
+                self.items[i] = new_item
+            original_item.parent = None
+            new_item.parent = self
+        except ValueError:
+            raise ValueError(f"Could not find {original_item} in section.")
+        return self
+
+    def get_item(self, id: int | str | None = None, **attrs: Any) -> ViewItem | None:
+        r"""Get an item from this section. Alias for `utils.get(section.walk_items(), ...)`.
         If an ``int`` is provided, it will be retrieved by ``id``, otherwise it will check the accessory's ``custom_id``.
+        If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
+        To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.
 
         Parameters
         ----------
         id: Union[:class:`str`, :class:`int`]
             The id or custom_id of the item to get.
+        \*\*attrs
+            Keyword arguments that denote attributes to search with.
 
         Returns
         -------
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` if it exists.
         """
-        if not id:
-            return None
-        attr = "id" if isinstance(id, int) else "custom_id"
-        if self.accessory and id == getattr(self.accessory, attr, None):
-            return self.accessory
-        child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        child = None
+        iterr = self.items[:]
+        if self.accessory:
+            iterr.append(self.accessory)
+        if id:
+            attr = "id" if isinstance(id, int) else "custom_id"
+            if attrs:
+                attrs[attr] = id
+            if self.accessory and id == getattr(self.accessory, attr, None):
+                return self.accessory
+            child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        elif attrs:
+            child = _item_getter(iterr, **attrs)
+
         return child
 
     def add_text(self, content: str, *, id: int | None = None) -> Self:
