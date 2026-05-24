@@ -2115,8 +2115,8 @@ class Webhook(BaseWebhook):
                 raise InvalidArgument(
                     "Dispatchable Webhook views require an associated state with the webhook"
                 )
-
-            self._state.prevent_view_updates_for(message_id)
+            if self._state._parent:
+                self._state.prevent_view_updates_for(message_id)
             if self.type is not WebhookType.application:
                 with_components = True
 
