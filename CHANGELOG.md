@@ -19,8 +19,9 @@ released.
 
 - Include `bypass_slowmode` in `Permissions.all`.
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
-- Fix `PartialMessage.edit` and `Webhook.edit_message` to work with
-  `discord.ui.DesignerView`.
+- Fixed `PartialMessage.edit` to work with `discord.ui.DesignerView`.
+  ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
+- Fixed `AttributeError` when using `Webhook.edit_message` with views.
   ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
 
 ### Deprecated
