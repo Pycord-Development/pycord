@@ -47,11 +47,7 @@ from typing import (
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
-from ..enums import (
-    IntegrationType,
-    InteractionContextType,
-    SlashCommandOptionType,
-)
+from ..enums import IntegrationType, InteractionContextType, SlashCommandOptionType
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
