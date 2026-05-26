@@ -80,7 +80,7 @@ dev = [
 ]
 test = [
     "pytest~=9.0.1",
-    "pytest-asyncio~=1.3.0",
+    "pytest-asyncio~=1.4.0",
 ]
 [tool.setuptools_scm]
 
