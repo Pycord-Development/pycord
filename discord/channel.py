@@ -148,7 +148,7 @@ class ForumTag(Hashable):
             Whether this tag can only be added or removed by a moderator with
             the :attr:`~Permissions.manage_threads` permission.
         emoji: Optional[:class:`PartialEmoji`]
-            The emoji that is used to represent this tag.
+            The emoji that is used to represent this tag. Defaults to ``None``.
             Note that if the emoji is a custom emoji, it will *not* have name information.
     """
 
@@ -189,9 +189,8 @@ class ForumTag(Hashable):
 
         emoji_name = data["emoji_name"] or ""
         emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
-        if not emoji_name and not emoji_id:
-            self.emoji = None
-        else:
+        self.emoji = None
+        if emoji_name or emoji_id:
             self.emoji = PartialEmoji.with_state(
                 state=state, name=emoji_name, id=emoji_id
             )
@@ -201,11 +200,13 @@ class ForumTag(Hashable):
         payload: dict[str, Any] = {
             "name": self.name,
             "moderated": self.moderated,
+            "emoji_id": None,
+            "emoji_name": None,
         }
         if self.emoji is not None:
-            payload |= self.emoji._to_forum_reaction_payload()
-        else:
-            payload |= {"emoji_id": None, "emoji_name": None}
+            emoji = self.emoji._to_forum_reaction_payload()
+            payload["emoji_id"] = emoji["emoji_id"]
+            payload["emoji_name"] = emoji["emoji_name"]
 
         if self.id:
             payload["id"] = self.id
