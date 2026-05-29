@@ -1665,3 +1665,24 @@ def warn_if_voice_dependencies_missing() -> None:
         deps,
         "is" if len(missing) == 1 else "are",
     )
+
+
+def _get_event_loop() -> asyncio.AbstractEventLoop:
+    """Get the current event loop, creating one if necessary.
+
+    If no event loop is running and none is set, a new event loop
+    is created and set as the current event loop.
+
+    Returns
+    -------
+    asyncio.AbstractEventLoop
+        The current event loop.
+    """
+    if sys.version_info >= (3, 14):
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        return loop
+    return asyncio.get_event_loop()

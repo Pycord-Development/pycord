@@ -29,7 +29,7 @@ of :class:`enum.Enum`.
         A string.
     .. attribute:: integer
 
-        An integer between -2⁵³ and 2⁵³.
+        An integer where :math:`-2^{53} < x < 2^{53}`.
 
         .. note::
 
@@ -52,7 +52,7 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating-point number between -2⁵³ and 2⁵³.
+        A floating-point number where :math:`-2^{53} < x < 2^{53}`.
 
         .. note::
 
@@ -2681,3 +2681,24 @@ of :class:`enum.Enum`.
 
     .. attribute:: disabled_by_discord
         The application webhook is disabled by Discord.
+
+.. class:: TeamRole
+    Represents a app team role.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: owner
+
+        Represents the team owner role.
+
+    .. attribute:: admin
+
+        Represents the team admin role.
+
+    .. attribute:: developer
+
+        Represents the team developer role.
+
+    .. attribute:: read_only
+
+        Represents the team read only role.

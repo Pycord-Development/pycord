@@ -32,6 +32,7 @@ from typing import TYPE_CHECKING, Any, Callable, Deque, TypeVar
 
 import discord.abc
 from discord.enums import Enum
+from discord.utils import _get_event_loop
 
 from ...abc import PrivateChannel
 from .errors import MaxConcurrencyReached
@@ -308,7 +309,7 @@ class _Semaphore:
 
     def __init__(self, number: int) -> None:
         self.value: int = number
-        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
+        self.loop: asyncio.AbstractEventLoop = _get_event_loop()
         self._waiters: Deque[asyncio.Future] = deque()
 
     def __repr__(self) -> str:

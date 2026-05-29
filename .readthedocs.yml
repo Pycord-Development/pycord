@@ -1,10 +1,10 @@
 version: 2
-formats: []
+formats: [ ]
 
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.13"
+    python: "3.14"
 
 sphinx:
   configuration: docs/conf.py

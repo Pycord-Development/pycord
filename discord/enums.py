@@ -45,6 +45,7 @@ __all__ = (
     "ActivityType",
     "NotificationLevel",
     "TeamMembershipState",
+    "TeamRole",
     "WebhookType",
     "ExpireBehaviour",
     "ExpireBehavior",
@@ -629,6 +630,15 @@ class TeamMembershipState(Enum):
     accepted = 2
 
 
+class TeamRole(Enum):
+    """Role of a team member."""
+
+    owner = "owner"
+    admin = "admin"
+    developer = "developer"
+    read_only = "read_only"
+
+
 class WebhookType(Enum):
     """Webhook Type"""
 
@@ -1139,7 +1149,7 @@ class SelectDefaultValueType(Enum):
 class RoleType(IntEnum):
     """Represents the type of role.
 
-    This is NOT provided by Discord but is rather computed based on :attr:`Role.tags`.
+    This is NOT provided by Discord but is rather computed from :attr:`Role.tags`.
 
     .. versionadded:: 2.8
 
@@ -1156,7 +1166,8 @@ class RoleType(IntEnum):
 
         .. note::
             This is not possible to determine at times because role tags seem to be missing altogether, notably when
-            a role is fetched. In such cases :attr:`Role.type` and :attr:`Role.tags` will both be :data:`None`.
+            a guild product role is fetched.
+            In such cases :attr:`Role.type` will be :attr:`RoleType.NORMAL` and :attr:`Role.tags` will be :data:`None`.
     PREMIUM_SUBSCRIPTION_BASE: :class:`int`
         The role is a base subscription role.
 
