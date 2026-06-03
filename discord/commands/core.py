@@ -46,6 +46,9 @@ from typing import (
 )
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
+from ..enums import (
+    EntryPointHandler,
+)
 from ..enums import Enum as DiscordEnum
 from ..enums import (
     IntegrationType,
@@ -82,11 +85,13 @@ __all__ = (
     "application_command",
     "user_command",
     "message_command",
+    "entry_point_command",
     "command",
     "SlashCommandGroup",
     "ContextMenuCommand",
     "UserCommand",
     "MessageCommand",
+    "EntryPointCommand",
 )
 
 if TYPE_CHECKING:
@@ -1979,6 +1984,185 @@ class MessageCommand(ContextMenuCommand):
             return self.copy()
 
 
+class EntryPointCommand(ApplicationCommand):
+    r"""A class that implements the protocol for an entry point command.
+
+    These are not created manually, instead they are created via the
+    decorator or functional interface.
+
+    .. versionadded:: 2.8.1
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the command.
+    callback: :ref:`coroutine <coroutine>`
+        The coroutine that is executed when the command is run.
+        This is only called if the handler is not :attr:`EntryPointHandler.discord_launch_activity`.
+    description: Optional[:class:`str`]
+        The description for the command.
+    mention: :class:`str`
+        Returns a string that allows you to mention the slash command.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
+        The cog that this command belongs to. ``None`` if there isn't one.
+    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
+        A list of predicates that verifies if the command could be executed
+        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
+        is necessary to be thrown to signal failure, then one inherited from
+        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
+        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
+        event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+    name_localizations: Dict[:class:`str`, :class:`str`]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
+    description_localizations: Dict[:class:`str`, :class:`str`]
+        The description localizations for this command. The values of this should be ``"locale": "description"``.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The type of installation this command should be available to. For instance, if set to
+        :attr:`IntegrationType.user_install`, the command will only be available to users with
+        the application installed on their account. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The location where this command can be used. Cannot be set if this is a guild command.
+    handler: :class:`EntryPointHandler`
+        The action to take when the user executes this command.
+    """
+
+    type = 4
+
+    def __new__(cls, *args, **kwargs) -> EntryPointCommand:
+        self = super().__new__(cls)
+
+        self.__original_kwargs__ = kwargs.copy()
+        return self
+
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
+        super().__init__(func, **kwargs)
+        if not asyncio.iscoroutinefunction(func):
+            raise TypeError("Callback must be a coroutine.")
+        self.callback = func
+
+        self.name_localizations: dict[str, str] = kwargs.get(
+            "name_localizations", MISSING
+        )
+        _validate_names(self)
+
+        description = kwargs.get("description") or (
+            inspect.cleandoc(func.__doc__).splitlines()[0]
+            if func.__doc__ is not None
+            else "No description provided"
+        )
+
+        self.description: str = description
+        self.description_localizations: dict[str, str] = kwargs.get(
+            "description_localizations", MISSING
+        )
+        _validate_descriptions(self)
+
+        self.handler: EntryPointHandler = kwargs.get("handler", MISSING)
+
+        self.attached_to_group: bool = False
+
+        try:
+            checks = func.__commands_checks__
+            checks.reverse()
+        except AttributeError:
+            checks = kwargs.get("checks", [])
+
+        self.checks = checks
+
+        self._before_invoke = None
+        self._after_invoke = None
+
+    def _validate_parameters(self):
+        params = self._get_signature_parameters()
+        if list(params.items())[0][0] == "self":
+            temp = list(params.items())
+            temp.pop(0)
+            params = dict(temp)
+        params = iter(params)
+
+        # next we have the 'ctx' as the next parameter
+        try:
+            next(params)
+        except StopIteration:
+            raise ClientException(
+                f'Callback for {self.name} command is missing "ctx" parameter.'
+            )
+
+        # next there should be no more parameters
+        try:
+            next(params)
+            raise ClientException(
+                f"Callback for {self.name} command has too many parameters."
+            )
+        except StopIteration:
+            pass
+
+    @property
+    def cog(self):
+        return getattr(self, "_cog", None)
+
+    @cog.setter
+    def cog(self, value):
+        old_cog = self.cog
+        self._cog = value
+
+        if (
+            old_cog is None
+            and value is not None
+            or value is None
+            and old_cog is not None
+        ):
+            self._validate_parameters()
+
+    @property
+    def mention(self) -> str:
+        return f"</{self.qualified_name}:{self.qualified_id}>"
+
+    def to_dict(self) -> dict:
+        as_dict = {
+            "name": self.name,
+            "description": self.description,
+            "type": self.type,
+        }
+        if self.name_localizations is not MISSING:
+            as_dict["name_localizations"] = self.name_localizations
+        if self.description_localizations is not MISSING:
+            as_dict["description_localizations"] = self.description_localizations
+
+        if self.nsfw is not None:
+            as_dict["nsfw"] = self.nsfw
+
+        if self.default_member_permissions is not None:
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
+
+        if self.handler is not MISSING:
+            as_dict["handler"] = self.handler
+
+        if not self.guild_ids:
+            as_dict["integration_types"] = [it.value for it in self.integration_types]
+            as_dict["contexts"] = [ctx.value for ctx in self.contexts]
+
+        return as_dict
+
+    async def _invoke(self, ctx: ApplicationContext) -> None:
+        if self.cog is not None:
+            await self.callback(self.cog, ctx)
+        else:
+            await self.callback(ctx)
+
+
 def slash_command(
     *,
     checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
@@ -2106,6 +2290,49 @@ def message_command(
         name=name,
         name_localizations=name_localizations,
         nsfw=nsfw,
+        **kwargs,
+    )
+
+
+def entry_point_command(
+    *,
+    checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
+    cog: Cog | None = MISSING,
+    contexts: set[InteractionContextType] | None = MISSING,
+    cooldown: Cooldown | None = MISSING,
+    default_member_permissions: Permissions | None = MISSING,
+    description: str | None = MISSING,
+    description_localizations: dict[str, str] | None = MISSING,
+    integration_types: set[IntegrationType] | None = MISSING,
+    name: str | None = MISSING,
+    name_localizations: dict[str, str] | None = MISSING,
+    nsfw: bool | None = MISSING,
+    handler: EntryPointHandler = MISSING,
+    **kwargs: Never,
+) -> Callable[..., EntryPointCommand]:
+    """Decorator for entry point commands that invokes :func:`application_command`.
+
+    .. versionadded:: 2.8.1
+
+    Returns
+    -------
+    Callable[..., :class:`.EntryPointCommand`]
+        A decorator that converts the provided method into a :class:`.EntryPointCommand`.
+    """
+    return application_command(
+        cls=EntryPointCommand,
+        checks=checks,
+        cog=cog,
+        contexts=contexts,
+        cooldown=cooldown,
+        default_member_permissions=default_member_permissions,
+        description=description,
+        description_localizations=description_localizations,
+        integration_types=integration_types,
+        name=name,
+        name_localizations=name_localizations,
+        nsfw=nsfw,
+        handler=handler,
         **kwargs,
     )
 

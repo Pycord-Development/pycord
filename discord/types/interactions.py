@@ -291,6 +291,9 @@ class InteractionCallback(TypedDict):
 
 class InteractionCallbackResource(TypedDict):
     type: InteractionResponseType
-    # This is not fully typed as activities are out of scope
-    activity_instance: NotRequired[dict]
+    activity_instance: NotRequired[InteractionCallbackActivityInstance]
     message: NotRequired[Message]
+
+
+class InteractionCallbackActivityInstance(TypedDict):
+    id: str
