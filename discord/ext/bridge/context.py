@@ -25,10 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import asyncio
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Union, overload
 
+from typing_extensions import Self
+
 from discord.commands import ApplicationContext
+from discord.context_managers import Typing
 from discord.interactions import Interaction, InteractionMessage
 from discord.message import Message
 from discord.webhook import WebhookMessage
@@ -36,10 +40,46 @@ from discord.webhook import WebhookMessage
 from ..commands import Context
 
 if TYPE_CHECKING:
+    from types import TracebackType
+
     from .core import BridgeExtCommand, BridgeSlashCommand
 
 
 __all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext", "Context")
+
+
+class DeferTyping:
+    def __init__(self, ctx: BridgeApplicationContext, ephemeral: bool) -> None:
+        self.loop: asyncio.AbstractEventLoop = ctx._state.loop
+        self.ctx = ctx
+        self.ephemeral = ephemeral
+
+    async def do_defer(self) -> None:
+        await self.ctx.defer(ephemeral=self.ephemeral)
+
+    def __enter__(self) -> Self:
+        self.task: asyncio.Task = self.loop.create_task(self.do_defer())
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        self.task.cancel()
+
+    async def __aenter__(self) -> Self:
+        await self.do_defer()
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        pass
 
 
 class BridgeContext(ABC):
@@ -73,6 +113,9 @@ class BridgeContext(ABC):
 
     @abstractmethod
     async def _defer(self, *args, **kwargs) -> None: ...
+
+    @abstractmethod
+    def _typing(self, *args, **kwargs) -> Typing | DeferTyping: ...
 
     @abstractmethod
     async def _edit(self, *args, **kwargs) -> InteractionMessage | Message: ...
@@ -111,6 +154,14 @@ class BridgeContext(ABC):
         """
         return await self._defer(*args, **kwargs)
 
+    def typing(self, *args, **kwargs) -> Typing | DeferTyping:
+        """
+        Returns a context manager that allows you to type for an indefinite period of time.
+        In :class:`BridgeExtContext`, this will be :meth:`~Context.typing` while in :class:`BridgeApplicationContext`,
+        this is equivalent to a defer() call and does not do any typing calls.
+        """
+        return self._typing(*args, **kwargs)
+
     async def edit(self, *args, **kwargs) -> InteractionMessage | Message:
         """|coro|
 
@@ -147,6 +198,9 @@ class BridgeApplicationContext(BridgeContext, ApplicationContext):
     async def _defer(self, *args, **kwargs) -> None:
         return await self._get_super("defer")(*args, **kwargs)
 
+    def _typing(self, *args, **kwargs) -> DeferTyping:
+        return DeferTyping(self, *args, **kwargs)
+
     async def _edit(self, *args, **kwargs) -> InteractionMessage:
         return await self._get_super("edit")(*args, **kwargs)
 
@@ -173,6 +227,10 @@ class BridgeExtContext(BridgeContext, Context):
     async def _defer(self, *args, **kwargs) -> None:
         kwargs.pop("ephemeral", None)
         return await self._get_super("trigger_typing")(*args, **kwargs)
+
+    def _typing(self, *args, **kwargs) -> Typing:
+        kwargs.pop("ephemeral", None)
+        return self._get_super("typing")(*args, **kwargs)
 
     async def _edit(self, *args, **kwargs) -> Message | None:
         if self._original_response_message:
