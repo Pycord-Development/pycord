@@ -70,8 +70,7 @@ class DeferTyping:
         self.task.cancel()
 
     async def __aenter__(self) -> Self:
-        await self.do_defer()
-        return self
+        return self.__enter__()
 
     async def __aexit__(
         self,
