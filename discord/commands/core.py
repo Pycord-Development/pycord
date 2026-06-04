@@ -2148,7 +2148,7 @@ class EntryPointCommand(ApplicationCommand):
             )
 
         if self.handler is not MISSING:
-            as_dict["handler"] = self.handler
+            as_dict["handler"] = self.handler.value
 
         if not self.guild_ids:
             as_dict["integration_types"] = [it.value for it in self.integration_types]
