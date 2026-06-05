@@ -317,6 +317,13 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         """Checks if the channel is NSFW."""
         return self.nsfw
 
+    def is_spoiler(self) -> bool:
+        """Checks if the channel is a spoiler channel.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.is_spoiler_channel
+
     @property
     def last_message(self) -> Message | None:
         """Fetches the last message from this channel in cache.
@@ -1837,6 +1844,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """Checks if the channel is NSFW."""
         return self.nsfw
 
+    def is_spoiler(self) -> bool:
+        """Checks if the channel is a spoiler channel.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.is_spoiler_channel
+
     @property
     def last_message(self) -> Message | None:
         """Fetches the last message from this channel in cache.
@@ -2439,6 +2453,13 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     def is_nsfw(self) -> bool:
         """Checks if the channel is NSFW."""
         return self.nsfw
+
+    def is_spoiler(self) -> bool:
+        """Checks if the channel is a spoiler channel.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.is_spoiler_channel
 
     @property
     def last_message(self) -> Message | None:
