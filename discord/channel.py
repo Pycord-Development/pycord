@@ -204,9 +204,7 @@ class ForumTag(Hashable):
             "emoji_name": None,
         }
         if self.emoji is not None:
-            emoji = self.emoji._to_forum_reaction_payload()
-            payload["emoji_id"] = emoji["emoji_id"]
-            payload["emoji_name"] = emoji["emoji_name"]
+            payload.update(self.emoji._to_forum_reaction_payload())
 
         if self.id:
             payload["id"] = self.id
