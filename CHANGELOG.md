@@ -8,8 +8,7 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
-These changes are available on the `cherry/2.8.0` branch, but have not yet been
-released.
+These changes are available on the `master` branch, but have not yet been released.
 
 ### Added
 
