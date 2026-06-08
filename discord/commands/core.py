@@ -71,6 +71,7 @@ if sys.version_info >= (3, 11):
     from typing import Annotated, Literal, Self, get_args, get_origin
 else:
     from typing import Annotated, Literal, get_args, get_origin
+
     from typing_extensions import Self
 
 __all__ = (
