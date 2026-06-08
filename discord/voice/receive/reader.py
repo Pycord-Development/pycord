@@ -323,7 +323,7 @@ class PacketDecryptor:
         offset = 0
 
         while offset < len(data):
-            # offset will allow us to read the compund packets
+            # offset will allow us to read the compound packets
             current_data = data[offset:]
             if len(current_data) < 8:
                 break

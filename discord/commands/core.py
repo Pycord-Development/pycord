@@ -1318,7 +1318,7 @@ class SlashCommandGroup(ApplicationCommand):
         # similar to ApplicationCommand
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
-        # no need to getattr, since slash cmds groups cant be created using a decorator
+        # no need to getattr, since slash cmds groups can't be created using a decorator
 
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
@@ -1331,7 +1331,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._buckets: CooldownMapping = buckets
 
-        # no need to getattr, since slash cmds groups cant be created using a decorator
+        # no need to getattr, since slash cmds groups can't be created using a decorator
 
         if max_concurrency is not None and not isinstance(
             max_concurrency, MaxConcurrency
