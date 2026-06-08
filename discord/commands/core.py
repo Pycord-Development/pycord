@@ -70,9 +70,9 @@ from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
 if sys.version_info >= (3, 11):
-    from typing import Annotated, Literal, get_args, get_origin
+    from typing import Annotated, Literal, Self, get_args, get_origin
 else:
-    from typing_extensions import Annotated, Literal, get_args, get_origin
+    from typing_extensions import Annotated, Literal, Self, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -1228,7 +1228,7 @@ class SlashCommandGroup(ApplicationCommand):
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
-    def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
+    def __new__(cls, *args, **kwargs) -> Self:
         self = super().__new__(cls)
         self.__original_kwargs__ = kwargs.copy()
 
