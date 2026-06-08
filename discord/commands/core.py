@@ -715,7 +715,7 @@ class SlashCommand(ApplicationCommand):
     integration_types: Set[:class:`IntegrationType`]
         The type of installation this command should be available to. For instance, if set to
         :attr:`IntegrationType.user_install`, the command will only be available to users with
-        the application installed on their account. Inapplicable for guild commands.
+        the application installed on their account. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
         The location where this command can be used. Cannot be set if this is a guild command.
     """
@@ -1220,9 +1220,9 @@ class SlashCommandGroup(ApplicationCommand):
     integration_types: Set[:class:`IntegrationType`]
         The type of installation this command should be available to. For instance, if set to
         :attr:`IntegrationType.user_install`, the command will only be available to users with
-        the application installed on their account. Inapplicable for guild commands.
+        the application installed on their account. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The location where this command can be used. Inapplicable for guild commands.
+        The location where this command can be used. Not applicable for guild commands.
     """
 
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
@@ -1650,9 +1650,9 @@ class ContextMenuCommand(ApplicationCommand):
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Inapplicable for guild commands.
+        The installation contexts where this command is available. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Inapplicable for guild commands.
+        The interaction contexts where this command is available. Not applicable for guild commands.
     """
 
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
@@ -1790,9 +1790,9 @@ class UserCommand(ContextMenuCommand):
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Inapplicable for guild commands.
+        The installation contexts where this command is available. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Inapplicable for guild commands.
+        The interaction contexts where this command is available. Not applicable for guild commands.
     """
 
     type = 2
@@ -1905,9 +1905,9 @@ class MessageCommand(ContextMenuCommand):
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Inapplicable for guild commands.
+        The installation contexts where this command is available. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Inapplicable for guild commands.
+        The interaction contexts where this command is available. Not applicable for guild commands.
     """
 
     type = 3

@@ -299,8 +299,8 @@ msgstr "Dict[:class:`str`, :class:`str`]"
 msgid "The description localizations for this command. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
 msgstr "The description localizations for this command. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
 
-msgid "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Inapplicable for guild commands."
-msgstr "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Inapplicable for guild commands."
+msgid "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Not applicable for guild commands."
+msgstr "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Not applicable for guild commands."
 
 msgid "Set[:class:`IntegrationType`]"
 msgstr "Set[:class:`IntegrationType`]"
@@ -329,8 +329,8 @@ msgstr "These can be created manually, but they should be created via the decora
 msgid "The parent group that this group belongs to. ``None`` if there isn't one."
 msgstr "The parent group that this group belongs to. ``None`` if there isn't one."
 
-msgid "The location where this command can be used. Inapplicable for guild commands."
-msgstr "The location where this command can be used. Inapplicable for guild commands."
+msgid "The location where this command can be used. Not applicable for guild commands."
+msgstr "The location where this command can be used. Not applicable for guild commands."
 
 msgid "Creates a new subgroup for this SlashCommandGroup."
 msgstr "Creates a new subgroup for this SlashCommandGroup."
@@ -380,11 +380,11 @@ msgstr "A class that implements the protocol for user context menu commands."
 msgid "Use the ``contexts`` parameter instead."
 msgstr "Use the ``contexts`` parameter instead."
 
-msgid "The installation contexts where this command is available. Inapplicable for guild commands."
-msgstr "The installation contexts where this command is available. Inapplicable for guild commands."
+msgid "The installation contexts where this command is available. Not applicable for guild commands."
+msgstr "The installation contexts where this command is available. Not applicable for guild commands."
 
-msgid "The interaction contexts where this command is available. Inapplicable for guild commands."
-msgstr "The interaction contexts where this command is available. Inapplicable for guild commands."
+msgid "The interaction contexts where this command is available. Not applicable for guild commands."
+msgstr "The interaction contexts where this command is available. Not applicable for guild commands."
 
 msgid ":class:`UserCommand`"
 msgstr ":class:`UserCommand`"

@@ -685,7 +685,7 @@ msgid ""
 "The type of installation this command should be available to. For "
 "instance, if set to :attr:`IntegrationType.user_install`, the command "
 "will only be available to users with the application installed on their "
-"account. Inapplicable for guild commands."
+"account. Not applicable for guild commands."
 msgstr ""
 
 #: 667c0fef77a5473cb31b94fd02113660 bde9fd66a882485c806403a935a2799b
@@ -746,7 +746,7 @@ msgstr ""
 #: 86feaefaaaf34288af79998e7d3eb3a9 discord.commands.core.SlashCommandGroup:88
 #: of
 msgid ""
-"The location where this command can be used. Inapplicable for guild "
+"The location where this command can be used. Not applicable for guild "
 "commands."
 msgstr ""
 
@@ -849,14 +849,14 @@ msgstr ""
 #: discord.commands.core.MessageCommand:79 discord.commands.core.UserCommand:79
 #: e5ac68f43e54493b955c34ffa4045d84 of
 msgid ""
-"The installation contexts where this command is available. Inapplicable "
+"The installation contexts where this command is available. Not applicable "
 "for guild commands."
 msgstr ""
 
 #: discord.commands.core.MessageCommand:85 discord.commands.core.UserCommand:85
 #: f07350db291c4c9eb79da175bcf9ccd0 of
 msgid ""
-"The interaction contexts where this command is available. Inapplicable "
+"The interaction contexts where this command is available. Not applicable "
 "for guild commands."
 msgstr ""
 
