@@ -415,7 +415,7 @@ class FFmpegPCMAudio(FFmpegAudio):
 
         if isinstance(before_options, str):
             user_args = shlex.split(before_options)
-            if "-protocol_whitelist" in user_args and protocol_whitelist is not None:
+            if "-protocol_whitelist" in user_args:
                 protocol_whitelist = None
                 warnings.warn(
                     "the protocol_whitelist argument is being ignored because -protocol_whitelist was found in before_options.",
@@ -590,7 +590,7 @@ class FFmpegOpusAudio(FFmpegAudio):
 
         if isinstance(before_options, str):
             user_args = shlex.split(before_options)
-            if "-protocol_whitelist" in user_args and protocol_whitelist is not None:
+            if "-protocol_whitelist" in user_args:
                 protocol_whitelist = None
                 warnings.warn(
                     "the protocol_whitelist argument is being ignored because -protocol_whitelist was found in before_options.",
