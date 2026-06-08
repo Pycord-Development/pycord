@@ -972,7 +972,7 @@ Reactions
 
     .. note::
 
-        To get the message being reacted to, access it via :attr:`Reaction.message`.
+        To retrieve the message that received the reaction, access :attr:`Reaction.message`.
 
     This requires both :attr:`Intents.reactions` and :attr:`Intents.members` to be enabled.
 
