@@ -1730,8 +1730,8 @@ msgstr "The poll's layout type. Only one exists at the moment."
 msgid ":class:`PollLayoutType`"
 msgstr ":class:`PollLayoutType`"
 
-msgid "The results of this poll recieved from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
-msgstr "The results of this poll recieved from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
+msgid "The results of this poll received from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
+msgstr "The results of this poll received from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
 
 msgid "Optional[:class:`PollResults`]"
 msgstr "Optional[:class:`PollResults`]"
@@ -1793,8 +1793,8 @@ msgstr "Chaining style ::"
 msgid "Immediately ends this poll, if attached to a message. Only doable by the poll's owner. Shortcut to :meth:`Message.end_poll`"
 msgstr "Immediately ends this poll, if attached to a message. Only doable by the poll's owner. Shortcut to :meth:`Message.end_poll`"
 
-msgid "This poll wasn't recieved from a message."
-msgstr "This poll wasn't recieved from a message."
+msgid "This poll wasn't received from a message."
+msgstr "This poll wasn't received from a message."
 
 msgid "Represents a poll media object that supports both questions and answers."
 msgstr "Represents a poll media object that supports both questions and answers."
@@ -1823,11 +1823,11 @@ msgstr "The answer's text. Shortcut for :attr:`PollMedia.text`."
 msgid "The answer's emoji. Shortcut for :attr:`PollMedia.emoji`."
 msgstr "The answer's emoji. Shortcut for :attr:`PollMedia.emoji`."
 
-msgid "This answer's vote count, if recieved from Discord."
-msgstr "This answer's vote count, if recieved from Discord."
+msgid "This answer's vote count, if received from Discord."
+msgstr "This answer's vote count, if received from Discord."
 
-msgid "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was recieved from Discord."
-msgstr "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was recieved from Discord."
+msgid "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was received from Discord."
+msgstr "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was received from Discord."
 
 msgid "The ``after`` parameter must represent a member and meet the :class:`abc.Snowflake` abc."
 msgstr "The ``after`` parameter must represent a member and meet the :class:`abc.Snowflake` abc."

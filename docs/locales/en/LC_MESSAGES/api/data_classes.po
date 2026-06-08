@@ -3251,7 +3251,7 @@ msgstr ""
 
 #: 6831db54dc464b23af1be2fe67385a15 discord.poll.Poll:37 of
 msgid ""
-"The results of this poll recieved from Discord. If ``None``, this should "
+"The results of this poll received from Discord. If ``None``, this should "
 "be considered \"unknown\" rather than \"no\" results."
 msgstr ""
 
@@ -3349,7 +3349,7 @@ msgstr ""
 
 #: a64df6f6aa664e17aca4891da237f9de discord.poll.Poll.end:9
 #: discord.poll.PollAnswer.voters:22 of
-msgid "This poll wasn't recieved from a message."
+msgid "This poll wasn't received from a message."
 msgstr ""
 
 #: discord.poll.PollMedia:1 ffb86145dac0403086b43ea3e82fe8f5 of
@@ -3396,13 +3396,13 @@ msgid "The answer's emoji. Shortcut for :attr:`PollMedia.emoji`."
 msgstr ""
 
 #: 26fd8264a6f94ea9be9059f7006b6c63 discord.PollAnswer.count:1 of
-msgid "This answer's vote count, if recieved from Discord."
+msgid "This answer's vote count, if received from Discord."
 msgstr ""
 
 #: bc21833cc8ae40d88034324574ffa7aa discord.poll.PollAnswer.voters:1 of
 msgid ""
 "Returns an :class:`AsyncIterator` representing the users that have voted "
-"with this answer. Only works if this poll was recieved from Discord."
+"with this answer. Only works if this poll was received from Discord."
 msgstr ""
 
 #: 583e4434932a41e5b3a269a6713a7fa2 discord.poll.PollAnswer.voters:4 of
