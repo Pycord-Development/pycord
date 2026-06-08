@@ -383,7 +383,7 @@ They will be enumerated here.
 
 - :attr:`Member.avatar_url` and :attr:`User.avatar_url` now return the default avatar if a custom one is not set.
 - :attr:`Message.embeds` is now a list of :class:`Embed` instead of :class:`dict` objects.
-- :attr:`Message.attachments` is now a list of :class:`Attachment` instead of :class:`dict` object.
+- :attr:`Message.attachments` is now a list of :class:`Attachment` instead of :class:`dict` objects.
 - :attr:`Guild.roles` is now sorted through hierarchy. The first element is always the ``@everyone`` role.
 
 **Added**
@@ -1089,8 +1089,8 @@ Basically: ::
         # do something after a command is called
         pass
 
-The after invocation is hook always called, **regardless of an error in the command**. This makes it ideal for some error
-handling or clean up of certain resources such a database connection.
+The after invocation hook is always called, **regardless of an error in the command**. This makes it ideal for some error
+handling or clean up of certain resources such as a database connection.
 
 The per-command registration is as follows: ::
 

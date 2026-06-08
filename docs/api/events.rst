@@ -1408,7 +1408,7 @@ Voice Channel Status Update
 
 .. function:: on_raw_voice_channel_status_update(payload)
 
-    Called when someone updates a voice channels status.
+    Called when someone updates a voice channel status.
 
     .. versionadded:: 2.5
 

@@ -379,7 +379,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             buckets = cooldown
         else:
             raise TypeError(
-                "Cooldown must be a an instance of CooldownMapping or None."
+                "Cooldown must be an instance of CooldownMapping or None."
             )
         self._buckets: CooldownMapping = buckets
 
