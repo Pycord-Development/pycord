@@ -57,7 +57,7 @@ class MP4Sink(Sink):
         MP4SinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.recording:
             raise MP4SinkError(
                 "Audio may only be formatted after recording is finished."
             )

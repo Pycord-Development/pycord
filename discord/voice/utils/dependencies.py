@@ -24,17 +24,19 @@ DEALINGS IN THE SOFTWARE.
 
 try:
     import davey
+
+    _ = davey.DAVE_PROTOCOL_VERSION
 except ImportError:
-    HAS_DAVEY = False
-    DAVE_PROTOCOL_VERSION = 0
+    has_davey = False
+    dave_protocol_version = 0
 else:
-    HAS_DAVEY = True
-    DAVE_PROTOCOL_VERSION = davey.DAVE_PROTOCOL_VERSION
+    has_davey = True
+    dave_protocol_version = davey.DAVE_PROTOCOL_VERSION
 
 try:
-    import nacl.secret
-    import nacl.utils
+    import nacl.secret  # pyright: ignore[reportUnusedImport]
+    import nacl.utils  # pyright: ignore[reportUnusedImport]
 except ImportError:
-    HAS_NACL = False
+    has_nacl = False
 else:
-    HAS_NACL = True
+    has_nacl = True
