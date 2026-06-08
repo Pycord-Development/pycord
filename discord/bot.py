@@ -711,7 +711,7 @@ class ApplicationCommandMixin(ABC):
         register all commands.
 
         By default, this coroutine is called inside the :func:`.on_connect` event. If the
-        :func:`.on_connect` event is overridden, this coroutine must be invoked manually, 
+        :func:`.on_connect` event is overridden, this coroutine must be invoked manually,
         as shown in the following example:
 
         .. code-block:: python
