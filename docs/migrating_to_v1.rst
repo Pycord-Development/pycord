@@ -1089,7 +1089,7 @@ Basically: ::
         # do something after a command is called
         pass
 
-The after invocation hook is always called, **regardless of an error in the command**. This makes it ideal for some error
+The "after" invocation hook is always called, **regardless of an error in the command**. This makes it ideal for some error
 handling or clean up of certain resources, such as a database connection.
 
 The per-command registration is as follows: ::
