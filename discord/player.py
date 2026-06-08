@@ -39,7 +39,7 @@ import time
 import warnings
 from math import floor
 from typing import IO, TYPE_CHECKING, Any, Callable, Generic, Literal, TypeVar, overload
-
+from collections.abc import Set
 from .enums import SpeakingState
 from .errors import ClientException
 from .oggparse import OggStream
@@ -51,7 +51,6 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from .voice import VoiceClient
-
 
 AT = TypeVar("AT", bound="AudioSource")
 FT = TypeVar("FT", bound="FFmpegOpusAudio")
@@ -152,12 +151,12 @@ class FFmpegAudio(AudioSource):
     BLOCKSIZE: int = io.DEFAULT_BUFFER_SIZE
 
     def __init__(
-        self,
-        source: str | io.BufferedIOBase,
-        *,
-        executable: str = "ffmpeg",
-        args: Any,
-        **subprocess_kwargs: Any,
+            self,
+            source: str | io.BufferedIOBase,
+            *,
+            executable: str = "ffmpeg",
+            args: Any,
+            **subprocess_kwargs: Any,
     ):
         piping_stdin = subprocess_kwargs.get("stdin") == subprocess.PIPE
         if piping_stdin and isinstance(source, str):
@@ -309,7 +308,7 @@ class FFmpegAudio(AudioSource):
         self._process = self._stdout = self._stdin = self._stderr = MISSING
 
 
-DEFAULT_PROTOCOL_WHITELIST: set[str] = frozenset(
+DEFAULT_PROTOCOL_WHITELIST: Set[str] = frozenset(
     {"file", "http", "https", "tcp", "tls", "crypto", "pipe", "fd", "cache"}
 )
 
@@ -372,40 +371,42 @@ class FFmpegPCMAudio(FFmpegAudio):
 
     @overload
     def __init__(
-        self,
-        source: io.BufferedIOBase,
-        *,
-        executable: str = ...,
-        pipe: Literal[True] = ...,
-        stderr: IO[bytes] | None = ...,
-        before_options: str | None = ...,
-        options: str | None = ...,
-        protocol_whitelist: set[str] | None = ...,
-    ) -> None: ...
+            self,
+            source: io.BufferedIOBase,
+            *,
+            executable: str = ...,
+            pipe: Literal[True] = ...,
+            stderr: IO[bytes] | None = ...,
+            before_options: str | None = ...,
+            options: str | None = ...,
+            protocol_whitelist: Set[str] | None = ...,
+    ) -> None:
+        ...
 
     @overload
     def __init__(
-        self,
-        source: str,
-        *,
-        executable: str = ...,
-        pipe: Literal[False] = ...,
-        stderr: IO[bytes] | None = ...,
-        before_options: str | None = ...,
-        options: str | None = ...,
-        protocol_whitelist: set[str] | None = ...,
-    ) -> None: ...
+            self,
+            source: str,
+            *,
+            executable: str = ...,
+            pipe: Literal[False] = ...,
+            stderr: IO[bytes] | None = ...,
+            before_options: str | None = ...,
+            options: str | None = ...,
+            protocol_whitelist: Set[str] | None = ...,
+    ) -> None:
+        ...
 
     def __init__(
-        self,
-        source: str | io.BufferedIOBase,
-        *,
-        executable: str = "ffmpeg",
-        pipe: bool = False,
-        stderr: IO[bytes] | None = None,
-        before_options: str | None = None,
-        options: str | None = None,
-        protocol_whitelist: set[str] | None = DEFAULT_PROTOCOL_WHITELIST,
+            self,
+            source: str | io.BufferedIOBase,
+            *,
+            executable: str = "ffmpeg",
+            pipe: bool = False,
+            stderr: IO[bytes] | None = None,
+            before_options: str | None = None,
+            options: str | None = None,
+            protocol_whitelist: Set[str] | None = DEFAULT_PROTOCOL_WHITELIST,
     ) -> None:
         args = []
         subprocess_kwargs = {
@@ -532,46 +533,48 @@ class FFmpegOpusAudio(FFmpegAudio):
 
     @overload
     def __init__(
-        self,
-        source: io.BufferedIOBase,
-        *,
-        bitrate: int | None = None,
-        codec: str | None = None,
-        executable: str = ...,
-        pipe: Literal[True] = ...,
-        stderr: IO[bytes] | None = ...,
-        before_options: str | None = ...,
-        options: str | None = ...,
-        protocol_whitelist: set[str] | None = ...,
-    ) -> None: ...
+            self,
+            source: io.BufferedIOBase,
+            *,
+            bitrate: int | None = None,
+            codec: str | None = None,
+            executable: str = ...,
+            pipe: Literal[True] = ...,
+            stderr: IO[bytes] | None = ...,
+            before_options: str | None = ...,
+            options: str | None = ...,
+            protocol_whitelist: Set[str] | None = ...,
+    ) -> None:
+        ...
 
     @overload
     def __init__(
-        self,
-        source: str,
-        *,
-        bitrate: int | None = None,
-        codec: str | None = None,
-        executable: str = ...,
-        pipe: Literal[False] = ...,
-        stderr: IO[bytes] | None = ...,
-        before_options: str | None = ...,
-        options: str | None = ...,
-        protocol_whitelist: set[str] | None = ...,
-    ) -> None: ...
+            self,
+            source: str,
+            *,
+            bitrate: int | None = None,
+            codec: str | None = None,
+            executable: str = ...,
+            pipe: Literal[False] = ...,
+            stderr: IO[bytes] | None = ...,
+            before_options: str | None = ...,
+            options: str | None = ...,
+            protocol_whitelist: Set[str] | None = ...,
+    ) -> None:
+        ...
 
     def __init__(
-        self,
-        source: str | io.BufferedIOBase,
-        *,
-        bitrate: int | None = None,
-        codec: str | None = None,
-        executable: str = "ffmpeg",
-        pipe: bool = False,
-        stderr: IO[bytes] | None = None,
-        before_options: str | None = None,
-        options: str | None = None,
-        protocol_whitelist: set[str] | None = DEFAULT_PROTOCOL_WHITELIST,
+            self,
+            source: str | io.BufferedIOBase,
+            *,
+            bitrate: int | None = None,
+            codec: str | None = None,
+            executable: str = "ffmpeg",
+            pipe: bool = False,
+            stderr: IO[bytes] | None = None,
+            before_options: str | None = None,
+            options: str | None = None,
+            protocol_whitelist: Set[str] | None = DEFAULT_PROTOCOL_WHITELIST,
     ) -> None:
         args = []
         subprocess_kwargs = {
@@ -626,11 +629,11 @@ class FFmpegOpusAudio(FFmpegAudio):
 
     @classmethod
     async def from_probe(
-        cls,
-        source: str,
-        *,
-        method: str | Callable[[str, str], tuple[str | None, int | None]] | None = None,
-        **kwargs: Any,
+            cls,
+            source: str,
+            *,
+            method: str | Callable[[str, str], tuple[str | None, int | None]] | None = None,
+            **kwargs: Any,
     ) -> Self:
         r"""|coro|
 
@@ -693,11 +696,11 @@ class FFmpegOpusAudio(FFmpegAudio):
 
     @classmethod
     async def probe(
-        cls,
-        source: str,
-        *,
-        method: str | Callable[[str, str], tuple[str | None, int | None]] | None = None,
-        executable: str | None = None,
+            cls,
+            source: str,
+            *,
+            method: str | Callable[[str, str], tuple[str | None, int | None]] | None = None,
+            executable: str | None = None,
     ) -> tuple[str | None, int | None]:
         """|coro|
 
@@ -779,7 +782,7 @@ class FFmpegOpusAudio(FFmpegAudio):
 
     @staticmethod
     def _probe_codec_native(
-        source, executable: str = "ffmpeg"
+            source, executable: str = "ffmpeg"
     ) -> tuple[str | None, int | None]:
         exe = (
             executable[:2] + "probe"
@@ -812,7 +815,7 @@ class FFmpegOpusAudio(FFmpegAudio):
 
     @staticmethod
     def _probe_codec_fallback(
-        source, executable: str = "ffmpeg"
+            source, executable: str = "ffmpeg"
     ) -> tuple[str | None, int | None]:
         args = [executable, "-hide_banner", "-i", source]
         proc = subprocess.Popen(
@@ -904,11 +907,11 @@ class AudioPlayer(threading.Thread):
     DELAY: float = OpusEncoder.FRAME_LENGTH / 1000.0
 
     def __init__(
-        self,
-        source: AudioSource,
-        client: VoiceClient,
-        *,
-        after: Callable[[Exception | None], Any] | None = None,
+            self,
+            source: AudioSource,
+            client: VoiceClient,
+            *,
+            after: Callable[[Exception | None], Any] | None = None,
     ) -> None:
         super().__init__(daemon=True, name=f"audio-player:{id(self):#x}")
         self.source: AudioSource = source
