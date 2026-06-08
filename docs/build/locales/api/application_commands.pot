@@ -859,7 +859,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.SlashCommandGroup:80
 #: 709b29ca67a54df18bd7293c19e29cf2
 #: 5d7c88e616bd457884fb476a7d2f4ab0
-msgid "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Not applicable for guild commands."
+msgid "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Unapplicable for guild commands."
 msgstr ""
 
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.MessageCommand:81
@@ -929,7 +929,7 @@ msgstr ""
 
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.SlashCommandGroup:88
 #: 86feaefaaaf34288af79998e7d3eb3a9
-msgid "The location where this command can be used. Not applicable for guild commands."
+msgid "The location where this command can be used. Unapplicable for guild commands."
 msgstr ""
 
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.SlashCommandGroup.create_subgroup:1
@@ -1024,14 +1024,14 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:79
 #: e5ac68f43e54493b955c34ffa4045d84
 #: e5ac68f43e54493b955c34ffa4045d84
-msgid "The installation contexts where this command is available. Not applicable for guild commands."
+msgid "The installation contexts where this command is available. Unapplicable for guild commands."
 msgstr ""
 
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.MessageCommand:85
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:85
 #: f07350db291c4c9eb79da175bcf9ccd0
 #: f07350db291c4c9eb79da175bcf9ccd0
-msgid "The interaction contexts where this command is available. Not applicable for guild commands."
+msgid "The interaction contexts where this command is available. Unapplicable for guild commands."
 msgstr ""
 
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand.copy:4

@@ -4470,7 +4470,7 @@ msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.poll.Poll:37
 #: 6831db54dc464b23af1be2fe67385a15
-msgid "The results of this poll received from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
+msgid "The results of this poll recieved from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
 msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.poll.Poll:39
@@ -4581,7 +4581,7 @@ msgstr ""
 #: ../../../discord/poll.py:docstring of discord.poll.PollAnswer.voters:22
 #: a64df6f6aa664e17aca4891da237f9de
 #: a64df6f6aa664e17aca4891da237f9de
-msgid "This poll wasn't received from a message."
+msgid "This poll wasn't recieved from a message."
 msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.poll.PollMedia:1
@@ -4633,12 +4633,12 @@ msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.PollAnswer.count:1
 #: 26fd8264a6f94ea9be9059f7006b6c63
-msgid "This answer's vote count, if received from Discord."
+msgid "This answer's vote count, if recieved from Discord."
 msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.poll.PollAnswer.voters:1
 #: bc21833cc8ae40d88034324574ffa7aa
-msgid "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was received from Discord."
+msgid "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was recieved from Discord."
 msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.poll.PollAnswer.voters:4

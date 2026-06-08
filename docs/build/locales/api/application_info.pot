@@ -304,7 +304,7 @@ msgstr ""
 
 #: ../../../discord/appinfo.py:docstring of discord.appinfo.AppInfo:160
 #: 6247ad0381374a3d8b72aad9bc74ac79
-msgid "Maximum of 5 tags."
+msgid "Maximium of 5 tags."
 msgstr ""
 
 #: ../../../discord/appinfo.py:docstring of discord.appinfo.AppInfo:168
