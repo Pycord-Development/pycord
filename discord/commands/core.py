@@ -197,9 +197,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError(
-                "Cooldown must be an instance of CooldownMapping or None."
-            )
+            raise TypeError("Cooldown must be an instance of CooldownMapping or None.")
 
         self._buckets: CooldownMapping = buckets
 
@@ -1325,9 +1323,7 @@ class SlashCommandGroup(ApplicationCommand):
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError(
-                "Cooldown must be an instance of CooldownMapping or None."
-            )
+            raise TypeError("Cooldown must be an instance of CooldownMapping or None.")
 
         self._buckets: CooldownMapping = buckets
 
