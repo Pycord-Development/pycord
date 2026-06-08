@@ -314,10 +314,7 @@ class PacketDecryptor:
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
 
-            if not uid:
-                # SSRC -> user_id mapping not yet populated (race with member_connect).
-                raw_payload = b""
-            else:
+            if uid:
                 try:
                     raw_payload = dave.decrypt(
                         uid,
@@ -332,6 +329,9 @@ class PacketDecryptor:
                         exc_info=True,
                     )
                     raw_payload = b""
+            else:
+                # SSRC -> user_id mapping not yet populated (race with member_connect).
+                raw_payload = b""
 
             packet.decrypted_data = raw_payload
         else:  # e.g., stage channels
