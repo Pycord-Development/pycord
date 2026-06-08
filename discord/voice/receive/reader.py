@@ -58,9 +58,9 @@ Ts = TypeVarTuple("Ts")
 
 class AfterCallback(Protocol, Generic[Unpack[Ts]]):
     def __call__(
-            self,
-            sink: Sink,
-            *args: Unpack[Ts],
+        self,
+        sink: Sink,
+        *args: Unpack[Ts],
     ) -> Coroutine[Any, Any, Any] | Any: ...
 
 
@@ -76,39 +76,37 @@ def is_rtcp(data: bytes) -> bool:
 class AudioReader(Generic[Unpack[Ts]]):
     @overload
     def __init__(
-            self,
-            sink: Sink,
-            client: VoiceClient,
-            *,
-            after: None = None,
-            args: None = None,
-            start: bool = False,
-    ) -> None:
-        ...
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: None = None,
+        args: None = None,
+        start: bool = False,
+    ) -> None: ...
 
     @overload
     def __init__(
-            self,
-            sink: Sink,
-            client: VoiceClient,
-            *,
-            after: AfterCallback[Unpack[Ts]],
-            args: tuple[Unpack[Ts]],
-            start: bool = False,
-    ) -> None:
-        ...
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback[Unpack[Ts]],
+        args: tuple[Unpack[Ts]],
+        start: bool = False,
+    ) -> None: ...
 
     def __init__(
-            self,
-            sink: Sink,
-            client: VoiceClient,
-            *,
-            after: AfterCallback[Unpack[Ts]] | None = None,
-            args: tuple[Unpack[Ts]] | None = None,
-            start: bool = False,
+        self,
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback[Unpack[Ts]] | None = None,
+        args: tuple[Unpack[Ts]] | None = None,
+        start: bool = False,
     ) -> None:
         if after is not None and not callable(
-                after
+            after
         ):  # pyright: ignore[reportUnnecessaryComparison]
             raise TypeError(  # pyright: ignore[reportUnreachable]
                 f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead"
@@ -288,7 +286,7 @@ class PacketDecryptor:
     ]
 
     def __init__(
-            self, mode: SupportedModes, secret_key: bytes, client: VoiceClient
+        self, mode: SupportedModes, secret_key: bytes, client: VoiceClient
     ) -> None:
         self.mode: SupportedModes = mode
         self.client: VoiceClient = client
