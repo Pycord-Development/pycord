@@ -195,7 +195,7 @@ New Features
     - :attr:`Role.tags` to get the role's tags.
     - :meth:`Role.is_premium_subscriber` to check if a role is the "Nitro Booster" role.
     - :meth:`Role.is_bot_managed` to check if a role is a bot role (i.e. the automatically created role for bots).
-    - :meth:`Role.is_integration` to check if a role is created by an integration.
+    - :meth:`Role.is_integration` to check if a role is role created by an integration.
 - Add :meth:`Client.is_ws_ratelimited` to check if the websocket is rate limited.
     - :meth:`ShardInfo.is_ws_ratelimited` is the equivalent for checking a specific shard.
 - Add support for chunking an :class:`AsyncIterator` through :meth:`AsyncIterator.chunk` (:dpy-issue:`6100`, :dpy-issue:`6082`)
