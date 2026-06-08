@@ -213,7 +213,7 @@ class ApplicationCommandMixin(ABC):
         name: :class:`str`
             The qualified name of the command to get.
         guild_ids: List[:class:`int`]
-            The guild ids associated to the command to get.
+            The guild ids associated with the command to get.
         type: Type[:class:`.ApplicationCommand`]
             The type of the command to get. Defaults to :class:`.ApplicationCommand`.
 
