@@ -58,9 +58,9 @@ Ts = TypeVarTuple("Ts")
 
 class AfterCallback(Protocol, Generic[Unpack[Ts]]):
     def __call__(
-        self,
-        sink: Sink,
-        *args: Unpack[Ts],
+            self,
+            sink: Sink,
+            *args: Unpack[Ts],
     ) -> Coroutine[Any, Any, Any] | Any: ...
 
 
@@ -76,37 +76,39 @@ def is_rtcp(data: bytes) -> bool:
 class AudioReader(Generic[Unpack[Ts]]):
     @overload
     def __init__(
-        self,
-        sink: Sink,
-        client: VoiceClient,
-        *,
-        after: None = None,
-        args: None = None,
-        start: bool = False,
-    ) -> None: ...
+            self,
+            sink: Sink,
+            client: VoiceClient,
+            *,
+            after: None = None,
+            args: None = None,
+            start: bool = False,
+    ) -> None:
+        ...
 
     @overload
     def __init__(
-        self,
-        sink: Sink,
-        client: VoiceClient,
-        *,
-        after: AfterCallback[Unpack[Ts]],
-        args: tuple[Unpack[Ts]],
-        start: bool = False,
-    ) -> None: ...
+            self,
+            sink: Sink,
+            client: VoiceClient,
+            *,
+            after: AfterCallback[Unpack[Ts]],
+            args: tuple[Unpack[Ts]],
+            start: bool = False,
+    ) -> None:
+        ...
 
     def __init__(
-        self,
-        sink: Sink,
-        client: VoiceClient,
-        *,
-        after: AfterCallback[Unpack[Ts]] | None = None,
-        args: tuple[Unpack[Ts]] | None = None,
-        start: bool = False,
+            self,
+            sink: Sink,
+            client: VoiceClient,
+            *,
+            after: AfterCallback[Unpack[Ts]] | None = None,
+            args: tuple[Unpack[Ts]] | None = None,
+            start: bool = False,
     ) -> None:
         if after is not None and not callable(
-            after
+                after
         ):  # pyright: ignore[reportUnnecessaryComparison]
             raise TypeError(  # pyright: ignore[reportUnreachable]
                 f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead"
@@ -286,7 +288,7 @@ class PacketDecryptor:
     ]
 
     def __init__(
-        self, mode: SupportedModes, secret_key: bytes, client: VoiceClient
+            self, mode: SupportedModes, secret_key: bytes, client: VoiceClient
     ) -> None:
         self.mode: SupportedModes = mode
         self.client: VoiceClient = client
@@ -316,31 +318,7 @@ class PacketDecryptor:
 
             if not uid:
                 # SSRC -> user_id mapping not yet populated (race with member_connect).
-                # Try every user ID known to the DAVE session until one decrypts.
-                # This is ugly but I didn't manage to get it to work otherwise. If you have a better implementation,
-                # please open a PR.
-                for candidate_uid in dave.get_user_ids():
-                    try:
-                        int_uid = int(candidate_uid)
-                        decrypted_audio = dave.decrypt(
-                            int_uid,
-                            davey.MediaType.audio,
-                            raw_payload,
-                        )
-                        # Successfully decrypted - cache the mapping for next time
-                        self.client._add_ssrc(int_uid, packet.ssrc)
-                        uid = int_uid
-                        raw_payload = decrypted_audio
-                        _log.debug(
-                            "DAVE: inferred ssrc %s -> user_id %s from decryption",
-                            packet.ssrc,
-                            uid,
-                        )
-                        break
-                    except ValueError:
-                        continue
-                else:
-                    raw_payload = b""
+                raw_payload = b""
             else:
                 try:
                     raw_payload = dave.decrypt(
