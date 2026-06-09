@@ -45,7 +45,13 @@ if TYPE_CHECKING:
     from .core import BridgeExtCommand, BridgeSlashCommand
 
 
-__all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext", "Context")
+__all__ = (
+    "BridgeContext",
+    "BridgeExtContext",
+    "BridgeApplicationContext",
+    "Context",
+    "DeferTyping",
+)
 
 
 class DeferTyping:
