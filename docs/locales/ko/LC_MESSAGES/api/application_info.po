@@ -110,8 +110,8 @@ msgstr "Optional[List[:class:`AppInstallParams`]]"
 msgid "The list of tags describing the content and functionality of the app, if set."
 msgstr "The list of tags describing the content and functionality of the app, if set."
 
-msgid "Maximum of 5 tags."
-msgstr "Maximum of 5 tags."
+msgid "Maximium of 5 tags."
+msgstr "Maximium of 5 tags."
 
 msgid "The default custom authorization URL for the application, if set."
 msgstr "The default custom authorization URL for the application, if set."

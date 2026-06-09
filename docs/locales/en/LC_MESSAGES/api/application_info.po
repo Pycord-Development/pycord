@@ -209,7 +209,7 @@ msgid ""
 msgstr ""
 
 #: 6247ad0381374a3d8b72aad9bc74ac79 discord.appinfo.AppInfo:160 of
-msgid "Maximum of 5 tags."
+msgid "Maximium of 5 tags."
 msgstr ""
 
 #: 2e43d10963c04c7882079894d1dd2197 discord.appinfo.AppInfo:168 of

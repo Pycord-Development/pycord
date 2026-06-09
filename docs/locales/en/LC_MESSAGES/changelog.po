@@ -3475,7 +3475,7 @@ msgstr ""
 
 #~ msgid ""
 #~ "Fixed the `guild` attribute of `Member`s"
-#~ " received from a `UserCommand` being "
+#~ " recieved from a `UserCommand` being "
 #~ "`None`. ([#2573](https://github.com/Pycord-"
 #~ "Development/pycord/pull/2573))"
 #~ msgstr ""
