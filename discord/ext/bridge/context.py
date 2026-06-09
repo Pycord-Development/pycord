@@ -78,7 +78,7 @@ class DeferTyping:
         exc_value: BaseException | None,
         traceback: TracebackType | None,
     ) -> None:
-        pass
+        return self.__exit__(exc_type, exc_value, traceback)
 
 
 class BridgeContext(ABC):
