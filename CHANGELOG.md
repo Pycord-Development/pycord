@@ -12,6 +12,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `ScheduledEventEntityType` enum and `ScheduledEventEntityMetadata` class, added
+  missing attributes and API-aligned parameters to `ScheduledEvent`,
+  `Guild.create_scheduled_event`, and `ScheduledEvent.edit`, and added `use_cache` to
+  `ScheduledEvent.subscribers()`.
+  ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
+
 ### Changed
 
 ### Fixed
@@ -22,8 +28,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
 - Allow `ForumTag` to be created without an emoji.
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
+- Fixed `ScheduledEvent` subscriber cache not being kept in sync correctly.
+  ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
 
 ### Deprecated
+
+- Deprecated `ScheduledEventLocationType`, `ScheduledEventLocation`, and several
+  `ScheduledEvent` attributes and related methods' parameters in favor of their API-aligned
+  names. ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
 
 ### Removed
 
@@ -114,8 +126,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Removed the guild creation and ownership-related methods and arguments due to updated
   restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
-    `Template.create_guild`, and `Client.create_guild`.
+    - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+      `Template.create_guild`, and `Client.create_guild`.
 
 ## [2.8.0rc2] - 2026-04-14
 
@@ -196,8 +208,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Removed the guild creation and ownership-related methods and arguments due to updated
   restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
-    `Template.create_guild`, and `Client.create_guild`.
+    - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+      `Template.create_guild`, and `Client.create_guild`.
 
 ## [2.7.2] - 2026-04-14
 
@@ -290,12 +302,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
 - Added support for select default values.
   ([#2899](https://github.com/Pycord-Development/pycord/pull/2899))
-  - Adds a new generic parameter to selects to type `ui.Select.values` return type.
-  - Adds `SelectDefaultValue` object to create select default values.
-  - Adds `SelectDefaultValueType` enum.
-  - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
-    different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
-    `ui.MentionableSelect`, and `ui.ChannelSelect`.
+    - Adds a new generic parameter to selects to type `ui.Select.values` return type.
+    - Adds `SelectDefaultValue` object to create select default values.
+    - Adds `SelectDefaultValueType` enum.
+    - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
+      different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
+      `ui.MentionableSelect`, and `ui.ChannelSelect`.
 - Added `store` parameter to `View` and `Modal` classes.
   ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
 - Added `Webhook.parent` and `Webhook.from_interaction`
@@ -348,14 +360,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Added the following soundboard-related features:
-  - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
-    `SoundboardSound.edit()`, and `SoundboardSound.delete()`.
-  - Access Discord default sounds with `Client.fetch_default_sounds()`.
-  - Play sounds in voice channels with `VoiceChannel.send_soundboard_sound()`.
-  - New `on_voice_channel_effect_send` event for sound and emoji effects.
-  - Soundboard limits based on guild premium tier (8-48 slots) in
-    `Guild.soundboard_limit`.
-    ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
+    - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
+      `SoundboardSound.edit()`, and `SoundboardSound.delete()`.
+    - Access Discord default sounds with `Client.fetch_default_sounds()`.
+    - Play sounds in voice channels with `VoiceChannel.send_soundboard_sound()`.
+    - New `on_voice_channel_effect_send` event for sound and emoji effects.
+    - Soundboard limits based on guild premium tier (8-48 slots) in
+      `Guild.soundboard_limit`.
+      ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Added `Message.forward_to`, `Message.snapshots`, and other related attributes.
@@ -398,20 +410,20 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Overhauled support for Components V2 and new Modal components
   ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
-  - Revert `discord.ui.View` and `discord.ui.Modal` to 2.6.1 behavior; not compatible
-    with new features.
-  - Implemented `discord.ui.DesignerView` and `discord.ui.DesignerModal` to support new
-    components.
-  - `DesignerView` and `Container` do not support `Button` and `Select` directly; use
-    `discord.ui.ActionRow` instead.
-  - `DesignerModal` does not support `InputText` and `Select` directly; use
-    `discord.ui.Label` instead.
-  - Removed `InputText.description`, `Select.label` and `Select.description`; these are
-    now attributes of `Label`.
-  - `discord.ui.Item` is now a base class for `ViewItem` and `ModalItem`; all items
-    inherit from these.
-  - All view and modal classes now inherit from a base `ItemInterface` class, split into
-    `BaseView` and `BaseModal`
+    - Revert `discord.ui.View` and `discord.ui.Modal` to 2.6.1 behavior; not compatible
+      with new features.
+    - Implemented `discord.ui.DesignerView` and `discord.ui.DesignerModal` to support new
+      components.
+    - `DesignerView` and `Container` do not support `Button` and `Select` directly; use
+      `discord.ui.ActionRow` instead.
+    - `DesignerModal` does not support `InputText` and `Select` directly; use
+      `discord.ui.Label` instead.
+    - Removed `InputText.description`, `Select.label` and `Select.description`; these are
+      now attributes of `Label`.
+    - `discord.ui.Item` is now a base class for `ViewItem` and `ModalItem`; all items
+      inherit from these.
+    - All view and modal classes now inherit from a base `ItemInterface` class, split into
+      `BaseView` and `BaseModal`
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
   `ScheduledEvent.edit` to `image`.
   ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
@@ -592,12 +604,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
 - Added support for select default values.
   ([#2899](https://github.com/Pycord-Development/pycord/pull/2899))
-  - Adds a new generic parameter to selects to type `ui.Select.values` return type.
-  - Adds `SelectDefaultValue` object to create select default values.
-  - Adds `SelectDefaultValueType` enum.
-  - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
-    different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
-    `ui.MentionableSelect`, and `ui.ChannelSelect`.
+    - Adds a new generic parameter to selects to type `ui.Select.values` return type.
+    - Adds `SelectDefaultValue` object to create select default values.
+    - Adds `SelectDefaultValueType` enum.
+    - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
+      different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
+      `ui.MentionableSelect`, and `ui.ChannelSelect`.
 - Added `store` parameter to `View` and `Modal` classes.
   ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
 - Added `Webhook.parent` and `Webhook.from_interaction`
@@ -619,20 +631,20 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Overhauled support for Components V2 and new Modal components
   ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
-  - Revert `discord.ui.View` and `discord.ui.Modal` to 2.6.1 behavior; not compatible
-    with new features.
-  - Implemented `discord.ui.DesignerView` and `discord.ui.DesignerModal` to support new
-    components.
-  - `DesignerView` and `Container` do not support `Button` and `Select` directly; use
-    `discord.ui.ActionRow` instead.
-  - `DesignerModal` does not support `InputText` and `Select` directly; use
-    `discord.ui.Label` instead.
-  - Removed `InputText.description`, `Select.label` and `Select.description`; these are
-    now attributes of `Label`.
-  - `discord.ui.Item` is now a base class for `ViewItem` and `ModalItem`; all items
-    inherit from these.
-  - All view and modal classes now inherit from a base `ItemInterface` class, split into
-    `BaseView` and `BaseModal`
+    - Revert `discord.ui.View` and `discord.ui.Modal` to 2.6.1 behavior; not compatible
+      with new features.
+    - Implemented `discord.ui.DesignerView` and `discord.ui.DesignerModal` to support new
+      components.
+    - `DesignerView` and `Container` do not support `Button` and `Select` directly; use
+      `discord.ui.ActionRow` instead.
+    - `DesignerModal` does not support `InputText` and `Select` directly; use
+      `discord.ui.Label` instead.
+    - Removed `InputText.description`, `Select.label` and `Select.description`; these are
+      now attributes of `Label`.
+    - `discord.ui.Item` is now a base class for `ViewItem` and `ModalItem`; all items
+      inherit from these.
+    - All view and modal classes now inherit from a base `ItemInterface` class, split into
+      `BaseView` and `BaseModal`
 
 ### Fixed
 
@@ -715,14 +727,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Added the following soundboard-related features:
-  - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
-    `SoundboardSound.edit()`, and `SoundboardSound.delete()`.
-  - Access Discord default sounds with `Client.fetch_default_sounds()`.
-  - Play sounds in voice channels with `VoiceChannel.send_soundboard_sound()`.
-  - New `on_voice_channel_effect_send` event for sound and emoji effects.
-  - Soundboard limits based on guild premium tier (8-48 slots) in
-    `Guild.soundboard_limit`.
-    ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
+    - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
+      `SoundboardSound.edit()`, and `SoundboardSound.delete()`.
+    - Access Discord default sounds with `Client.fetch_default_sounds()`.
+    - Play sounds in voice channels with `VoiceChannel.send_soundboard_sound()`.
+    - New `on_voice_channel_effect_send` event for sound and emoji effects.
+    - Soundboard limits based on guild premium tier (8-48 slots) in
+      `Guild.soundboard_limit`.
+      ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Added `Message.forward_to`, `Message.snapshots`, and other related attributes.
@@ -1785,46 +1797,81 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
 [unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...HEAD
+
 [2.8.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0
+
 [2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0rc2
+
 [2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0rc1
+
 [2.7.2]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...v2.7.2
+
 [2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
+
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
+
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
+
 [2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1
+
 [2.6.1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.6.1
+
 [2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...v2.6.0
+
 [2.5.0]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...v2.5.0
+
 [2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1
+
 [2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0
+
 [2.3.3]: https://github.com/Pycord-Development/pycord/compare/v2.3.2...v2.3.3
+
 [2.3.2]: https://github.com/Pycord-Development/pycord/compare/v2.3.1...v2.3.2
+
 [2.3.1]: https://github.com/Pycord-Development/pycord/compare/v2.3.0...v2.3.1
+
 [2.3.0]: https://github.com/Pycord-Development/pycord/compare/v2.2.2...v2.3.0
+
 [2.2.2]: https://github.com/Pycord-Development/pycord/compare/v2.2.1...v2.2.2
+
 [2.2.1]: https://github.com/Pycord-Development/pycord/compare/v2.2.0...v2.2.1
+
 [2.2.0]: https://github.com/Pycord-Development/pycord/compare/v2.1.3...v2.2.0
+
 [2.1.3]: https://github.com/Pycord-Development/pycord/compare/v2.1.2...v2.1.3
+
 [2.1.2]: https://github.com/Pycord-Development/pycord/compare/v2.1.1...v2.1.2
+
 [2.1.1]: https://github.com/Pycord-Development/pycord/compare/v2.1.0...v2.1.1
+
 [2.1.0]: https://github.com/Pycord-Development/pycord/compare/v2.0.1...v2.1.0
+
 [2.0.1]: https://github.com/Pycord-Development/pycord/compare/v2.0.0...v2.0.1
+
 [2.0.0]: https://github.com/Pycord-Development/pycord/compare/v2.0.0-rc.1...v2.0.0
+
 [2.0.0-rc.1]:
-  https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.7...v2.0.0-rc.1
+https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.7...v2.0.0-rc.1
+
 [2.0.0-beta.7]:
-  https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.6...v2.0.0-beta.7
+https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.6...v2.0.0-beta.7
+
 [2.0.0-beta.6]:
-  https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.5...v2.0.0-beta.6
+https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.5...v2.0.0-beta.6
+
 [2.0.0-beta.5]:
-  https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.4...v2.0.0-beta.5
+https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.4...v2.0.0-beta.5
+
 [2.0.0-beta.4]:
-  https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.3...v2.0.0-beta.4
+https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.3...v2.0.0-beta.4
+
 [2.0.0-beta.3]:
-  https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.2...v2.0.0-beta.3
+https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.2...v2.0.0-beta.3
+
 [2.0.0-beta.2]:
-  https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.1...v2.0.0-beta.2
+https://github.com/Pycord-Development/pycord/compare/v2.0.0-beta.1...v2.0.0-beta.2
+
 [2.0.0-beta.1]:
-  https://github.com/Pycord-Development/pycord/compare/v1.7.3...v2.0.0-beta.1
+https://github.com/Pycord-Development/pycord/compare/v1.7.3...v2.0.0-beta.1
+
 [version guarantees]: https://docs.pycord.dev/en/stable/version_guarantees.html
