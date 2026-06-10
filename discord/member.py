@@ -149,7 +149,7 @@ class VoiceState:
         self.self_deaf: bool = data.get("self_deaf", False)
         self.self_stream: bool = data.get("self_stream", False)
         self.self_video: bool = data.get("self_video", False)
-        self.afk: bool = data.get("suppress", False)
+        self.afk: bool = data.get("afk", False)
         self.mute: bool = data.get("mute", False)
         self.deaf: bool = data.get("deaf", False)
         self.suppress: bool = data.get("suppress", False)
@@ -1019,7 +1019,7 @@ class Member(discord.abc.Messageable, _UserTag):
             else:
                 if not suppress:
                     voice_state_payload["request_to_speak_timestamp"] = (
-                        datetime.datetime.utcnow().isoformat()
+                        datetime.datetime.now(datetime.timezone.utc).isoformat()
                     )
                 await http.edit_voice_state(guild_id, self.id, voice_state_payload)
 
@@ -1172,7 +1172,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         payload = {
             "channel_id": self.voice.channel.id,
-            "request_to_speak_timestamp": datetime.datetime.utcnow().isoformat(),
+            "request_to_speak_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         }
 
         if self._state.self_id != self.id:
