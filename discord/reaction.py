@@ -120,7 +120,7 @@ class Reaction:
         There is an alias for this named :attr:`burst_colors`.
         """
 
-        # We recieve a list of #FFFFFF, so omit the # and convert to base 16
+        # We receive a list of #FFFFFF, so omit the # and convert to base 16
         return [Colour(int(c[1:], 16)) for c in self._burst_colours]
 
     @property
