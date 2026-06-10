@@ -4324,7 +4324,7 @@ class Guild(Hashable):
         *,
         name: str,
         description: str = MISSING,
-        scheduled_start_time: datetime.datetime,
+        scheduled_start_time: datetime.datetime = MISSING,
         scheduled_end_time: datetime.datetime = MISSING,
         location: (
             str | int | VoiceChannel | StageChannel | ScheduledEventLocation
