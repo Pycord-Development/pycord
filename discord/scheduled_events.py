@@ -74,7 +74,7 @@ class ScheduledEventLocation:
     | :class:`str`           | :attr:`ScheduledEventLocationType.external`       |
     +------------------------+---------------------------------------------------+
 
-    .. deprecated:: 2.7
+    .. deprecated:: 2.9
         Use :class:`ScheduledEventEntityMetadata` instead.
 
     .. versionadded:: 2.0
@@ -101,7 +101,7 @@ class ScheduledEventLocation:
     ) -> None:
         if not _suppress_deprecation:
             warn_deprecated(
-                "ScheduledEventLocation", "ScheduledEventEntityMetadata", "2.7"
+                "ScheduledEventLocation", "ScheduledEventEntityMetadata", "2.9"
             )
         self._state: ConnectionState | None = state
         self.value: str | StageChannel | VoiceChannel | Object | None
@@ -140,7 +140,7 @@ class ScheduledEventEntityMetadata:
     This contains additional metadata for the scheduled event, particularly
     for external events which require a location string.
 
-    .. versionadded:: 2.7
+    .. versionadded:: 2.9
 
     Attributes
     ----------
@@ -315,7 +315,7 @@ class ScheduledEvent(Hashable):
 
     @property
     @typing_extensions.deprecated(
-        "location is deprecated since 2.7 and will be removed in 3.0, consider using entity_metadata instead",
+        "location is deprecated since 2.9 and will be removed in 3.0, consider using entity_metadata instead",
     )
     def location(self) -> ScheduledEventLocation | None:
         """Returns the location of the event."""
@@ -338,46 +338,46 @@ class ScheduledEvent(Hashable):
 
     @property
     @typing_extensions.deprecated(
-        "start_time is deprecated since 2.7 and will be removed in 3.0, consider using scheduled_start_time instead",
+        "start_time is deprecated since 2.9 and will be removed in 3.0, consider using scheduled_start_time instead",
     )
     def start_time(self) -> datetime.datetime:
         """
         Returns the scheduled start time of the event.
 
-        .. deprecated:: 2.7
+        .. deprecated:: 2.9
             Use :attr:`scheduled_start_time` instead.
         """
         return self.scheduled_start_time
 
     @property
     @typing_extensions.deprecated(
-        "end_time is deprecated since 2.7 and will be removed in 3.0, consider using scheduled_end_time instead",
+        "end_time is deprecated since 2.9 and will be removed in 3.0, consider using scheduled_end_time instead",
     )
     def end_time(self) -> datetime.datetime | None:
         """
         Returns the scheduled end time of the event.
 
-        .. deprecated:: 2.7
+        .. deprecated:: 2.9
             Use :attr:`scheduled_end_time` instead.
         """
         return self.scheduled_end_time
 
     @property
     @typing_extensions.deprecated(
-        "subscriber_count is deprecated since 2.7 and will be removed in 3.0, consider using user_count instead",
+        "subscriber_count is deprecated since 2.9 and will be removed in 3.0, consider using user_count instead",
     )
     def subscriber_count(self) -> int | None:
         """
         Returns the number of users subscribed to the event.
 
-        .. deprecated:: 2.7
+        .. deprecated:: 2.9
             Use :attr:`user_count` instead.
         """
         return self.user_count
 
     @property
     @typing_extensions.deprecated(
-        "interested is deprecated since 2.7 and will be removed in 3.0, consider using user_count instead",
+        "interested is deprecated since 2.9 and will be removed in 3.0, consider using user_count instead",
     )
     def interested(self) -> int | None:
         """An alias to :attr:`.user_count`"""
@@ -510,16 +510,21 @@ class ScheduledEvent(Hashable):
             payload["privacy_level"] = int(privacy_level)
 
         if location is not MISSING:
-            warn_deprecated("location", "entity_metadata", "2.7", "3.0")
+            warn_deprecated("location", "entity_metadata", "2.9", "3.0")
             if entity_metadata is MISSING:
                 if not isinstance(location, ScheduledEventLocation):
-                    location = ScheduledEventLocation(state=self._state, value=location)
+                    location = ScheduledEventLocation(
+                        state=self._state,
+                        value=location,
+                        _suppress_deprecation=True,
+                    )
                 if entity_type is MISSING:
                     entity_type = location.type
                 if location.type == ScheduledEventEntityType.external:
                     entity_metadata = ScheduledEventEntityMetadata(str(location))
                 else:
                     payload["channel_id"] = location.value.id
+                    payload["entity_metadata"] = None
 
         if cover is not MISSING:
             warn_deprecated("cover", "image", "2.7", "3.0")
@@ -527,12 +532,12 @@ class ScheduledEvent(Hashable):
                 image = cover
 
         if start_time is not MISSING:
-            warn_deprecated("start_time", "scheduled_start_time", "2.7", "3.0")
+            warn_deprecated("start_time", "scheduled_start_time", "2.9", "3.0")
             if scheduled_start_time is MISSING:
                 scheduled_start_time = start_time
 
         if end_time is not MISSING:
-            warn_deprecated("end_time", "scheduled_end_time", "2.7", "3.0")
+            warn_deprecated("end_time", "scheduled_end_time", "2.9", "3.0")
             if scheduled_end_time is MISSING:
                 scheduled_end_time = end_time
 
@@ -725,6 +730,8 @@ class ScheduledEvent(Hashable):
             If ``True``, only use cached subscribers and skip API calls.
             This is useful when calling from an event handler where the
             event may have been deleted. Defaults to ``False``.
+            Only members currently cached in the guild are yielded, and
+            ``as_member=False`` is ignored with a warning.
 
         Yields
         ------

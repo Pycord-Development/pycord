@@ -4298,6 +4298,7 @@ class Guild(Hashable):
         location: (
             str | int | VoiceChannel | StageChannel | ScheduledEventLocation
         ) = MISSING,
+        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
         image: bytes = MISSING,
     ) -> ScheduledEvent | None: ...
@@ -4312,11 +4313,12 @@ class Guild(Hashable):
         scheduled_end_time: datetime.datetime = MISSING,
         entity_type: ScheduledEventEntityType = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
-        channel_id: int = MISSING,
-        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        channel_id: int | VoiceChannel | StageChannel = MISSING,
+        privacy_level: ScheduledEventPrivacyLevel = MISSING,
         reason: str | None = None,
         image: bytes = MISSING,
     ) -> ScheduledEvent | None: ...
+
     async def create_scheduled_event(
         self,
         *,
@@ -4329,8 +4331,8 @@ class Guild(Hashable):
         ) = MISSING,
         entity_type: ScheduledEventEntityType = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
-        channel_id: int = MISSING,
-        privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
+        channel_id: int | VoiceChannel | StageChannel = MISSING,
+        privacy_level: ScheduledEventPrivacyLevel = MISSING,
         reason: str | None = None,
         image: bytes = MISSING,
         start_time: datetime.datetime = MISSING,
@@ -4389,20 +4391,24 @@ class Guild(Hashable):
                 "Either start_time or scheduled_start_time must be provided."
             )
         if start_time is not MISSING:
-            warn_deprecated("start_time", "scheduled_start_time", "2.7", "3.0")
+            warn_deprecated("start_time", "scheduled_start_time", "2.9", "3.0")
             if scheduled_start_time is MISSING:
                 scheduled_start_time = start_time
 
         if end_time is not MISSING:
-            warn_deprecated("end_time", "scheduled_end_time", "2.7", "3.0")
+            warn_deprecated("end_time", "scheduled_end_time", "2.9", "3.0")
             if scheduled_end_time is MISSING:
                 scheduled_end_time = end_time
 
         if location is not MISSING:
-            warn_deprecated("location", "entity_metadata", "2.7", "3.0")
+            warn_deprecated("location", "entity_metadata", "2.9", "3.0")
             if entity_metadata is MISSING:
                 if not isinstance(location, ScheduledEventLocation):
-                    location = ScheduledEventLocation(state=self._state, value=location)
+                    location = ScheduledEventLocation(
+                        state=self._state,
+                        value=location,
+                        _suppress_deprecation=True,
+                    )
                 if entity_type is MISSING:
                     entity_type = location.type
                 if location.type == ScheduledEventEntityType.external:
@@ -4416,11 +4422,20 @@ class Guild(Hashable):
                 "or provide a location with a resolvable type."
             )
 
-        payload: dict[str, str | int] = {
+        if privacy_level is not MISSING:
+            warn_deprecated("privacy_level", since="2.9")
+            resolved_privacy_level = privacy_level
+        else:
+            resolved_privacy_level = ScheduledEventPrivacyLevel.guild_only
+
+        if channel_id is not MISSING and not isinstance(channel_id, int):
+            channel_id = channel_id.id
+
+        payload: dict[str, str | int | None] = {
             "name": name,
             "scheduled_start_time": scheduled_start_time.isoformat(),
             "entity_type": int(entity_type),
-            "privacy_level": int(privacy_level),
+            "privacy_level": int(resolved_privacy_level),
         }
 
         if scheduled_end_time is not MISSING:

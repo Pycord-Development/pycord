@@ -30,6 +30,8 @@ from collections import namedtuple
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
+from typing_extensions import deprecated
+
 __all__ = (
     "Enum",
     "ChannelType",
@@ -978,9 +980,30 @@ class ScheduledEventEntityType(Enum):
         return self.value
 
 
-# TODO(Paillat-dev): Add @deprecated notice using warnings.deprecated in relevant PR
-class ScheduledEventLocationType(ScheduledEventEntityType):
-    """Scheduled event location type (deprecated alias for :class:`ScheduledEventEntityType`)"""
+class _DeprecatedScheduledEventLocationTypeMeta(EnumMeta):
+    @deprecated(
+        "ScheduledEventLocationType is deprecated since 2.9 and will be removed in 3.0, "
+        "use ScheduledEventEntityType instead",
+    )
+    def __call__(cls, value):
+        return ScheduledEventEntityType(value)
+
+
+class ScheduledEventLocationType(
+    ScheduledEventEntityType, metaclass=_DeprecatedScheduledEventLocationTypeMeta
+):
+    """Scheduled event location type (deprecated alias for :class:`ScheduledEventEntityType`)
+
+    .. deprecated:: 2.9
+        Use :class:`ScheduledEventEntityType` instead.
+    """
+
+    stage_instance = 1
+    voice = 2
+    external = 3
+
+    def __int__(self):
+        return self.value
 
 
 class AutoModTriggerType(Enum):

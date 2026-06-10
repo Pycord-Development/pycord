@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-import itertools
+import warnings
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -916,6 +916,13 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         self.after = after
         self.use_cache = use_cache
 
+        if use_cache and not with_member:
+            warnings.warn(
+                "use_cache=True only yields cached members; as_member=False is ignored.",
+                UserWarning,
+                stacklevel=2,
+            )
+
         self.subscribers = asyncio.Queue()
         self.get_subscribers = self.event._state.http.get_scheduled_event_users
 
@@ -957,11 +964,16 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
     async def _fill_from_cache(self):
         """Fill subscribers queue from cached user IDs."""
         cached_user_ids = list(self.event._cached_subscribers)
+        remaining = self.limit
 
-        for user_id in itertools.islice(iter(cached_user_ids), self.retrieve):
+        for user_id in cached_user_ids:
+            if remaining is not None and remaining <= 0:
+                break
             member = self.event.guild.get_member(user_id)
             if member:
                 await self.subscribers.put(member)
+                if remaining is not None:
+                    remaining -= 1
 
         self.limit = 0
 
