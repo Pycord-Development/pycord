@@ -1172,7 +1172,9 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         payload = {
             "channel_id": self.voice.channel.id,
-            "request_to_speak_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "request_to_speak_timestamp": datetime.datetime.now(
+                datetime.timezone.utc
+            ).isoformat(),
         }
 
         if self._state.self_id != self.id:
