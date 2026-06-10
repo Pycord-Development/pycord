@@ -1678,10 +1678,12 @@ class ConnectionState:
             if not data.get("creator", None)
             else guild.get_member(data.get("creator_id"))
         )
+        old_event = guild.get_scheduled_event(int(data["id"]))
         scheduled_event = ScheduledEvent(
             state=self, guild=guild, creator=creator, data=data
         )
-        old_event = guild.get_scheduled_event(int(data["id"]))
+        if old_event is not None:
+            scheduled_event._cached_subscribers = old_event._cached_subscribers.copy()
         guild._add_scheduled_event(scheduled_event)
         self.dispatch("scheduled_event_update", old_event, scheduled_event)
 
@@ -1702,10 +1704,15 @@ class ConnectionState:
             if not data.get("creator", None)
             else guild.get_member(data.get("creator_id"))
         )
+        cached_event = guild.get_scheduled_event(int(data["id"]))
         scheduled_event = ScheduledEvent(
             state=self, guild=guild, creator=creator, data=data
         )
         scheduled_event.status = ScheduledEventStatus.canceled
+        if cached_event is not None:
+            scheduled_event._cached_subscribers = (
+                cached_event._cached_subscribers.copy()
+            )
         guild._remove_scheduled_event(scheduled_event)
         self.dispatch("scheduled_event_delete", scheduled_event)
 
@@ -1725,12 +1732,14 @@ class ConnectionState:
         payload.guild = guild
         self.dispatch("raw_scheduled_event_user_add", payload)
 
-        member = guild.get_member(data["user_id"])
-        if member is not None:
-            event = guild.get_scheduled_event(data["guild_scheduled_event_id"])
-            if event:
-                event.subscriber_count += 1
-                guild._add_scheduled_event(event)
+        user_id = int(data["user_id"])
+        event = guild.get_scheduled_event(int(data["guild_scheduled_event_id"]))
+        if event:
+            event._cached_subscribers.add(user_id)
+            if event.user_count is not None:
+                event.user_count += 1
+            member = guild.get_member(user_id)
+            if member is not None:
                 self.dispatch("scheduled_event_user_add", event, member)
 
     def parse_guild_scheduled_event_user_remove(self, data) -> None:
@@ -1749,12 +1758,14 @@ class ConnectionState:
         payload.guild = guild
         self.dispatch("raw_scheduled_event_user_remove", payload)
 
-        member = guild.get_member(data["user_id"])
-        if member is not None:
-            event = guild.get_scheduled_event(data["guild_scheduled_event_id"])
-            if event:
-                event.subscriber_count += 1
-                guild._add_scheduled_event(event)
+        user_id = int(data["user_id"])
+        event = guild.get_scheduled_event(int(data["guild_scheduled_event_id"]))
+        if event:
+            event._cached_subscribers.discard(user_id)
+            if event.user_count is not None:
+                event.user_count -= 1
+            member = guild.get_member(user_id)
+            if member is not None:
                 self.dispatch("scheduled_event_user_remove", event, member)
 
     def parse_guild_integrations_update(self, data) -> None:

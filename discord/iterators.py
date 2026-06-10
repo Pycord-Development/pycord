@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime
+import warnings
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -901,6 +902,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         with_member: bool = False,
         before: datetime.datetime | int | None = None,
         after: datetime.datetime | int | None = None,
+        use_cache: bool = False,
     ):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
@@ -912,6 +914,14 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         self.with_member = with_member
         self.before = before
         self.after = after
+        self.use_cache = use_cache
+
+        if use_cache and not with_member:
+            warnings.warn(
+                "use_cache=True only yields cached members; as_member=False is ignored.",
+                UserWarning,
+                stacklevel=2,
+            )
 
         self.subscribers = asyncio.Queue()
         self.get_subscribers = self.event._state.http.get_scheduled_event_users
@@ -951,12 +961,33 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
 
         return User(state=self.event._state, data=user)
 
+    async def _fill_from_cache(self):
+        """Fill subscribers queue from cached user IDs."""
+        cached_user_ids = list(self.event._cached_subscribers)
+        remaining = self.limit
+
+        for user_id in cached_user_ids:
+            if remaining is not None and remaining <= 0:
+                break
+            member = self.event.guild.get_member(user_id)
+            if member:
+                await self.subscribers.put(member)
+                if remaining is not None:
+                    remaining -= 1
+
+        self.limit = 0
+
     async def fill_subs(self):
         if not self._get_retrieve():
             return
 
+        if self.use_cache:
+            await self._fill_from_cache()
+            return
+
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
+
         data = await self.get_subscribers(
             guild_id=self.event.guild.id,
             event_id=self.event.id,
@@ -969,9 +1000,8 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         data_length = len(data)
         if data_length < self.retrieve:
             self.limit = 0
-        elif data_length > 0:
-            if self.limit:
-                self.limit -= self.retrieve
+        elif data_length > 0 and self.limit is not None:
+            self.limit -= self.retrieve
             self.after = Object(id=int(data[-1]["user_id"]))
 
         for element in reversed(data):
