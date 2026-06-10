@@ -821,8 +821,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         return (
             self.communication_disabled_until is not None
-            and self.communication_disabled_until
-            > utcnow()
+            and self.communication_disabled_until > utcnow()
         )
 
     async def ban(
@@ -1122,9 +1121,7 @@ class Member(discord.abc.Messageable, _UserTag):
         HTTPException
             An error occurred doing the request.
         """
-        await self.timeout(
-            utcnow() + duration, reason=reason
-        )
+        await self.timeout(utcnow() + duration, reason=reason)
 
     async def remove_timeout(self, *, reason: str | None = None) -> None:
         """|coro|
