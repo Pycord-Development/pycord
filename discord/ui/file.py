@@ -93,7 +93,7 @@ class File(ViewItem[V]):
 
     @property
     def file(self) -> UnfurledMediaItem:
-        """The file's unerlying media item."""
+        """The file's underlying media item."""
         return self.underlying.file
 
     @file.setter
