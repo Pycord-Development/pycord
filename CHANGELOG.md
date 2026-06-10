@@ -22,7 +22,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
 - Allow `ForumTag` to be created without an emoji.
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
-- Fixed `PartialMessage.edit to work with `discord.ui.DesignerView`.
+- Fixed `PartialMessage.edit` to work with `DesignerView`.
   ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
 
 ### Deprecated
