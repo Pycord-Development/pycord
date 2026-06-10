@@ -22,6 +22,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
 - Allow `ForumTag` to be created without an emoji.
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
+- Fix issue where `0` would be ignored as an `Embed`'s `colour` parameter.
+  ([#3256](https://github.com/Pycord-Development/pycord/pull/3256))
 
 ### Deprecated
 
