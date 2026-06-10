@@ -16,6 +16,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix use of deprecated `datetime.utcnow()` in `Member.edit` and `Member.request_to_speak`
 - Fix typehint for `SlashCommandGroup.__new__`.
   ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
 - Include `bypass_slowmode` in `Permissions.all`.
