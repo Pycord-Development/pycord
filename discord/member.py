@@ -149,7 +149,7 @@ class VoiceState:
         self.self_deaf: bool = data.get("self_deaf", False)
         self.self_stream: bool = data.get("self_stream", False)
         self.self_video: bool = data.get("self_video", False)
-        self.afk: bool = data.get("afk", False)
+        self.afk: bool = data.get("suppress", False)
         self.mute: bool = data.get("mute", False)
         self.deaf: bool = data.get("deaf", False)
         self.suppress: bool = data.get("suppress", False)
