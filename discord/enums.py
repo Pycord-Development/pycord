@@ -100,23 +100,23 @@ def _create_value_cls(name, comparable):
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
         cls.__le__ = lambda self, other: (
-                isinstance(other, self.__class__) and self.value <= other.value
+            isinstance(other, self.__class__) and self.value <= other.value
         )
         cls.__ge__ = lambda self, other: (
-                isinstance(other, self.__class__) and self.value >= other.value
+            isinstance(other, self.__class__) and self.value >= other.value
         )
         cls.__lt__ = lambda self, other: (
-                isinstance(other, self.__class__) and self.value < other.value
+            isinstance(other, self.__class__) and self.value < other.value
         )
         cls.__gt__ = lambda self, other: (
-                isinstance(other, self.__class__) and self.value > other.value
+            isinstance(other, self.__class__) and self.value > other.value
         )
     return cls
 
 
 def _is_descriptor(obj):
     return (
-            hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
     )
 
 
@@ -887,7 +887,7 @@ class SlashCommandOptionType(Enum):
         from .ext.bridge import BridgeContext
 
         if not issubclass(
-                datatype, (ApplicationContext, BridgeContext)
+            datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
