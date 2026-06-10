@@ -100,23 +100,23 @@ def _create_value_cls(name, comparable):
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
         cls.__le__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value <= other.value
+                isinstance(other, self.__class__) and self.value <= other.value
         )
         cls.__ge__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value >= other.value
+                isinstance(other, self.__class__) and self.value >= other.value
         )
         cls.__lt__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value < other.value
+                isinstance(other, self.__class__) and self.value < other.value
         )
         cls.__gt__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value > other.value
+                isinstance(other, self.__class__) and self.value > other.value
         )
     return cls
 
 
 def _is_descriptor(obj):
     return (
-        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
+            hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
     )
 
 
@@ -887,7 +887,7 @@ class SlashCommandOptionType(Enum):
         from .ext.bridge import BridgeContext
 
         if not issubclass(
-            datatype, (ApplicationContext, BridgeContext)
+                datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
@@ -980,30 +980,8 @@ class ScheduledEventEntityType(Enum):
         return self.value
 
 
-class _DeprecatedScheduledEventLocationTypeMeta(EnumMeta):
-    @deprecated(
-        "ScheduledEventLocationType is deprecated since 2.9 and will be removed in 3.0, "
-        "use ScheduledEventEntityType instead",
-    )
-    def __call__(cls, value):
-        return ScheduledEventEntityType(value)
-
-
-class ScheduledEventLocationType(
-    ScheduledEventEntityType, metaclass=_DeprecatedScheduledEventLocationTypeMeta
-):
-    """Scheduled event location type (deprecated alias for :class:`ScheduledEventEntityType`)
-
-    .. deprecated:: 2.9
-        Use :class:`ScheduledEventEntityType` instead.
-    """
-
-    stage_instance = 1
-    voice = 2
-    external = 3
-
-    def __int__(self):
-        return self.value
+# TODO(Paillat-dev): Add @deprecated notice using warnings.deprecated or in some other way
+ScheduledEventLocationType = ScheduledEventEntityType
 
 
 class AutoModTriggerType(Enum):
