@@ -23,6 +23,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed an `AttributeError` when using `RoleColours.is_holographic` and `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+- Fix error message for `Guild.create_sticker`.
+  ([#3263](https://github.com/Pycord-Development/pycord/pull/3263))
 - Fix typehint for `SlashCommandGroup.__new__`.
   ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
 - Include `bypass_slowmode` in `Permissions.all`.
