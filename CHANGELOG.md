@@ -16,6 +16,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix error message for `Guild.create_sticker`.
+  ([#3263](https://github.com/Pycord-Development/pycord/pull/3263))
 - Fix typehint for `SlashCommandGroup.__new__`.
   ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
 - Include `bypass_slowmode` in `Permissions.all`.
