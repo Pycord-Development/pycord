@@ -2529,6 +2529,33 @@ of :class:`enum.Enum`.
         Represents the default layout.
 
 
+.. class:: SharedClientThemeBaseType
+
+    The base theme mode of a :class:`SharedClientTheme`.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: unset
+
+        No explicit base theme. Treated as :attr:`dark` by Discord.
+
+    .. attribute:: dark
+
+        The dark base theme.
+
+    .. attribute:: light
+
+        The light base theme.
+
+    .. attribute:: darker
+
+        The darker base theme.
+
+    .. attribute:: midnight
+
+        The midnight base theme.
+
+
 .. class:: IntegrationType
 
     The integration type for an application.
