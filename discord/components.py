@@ -850,11 +850,9 @@ class Section(Component):
         return payload
 
     def walk_components(self) -> Iterator[Component]:
-        r = self.components
+        yield from self.components
         if self.accessory:
-            yield from r + [self.accessory]
-        else:
-            yield from r
+            yield self.accessory
 
     def get_component(self, id: str | int) -> Component | None:
         """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.
