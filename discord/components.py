@@ -853,7 +853,8 @@ class Section(Component):
         r = self.components
         if self.accessory:
             yield from r + [self.accessory]
-        yield from r
+        else:
+            yield from r
 
     def get_component(self, id: str | int) -> Component | None:
         """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.
