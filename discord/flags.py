@@ -1495,8 +1495,8 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def gateway_message_content_limited(self):
-        """:class:`bool`: Returns ``True`` if the application is currently pending verification
-        and has hit the guild limit.
+        """:class:`bool`: Returns ``True`` if the application is allowed to receive limited
+        message content information over the gateway.
         """
         return 1 << 19
 
