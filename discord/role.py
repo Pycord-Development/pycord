@@ -374,7 +374,9 @@ class RoleColours:
         """
         return (
             self.primary.value == 11127295
+            and self.secondary is not None
             and self.secondary.value == 16759788
+            and self.tertiary is not None
             and self.tertiary.value == 16761760
         )
 
