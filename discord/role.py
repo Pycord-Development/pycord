@@ -390,9 +390,7 @@ class RoleColours:
         """
         return (
             self.primary == self.HOLOGRAPHIC_PRIMARY
-            and self.secondary is not None
             and self.secondary == self.HOLOGRAPHIC_SECONDARY
-            and self.tertiary is not None
             and self.tertiary == self.HOLOGRAPHIC_TERTIARY
         )
 
