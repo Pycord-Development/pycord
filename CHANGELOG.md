@@ -24,6 +24,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
 - Fixed `PartialMessage.edit` to work with `DesignerView`.
   ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
+- Fix a bug where `TextChannel.archived_threads` would ignore any limit parameter
+  smaller than 50 and use 50 instead.
+  ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
 
 ### Deprecated
 
