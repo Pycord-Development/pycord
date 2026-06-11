@@ -16,7 +16,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed `RoleColours.is_holographic` raising `AttributeError` when `secondary` or
+- Fixed an `AttributeError` when using `RoleColours.is_holographic` and `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
 - Fix typehint for `SlashCommandGroup.__new__`.
