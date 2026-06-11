@@ -12,12 +12,19 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
+  `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
+  ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+
 ### Changed
 
 ### Fixed
 
 - Fixed an `AttributeError` when using `RoleColours.is_holographic` and `secondary` or
   `tertiary` is `None`.
+  ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+- Fixed `Role.edit` not checking if `holographic` is `MISSING`
+  before applying holographic colours.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
 - Fix typehint for `SlashCommandGroup.__new__`.
   ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
