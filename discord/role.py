@@ -309,6 +309,12 @@ class RoleColours:
         The secondary colour of the role.
     tertiary: Optional[:class:`Colour`]
         The tertiary colour of the role. At the moment, only :attr:`HOLOGRAPHIC_TERTIARY` is allowed.
+    HOLOGRAPHIC_PRIMARY: :class:`Colour`
+            The primary colour used for holographic roles.
+    HOLOGRAPHIC_SECONDARY: :class:`Colour`
+        The secondary colour used for holographic roles.
+    HOLOGRAPHIC_TERTIARY: :class:`Colour`
+        The tertiary colour used for holographic roles.
     """
 
     HOLOGRAPHIC_PRIMARY = Colour(11127295)
@@ -868,7 +874,7 @@ class Role(Hashable):
             if isinstance(colour, int):
                 colour = Colour(colour)
             colours = RoleColours(primary=colour)
-        if holographic is not MISSING and holographic:
+        if holographic:
             colours = RoleColours.holographic()
         if colours is not MISSING:
             if not isinstance(colours, RoleColours):
