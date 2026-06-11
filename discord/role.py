@@ -370,7 +370,9 @@ class RoleColours:
         :attr:`HOLOGRAPHIC_PRIMARY`, :attr:`HOLOGRAPHIC_SECONDARY`, and :attr:`HOLOGRAPHIC_TERTIARY`.
         """
         return cls(
-            cls.HOLOGRAPHIC_PRIMARY, cls.HOLOGRAPHIC_SECONDARY, cls.HOLOGRAPHIC_TERTIARY
+            cls.HOLOGRAPHIC_PRIMARY,
+            cls.HOLOGRAPHIC_SECONDARY,
+            cls.HOLOGRAPHIC_TERTIARY,
         )
 
     @property
@@ -866,7 +868,7 @@ class Role(Hashable):
             if isinstance(colour, int):
                 colour = Colour(colour)
             colours = RoleColours(primary=colour)
-        if holographic:
+        if holographic is not MISSING and holographic:
             colours = RoleColours.holographic()
         if colours is not MISSING:
             if not isinstance(colours, RoleColours):
