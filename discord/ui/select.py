@@ -27,9 +27,9 @@ from __future__ import annotations
 
 import inspect
 import os
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from functools import partial
-from typing import TYPE_CHECKING, Any, Callable, Generic, Literal, overload
+from typing import TYPE_CHECKING, Any, Generic, Literal, overload
 
 from typing_extensions import Self, TypeVar
 

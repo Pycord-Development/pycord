@@ -28,15 +28,13 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    List,
     NamedTuple,
     Optional,
-    Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
@@ -134,7 +132,7 @@ if TYPE_CHECKING:
     GuildChannel = Union[
         VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
     ]
-    ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+    ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
 
 T = TypeVar("T")
 

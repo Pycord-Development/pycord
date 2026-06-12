@@ -28,14 +28,12 @@ from __future__ import annotations
 import datetime
 import io
 import re
+from collections.abc import AsyncGenerator, Callable, Sequence
 from os import PathLike
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncGenerator,
-    Callable,
     ClassVar,
-    Sequence,
     TypeVar,
     Union,
     overload,

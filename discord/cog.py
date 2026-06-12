@@ -31,17 +31,15 @@ import os
 import pathlib
 import sys
 import types
-from collections.abc import Generator, Mapping
+from collections.abc import Callable, Generator, Mapping
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     ClassVar,
+    TypeGuard,
     TypeVar,
     overload,
 )
-
-from typing_extensions import TypeGuard
 
 import discord.utils
 
