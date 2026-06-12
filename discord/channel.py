@@ -1509,7 +1509,7 @@ class MediaChannel(ForumChannel):
 
     @overload
     async def edit(self) -> MediaChannel | None: ...
-    
+
     async def edit(self, *, reason=None, **options):
         """|coro|
 
@@ -2784,6 +2784,9 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
+        bitrate: int = ...,
+        user_limit: int = ...,
+        slowmode_delay: int = ...,
         reason: str | None = ...,
     ) -> StageChannel | None: ...
 
@@ -2827,6 +2830,16 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The camera video quality for the stage channel's participants.
 
             .. versionadded:: 2.0
+
+        bitrate: :class:`int`
+            The channel's preferred audio bitrate in bits per second.
+
+        user_limit: :class:`int`
+            The channel's limit for number of members that can be in a stage channel.
+
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
 
         Returns
         -------
