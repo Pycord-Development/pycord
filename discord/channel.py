@@ -1507,7 +1507,7 @@ class MediaChannel(ForumChannel):
         require_tag: bool = ...,
         hide_media_download_options: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> ForumChannel | None: ...
+    ) -> MediaChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
