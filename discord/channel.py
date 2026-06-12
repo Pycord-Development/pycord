@@ -2695,7 +2695,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         topic: str,
         privacy_level: StagePrivacyLevel = MISSING,
         reason: str | None = None,
-        send_notification: bool | None = False,
+        send_notification: bool = False,
     ) -> StageInstance:
         """|coro|
 
