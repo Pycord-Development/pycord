@@ -1507,6 +1507,9 @@ class MediaChannel(ForumChannel):
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
     ) -> MediaChannel | None: ...
 
+    @overload
+    async def edit(self) -> MediaChannel | None: ...
+    
     async def edit(self, *, reason=None, **options):
         """|coro|
 
@@ -3525,7 +3528,7 @@ class VoiceChannelEffectSendEvent:
 
     Attributes
     ----------
-    animation_type: :class:`int`
+    animation_type: :class:`VoiceChannelEffectAnimationType`
         The type of animation that is being sent.
     animation_id: :class:`int`
         The ID of the animation that is being sent.
