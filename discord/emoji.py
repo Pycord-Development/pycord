@@ -364,7 +364,7 @@ class AppEmoji(BaseEmoji):
         return f"<AppEmoji id={self.id} name={self.name!r} animated={self.animated}>"
 
     @property
-    def guild(self) -> Guild:
+    def guild(self) -> None:
         """The guild this emoji belongs to. This is always `None` for :class:`AppEmoji`."""
         return None
 
