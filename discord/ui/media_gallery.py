@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import MediaGalleryItem
 from ..enums import ComponentType
+from .constant import ComponentLimits
 from .item import ViewItem
 
 __all__ = ("MediaGallery",)
@@ -89,11 +90,13 @@ class MediaGallery(ViewItem[V]):
 
     @items.setter
     def items(self, value: list[MediaGalleryItem]) -> None:
-        if len(value) > 10:
-            raise ValueError("may not set more than 10 items in a gallery.")
+        if len(value) > ComponentLimits.MEDIA_GALLERY_ITEMS_MAX:
+            raise ValueError(
+                f"may not set more than {ComponentLimits.MEDIA_GALLERY_ITEMS_MAX} items in a gallery."
+            )
 
         if not all(isinstance(i, MediaGalleryItem) for i in value):
-            raise TypeError(f"items must be a list of MediaGalleryItem.")
+            raise TypeError("items must be a list of MediaGalleryItem.")
 
         self.underlying.items = value
 
@@ -113,8 +116,10 @@ class MediaGallery(ViewItem[V]):
             Maximum number of items has been exceeded (10).
         """
 
-        if len(self.items) >= 10:
-            raise ValueError("maximum number of items exceeded")
+        if len(self.items) >= ComponentLimits.MEDIA_GALLERY_ITEMS_MAX:
+            raise ValueError(
+                f"maximum number of items exceeded ({ComponentLimits.MEDIA_GALLERY_ITEMS_MAX})"
+            )
 
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
@@ -146,8 +151,10 @@ class MediaGallery(ViewItem[V]):
             Maximum number of items has been exceeded (10).
         """
 
-        if len(self.items) >= 10:
-            raise ValueError("maximum number of items exceeded")
+        if len(self.items) >= ComponentLimits.MEDIA_GALLERY_ITEMS_MAX:
+            raise ValueError(
+                f"maximum number of items exceeded ({ComponentLimits.MEDIA_GALLERY_ITEMS_MAX})"
+            )
 
         item = MediaGalleryItem(url, description=description, spoiler=spoiler)
 

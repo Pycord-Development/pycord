@@ -33,6 +33,7 @@ from .colour import Colour
 
 __all__ = (
     "Embed",
+    "EmbedLimits",
     "EmbedField",
     "EmbedAuthor",
     "EmbedFooter",
@@ -42,6 +43,29 @@ __all__ = (
 
 
 E = TypeVar("E", bound="Embed")
+
+
+class EmbedLimits:
+    # Embed field constraints
+    FIELDS_MAX = 25
+
+    # Field title/name constraints
+    FIELD_NAME_MAX = 256
+
+    # Field value constraints
+    FIELD_VALUE_MAX = 1024
+
+    # Embed description constraints
+    DESCRIPTION_MAX = 4096
+
+    # Embed footer constraints
+    FOOTER_TEXT_MAX = 2048
+
+    # Embed author constraints
+    AUTHOR_NAME_MAX = 256
+    TITLE_MAX = 256
+    TOTAL_MAX = 6000
+
 
 if TYPE_CHECKING:
     from discord.types.embed import Embed as EmbedData
