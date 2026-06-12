@@ -51,14 +51,12 @@ from .enums import (
     InviteTarget,
     SortOrder,
     StagePrivacyLevel,
-)
-from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
-from .enums import (
     VideoQualityMode,
     VoiceChannelEffectAnimationType,
     VoiceRegion,
     try_enum,
 )
+from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import ChannelFlags, MessageFlags
@@ -2826,16 +2824,6 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The camera video quality for the stage channel's participants.
 
             .. versionadded:: 2.0
-
-        bitrate: :class:`int`
-            The channel's preferred audio bitrate in bits per second.
-
-        user_limit: :class:`int`
-            The channel's limit for number of members that can be in a voice channel.
-
-        slowmode_delay: :class:`int`
-            Specifies the slowmode rate limit for user in this channel, in seconds.
-            A value of `0` disables slowmode. The maximum value possible is `21600`.
 
         Returns
         -------
