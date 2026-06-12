@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
 - Allow `ForumTag` to be created without an emoji.
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
+- Fix `PollAnswer.to_dict` incorrectly setting `answer_id` as a tuple instead of an int.
+  ([#3260](https://github.com/Pycord-Development/pycord/pull/3260))
 - Fix a bug where `TextChannel.archived_threads` would ignore any limit parameter
   smaller than 50 and use 50 instead.
   ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
