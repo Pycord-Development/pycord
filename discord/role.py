@@ -917,3 +917,6 @@ class Role(Hashable):
         """
 
         await self._state.http.delete_role(self.guild.id, self.id, reason=reason)
+
+    def search_mentions(self, **params):
+        return self.guild.search(mentions_roles=[self], **params)
