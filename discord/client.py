@@ -233,6 +233,10 @@ class Client:
         Whether to automatically fetch and cache the default soundboard sounds on startup. Defaults to ``True``.
 
         .. versionadded:: 2.8
+    cache_channel_info: :class:`bool`
+        Whether to automatically request and cache voice channel statuses on startup. Defaults to ``False``.
+
+        .. versionadded:: 2.9
 
     Attributes
     -----------
@@ -719,6 +723,10 @@ class Client:
             except ReconnectWebSocket as e:
                 _log.info("Got a request to %s the websocket.", e.op)
                 self.dispatch("disconnect")
+                if not e.resume:
+                    # Since we aren't resuming, channel info can fall out of date
+                    # So we re-request it
+                    self._connection._request_channel_info = True
                 ws_params.update(
                     sequence=self.ws.sequence,
                     resume=e.resume,
