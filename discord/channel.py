@@ -674,7 +674,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`bool`]
+        limit: Optional[:class:`int`]
             The number of threads to retrieve.
             If ``None``, retrieves every archived thread in the channel. Note, however,
             that this would make it a slow operation.
@@ -1507,7 +1507,10 @@ class MediaChannel(ForumChannel):
         require_tag: bool = ...,
         hide_media_download_options: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> ForumChannel | None: ...
+    ) -> MediaChannel | None: ...
+
+    @overload
+    async def edit(self) -> MediaChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -2091,7 +2094,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         bitrate: int = ...,
         user_limit: int = ...,
         position: int = ...,
-        sync_permissions: int = ...,
+        sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         rtc_region: VoiceRegion | None = ...,
@@ -2694,7 +2697,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         topic: str,
         privacy_level: StagePrivacyLevel = MISSING,
         reason: str | None = None,
-        send_notification: bool | None = False,
+        send_notification: bool = False,
     ) -> StageInstance:
         """|coro|
 
@@ -2778,11 +2781,14 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         name: str = ...,
         topic: str | None = ...,
         position: int = ...,
-        sync_permissions: int = ...,
+        sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
+        bitrate: int = ...,
+        user_limit: int = ...,
+        slowmode_delay: int = ...,
         reason: str | None = ...,
     ) -> StageChannel | None: ...
 
@@ -2831,7 +2837,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The channel's preferred audio bitrate in bits per second.
 
         user_limit: :class:`int`
-            The channel's limit for number of members that can be in a voice channel.
+            The channel's limit for number of members that can be in a stage channel.
 
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
@@ -3537,7 +3543,7 @@ class VoiceChannelEffectSendEvent:
 
     Attributes
     ----------
-    animation_type: :class:`int`
+    animation_type: :class:`VoiceChannelEffectAnimationType`
         The type of animation that is being sent.
     animation_id: :class:`int`
         The ID of the animation that is being sent.
