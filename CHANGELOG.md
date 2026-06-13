@@ -12,8 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added missing ``slowmode_delay``, ``user_limit``, and ``bitrate`` params to `StageChannel.edit`.
-  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Added missing `slowmode_delay`, `user_limit`, and `bitrate` params to
+  `StageChannel.edit`. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 
 ### Changed
 
