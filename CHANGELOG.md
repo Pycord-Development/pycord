@@ -12,10 +12,19 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added missing ``slowmode_delay``, ``user_limit``, and ``bitrate`` params to `StageChannel.edit`.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+
 ### Changed
 
 ### Fixed
 
+- Fix `StageChannel.create_instance` `send_notification` param type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix `VoiceChannel.edit` and `StageChannel.edit` overload `sync_permissions` type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix `MediaChannel.edit` overload return type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix error message for `Guild.create_sticker`.
   ([#3263](https://github.com/Pycord-Development/pycord/pull/3263))
 - Fix typehint for `SlashCommandGroup.__new__`.
