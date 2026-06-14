@@ -2244,12 +2244,9 @@ class ConnectionState:
         return before
 
     def parse_soundboard_sounds(self, data) -> None:
-        guild_id = int(data["guild_id"])
         for sound_data in data["soundboard_sounds"]:
             self._add_sound(
-                SoundboardSound(
-                    state=self, http=self.http, data=sound_data, guild_id=guild_id
-                )
+                SoundboardSound(state=self, http=self.http, data=sound_data)
             )
 
     def parse_guild_soundboard_sounds_update(self, data):

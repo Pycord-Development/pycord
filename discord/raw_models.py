@@ -476,7 +476,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
     guild_id: :class:`int`
         The guild ID where the voice channel status update originated from.
     status: Optional[:class:`str`]
-        The new new voice channel status.
+        The new voice channel status.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#voice-channel-status-update>`__.
     """
