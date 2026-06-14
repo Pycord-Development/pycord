@@ -104,7 +104,7 @@ def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
     """
     if value := data.get(key):
         with suppress(ValueError):
-            # value error means it's not an number string (None or "")
+            # value error means it's not a number string (None or "")
             return int(value)  # pyright: ignore[reportUnknownArgumentType]
     return None
 
