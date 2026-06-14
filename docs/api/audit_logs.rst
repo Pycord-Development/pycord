@@ -69,7 +69,7 @@ this goal, it must make use of a couple of data classes that aid in this goal.
     map to certain attributes being set.
 
     Note that accessing an attribute that does not match the specified action
-    will lead to an attribute error.
+    will lead to an :exc:`AttributeError`.
 
     To get a list of attributes that have been set, you can iterate over
     them. To see a list of all possible attributes that could be set based

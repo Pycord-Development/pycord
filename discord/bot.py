@@ -220,7 +220,7 @@ class ApplicationCommandMixin(ABC):
         name: :class:`str`
             The qualified name of the command to get.
         guild_ids: List[:class:`int`]
-            The guild ids associated to the command to get.
+            The guild ids associated with the command to get.
         type: Type[:class:`.ApplicationCommand`]
             The type of the command to get. Defaults to :class:`.ApplicationCommand`.
 
@@ -717,8 +717,9 @@ class ApplicationCommandMixin(ABC):
         commands in the most efficient way possible, unless ``force`` is set to ``True``, in which case it will always
         register all commands.
 
-        By default, this coroutine is called inside the :func:`.on_connect` event. If you choose to override the
-        :func:`.on_connect` event, then you should invoke this coroutine as well such as the following:
+        By default, this coroutine is called inside the :func:`.on_connect` event. If the
+        :func:`.on_connect` event is overridden, this coroutine must be invoked manually,
+        as shown in the following example:
 
         .. code-block:: python
 

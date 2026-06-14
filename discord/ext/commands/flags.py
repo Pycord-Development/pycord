@@ -632,7 +632,7 @@ class FlagConverter(metaclass=FlagsMeta):
     async def convert(cls: type[F], ctx: Context, argument: str) -> F:
         """|coro|
 
-        The method that actually converters an argument to the flag mapping.
+        The method that actually converts an argument to the flag mapping.
 
         Parameters
         ----------
