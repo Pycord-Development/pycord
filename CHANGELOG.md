@@ -8,8 +8,7 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
-These changes are available on the `cherry/2.8.0` branch, but have not yet been
-released.
+These changes are available on the `master` branch, but have not yet been released.
 
 ### Added
 
@@ -17,8 +16,17 @@ released.
 
 ### Fixed
 
+- Fix error message for `Guild.create_sticker`.
+  ([#3263](https://github.com/Pycord-Development/pycord/pull/3263))
+- Fix typehint for `SlashCommandGroup.__new__`.
+  ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
 - Include `bypass_slowmode` in `Permissions.all`.
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
+- Allow `ForumTag` to be created without an emoji.
+  ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
+- Fix a bug where `TextChannel.archived_threads` would ignore any limit parameter
+  smaller than 50 and use 50 instead.
+  ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
 
 ### Deprecated
 

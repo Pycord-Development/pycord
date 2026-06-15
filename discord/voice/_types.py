@@ -97,7 +97,7 @@ class VoiceProtocol(Generic[ClientT]):
     async def on_voice_server_update(self, data: RawVoiceServerUpdateEvent) -> None:
         """|coro|
 
-        A method called when the client's intially connecting to voice. This corresponds
+        A method called when the client is initially connecting to voice. This corresponds
         to the ``VOICE_SERVER_UPDATE`` event.
 
         Parameters
@@ -117,11 +117,11 @@ class VoiceProtocol(Generic[ClientT]):
         A method called to initialise the connection.
 
         The library initialises this class and calls ``__init__``, and then :meth:`connect` when attempting
-        to start a connection to the voice. If an error ocurrs, it calls :meth:`disconnect`, so if you need
+        to start a connection to the voice. If an error occurs, it calls :meth:`disconnect`, so if you need
         to implement any cleanup, you should manually call it in :meth:`disconnect` as the library will not
         do so for you.
 
-        Within this method, to start the voice connection flow, it is recommened to use :meth:`Guild.change_voice_state`
+        Within this method, to start the voice connection flow, it is recommended to use :meth:`Guild.change_voice_state`
         to start the flow. After which :meth:`on_voice_server_update` and :meth:`on_voice_state_update` will be called,
         although this could vary and cause unexpected behaviour, but that falls under Discord's way of handling the voice
         connection.
@@ -140,7 +140,7 @@ class VoiceProtocol(Generic[ClientT]):
 
         A method called to terminate the voice connection.
 
-        This can be either called manually when forcing a disconnection, or when an exception in :meth:`connect` ocurrs.
+        This can be either called manually when forcing a disconnection, or when an exception in :meth:`connect` occurs.
 
         It is recommended to call :meth:`cleanup` here.
 

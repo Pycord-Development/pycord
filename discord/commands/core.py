@@ -70,9 +70,9 @@ from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
 if sys.version_info >= (3, 11):
-    from typing import Annotated, Literal, get_args, get_origin
+    from typing import Annotated, Literal, Self, get_args, get_origin
 else:
-    from typing_extensions import Annotated, Literal, get_args, get_origin
+    from typing_extensions import Annotated, Literal, Self, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -197,9 +197,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError(
-                "Cooldown must be a an instance of CooldownMapping or None."
-            )
+            raise TypeError("Cooldown must be an instance of CooldownMapping or None.")
 
         self._buckets: CooldownMapping = buckets
 
@@ -717,7 +715,7 @@ class SlashCommand(ApplicationCommand):
     integration_types: Set[:class:`IntegrationType`]
         The type of installation this command should be available to. For instance, if set to
         :attr:`IntegrationType.user_install`, the command will only be available to users with
-        the application installed on their account. Unapplicable for guild commands.
+        the application installed on their account. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
         The location where this command can be used. Cannot be set if this is a guild command.
     """
@@ -1222,15 +1220,15 @@ class SlashCommandGroup(ApplicationCommand):
     integration_types: Set[:class:`IntegrationType`]
         The type of installation this command should be available to. For instance, if set to
         :attr:`IntegrationType.user_install`, the command will only be available to users with
-        the application installed on their account. Unapplicable for guild commands.
+        the application installed on their account. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The location where this command can be used. Unapplicable for guild commands.
+        The location where this command can be used. Not applicable for guild commands.
     """
 
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
-    def __new__(cls, *args, **kwargs) -> SlashCommandGroup:
+    def __new__(cls, *args, **kwargs) -> Self:
         self = super().__new__(cls)
         self.__original_kwargs__ = kwargs.copy()
 
@@ -1318,20 +1316,18 @@ class SlashCommandGroup(ApplicationCommand):
         # similar to ApplicationCommand
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
-        # no need to getattr, since slash cmds groups cant be created using a decorator
+        # no need to getattr, since slash cmds groups can't be created using a decorator
 
         if cooldown is None:
             buckets = CooldownMapping(cooldown, BucketType.default)
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError(
-                "Cooldown must be a an instance of CooldownMapping or None."
-            )
+            raise TypeError("Cooldown must be an instance of CooldownMapping or None.")
 
         self._buckets: CooldownMapping = buckets
 
-        # no need to getattr, since slash cmds groups cant be created using a decorator
+        # no need to getattr, since slash cmds groups can't be created using a decorator
 
         if max_concurrency is not None and not isinstance(
             max_concurrency, MaxConcurrency
@@ -1654,9 +1650,9 @@ class ContextMenuCommand(ApplicationCommand):
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Unapplicable for guild commands.
+        The installation contexts where this command is available. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Unapplicable for guild commands.
+        The interaction contexts where this command is available. Not applicable for guild commands.
     """
 
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
@@ -1794,9 +1790,9 @@ class UserCommand(ContextMenuCommand):
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Unapplicable for guild commands.
+        The installation contexts where this command is available. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Unapplicable for guild commands.
+        The interaction contexts where this command is available. Not applicable for guild commands.
     """
 
     type = 2
@@ -1909,9 +1905,9 @@ class MessageCommand(ContextMenuCommand):
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Unapplicable for guild commands.
+        The installation contexts where this command is available. Not applicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Unapplicable for guild commands.
+        The interaction contexts where this command is available. Not applicable for guild commands.
     """
 
     type = 3
