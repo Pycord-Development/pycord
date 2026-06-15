@@ -168,13 +168,13 @@ class AudioReader(Generic[Unpack[Ts]]):
                     self.packet_router.join(timeout=5)
         except Exception as exc:
             self.error = exc
-            _log.exception("An error ocurred while stopping packet router.")
+            _log.exception("An error occurred while stopping packet router.")
 
         try:
             self.event_router.stop()
         except Exception as exc:
             self.error = exc
-            _log.exception("An error ocurred while stopping event router.")
+            _log.exception("An error occurred while stopping event router.")
 
         self.speaking_timer.stop()
         self.keep_alive.stop()
@@ -188,7 +188,7 @@ class AudioReader(Generic[Unpack[Ts]]):
                     )  # pyright: ignore[reportUnknownArgumentType]
             except Exception:
                 _log.exception(
-                    "An error ocurred while calling the after callback on audio reader"
+                    "An error occurred while calling the after callback on audio reader"
                 )
 
         try:
@@ -230,7 +230,7 @@ class AudioReader(Generic[Unpack[Ts]]):
                 _log.debug("Received an IP Discovery Packet, ignoring...")
                 return
             _log.exception(
-                "An exception ocurred while decoding voice packets", exc_info=exc
+                "An exception occurred while decoding voice packets", exc_info=exc
             )
         finally:
             if self.error:
@@ -271,7 +271,7 @@ class AudioReader(Generic[Unpack[Ts]]):
                 self.packet_router.feed_rtp(rtp_packet)  # type: ignore
             except Exception as exc:
                 _log.exception(
-                    "An error ocurred while processing RTP packet %s", rtp_packet
+                    "An error occurred while processing RTP packet %s", rtp_packet
                 )
                 self.error = exc
                 self.stop()

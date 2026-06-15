@@ -140,7 +140,7 @@ class SocketReader(threading.Thread):
             self._do_run()
         except Exception:
             _log.exception(
-                "An error ocurred while running the socket reader %s",
+                "An error occurred while running the socket reader %s",
                 self.name,
             )
         finally:
