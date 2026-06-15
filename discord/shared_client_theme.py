@@ -53,8 +53,6 @@ class SharedClientTheme:
     ----------
     colours: List[:class:`Colour`]
         The colours of the theme. A maximum of 5 colours.
-    colors: List[:class:`Colour`]
-        Alias for :attr:`colours`.
     gradient_angle: :class:`int`
         The direction of the theme's colors, in degrees. Must be between ``0`` and ``360``.
     base_mix: :class:`int`
@@ -103,6 +101,10 @@ class SharedClientTheme:
 
     @property
     def colors(self) -> list[Colour]:
+        """Returns the theme's colours. Equivalent to :attr:`colours`.
+
+        .. versionadded:: 2.9
+        """
         return self.colours
 
     def to_dict(self) -> SharedClientThemePayload:
