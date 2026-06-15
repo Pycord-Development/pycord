@@ -234,7 +234,7 @@ class Container(ViewItem[V]):
         ----------
         *items: Union[:class:`Button`, :class:`Select`]
             The items this action row contains.
-        id: Optiona[:class:`int`]
+        id: Optional[:class:`int`]
             The action row's ID.
         """
 
@@ -276,7 +276,7 @@ class Container(ViewItem[V]):
         ----------
         content: :class:`str`
             The content of the TextDisplay
-        id: Optiona[:class:`int`]
+        id: Optional[:class:`int`]
             The text displays' ID.
         """
 
@@ -297,7 +297,7 @@ class Container(ViewItem[V]):
         ----------
         *items: :class:`MediaGalleryItem`
             The media this gallery contains.
-        id: Optiona[:class:`int`]
+        id: Optional[:class:`int`]
             The gallery's ID.
         """
 
@@ -314,7 +314,7 @@ class Container(ViewItem[V]):
             The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
         spoiler: Optional[:class:`bool`]
             Whether the file has the spoiler overlay. Defaults to ``False``.
-        id: Optiona[:class:`int`]
+        id: Optional[:class:`int`]
             The file's ID.
         """
 

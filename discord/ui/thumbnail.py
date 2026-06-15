@@ -103,7 +103,7 @@ class Thumbnail(ViewItem[V]):
 
     @property
     def media(self) -> UnfurledMediaItem:
-        """The thumbnail's unerlying media item."""
+        """The thumbnail's underlying media item."""
         return self.underlying.media
 
     @media.setter
