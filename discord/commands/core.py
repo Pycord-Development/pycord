@@ -1986,7 +1986,7 @@ class EntryPointCommand(ApplicationCommand):
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
-    .. versionadded:: 2.8.1
+    .. versionadded:: 2.9.0
 
     Attributes
     -----------
@@ -2308,7 +2308,7 @@ def entry_point_command(
 ) -> Callable[..., EntryPointCommand]:
     """Decorator for entry point commands that invokes :func:`application_command`.
 
-    .. versionadded:: 2.8.1
+    .. versionadded:: 2.9.0
 
     Returns
     -------

@@ -2002,7 +2002,7 @@ class InteractionCallback:
 
 class InteractionCallbackActivityInstanceResource:
     """Information about the Activity that was launched or joined as a response to this interaction.
-    .. versionadded:: 2.8.1
+    .. versionadded:: 2.9.0
 
     Attributes
     ----------

@@ -1084,7 +1084,7 @@ class ApplicationCommandMixin(ABC):
         This is equivalent to using :meth:`application_command`, providing
         the :class:`EntryPointCommand` class.
 
-        .. versionadded:: 2.8.1
+        .. versionadded:: 2.9.0
 
         Returns
         -------
