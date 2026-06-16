@@ -27,6 +27,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix a bug where `TextChannel.archived_threads` would ignore any limit parameter
   smaller than 50 and use 50 instead.
   ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
+- Fix an issue where `SubscriptionStatus.inactive` and `SubscriptionStatus.ending` were swapped.
+  ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
 
 ### Deprecated
 
