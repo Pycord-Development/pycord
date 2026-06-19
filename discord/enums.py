@@ -1115,8 +1115,8 @@ class SubscriptionStatus(Enum):
     """The status of a subscription."""
 
     active = 0
-    ending = 1
-    inactive = 2
+    inactive = 1
+    ending = 2
 
 
 class ThreadArchiveDuration(IntEnum):
