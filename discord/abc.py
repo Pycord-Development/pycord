@@ -56,6 +56,7 @@ from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
+from .shared_client_theme import SharedClientThemeBaseType
 from .sticker import GuildSticker, StickerItem
 from .utils import warn_deprecated
 
@@ -89,6 +90,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
     from .poll import Poll
+    from .shared_client_theme import SharedClientTheme
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -1388,6 +1390,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1410,6 +1413,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1432,6 +1436,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1454,6 +1459,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     async def send(
@@ -1477,6 +1483,7 @@ class Messageable:
         suppress=None,
         suppress_embeds=None,
         silent=None,
+        shared_client_theme=None,
     ):
         """|coro|
 
@@ -1568,6 +1575,10 @@ class Messageable:
             The poll to send.
 
             .. versionadded:: 2.6
+        shared_client_theme: :class:`SharedClientTheme`
+            The shared client theme to send.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -1591,6 +1602,9 @@ class Messageable:
         channel = await self._get_channel()
         state = self._state
         content = str(content) if content is not None else None
+
+        if shared_client_theme is not None:
+            shared_client_theme = shared_client_theme.to_dict()
 
         if embed is not None and embeds is not None:
             raise InvalidArgument(
@@ -1706,6 +1720,7 @@ class Messageable:
                     components=components,
                     flags=flags.value,
                     poll=poll,
+                    shared_client_theme=shared_client_theme,
                 )
             finally:
                 for f in files:
@@ -1725,6 +1740,7 @@ class Messageable:
                 components=components,
                 flags=flags.value,
                 poll=poll,
+                shared_client_theme=shared_client_theme,
             )
 
         ret = state.create_message(channel=channel, data=data)

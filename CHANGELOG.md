@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added support for sending and receiving client themes.
+  ([#3209](https://github.com/Pycord-Development/pycord/pull/3209))
+
 ### Changed
 
 ### Fixed
