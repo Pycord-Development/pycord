@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Add `typing` context manager for Bridge `Context`s.
+  ([#3251](https://github.com/Pycord-Development/pycord/pull/3251))
+
 ### Changed
 
 ### Fixed
