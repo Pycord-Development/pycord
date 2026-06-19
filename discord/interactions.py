@@ -88,7 +88,13 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionCallback as InteractionCallbackPayload
-    from .types.interactions import InteractionCallbackResponse, InteractionData
+    from .types.interactions import (
+        InteractionCallbackActivityInstance as InteractionCallbackActivityInstancePayload,
+    )
+    from .types.interactions import (
+        InteractionCallbackResponse,
+        InteractionData,
+    )
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import BaseModal
@@ -200,6 +206,7 @@ class Interaction:
         "context",
         "authorizing_integration_owners",
         "callback",
+        "activity_instance",
         "command",
         "view",
         "modal",
@@ -225,6 +232,9 @@ class Interaction:
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
         self.callback: InteractionCallback | None = None
+        self.activity_instance: InteractionCallbackActivityInstanceResource | None = (
+            None
+        )
         self._cs_channel: InteractionChannel | None = MISSING
         self._from_data(data)
 
@@ -1034,7 +1044,9 @@ class InteractionResponse:
     async def _process_callback_response(
         self, callback_response: InteractionCallbackResponse
     ):
-        if callback_response.get("resource", {}).get("message"):
+        resource = callback_response.get("resource", {})
+
+        if resource.get("message"):
             # TODO: fix later to not raise?
             channel = self._parent.channel
             if channel is None:
@@ -1048,6 +1060,11 @@ class InteractionResponse:
                 data=callback_response["resource"]["message"],
             )  # type: ignore
             self._parent._original_response = message
+
+        if act_inst := resource.get("activity_instance"):
+            self._parent.activity_instance = (
+                InteractionCallbackActivityInstanceResource(act_inst)
+            )
 
         self._parent.callback = InteractionCallback(callback_response["interaction"])
 
@@ -1542,6 +1559,39 @@ class InteractionResponse:
         await self._process_callback_response(callback_response)
         return self._parent
 
+    async def launch_activity(self) -> Interaction:
+        """|coro|
+
+        Responds to this interaction by launching the activity associated with the bot.
+
+        Raises
+        ------
+        HTTPException
+            Sending the message failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
+        if self._responded:
+            raise InteractionResponded(self._parent)
+
+        parent = self._parent
+
+        adapter = async_context.get()
+        http = parent._state.http
+        callback_response: InteractionCallbackResponse = await self._locked_response(
+            adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                proxy=http.proxy,
+                proxy_auth=http.proxy_auth,
+                type=InteractionResponseType.launch_activity.value,
+            )
+        )
+        self._responded = True
+        await self._process_callback_response(callback_response)
+        return self._parent
+
     async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> Any:
         """|coro|
 
@@ -1916,6 +1966,7 @@ class InteractionCallback:
     """
 
     def __init__(self, data: InteractionCallbackPayload):
+        self._activity_instance_id: str | None = data.get("activity_instance_id", None)
         self._response_message_loading: bool = data.get(
             "response_message_loading", False
         )
@@ -1926,6 +1977,7 @@ class InteractionCallback:
     def __repr__(self):
         return (
             f"<InteractionCallback "
+            f"_activity_instance_id={self._activity_instance_id} "
             f"_response_message_loading={self._response_message_loading} "
             f"_response_message_ephemeral={self._response_message_ephemeral}>"
         )
@@ -1940,3 +1992,23 @@ class InteractionCallback:
         This might be useful for determining if the message was forced to be ephemeral.
         """
         return self._response_message_ephemeral
+
+    def activity_instance_id(self) -> str | None:
+        """Instance ID of the Activity if one was launched or joined.
+        If no activity was launched or joined this will be None.
+        """
+        return self._activity_instance_id
+
+
+class InteractionCallbackActivityInstanceResource:
+    """Information about the Activity that was launched or joined as a response to this interaction.
+    .. versionadded:: 2.9.0
+
+    Attributes
+    ----------
+    id: :class:`str`
+        Instance ID of the Activity if one was launched or joined.
+    """
+
+    def __init__(self, data: InteractionCallbackActivityInstancePayload):
+        self.id = data["id"]

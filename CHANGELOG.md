@@ -12,6 +12,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Add support for Entry Point Commands.
+  ([#3276](https://github.com/Pycord-Development/pycord/pull/3276))
+- Add support for launching activities as an interaction response.
+  ([#3276](https://github.com/Pycord-Development/pycord/pull/3276))
+
 ### Changed
 
 ### Fixed

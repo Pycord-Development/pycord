@@ -51,13 +51,20 @@ from .commands import (
     ApplicationCommand,
     ApplicationContext,
     AutocompleteContext,
+    EntryPointCommand,
     MessageCommand,
     SlashCommand,
     SlashCommandGroup,
     UserCommand,
     command,
 )
-from .enums import IntegrationType, InteractionContextType, InteractionType, TeamRole
+from .enums import (
+    EntryPointHandler,
+    IntegrationType,
+    InteractionContextType,
+    InteractionType,
+    TeamRole,
+)
 from .errors import CheckFailure, DiscordException
 from .interactions import Interaction
 from .shard import AutoShardedClient
@@ -74,7 +81,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .permissions import Permissions
 
-C = TypeVar("C", bound=MessageCommand | SlashCommand | UserCommand)
+C = TypeVar("C", bound=MessageCommand | SlashCommand | UserCommand | EntryPointCommand)
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar("CFT", bound=CoroFunc)
 
@@ -1053,6 +1060,52 @@ class ApplicationCommandMixin(ABC):
             name=name,
             name_localizations=name_localizations,
             nsfw=nsfw,
+            **kwargs,
+        )
+
+    def entry_point_command(
+        self,
+        *,
+        checks: list[Callable[[ApplicationContext], bool]] | None = MISSING,
+        cog: Cog | None = MISSING,
+        contexts: set[InteractionContextType] | None = MISSING,
+        cooldown: Cooldown | None = MISSING,
+        default_member_permissions: Permissions | None = MISSING,
+        description: str | None = MISSING,
+        description_localizations: dict[str, str] | None = MISSING,
+        integration_types: set[IntegrationType] | None = MISSING,
+        name: str | None = MISSING,
+        name_localizations: dict[str, str] | None = MISSING,
+        nsfw: bool | None = MISSING,
+        handler: EntryPointHandler = MISSING,
+        **kwargs: Never,
+    ) -> Callable[..., EntryPointCommand]:
+        """A shortcut decorator for adding an entry point command to the bot.
+        This is equivalent to using :meth:`application_command`, providing
+        the :class:`EntryPointCommand` class.
+
+        .. versionadded:: 2.9.0
+
+        Returns
+        -------
+        Callable[..., :class:`EntryPointCommand`]
+            A decorator that converts the provided function into a :class:`.EntryPointCommand`,
+            adds it to the bot, and returns it.
+        """
+        return self.application_command(
+            cls=EntryPointCommand,
+            checks=checks,
+            cog=cog,
+            contexts=contexts,
+            cooldown=cooldown,
+            default_member_permissions=default_member_permissions,
+            description=description,
+            description_localizations=description_localizations,
+            integration_types=integration_types,
+            name=name,
+            name_localizations=name_localizations,
+            nsfw=nsfw,
+            handler=handler,
             **kwargs,
         )
 
