@@ -48,7 +48,7 @@ from .primary_guild import PrimaryGuild
 from .role import RoleColours
 from .types.collectibles import AvatarDecoration
 from .user import BaseUser, User, _UserTag
-from .utils import MISSING
+from .utils import MISSING, utcnow
 
 __all__ = (
     "VoiceState",
@@ -821,8 +821,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         return (
             self.communication_disabled_until is not None
-            and self.communication_disabled_until
-            > datetime.datetime.now(datetime.timezone.utc)
+            and self.communication_disabled_until > utcnow()
         )
 
     async def ban(
@@ -1019,8 +1018,9 @@ class Member(discord.abc.Messageable, _UserTag):
             else:
                 if not suppress:
                     voice_state_payload["request_to_speak_timestamp"] = (
-                        datetime.datetime.utcnow().isoformat()
+                        utcnow().isoformat()
                     )
+
                 await http.edit_voice_state(guild_id, self.id, voice_state_payload)
 
         if voice_channel is not MISSING:
@@ -1121,9 +1121,7 @@ class Member(discord.abc.Messageable, _UserTag):
         HTTPException
             An error occurred doing the request.
         """
-        await self.timeout(
-            datetime.datetime.now(datetime.timezone.utc) + duration, reason=reason
-        )
+        await self.timeout(utcnow() + duration, reason=reason)
 
     async def remove_timeout(self, *, reason: str | None = None) -> None:
         """|coro|
@@ -1172,7 +1170,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         payload = {
             "channel_id": self.voice.channel.id,
-            "request_to_speak_timestamp": datetime.datetime.utcnow().isoformat(),
+            "request_to_speak_timestamp": utcnow().isoformat(),
         }
 
         if self._state.self_id != self.id:

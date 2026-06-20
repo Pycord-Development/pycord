@@ -3146,7 +3146,7 @@ class Guild(Hashable):
             raise TypeError('"name" parameter must be 2 to 30 characters long.')
 
         if description and not (2 <= len(description) <= 100):
-            raise TypeError('"description" parameter must be 2 to 200 characters long.')
+            raise TypeError('"description" parameter must be 2 to 100 characters long.')
 
         payload = {"name": name, "description": description or ""}
 
@@ -3389,7 +3389,7 @@ class Guild(Hashable):
         data = await self._state.http.get_role(self.id, role_id)
         return Role(guild=self, state=self._state, data=data)
 
-    async def _fetch_role(self, role_id: int) -> Role:
+    async def _fetch_role(self, role_id: int) -> Role | None:
         """|coro|
 
         Retrieves a :class:`Role` that the guild has.
