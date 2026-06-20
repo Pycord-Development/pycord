@@ -172,7 +172,7 @@ class Page:
     async def callback(self, interaction: discord.Interaction | None = None):
         """|coro|
 
-        The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called.
+        The coroutine associated with a specific page. If `Paginator.page_action()` is used, this coroutine is called.
 
         Parameters
         ----------

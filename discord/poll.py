@@ -146,7 +146,7 @@ class PollAnswer:
 
     @property
     def count(self) -> int | None:
-        """This answer's vote count, if recieved from Discord."""
+        """This answer's vote count, if received from Discord."""
         if not (self._poll and self.id):
             return None
         if self._poll.results is None:
@@ -189,7 +189,7 @@ class PollAnswer:
         self, *, limit: int | None = None, after: Snowflake | None = None
     ) -> VoteIterator:
         """Returns an :class:`AsyncIterator` representing the users that have voted with this answer.
-        Only works if this poll was recieved from Discord.
+        Only works if this poll was received from Discord.
 
         The ``after`` parameter must represent a member
         and meet the :class:`abc.Snowflake` abc.
@@ -216,7 +216,7 @@ class PollAnswer:
         HTTPException
             Getting the voters for the answer failed.
         RuntimeError
-            This poll wasn't recieved from a message.
+            This poll wasn't received from a message.
 
         Examples
         --------
@@ -336,7 +336,7 @@ class Poll:
     layout_type: :class:`PollLayoutType`
         The poll's layout type. Only one exists at the moment.
     results: Optional[:class:`PollResults`]
-        The results of this poll recieved from Discord. If ``None``, this should be considered "unknown" rather than "no" results.
+        The results of this poll received from Discord. If ``None``, this should be considered "unknown" rather than "no" results.
     """
 
     def __init__(
@@ -521,10 +521,10 @@ class Poll:
         HTTPException
             Ending this poll failed.
         RuntimeError
-            This poll wasn't recieved from a message.
+            This poll wasn't received from a message.
         """
 
         if not self._message:
-            raise RuntimeError("You can only end a poll recieved from a message.")
+            raise RuntimeError("You can only end a poll received from a message.")
 
         return await self._message.end_poll()
