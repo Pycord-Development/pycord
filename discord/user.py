@@ -50,7 +50,6 @@ if TYPE_CHECKING:
     from .types.user import PartialUser as PartialUserPayload
     from .types.user import User as UserPayload
 
-
 __all__ = (
     "User",
     "ClientUser",

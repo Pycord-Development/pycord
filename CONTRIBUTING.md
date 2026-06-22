@@ -57,7 +57,7 @@ follows PEP-8 guidelines (mostly) with a column limit of 120.
 ## Use of "type: ignore" comments
 
 In some cases, it might be necessary to ignore type checker warnings for one reason or
-another. If that is that case, it is **required** that a comment is left explaining why
+another. If that is the case, it is **required** that a comment is left explaining why
 you are deciding to ignore type checking warnings.
 
 ### Licensing

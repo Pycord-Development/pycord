@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
+  `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
+  ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
 - Added `ChannelFlags.is_spoiler_channel` and `.is_spoiler()` function to all applicable
   channel types. ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
 - Added `spoiler` parameter to the `edit()` function of all applicable channel types.
@@ -21,8 +24,24 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed an `AttributeError` when using `RoleColours.is_holographic` and `secondary` or
+  `tertiary` is `None`.
+  ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+- Fix error message for `Guild.create_sticker`.
+  ([#3263](https://github.com/Pycord-Development/pycord/pull/3263))
+- Fix typehint for `SlashCommandGroup.__new__`.
+  ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
 - Include `bypass_slowmode` in `Permissions.all`.
   ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
+- Allow `ForumTag` to be created without an emoji.
+  ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
+- Fix an issue where an `Embed` object's `colour` parameter would be ignored when set to
+  `0`. ([#3256](https://github.com/Pycord-Development/pycord/pull/3256))
+- Fix a bug where `TextChannel.archived_threads` would ignore any limit parameter
+  smaller than 50 and use 50 instead.
+  ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
+- Fix an issue where `SubscriptionStatus.inactive` and `SubscriptionStatus.ending` were
+  swapped. ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
 
 ### Deprecated
 
