@@ -1419,7 +1419,9 @@ class FileUpload(Component):
         self.min_values: int | None = data.get("min_values", None)
         self.max_values: int | None = data.get("max_values", None)
         self.required: bool = data.get("required", True)
-        self.file_types: list[str | FileType] = data.get("file_types", [])
+        self.file_types: list[str | FileType] = []
+        for f in data.get("file_types", []):
+            self.file_types.append(f) if f not in FileType.__members__ else try_enum(FileType, f)
 
     def to_dict(self) -> FileUploadComponentPayload:
         payload = {
