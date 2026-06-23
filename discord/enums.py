@@ -88,6 +88,7 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+    "FileUpload",
 )
 
 
@@ -1210,6 +1211,25 @@ class InviteTargetUsersJobStatusCode(Enum):
     processing = 1
     completed = 2
     failed = 3
+
+
+class FileType(Enum):
+    """Represents the allowed file types in an attachment option or component. The types are subject to change based on what is supported on Discord clients.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    image: :class:`str`
+        Allow image files. This includes ``.png``, ``.gif``, ``.jpg``, ``.jpeg``, ``.jfif``, ``.webp``, and ``.avif``.
+    video: :class:`str`
+        Allow video files. This includes ``.mp4``, ``.mov``, ``.qt``, and ``.webm``.
+    audio: :class:`str`
+        Allow audio files. This includes ``.mp3``, ``.m4a``, ``.wav``, ``.ogg``, ``.opus``, and ``.flac``.
+    """
+    image = "image"
+    video = "video"
+    audio = "audio"
 
 
 T = TypeVar("T")
