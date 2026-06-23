@@ -73,6 +73,7 @@ class FileUpload(ModalItem):
         "min_values",
         "max_values",
         "custom_id",
+        "file_types",
         "id",
     )
 
