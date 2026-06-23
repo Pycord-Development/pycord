@@ -103,7 +103,9 @@ class FileUpload(ModalItem):
             if not isinstance(f, (str, FileType)):
                 raise TypeError("items in file_types must be of type str or FileType")
             if len(str(f)) > 16:
-                raise ValueError("items in file_types must be a maximum of 16 characters in length")
+                raise ValueError(
+                    "items in file_types must be a maximum of 16 characters in length"
+                )
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._attachments: list[Attachment] | None = None
 
@@ -205,9 +207,13 @@ class FileUpload(ModalItem):
                 raise ValueError("file_types must be between 0 and 10 in length")
             for f in self.file_types:
                 if not isinstance(f, (str, FileType)):
-                    raise TypeError("items in file_types must be of type str or FileType")
+                    raise TypeError(
+                        "items in file_types must be of type str or FileType"
+                    )
                 if len(str(f)) > 16:
-                    raise ValueError("items in file_types must be a maximum of 16 characters in length")
+                    raise ValueError(
+                        "items in file_types must be a maximum of 16 characters in length"
+                    )
         self.underlying.file_types = file_types or []
 
     @property

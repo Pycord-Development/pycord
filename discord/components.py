@@ -33,10 +33,10 @@ from .enums import (
     ButtonStyle,
     ChannelType,
     ComponentType,
+    FileType,
     InputTextStyle,
     SelectDefaultValueType,
     SeparatorSpacingSize,
-    FileType,
     try_enum,
 )
 from .flags import AttachmentFlags
@@ -1421,7 +1421,11 @@ class FileUpload(Component):
         self.required: bool = data.get("required", True)
         self.file_types: list[str | FileType] = []
         for f in data.get("file_types", []):
-            self.file_types.append(f) if f not in FileType.__members__ else try_enum(FileType, f)
+            (
+                self.file_types.append(f)
+                if f not in FileType.__members__
+                else try_enum(FileType, f)
+            )
 
     def to_dict(self) -> FileUploadComponentPayload:
         payload = {
@@ -1439,7 +1443,7 @@ class FileUpload(Component):
 
         if not self.required:
             payload["required"] = self.required
-        
+
         if self.file_types:
             payload["file_types"] = [str(f) for f in self.file_types]
 

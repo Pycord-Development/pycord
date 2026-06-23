@@ -58,9 +58,9 @@ from ..channel import (
     VoiceChannel,
 )
 from ..commands import ApplicationContext, AutocompleteContext
-from ..enums import ChannelType, FileType
+from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
-from ..enums import SlashCommandOptionType
+from ..enums import FileType, SlashCommandOptionType
 from ..utils import MISSING, basic_autocomplete
 
 if TYPE_CHECKING:
@@ -409,7 +409,9 @@ class Option:
             if not isinstance(f, (str, FileType)):
                 raise TypeError("items in file_types must be of type str or FileType")
             if len(str(f)) > 16:
-                raise ValueError("items in file_types must be a maximum of 16 characters in length")
+                raise ValueError(
+                    "items in file_types must be a maximum of 16 characters in length"
+                )
 
         if input_type is None:
             raise TypeError("input_type cannot be NoneType.")

@@ -1227,6 +1227,7 @@ class FileType(Enum):
     audio: :class:`str`
         Allow audio files. This includes ``.mp3``, ``.m4a``, ``.wav``, ``.ogg``, ``.opus``, and ``.flac``.
     """
+
     image = "image"
     video = "video"
     audio = "audio"
