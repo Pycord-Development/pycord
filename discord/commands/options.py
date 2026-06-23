@@ -405,12 +405,16 @@ class Option:
         self.file_types: list[FileType | str] = kwargs.pop("file_types", []) or []
         if self.file_types:
             if not isinstance(self.file_types, list):
-                raise TypeError(f"file_types must be a list, not {self.file_types.__class__.__name__}")
+                raise TypeError(
+                    f"file_types must be a list, not {self.file_types.__class__.__name__}"
+                )
             if len(self.file_types) > 10:
                 raise ValueError("file_types must be between 0 and 10 in length")
             for f in self.file_types:
                 if not isinstance(f, (str, FileType)):
-                    raise TypeError("items in file_types must be of type str or FileType")
+                    raise TypeError(
+                        "items in file_types must be of type str or FileType"
+                    )
                 if len(str(f)) > 16:
                     raise ValueError(
                         "items in file_types must be a maximum of 16 characters in length"

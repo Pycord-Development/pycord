@@ -100,12 +100,16 @@ class FileUpload(ModalItem):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         if file_types is not None:
             if not isinstance(file_types, list):
-                raise TypeError(f"file_types must be a list, not {file_types.__class__.__name__}")
+                raise TypeError(
+                    f"file_types must be a list, not {file_types.__class__.__name__}"
+                )
             if len(file_types) > 10:
                 raise ValueError("file_types must be between 0 and 10 in length")
             for f in file_types:
                 if not isinstance(f, (str, FileType)):
-                    raise TypeError("items in file_types must be of type str or FileType")
+                    raise TypeError(
+                        "items in file_types must be of type str or FileType"
+                    )
                 if len(str(f)) > 16:
                     raise ValueError(
                         "items in file_types must be a maximum of 16 characters in length"
@@ -208,7 +212,9 @@ class FileUpload(ModalItem):
     def file_types(self, value: list[str | FileType] | None):
         if value:
             if not isinstance(value, list):
-                raise TypeError(f"file_types must be a list, not {value.__class__.__name__}")
+                raise TypeError(
+                    f"file_types must be a list, not {value.__class__.__name__}"
+                )
             if len(value) > 10:
                 raise ValueError("file_types must be between 0 and 10 in length")
             for f in value:
