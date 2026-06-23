@@ -38,6 +38,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
 - Fix an issue where `SubscriptionStatus.inactive` and `SubscriptionStatus.ending` were
   swapped. ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
+- Fix a `TypeError` when accessing `guild_only` on a `SlashCommand` or
+  `SlashCommandGroup` whose `contexts` was never set (e.g. when only
+  `integration_types` is passed).
+  ([#3282](https://github.com/Pycord-Development/pycord/issues/3282))
 
 ### Deprecated
 

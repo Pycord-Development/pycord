@@ -310,6 +310,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "2.6",
             reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
+        if self.contexts is None:
+            return False
         return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
 
     @guild_only.setter
@@ -1345,6 +1347,8 @@ class SlashCommandGroup(ApplicationCommand):
     @property
     def guild_only(self) -> bool:
         warn_deprecated("guild_only", "contexts", "2.6")
+        if self.contexts is None:
+            return False
         return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
 
     @guild_only.setter
