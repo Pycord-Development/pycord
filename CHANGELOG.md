@@ -15,6 +15,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
   `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+- Added the `rotterdam` value to `VoiceRegion`.
+  ([#3215](https://github.com/Pycord-Development/pycord/issues/3215))
 
 ### Changed
 

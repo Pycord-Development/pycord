@@ -299,6 +299,7 @@ class VoiceRegion(Enum):
     london = "london"
     sydney = "sydney"
     amsterdam = "amsterdam"
+    rotterdam = "rotterdam"
     frankfurt = "frankfurt"
     brazil = "brazil"
     hongkong = "hongkong"
