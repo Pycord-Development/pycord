@@ -308,20 +308,10 @@ class Container(ViewItem[V]):
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
-        child = None
         if id:
             attr = "id" if isinstance(id, int) else "custom_id"
-            if attrs:
-                attrs[attr] = id
-            child = find(lambda i: getattr(i, attr, None) == id, self.items)
-            if not child:
-                for i in self.items:
-                    if hasattr(i, "get_item"):
-                        if child := i.get_item(id):
-                            return child
-        elif attrs:
-            child = _item_getter(self.items, **attrs)
-        return child
+            attrs[attr] = id
+        return _item_getter(self.items, **attrs)
 
     def add_row(
         self,

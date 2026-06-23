@@ -181,21 +181,10 @@ class ItemInterface:
         Optional[:class:`Item`]
             The item with the matching ``custom_id``, ``id``, or ``attrs`` if it exists.
         """
-        child = None
         if custom_id:
             attr = "id" if isinstance(custom_id, int) else "custom_id"
-            if attrs:
-                attrs[attr] = custom_id
-            child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
-            if not child:
-                for i in self.children:
-                    if hasattr(i, "get_item"):
-                        if child := i.get_item(custom_id):
-                            return child
-        elif attrs:
-            child = _item_getter(self.children, **attrs)
-
-        return child
+            attrs[attr] = custom_id
+        return _item_getter(self.children, **attrs)
 
     def add_item(self, item: Item) -> Self:
         raise NotImplementedError

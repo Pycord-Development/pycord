@@ -279,16 +279,10 @@ class ActionRow(ViewItem[V]):
         Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
-        child = None
         if id:
             attr = "id" if isinstance(id, int) else "custom_id"
-            if attrs:
-                attrs[attr] = id
-            child = find(lambda i: getattr(i, attr, None) == id, self.children)
-        elif attrs:
-            child = _item_getter(self.children, **attrs)
-
-        return child
+            attrs[attr] = id
+        return _item_getter(self.children, **attrs)
 
     def add_button(
         self,
