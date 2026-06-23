@@ -203,10 +203,10 @@ class FileUpload(ModalItem):
 
     @file_types.setter
     def file_types(self, value: list[str | FileType] | None):
-        if file_types:
-            if len(file_types) > 10:
+        if value:
+            if len(value) > 10:
                 raise ValueError("file_types must be between 0 and 10 in length")
-            for f in file_types:
+            for f in value:
                 if not isinstance(f, (str, FileType)):
                     raise TypeError(
                         "items in file_types must be of type str or FileType"
@@ -215,7 +215,7 @@ class FileUpload(ModalItem):
                     raise ValueError(
                         "items in file_types must be a maximum of 16 characters in length"
                     )
-        self.underlying.file_types = file_types or []
+        self.underlying.file_types = value or []
 
     @property
     def values(self) -> list[Attachment] | None:
