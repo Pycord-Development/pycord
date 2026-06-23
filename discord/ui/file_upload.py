@@ -204,9 +204,9 @@ class FileUpload(ModalItem):
     @file_types.setter
     def file_types(self, value: list[str | FileType] | None):
         if file_types:
-            if len(self.file_types) > 10:
+            if len(file_types) > 10:
                 raise ValueError("file_types must be between 0 and 10 in length")
-            for f in self.file_types:
+            for f in file_types:
                 if not isinstance(f, (str, FileType)):
                     raise TypeError(
                         "items in file_types must be of type str or FileType"

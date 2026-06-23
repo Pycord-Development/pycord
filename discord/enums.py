@@ -88,7 +88,7 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
-    "FileUpload",
+    "FileType",
 )
 
 
