@@ -52,9 +52,7 @@ def _slash_command(**kwargs) -> SlashCommand:
 # (e.g. when only ``integration_types`` was passed), because the getter used the
 # ``in`` operator on ``None``.
 def test_guild_only_is_false_when_contexts_is_unset():
-    command = _slash_command(
-        integration_types={discord.IntegrationType.user_install}
-    )
+    command = _slash_command(integration_types={discord.IntegrationType.user_install})
 
     assert command.contexts is None
     assert _guild_only(command) is False
