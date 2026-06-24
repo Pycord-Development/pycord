@@ -2549,7 +2549,6 @@ class PartialMessage(Hashable):
         suppress = fields.pop("suppress", False)
         flags = MessageFlags._from_value(0)
         flags.suppress_embeds = suppress
-        fields["flags"] = flags.value
 
         delete_after = fields.pop("delete_after", None)
 
@@ -2573,7 +2572,10 @@ class PartialMessage(Hashable):
         if view is not MISSING:
             self._state.prevent_view_updates_for(self.id)
             fields["components"] = view.to_components() if view else []
+            if view and view.is_components_v2():
+                flags.is_components_v2 = True
 
+        fields["flags"] = flags.value
         if fields:
             data = await self._state.http.edit_message(
                 self.channel.id, self.id, **fields
