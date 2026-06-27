@@ -33,6 +33,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
 - Fix a type error in `Poll.to_dict()` for closed polls.
   ([#3261](https://github.com/Pycord-Development/pycord/pull/3261))
+- Fix an attribute error when using `Webhook.edit_message()` with views.
+  ([#3239](https://github.com/Pycord-Development/pycord/pull/3239))
+- Fix `PollAnswer.to_dict()` incorrectly setting `answer_id` attribute as a tuple
+  instead of an integer.
+  ([#3260](https://github.com/Pycord-Development/pycord/pull/3260))
 - Fix an issue where an `Embed` object's `colour` parameter would be ignored when set to
   `0`. ([#3256](https://github.com/Pycord-Development/pycord/pull/3256))
 - Fix a bug where `TextChannel.archived_threads` would ignore any limit parameter
@@ -40,6 +45,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
 - Fix an issue where `SubscriptionStatus.inactive` and `SubscriptionStatus.ending` were
   swapped. ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
+- Fix `PartialMessage.edit()` to work with `DesignerView`.
+  ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
 
 ### Deprecated
 
