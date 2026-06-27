@@ -354,9 +354,9 @@ class Poll:
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
-        self.results = None
-        self._expiry = None
-        self._message = None
+        self.results: PollResults | None = None
+        self._expiry: str | None = None
+        self._message: Message | PartialMessage | None = None
 
     @cached_property
     def expiry(self) -> datetime.datetime | None:
@@ -371,8 +371,8 @@ class Poll:
             "allow_multiselect": self.allow_multiselect,
             "layout_type": self.layout_type.value,
         }
-        if self.results:
-            dict_["results"] = [r.to_dict() for r in self.results]
+        if self.results is not None:
+            dict_["results"] = self.results.to_dict()
         if self._expiry:
             dict_["expiry"] = self._expiry
         return dict_
