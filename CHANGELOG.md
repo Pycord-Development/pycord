@@ -33,6 +33,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
 - Fix a type error in `Poll.to_dict()` for closed polls.
   ([#3261](https://github.com/Pycord-Development/pycord/pull/3261))
+- Fix an attribute error when accessing the `system` attribute on copied `User` objects.
+  ([#3247](https://github.com/Pycord-Development/pycord/pull/3247))
 - Fix an attribute error when using `Webhook.edit_message()` with views.
   ([#3239](https://github.com/Pycord-Development/pycord/pull/3239))
 - Fix `PollAnswer.to_dict()` incorrectly setting `answer_id` attribute as a tuple
