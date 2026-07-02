@@ -300,7 +300,9 @@ class Asset(AssetMixin):
     def _from_guild_icon(cls, state, guild_id: int, icon_hash: str) -> Asset:
         animated = icon_hash.startswith("a_")
         if animated:
-            url = f"{cls.BASE}/icons/{guild_id}/{icon_hash}.webp?animated=true&size=1024"
+            url = (
+                f"{cls.BASE}/icons/{guild_id}/{icon_hash}.webp?animated=true&size=1024"
+            )
         else:
             url = f"{cls.BASE}/icons/{guild_id}/{icon_hash}.png?size=1024"
         return cls(state, url=url, key=icon_hash, animated=animated)
