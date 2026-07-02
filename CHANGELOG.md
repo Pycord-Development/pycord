@@ -20,6 +20,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix animated asset url extension from `.gif` to `.webp`
+  ([#3294](https://github.com/Pycord-Development/pycord/pull/3294))
 - Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
