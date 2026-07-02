@@ -178,13 +178,11 @@ class Asset(AssetMixin):
     @classmethod
     def _from_avatar(cls, state, user_id: int, avatar: str) -> Asset:
         animated = avatar.startswith("a_")
-        format = "gif" if animated else "png"
-        return cls(
-            state,
-            url=f"{cls.BASE}/avatars/{user_id}/{avatar}.{format}?size=1024",
-            key=avatar,
-            animated=animated,
-        )
+        if animated:
+            url = f"{cls.BASE}/avatars/{user_id}/{avatar}.webp?animated=true&size=1024"
+        else:
+            url = f"{cls.BASE}/avatars/{user_id}/{avatar}.png?size=1024"
+        return cls(state, url=url, key=avatar, animated=animated)
 
     @classmethod
     def _from_avatar_decoration(
@@ -235,26 +233,22 @@ class Asset(AssetMixin):
         cls, state, guild_id: int, member_id: int, avatar: str
     ) -> Asset:
         animated = avatar.startswith("a_")
-        format = "gif" if animated else "png"
-        return cls(
-            state,
-            url=f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/avatars/{avatar}.{format}?size=1024",
-            key=avatar,
-            animated=animated,
-        )
+        if animated:
+            url = f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/avatars/{avatar}.webp?animated=true&size=1024"
+        else:
+            url = f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/avatars/{avatar}.png?size=1024"
+        return cls(state, url=url, key=avatar, animated=animated)
 
     @classmethod
     def _from_guild_banner(
         cls, state, guild_id: int, member_id: int, banner: str
     ) -> Asset:
         animated = banner.startswith("a_")
-        format = "gif" if animated else "png"
-        return cls(
-            state,
-            url=f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/banners/{banner}.{format}?size=512",
-            key=banner,
-            animated=animated,
-        )
+        if animated:
+            url = f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/banners/{banner}.webp?animated=true&size=512"
+        else:
+            url = f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/banners/{banner}.png?size=512"
+        return cls(state, url=url, key=banner, animated=animated)
 
     @classmethod
     def _from_icon(cls, state, object_id: int, icon_hash: str, path: str) -> Asset:
@@ -292,11 +286,12 @@ class Asset(AssetMixin):
         format = "png"
         if path == "banners":
             animated = image.startswith("a_")
-            format = "gif" if animated else "png"
+            format = "webp" if animated else "png"
 
+        extra = "&animated=true" if animated else ""
         return cls(
             state,
-            url=f"{cls.BASE}/{path}/{guild_id}/{image}.{format}?size=1024",
+            url=f"{cls.BASE}/{path}/{guild_id}/{image}.{format}?size=1024{extra}",
             key=image,
             animated=animated,
         )
@@ -304,13 +299,11 @@ class Asset(AssetMixin):
     @classmethod
     def _from_guild_icon(cls, state, guild_id: int, icon_hash: str) -> Asset:
         animated = icon_hash.startswith("a_")
-        format = "gif" if animated else "png"
-        return cls(
-            state,
-            url=f"{cls.BASE}/icons/{guild_id}/{icon_hash}.{format}?size=1024",
-            key=icon_hash,
-            animated=animated,
-        )
+        if animated:
+            url = f"{cls.BASE}/icons/{guild_id}/{icon_hash}.webp?animated=true&size=1024"
+        else:
+            url = f"{cls.BASE}/icons/{guild_id}/{icon_hash}.png?size=1024"
+        return cls(state, url=url, key=icon_hash, animated=animated)
 
     @classmethod
     def _from_sticker_banner(cls, state, banner: int) -> Asset:
@@ -324,13 +317,11 @@ class Asset(AssetMixin):
     @classmethod
     def _from_user_banner(cls, state, user_id: int, banner_hash: str) -> Asset:
         animated = banner_hash.startswith("a_")
-        format = "gif" if animated else "png"
-        return cls(
-            state,
-            url=f"{cls.BASE}/banners/{user_id}/{banner_hash}.{format}?size=512",
-            key=banner_hash,
-            animated=animated,
-        )
+        if animated:
+            url = f"{cls.BASE}/banners/{user_id}/{banner_hash}.webp?animated=true&size=512"
+        else:
+            url = f"{cls.BASE}/banners/{user_id}/{banner_hash}.png?size=512"
+        return cls(state, url=url, key=banner_hash, animated=animated)
 
     @classmethod
     def _from_scheduled_event_image(
