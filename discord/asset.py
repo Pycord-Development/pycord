@@ -156,6 +156,8 @@ class Asset(AssetMixin):
         "_url",
         "_animated",
         "_key",
+        "_extension",
+        "_size",
     )
 
     BASE = "https://cdn.discordapp.com"
@@ -165,6 +167,13 @@ class Asset(AssetMixin):
         self._url = url
         self._animated = animated
         self._key = key
+
+        parsed = yarl.URL(url)
+        _, ext = os.path.splitext(parsed.path)
+        self._extension = ext.lstrip(".")
+
+        size = parsed.query.get("size")
+        self._size = int(size) if size is not None else None
 
     @classmethod
     def _from_default_avatar(cls, state, index: int) -> Asset:
@@ -366,17 +375,14 @@ class Asset(AssetMixin):
         return self._key
 
     @property
-    def extension(self) -> Literal["webp", "png"]:
+    def extension(self) -> str:
         """Returns the extension of the asset."""
-        return "webp" if self._animated else "png"
+        return self._extension
 
     @property
     def size(self) -> int | None:
         """Returns the size of the asset."""
-
-        query = yarl.URL(self._url).query
-        size = query.get("size")
-        return int(size) if size is not None else None
+        return self._size
 
     def is_animated(self) -> bool:
         """Returns whether the asset is animated."""
