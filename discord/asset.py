@@ -416,7 +416,7 @@ class Asset(AssetMixin):
 
     @property
     def extension(self) -> str | None:
-        """Returns the extension of the asset."""
+        """Returns the file extension of the asset."""
         return self._extension
 
     @property
