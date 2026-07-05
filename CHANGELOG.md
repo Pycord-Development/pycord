@@ -15,7 +15,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Add `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
   `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
-- Add `Asset.size`, `Asset.extention` properties.
+- Add `Asset.size`, `Asset.extension` properties.
   ([#3294](https://github.com/Pycord-Development/pycord/pull/3294))
 
 ### Changed
