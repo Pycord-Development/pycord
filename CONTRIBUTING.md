@@ -86,9 +86,9 @@ sure it is appropriate and makes sense in this library.
 ## AI Usage Policy
 
 The use of LLMs or other AI tools for any kind of partial or complete interaction or
-contribution (included but not limited to writing code, documentation or discussing with
-maintainers) must be disclosed at all times. The disclosure must include what tools what
-used and within which scope.
+contribution (including but not limited to the following: writing code/documentation or
+discussing with maintainers) must be disclosed at all times. The disclosure must include
+what tools what used and to what scopes they were used.
 
 The use of fully autonomous LLMs or other AI tools to perform the action of opening
 issues or pull requests is forbidden.
@@ -99,5 +99,5 @@ permanent ban from our organization.
 The use of LLMs or AI tools by new contributors is highly discouraged, and may result to
 direct closure of your issue or pull request.
 
-Furthermore, as outlined earlier in §"Licensing", by submitting a pull request, you
+Furthermore, as outlined earlier in §"Licensing," by submitting a pull request, you
 agree that you hold the copyright on your contribution.
