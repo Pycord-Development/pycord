@@ -59,7 +59,9 @@ jobs:
               'github-actions[bot]',
               'github-copilot[bot]',
               'copilot[bot]',
-              'copilot'
+              'copilot',
+              'pre-commit-ci',
+              'pre-commit-ci[bot]'
             ];
 
             if (skipAuthors.includes(author)) {
