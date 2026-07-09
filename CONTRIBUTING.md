@@ -29,19 +29,19 @@ Please be aware of the following things when filing bug reports.
 3. Make sure to provide enough information to make the issue workable. The issue
    template will generally walk you through the process but they are enumerated here as
    well:
-    - A **summary** of your bug report. This is generally a quick sentence or two to
-      describe the issue in human terms.
-    - Guidance on **how to reproduce the issue**. Ideally, this should have a small code
-      sample that allows us to run and see the issue for ourselves to debug. **Please
-      make sure that the token is not displayed**. If you cannot provide a code snippet,
-      then let us know what the steps were, how often it happens, etc.
-    - Tell us **what you expected to happen**. That way we can meet that expectation.
-    - Tell us **what actually happens**. What ends up happening in reality? It's not
-      helpful to say "it fails" or "it doesn't work". Say _how_ it failed, do you get an
-      exception? Does it hang? How are the expectations different from reality?
-    - Tell us **information about your environment**. What version of Pycord are you
-      using? How was it installed? What operating system are you running on? These are
-      valuable questions and information that we use.
+   - A **summary** of your bug report. This is generally a quick sentence or two to
+     describe the issue in human terms.
+   - Guidance on **how to reproduce the issue**. Ideally, this should have a small code
+     sample that allows us to run and see the issue for ourselves to debug. **Please
+     make sure that the token is not displayed**. If you cannot provide a code snippet,
+     then let us know what the steps were, how often it happens, etc.
+   - Tell us **what you expected to happen**. That way we can meet that expectation.
+   - Tell us **what actually happens**. What ends up happening in reality? It's not
+     helpful to say "it fails" or "it doesn't work". Say _how_ it failed, do you get an
+     exception? Does it hang? How are the expectations different from reality?
+   - Tell us **information about your environment**. What version of Pycord are you
+     using? How was it installed? What operating system are you running on? These are
+     valuable questions and information that we use.
 
 If the bug report is missing this information then it'll take us longer to fix the
 issue. We will probably ask for clarification, and barring that if no response was given
@@ -85,18 +85,19 @@ sure it is appropriate and makes sense in this library.
 
 ### AI Usage Policy
 
-The use of LLMs or other AI tools for any kind of partial or complete interaction or contribution (included but not
-limited to writing code, documentation or discussing with maintainers) must be disclosed at all times. The disclosure
-must include what tools what used and within which scope.
+The use of LLMs or other AI tools for any kind of partial or complete interaction or
+contribution (included but not limited to writing code, documentation or discussing with
+maintainers) must be disclosed at all times. The disclosure must include what tools what
+used and within which scope.
 
-The use of fully autonomous LLMs or other AI tools to perform the action of opening issues or pull requests is
-forbidden.
+The use of fully autonomous LLMs or other AI tools to perform the action of opening
+issues or pull requests is forbidden.
 
-Failure to disclose your AI use or to follow this policy may result in a temporary or permanent ban from our
-organization.
+Failure to disclose your AI use or to follow this policy may result in a temporary or
+permanent ban from our organization.
 
-The use of LLMs or AI tools by new contributors is highly discouraged, and may result to direct closure of your issue
-or pull request.
+The use of LLMs or AI tools by new contributors is highly discouraged, and may result to
+direct closure of your issue or pull request.
 
-Furthermore, as outlined earlier in § "Licensing", by submitting a pull request, you agree that you hold the copyright
-on your contribution.
+Furthermore, as outlined earlier in § "Licensing", by submitting a pull request, you
+agree that you hold the copyright on your contribution.
