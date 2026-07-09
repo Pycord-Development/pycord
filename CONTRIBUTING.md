@@ -60,7 +60,7 @@ In some cases, it might be necessary to ignore type checker warnings for one rea
 another. If that is the case, it is **required** that a comment is left explaining why
 you are deciding to ignore type checking warnings.
 
-### Licensing
+## Licensing
 
 By submitting a pull request, you agree that; 1) You hold the copyright on all submitted
 code inside said pull request; 2) You agree to transfer all rights to the owner of this
