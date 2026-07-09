@@ -95,14 +95,14 @@ English speaker, is discouraged. It can distort your intended meaning and make a
 human-written contribution look AI-generated. Please use a non-LLM-based translation
 tool instead.
 
-The use of fully autonomous LLMs or other AI tools to perform the action of opening
-issues or pull requests is forbidden.
+The use of fully autonomous LLMs or other AI tools to open issues or pull requests is
+forbidden.
 
 Failure to disclose your AI use or to follow this policy may result in a temporary or
 permanent ban from our organization.
 
-The use of LLMs or AI tools by new contributors is highly discouraged, and may result to
-direct closure of your issue or pull request.
+The use of LLMs or AI tools by new contributors is highly discouraged, and may result in
+the direct closure of your issue or pull request.
 
 Furthermore, as outlined earlier in §"Licensing," by submitting a pull request, you
 agree that you hold the copyright on your contribution.
