@@ -83,7 +83,7 @@ different to others.
 We don't limit nor deny your pulls when you're using another style although, please make
 sure it is appropriate and makes sense in this library.
 
-### AI Usage Policy
+## AI Usage Policy
 
 The use of LLMs or other AI tools for any kind of partial or complete interaction or
 contribution (included but not limited to writing code, documentation or discussing with
@@ -99,5 +99,5 @@ permanent ban from our organization.
 The use of LLMs or AI tools by new contributors is highly discouraged, and may result to
 direct closure of your issue or pull request.
 
-Furthermore, as outlined earlier in § "Licensing", by submitting a pull request, you
+Furthermore, as outlined earlier in §"Licensing", by submitting a pull request, you
 agree that you hold the copyright on your contribution.
