@@ -98,8 +98,8 @@ tool instead.
 The use of fully autonomous LLMs or other AI tools to open issues or pull requests is
 forbidden.
 
-Failure to disclose your AI use or to follow this policy may result in a temporary or
-permanent ban from our organization.
+Failure to follow this policy may result in a temporary or permanent ban from our
+organization.
 
 The use of LLMs or AI tools by new contributors is highly discouraged, and may result in
 the direct closure of your issue or pull request.
