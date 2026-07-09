@@ -92,8 +92,8 @@ the tools used and the scope of their application.
 
 If you are not a native English speaker, using LLMs or other AI tools for translation is
 discouraged. It can distort your intended meaning and make a human-written contribution
-look AI-generated. Please use a non-LLM-based translation tool like https://deepl.com
-instead.
+look AI-generated. Please use a non-LLM-based translation tool like
+[DeepL](https://deepl.com) instead.
 
 The use of fully autonomous LLMs or other AI tools to open issues or pull requests is
 strictly forbidden.
