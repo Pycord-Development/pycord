@@ -87,8 +87,8 @@ sure it is appropriate and makes sense in this library.
 
 The use of LLMs or other AI tools for any kind of partial or complete interaction or
 contribution (including but not limited to the following: writing code/documentation or
-discussing with maintainers) must be disclosed at all times. The disclosure must include
-what tools were used and to what scopes they were used.
+discussing with maintainers) must be disclosed at all times. The disclosure must specify
+the tools used and the scope of their application.
 
 If you are not a native English speaker, using LLMs or other AI tools for translation is
 discouraged. It can distort your intended meaning and make a human-written contribution
