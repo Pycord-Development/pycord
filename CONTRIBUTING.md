@@ -105,4 +105,6 @@ The use of LLMs or AI tools by new contributors is highly discouraged, and may r
 the direct closure of your issue or pull request.
 
 Furthermore, as outlined earlier in §"Licensing," by submitting a pull request, you
-agree that you hold the copyright on your contribution.
+agree that you hold the copyright on your contribution; and that you understand how your
+submitted code works and are able to explain its purpose, behavior, and impact when
+requested.
