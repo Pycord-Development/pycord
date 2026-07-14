@@ -409,6 +409,7 @@ class ApplicationCommandMixin(ABC):
                         "command": registered_commands_dict[cmd]["name"],
                         "id": int(value_["id"]),
                         "action": "delete",
+                        "raw": value_,
                     }
                 )
 
@@ -570,10 +571,11 @@ class ApplicationCommandMixin(ABC):
                 if cmd["action"] == "delete":
                     pending_actions.append(
                         {
-                            "action": "delete" if delete_existing else None,
+                            "action": "delete" if delete_existing else "keep",
                             "command": collections.namedtuple("Command", ["name"])(
                                 name=cmd["command"]
                             ),
+                            "raw": cmd.get("raw"),
                             "id": cmd["id"],
                         }
                     )
@@ -607,7 +609,10 @@ class ApplicationCommandMixin(ABC):
                 else:
                     raise ValueError(f"Unknown action: {cmd['action']}")
             filtered_no_action = list(
-                filter(lambda c: c["action"] is not None, pending_actions)
+                filter(
+                    lambda c: c["action"] is not None and c["action"] != "keep",
+                    pending_actions,
+                )
             )
             filtered_deleted = list(
                 filter(lambda a: a["action"] != "delete", pending_actions)
@@ -616,7 +621,11 @@ class ApplicationCommandMixin(ABC):
                 method == "auto" and len(filtered_deleted) == len(pending)
             ):
                 # Either the method is bulk or all the commands need to be modified, so we can just do a bulk upsert
-                data = [cmd["command"].to_dict() for cmd in filtered_deleted]
+                data = [
+                    cmd["raw"] if cmd["action"] == "keep" else cmd["command"].to_dict()
+                    for cmd in filtered_deleted
+                    if cmd["action"] != "keep" or cmd.get("raw") is not None
+                ]
                 # If there's nothing to update, don't bother
                 if len(filtered_no_action) == 0:
                     _log.debug("Skipping bulk command update: Commands are up to date")
@@ -677,6 +686,12 @@ class ApplicationCommandMixin(ABC):
             data = [cmd.to_dict() for cmd in pending]
             registered = await register("bulk", data, guild_id=guild_id)
 
+        kept_names = {
+            action["command"].name
+            for action in pending_actions
+            if action["action"] == "keep"
+        }
+
         for i in registered:
             cmd = get(
                 self.pending_application_commands,
@@ -684,6 +699,8 @@ class ApplicationCommandMixin(ABC):
                 type=i.get("type"),
             )
             if not cmd:
+                if i["name"] in kept_names:
+                    continue
                 raise ValueError(
                     f"Registered command {i['name']}, type {i.get('type')} not found in"
                     " pending commands"
