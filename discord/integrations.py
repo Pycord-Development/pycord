@@ -50,9 +50,7 @@ if TYPE_CHECKING:
     from .types.integration import (
         IntegrationApplication as IntegrationApplicationPayload,
     )
-    from .types.integration import (
-        IntegrationType,
-    )
+    from .types.integration import IntegrationType
     from .types.integration import StreamIntegration as StreamIntegrationPayload
 
 
