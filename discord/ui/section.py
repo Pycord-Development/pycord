@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
 
 from ..components import Section as SectionComponent
 from ..components import _component_factory
-from ..enums import ComponentType, ButtonStyle
+from ..enums import ButtonStyle, ComponentType
 from ..utils import find, get
 from .button import Button
 from .core import _item_getter
@@ -42,7 +42,7 @@ __all__ = ("Section",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..emoji import GuildEmoji, AppEmoji, PartialEmoji
+    from ..emoji import AppEmoji, GuildEmoji, PartialEmoji
     from ..types.components import SectionComponent as SectionComponentPayload
     from .view import DesignerView
 
