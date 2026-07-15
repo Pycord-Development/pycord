@@ -72,7 +72,7 @@ dev = [
     "mypy~=2.2.0",
     "coverage~=7.10",
     "pre-commit==4.6.0",
-    "codespell==2.4.2",
+    "codespell==2.4.3",
     "bandit==1.9.4",
     "flake8==7.3.0",
     "tox>=4.27.0",
