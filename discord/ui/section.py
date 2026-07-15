@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
 
 from ..components import Section as SectionComponent
 from ..components import _component_factory
-from ..enums import ComponentType
+from ..enums import ComponentType, ButtonStyle
 from ..utils import find, get
 from .button import Button
 from .core import _item_getter
@@ -42,6 +42,7 @@ __all__ = ("Section",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
+    from ..emoji import GuildEmoji, AppEmoji, PartialEmoji
     from ..types.components import SectionComponent as SectionComponentPayload
     from .view import DesignerView
 
@@ -375,6 +376,54 @@ class Section(ViewItem[V]):
         thumbnail = Thumbnail(url, description=description, spoiler=spoiler, id=id)
 
         return self.set_accessory(thumbnail)
+
+    def set_button(
+        self,
+        *,
+        style: ButtonStyle = ButtonStyle.secondary,
+        label: str | None = None,
+        disabled: bool = False,
+        custom_id: str | None = None,
+        url: str | None = None,
+        emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
+        sku_id: int | None = None,
+        id: int | None = None,
+    ) -> Self:
+        """Sets a :class:`Button` as the section's :attr:`accessory`.
+
+        Parameters
+        ----------
+        style: :class:`discord.ButtonStyle`
+            The style of the button.
+        custom_id: Optional[:class:`str`]
+            The custom ID of the button that gets received during an interaction.
+            If this button is for a URL, it does not have a custom ID.
+        url: Optional[:class:`str`]
+            The URL this button sends you to.
+        disabled: :class:`bool`
+            Whether the button is disabled or not.
+        label: Optional[:class:`str`]
+            The label of the button, if any. Maximum of 80 chars.
+        emoji: Optional[Union[:class:`.PartialEmoji`, :class:`GuildEmoji`, :class:`AppEmoji`, :class:`str`]]
+            The emoji of the button, if any.
+        sku_id: Optional[Union[:class:`int`]]
+            The ID of the SKU this button refers to.
+        id: Optional[:class:`int`]
+            The button's ID.
+        """
+
+        button = Button(
+            style=style,
+            label=label,
+            disabled=disabled,
+            custom_id=custom_id,
+            url=url,
+            emoji=emoji,
+            sku_id=sku_id,
+            id=id,
+        )
+
+        return self.set_accessory(button)
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
