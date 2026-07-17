@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added missing `slowmode_delay`, `user_limit`, and `bitrate` params to
+  `StageChannel.edit`. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Added `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
 - Add `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
   `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
@@ -20,6 +23,13 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix `StageChannel.create_instance` `send_notification` param type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix `VoiceChannel.edit` and `StageChannel.edit` overload `sync_permissions` type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix `MediaChannel.edit` overload return type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fixed an `AttributeError` when using `RoleColours.is_holographic` and `secondary` or
 - Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
