@@ -65,6 +65,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Support for **Python 3.14**.
   ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
+- Added `ComponentLimits` and `EmbedLimits` enums for Discord API constraints.
+  ([#3217](https://github.com/Pycord-Development/pycord/pull/3217))
 - Added support for community invites.
   ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `Member.colours` and `Member.colors` properties.
