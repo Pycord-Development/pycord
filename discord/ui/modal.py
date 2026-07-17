@@ -32,6 +32,7 @@ from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
+from ..components import _component_factory
 from ..enums import ComponentType
 from ..utils import _get_event_loop, find
 from .core import ItemInterface
@@ -40,6 +41,7 @@ from .item import ModalItem
 from .label import Label
 from .select import Select
 from .text_display import TextDisplay
+from .view import _component_to_item
 
 __all__ = (
     "BaseModal",
@@ -55,6 +57,7 @@ if TYPE_CHECKING:
     from ..interactions import Interaction
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
+    from ..types.components import Modal as ModalPayload
 
 M = TypeVar("M", bound="Modal", covariant=True)
 
@@ -431,6 +434,39 @@ class DesignerModal(BaseModal):
                 )
         self._children = value
 
+    @classmethod
+    def from_dict(
+        cls,
+        data: ModalPayload,
+        /,
+        *,
+        timeout: float | None = None,
+    ) -> DesignerModal:
+        """Converts a modal dictionary into a :class:`DesignerModal`.
+
+        Parameters
+        ----------
+        data: ModalPayload
+            The dict representing a modal
+        timeout: Optional[:class:`float`]
+            The timeout of the converted modal.
+
+        Returns
+        -------
+        :class:`DesignerModal`
+            The converted view. This always returns a :class:`DesignerModal` and not
+            one of its subclasses.
+        """
+        modal = DesignerModal(
+            title=data.get("title"),
+            custom_id=data.get("custom_id", None),
+            timeout=timeout,
+        )
+        components = [_component_factory(d) for d in data.get("components", [])]
+        for component in components:
+            modal.add_item(_component_to_item(component))
+        return modal
+
     def add_item(self, item: ModalItem) -> Self:
         """Adds a component to the modal.
 
@@ -447,6 +483,49 @@ class DesignerModal(BaseModal):
 
         super().add_item(item)
         return self
+
+    def add_label(
+        self,
+        label: str,
+        item: ModalItem = None,
+        *,
+        description: str | None = None,
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`Label` to the modal.
+
+        To append a pre-existing :class:`Label`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        label: :class:`str`
+            The label text. Must be 45 characters or fewer.
+        item: :class:`ModalItem`
+            The initial item attached to this label.
+        description: Optional[:class:`str`]
+            The description for this label. Must be 100 characters or fewer.
+        id: Optional[:class:`int`]
+            The label's ID.
+        """
+
+        label = Label(label, item=item, description=description, id=id)
+
+        return self.add_item(label)
+
+    def add_text(self, content: str, id: int | None = None) -> Self:
+        """Adds a :class:`TextDisplay` to the modal.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The content of the TextDisplay
+        id: Optional[:class:`int`]
+            The text display's ID.
+        """
+
+        text = TextDisplay(content, id=id)
+
+        return self.add_item(text)
 
     def _refresh(self, interaction: Interaction, data: list[ComponentPayload]):
         for component, child in zip(data, self.children):

@@ -286,12 +286,14 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             min_values=min_values,
             max_values=max_values,
             disabled=disabled,
-            options=options or [],
+            options=[],
             channel_types=channel_types or [],
             id=id,
             required=required,
             default_values=self._handle_default_values(default_values, select_type),
         )
+        if options is not None:
+            self.options = options
 
     def _generate_underlying(
         self,

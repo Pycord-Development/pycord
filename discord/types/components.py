@@ -47,6 +47,12 @@ class BaseComponent(TypedDict):
     id: NotRequired[int]
 
 
+class Modal(TypedDict):
+    custom_id: str
+    title: str
+    components: list[AllowedModalComponents]
+
+
 class ActionRow(BaseComponent):
     type: Literal[1]
     components: list[AllowedActionRowComponents]
@@ -253,4 +259,10 @@ AllowedLabelComponents = Union[
     RadioGroupComponent,
     CheckboxComponent,
     CheckboxGroupComponent,
+]
+
+AllowedModalComponents = Union[
+    ActionRow,
+    LabelComponent,
+    TextDisplayComponent,
 ]
