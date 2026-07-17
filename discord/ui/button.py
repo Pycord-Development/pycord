@@ -27,7 +27,8 @@ from __future__ import annotations
 
 import inspect
 import os
-from typing import TYPE_CHECKING, Callable, TypeVar
+from collections.abc import Callable
+from typing import TYPE_CHECKING, TypeVar
 
 from ..components import Button as ButtonComponent
 from ..enums import ButtonStyle, ComponentType

@@ -31,8 +31,8 @@ import datetime
 import inspect
 import sys
 import traceback
-from collections.abc import Sequence
-from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
+from collections.abc import Awaitable, Callable, Sequence
+from typing import Any, Generic, TypeVar, cast
 
 import aiohttp
 

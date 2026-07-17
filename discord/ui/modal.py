@@ -28,9 +28,10 @@ import asyncio
 import os
 import sys
 import time
+from collections.abc import Iterator
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from ..enums import ComponentType
 from ..utils import _get_event_loop, find

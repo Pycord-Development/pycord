@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Iterator, Literal
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, Any, Literal
 
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag

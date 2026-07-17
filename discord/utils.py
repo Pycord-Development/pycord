@@ -42,24 +42,26 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
+from collections.abc import (
+    AsyncIterator,
+    Awaitable,
+    Callable,
+    Coroutine,
+    Iterable,
+    Iterator,
+    Mapping,
+    Sequence,
+)
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Coroutine,
     ForwardRef,
     Generic,
-    Iterable,
-    Iterator,
     Literal,
-    Mapping,
     Protocol,
-    Sequence,
     TypeVar,
     Union,
     overload,

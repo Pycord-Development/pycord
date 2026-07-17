@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
+from collections.abc import Callable, Coroutine
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from ..interactions import Interaction
 

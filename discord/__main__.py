@@ -28,7 +28,6 @@ import importlib.metadata
 import platform
 import sys
 from pathlib import Path
-from typing import Tuple
 
 import aiohttp
 
@@ -352,7 +351,7 @@ def add_newcog_args(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def parse_args() -> Tuple[argparse.ArgumentParser, argparse.Namespace]:
+def parse_args() -> tuple[argparse.ArgumentParser, argparse.Namespace]:
     parser = argparse.ArgumentParser(
         prog="discord", description="Tools for helping with Pycord"
     )
