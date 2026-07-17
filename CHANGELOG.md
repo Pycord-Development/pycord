@@ -91,6 +91,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Changed that `read_only` team members aren't considered as owner.
 - `read_only` team members aren't considered as owners anymore when checking for app
   ownership permissions.
 - Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
@@ -114,6 +115,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3189](https://github.com/Pycord-Development/pycord/pull/3189))
 - Fixed incorrect type hints for `MessagePinIterator`.
   ([#3178](https://github.com/Pycord-Development/pycord/pull/3178))
+- Fixed team `permissions` keyerror by replacing deprecated permissions with `role`.
 - Fixed a `KeyError` when fetching an app's information or checking for app ownership
   with `is_owner`.
 - Fixed certain scenarios where received components could crash the app.
