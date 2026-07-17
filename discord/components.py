@@ -33,6 +33,7 @@ from .enums import (
     ButtonStyle,
     ChannelType,
     ComponentType,
+    FileType,
     InputTextStyle,
     SelectDefaultValueType,
     SeparatorSpacingSize,
@@ -1386,6 +1387,14 @@ class FileUpload(Component):
         The maximum number of files that can be uploaded.
     required: Optional[:class:`bool`]
         Whether the file upload field is required or not. Defaults to `True`.
+    file_types: List[:class:`str`, :class:`FileType`]
+        The file types allowed in this upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
+        A maximum of 10 file types can be provided, up to 16 characters each.
+
+        .. warning::
+            This only checks the file extension - you will still need to validate the file contents yourself.
+
+        .. versionadded:: 2.9
     id: Optional[:class:`int`]
         The file upload's ID.
     """
@@ -1396,6 +1405,7 @@ class FileUpload(Component):
         "min_values",
         "max_values",
         "required",
+        "file_types",
         "id",
     )
 
@@ -1409,6 +1419,13 @@ class FileUpload(Component):
         self.min_values: int | None = data.get("min_values", None)
         self.max_values: int | None = data.get("max_values", None)
         self.required: bool = data.get("required", True)
+        self.file_types: list[str | FileType] = []
+        for f in data.get("file_types", []):
+            (
+                self.file_types.append(f)
+                if f not in FileType.__members__
+                else try_enum(FileType, f)
+            )
 
     def to_dict(self) -> FileUploadComponentPayload:
         payload = {
@@ -1426,6 +1443,9 @@ class FileUpload(Component):
 
         if not self.required:
             payload["required"] = self.required
+
+        if self.file_types:
+            payload["file_types"] = [str(f) for f in self.file_types]
 
         return payload  # type: ignore
 

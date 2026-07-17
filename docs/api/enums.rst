@@ -2702,3 +2702,20 @@ of :class:`enum.Enum`.
     .. attribute:: read_only
 
         Represents the team read only role.
+
+.. class:: FileType
+    Represents the allowed file types in an attachment option or component. The types are subject to change based on what is supported on Discord clients.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: image
+
+        Allow image files. This includes ``.png``, ``.gif``, ``.jpg``, ``.jpeg``, ``.jfif``, ``.webp``, and ``.avif``.
+
+    .. attribute:: video
+
+        Allow video files. This includes ``.mp4``, ``.mov``, ``.qt``, and ``.webm``.
+
+    .. attribute:: audio
+
+        Allow audio files. This includes ``.mp3``, ``.m4a``, ``.wav``, ``.ogg``, ``.opus``, and ``.flac``.

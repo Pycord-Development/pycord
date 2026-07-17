@@ -60,7 +60,7 @@ from ..channel import (
 from ..commands import ApplicationContext, AutocompleteContext
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
-from ..enums import SlashCommandOptionType
+from ..enums import FileType, SlashCommandOptionType
 from ..utils import MISSING, basic_autocomplete
 
 if TYPE_CHECKING:
@@ -195,6 +195,15 @@ class Option:
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
         See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
+    file_types: List[:class:`str`, :class:`FileType`]
+        The file types allowed for this option. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
+        A maximum of 10 file types can be provided, up to 16 characters each.
+        Only applies to Options with an :attr:`input_type` of :class:`Attachment`.
+
+        .. warning::
+            This only checks the file extension - you will still need to validate the file contents yourself.
+
+        .. versionadded:: 2.9
 
     Examples
     --------
@@ -393,6 +402,23 @@ class Option:
         self.description_localizations = kwargs.pop(
             "description_localizations", MISSING
         )
+        self.file_types: list[FileType | str] = kwargs.pop("file_types", []) or []
+        if self.file_types:
+            if not isinstance(self.file_types, list):
+                raise TypeError(
+                    f"file_types must be a list, not {self.file_types.__class__.__name__}"
+                )
+            if len(self.file_types) > 10:
+                raise ValueError("file_types must be between 0 and 10 in length")
+            for f in self.file_types:
+                if not isinstance(f, (str, FileType)):
+                    raise TypeError(
+                        "items in file_types must be of type str or FileType"
+                    )
+                if len(str(f)) > 16:
+                    raise ValueError(
+                        "items in file_types must be a maximum of 16 characters in length"
+                    )
 
         if input_type is None:
             raise TypeError("input_type cannot be NoneType.")
@@ -453,6 +479,8 @@ class Option:
             as_dict["min_length"] = self.min_length
         if self.max_length is not None:
             as_dict["max_length"] = self.max_length
+        if self.file_types:
+            as_dict["file_types"] = [str(f) for f in self.file_types]
 
         return as_dict
 
