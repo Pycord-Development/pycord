@@ -288,12 +288,12 @@ class Attachment(Hashable):
         return self.url or ""
 
     async def save(
-            self,
-            fp: io.BufferedIOBase | PathLike,
-            *,
-            seek_begin: bool = True,
-            use_cached: bool = False,
-            chunksize: int | None = None,
+        self,
+        fp: io.BufferedIOBase | PathLike,
+        *,
+        seek_begin: bool = True,
+        use_cached: bool = False,
+        chunksize: int | None = None,
     ) -> int:
         """|coro|
 
@@ -393,7 +393,7 @@ class Attachment(Hashable):
         return data
 
     async def read_chunked(
-            self, chunksize: int, *, use_cached: bool = False
+        self, chunksize: int, *, use_cached: bool = False
     ) -> AsyncGenerator[bytes]:
         """|coro|
 
@@ -586,13 +586,13 @@ class MessageReference:
     )
 
     def __init__(
-            self,
-            *,
-            message_id: int,
-            channel_id: int,
-            guild_id: int | None = None,
-            fail_if_not_exists: bool = True,
-            type: MessageReferenceType = MessageReferenceType.default,
+        self,
+        *,
+        message_id: int,
+        channel_id: int,
+        guild_id: int | None = None,
+        fail_if_not_exists: bool = True,
+        type: MessageReferenceType = MessageReferenceType.default,
     ):
         self._state: ConnectionState | None = None
         self.resolved: Message | DeletedReferencedMessage | None = None
@@ -604,12 +604,12 @@ class MessageReference:
 
     @classmethod
     def with_state(
-            cls: type[MR], state: ConnectionState, data: MessageReferencePayload
+        cls: type[MR], state: ConnectionState, data: MessageReferencePayload
     ) -> MR:
         self = cls.__new__(cls)
         self.type = (
-                try_enum(MessageReferenceType, data.get("type"))
-                or MessageReferenceType.default
+            try_enum(MessageReferenceType, data.get("type"))
+            or MessageReferenceType.default
         )
         self.message_id = utils._get_as_snowflake(data, "message_id")
         self.channel_id = utils._get_as_snowflake(data, "channel_id")
@@ -621,11 +621,11 @@ class MessageReference:
 
     @classmethod
     def from_message(
-            cls: type[MR],
-            message: Message,
-            *,
-            fail_if_not_exists: bool = True,
-            type: MessageReferenceType = MessageReferenceType.default,
+        cls: type[MR],
+        message: Message,
+        *,
+        fail_if_not_exists: bool = True,
+        type: MessageReferenceType = MessageReferenceType.default,
     ) -> MR:
         """Creates a :class:`MessageReference` from an existing :class:`~discord.Message`.
 
@@ -767,27 +767,27 @@ class ForwardedMessage:
     """
 
     def __init__(
-            self,
-            *,
-            state: ConnectionState,
-            reference: MessageReference,
-            data: ForwardedMessagePayload,
+        self,
+        *,
+        state: ConnectionState,
+        reference: MessageReference,
+        data: ForwardedMessagePayload,
     ):
         self._state: ConnectionState = state
         self._reference = reference
         self.id: int = reference.message_id
         self.channel = state.get_channel(reference.channel_id) or (
-                reference.channel_id
-                and PartialMessageable(
-            state=state,
-            id=reference.channel_id,
-        )
+            reference.channel_id
+            and PartialMessageable(
+                state=state,
+                id=reference.channel_id,
+            )
         )
         self.guild = state._get_guild(reference.guild_id) or (
-                reference.guild_id and Object(reference.guild_id)
+            reference.guild_id and Object(reference.guild_id)
         )
         self.original_message = state._get_message(self.id) or (
-                self.id and self.channel.get_partial_message(self.id)
+            self.id and self.channel.get_partial_message(self.id)
         )
         self.content: str = data["content"]
         self.embeds: list[Embed] = [Embed.from_dict(a) for a in data["embeds"]]
@@ -844,11 +844,11 @@ class MessageSnapshot:
     """
 
     def __init__(
-            self,
-            *,
-            state: ConnectionState,
-            reference: MessageReference,
-            data: MessageSnapshotPayload,
+        self,
+        *,
+        state: ConnectionState,
+        reference: MessageReference,
+        data: MessageSnapshotPayload,
     ):
         self._state: ConnectionState = state
         self.message: ForwardedMessage | None
@@ -881,10 +881,10 @@ class MessagePin:
     """
 
     def __init__(
-            self,
-            state: ConnectionState,
-            channel: MessageableChannel,
-            data: MessagePinPayload,
+        self,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePinPayload,
     ):
         self._state: ConnectionState = state
         self._pinned_at: datetime.datetime = utils.parse_time(data["pinned_at"])
@@ -1099,11 +1099,11 @@ class Message(Hashable):
         role_mentions: list[Role]
 
     def __init__(
-            self,
-            *,
-            state: ConnectionState,
-            channel: MessageableChannel,
-            data: MessagePayload,
+        self,
+        *,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePayload,
     ):
         self._state: ConnectionState = state
         self._raw_data: MessagePayload = data
@@ -1259,7 +1259,7 @@ class Message(Hashable):
         return reaction
 
     def _remove_reaction(
-            self, data: ReactionPayload, emoji: EmojiInputType, user_id: int
+        self, data: ReactionPayload, emoji: EmojiInputType, user_id: int
     ) -> Reaction:
         reaction = utils.find(lambda r: r.emoji == emoji, self.reactions)
 
@@ -1382,7 +1382,7 @@ class Message(Hashable):
         self.components = [_component_factory(d, state=self._state) for d in components]
 
     def _rebind_cached_references(
-            self, new_guild: Guild, new_channel: TextChannel | Thread
+        self, new_guild: Guild, new_channel: TextChannel | Thread
     ) -> None:
         self.guild = new_guild
         self.channel = new_channel
@@ -1692,7 +1692,7 @@ class Message(Hashable):
             )
 
     async def delete(
-            self, *, delay: float | None = None, reason: str | None = None
+        self, *, delay: float | None = None, reason: str | None = None
     ) -> None:
         """|coro|
 
@@ -1732,35 +1732,34 @@ class Message(Hashable):
 
     @overload
     async def edit(
-            self,
-            *,
-            content: str | None = ...,
-            embed: Embed | None = ...,
-            embeds: list[Embed] = ...,
-            file: File | None = ...,
-            files: list[File] | None = ...,
-            attachments: list[Attachment] = ...,
-            suppress: bool = ...,
-            suppress_embeds: bool = ...,
-            delete_after: float | None = ...,
-            allowed_mentions: AllowedMentions | None = ...,
-            view: BaseView | None = ...,
-    ) -> Message:
-        ...
+        self,
+        *,
+        content: str | None = ...,
+        embed: Embed | None = ...,
+        embeds: list[Embed] = ...,
+        file: File | None = ...,
+        files: list[File] | None = ...,
+        attachments: list[Attachment] = ...,
+        suppress: bool = ...,
+        suppress_embeds: bool = ...,
+        delete_after: float | None = ...,
+        allowed_mentions: AllowedMentions | None = ...,
+        view: BaseView | None = ...,
+    ) -> Message: ...
 
     async def edit(
-            self,
-            content: str | None = MISSING,
-            embed: Embed | None = MISSING,
-            embeds: list[Embed] = MISSING,
-            file: Sequence[File] = MISSING,
-            files: list[Sequence[File]] = MISSING,
-            attachments: list[Attachment] = MISSING,
-            suppress: bool = MISSING,
-            suppress_embeds: bool = MISSING,
-            delete_after: float | None = None,
-            allowed_mentions: AllowedMentions | None = MISSING,
-            view: BaseView | None = MISSING,
+        self,
+        content: str | None = MISSING,
+        embed: Embed | None = MISSING,
+        embeds: list[Embed] = MISSING,
+        file: Sequence[File] = MISSING,
+        files: list[Sequence[File]] = MISSING,
+        attachments: list[Attachment] = MISSING,
+        suppress: bool = MISSING,
+        suppress_embeds: bool = MISSING,
+        delete_after: float | None = None,
+        allowed_mentions: AllowedMentions | None = MISSING,
+        view: BaseView | None = MISSING,
     ) -> Message:
         """|coro|
 
@@ -1862,8 +1861,8 @@ class Message(Hashable):
 
         if allowed_mentions is MISSING:
             if (
-                    self._state.allowed_mentions is not None
-                    and self.author.id == self._state.self_id
+                self._state.allowed_mentions is not None
+                and self.author.id == self._state.self_id
             ):
                 payload["allowed_mentions"] = self._state.allowed_mentions.to_dict()
         elif allowed_mentions is not None:
@@ -2040,7 +2039,7 @@ class Message(Hashable):
         await self._state.http.add_reaction(self.channel.id, self.id, emoji)
 
     async def remove_reaction(
-            self, emoji: EmojiInputType | Reaction, member: Snowflake
+        self, emoji: EmojiInputType | Reaction, member: Snowflake
     ) -> None:
         """|coro|
 
@@ -2130,11 +2129,11 @@ class Message(Hashable):
         await self._state.http.clear_reactions(self.channel.id, self.id)
 
     async def create_thread(
-            self,
-            *,
-            name: str,
-            auto_archive_duration: ThreadArchiveDuration = MISSING,
-            slowmode_delay: int = MISSING,
+        self,
+        *,
+        name: str,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        slowmode_delay: int = MISSING,
     ) -> Thread:
         """|coro|
 
@@ -2184,7 +2183,7 @@ class Message(Hashable):
             self.id,
             name=name,
             auto_archive_duration=auto_archive_duration
-                                  or default_auto_archive_duration,
+            or default_auto_archive_duration,
             rate_limit_per_user=slowmode_delay or 0,
         )
 
@@ -2218,7 +2217,7 @@ class Message(Hashable):
         return await self.channel.send(content, reference=self.to_reference(), **kwargs)
 
     async def forward_to(
-            self, channel: MessageableChannel | PartialMessageableChannel, **kwargs
+        self, channel: MessageableChannel | PartialMessageableChannel, **kwargs
     ) -> Message:
         """|coro|
 
@@ -2281,7 +2280,7 @@ class Message(Hashable):
         return message
 
     def to_reference(
-            self, *, fail_if_not_exists: bool = True, type: MessageReferenceType = None
+        self, *, fail_if_not_exists: bool = True, type: MessageReferenceType = None
     ) -> MessageReference:
         """Creates a :class:`~discord.MessageReference` from the current message.
 
@@ -2311,7 +2310,7 @@ class Message(Hashable):
         )
 
     def to_message_reference_dict(
-            self, type: MessageReferenceType = None
+        self, type: MessageReferenceType = None
     ) -> MessageReferencePayload:
         data: MessageReferencePayload = {
             "message_id": self.id,
@@ -2409,14 +2408,14 @@ class PartialMessage(Hashable):
 
     def __init__(self, *, channel: PartialMessageableChannel, id: int):
         if channel.type not in (
-                ChannelType.text,
-                ChannelType.voice,
-                ChannelType.stage_voice,
-                ChannelType.news,
-                ChannelType.private,
-                ChannelType.news_thread,
-                ChannelType.public_thread,
-                ChannelType.private_thread,
+            ChannelType.text,
+            ChannelType.voice,
+            ChannelType.stage_voice,
+            ChannelType.news,
+            ChannelType.private,
+            ChannelType.news_thread,
+            ChannelType.public_thread,
+            ChannelType.private_thread,
         ) and not isinstance(channel, PartialMessageable):
             raise TypeError(
                 "Expected TextChannel, VoiceChannel, StageChannel, DMChannel, Thread or PartialMessageable not"

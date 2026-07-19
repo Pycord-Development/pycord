@@ -207,7 +207,11 @@ class Thread(Messageable, Hashable):
         ]
 
         # Here, we try to fill in potentially missing data
-        if self.guild and (thread := self.guild.get_thread(self.id)) and data.pop("_invoke_flag", False):
+        if (
+            self.guild
+            and (thread := self.guild.get_thread(self.id))
+            and data.pop("_invoke_flag", False)
+        ):
             self.owner_id = thread.owner_id if self.owner_id is None else self.owner_id
             self.last_message_id = (
                 thread.last_message_id
@@ -462,7 +466,7 @@ class Thread(Messageable, Hashable):
         return parent.permissions_for(obj)
 
     async def delete_messages(
-            self, messages: Iterable[Snowflake], *, reason: str | None = None
+        self, messages: Iterable[Snowflake], *, reason: str | None = None
     ) -> None:
         """|coro|
 
@@ -518,16 +522,16 @@ class Thread(Messageable, Hashable):
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
-            self,
-            *,
-            limit: int | None = 100,
-            check: Callable[[Message], bool] = MISSING,
-            before: SnowflakeTime | None = None,
-            after: SnowflakeTime | None = None,
-            around: SnowflakeTime | None = None,
-            oldest_first: bool | None = False,
-            bulk: bool = True,
-            reason: str | None = None,
+        self,
+        *,
+        limit: int | None = 100,
+        check: Callable[[Message], bool] = MISSING,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        around: SnowflakeTime | None = None,
+        oldest_first: bool | None = False,
+        bulk: bool = True,
+        reason: str | None = None,
     ) -> list[Message]:
         """|coro|
 
@@ -599,19 +603,19 @@ class Thread(Messageable, Hashable):
         )
 
     async def edit(
-            self,
-            *,
-            name: str = MISSING,
-            archived: bool = MISSING,
-            locked: bool = MISSING,
-            invitable: bool = MISSING,
-            slowmode_delay: int = MISSING,
-            auto_archive_duration: (
-                    ThreadArchiveDuration | ThreadArchiveDurationEnum
-            ) = MISSING,
-            pinned: bool = MISSING,
-            applied_tags: list[ForumTag] = MISSING,
-            reason: str | None = None,
+        self,
+        *,
+        name: str = MISSING,
+        archived: bool = MISSING,
+        locked: bool = MISSING,
+        invitable: bool = MISSING,
+        slowmode_delay: int = MISSING,
+        auto_archive_duration: (
+            ThreadArchiveDuration | ThreadArchiveDurationEnum
+        ) = MISSING,
+        pinned: bool = MISSING,
+        applied_tags: list[ForumTag] = MISSING,
+        reason: str | None = None,
     ) -> Thread:
         """|coro|
 
