@@ -1203,13 +1203,16 @@ class Message(Hashable):
         except KeyError:
             self._poll = None
 
-        self.thread: Thread | None
-        try:
-            self.thread = Thread(
-                guild=self.guild, state=self._state, data=data["thread"]
+        self.thread: Thread | None = None
+        if thread_data := data.get("thread"):
+            # When fetching from a PartialMessageable we don't have a guild so we need to fallback here
+            guild = self.guild or state._get_guild(
+                utils._get_as_snowflake(thread_data, "guild_id")
             )
-        except KeyError:
-            self.thread = None
+            if guild is not None:
+                self.thread = guild.get_thread(int(thread_data["id"])) or Thread(
+                    guild=guild, state=self._state, data=thread_data
+                )
 
         self.call: MessageCall | None
         try:
