@@ -545,7 +545,7 @@ class Invite(Hashable):
     ):
         self._state: ConnectionState = state
         self.max_age: int | None = data.get("max_age")
-        self.code: str = data["code"]
+        self.code: str | None = data.get("code")
         self.guild: InviteGuildType | None = self._resolve_guild(
             data.get("guild"), guild
         )
@@ -689,7 +689,7 @@ class Invite(Hashable):
             return [Object(role_id) for role_id in role_ids]
 
     def __str__(self) -> str:
-        return self.url
+        return self.code or ""
 
     def __repr__(self) -> str:
         return (
@@ -712,6 +712,8 @@ class Invite(Hashable):
     @property
     def url(self) -> str:
         """A property that retrieves the invite URL."""
+        if self.code is None:
+            raise ValueError("Cannot build an invite URL when code is None")
         return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
 
     @property
