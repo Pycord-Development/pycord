@@ -18,11 +18,16 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Inline `_InviteMetadata` fields into `IncompleteInvite` and remove the now-unused
+  `_InviteMetadata` TypedDict.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+
 ### Fixed
 
-- Fix `Invite.url` producing `"https://discord.gg/None"` when `code` is `None` (from
-  `VanityInvitePayload`). Now raises `ValueError` on `.url` and returns`""` from
-  `__str__`. ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+- Fix `Invite.code` handling when `None` (from `VanityInvitePayload`). `__str__`
+  falls back to `""`, `.url` and all code-dependent methods raise `ValueError`, 
+  and `Invite.code` is typed as `str | None`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 - Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
