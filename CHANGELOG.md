@@ -20,6 +20,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix `Invite.url` producing `"https://discord.gg/None"` when `code` is `None`
+  (from `VanityInvitePayload`). Now raises `ValueError` on `.url` and returns`""` 
+  from `__str__`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 - Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
