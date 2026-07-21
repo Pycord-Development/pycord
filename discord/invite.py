@@ -705,9 +705,9 @@ class Invite(Hashable):
         return hash(self.code)
 
     @property
-    def id(self) -> str:
+    def id(self) -> str:  # type: ignore[override]
         """Returns the proper code portion of the invite."""
-        return self.code
+        return self.code or ""
 
     @property
     def url(self) -> str:
