@@ -545,7 +545,7 @@ class Invite(Hashable):
     ):
         self._state: ConnectionState = state
         self.max_age: int | None = data.get("max_age")
-        self.code: str = data["code"]
+        self.code: str | None = data.get("code")
         self.guild: InviteGuildType | None = self._resolve_guild(
             data.get("guild"), guild
         )
@@ -689,7 +689,7 @@ class Invite(Hashable):
             return [Object(role_id) for role_id in role_ids]
 
     def __str__(self) -> str:
-        return self.url
+        return self.code or ""
 
     def __repr__(self) -> str:
         return (
@@ -705,13 +705,15 @@ class Invite(Hashable):
         return hash(self.code)
 
     @property
-    def id(self) -> str:
+    def id(self) -> str:  # type: ignore[override]
         """Returns the proper code portion of the invite."""
-        return self.code
+        return self.code or ""
 
     @property
     def url(self) -> str:
         """A property that retrieves the invite URL."""
+        if self.code is None:
+            raise ValueError("Cannot build an invite URL when code is None")
         return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
 
     @property
@@ -719,7 +721,14 @@ class Invite(Hashable):
         """An :class:`InviteTargetUsers` object for managing the target users list for this invite.
 
         .. versionadded:: 2.8
+
+        Raises
+        ------
+        ValueError
+            The invite has no code.
         """
+        if self.code is None:
+            raise ValueError("Cannot manage target users for an invite with no code")
         return InviteTargetUsers(invite_code=self.code, state=self._state)
 
     async def edit_target_users(self, target_users_file: File) -> None:
@@ -738,6 +747,8 @@ class Invite(Hashable):
 
         Raises
         ------
+        ValueError
+            The invite has no code.
         HTTPException
             Updating the target users failed.
         Forbidden
@@ -745,6 +756,8 @@ class Invite(Hashable):
         NotFound
             The invite is invalid or expired.
         """
+        if self.code is None:
+            raise ValueError("Cannot edit target users for an invite with no code")
         await self._state.http.update_invite_target_users(
             self.code, target_users_file=target_users_file
         )
@@ -764,6 +777,8 @@ class Invite(Hashable):
 
         Raises
         ------
+        ValueError
+            The invite has no code.
         HTTPException
             Fetching the job status failed.
         NotFound
@@ -771,6 +786,10 @@ class Invite(Hashable):
         Forbidden
             You do not have permission to view the target users.
         """
+        if self.code is None:
+            raise ValueError(
+                "Cannot fetch target users job status for an invite with no code"
+            )
         r = await self._state.http.get_invite_target_users_job_status(self.code)
         return InviteTargetUsersJobStatus(data=r)
 
@@ -788,6 +807,8 @@ class Invite(Hashable):
 
         Raises
         ------
+        ValueError
+            The invite has no code.
         Forbidden
             You do not have permissions to revoke invites.
         NotFound
@@ -796,6 +817,8 @@ class Invite(Hashable):
             Revoking the invite failed.
         """
 
+        if self.code is None:
+            raise ValueError("Cannot delete an invite with no code")
         await self._state.http.delete_invite(self.code, reason=reason)
 
     def set_scheduled_event(self, event: ScheduledEvent) -> None:
