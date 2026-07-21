@@ -77,6 +77,8 @@ body:
           required: true
         - label: I have removed my token from display, if visible.
           required: true
+        - label: I have read the [Contributing Guidelines](https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md).
+          required: true
   - type: textarea
     attributes:
       label: Additional Context

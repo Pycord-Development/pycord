@@ -69,10 +69,10 @@ voice = { file = "requirements/voice.txt" }
 [dependency-groups]
 dev = [
     "pylint~=4.0.5",
-    "mypy~=2.1.0",
+    "mypy~=2.3.0",
     "coverage~=7.10",
     "pre-commit==4.6.0",
-    "codespell==2.4.2",
+    "codespell==2.4.3",
     "bandit==1.9.4",
     "flake8==7.3.0",
     "tox>=4.27.0",
@@ -80,7 +80,7 @@ dev = [
 ]
 test = [
     "pytest~=9.1.1",
-    "pytest-asyncio~=1.3.0",
+    "pytest-asyncio~=1.4.0",
 ]
 [tool.setuptools_scm]
 
