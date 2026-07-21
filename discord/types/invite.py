@@ -49,8 +49,9 @@ class _InviteMetadata(TypedDict, total=False):
     expires_at: str | None
 
 
-class VanityInvite(_InviteMetadata):
+class VanityInvite(TypedDict):
     code: str | None
+    uses: int
 
 
 class IncompleteInvite(_InviteMetadata):
