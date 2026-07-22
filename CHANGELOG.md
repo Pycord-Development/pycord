@@ -18,6 +18,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Added support for Discord DAVE (Audio & Video E2EE) for voice-receive related features
+  and refactored the voice-reception system.
+  ([#3159](https://github.com/Pycord-Development/pycord/pull/3159))
+
 ### Fixed
 
 - Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
