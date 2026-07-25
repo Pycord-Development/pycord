@@ -21,6 +21,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Removed
 
 ## [2.8.1] - 2026-07-25
+
 ### Added
 
 - Add `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
@@ -63,6 +64,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
 - Fix `PartialMessage.edit()` to work with `DesignerView`.
   ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
+
 ## [2.8.0] - 2026-05-18
 
 ### Added
