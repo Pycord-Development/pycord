@@ -64,7 +64,7 @@ Application Commands
 
     .. versionadded:: 2.0
 
-    :param context: The ApplicationContext associated to the command being received.
+    :param context: The ApplicationContext associated with the command being received.
     :type context: :class:`ApplicationContext`
 
 .. function:: on_application_command_completion(context)
@@ -73,7 +73,7 @@ Application Commands
 
     .. versionadded:: 2.0
 
-    :param context: The ApplicationContext associated to the command that was completed.
+    :param context: The ApplicationContext associated with the command that was completed.
     :type context: :class:`ApplicationContext`
 
 .. function:: on_application_command_error(context, exception)
@@ -82,10 +82,10 @@ Application Commands
 
     .. versionadded:: 2.0
 
-    :param context: The ApplicationContext associated to the command that has an error.
+    :param context: The ApplicationContext associated with the command that has an error.
     :type context: :class:`ApplicationContext`
 
-    :param exception: The DiscordException associated to the error.
+    :param exception: The DiscordException associated with the error.
     :type exception: :class:`DiscordException`
 
 .. function:: on_unknown_application_command(interaction)
@@ -94,7 +94,7 @@ Application Commands
 
     .. versionadded:: 2.0
 
-    :param interaction: The interaction associated to the unknown command.
+    :param interaction: The interaction associated with the unknown command.
     :type interaction: :class:`Interaction`
 
 Audit Logs
@@ -937,7 +937,7 @@ Reactions
 
     .. note::
 
-        To get the :class:`Message` being reacted, access it via :attr:`Reaction.message`.
+        To retrieve the :class:`Message` that received the reaction, access :attr:`Reaction.message`.
 
     This requires :attr:`Intents.reactions` to be enabled.
 
@@ -966,13 +966,13 @@ Reactions
 
 .. function:: on_reaction_remove(reaction, user)
 
-    Called when a message has a reaction removed from it. Similar to on_message_edit,
+    Called when a message has a reaction removed from it. Similar to :func:`on_message_edit`,
     if the message is not found in the internal message cache, then this event
     will not be called.
 
     .. note::
 
-        To get the message being reacted, access it via :attr:`Reaction.message`.
+        To retrieve the :class:`Message` that received the reaction, access :attr:`Reaction.message`.
 
     This requires both :attr:`Intents.reactions` and :attr:`Intents.members` to be enabled.
 
@@ -1173,7 +1173,7 @@ Scheduled Events
 
 .. function:: on_scheduled_event_user_remove(event, member)
 
-    Called when a user unsubscribes to an event. If the member or event is
+    Called when a user unsubscribes from an event. If the member or event is
     not found in the internal cache, then this event will not be called.
     Consider using :func:`on_raw_scheduled_event_user_remove` instead.
 
@@ -1186,7 +1186,7 @@ Scheduled Events
 
 .. function:: on_raw_scheduled_event_user_remove(payload)
 
-    Called when a user unsubscribes to an event. Unlike
+    Called when a user unsubscribes from an event. Unlike
     :meth:`on_scheduled_event_user_remove`, this will be called
     regardless of the state of the internal cache.
 
@@ -1408,7 +1408,7 @@ Voice Channel Status Update
 
 .. function:: on_raw_voice_channel_status_update(payload)
 
-    Called when someone updates a voice channels status.
+    Called when someone updates a voice channel status.
 
     .. versionadded:: 2.5
 

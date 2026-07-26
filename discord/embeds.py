@@ -41,7 +41,6 @@ __all__ = (
     "EmbedProvider",
 )
 
-
 E = TypeVar("E", bound="Embed")
 
 if TYPE_CHECKING:
@@ -365,7 +364,7 @@ class Embed:
         image: str | EmbedMedia | None = None,
         thumbnail: str | EmbedMedia | None = None,
     ):
-        self.colour = colour if colour else color
+        self.colour = colour if colour is not None else color
         self.title = title
         self.type = type
         self.url = url
