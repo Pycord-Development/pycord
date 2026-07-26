@@ -280,4 +280,3 @@ class Template:
         return f"https://discord.new/{self.code}"
 
 
-# pre commit test trigger

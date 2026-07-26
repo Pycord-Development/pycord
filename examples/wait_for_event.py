@@ -53,4 +53,3 @@ async def guess_number(ctx: discord.ApplicationContext):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

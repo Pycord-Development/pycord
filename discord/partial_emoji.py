@@ -265,4 +265,3 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return await super().read()
 
 
-# pre commit test trigger

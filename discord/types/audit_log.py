@@ -296,4 +296,3 @@ class AuditLog(TypedDict):
     auto_moderation_rules: list[AutoModRule]
 
 
-# pre commit test trigger

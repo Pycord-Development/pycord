@@ -65,4 +65,3 @@ class Webhook(PartialWebhook):
     application_id: NotRequired[Snowflake | None]
 
 
-# pre commit test trigger

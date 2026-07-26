@@ -1023,4 +1023,3 @@ class MissingFlagArgument(FlagError):
         super().__init__(f"Flag {flag.name!r} does not have an argument")
 
 
-# pre commit test trigger

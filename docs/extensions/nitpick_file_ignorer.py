@@ -24,4 +24,3 @@ def setup(app: Sphinx):
     sphinx_logging.getLogger("sphinx.transforms.post_transforms").logger.addFilter(f)
 
 
-# pre commit test trigger

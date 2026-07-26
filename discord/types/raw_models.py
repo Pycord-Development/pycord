@@ -167,4 +167,3 @@ class MessagePollVoteEvent(TypedDict):
     answer_id: int
 
 
-# pre commit test trigger

@@ -204,4 +204,3 @@ class AutoShardedBot(BotBase, ExtAutoShardedBot):
     """
 
 
-# pre commit test trigger

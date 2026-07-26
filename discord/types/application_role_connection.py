@@ -40,4 +40,3 @@ class ApplicationRoleConnectionMetadata(TypedDict):
     description_localizations: NotRequired[dict[str, str]]
 
 
-# pre commit test trigger

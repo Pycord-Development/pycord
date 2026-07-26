@@ -1690,4 +1690,3 @@ def _get_event_loop() -> asyncio.AbstractEventLoop:
     return asyncio.get_event_loop()
 
 
-# pre commit test trigger

@@ -286,4 +286,3 @@ class CheckboxGroup(ModalItem):
         return self.refresh_state(data)
 
 
-# pre commit test trigger

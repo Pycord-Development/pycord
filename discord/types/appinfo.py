@@ -95,4 +95,3 @@ class PartialAppInfo(BaseAppInfo, total=False):
     pass
 
 
-# pre commit test trigger

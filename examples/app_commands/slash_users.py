@@ -31,4 +31,3 @@ async def say_hello(ctx: discord.ApplicationContext):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

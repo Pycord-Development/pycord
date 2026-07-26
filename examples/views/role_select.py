@@ -43,4 +43,3 @@ async def on_ready() -> None:
 
 
 bot.run("TOKEN")
-# pre commit test trigger

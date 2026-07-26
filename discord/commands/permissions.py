@@ -139,4 +139,3 @@ def is_nsfw() -> Callable:
     return inner
 
 
-# pre commit test trigger

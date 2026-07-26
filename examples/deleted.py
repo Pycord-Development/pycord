@@ -32,4 +32,3 @@ async def on_message_delete(message: discord.Message):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

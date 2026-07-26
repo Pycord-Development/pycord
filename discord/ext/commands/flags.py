@@ -702,4 +702,3 @@ class FlagConverter(metaclass=FlagsMeta):
         return self
 
 
-# pre commit test trigger

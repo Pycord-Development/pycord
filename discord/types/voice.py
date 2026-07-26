@@ -89,4 +89,3 @@ class VoiceReady(TypedDict):
     heartbeat_interval: int
 
 
-# pre commit test trigger

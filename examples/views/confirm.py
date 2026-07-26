@@ -64,4 +64,3 @@ async def ask(ctx: commands.Context):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

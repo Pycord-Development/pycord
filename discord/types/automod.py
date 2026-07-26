@@ -91,4 +91,3 @@ class EditAutoModRule(TypedDict, total=False):
     exempt_channels: list[Snowflake]
 
 
-# pre commit test trigger

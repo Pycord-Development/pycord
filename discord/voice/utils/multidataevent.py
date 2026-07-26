@@ -79,4 +79,3 @@ class MultiDataEvent(Generic[T]):
         self._ready.clear()
 
 
-# pre commit test trigger

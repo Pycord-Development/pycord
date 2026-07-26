@@ -27,4 +27,3 @@ def setup(bot):
 # bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"))
 # bot.load_extension("slash_cog")
 # bot.run("TOKEN")
-# pre commit test trigger

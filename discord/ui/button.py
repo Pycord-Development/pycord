@@ -420,4 +420,3 @@ def button(
     return decorator  # type: ignore # lie to the type checkers, because after a View is instated, the button callback is converted into a Button instance
 
 
-# pre commit test trigger

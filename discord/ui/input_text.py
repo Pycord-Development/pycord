@@ -297,4 +297,3 @@ class InputText(ModalItem):
 
 
 TextInput = InputText
-# pre commit test trigger

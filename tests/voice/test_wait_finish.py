@@ -113,4 +113,3 @@ def test_wait_finish_keeps_first_result_when_stop_races(monkeypatch):
         loop.close()
 
 
-# pre commit test trigger

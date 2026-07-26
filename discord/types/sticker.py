@@ -91,4 +91,3 @@ class ListPremiumStickerPacks(TypedDict):
     sticker_packs: list[StickerPack]
 
 
-# pre commit test trigger

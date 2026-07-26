@@ -1032,4 +1032,3 @@ class RawMemberUpdateEvent(_RawReprMixin):
         self.member: Member = member
 
 
-# pre commit test trigger

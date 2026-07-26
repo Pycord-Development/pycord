@@ -55,4 +55,3 @@ def test_voice_modules_import_with_voice_extra():
     __import__("discord.voice.receive.reader")
 
 
-# pre commit test trigger

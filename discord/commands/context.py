@@ -476,4 +476,3 @@ class AutocompleteContext:
         self.interaction.command = value
 
 
-# pre commit test trigger

@@ -296,4 +296,3 @@ class ReactionCountDetails:
         self.burst = data.get("burst", 0)
 
 
-# pre commit test trigger

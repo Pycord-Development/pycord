@@ -720,4 +720,3 @@ class AuditLogEntry(Hashable):
         return self.guild.get_scheduled_event(target_id) or Object(id=target_id)
 
 
-# pre commit test trigger

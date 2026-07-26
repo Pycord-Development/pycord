@@ -111,4 +111,3 @@ class Activity(_BaseActivity, total=False):
     buttons: list[str]
 
 
-# pre commit test trigger

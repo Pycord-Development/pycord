@@ -44,4 +44,3 @@ async def counter(ctx: commands.Context):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

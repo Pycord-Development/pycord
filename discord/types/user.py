@@ -57,4 +57,3 @@ class User(PartialUser, total=False):
     collectibles: Collectibles
 
 
-# pre commit test trigger

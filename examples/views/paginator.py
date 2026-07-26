@@ -339,4 +339,3 @@ def setup(bot):
 # bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), intents=intents)
 # bot.load_extension("paginator")
 # bot.run("TOKEN")
-# pre commit test trigger

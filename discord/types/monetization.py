@@ -78,4 +78,3 @@ class Subscription(TypedDict):
     country: NotRequired[str]
 
 
-# pre commit test trigger

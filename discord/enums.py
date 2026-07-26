@@ -1233,4 +1233,3 @@ def try_enum(cls: type[T], val: Any) -> T:
         return create_unknown_value(cls, val)
 
 
-# pre commit test trigger

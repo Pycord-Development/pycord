@@ -556,4 +556,3 @@ def option(name, input_type=None, **kwargs):
     return decorator
 
 
-# pre commit test trigger

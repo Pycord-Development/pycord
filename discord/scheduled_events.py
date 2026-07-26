@@ -578,4 +578,3 @@ class ScheduledEvent(Hashable):
         )
 
 
-# pre commit test trigger

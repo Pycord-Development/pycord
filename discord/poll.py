@@ -529,4 +529,3 @@ class Poll:
         return await self._message.end_poll()
 
 
-# pre commit test trigger

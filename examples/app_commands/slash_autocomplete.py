@@ -234,4 +234,3 @@ async def get_vegetable(ctx: discord.ApplicationContext, choice: str):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

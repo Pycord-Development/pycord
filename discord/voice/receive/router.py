@@ -231,4 +231,3 @@ class SinkEventRouter(threading.Thread):
                         self._dispatch_to_listeners(event, *args, **kwargs)
 
 
-# pre commit test trigger

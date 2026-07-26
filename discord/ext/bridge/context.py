@@ -201,4 +201,3 @@ Context = Union[BridgeExtContext, BridgeApplicationContext]
 A Union class for either :class:`BridgeExtContext` or :class:`BridgeApplicationContext`.
 Can be used as a type hint for Context for bridge commands.
 """
-# pre commit test trigger

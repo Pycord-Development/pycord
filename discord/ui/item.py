@@ -270,4 +270,3 @@ class ModalItem(Item[M]):
         self._modal = value
 
 
-# pre commit test trigger

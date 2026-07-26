@@ -50,4 +50,3 @@ class EditEmoji(TypedDict):
     roles: SnowflakeList | None
 
 
-# pre commit test trigger

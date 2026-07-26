@@ -62,4 +62,3 @@ class RoleTags(TypedDict, total=False):
     guild_connections: NotRequired[Literal[None]]
 
 
-# pre commit test trigger

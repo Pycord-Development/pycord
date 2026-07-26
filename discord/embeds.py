@@ -1080,4 +1080,3 @@ class Embed:
         return result  # type: ignore
 
 
-# pre commit test trigger

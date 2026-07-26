@@ -297,4 +297,3 @@ def setup(app):
     app.connect("doctree-resolved", process_attributetable)
 
 
-# pre commit test trigger

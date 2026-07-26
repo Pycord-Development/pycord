@@ -45,4 +45,3 @@ class AvatarDecoration(TypedDict):
     asset: str
 
 
-# pre commit test trigger

@@ -1841,4 +1841,3 @@ class RoleFlags(BaseFlags):
         return 1 << 0
 
 
-# pre commit test trigger

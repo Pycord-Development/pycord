@@ -42,4 +42,3 @@ class GatewayBot(Gateway):
     session_start_limit: SessionStartLimit
 
 
-# pre commit test trigger

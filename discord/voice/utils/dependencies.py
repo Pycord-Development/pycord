@@ -38,4 +38,3 @@ except ImportError:
     HAS_NACL = False
 else:
     HAS_NACL = True
-# pre commit test trigger

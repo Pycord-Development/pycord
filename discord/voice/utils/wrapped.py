@@ -32,4 +32,3 @@ def add_wrapped(a: int, b: int, *, wrap: int = 65536) -> int:
     return (a + b) % wrap
 
 
-# pre commit test trigger

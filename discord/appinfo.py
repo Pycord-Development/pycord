@@ -650,4 +650,3 @@ class IntegrationTypesConfig:
         return payload
 
 
-# pre commit test trigger

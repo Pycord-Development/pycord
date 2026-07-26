@@ -521,4 +521,3 @@ class VoiceWebSocket(DiscordWebSocket):
         await self.send_as_json(payload)
 
 
-# pre commit test trigger

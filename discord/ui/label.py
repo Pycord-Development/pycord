@@ -566,4 +566,3 @@ class Label(ModalItem[M]):
         )
 
 
-# pre commit test trigger

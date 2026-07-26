@@ -166,4 +166,3 @@ class VoiceProtocol(Generic[ClientT]):
         self.client._connection._remove_voice_client(key)
 
 
-# pre commit test trigger

@@ -196,4 +196,3 @@ class VoiceChannelEffectSendEvent(TypedDict):
     sound_volume: NotRequired[float]
 
 
-# pre commit test trigger

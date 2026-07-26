@@ -110,4 +110,3 @@ class TextDisplay(ViewItem[V], ModalItem[M]):
     callback = None
 
 
-# pre commit test trigger

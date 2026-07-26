@@ -85,4 +85,3 @@ async def show_view(ctx: ApplicationContext):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

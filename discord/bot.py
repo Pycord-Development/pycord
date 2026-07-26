@@ -1683,4 +1683,3 @@ class AutoShardedBot(BotBase, AutoShardedClient):
         return self
 
 
-# pre commit test trigger

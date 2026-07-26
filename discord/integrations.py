@@ -374,4 +374,3 @@ def _integration_factory(value: str) -> tuple[type[Integration], str]:
         return Integration, value
 
 
-# pre commit test trigger

@@ -689,4 +689,3 @@ def bridge_option(name, input_type=None, **kwargs):
     return decorator
 
 
-# pre commit test trigger

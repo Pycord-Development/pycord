@@ -881,4 +881,3 @@ def create_activity(data: ActivityPayload | None) -> ActivityTypes | None:
     return Activity(**data)
 
 
-# pre commit test trigger

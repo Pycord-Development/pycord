@@ -92,4 +92,3 @@ class MemberUpdateEvent(TypedDict):
     # collectibles: Collectibles
 
 
-# pre commit test trigger

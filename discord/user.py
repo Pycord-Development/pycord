@@ -740,4 +740,3 @@ class User(BaseUser, discord.abc.Messageable):
         )
 
 
-# pre commit test trigger

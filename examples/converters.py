@@ -124,4 +124,3 @@ async def multiply(ctx: commands.Context, number: int, maybe: bool):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

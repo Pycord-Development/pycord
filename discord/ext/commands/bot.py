@@ -458,4 +458,3 @@ class AutoShardedBot(BotBase, discord.AutoShardedBot):
     """
 
 
-# pre commit test trigger

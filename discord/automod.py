@@ -560,4 +560,3 @@ class AutoModRule(Hashable):
             return AutoModRule(state=self._state, data=data)
 
 
-# pre commit test trigger

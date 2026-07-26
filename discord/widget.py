@@ -348,4 +348,3 @@ class Widget:
         return Invite.from_incomplete(state=self._state, data=data)
 
 
-# pre commit test trigger

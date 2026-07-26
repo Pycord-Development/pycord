@@ -64,4 +64,3 @@ class WidgetSettings(TypedDict):
     channel_id: Snowflake | None
 
 
-# pre commit test trigger

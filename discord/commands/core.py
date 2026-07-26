@@ -2303,4 +2303,3 @@ def validate_chat_input_description(description: Any, locale: str | None = None)
         raise error
 
 
-# pre commit test trigger

@@ -90,4 +90,3 @@ class Typing:
         self.task.cancel()
 
 
-# pre commit test trigger

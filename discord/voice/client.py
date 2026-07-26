@@ -810,4 +810,3 @@ class VoiceClient(VoiceProtocol):
             return self._reader.speaking_timer.get_speaking(ssrc)
 
 
-# pre commit test trigger

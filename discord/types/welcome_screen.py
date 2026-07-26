@@ -42,4 +42,3 @@ class WelcomeScreenChannel(TypedDict):
     emoji_name: str | None
 
 
-# pre commit test trigger

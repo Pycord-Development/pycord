@@ -350,4 +350,3 @@ class Subscription(Hashable):
         return self._state.get_user(self.user_id)
 
 
-# pre commit test trigger

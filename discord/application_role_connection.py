@@ -128,4 +128,3 @@ class ApplicationRoleConnectionMetadata:
         return data
 
 
-# pre commit test trigger

@@ -296,4 +296,3 @@ class InteractionCallbackResource(TypedDict):
     message: NotRequired[Message]
 
 
-# pre commit test trigger

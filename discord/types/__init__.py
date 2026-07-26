@@ -8,4 +8,3 @@ Typings for the Discord API
 :license: MIT, see LICENSE for more details.
 """
 
-# pre commit test trigger

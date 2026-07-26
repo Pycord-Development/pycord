@@ -34,4 +34,3 @@ def setup(app):
     app.add_directive("exception_hierarchy", ExceptionHierarchyDirective)
 
 
-# pre commit test trigger

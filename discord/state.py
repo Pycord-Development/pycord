@@ -2289,4 +2289,3 @@ class AutoShardedConnectionState(ConnectionState):
         self.dispatch("shard_resumed", data["__shard_id__"])
 
 
-# pre commit test trigger

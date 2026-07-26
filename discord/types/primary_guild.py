@@ -36,4 +36,3 @@ class PrimaryGuild(TypedDict):
     badge: str
 
 
-# pre commit test trigger

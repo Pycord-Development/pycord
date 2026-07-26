@@ -199,4 +199,3 @@ class StageInstance(Hashable):
         await self._state.http.delete_stage_instance(self.channel_id, reason=reason)
 
 
-# pre commit test trigger

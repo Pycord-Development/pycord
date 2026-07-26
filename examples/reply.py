@@ -26,4 +26,3 @@ async def on_message(message: discord.Message):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

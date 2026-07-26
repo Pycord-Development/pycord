@@ -554,4 +554,3 @@ def _sticker_factory(
         return Sticker, value
 
 
-# pre commit test trigger

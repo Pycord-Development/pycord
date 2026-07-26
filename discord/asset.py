@@ -526,4 +526,3 @@ class Asset(AssetMixin):
         return self.with_format(format)
 
 
-# pre commit test trigger

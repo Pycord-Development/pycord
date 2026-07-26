@@ -1312,4 +1312,3 @@ class Member(discord.abc.Messageable, _UserTag):
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
 
 
-# pre commit test trigger

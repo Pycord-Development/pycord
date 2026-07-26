@@ -163,4 +163,3 @@ _advanced = AdvancedVersionInfo(
     commit=raw_info["commit"],
     date=date_info,
 )
-# pre commit test trigger

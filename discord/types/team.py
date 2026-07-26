@@ -46,4 +46,3 @@ class Team(TypedDict):
     icon: str | None
 
 
-# pre commit test trigger

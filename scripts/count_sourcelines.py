@@ -45,4 +45,3 @@ for line_number_count, filename in loc_list:
     print("%05d lines in %s" % (line_number_count, filename))
 
 print(f"\nTotal: {sum([x[0] for x in loc_list])} lines ({cur_path})")
-# pre commit test trigger

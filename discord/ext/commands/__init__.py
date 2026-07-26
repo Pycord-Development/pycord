@@ -18,4 +18,3 @@ from .errors import *
 from .flags import *
 from .help import *
 
-# pre commit test trigger

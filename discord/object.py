@@ -111,4 +111,3 @@ class Object(Hashable):
         return self.id & 0xFFF
 
 
-# pre commit test trigger

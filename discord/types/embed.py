@@ -103,4 +103,3 @@ class Embed(TypedDict, total=False):
     fields: list[EmbedField]
 
 
-# pre commit test trigger

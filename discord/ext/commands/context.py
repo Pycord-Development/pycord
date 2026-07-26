@@ -411,4 +411,3 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         return await self.message.forward_to(channel, **kwargs)
 
 
-# pre commit test trigger

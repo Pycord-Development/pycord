@@ -1166,4 +1166,3 @@ class CogMixin:
         return types.MappingProxyType(self.__extensions)
 
 
-# pre commit test trigger

@@ -818,4 +818,3 @@ class Invite(Hashable):
         self.scheduled_event = event
 
 
-# pre commit test trigger

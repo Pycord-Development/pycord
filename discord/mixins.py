@@ -48,4 +48,3 @@ class Hashable(EqualityComparable):
         return self.id >> 22
 
 
-# pre commit test trigger

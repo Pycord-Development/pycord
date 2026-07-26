@@ -27,4 +27,3 @@ async def main():
 
 
 asyncio.run(main())
-# pre commit test trigger

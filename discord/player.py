@@ -945,4 +945,3 @@ class AudioPlayer(threading.Thread):
         return self._played_frames_offset + self.loops
 
 
-# pre commit test trigger

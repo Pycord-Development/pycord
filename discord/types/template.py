@@ -51,4 +51,3 @@ class Template(TypedDict):
     is_dirty: bool | None
 
 
-# pre commit test trigger

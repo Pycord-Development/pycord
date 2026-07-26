@@ -103,4 +103,3 @@ class MP4Sink(Sink):
         audio.on_format(self.encoding)
 
 
-# pre commit test trigger

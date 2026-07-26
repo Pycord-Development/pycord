@@ -44,4 +44,3 @@ async def joined(ctx: discord.ApplicationContext, member: discord.Member = None)
 
 # To learn how to add descriptions and choices to options, check slash_options.py
 bot.run("TOKEN")
-# pre commit test trigger

@@ -65,4 +65,3 @@ class ScheduledEventSubscriber(TypedDict):
     member: Member | None
 
 
-# pre commit test trigger

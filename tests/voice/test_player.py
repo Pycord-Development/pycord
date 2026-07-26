@@ -52,4 +52,3 @@ def test_audio_player_resume_preserves_played_frames():
     assert player.played_frames() == 75
 
 
-# pre commit test trigger

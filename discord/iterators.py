@@ -1299,4 +1299,3 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         return self.retrieve_inner().__await__()
 
 
-# pre commit test trigger

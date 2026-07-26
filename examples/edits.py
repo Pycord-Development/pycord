@@ -35,4 +35,3 @@ async def on_message_edit(before: discord.Message, after: discord.Message):
 
 
 bot.run("TOKEN")
-# pre commit test trigger

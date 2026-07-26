@@ -1412,4 +1412,3 @@ class MinimalHelpCommand(HelpCommand):
         await self.send_pages()
 
 
-# pre commit test trigger

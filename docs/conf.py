@@ -316,4 +316,3 @@ myst_enable_extensions = [
     "tasklist",
 ]
 myst_links_external_new_tab = True
-# pre commit test trigger
