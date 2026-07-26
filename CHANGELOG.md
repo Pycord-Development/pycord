@@ -19,6 +19,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
+  `SlashCommandGroup.guild_only` when `contexts` is `None`.
+  ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
+
 ### Deprecated
 
 ### Removed
