@@ -47,11 +47,7 @@ from typing import (
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
-from ..enums import (
-    IntegrationType,
-    InteractionContextType,
-    SlashCommandOptionType,
-)
+from ..enums import IntegrationType, InteractionContextType, SlashCommandOptionType
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
@@ -310,7 +306,11 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "2.6",
             reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
@@ -1345,7 +1345,11 @@ class SlashCommandGroup(ApplicationCommand):
     @property
     def guild_only(self) -> bool:
         warn_deprecated("guild_only", "contexts", "2.6")
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:

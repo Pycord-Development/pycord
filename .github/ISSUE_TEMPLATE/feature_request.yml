@@ -50,3 +50,13 @@ body:
     attributes:
       label: Additional Context
       description: If there is anything else to say, please do so here.
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      description: >
+        Let's make sure you've properly done due diligence when requesting this feature!
+      options:
+        - label: I have searched the open issues for duplicates.
+          required: true
+        - label: I have read the [Contributing Guidelines](https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md).
+          required: true
