@@ -40,5 +40,3 @@ class SoundboardSound(TypedDict):
     guild_id: NotRequired[Snowflake]
     user: NotRequired[User]
     available: bool
-
-

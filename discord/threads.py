@@ -938,5 +938,3 @@ class ThreadMember(Hashable):
     def thread(self) -> Thread:
         """The thread this member belongs to."""
         return self.parent
-
-

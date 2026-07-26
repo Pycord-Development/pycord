@@ -151,5 +151,3 @@ class Thumbnail(ViewItem[V]):
         )
 
     callback = None
-
-

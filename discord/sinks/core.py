@@ -248,5 +248,3 @@ class Sink(Filters):
     def get_user_audio(self, user: snowflake.Snowflake):
         """Gets the audio file(s) of one specific user."""
         return os.path.realpath(self.audio_data.pop(user))
-
-

@@ -121,5 +121,3 @@ class OggStream:
                 if complete:
                     yield partial
                     partial = b""
-
-

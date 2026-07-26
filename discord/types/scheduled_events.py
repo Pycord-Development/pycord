@@ -63,5 +63,3 @@ class ScheduledEventSubscriber(TypedDict):
     user_id: Snowflake
     user: User
     member: Member | None
-
-

@@ -2619,5 +2619,3 @@ class PartialMessage(Hashable):
         message = self._state.create_message(channel=self.channel, data=data)
 
         return message
-
-

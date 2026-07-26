@@ -474,5 +474,3 @@ class AutocompleteContext:
     @command.setter
     def command(self, value: ApplicationCommand | None) -> None:
         self.interaction.command = value
-
-

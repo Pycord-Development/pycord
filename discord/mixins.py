@@ -46,5 +46,3 @@ class Hashable(EqualityComparable):
 
     def __hash__(self) -> int:
         return self.id >> 22
-
-

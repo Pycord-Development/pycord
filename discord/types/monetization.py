@@ -76,5 +76,3 @@ class Subscription(TypedDict):
     status: SubscriptionStatus
     canceled_at: str | None
     country: NotRequired[str]
-
-

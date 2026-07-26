@@ -204,5 +204,3 @@ class VoiceMessage(File):
         super().__init__(fp, filename, **kwargs)
         self.waveform = waveform
         self.duration_secs = duration_secs
-
-

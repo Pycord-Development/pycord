@@ -148,5 +148,3 @@ class File(ViewItem[V]):
         )
 
     callback = None
-
-

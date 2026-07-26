@@ -89,5 +89,3 @@ class EditGuildSticker(TypedDict, total=False):
 
 class ListPremiumStickerPacks(TypedDict):
     sticker_packs: list[StickerPack]
-
-

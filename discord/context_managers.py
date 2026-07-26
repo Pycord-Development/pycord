@@ -88,5 +88,3 @@ class Typing:
         traceback: TracebackType | None,
     ) -> None:
         self.task.cancel()
-
-

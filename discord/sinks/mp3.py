@@ -94,5 +94,3 @@ class MP3Sink(Sink):
         out.seek(0)
         audio.file = out
         audio.on_format(self.encoding)
-
-

@@ -22,5 +22,3 @@ def setup(app: Sphinx):
     app.add_config_value("nitpick_ignore_files", [], "")
     f = NitpickFileIgnorer(app)
     sphinx_logging.getLogger("sphinx.transforms.post_transforms").logger.addFilter(f)
-
-

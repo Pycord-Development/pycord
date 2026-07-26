@@ -1179,5 +1179,3 @@ def channel_select(
         id=id,
         default_values=default_values,
     )
-
-

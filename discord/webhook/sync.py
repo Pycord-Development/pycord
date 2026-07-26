@@ -1316,5 +1316,3 @@ class SyncWebhook(BaseWebhook):
             session=self.session,
             thread_id=thread_id,
         )
-
-

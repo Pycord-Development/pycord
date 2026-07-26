@@ -120,5 +120,3 @@ class Separator(ViewItem[V]):
         )
 
     callback = None
-
-

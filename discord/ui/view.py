@@ -1047,5 +1047,3 @@ class ViewStore:
             _log.exception(
                 f"Failed to refresh View {view} from Message {message_id} due to mismatched state. Items may not have complete data."
             )
-
-

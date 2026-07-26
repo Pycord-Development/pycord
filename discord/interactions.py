@@ -1941,5 +1941,3 @@ class InteractionCallback:
         This might be useful for determining if the message was forced to be ephemeral.
         """
         return self._response_message_ephemeral
-
-

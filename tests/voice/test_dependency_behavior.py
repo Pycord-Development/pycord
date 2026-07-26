@@ -64,5 +64,3 @@ def test_voice_modules_imports_without_voice_dependencies():
 
     with pytest.raises(discord.MissingVoiceDependenciesError):
         __import__("discord.voice.receive.reader")
-
-

@@ -2097,5 +2097,3 @@ class Connectable(Protocol):
 class Mentionable:
     # TODO: documentation, methods if needed
     pass
-
-

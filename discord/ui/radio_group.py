@@ -234,5 +234,3 @@ class RadioGroup(ModalItem):
         self, interaction: Interaction, data: RadioGroupComponentPayload
     ) -> None:
         return self.refresh_state(data)
-
-

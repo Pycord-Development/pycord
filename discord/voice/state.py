@@ -981,5 +981,3 @@ class VoiceConnectionState:
             )
 
         self.dave_pending_transition = None
-
-

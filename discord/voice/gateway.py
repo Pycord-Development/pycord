@@ -519,5 +519,3 @@ class VoiceWebSocket(DiscordWebSocket):
             },
         }
         await self.send_as_json(payload)
-
-

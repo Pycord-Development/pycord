@@ -84,5 +84,3 @@ class Cog(Cog):
                 This does not include subcommands.
         """
         return [c for c in self.__cog_commands__ if c.parent is None]
-
-

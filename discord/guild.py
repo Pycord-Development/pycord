@@ -4719,5 +4719,3 @@ class Guild(Hashable):
             The sound or ``None`` if not found.
         """
         return self._sounds.get(sound_id)
-
-

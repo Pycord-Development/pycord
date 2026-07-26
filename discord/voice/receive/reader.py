@@ -575,5 +575,3 @@ class UDPKeepAlive(threading.Thread):
 
     def stop(self) -> None:
         self._end_thread.set()
-
-

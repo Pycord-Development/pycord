@@ -524,5 +524,3 @@ class Asset(AssetMixin):
         if self._animated:
             return self
         return self.with_format(format)
-
-

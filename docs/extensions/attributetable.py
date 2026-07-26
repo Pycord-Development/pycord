@@ -295,5 +295,3 @@ def setup(app):
     )
     app.add_node(attributetableplaceholder)
     app.connect("doctree-resolved", process_attributetable)
-
-

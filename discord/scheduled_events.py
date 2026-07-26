@@ -576,5 +576,3 @@ class ScheduledEvent(Hashable):
         return ScheduledEventSubscribersIterator(
             event=self, limit=limit, with_member=as_member, before=before, after=after
         )
-
-

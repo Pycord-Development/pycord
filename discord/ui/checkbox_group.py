@@ -284,5 +284,3 @@ class CheckboxGroup(ModalItem):
         self, interaction: Interaction, data: CheckboxGroupComponentPayload
     ) -> None:
         return self.refresh_state(data)
-
-

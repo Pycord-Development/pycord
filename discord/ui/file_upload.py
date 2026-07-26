@@ -197,5 +197,3 @@ class FileUpload(ModalItem):
             required=component.required,
             id=component.id,
         )
-
-

@@ -348,5 +348,3 @@ class Subscription(Hashable):
     def user(self):
         """Optional[:class:`User`]: The user that owns this subscription."""
         return self._state.get_user(self.user_id)
-
-

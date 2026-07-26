@@ -899,5 +899,3 @@ class PermissionOverwrite:
     def __iter__(self) -> Iterator[tuple[str, bool | None]]:
         for key in self.PURE_FLAGS:
             yield key, self._values.get(key)
-
-

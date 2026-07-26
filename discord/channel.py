@@ -3644,5 +3644,3 @@ def _threaded_guild_channel_factory(channel_type: int):
     ):
         return Thread, value
     return cls, value
-
-

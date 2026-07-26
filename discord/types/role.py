@@ -60,5 +60,3 @@ class RoleTags(TypedDict, total=False):
     premium_subscriber: NotRequired[Literal[None]]
     available_for_purchase: NotRequired[Literal[None]]
     guild_connections: NotRequired[Literal[None]]
-
-

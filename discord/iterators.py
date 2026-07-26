@@ -1297,5 +1297,3 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
     )
     def __await__(self) -> Generator[Any, Any, list[Message]]:
         return self.retrieve_inner().__await__()
-
-

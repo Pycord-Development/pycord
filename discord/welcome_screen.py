@@ -232,5 +232,3 @@ class WelcomeScreen:
             self._update(new)
 
         return self
-
-

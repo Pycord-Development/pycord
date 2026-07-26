@@ -648,5 +648,3 @@ class IntegrationTypesConfig:
         if self.user is not utils.MISSING:
             payload[1] = self._encode_install_params(self.user)
         return payload
-
-

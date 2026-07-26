@@ -62,5 +62,3 @@ class Poll(TypedDict):
     allow_multiselect: bool
     layout_type: NotRequired[PollLayoutType]
     results: NotRequired[PollResults]
-
-

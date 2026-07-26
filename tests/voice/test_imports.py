@@ -53,5 +53,3 @@ def test_voice_modules_import_with_voice_extra():
     __import__("discord.voice")
     __import__("discord.voice.gateway")
     __import__("discord.voice.receive.reader")
-
-

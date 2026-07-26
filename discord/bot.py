@@ -1681,5 +1681,3 @@ class AutoShardedBot(BotBase, AutoShardedClient):
     @property
     def _bot(self) -> AutoShardedBot:
         return self
-
-

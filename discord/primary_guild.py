@@ -96,5 +96,3 @@ class PrimaryGuild:
         return Asset._from_user_primary_guild_tag(
             self._state, self.identity_guild_id, self._badge
         )
-
-

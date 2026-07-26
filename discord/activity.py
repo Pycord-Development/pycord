@@ -879,5 +879,3 @@ def create_activity(data: ActivityPayload | None) -> ActivityTypes | None:
     ):
         return Spotify(**data)
     return Activity(**data)
-
-

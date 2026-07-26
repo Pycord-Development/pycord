@@ -164,5 +164,3 @@ class VoiceProtocol(Generic[ClientT]):
         """
         key, _ = self.channel._get_voice_client_key()
         self.client._connection._remove_voice_client(key)
-
-

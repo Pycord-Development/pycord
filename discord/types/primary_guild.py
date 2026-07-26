@@ -34,5 +34,3 @@ class PrimaryGuild(TypedDict):
     identity_enabled: bool | None
     tag: str
     badge: str
-
-

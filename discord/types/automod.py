@@ -89,5 +89,3 @@ class EditAutoModRule(TypedDict, total=False):
     enabled: bool
     exempt_roles: list[Snowflake]
     exempt_channels: list[Snowflake]
-
-

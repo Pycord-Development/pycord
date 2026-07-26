@@ -441,5 +441,3 @@ class Container(ViewItem[V]):
         )
 
     callback = None
-
-

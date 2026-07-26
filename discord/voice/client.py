@@ -808,5 +808,3 @@ class VoiceClient(VoiceProtocol):
             return None
         if self._reader:
             return self._reader.speaking_timer.get_speaking(ssrc)
-
-

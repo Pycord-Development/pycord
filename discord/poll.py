@@ -527,5 +527,3 @@ class Poll:
             raise RuntimeError("You can only end a poll received from a message.")
 
         return await self._message.end_poll()
-
-

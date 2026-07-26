@@ -63,5 +63,3 @@ class Webhook(PartialWebhook):
     avatar: NotRequired[str | None]
     channel_id: NotRequired[Snowflake]
     application_id: NotRequired[Snowflake | None]
-
-

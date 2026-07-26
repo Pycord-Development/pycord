@@ -943,5 +943,3 @@ class AudioPlayer(threading.Thread):
 
     def played_frames(self) -> int:
         return self._played_frames_offset + self.loops
-
-

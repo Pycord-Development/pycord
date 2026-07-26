@@ -194,5 +194,3 @@ class VoiceChannelEffectSendEvent(TypedDict):
     animation_id: NotRequired[int]
     sound_id: NotRequired[Snowflake | int]
     sound_volume: NotRequired[float]
-
-

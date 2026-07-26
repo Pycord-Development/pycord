@@ -111,5 +111,3 @@ def test_wait_finish_keeps_first_result_when_stop_races(monkeypatch):
         assert future.result() is err
     finally:
         loop.close()
-
-

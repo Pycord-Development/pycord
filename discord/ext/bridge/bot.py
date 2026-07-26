@@ -202,5 +202,3 @@ class AutoShardedBot(BotBase, ExtAutoShardedBot):
 
     .. versionadded:: 2.0
     """
-
-
