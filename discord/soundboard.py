@@ -42,7 +42,6 @@ if TYPE_CHECKING:
     from .http import HTTPClient
     from .state import ConnectionState
 
-
 __all__ = (
     "PartialSoundboardSound",
     "SoundboardSound",
@@ -100,7 +99,7 @@ class PartialSoundboardSound(Hashable):
     def __eq__(
         self, other: PartialSoundboardSound
     ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        if isinstance(other, self, __class__):
+        if isinstance(other, __class__):
             return self.id == other.id
         return NotImplemented
 

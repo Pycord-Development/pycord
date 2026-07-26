@@ -614,7 +614,7 @@ class ForumChannelConverter(IDConverter[discord.ForumChannel]):
 
 
 class ThreadConverter(IDConverter[discord.Thread]):
-    """Coverts to a :class:`~discord.Thread`.
+    """Converts to a :class:`~discord.Thread`.
 
     All lookups are via the local guild.
 

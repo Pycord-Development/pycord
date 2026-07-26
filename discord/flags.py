@@ -765,15 +765,6 @@ class Intents(BaseFlags):
         return 1 << 2
 
     @flag_value
-    def emojis(self):
-        """:class:`bool`: Alias of :attr:`.emojis_and_stickers`.
-
-        .. versionchanged:: 2.0
-            Changed to an alias.
-        """
-        return 1 << 3
-
-    @alias_flag_value
     def emojis_and_stickers(self):
         """:class:`bool`: Whether guild emoji and sticker related events are enabled.
 
@@ -794,6 +785,15 @@ class Intents(BaseFlags):
         - :meth:`Client.stickers`
         - :attr:`Guild.emojis`
         - :attr:`Guild.stickers`
+        """
+        return 1 << 3
+
+    @alias_flag_value
+    def emojis(self):
+        """:class:`bool`: Alias of :attr:`.emojis_and_stickers`.
+
+        .. versionchanged:: 2.0
+            Changed to an alias.
         """
         return 1 << 3
 
@@ -1495,8 +1495,8 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def gateway_message_content_limited(self):
-        """:class:`bool`: Returns ``True`` if the application is currently pending verification
-        and has hit the guild limit.
+        """:class:`bool`: Returns ``True`` if the application is allowed to receive limited
+        message content information over the gateway.
         """
         return 1 << 19
 
