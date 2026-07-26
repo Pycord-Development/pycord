@@ -2,7 +2,7 @@
 # Copyright 2007-2020 by the Sphinx team
 # Licensed under BSD.
 
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import sphinx
 from docutils import nodes, utils
