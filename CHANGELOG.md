@@ -14,8 +14,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Simplify and optimize `utils.get()` by removing the single-attribute special case and
-  replacing `all()` with an early-break loop.
+- Simplify and optimize `utils.get()`.
   ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
 
 ### Fixed
