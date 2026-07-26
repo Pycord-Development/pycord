@@ -294,3 +294,4 @@ class InteractionCallbackResource(TypedDict):
     # This is not fully typed as activities are out of scope
     activity_instance: NotRequired[dict]
     message: NotRequired[Message]
+# pre commit test trigger

@@ -109,3 +109,4 @@ class Activity(_BaseActivity, total=False):
     session_id: str | None
     instance: bool
     buttons: list[str]
+# pre commit test trigger

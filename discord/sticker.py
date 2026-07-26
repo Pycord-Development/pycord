@@ -552,3 +552,4 @@ def _sticker_factory(
         return GuildSticker, value
     else:
         return Sticker, value
+# pre commit test trigger

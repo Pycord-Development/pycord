@@ -434,3 +434,4 @@ class AppEmoji(BaseEmoji):
             self.application_id, self.id, payload=payload
         )
         return self._state.maybe_store_app_emoji(self.application_id, data)
+# pre commit test trigger

@@ -254,3 +254,4 @@ AllowedLabelComponents = Union[
     CheckboxComponent,
     CheckboxGroupComponent,
 ]
+# pre commit test trigger

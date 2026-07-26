@@ -101,3 +101,4 @@ class MP4Sink(Sink):
         os.remove(mp4_file)
 
         audio.on_format(self.encoding)
+# pre commit test trigger

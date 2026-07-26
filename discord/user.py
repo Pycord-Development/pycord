@@ -738,3 +738,4 @@ class User(BaseUser, discord.abc.Messageable):
             user_id=self.id,
             exclude_ended=exclude_ended,
         )
+# pre commit test trigger

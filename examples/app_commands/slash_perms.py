@@ -27,3 +27,4 @@ If the member viewing commands does not have the required permissions, the comma
 
 
 bot.run("TOKEN")
+# pre commit test trigger

@@ -40,3 +40,4 @@ class Gateway(TypedDict):
 class GatewayBot(Gateway):
     shards: int
     session_start_limit: SessionStartLimit
+# pre commit test trigger

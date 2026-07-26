@@ -69,3 +69,4 @@ async def on_command_error(ctx: commands.Context, error: commands.CommandError):
 
 
 bot.run("TOKEN")
+# pre commit test trigger

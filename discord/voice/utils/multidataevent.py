@@ -77,3 +77,4 @@ class MultiDataEvent(Generic[T]):
     def clear(self) -> None:
         self._items.clear()
         self._ready.clear()
+# pre commit test trigger

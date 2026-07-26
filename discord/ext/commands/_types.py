@@ -48,3 +48,4 @@ Error = Union[
     Callable[["Cog", "Context[Any]", "CommandError"], Coro[Any]],
     Callable[["Context[Any]", "CommandError"], Coro[Any]],
 ]
+# pre commit test trigger

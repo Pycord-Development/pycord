@@ -54,3 +54,4 @@ class Example(commands.Cog):
 
 bot.add_cog(Example(bot))  # Put in a setup function for cog files
 bot.run("TOKEN")  # Main file
+# pre commit test trigger

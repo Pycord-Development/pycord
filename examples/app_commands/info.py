@@ -46,3 +46,4 @@ async def info(ctx: discord.ApplicationContext, user: discord.Member = None):
 
 
 bot.run("TOKEN")
+# pre commit test trigger

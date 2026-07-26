@@ -126,3 +126,4 @@ class ApplicationRoleConnectionMetadata:
         if self.description_localizations is not MISSING:
             data["description_localizations"] = self.description_localizations
         return data
+# pre commit test trigger

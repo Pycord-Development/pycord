@@ -88,3 +88,4 @@ class Typing:
         traceback: TracebackType | None,
     ) -> None:
         self.task.cancel()
+# pre commit test trigger

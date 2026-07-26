@@ -87,3 +87,4 @@ class VoiceReady(TypedDict):
     port: int
     modes: list[SupportedModes]
     heartbeat_interval: int
+# pre commit test trigger

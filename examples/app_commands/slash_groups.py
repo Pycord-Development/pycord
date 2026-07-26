@@ -22,3 +22,4 @@ async def add(ctx: discord.ApplicationContext, num1: int, num2: int):
 
 bot.add_application_command(math)
 bot.run("TOKEN")
+# pre commit test trigger

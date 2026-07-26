@@ -585,3 +585,4 @@ class AutoShardedClient(Client):
         .. versionadded:: 1.6
         """
         return any(shard.ws.is_ratelimited() for shard in self.__shards.values())
+# pre commit test trigger

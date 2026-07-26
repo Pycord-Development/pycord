@@ -294,3 +294,4 @@ class ReactionCountDetails:
     def __init__(self, data: ReactionCountDetailsPayload):
         self.normal = data.get("normal", 0)
         self.burst = data.get("burst", 0)
+# pre commit test trigger

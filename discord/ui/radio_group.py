@@ -234,3 +234,4 @@ class RadioGroup(ModalItem):
         self, interaction: Interaction, data: RadioGroupComponentPayload
     ) -> None:
         return self.refresh_state(data)
+# pre commit test trigger

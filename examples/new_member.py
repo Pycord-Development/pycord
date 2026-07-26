@@ -22,3 +22,4 @@ async def on_member_join(member: discord.Member):
 
 
 bot.run("TOKEN")
+# pre commit test trigger

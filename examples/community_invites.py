@@ -66,3 +66,4 @@ async def get_invite_target_users(ctx: discord.ApplicationContext, code: str):
 
 
 bot.run("TOKEN")
+# pre commit test trigger

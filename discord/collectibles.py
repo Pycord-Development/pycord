@@ -134,3 +134,4 @@ class Nameplate:
         .. versionadded:: 2.7
         """
         return Asset._from_collectible(self._state, self._asset, animated=True)
+# pre commit test trigger

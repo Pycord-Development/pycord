@@ -779,3 +779,4 @@ class DiscordWebSocket:
 
         self._close_code = code
         await self.socket.close(code=code)
+# pre commit test trigger

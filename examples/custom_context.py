@@ -87,3 +87,4 @@ async def slash_guess(ctx: MyApplicationContext, number: int):
 # bot. Try to use a file or something to keep
 # them private, and don't commit it to GitHub.
 bot.run("TOKEN")
+# pre commit test trigger

@@ -109,3 +109,4 @@ class Object(Hashable):
     def increment_id(self) -> int:
         """Returns the increment id that made the snowflake."""
         return self.id & 0xFFF
+# pre commit test trigger

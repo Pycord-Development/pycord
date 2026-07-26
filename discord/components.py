@@ -1822,3 +1822,4 @@ def _component_factory(data: ComponentPayload, state=None) -> Component:
     else:
         as_enum = try_enum(ComponentType, component_type)
         return Component._raw_construct(type=as_enum)
+# pre commit test trigger
