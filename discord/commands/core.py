@@ -306,7 +306,11 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "2.6",
             reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
@@ -921,9 +925,7 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_union(self, annotation):
         return getattr(annotation, "__origin__", None) is Union or type(
             annotation
-        ) is getattr(
-            types, "UnionType", Union
-        )  # type: ignore
+        ) is getattr(types, "UnionType", Union)  # type: ignore
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
@@ -1341,7 +1343,11 @@ class SlashCommandGroup(ApplicationCommand):
     @property
     def guild_only(self) -> bool:
         warn_deprecated("guild_only", "contexts", "2.6")
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
