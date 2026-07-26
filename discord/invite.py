@@ -816,4 +816,6 @@ class Invite(Hashable):
             The scheduled event object to link.
         """
         self.scheduled_event = event
+
+
 # pre commit test trigger

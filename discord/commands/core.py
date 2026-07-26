@@ -2301,4 +2301,6 @@ def validate_chat_input_description(description: Any, locale: str | None = None)
         if locale:
             error.args = (f"{error.args[0]} in locale {locale}",)
         raise error
+
+
 # pre commit test trigger

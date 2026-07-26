@@ -1021,4 +1021,6 @@ class MissingFlagArgument(FlagError):
     def __init__(self, flag: Flag) -> None:
         self.flag: Flag = flag
         super().__init__(f"Flag {flag.name!r} does not have an argument")
+
+
 # pre commit test trigger

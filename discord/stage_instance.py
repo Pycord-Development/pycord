@@ -197,4 +197,6 @@ class StageInstance(Hashable):
             Deleting the stage instance failed.
         """
         await self._state.http.delete_stage_instance(self.channel_id, reason=reason)
+
+
 # pre commit test trigger

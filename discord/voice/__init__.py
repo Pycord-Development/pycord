@@ -17,4 +17,5 @@ if missing := get_missing_voice_dependencies():
 from ._types import *
 from .client import *
 from .packets import *
+
 # pre commit test trigger

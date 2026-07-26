@@ -77,4 +77,6 @@ class ConnectionFlowState(Enum):
     got_websocket_ready = 6
     got_ip_discovery = 7
     connected = 8
+
+
 # pre commit test trigger

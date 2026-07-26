@@ -178,4 +178,6 @@ class TeamMember(BaseUser):
     )
     def permissions(self) -> list[str]:
         return []
+
+
 # pre commit test trigger

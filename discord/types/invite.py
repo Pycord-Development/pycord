@@ -104,4 +104,6 @@ class InviteTargetUsersJobStatus(TypedDict):
     created_at: NotRequired[str]
     completed_at: NotRequired[str | None]
     error_message: NotRequired[str]
+
+
 # pre commit test trigger

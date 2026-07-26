@@ -558,4 +558,6 @@ class AutoModRule(Hashable):
                 self.guild_id, self.id, payload, reason=reason
             )
             return AutoModRule(state=self._state, data=data)
+
+
 # pre commit test trigger

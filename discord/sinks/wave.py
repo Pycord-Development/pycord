@@ -67,4 +67,6 @@ class WaveSink(Sink):
 
         data.seek(0)
         audio.on_format(self.encoding)
+
+
 # pre commit test trigger

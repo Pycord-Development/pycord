@@ -1231,4 +1231,6 @@ def try_enum(cls: type[T], val: Any) -> T:
         return cls._enum_value_map_[val]  # type: ignore
     except (KeyError, TypeError, AttributeError):
         return create_unknown_value(cls, val)
+
+
 # pre commit test trigger

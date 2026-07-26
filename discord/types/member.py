@@ -90,4 +90,6 @@ class MemberUpdateEvent(TypedDict):
     flags: NotRequired[int | None]
     avatar_decoration_data: NotRequired[AvatarDecoration | None]
     # collectibles: Collectibles
+
+
 # pre commit test trigger

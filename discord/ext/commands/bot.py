@@ -456,4 +456,6 @@ class AutoShardedBot(BotBase, discord.AutoShardedBot):
     """This is similar to :class:`.Bot` except that it is inherited from
     :class:`discord.AutoShardedBot` instead.
     """
+
+
 # pre commit test trigger

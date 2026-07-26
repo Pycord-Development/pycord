@@ -50,4 +50,6 @@ def test_audio_player_resume_preserves_played_frames():
     assert player._played_frames_offset == 75
     assert player.loops == 0
     assert player.played_frames() == 75
+
+
 # pre commit test trigger

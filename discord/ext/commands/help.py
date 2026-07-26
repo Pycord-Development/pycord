@@ -1410,4 +1410,6 @@ class MinimalHelpCommand(HelpCommand):
         self.add_command_formatting(command)
         self.paginator.close_page()
         await self.send_pages()
+
+
 # pre commit test trigger

@@ -43,4 +43,6 @@ class Nameplate(TypedDict):
 class AvatarDecoration(TypedDict):
     sku_id: Snowflake
     asset: str
+
+
 # pre commit test trigger

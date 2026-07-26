@@ -933,4 +933,6 @@ class Role(Hashable):
         """
 
         await self._state.http.delete_role(self.guild.id, self.id, reason=reason)
+
+
 # pre commit test trigger

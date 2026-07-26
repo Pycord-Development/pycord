@@ -48,4 +48,6 @@ class Emoji(PartialEmoji, total=False):
 class EditEmoji(TypedDict):
     name: str
     roles: SnowflakeList | None
+
+
 # pre commit test trigger

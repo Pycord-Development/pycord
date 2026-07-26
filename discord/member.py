@@ -1310,4 +1310,6 @@ class Member(discord.abc.Messageable, _UserTag):
             The role or ``None`` if not found in the member's roles.
         """
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
+
+
 # pre commit test trigger

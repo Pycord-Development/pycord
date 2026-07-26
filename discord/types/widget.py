@@ -62,4 +62,6 @@ class Widget(TypedDict):
 class WidgetSettings(TypedDict):
     enabled: bool
     channel_id: Snowflake | None
+
+
 # pre commit test trigger

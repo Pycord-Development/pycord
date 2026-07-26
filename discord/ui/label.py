@@ -564,4 +564,6 @@ class Label(ModalItem[M]):
             id=component.id,
             description=component.description,
         )
+
+
 # pre commit test trigger

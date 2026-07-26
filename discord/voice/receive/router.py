@@ -229,4 +229,6 @@ class SinkEventRouter(threading.Thread):
                 with self._lock:
                     with self.reader.packet_router._lock:
                         self._dispatch_to_listeners(event, *args, **kwargs)
+
+
 # pre commit test trigger

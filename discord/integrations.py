@@ -372,4 +372,6 @@ def _integration_factory(value: str) -> tuple[type[Integration], str]:
         return StreamIntegration, value
     else:
         return Integration, value
+
+
 # pre commit test trigger

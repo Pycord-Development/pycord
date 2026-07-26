@@ -85,4 +85,6 @@ class IncidentsData:
             "raid_detected_at": self.raid_detected_at
             and self.raid_detected_at.isoformat(),
         }
+
+
 # pre commit test trigger

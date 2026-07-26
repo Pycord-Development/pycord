@@ -700,4 +700,6 @@ class FlagConverter(metaclass=FlagsMeta):
             setattr(self, flag.attribute, values)
 
         return self
+
+
 # pre commit test trigger

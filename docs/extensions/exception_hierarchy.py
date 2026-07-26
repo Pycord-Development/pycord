@@ -32,4 +32,6 @@ def setup(app):
         html=(visit_exception_hierarchy_node, depart_exception_hierarchy_node),
     )
     app.add_directive("exception_hierarchy", ExceptionHierarchyDirective)
+
+
 # pre commit test trigger

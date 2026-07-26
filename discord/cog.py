@@ -1164,4 +1164,6 @@ class CogMixin:
     def extensions(self) -> Mapping[str, types.ModuleType]:
         """A read-only mapping of extension name to extension."""
         return types.MappingProxyType(self.__extensions)
+
+
 # pre commit test trigger

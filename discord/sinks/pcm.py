@@ -43,4 +43,6 @@ class PCMSink(Sink):
 
     def format_audio(self, audio):
         return
+
+
 # pre commit test trigger

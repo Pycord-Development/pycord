@@ -263,4 +263,6 @@ class PartialEmoji(_EmojiTag, AssetMixin):
             raise InvalidArgument("PartialEmoji is not a custom emoji")
 
         return await super().read()
+
+
 # pre commit test trigger

@@ -198,4 +198,6 @@ class StringView:
             f"<StringView pos: {self.index} prev: {self.previous} end: {self.end} eof:"
             f" {self.eof}>"
         )
+
+
 # pre commit test trigger

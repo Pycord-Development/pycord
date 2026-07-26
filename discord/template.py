@@ -278,4 +278,6 @@ class Template:
         .. versionadded:: 2.0
         """
         return f"https://discord.new/{self.code}"
+
+
 # pre commit test trigger

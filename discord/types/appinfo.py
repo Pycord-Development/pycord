@@ -93,4 +93,6 @@ class AppInfo(BaseAppInfo, total=False):
 
 class PartialAppInfo(BaseAppInfo, total=False):
     pass
+
+
 # pre commit test trigger

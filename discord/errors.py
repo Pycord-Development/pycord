@@ -432,4 +432,6 @@ class MissingVoiceDependenciesError(RuntimeError, DiscordException):
             f"{deps} {'is' if len(missing) == 1 else 'are'} required for voice support. "
             'Install them with "pip install py-cord[voice]".'
         )
+
+
 # pre commit test trigger

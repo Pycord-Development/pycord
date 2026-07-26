@@ -135,4 +135,6 @@ class Checkbox(ModalItem):
         self, interaction: Interaction, data: CheckboxComponentPayload
     ) -> None:
         return self.refresh_state(data)
+
+
 # pre commit test trigger

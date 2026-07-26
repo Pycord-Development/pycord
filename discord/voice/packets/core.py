@@ -91,4 +91,6 @@ class Packet:
 
     def __hash__(self) -> int:
         return hash(self.data)
+
+
 # pre commit test trigger

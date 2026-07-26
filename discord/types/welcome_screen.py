@@ -40,4 +40,6 @@ class WelcomeScreenChannel(TypedDict):
     description: str
     emoji_id: Snowflake | None
     emoji_name: str | None
+
+
 # pre commit test trigger

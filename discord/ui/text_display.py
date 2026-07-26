@@ -108,4 +108,6 @@ class TextDisplay(ViewItem[V], ModalItem[M]):
         return cls(component.content, id=component.id)
 
     callback = None
+
+
 # pre commit test trigger

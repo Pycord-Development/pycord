@@ -1030,4 +1030,6 @@ class RawMemberUpdateEvent(_RawReprMixin):
         self.data: MemberUpdateEvent = data
         self.cached_member: Member | None = None
         self.member: Member = member
+
+
 # pre commit test trigger
