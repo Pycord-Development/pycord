@@ -62,12 +62,12 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.channel import PartialChannel as InviteChannelPayload
     from .types.invite import GatewayInvite as GatewayInvitePayload
+    from .types.invite import IncompleteInvite as IncompleteInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
-    from .types.invite import VanityInvite as VanityInvitePayload
     from .types.role import Role as RolePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.snowflake import Snowflake
@@ -512,25 +512,25 @@ class Invite(Hashable):
     """
 
     __slots__ = (
-        "max_age",
-        "code",
-        "guild",
-        "revoked",
-        "created_at",
-        "uses",
-        "temporary",
-        "max_uses",
-        "inviter",
-        "channel",
-        "target_user",
-        "target_type",
         "_state",
         "approximate_member_count",
         "approximate_presence_count",
+        "channel",
+        "code",
+        "created_at",
+        "expires_at",
+        "guild",
+        "inviter",
+        "max_age",
+        "max_uses",
+        "revoked",
+        "roles",
         "scheduled_event",
         "target_application",
-        "expires_at",
-        "roles",
+        "target_type",
+        "target_user",
+        "temporary",
+        "uses",
     )
 
     BASE = "https://discord.gg"
@@ -539,13 +539,13 @@ class Invite(Hashable):
         self,
         *,
         state: ConnectionState,
-        data: InvitePayload | VanityInvitePayload,
+        data: InvitePayload | IncompleteInvitePayload,
         guild: PartialInviteGuild | Guild | None = None,
         channel: PartialInviteChannel | GuildChannel | None = None,
     ):
         self._state: ConnectionState = state
         self.max_age: int | None = data.get("max_age")
-        self.code: str | None = data.get("code")
+        self.code: str = data["code"]
         self.guild: InviteGuildType | None = self._resolve_guild(
             data.get("guild"), guild
         )
@@ -724,14 +724,7 @@ class Invite(Hashable):
         """An :class:`InviteTargetUsers` object for managing the target users list for this invite.
 
         .. versionadded:: 2.8
-
-        Raises
-        ------
-        ValueError
-            The invite has no code.
         """
-        if self.code is None:
-            raise ValueError("Cannot manage target users for an invite with no code")
         return InviteTargetUsers(invite_code=self.code, state=self._state)
 
     async def edit_target_users(self, target_users_file: File) -> None:
@@ -750,8 +743,6 @@ class Invite(Hashable):
 
         Raises
         ------
-        ValueError
-            The invite has no code.
         HTTPException
             Updating the target users failed.
         Forbidden
@@ -759,8 +750,6 @@ class Invite(Hashable):
         NotFound
             The invite is invalid or expired.
         """
-        if self.code is None:
-            raise ValueError("Cannot edit target users for an invite with no code")
         await self._state.http.update_invite_target_users(
             self.code, target_users_file=target_users_file
         )
@@ -780,8 +769,6 @@ class Invite(Hashable):
 
         Raises
         ------
-        ValueError
-            The invite has no code.
         HTTPException
             Fetching the job status failed.
         NotFound
@@ -789,10 +776,6 @@ class Invite(Hashable):
         Forbidden
             You do not have permission to view the target users.
         """
-        if self.code is None:
-            raise ValueError(
-                "Cannot fetch target users job status for an invite with no code"
-            )
         r = await self._state.http.get_invite_target_users_job_status(self.code)
         return InviteTargetUsersJobStatus(data=r)
 
@@ -810,8 +793,6 @@ class Invite(Hashable):
 
         Raises
         ------
-        ValueError
-            The invite has no code.
         Forbidden
             You do not have permissions to revoke invites.
         NotFound
@@ -819,9 +800,6 @@ class Invite(Hashable):
         HTTPException
             Revoking the invite failed.
         """
-
-        if self.code is None:
-            raise ValueError("Cannot delete an invite with no code")
         await self._state.http.delete_invite(self.code, reason=reason)
 
     def set_scheduled_event(self, event: ScheduledEvent) -> None:
