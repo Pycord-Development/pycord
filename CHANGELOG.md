@@ -14,10 +14,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Inline `_InviteMetadata` fields into `IncompleteInvite`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+
 ### Fixed
 
-- Inline `_InviteMetadata` fields into `IncompleteInvite` and remove the now-unused
-  `_InviteMetadata` TypedDict.
+- Fix `Invite.code` handling when `None` (from `VanityInvitePayload`).
   ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 
 ### Deprecated
@@ -34,10 +36,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fix `Invite.code` handling when `None` (from `VanityInvitePayload`). `__str__` falls
-  back to `""`, `.url` and all code-dependent methods raise `ValueError`, and
-  `Invite.code` is typed as `str | None`.
-  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 - Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
