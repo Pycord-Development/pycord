@@ -16,11 +16,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Inline `_InviteMetadata` fields into `IncompleteInvite`.
   ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+- Accept `IncompleteInvite` instead of `VanityInvite` in `Invite.__init__`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 
 ### Fixed
 
-- Fix `Invite.code` handling when `None` (from `VanityInvitePayload`).
-  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
