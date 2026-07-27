@@ -30,7 +30,7 @@ import io
 import os
 from typing import TYPE_CHECKING, TypeVar, Union
 
-from typing_extensions import override
+from typing_extensions import deprecated, override
 
 from .appinfo import PartialAppInfo
 from .asset import Asset
@@ -705,6 +705,9 @@ class Invite(Hashable):
         return hash(self.code)
 
     @property
+    @deprecated(
+        "Invite.id is deprecated since version 2.9, consider using Invite.code instead."
+    )
     def id(self) -> str:  # type: ignore[override]
         """Returns the proper code portion of the invite."""
         return self.code or ""
