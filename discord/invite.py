@@ -689,7 +689,7 @@ class Invite(Hashable):
             return [Object(role_id) for role_id in role_ids]
 
     def __str__(self) -> str:
-        return self.code or ""
+        return self.url if self.code is not None else ""
 
     def __repr__(self) -> str:
         return (
