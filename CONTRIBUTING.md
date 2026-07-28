@@ -107,7 +107,7 @@ strictly forbidden.
 Failure to follow this policy may result in a temporary or permanent ban from our
 organization.
 
-The use of LLMs or AI tools by new contributors is highly discouraged, and may result in
+The use of LLMs or AI tools by new contributors is highly discouraged, and will likely result in
 the direct closure of your issue or pull request.
 
 Furthermore, as outlined earlier in §"Licensing," by submitting a pull request, you
