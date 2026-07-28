@@ -88,11 +88,11 @@ sure it is appropriate and makes sense in this library.
 The use of LLMs or other AI tools must be disclosed at all times. Disclosure is required
 for any interaction or contribution which includes but is not limited to:
 
-- Modifying Code
-- Modifying Documentation
+- Modifying code
+- Modifying documentation
 - Discussion with maintainers
 - Issue bodies and comments
-- Pull Request bodies and comments
+- Pull request bodies and comments
 
 The disclosure must specify the tools used and the scope of their application. The
 primary location of disclosure should be in the body of Issues and Pull Requests.
