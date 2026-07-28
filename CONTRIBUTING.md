@@ -88,7 +88,7 @@ sure it is appropriate and makes sense in this library.
 ## AI Usage Policy
 
 The use of LLMs or other AI tools must be disclosed at all times. Disclosure is required
-for any interaction or contribution which includes but is not limited to:
+for any interaction or contribution which includes but is not limited to the following:
 
 - Modifying code
 - Modifying documentation
