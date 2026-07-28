@@ -48,6 +48,7 @@ from typing import (
 
 from typing_extensions import override
 
+from discord import IntegrationTypesConfig
 from .client import Client
 from .cog import CogMixin
 from .commands import (
@@ -418,7 +419,7 @@ class ApplicationCommandMixin(ABC):
         integration_contexts = app_info.integration_types_config._to_payload().keys()
 
         if len(integration_contexts) == 0:
-            integration_contexts = {0, 1}
+            integration_contexts = {IntegrationType.guild_install.value, IntegrationType.user_install.value}
 
         command_defaults = COMMAND_DEFAULTS.copy()
         command_defaults["integration_types"] = DefaultSetComparison(
