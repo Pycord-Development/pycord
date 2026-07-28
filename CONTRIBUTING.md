@@ -94,7 +94,8 @@ for any interaction or contribution which includes but is not limited to:
 - Issue bodies and comments
 - Pull Request bodies and comments
 
-The disclosure must specify the tools used and the scope of their application. The primary location of disclosure should be in the body of Issues and Pull Requests.
+The disclosure must specify the tools used and the scope of their application. The
+primary location of disclosure should be in the body of Issues and Pull Requests.
 
 If you are not a native English speaker, using LLMs or other AI tools for translation is
 discouraged. It can distort your intended meaning and make a human-written contribution
