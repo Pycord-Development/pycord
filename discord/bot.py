@@ -222,11 +222,7 @@ COMMAND_DEFAULTS: NestedComparison = {
     "options": DefaultComparison(OPTION_DEFAULT_VALUES, _option_comparison_check),
     "default_member_permissions": DefaultComparison((None, MISSING)),
     "nsfw": DefaultComparison((False, MISSING)),
-    # TODO: Change the below default if needed to use the correct default integration types
-    # Discord States That This Defaults To "your app's configured contexts"
-    "integration_types": DefaultSetComparison(
-        (MISSING, {0, 1}), lambda x, y: set(x) == set(y)
-    ),
+    # integration_types gets set in ApplicationCommandMixin._get_command_defaults
     "contexts": DefaultSetComparison((None, MISSING), lambda x, y: set(x) == set(y)),
 }
 SUBCOMMAND_DEFAULTS: NestedComparison = {
@@ -420,6 +416,9 @@ class ApplicationCommandMixin(ABC):
     async def _get_command_defaults(self):
         app_info = await self._bot.application_info()
         integration_contexts = app_info.integration_types_config._to_payload().keys()
+
+        if len(integration_contexts) == 0:
+            integration_contexts = {0, 1}
 
         command_defaults = COMMAND_DEFAULTS.copy()
         command_defaults["integration_types"] = DefaultSetComparison(
