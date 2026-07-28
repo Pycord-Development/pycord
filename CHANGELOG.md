@@ -14,7 +14,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Fixed backend logic for `sync_commands` to only sync when needed.
+- Refactored backend logic for `sync_commands` to only sync when needed and be easily extensible.
   ([#2990](https://github.com/Pycord-Development/pycord/pull/2990))
 
 ### Fixed
