@@ -5,7 +5,7 @@ import pytest
 from typing_extensions import override
 
 import discord
-from discord import MISSING, Bot, SlashCommandGroup, IntegrationType
+from discord import MISSING, Bot, IntegrationType, SlashCommandGroup
 from discord.bot import COMMAND_DEFAULTS, DefaultSetComparison
 from discord.types.interactions import ApplicationCommand, ApplicationCommandOption
 
@@ -63,7 +63,8 @@ class DummyBot(Bot):
     async def _get_command_defaults(self):
         command_defaults = COMMAND_DEFAULTS.copy()
         command_defaults["integration_types"] = DefaultSetComparison(
-            (MISSING, {IntegrationType.guild_install.value}), lambda x, y: set(x) == set(y)
+            (MISSING, {IntegrationType.guild_install.value}),
+            lambda x, y: set(x) == set(y),
         )
         return command_defaults
 
