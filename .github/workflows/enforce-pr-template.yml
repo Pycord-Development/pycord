@@ -90,7 +90,7 @@ jobs:
             const problems = [];
 
             // Basic length check – tune as needed
-            if (body.length < 150) {
+            if (body.length < 200) {
               problems.push('PR description is too short (expected more content based on the template).');
             }
 
@@ -105,6 +105,11 @@ jobs:
               if (!body.includes(heading)) {
                 problems.push(`Missing required section: "${heading}"`);
               }
+            }
+
+            // Enforce Contribution reading line
+            if (!body.includes('I have read the [Contributing Guidelines](https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md)')) {
+              problems.push('The line "I have read the [Contributing Guidelines](https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md)" is missing.');
             }
 
             // Enforce AI disclosure line
