@@ -62,10 +62,12 @@ you are deciding to ignore type checking warnings.
 
 ## Licensing
 
-By submitting a pull request, you agree that: 
+By submitting a pull request, you agree that:
+
 1. You hold the copyright on all submitted code inside said pull request;
 2. You agree to transfer all rights to the owner of this repository, and;
-3. If you are found to be in fault with any of the above, we shall not be held responsible in any way after the pull request has been merged.
+3. If you are found to be in fault with any of the above, we shall not be held
+   responsible in any way after the pull request has been merged.
 
 ## Git Commit Styling
 
