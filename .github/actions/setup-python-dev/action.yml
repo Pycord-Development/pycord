@@ -18,7 +18,9 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
         cache: "pip"
-        cache-dependency-path: "pyproject.toml"
+        cache-dependency-path: |
+          pyproject.toml
+          requirements/*.txt
 
     - name: "Install dependencies"
       if: ${{ inputs.install-voice != 'true' }}
