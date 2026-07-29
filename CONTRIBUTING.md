@@ -88,7 +88,7 @@ sure it is appropriate and makes sense in this library.
 ## AI Usage Policy
 
 The use of LLMs or other AI tools must be disclosed at all times. Disclosure is required
-for any interaction or contribution including but not limited to the following:
+for any interaction or contribution including, but not limited to, the following:
 
 - Modifying code
 - Modifying documentation
@@ -101,7 +101,7 @@ primary location of disclosure should be in the body of issues and pull requests
 
 If you are not a native English speaker, using LLMs or other AI tools for translation is
 discouraged. It can distort your intended meaning and make a human-written contribution
-look AI-generated. Please use a non-LLM-based translation tool like
+look AI-generated. Please use a non-LLM-based translation tool such as
 [DeepL](https://deepl.com) instead.
 
 The use of fully autonomous LLMs or other AI tools to open issues or pull requests is
