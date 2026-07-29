@@ -4,9 +4,14 @@ on:
   push:
     paths:
       - "discord/**"
+      - "examples/**"
       - "requirements/**"
+      - "tests/**"
       - ".github/actions/**"
       - ".github/workflows/lib-checks.yml"
+      - "LICENSE"
+      - "MANIFEST.in"
+      - "README.rst"
       - "*.toml"
       - "*.py"
       - ".*"
@@ -48,9 +53,14 @@ jobs:
 
             const matches = (file) => (
               file.startsWith('discord/') ||
+              file.startsWith('examples/') ||
               file.startsWith('requirements/') ||
+              file.startsWith('tests/') ||
               file.startsWith('.github/actions/') ||
               file === '.github/workflows/lib-checks.yml' ||
+              file === 'LICENSE' ||
+              file === 'MANIFEST.in' ||
+              file === 'README.rst' ||
               (!file.includes('/') && file.endsWith('.toml')) ||
               (!file.includes('/') && file.endsWith('.py')) ||
               /^\.[^/]+$/.test(file)

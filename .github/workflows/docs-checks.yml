@@ -7,6 +7,10 @@ on:
       - "docs/**"
       - "requirements/**"
       - ".github/workflows/docs-checks.yml"
+      - ".readthedocs.yml"
+      - "LICENSE"
+      - "MANIFEST.in"
+      - "README.rst"
       - "*.toml"
       - "*.py"
     branches: [ master ]
@@ -55,6 +59,10 @@ jobs:
               file.startsWith('docs/') ||
               file.startsWith('requirements/') ||
               file === '.github/workflows/docs-checks.yml' ||
+              file === '.readthedocs.yml' ||
+              file === 'LICENSE' ||
+              file === 'MANIFEST.in' ||
+              file === 'README.rst' ||
               (!file.includes('/') && file.endsWith('.toml')) ||
               (!file.includes('/') && file.endsWith('.py'))
             );
