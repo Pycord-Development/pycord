@@ -6,16 +6,11 @@ on:
       - "discord/**"
       - "docs/**"
       - "requirements/**"
+      - ".github/workflows/docs-checks.yml"
       - "*.toml"
       - "*.py"
     branches: [ master ]
   pull_request:
-    paths:
-      - "discord/**"
-      - "docs/**"
-      - "requirements/"
-      - "*.toml"
-      - "*.py"
   workflow_dispatch:
     inputs:
       with_linkcheck:
@@ -29,10 +24,55 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-permissions: write-all
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - name: "Check changed paths"
+        id: filter
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          script: |
+            if (context.eventName !== 'pull_request') {
+              core.setOutput('docs', 'true');
+              return;
+            }
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+
+            const matches = (file) => (
+              file.startsWith('discord/') ||
+              file.startsWith('docs/') ||
+              file.startsWith('requirements/') ||
+              file === '.github/workflows/docs-checks.yml' ||
+              (!file.includes('/') && file.endsWith('.toml')) ||
+              (!file.includes('/') && file.endsWith('.py'))
+            );
+
+            const changed = files.some((file) => matches(file.filename));
+            core.setOutput('docs', changed ? 'true' : 'false');
+
+            if (!changed) {
+              core.notice('Documentation checks skipped because no changed files matched the documentation check paths.');
+              await core.summary
+                .addHeading('Documentation checks skipped', 2)
+                .addRaw('No changed files matched the documentation check paths.')
+                .write();
+            }
+
   docs:
+    needs: [ changes ]
+    if: ${{ needs.changes.outputs.docs == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
