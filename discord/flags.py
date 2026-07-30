@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, ClassVar, Iterator, TypeVar, overload
+from collections.abc import Callable, Iterator
+from typing import Any, ClassVar, TypeVar, overload
 
 from .enums import UserFlags
 
