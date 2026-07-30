@@ -5,8 +5,9 @@ import pytest
 from typing_extensions import override
 
 import discord
-from discord import MISSING, Bot, IntegrationType, SlashCommandGroup
+from discord import MISSING, Bot, SlashCommandGroup
 from discord.bot import COMMAND_DEFAULTS, DefaultSetComparison
+from discord.enums import IntegrationType
 from discord.types.interactions import ApplicationCommand, ApplicationCommandOption
 
 pytestmark = pytest.mark.asyncio

@@ -45,8 +45,6 @@ from typing import (
 
 from typing_extensions import override
 
-from discord import IntegrationTypesConfig
-
 from .client import Client
 from .cog import CogMixin
 from .commands import (
