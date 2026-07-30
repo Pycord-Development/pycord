@@ -36,7 +36,6 @@ from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Deque,
     TypeVar,
     Union,
 )
@@ -294,9 +293,9 @@ class ConnectionState:
         # extra dict to look up private channels by user id
         self._private_channels_by_user: dict[int, DMChannel] = {}
         if self.max_messages is not None:
-            self._messages: Deque[Message] | None = deque(maxlen=self.max_messages)
+            self._messages: deque[Message] | None = deque(maxlen=self.max_messages)
         else:
-            self._messages: Deque[Message] | None = None
+            self._messages: deque[Message] | None = None
 
     def process_chunk_requests(
         self, guild_id: int, nonce: str | None, members: list[Member], complete: bool
@@ -1515,7 +1514,7 @@ class ConnectionState:
 
         # do a cleanup of the messages cache
         if self._messages is not None:
-            self._messages: Deque[Message] | None = deque(
+            self._messages: deque[Message] | None = deque(
                 (msg for msg in self._messages if msg.guild != guild),
                 maxlen=self.max_messages,
             )
