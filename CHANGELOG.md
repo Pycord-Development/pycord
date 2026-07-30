@@ -12,11 +12,25 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+### Changed
+
+### Fixed
+
+- Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
+  `SlashCommandGroup.guild_only` when `contexts` is `None`.
+  ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
+
+### Deprecated
+
+### Removed
+
+## [2.8.1] - 2026-07-25
+
+### Added
+
 - Add `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
   `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
-
-### Changed
 
 ### Fixed
 
@@ -38,7 +52,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix a type error in `Poll.to_dict()` for closed polls.
   ([#3261](https://github.com/Pycord-Development/pycord/pull/3261))
 - Fix an attribute error when accessing the `User.system` attribute on copied `User`
-  objects. ([#3247](https://github.com/Pycord-Development/pycord/pull/3247))
+  objects. ([#3265](https://github.com/Pycord-Development/pycord/pull/3265))
 - Fix an attribute error when using `Webhook.edit_message()` with views.
   ([#3239](https://github.com/Pycord-Development/pycord/pull/3239))
 - Fix `PollAnswer.to_dict()` incorrectly setting the `PollAnswer.answer_id` attribute as
@@ -54,10 +68,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
 - Fix `PartialMessage.edit()` to work with `DesignerView`.
   ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
-
-### Deprecated
-
-### Removed
 
 ## [2.8.0] - 2026-05-18
 
@@ -1816,7 +1826,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.1...HEAD
+[2.8.1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0
 [2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0rc2
 [2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0rc1
