@@ -31,7 +31,7 @@ import inspect
 import itertools
 import logging
 import os
-from collections import OrderedDict, deque
+from collections import deque
 from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
@@ -290,7 +290,7 @@ class ConnectionState:
         self._sounds: dict[int, SoundboardSound] = {}
 
         # LRU of max size 128
-        self._private_channels: OrderedDict[int, PrivateChannel] = OrderedDict()
+        self._private_channels: dict[int, PrivateChannel] = {}
         # extra dict to look up private channels by user id
         self._private_channels_by_user: dict[int, DMChannel] = {}
         if self.max_messages is not None:
@@ -497,7 +497,7 @@ class ConnectionState:
         except KeyError:
             return None
         else:
-            self._private_channels.move_to_end(channel_id)  # type: ignore
+            self._private_channels[channel_id] = self._private_channels.pop(channel_id)  # type: ignore
             return value
 
     def _get_private_channel_by_user(self, user_id: int | None) -> DMChannel | None:
@@ -509,7 +509,8 @@ class ConnectionState:
         self._private_channels[channel_id] = channel
 
         if len(self._private_channels) > 128:
-            _, to_remove = self._private_channels.popitem(last=False)
+            oldest_key = next(iter(self._private_channels))
+            to_remove = self._private_channels.pop(oldest_key)
             if isinstance(to_remove, DMChannel) and to_remove.recipient:
                 self._private_channels_by_user.pop(to_remove.recipient.id, None)
 
