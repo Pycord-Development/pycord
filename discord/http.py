@@ -29,13 +29,10 @@ import asyncio
 import logging
 import sys
 import weakref
+from collections.abc import AsyncGenerator, Coroutine, Iterable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncGenerator,
-    Coroutine,
-    Iterable,
-    Sequence,
     TypeVar,
 )
 from urllib.parse import quote as _uriquote

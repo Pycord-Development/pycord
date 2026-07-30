@@ -26,8 +26,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from collections.abc import Callable, Generator
 from functools import cached_property
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
 from . import enums, utils
 from .asset import Asset
@@ -213,7 +214,7 @@ def _transform_communication_disabled_until(
     entry: AuditLogEntry, data: str
 ) -> datetime.datetime | None:
     if data:
-        return datetime.datetime.fromisoformat(data)
+        return utils.parse_time(data)
     return None
 
 
