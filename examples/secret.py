@@ -1,7 +1,6 @@
 # This example requires the 'members' privileged intent to use the Member converter,
 # and the 'message_content' privileged intent for prefixed commands.
 
-from typing import Union
 
 import discord
 from discord.ext import commands
@@ -25,9 +24,7 @@ async def secret(ctx: commands.Context):
         await ctx.send("Shh!", delete_after=5)
 
 
-def create_overwrites(
-    ctx: commands.Context, *objects: Union[discord.Role, discord.Member]
-):
+def create_overwrites(ctx: commands.Context, *objects: discord.Role | discord.Member):
     """
     This is just a helper function that creates the overwrites for the
     voice/text channels.
@@ -65,7 +62,7 @@ def create_overwrites(
 async def text(
     ctx: commands.Context,
     name: str,
-    *objects: Union[discord.Role, discord.Member],
+    *objects: discord.Role | discord.Member,
 ):
     """
     This makes a text channel with the passed name that
@@ -90,7 +87,7 @@ async def text(
 async def voice(
     ctx: commands.Context,
     name: str,
-    *objects: Union[discord.Role, discord.Member],
+    *objects: discord.Role | discord.Member,
 ):
     """
     This does the same thing as the `text` subcommand

@@ -24,7 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator, TypeVar
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, TypeVar
 
 from ..colour import Colour
 from ..components import Container as ContainerComponent
