@@ -26,7 +26,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Mapping, TypeVar
+from collections.abc import Mapping
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from . import utils
 from .colour import Colour
@@ -40,7 +41,6 @@ __all__ = (
     "EmbedMedia",
     "EmbedProvider",
 )
-
 
 E = TypeVar("E", bound="Embed")
 
@@ -388,7 +388,7 @@ class Embed:
         image: str | EmbedMedia | None = None,
         thumbnail: str | EmbedMedia | None = None,
     ):
-        self.colour = colour if colour else color
+        self.colour = colour if colour is not None else color
         self.title = title
         self.type = type
         self.url = url

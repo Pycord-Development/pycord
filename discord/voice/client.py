@@ -99,7 +99,7 @@ class VoiceClient(VoiceProtocol):
     In order to use PCM based AudioSources, you must have the opus library
     installed on your system and loaded through :func:`opus.load_opus`.
     Otherwise, your AudioSources must be opus encoded (e.g. using :class:`FFmpegOpusAudio`)
-    or the library will not be able ot transmit audio.
+    or the library will not be able to transmit audio.
     """
 
     def __init__(
@@ -342,9 +342,9 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def latency(self) -> float:
-        """Latency between a HEARTBEAT and a HEARBEAT_ACK in seconds.
+        """Latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
 
-        This chould be referred to as the Discord Voice WebSocket latency and is
+        This should be referred to as the Discord Voice WebSocket latency and is
         and analogue of user's voice latencies as seen in the Discord client.
 
         .. versionadded:: 1.4
@@ -354,7 +354,7 @@ class VoiceClient(VoiceProtocol):
 
     @property
     def average_latency(self) -> float:
-        """Average of most recent 20 HEARBEAT latencies in seconds.
+        """Average of most recent 20 HEARTBEAT latencies in seconds.
 
         .. versionadded:: 1.4
         """
@@ -708,7 +708,7 @@ class VoiceClient(VoiceProtocol):
         sink: :class:`~.Sink`
             A Sink in which all audio packets will be processed in.
         callback: Callable[[:class:`Exception` | None], Any]
-            A function which is called after the bot has stopped recording. This must take exactly one positonal(-only)
+            A function which is called after the bot has stopped recording. This must take exactly one positional(-only)
             parameter, ``exception``, which is the exception that was raised during the recording of the Sink.
 
             .. versionchanged:: 2.7

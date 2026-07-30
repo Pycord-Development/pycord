@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -863,10 +864,9 @@ class Section(Component):
         return payload
 
     def walk_components(self) -> Iterator[Component]:
-        r = self.components
+        yield from self.components
         if self.accessory:
-            yield from r + [self.accessory]
-        yield from r
+            yield self.accessory
 
     def get_component(self, id: str | int) -> Component | None:
         """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.

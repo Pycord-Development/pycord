@@ -28,7 +28,8 @@ from __future__ import annotations
 import asyncio
 import time
 from collections import deque
-from typing import TYPE_CHECKING, Any, Callable, Deque, TypeVar
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Deque, TypeVar
 
 import discord.abc
 from discord.enums import Enum

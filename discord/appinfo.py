@@ -166,7 +166,7 @@ class AppInfo:
     tags: Optional[List[:class:`str`]]
         The list of tags describing the content and functionality of the app, if set.
 
-        Maximium of 5 tags.
+        Maximum of 5 tags.
 
         .. versionadded:: 2.7
 
