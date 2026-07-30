@@ -34,12 +34,10 @@ import logging
 import sys
 import traceback
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Coroutine, Generator, Mapping
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Generator,
     Literal,
     Mapping,
     TypeAlias,

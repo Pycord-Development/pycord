@@ -24,7 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Coroutine
+from collections.abc import Coroutine
+from typing import TYPE_CHECKING, Any
 
 from typing_extensions import override
 
