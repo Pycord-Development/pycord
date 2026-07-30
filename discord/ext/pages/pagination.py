@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import contextlib
-from typing import List
 
 import discord
 from discord.errors import DiscordException
@@ -170,7 +169,7 @@ class Page:
     async def callback(self, interaction: discord.Interaction | None = None):
         """|coro|
 
-        The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called.
+        The coroutine associated with a specific page. If `Paginator.page_action()` is used, this coroutine is called.
 
         Parameters
         ----------
@@ -935,7 +934,7 @@ class Paginator(discord.ui.View):
             return Page(content=None, embeds=[], files=[page])
         elif isinstance(page, discord.ui.View):
             return Page(content=None, embeds=[], files=[], custom_view=page)
-        elif isinstance(page, List):
+        elif isinstance(page, list):
             if all(isinstance(x, discord.Embed) for x in page):
                 return Page(content=None, embeds=page, files=[])
             if all(isinstance(x, discord.File) for x in page):

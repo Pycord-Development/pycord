@@ -27,14 +27,10 @@ from __future__ import annotations
 
 import asyncio
 import datetime
+from collections.abc import AsyncIterator, Awaitable, Callable, Generator
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Generator,
-    List,
     TypeVar,
     Union,
 )
@@ -140,7 +136,7 @@ def _identity(x):
     return x
 
 
-class _ChunkedAsyncIterator(_AsyncIterator[List[T]]):
+class _ChunkedAsyncIterator(_AsyncIterator[list[T]]):
     def __init__(self, iterator, max_size):
         self.iterator = iterator
         self.max_size = max_size
@@ -870,7 +866,7 @@ class ArchivedThreadIterator(_AsyncIterator["Thread"]):
         if not self.has_more:
             raise NoMoreItems()
 
-        limit = 50 if self.limit is None else max(self.limit, 50)
+        limit = 50 if self.limit is None else min(self.limit, 50)
         data = await self.endpoint(self.channel_id, before=self.before, limit=limit)
 
         # This stuff is obviously WIP because 'members' is always empty
