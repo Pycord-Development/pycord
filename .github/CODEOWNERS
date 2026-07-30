@@ -12,3 +12,4 @@
 /.github/workflows/docs-localization-upload.yml @Pycord-Development/maintain-translations
 /crowdin.yml @Pycord-Development/maintain-translations
 /requirements/_locale.txt @Pycord-Development/maintain-translations
+/CHANGELOG.md @Pycord-Development/squiddo-typo-check

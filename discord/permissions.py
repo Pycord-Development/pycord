@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, TypeVar
+from collections.abc import Callable, Iterator
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
 from .flags import BaseFlags, alias_flag_value, fill_with_flags, flag_value
 
