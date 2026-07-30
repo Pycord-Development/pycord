@@ -71,19 +71,19 @@ from typing_extensions import deprecated as ext_deprecated
 
 if TYPE_CHECKING:
     from discord import (
-        Client,
-        VoiceChannel,
-        TextChannel,
-        ForumChannel,
-        StageChannel,
-        CategoryChannel,
-        Thread,
-        Member,
-        User,
-        Guild,
-        Role,
-        GuildEmoji,
         AppEmoji,
+        CategoryChannel,
+        Client,
+        ForumChannel,
+        Guild,
+        GuildEmoji,
+        Member,
+        Role,
+        StageChannel,
+        TextChannel,
+        Thread,
+        User,
+        VoiceChannel,
     )
 
 from .errors import HTTPException, InvalidArgument, InvalidData
@@ -96,32 +96,32 @@ else:
     HAS_MSGSPEC = True
 
 __all__ = (
-    "parse_time",
-    "warn_deprecated",
+    "MISSING",
+    "as_chunks",
+    "basic_autocomplete",
     "deprecated",
-    "oauth_url",
-    "snowflake_time",
-    "time_snowflake",
-    "find",
-    "get",
-    "get_or_fetch",
-    "sleep_until",
-    "utcnow",
-    "resolve_invite",
-    "resolve_template",
-    "remove_markdown",
     "escape_markdown",
     "escape_mentions",
-    "raw_mentions",
-    "raw_channel_mentions",
-    "raw_role_mentions",
-    "as_chunks",
+    "filter_params",
+    "find",
     "format_dt",
     "generate_snowflake",
-    "basic_autocomplete",
-    "filter_params",
-    "MISSING",
+    "get",
+    "get_or_fetch",
+    "oauth_url",
+    "parse_time",
+    "raw_channel_mentions",
+    "raw_mentions",
+    "raw_role_mentions",
+    "remove_markdown",
+    "resolve_invite",
+    "resolve_template",
+    "sleep_until",
+    "snowflake_time",
+    "time_snowflake",
     "users_to_csv",
+    "utcnow",
+    "warn_deprecated",
 )
 
 _log = logging.getLogger(__name__)
@@ -158,7 +158,7 @@ class _MissingSentinel:
 MISSING: Any = _MissingSentinel()
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
@@ -1319,7 +1319,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     if isinstance(iterator, AsyncIterator):
         return _achunk(iterator, max_size)
     return _chunk(iterator, max_size)
-
 
 
 def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:

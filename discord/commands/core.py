@@ -83,9 +83,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing import Concatenate
+    from typing import Concatenate, ParamSpec
 
-    from typing_extensions import Never, ParamSpec
+    from typing_extensions import Never
 
     from .. import Permissions
     from ..bot import C
