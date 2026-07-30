@@ -21,11 +21,11 @@ jobs:
     # - NyuwBot: 106019021
     if:
       ${{
-        github.actor_id == 29139614 ||
-        github.actor_id == 49699333 ||
-        github.actor_id == 66853113 ||
-        github.actor_id == 58779643 ||
-        github.actor_id == 106019021
+        github.event.pull_request.user.id == 29139614 ||
+        github.event.pull_request.user.id == 49699333 ||
+        github.event.pull_request.user.id == 66853113 ||
+        github.event.pull_request.user.id == 58779643 ||
+        github.event.pull_request.user.id == 106019021
       }}
     continue-on-error: true
     steps:
