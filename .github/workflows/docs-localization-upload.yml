@@ -10,7 +10,8 @@ on:
   schedule:
     - cron: "0 0 * * 1"
 
-permissions: write-all
+permissions:
+  contents: read
 
 jobs:
   upload:

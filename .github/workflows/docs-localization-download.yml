@@ -3,7 +3,8 @@ name: "Multilingual Docs Download"
 on:
   workflow_dispatch:
 
-permissions: write-all
+permissions:
+  contents: read
 
 jobs:
   download:
@@ -71,6 +72,9 @@ jobs:
     name: "PR operations"
     needs: [ download ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     environment: translations
     steps:
       - name: "Checkout Repository"
@@ -87,41 +91,6 @@ jobs:
           PR_ID=$(echo -n "${{ needs.download.outputs.pr_id }}" | base64 --decode)
           echo "pr_ref=$PR_REF" >> $GITHUB_OUTPUT
           echo "pr_id=$PR_ID" >> $GITHUB_OUTPUT
-      #- name: Invoke checks workflow
-      #uses: benc-uk/workflow-dispatch@v1.2.4
-      #with:
-      #workflow: check.yml
-      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      #- name: Invoke codeql workflow
-      #uses: benc-uk/workflow-dispatch@v1.2.4
-      #with:
-      #workflow: codeql-analysis.yml
-      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      #- name: Invoke lint workflow
-      #uses: benc-uk/workflow-dispatch@v1.2.4
-      #with:
-      #workflow: lint.yml
-      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      #- name: Invoke pr workflow
-      #uses: benc-uk/workflow-dispatch@v1.2.4
-      #with:
-      #workflow: pr.yml
-      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      #- name: Invoke test workflow
-      #uses: benc-uk/workflow-dispatch@v1.2.4
-      #with:
-      #workflow: test.yml
-      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      #- name: Invoke todo workflow
-      #uses: benc-uk/workflow-dispatch@v1.2.4
-      #with:
-      #workflow: todo.yml
-      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      #- name: Invoke version updates workflow
-      #uses: benc-uk/workflow-dispatch@v1.2.4
-      #with:
-      #workflow: version-updates.yml
-      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: "Auto Approve"
         run: gh pr review --approve -b "Auto-approval for localization sync" "$PR_ID"
         env:
