@@ -33,7 +33,9 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19]
+ComponentType = Literal[
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23
+]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
@@ -47,7 +49,7 @@ class BaseComponent(TypedDict):
 
 class ActionRow(BaseComponent):
     type: Literal[1]
-    components: list[ButtonComponent | InputText | SelectMenu]
+    components: list[AllowedActionRowComponents]
 
 
 class ButtonComponent(BaseComponent):
@@ -106,8 +108,8 @@ class TextDisplayComponent(BaseComponent):
 
 class SectionComponent(BaseComponent):
     type: Literal[9]
-    components: list[TextDisplayComponent]
-    accessory: NotRequired[ThumbnailComponent | ButtonComponent]
+    components: list[AllowedSectionComponents]
+    accessory: NotRequired[AllowedSectionAccessories]
 
 
 class UnfurledMediaItem(TypedDict):
@@ -163,7 +165,7 @@ class LabelComponent(BaseComponent):
     type: Literal[18]
     label: str
     description: NotRequired[str]
-    component: SelectMenu | InputText | FileUploadComponent
+    component: AllowedLabelComponents
 
 
 class FileUploadComponent(BaseComponent):
@@ -174,10 +176,66 @@ class FileUploadComponent(BaseComponent):
     required: NotRequired[bool]
 
 
+class RadioGroupOption(TypedDict):
+    value: str
+    label: str
+    description: NotRequired[str]
+    default: NotRequired[bool]
+
+
+class RadioGroupComponent(BaseComponent):
+    type: Literal[21]
+    custom_id: str
+    required: NotRequired[bool]
+    options: list[RadioGroupOption]
+
+
+class CheckboxGroupOption(TypedDict):
+    value: str
+    label: str
+    description: NotRequired[str]
+    default: NotRequired[bool]
+
+
+class CheckboxGroupComponent(BaseComponent):
+    type: Literal[22]
+    custom_id: str
+    required: NotRequired[bool]
+    options: list[CheckboxGroupOption]
+    max_values: NotRequired[int]
+    min_values: NotRequired[int]
+
+
+class CheckboxComponent(BaseComponent):
+    type: Literal[23]
+    custom_id: str
+    default: NotRequired[bool]
+
+
 Component = Union[
-    ActionRow, ButtonComponent, SelectMenu, InputText, FileUploadComponent
+    ActionRow,
+    ButtonComponent,
+    SelectMenu,
+    InputText,
+    TextDisplayComponent,
+    SectionComponent,
+    ThumbnailComponent,
+    MediaGalleryComponent,
+    FileComponent,
+    SeparatorComponent,
+    ContainerComponent,
+    LabelComponent,
+    FileUploadComponent,
+    RadioGroupComponent,
+    CheckboxGroupComponent,
+    CheckboxComponent,
 ]
 
+AllowedActionRowComponents = Union[ButtonComponent, InputText, SelectMenu]
+
+AllowedSectionAccessories = Union[ThumbnailComponent, ButtonComponent]
+
+AllowedSectionComponents = Union[TextDisplayComponent]
 
 AllowedContainerComponents = Union[
     ActionRow,
@@ -186,4 +244,13 @@ AllowedContainerComponents = Union[
     FileComponent,
     SeparatorComponent,
     SectionComponent,
+]
+
+AllowedLabelComponents = Union[
+    SelectMenu,
+    InputText,
+    FileUploadComponent,
+    RadioGroupComponent,
+    CheckboxComponent,
+    CheckboxGroupComponent,
 ]

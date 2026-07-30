@@ -132,12 +132,6 @@ class InputText(ModalItem):
             id=id,
         )
 
-    def __repr__(self) -> str:
-        attrs = " ".join(
-            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
-        )
-        return f"<{self.__class__.__name__} {attrs}>"
-
     def _generate_underlying(
         self,
         style: InputTextStyle | None = None,
@@ -185,9 +179,9 @@ class InputText(ModalItem):
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f"custom_id must be None or str not {value.__class__.__name__}"
-            )
+            raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
+        if len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         self.underlying.custom_id = value
 
     @property

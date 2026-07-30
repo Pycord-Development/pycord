@@ -32,7 +32,7 @@ from discord.interactions import Interaction, InteractionMessage, InteractionRes
 from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
-    from typing import Awaitable, Callable
+    from collections.abc import Awaitable, Callable
 
     from typing_extensions import ParamSpec
 
@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
     from ..ui import BaseView
     from ..user import User
-    from ..voice_client import VoiceClient
+    from ..voice import VoiceClient
     from ..webhook import WebhookMessage
     from .core import ApplicationCommand, Option
 

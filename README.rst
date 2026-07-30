@@ -32,7 +32,7 @@ Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for D
 Note
 ----
 
-Pycord supports Python ``3.10`` - ``3.13``
+Pycord supports Python ``3.10`` - ``3.14``
 
 Key Features
 ------------
@@ -156,6 +156,7 @@ Useful Links
 - `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
+- `SonoLink, a high-performance Lavalink v4 wrapper for Python <https://github.com/sonolink/sonolink>`_
 
 Translations
 ------------

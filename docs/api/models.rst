@@ -89,6 +89,11 @@ Messages
 .. autoclass:: Message()
     :members:
 
+.. attributetable:: MessagePin
+
+.. autoclass:: MessagePin()
+    :members:
+
 .. attributetable:: MessageSnapshot
 
 .. autoclass:: MessageSnapshot()
@@ -221,6 +226,16 @@ Invites
 .. attributetable:: Invite
 
 .. autoclass:: Invite()
+    :members:
+
+.. attributetable:: InviteTargetUsers
+
+.. autoclass:: InviteTargetUsers()
+    :members:
+
+.. attributetable:: InviteTargetUsersJobStatus
+
+.. autoclass:: InviteTargetUsersJobStatus()
     :members:
 
 Role
@@ -473,6 +488,24 @@ UI Components
 .. attributetable:: FileUpload
 
 .. autoclass:: FileUpload()
+    :members:
+    :inherited-members:
+
+.. attributetable:: RadioGroup
+
+.. autoclass:: RadioGroup()
+    :members:
+    :inherited-members:
+
+.. attributetable:: CheckboxGroup
+
+.. autoclass:: CheckboxGroup()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Checkbox
+
+.. autoclass:: Checkbox()
     :members:
     :inherited-members:
 

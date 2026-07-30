@@ -28,8 +28,10 @@ from __future__ import annotations
 import inspect
 import re
 import sys
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Iterator, Literal, Pattern, TypeVar, Union
+from re import Pattern
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, Union
 
 from discord.utils import (
     MISSING,
@@ -632,7 +634,7 @@ class FlagConverter(metaclass=FlagsMeta):
     async def convert(cls: type[F], ctx: Context, argument: str) -> F:
         """|coro|
 
-        The method that actually converters an argument to the flag mapping.
+        The method that actually converts an argument to the flag mapping.
 
         Parameters
         ----------

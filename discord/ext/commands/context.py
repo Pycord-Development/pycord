@@ -41,7 +41,7 @@ if TYPE_CHECKING:
     from discord.member import Member
     from discord.state import ConnectionState
     from discord.user import ClientUser, User
-    from discord.voice_client import VoiceProtocol
+    from discord.voice import VoiceProtocol
 
     from .bot import AutoShardedBot, Bot
     from .cog import Cog

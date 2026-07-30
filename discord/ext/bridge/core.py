@@ -26,8 +26,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
-from collections.abc import Iterator
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable, Iterator
+from typing import TYPE_CHECKING, Any
 
 import discord.commands.options
 from discord import (
@@ -153,7 +153,7 @@ class BridgeExtGroup(BridgeExtCommand, Group):  # type: ignore
 
 
 class BridgeCommand:
-    """Compatibility class between prefixed-based commands and slash commands.
+    """Compatibility class between prefix-based commands and slash commands.
 
     Parameters
     ----------
@@ -350,7 +350,7 @@ class BridgeCommand:
 
 
 class BridgeCommandGroup(BridgeCommand):
-    """Compatibility class between prefixed-based commands and slash commands.
+    """Compatibility class between prefix-based commands and slash commands.
 
     Parameters
     ----------
@@ -584,7 +584,7 @@ def is_nsfw():
 
     .. warning::
 
-        In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly.
+        In DMs, the prefix-based command will always run as the user's privacy settings cannot be checked directly.
     """
 
     def predicate(func: Callable | ApplicationCommand):

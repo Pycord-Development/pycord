@@ -27,9 +27,9 @@ from __future__ import annotations
 
 import inspect
 import os
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from functools import partial
-from typing import TYPE_CHECKING, Any, Callable, Generic, Literal, overload
+from typing import TYPE_CHECKING, Any, Generic, Literal, overload
 
 from typing_extensions import Self, TypeVar
 
@@ -661,14 +661,14 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         return self
 
     @property
-    def values(self) -> list[ST]:
+    def values(self) -> list[ST] | None:
         """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] |
         List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None:
         A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet.
         """
         if self._interaction is None or self._interaction.data is None:
             # The select has not been interacted with yet
-            return []
+            return None
         select_type = self.underlying.type
         if select_type is ComponentType.string_select:
             return self._selected_values  # type: ignore # ST is str

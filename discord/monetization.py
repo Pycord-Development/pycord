@@ -179,7 +179,7 @@ class Entitlement(Hashable):
         As of October 1, 2024, entitlements that have been purchased will have ``ends_at`` set to ``None``
         unless the parent :class:`Subscription` has been cancelled.
 
-        `See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_
+        `See the Discord changelog. <https://docs.discord.com/developers/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_
 
     Attributes
     ----------

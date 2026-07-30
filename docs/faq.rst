@@ -305,7 +305,7 @@ Quick example: ::
             if r.status == 200:
                 js = await r.json()
 
-See `aiohttp's full documentation <http://aiohttp.readthedocs.io/en/stable/>`_ for more information.
+See `aiohttp's full documentation <https://docs.aiohttp.org/en/stable/>`_ for more information.
 
 How do I use a local image file for an embed image?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
