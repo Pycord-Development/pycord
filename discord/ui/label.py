@@ -31,11 +31,7 @@ from ..components import (
     CheckboxGroupOption,
 )
 from ..components import Label as LabelComponent
-from ..components import (
-    RadioGroupOption,
-    SelectDefaultValue,
-    SelectOption,
-)
+from ..components import RadioGroupOption, SelectDefaultValue, SelectOption
 from ..enums import ChannelType, ComponentType, InputTextStyle
 from .checkbox import Checkbox
 from .checkbox_group import CheckboxGroup
