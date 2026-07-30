@@ -92,10 +92,7 @@ if TYPE_CHECKING:
     from .types.interactions import (
         InteractionCallbackActivityInstance as InteractionCallbackActivityInstancePayload,
     )
-    from .types.interactions import (
-        InteractionCallbackResponse,
-        InteractionData,
-    )
+    from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import BaseModal
