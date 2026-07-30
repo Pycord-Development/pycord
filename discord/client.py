@@ -30,14 +30,11 @@ import logging
 import signal
 import sys
 import traceback
+from collections.abc import Callable, Coroutine, Generator, Sequence
 from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Generator,
-    Sequence,
     TypeVar,
 )
 

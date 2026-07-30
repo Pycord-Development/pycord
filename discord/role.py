@@ -308,8 +308,18 @@ class RoleColours:
     secondary: Optional[:class:`Colour`]
         The secondary colour of the role.
     tertiary: Optional[:class:`Colour`]
-        The tertiary colour of the role. At the moment, only `16761760` is allowed.
+        The tertiary colour of the role. At the moment, only :attr:`HOLOGRAPHIC_TERTIARY` is allowed.
+    HOLOGRAPHIC_PRIMARY: :class:`Colour`
+            The primary colour used for holographic roles.
+    HOLOGRAPHIC_SECONDARY: :class:`Colour`
+        The secondary colour used for holographic roles.
+    HOLOGRAPHIC_TERTIARY: :class:`Colour`
+        The tertiary colour used for holographic roles.
     """
+
+    HOLOGRAPHIC_PRIMARY = Colour(11127295)
+    HOLOGRAPHIC_SECONDARY = Colour(16759788)
+    HOLOGRAPHIC_TERTIARY = Colour(16761760)
 
     def __init__(
         self,
@@ -362,20 +372,26 @@ class RoleColours:
     def holographic(cls) -> RoleColours:
         """Returns a :class:`RoleColours` that makes the role look holographic.
 
-        Currently holographic roles are only supported with colours 11127295, 16759788, and 16761760.
+        Currently holographic roles are only supported with colours defined in
+        :attr:`HOLOGRAPHIC_PRIMARY`, :attr:`HOLOGRAPHIC_SECONDARY`, and :attr:`HOLOGRAPHIC_TERTIARY`.
         """
-        return cls(Colour(11127295), Colour(16759788), Colour(16761760))
+        return cls(
+            cls.HOLOGRAPHIC_PRIMARY,
+            cls.HOLOGRAPHIC_SECONDARY,
+            cls.HOLOGRAPHIC_TERTIARY,
+        )
 
     @property
     def is_holographic(self) -> bool:
         """Whether the role is holographic.
 
-        Currently roles are holographic when colours are set to 11127295, 16759788, and 16761760.
+        Currently roles are holographic when colours are set to
+        :attr:`HOLOGRAPHIC_PRIMARY`, :attr:`HOLOGRAPHIC_SECONDARY`, and :attr:`HOLOGRAPHIC_TERTIARY`.
         """
         return (
-            self.primary.value == 11127295
-            and self.secondary.value == 16759788
-            and self.tertiary.value == 16761760
+            self.primary == self.HOLOGRAPHIC_PRIMARY
+            and self.secondary == self.HOLOGRAPHIC_SECONDARY
+            and self.tertiary == self.HOLOGRAPHIC_TERTIARY
         )
 
     def __repr__(self) -> str:

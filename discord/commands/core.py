@@ -30,28 +30,27 @@ import datetime
 import functools
 import inspect
 import re
-import sys
 import types
 from collections import OrderedDict
+from collections.abc import Callable, Coroutine, Generator
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
-    Callable,
-    Coroutine,
-    Generator,
     Generic,
+    Literal,
     TypeVar,
     Union,
+    get_args,
+    get_origin,
 )
+
+from typing_extensions import Self
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
-from ..enums import (
-    IntegrationType,
-    InteractionContextType,
-    SlashCommandOptionType,
-)
+from ..enums import IntegrationType, InteractionContextType, SlashCommandOptionType
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
@@ -69,11 +68,6 @@ from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_depr
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
-if sys.version_info >= (3, 11):
-    from typing import Annotated, Literal, Self, get_args, get_origin
-else:
-    from typing_extensions import Annotated, Literal, Self, get_args, get_origin
-
 __all__ = (
     "_BaseCommand",
     "ApplicationCommand",
@@ -90,7 +84,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, Never, ParamSpec
+    from typing import Concatenate
+
+    from typing_extensions import Never, ParamSpec
 
     from .. import Permissions
     from ..bot import C
@@ -310,7 +306,11 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "2.6",
             reference="https://docs.discord.com/developers/change-log#user-installable-apps-preview",
         )
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
@@ -1345,7 +1345,11 @@ class SlashCommandGroup(ApplicationCommand):
     @property
     def guild_only(self) -> bool:
         warn_deprecated("guild_only", "contexts", "2.6")
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:

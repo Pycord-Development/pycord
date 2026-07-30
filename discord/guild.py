@@ -28,15 +28,13 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    List,
     NamedTuple,
     Optional,
-    Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
@@ -120,10 +118,7 @@ if TYPE_CHECKING:
     from .template import Template
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
-    from .types.guild import (
-        GuildFeature,
-        MFALevel,
-    )
+    from .types.guild import GuildFeature, MFALevel
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
@@ -135,7 +130,7 @@ if TYPE_CHECKING:
     GuildChannel = Union[
         VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
     ]
-    ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+    ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
 
 T = TypeVar("T")
 
