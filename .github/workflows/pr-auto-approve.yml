@@ -6,15 +6,27 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-permissions: write-all
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
+    # Bot IDs:
+    # - renovate[bot]: 29139614
+    # - dependabot[bot]: 49699333
+    # - pre-commit-ci[bot]: 66853113
+    # - crowdin-bot: 58779643
+    # - NyuwBot: 106019021
     if:
-      ${{ github.actor == 'dependabot[bot]' || github.actor == 'crowdin-bot' ||
-      github.actor == 'Crowdin Bot' || github.actor_id == 106019021 || github.actor_id
-      == 58779643 }}
+      ${{
+        github.actor_id == 29139614 ||
+        github.actor_id == 49699333 ||
+        github.actor_id == 66853113 ||
+        github.actor_id == 58779643 ||
+        github.actor_id == 106019021
+      }}
     continue-on-error: true
     steps:
       - name: "Auto Approve"

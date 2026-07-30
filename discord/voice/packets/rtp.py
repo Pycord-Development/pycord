@@ -32,7 +32,7 @@ from typing import TYPE_CHECKING, Any, Literal
 from .core import OPUS_SILENCE, Packet
 
 if TYPE_CHECKING:
-    from typing_extensions import Final
+    from typing import Final
 
 MAX_UINT_32 = 0xFFFFFFFF
 MAX_UINT_16 = 0xFFFF

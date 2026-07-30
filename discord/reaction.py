@@ -133,7 +133,7 @@ class Reaction:
         return self.burst_colours
 
     @property
-    def count_details(self):
+    def count_details(self) -> ReactionCountDetails:
         """Returns :class:`ReactionCountDetails` for the individual counts of normal and super reactions made."""
         return ReactionCountDetails(self._count_details)
 
