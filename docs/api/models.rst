@@ -726,6 +726,11 @@ Events
 .. autoclass:: VoiceChannelEffectSendEvent()
     :members:
 
+.. attributetable:: ChannelInfo
+
+.. autoclass:: ChannelInfo()
+    :members:
+
 
 
 Webhooks
