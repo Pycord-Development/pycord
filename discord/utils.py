@@ -207,17 +207,6 @@ class CachedSlotProperty(Generic[T, T_co]):
             return value
 
 
-class classproperty(Generic[T_co]):
-    def __init__(self, fget: Callable[[Any], T_co]) -> None:
-        self.fget = fget
-
-    def __get__(self, instance: Any | None, owner: type[Any]) -> T_co:
-        return self.fget(owner)
-
-    def __set__(self, instance, value) -> None:
-        raise AttributeError("cannot set attribute")
-
-
 def cached_slot_property(
     name: str,
 ) -> Callable[[Callable[[T], T_co]], CachedSlotProperty[T, T_co]]:
@@ -1319,17 +1308,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     if isinstance(iterator, AsyncIterator):
         return _achunk(iterator, max_size)
     return _chunk(iterator, max_size)
-
-
-def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    params = []
-    literal_cls = type(Literal[0])
-    for p in parameters:
-        if isinstance(p, literal_cls):
-            params.extend(p.__args__)
-        else:
-            params.append(p)
-    return tuple(params)
 
 
 def normalise_optional_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
