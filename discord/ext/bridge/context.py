@@ -55,7 +55,7 @@ __all__ = (
 
 
 class DeferTyping:
-    def __init__(self, ctx: BridgeApplicationContext, ephemeral: bool) -> None:
+    def __init__(self, ctx: BridgeApplicationContext, ephemeral: bool = False) -> None:
         self.loop: asyncio.AbstractEventLoop = ctx._state.loop
         self.ctx = ctx
         self.ephemeral = ephemeral
