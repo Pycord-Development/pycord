@@ -61,7 +61,10 @@ class ApplicationCommand(TypedDict):
     dm_permission: NotRequired[bool]
     default_permission: NotRequired[bool | None]
     nsfw: NotRequired[bool]
+    integration_types: NotRequired[list[int]]
+    contexts: NotRequired[list[int] | None]
     version: Snowflake
+    handler: NotRequired[int]
 
 
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -291,6 +294,9 @@ class InteractionCallback(TypedDict):
 
 class InteractionCallbackResource(TypedDict):
     type: InteractionResponseType
-    # This is not fully typed as activities are out of scope
-    activity_instance: NotRequired[dict]
+    activity_instance: NotRequired[InteractionCallbackActivityInstance]
     message: NotRequired[Message]
+
+
+class InteractionCallbackActivityInstance(TypedDict):
+    id: str

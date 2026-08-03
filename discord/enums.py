@@ -88,6 +88,7 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+    "EntryPointHandler",
 )
 
 
@@ -714,6 +715,7 @@ class InteractionResponseType(Enum):
     auto_complete_result = 8  # for autocomplete interactions
     modal = 9  # for modal dialogs
     premium_required = 10
+    launch_activity = 12
 
 
 class VideoQualityMode(Enum):
@@ -1210,6 +1212,13 @@ class InviteTargetUsersJobStatusCode(Enum):
     processing = 1
     completed = 2
     failed = 3
+
+
+class EntryPointHandler(Enum):
+    """Represents the handler for entry point commands (type 4)."""
+
+    app_handler = 1
+    discord_launch_activity = 2
 
 
 T = TypeVar("T")
