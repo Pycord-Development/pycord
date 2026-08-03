@@ -538,7 +538,7 @@ class ScheduledEvent(Hashable):
         self.name: str = data.get("name")
         self.description: str | None = data.get("description", None)
         self._image: str | None = data.get("image", None)
-        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(
+        self.start_time: datetime.datetime = utils.parse_time(
             data.get("scheduled_start_time")
         )
 
