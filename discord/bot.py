@@ -39,7 +39,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Literal,
-    NotRequired,
     TypedDict,
     TypeVar,
 )
@@ -65,7 +64,7 @@ from .user import User
 from .utils import MISSING, async_all, find, get
 
 if TYPE_CHECKING:
-    from typing_extensions import Never
+    from typing_extensions import Never, NotRequired
 
     from .cog import Cog
     from .commands import Option
@@ -695,11 +694,11 @@ class ApplicationCommandMixin(ABC):
                 type=i.get("type"),
             )
             if not cmd:
-                continue
-                raise ValueError(
+                _log.warning(
                     f"Registered command {i['name']}, type {i.get('type')} not found in"
-                    " pending commands"
+                    " pending commands. It's interactions will be ignored."
                 )
+                continue
             cmd.id = i["id"]
             self._application_commands[cmd.id] = cmd
 
