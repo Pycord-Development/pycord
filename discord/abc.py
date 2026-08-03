@@ -54,7 +54,6 @@ from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
-from .shared_client_theme import SharedClientThemeBaseType
 from .sticker import GuildSticker, StickerItem
 from .utils import warn_deprecated
 
