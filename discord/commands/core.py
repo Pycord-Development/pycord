@@ -2068,8 +2068,9 @@ class EntryPointCommand(ApplicationCommand):
         _validate_descriptions(self)
 
         self.handler: EntryPointHandler = kwargs.get("handler", MISSING)
-
         self.attached_to_group: bool = False
+
+        self._validate_parameters()
 
         try:
             checks = func.__commands_checks__

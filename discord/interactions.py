@@ -1991,6 +1991,7 @@ class InteractionCallback:
         """
         return self._response_message_ephemeral
 
+    @property
     def activity_instance_id(self) -> str | None:
         """Instance ID of the Activity if one was launched or joined.
         If no activity was launched or joined this will be None.
