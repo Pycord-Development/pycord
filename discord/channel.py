@@ -26,14 +26,11 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Iterable,
-    Mapping,
     NamedTuple,
-    Sequence,
     TypeVar,
     overload,
 )
@@ -147,27 +144,27 @@ class ForumTag(Hashable):
         moderated: :class:`bool`
             Whether this tag can only be added or removed by a moderator with
             the :attr:`~Permissions.manage_threads` permission.
-        emoji: :class:`PartialEmoji`
-            The emoji that is used to represent this tag.
+        emoji: Optional[:class:`PartialEmoji`]
+            The emoji that is used to represent this tag. Defaults to ``None``.
             Note that if the emoji is a custom emoji, it will *not* have name information.
     """
 
     __slots__ = ("name", "id", "moderated", "emoji")
 
     def __init__(
-        self, *, name: str, emoji: EmojiInputType, moderated: bool = False
+        self, *, name: str, emoji: EmojiInputType | None = None, moderated: bool = False
     ) -> None:
         self.name: str = name
         self.id: int = 0
         self.moderated: bool = moderated
-        self.emoji: PartialEmoji
+        self.emoji: PartialEmoji | None = None
         if isinstance(emoji, _EmojiTag):
             self.emoji = emoji._to_partial()
         elif isinstance(emoji, str):
             self.emoji = PartialEmoji.from_str(emoji)
-        else:
+        elif emoji is not None:
             raise TypeError(
-                "emoji must be a GuildEmoji, PartialEmoji, or str and not"
+                "emoji must be a GuildEmoji, PartialEmoji, str, or None and not"
                 f" {emoji.__class__!r}"
             )
 
@@ -189,14 +186,22 @@ class ForumTag(Hashable):
 
         emoji_name = data["emoji_name"] or ""
         emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
-        self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
+        self.emoji = None
+        if emoji_name or emoji_id:
+            self.emoji = PartialEmoji.with_state(
+                state=state, name=emoji_name, id=emoji_id
+            )
         return self
 
     def to_dict(self) -> dict[str, Any]:
         payload: dict[str, Any] = {
             "name": self.name,
             "moderated": self.moderated,
-        } | self.emoji._to_forum_reaction_payload()
+            "emoji_id": None,
+            "emoji_name": None,
+        }
+        if self.emoji is not None:
+            payload.update(self.emoji._to_forum_reaction_payload())
 
         if self.id:
             payload["id"] = self.id
@@ -1626,7 +1631,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self, guild: Guild, data: VoiceChannelPayload | StageChannelPayload
     ) -> None:
         # This data will always exist
-        self.guild = guild
+        self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
 

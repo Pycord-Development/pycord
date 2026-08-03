@@ -41,6 +41,7 @@ Exception Hierarchy
                 - :exc:`sinks.MKVSinkError`
                 - :exc:`sinks.MKASinkError`
                 - :exc:`sinks.OGGSinkError`
+            - :exc:`MissingVoiceDependenciesError`
 
 Objects
 -------
@@ -124,3 +125,5 @@ The following exceptions are thrown by the library.
 .. autoexception:: discord.sinks.MKASinkError
 
 .. autoexception:: discord.sinks.OGGSinkError
+
+.. autoexception:: discord.MissingVoiceDependenciesError

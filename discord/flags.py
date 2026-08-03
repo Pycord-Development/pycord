@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, ClassVar, Iterator, TypeVar, overload
+from collections.abc import Callable, Iterator
+from typing import Any, ClassVar, TypeVar, overload
 
 from .enums import UserFlags
 
@@ -715,6 +716,7 @@ class Intents(BaseFlags):
         - :func:`on_raw_member_remove`
         - :func:`on_member_update`
         - :func:`on_user_update`
+        - :func:`on_raw_member_update`
 
         This also corresponds to the following attributes and classes in terms of cache:
 
@@ -764,15 +766,6 @@ class Intents(BaseFlags):
         return 1 << 2
 
     @flag_value
-    def emojis(self):
-        """:class:`bool`: Alias of :attr:`.emojis_and_stickers`.
-
-        .. versionchanged:: 2.0
-            Changed to an alias.
-        """
-        return 1 << 3
-
-    @alias_flag_value
     def emojis_and_stickers(self):
         """:class:`bool`: Whether guild emoji and sticker related events are enabled.
 
@@ -793,6 +786,15 @@ class Intents(BaseFlags):
         - :meth:`Client.stickers`
         - :attr:`Guild.emojis`
         - :attr:`Guild.stickers`
+        """
+        return 1 << 3
+
+    @alias_flag_value
+    def emojis(self):
+        """:class:`bool`: Alias of :attr:`.emojis_and_stickers`.
+
+        .. versionchanged:: 2.0
+            Changed to an alias.
         """
         return 1 << 3
 
@@ -1494,8 +1496,8 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def gateway_message_content_limited(self):
-        """:class:`bool`: Returns ``True`` if the application is currently pending verification
-        and has hit the guild limit.
+        """:class:`bool`: Returns ``True`` if the application is allowed to receive limited
+        message content information over the gateway.
         """
         return 1 << 19
 

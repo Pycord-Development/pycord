@@ -28,15 +28,13 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    List,
     NamedTuple,
     Optional,
-    Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
@@ -61,6 +59,7 @@ from .enums import (
     NotificationLevel,
     NSFWLevel,
     OnboardingMode,
+    RoleType,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     SortOrder,
@@ -122,22 +121,19 @@ if TYPE_CHECKING:
     from .template import Template
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
-    from .types.guild import (
-        GuildFeature,
-        MFALevel,
-    )
+    from .types.guild import GuildFeature, MFALevel
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
-    from .types.voice import GuildVoiceState
-    from .voice_client import VoiceClient
+    from .types.voice import VoiceState as GuildVoiceState
+    from .voice import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
     GuildChannel = Union[
         VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
     ]
-    ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+    ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
 
 T = TypeVar("T")
 
@@ -1254,7 +1250,7 @@ class Guild(Hashable):
         .. versionadded:: 1.6
         """
         for role in self._roles.values():
-            if role.is_premium_subscriber():
+            if role.type is RoleType.BOOSTER:
                 return role
         return None
 
@@ -3087,7 +3083,7 @@ class Guild(Hashable):
             raise TypeError('"name" parameter must be 2 to 30 characters long.')
 
         if description and not (2 <= len(description) <= 100):
-            raise TypeError('"description" parameter must be 2 to 200 characters long.')
+            raise TypeError('"description" parameter must be 2 to 100 characters long.')
 
         payload = {"name": name, "description": description or ""}
 
@@ -3330,7 +3326,7 @@ class Guild(Hashable):
         data = await self._state.http.get_role(self.id, role_id)
         return Role(guild=self, state=self._state, data=data)
 
-    async def _fetch_role(self, role_id: int) -> Role:
+    async def _fetch_role(self, role_id: int) -> Role | None:
         """|coro|
 
         Retrieves a :class:`Role` that the guild has.
@@ -3808,7 +3804,7 @@ class Guild(Hashable):
 
         You must have the :attr:`~Permissions.view_audit_log` permission to use this.
 
-        See `API documentation <https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log>`_
+        See `API documentation <https://docs.discord.com/developers/resources/audit-log#get-guild-audit-log>`_
         for more information about the `before` and `after` parameters.
 
         Parameters

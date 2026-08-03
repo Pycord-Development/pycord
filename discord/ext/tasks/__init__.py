@@ -31,14 +31,14 @@ import datetime
 import inspect
 import sys
 import traceback
-from collections.abc import Sequence
-from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
+from collections.abc import Awaitable, Callable, Sequence
+from typing import Any, Generic, TypeVar, cast
 
 import aiohttp
 
 import discord
 from discord.backoff import ExponentialBackoff
-from discord.utils import MISSING
+from discord.utils import MISSING, _get_event_loop
 
 __all__ = ("loop",)
 
@@ -384,7 +384,7 @@ class Loop(Generic[LF]):
             args = (self._injected, *args)
 
         if self.loop is MISSING:
-            self.loop = asyncio.get_event_loop()
+            self.loop = _get_event_loop()
 
         self._task = self.loop.create_task(self._loop(*args, **kwargs))
         return self._task
@@ -825,8 +825,8 @@ def loop(
         using an exponential back-off algorithm similar to the
         one used in :meth:`discord.Client.connect`.
     loop: :class:`asyncio.AbstractEventLoop`
-        The loop to use to register the task, if not given
-        defaults to :func:`asyncio.get_event_loop`.
+        The loop to use to register the task, if not given the default event loop is used via
+        :func:`asyncio.get_event_loop()` if it exists or one is created via :func:`asyncio.new_event_loop()`.
     overlap: Union[:class:`bool`, :class:`int`]
         Controls whether overlapping executions of the task loop are allowed.
         Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.

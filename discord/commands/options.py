@@ -35,7 +35,6 @@ from typing import (
     Any,
     Literal,
     Optional,
-    Type,
     TypeVar,
     Union,
     get_args,
@@ -72,22 +71,22 @@ if TYPE_CHECKING:
     from ..user import User
 
     InputType = Union[
-        Type[str],
-        Type[bool],
-        Type[int],
-        Type[float],
-        Type[GuildChannel],
-        Type[Thread],
-        Type[Member],
-        Type[User],
-        Type[Attachment],
-        Type[Role],
-        Type[Mentionable],
+        type[str],
+        type[bool],
+        type[int],
+        type[float],
+        type[GuildChannel],
+        type[Thread],
+        type[Member],
+        type[User],
+        type[Attachment],
+        type[Role],
+        type[Mentionable],
         SlashCommandOptionType,
         Converter,
-        Type[Converter],
-        Type[Enum],
-        Type[DiscordEnum],
+        type[Converter],
+        type[Enum],
+        type[DiscordEnum],
     ]
 
     AutocompleteReturnType = Union[
@@ -191,10 +190,10 @@ class Option:
         If this argument is used, :attr:`input_type` will be ignored.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
 
     Examples
     --------
@@ -511,7 +510,7 @@ class OptionChoice:
         The value of the choice. If not provided, will use the value of ``name``.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this choice. The values of this should be ``"locale": "name"``.
-        See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+        See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     """
 
     def __init__(
