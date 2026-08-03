@@ -39,7 +39,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Literal,
-    Mapping,
     NotRequired,
     TypedDict,
     TypeVar,
@@ -614,7 +613,14 @@ class ApplicationCommandMixin(ABC):
                 method == "auto" and len(filtered_deleted) == len(pending)
             ):
                 # Either the method is bulk or all the commands need to be modified, so we can just do a bulk upsert
-                data = [cmd["command"] if isinstance(cmd["command"], dict) else cmd["command"].to_dict() for cmd in filtered_deleted]
+                data = [
+                    (
+                        cmd["command"]
+                        if isinstance(cmd["command"], dict)
+                        else cmd["command"].to_dict()
+                    )
+                    for cmd in filtered_deleted
+                ]
                 # If there's nothing to update, don't bother
                 if len(filtered_no_action) == 0:
                     _log.debug("Skipping bulk command update: Commands are up to date")
@@ -622,7 +628,14 @@ class ApplicationCommandMixin(ABC):
                 else:
                     _log.debug(
                         "Bulk updating commands %s for guild %s",
-                        {(c["command"]["name"] if isinstance(c["command"], dict) else c["command"].name): c["action"] for c in pending_actions},
+                        {
+                            (
+                                c["command"]["name"]
+                                if isinstance(c["command"], dict)
+                                else c["command"].name
+                            ): c["action"]
+                            for c in pending_actions
+                        },
                         guild_id,
                     )
                     registered = await register("bulk", data, _log=False)
@@ -1317,6 +1330,7 @@ class ApplicationCommandMixin(ABC):
 
 class _CommandSyncAction(TypedDict):
     """Used internally for passing metadata about the commands status for syncing with Discord."""
+
     id: NotRequired[int]
     action: Literal["upsert", "edit", "delete", None]
     command: ApplicationCommand | ApplicationCommandPayload
