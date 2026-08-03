@@ -1340,9 +1340,6 @@ class Message(Hashable):
         self._poll = Poll.from_dict(value, self)
         self._state.store_poll(self._poll, self.id)
 
-    def _handle_shared_client_theme(self, value: SharedClientThemePayload) -> None:
-        self.shared_client_theme = SharedClientTheme.from_dict(value)
-
     def _handle_author(self, author: UserPayload) -> None:
         self.author = self._state.store_user(author)
         if isinstance(self.guild, Guild):
