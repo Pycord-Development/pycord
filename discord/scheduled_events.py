@@ -47,6 +47,7 @@ __all__ = (
     "ScheduledEvent",
     "ScheduledEventLocation",
     "ScheduledEventRecurrenceRule",
+    "ScheduledEventException",
 )
 
 if TYPE_CHECKING:
@@ -60,6 +61,9 @@ if TYPE_CHECKING:
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.scheduled_events import (
         ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
+    )
+    from .types.scheduled_events import (
+        ScheduledEventException as ScheduledEventExceptionPayload,
     )
 
     Week = Literal[1, 2, 3, 4, 5]
@@ -126,10 +130,224 @@ class ScheduledEventLocation:
             return ScheduledEventLocationType.voice
 
 
+class ScheduledEventException(Hashable):
+    """Represents a :class:`ScheduledEvent`'s recurrence rule exception.
+
+    .. versionadded:: 2.9
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two scheduled event exceptions are equal.
+
+        .. describe:: x != y
+
+            Checks if two scheduled event exceptions are not equal.
+
+        .. describe:: hash(x)
+
+            Returns the scheduled event exception's hash.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The scheduled event exception's ID.
+
+        .. warning::
+
+            This ID is not guaranteed to be globally unique.
+    event: :class:`ScheduledEvent`
+        The scheduled event this exception belongs to.
+    start_time: :class:`str` | :data:`None`
+        The new start time, if applicable.
+    end_time: :class:`str` | :data:`None`
+        The new end time, if applicable.
+    canceled: :class:`bool`
+        Whether the scheduled event will be skipped on the recurrence.
+    """
+
+    __slots__ = (
+        "id",
+        "event",
+        "canceled",
+        "start_time",
+        "end_time",
+        "_state",
+    )
+
+    def __init__(
+        self,
+        *,
+        data: ScheduledEventExceptionPayload,
+        event: ScheduledEvent,
+    ) -> None:
+        self.event: ScheduledEvent = event
+        self._state: ConnectionState = event._state
+
+        self._update(data)
+
+    def _update(self, data: ScheduledEventExceptionPayload) -> None:
+        self.id: int = int(data["event_exception_id"])
+        self.canceled: bool = data["is_canceled"]
+        self.start_time: datetime.datetime | None = utils.parse_time(data.get("scheduled_start_time"))
+        self.end_time: datetime.datetime | None = utils.parse_time(data.get("scheduled_end_time"))
+
+    @property
+    def cancelled(self) -> bool:
+        """An alias for :attr:`ScheduledEventException.canceled`."""
+        return self.canceled
+
+    async def edit(
+        self,
+        *,
+        start_time: datetime.datetime = MISSING,
+        end_time: datetime.datetime = MISSING,
+        cancel: bool = MISSING,
+        reason: str | None = None,
+    ) -> ScheduledEventException:
+        """|coro|
+
+        Edits this exception.
+
+        Parameters
+        ----------
+        start_time: :class:`datetime.datetime`
+            The new start time of the exception.
+        end_time: :class:`datetime.datetime`
+            The new end time of the exception.
+        cancel: :class:`bool`
+            Whether to cancel the exception.
+        reason: :class:`str` | :data:`None`
+            The reason for updating the exception.
+
+        Raises
+        ------
+        Forbidden
+            You do not have the proper permissions to edit the exception.
+        HTTPException
+            The exception could not be updated.
+
+        Returns
+        -------
+        :class:`ScheduledEventException`
+            The updated exception.
+        """
+
+        payload = {}
+
+        if start_time is not MISSING:
+            payload["scheduled_start_time"] = start_time.isoformat()
+        if end_time is not MISSING:
+            payload["scheduled_end_time"] = end_time.isoformat()
+        if cancel is not MISSING:
+            payload["is_canceled"] = cancel
+
+        data = await self._state.http.edit_scheduled_event_exception(
+            self.event.guild.id,
+            self.event.id,
+            self.id,
+            reason,
+            **payload,
+        )
+        return ScheduledEventException(data=data, event=self.event)
+
+    async def delete(self, *, reason: str | None = None) -> None:
+        """|coro|
+
+        Deletes this exception.
+
+        Parameters
+        ----------
+        reason: :class:`str` | :data:`None`
+            The reason for deleting the exception.
+        """
+        await self._state.http.delete_scheduled_event_exception(
+            self.event.guild.id,
+            self.event.id,
+            self.id,
+            reason,
+        )
+
+    def subscribers(
+        self,
+        *,
+        limit: int | None = 100,
+        as_member: bool = False,
+        before: Snowflake | datetime.datetime | None = None,
+        after: Snowflake | datetime.datetime | None = None,
+    ) -> ScheduledEventSubscribersIterator:
+        """Returns an :class:`AsyncIterator` representing the users or members subscribed to the exception.
+
+        The ``after`` and ``before`` parameters must represent member or
+        user objects and meet the :class:`abc.Snowflake` abc.
+
+        .. note::
+
+            Even if ``as_member`` is set to ``True``, if the user
+            is outside the guild, it will be a :class:`User` object.
+
+        Parameters
+        ----------
+        limit: :class:`int` | :data:`None`
+            The maximum number of results to return.
+        as_member: :class:`bool` | :data:`None`
+            Whether to fetch :class:`Member` objects instead of user objects.
+            There may still be :class:`User` objects if the user is outside
+            the guild.
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :data:`None`
+            Retrieves users before this date or object. If a datetime is provided,
+            it is recommended to use a UTC aware datetime. If the datetime is naive,
+            it is assumed to be local time.
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :data:`None`
+            Retrieves users after this date or object. If a datetime is provided,
+            it is recommended to use a UTC aware datetime. If the datetime is naive,
+            it is assumed to be local time.
+
+        Yields
+        ------
+        :class:`User` | :class:`Member`
+            The subscribed :class:`Member`. If ``as_member`` is set to
+            ```False`` or the user is outside the guild, it will be a
+            :class:`User` object.
+
+        Raises
+        ------
+        HTTPException
+            Fetching the subscribed users failed.
+
+        Examples
+        --------
+
+        Usage ::
+
+            async for user in event_exception.subscribers(limit=100):
+                print(user.name)
+
+        Flattening into a list: ::
+
+            users = await event_exception.subscribers(limit=100).flatten()
+            # users is now a list of User...
+
+        Getting members instead of user objects: ::
+
+            async for member in event_exception.subscribers(limit=100, as_member=True):
+                print(member.display_name)
+        """
+        return ScheduledEventSubscribersIterator(
+            event=self.event,
+            exception=self,
+            limit=limit,
+            with_member=as_member,
+            before=before,
+            after=after,
+        )
+
+
 class ScheduledEventRecurrenceRule:
     """Represents a :class:`ScheduledEvent`'s recurrence rule.
 
-    .. versionadded:: 2.7
+    .. versionadded:: 2.9
 
     Parameters
     ----------
@@ -521,6 +739,7 @@ class ScheduledEvent(Hashable):
         "_image",
         "subscriber_count",
         "recurrence_rule",
+        "_exceptions",
     )
 
     def __init__(
@@ -568,6 +787,12 @@ class ScheduledEvent(Hashable):
                 data.get("recurrence_rule"),
             )
         )
+
+        exceptions = data.get("guild_scheduled_events_exceptions") or []
+        self._exceptions: dict[int, ScheduledEventException] = {
+            int(d["event_exception_id"]): ScheduledEventException(event=self, data=d)
+            for d in exceptions
+        }
 
     def __str__(self) -> str:
         return self.name
@@ -621,6 +846,28 @@ class ScheduledEvent(Hashable):
             self.id,
             self._image,
         )
+
+    @property
+    def exceptions(self) -> list[ScheduledEventException]:
+        """The exceptions to this scheduled event's recurrence rule."""
+        return list(self._exceptions.values())
+
+    def get_exception(self, id: int, /) -> ScheduledEventException | None:
+        """Gets an exception from this scheduled event's recurrence rule by its ID.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the exception.
+
+        Returns
+        -------
+        :class:`ScheduledEventException` | :data:`None`
+            The cached exception, or ``None``.
+        """
+        return self._exceptions.get(id)
 
     async def edit(
         self,
@@ -882,7 +1129,7 @@ class ScheduledEvent(Hashable):
 
         .. note::
 
-            Even is ``as_member`` is set to ``True``, if the user
+            Even if ``as_member`` is set to ``True``, if the user
             is outside the guild, it will be a :class:`User` object.
 
         Parameters
@@ -935,3 +1182,76 @@ class ScheduledEvent(Hashable):
         return ScheduledEventSubscribersIterator(
             event=self, limit=limit, with_member=as_member, before=before, after=after
         )
+
+    async def create_exception(
+        self,
+        *,
+        original_start_time: datetime.datetime,
+        new_start_time: datetime.datetime | None = MISSING,
+        new_end_time: datetime.datetime | None = MISSING,
+        cancel: bool = MISSING,
+        reason: str | None = MISSING,
+    ) -> ScheduledEventException:
+        """|coro|
+
+        Creates an exception to the scheduled event's recurrence rule.
+
+        .. versionadded:: 2.9
+
+        .. note::
+
+            At least one of ``new_start_time``, ``new_end_time``, or ``cancel`` must be provided.
+
+        Parameters
+        ----------
+        original_start_time: :class:`datetime.datetime`
+            The start time in which the event would have started.
+
+            .. note::
+
+                If an exception with the same start time already exists, it will be overridden.
+        new_start_time: :class:`datetime.datetime` | :data:`None`
+            The new time in which the event will start, if applicable.
+        new_end_time: :class:`datetime.datetime` | :data:`None`
+            The new time in which the event will end, if applicable.
+        cancel: :class:`bool`
+            Whether the event should be skipped on this recurrence rule.
+        reason: :class:`str` | :data:`None`
+            The reason for creating the exception.
+
+        Raises
+        ------
+        ValueError
+            You did not provide one of the required parameters.
+        Forbidden
+            You do no thave the proper permissions to create an exception.
+        HTTPException
+            Creating the exception failed.
+
+        Returns
+        -------
+        :class:`ScheduledEventException`
+            The newly created exception.
+        """
+
+        payload: dict[str, Any] = {
+            "original_scheduled_start_time": original_start_time.isoformat(),
+        }
+
+        if new_start_time is not MISSING:
+            payload["scheduled_start_time"] = new_start_time.isoformat() if new_start_time is not None else None
+        if new_end_time is not MISSING:
+            payload["scheduled_end_time"] = new_end_time.isoformat() if new_end_time is not None else None
+        if cancel is not MISSING:
+            payload["is_canceled"] = cancel
+
+        if len(payload) < 2:
+            raise ValueError("You must provide at least one parameter of new_start_time, new_end_time, or cancel")
+
+        data = await self._state.http.create_scheduled_event_exception(
+            self.guild.id,
+            self.id,
+            reason=reason,
+            **payload,
+        )
+        return ScheduledEventException(data=data, event=self)

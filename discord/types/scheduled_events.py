@@ -58,7 +58,15 @@ class ScheduledEvent(TypedDict):
     user_count: int | None
     recurrence_rule: ScheduledEventRecurrenceRule | None
     auto_start: bool
-    guild_scheduled_events_exceptions: list[Snowflake]
+    guild_scheduled_events_exceptions: list[ScheduledEventException]
+
+
+class ScheduledEventException(TypedDict):
+    event_id: Snowflake
+    event_exception_id: Snowflake
+    scheduled_start_time: str | None
+    scheduled_end_time: str | None
+    is_canceled: bool
 
 
 class ScheduledEventEntityMetadata(TypedDict):
@@ -70,6 +78,7 @@ class ScheduledEventSubscriber(TypedDict):
     user_id: Snowflake
     user: User
     member: Member | None
+    guild_scheduled_event_exception_id: NotRequired[Snowflake]
 
 
 class ScheduledEventRecurrenceRule(TypedDict):

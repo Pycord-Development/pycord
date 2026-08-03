@@ -28,6 +28,7 @@ from __future__ import annotations
 import asyncio
 import datetime
 from collections.abc import AsyncIterator, Awaitable, Callable, Generator
+import functools
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -61,7 +62,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message, MessagePin
     from .monetization import Entitlement, Subscription
-    from .scheduled_events import ScheduledEvent
+    from .scheduled_events import ScheduledEvent, ScheduledEventException
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
@@ -895,8 +896,9 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         event: ScheduledEvent,
         limit: int | None,
         with_member: bool = False,
-        before: datetime.datetime | int | None = None,
-        after: datetime.datetime | int | None = None,
+        before: datetime.datetime | Snowflake | None = None,
+        after: datetime.datetime | Snowflake | None = None,
+        exception: ScheduledEventException | None = None,
     ):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
@@ -908,9 +910,26 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         self.with_member = with_member
         self.before = before
         self.after = after
+        self.exception = exception
 
         self.subscribers = asyncio.Queue()
-        self.get_subscribers = self.event._state.http.get_scheduled_event_users
+
+        http = event._state.http
+        if exception is None:
+            self.get_subscribers = functools.partial(
+                http.get_scheduled_event_users,
+                guild_id=event.guild.id,
+                event_id=event.id,
+                with_member=with_member,
+            )
+        else:
+            self.get_subscribers = functools.partial(
+                http.get_scheduled_event_exception_users,
+                guild_id=event.guild.id,
+                event_id=event.id,
+                exception_id=exception.id,
+                with_member=with_member,
+            )
 
     async def next(self) -> User | Member:
         if self.subscribers.empty():
@@ -954,10 +973,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data = await self.get_subscribers(
-            guild_id=self.event.guild.id,
-            event_id=self.event.id,
             limit=self.retrieve,
-            with_member=self.with_member,
             before=before,
             after=after,
         )

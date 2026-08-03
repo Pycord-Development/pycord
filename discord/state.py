@@ -63,7 +63,7 @@ from .partial_emoji import PartialEmoji
 from .poll import Poll, PollAnswerCount
 from .raw_models import *
 from .role import Role
-from .scheduled_events import ScheduledEvent
+from .scheduled_events import ScheduledEvent, ScheduledEventException
 from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
@@ -1754,6 +1754,38 @@ class ConnectionState:
                 event.subscriber_count += 1
                 guild._add_scheduled_event(event)
                 self.dispatch("scheduled_event_user_remove", event, member)
+
+    def parse_guild_scheduled_event_exception_create(self, data) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        if guild is None:
+            _log.debug(
+                (
+                    "GUILD_SCHEDULED_EVENT_EXCEPTION_CREATE referencing an unknown guild ID:"
+                    " %s. Discarding."
+                ),
+                data["guild_id"],
+            )
+            return
+
+        event_id = int(data["event_id"])
+        event = guild._scheduled_events.get(event_id)
+
+        # we will mock the event, that way we are able to interact with the
+        # scheduled event exception as normal
+        if event is None:
+            event = Object(event_id, type=ScheduledEvent)
+            event.guild = Object(guild.id, type=Guild)  # type: ignore
+            event._state = self  # type: ignore
+
+        event_exc = ScheduledEventException(
+            data=data,
+            event=event,  # type: ignore
+        )
+
+        if event and not isinstance(event, Object):
+            event._exceptions[event_exc.id] = event_exc
+
+        self.dispatch("scheduled_event_exception_create", event_exc)
 
     def parse_guild_integrations_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
