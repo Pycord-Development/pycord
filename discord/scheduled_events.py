@@ -159,9 +159,9 @@ class ScheduledEventException(Hashable):
             This ID is not guaranteed to be globally unique.
     event: :class:`ScheduledEvent`
         The scheduled event this exception belongs to.
-    start_time: :class:`str` | :data:`None`
+    start_time: :class:`datetime.datetime` | :data:`None`
         The new start time, if applicable.
-    end_time: :class:`str` | :data:`None`
+    end_time: :class:`datetime.datetime` | :data:`None`
         The new end time, if applicable.
     canceled: :class:`bool`
         Whether the scheduled event will be skipped on the recurrence.
