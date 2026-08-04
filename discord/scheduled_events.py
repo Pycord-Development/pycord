@@ -312,7 +312,7 @@ class ScheduledEventException(Hashable):
         ------
         :class:`User` | :class:`Member`
             The subscribed :class:`Member`. If ``as_member`` is set to
-            ```False`` or the user is outside the guild, it will be a
+            ``False`` or the user is outside the guild, it will be a
             :class:`User` object.
 
         Raises
