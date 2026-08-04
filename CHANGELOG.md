@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Methods to store and restore states of UI components.
+  ([#3208](https://github.com/Pycord-Development/pycord/pull/3208))
+
 ### Changed
 
 ### Fixed
