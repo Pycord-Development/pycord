@@ -49,6 +49,7 @@ class ClientStatus(TypedDict, total=False):
     web: str
     vr: str
 
+
 class ActivityTimestamps(TypedDict, total=False):
     start: int
     end: int
