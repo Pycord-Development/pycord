@@ -276,7 +276,7 @@ Scheduled Event
 
 .. autoclass:: ScheduledEventException()
     :members:
-    
+
 Welcome Screen
 ~~~~~~~~~~~~~~
 

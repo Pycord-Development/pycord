@@ -63,8 +63,10 @@ if TYPE_CHECKING:
     from .types.automod import AutoModTriggerMetadata as AutoModTriggerMetadataPayload
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .types.role import Role as RolePayload
+    from .types.scheduled_events import (
+        ScheduledEventException as ScheduledEventExceptionPayload,
+    )
     from .types.snowflake import Snowflake
-    from .types.scheduled_events import ScheduledEventException as ScheduledEventExceptionPayload
     from .user import User
 
 
@@ -211,16 +213,15 @@ def _transform_trigger_metadata(
         return AutoModTriggerMetadata.from_dict(data)
 
 
-def _transform_timestamp(
-    entry: AuditLogEntry, data: str
-) -> datetime.datetime | None:
+def _transform_timestamp(entry: AuditLogEntry, data: str) -> datetime.datetime | None:
     if data:
         return utils.parse_time(data)
     return None
 
 
 def _transform_scheduled_event(
-    entry: AuditLogEntry, data: Snowflake,
+    entry: AuditLogEntry,
+    data: Snowflake,
 ) -> ScheduledEvent | Object:
     id = int(data)
     return entry.guild.get_scheduled_event(id) or Object(id=id, type=ScheduledEvent)
@@ -743,7 +744,11 @@ class AuditLogEntry(Hashable):
             if self.action is enums.AuditLogAction.scheduled_event_exception_delete
             else self.after
         )
-        event = changeset.event if isinstance(changeset.event, ScheduledEvent) else self.guild.get_scheduled_event(changeset.event.id)
+        event = (
+            changeset.event
+            if isinstance(changeset.event, ScheduledEvent)
+            else self.guild.get_scheduled_event(changeset.event.id)
+        )
         cached = event and event._exceptions.get(changeset.event_exception_id)
         if cached:
             return cached
@@ -752,8 +757,16 @@ class AuditLogEntry(Hashable):
             "event_exception_id": changeset.event_exception_id,
             "event_id": changeset.event.id,
             "is_canceled": changeset.canceled,
-            "scheduled_end_time": changeset.end_time.isoformat() if changeset.end_time is not None else None,
-            "scheduled_start_time": changeset.start_time.isoformat() if changeset.start_time is not None else None,
+            "scheduled_end_time": (
+                changeset.end_time.isoformat()
+                if changeset.end_time is not None
+                else None
+            ),
+            "scheduled_start_time": (
+                changeset.start_time.isoformat()
+                if changeset.start_time is not None
+                else None
+            ),
         }
 
         if not event:
