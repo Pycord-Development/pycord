@@ -1787,6 +1787,75 @@ class ConnectionState:
 
         self.dispatch("scheduled_event_exception_create", event_exc)
 
+    def parse_guild_scheduled_event_exception_update(self, data) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        if guild is None:
+            _log.debug(
+                (
+                    "GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATE referencing an unknown guild ID:"
+                    " %s. Discarding."
+                ),
+                data["guild_id"],
+            )
+            return
+
+        event_id = int(data["event_id"])
+        event = guild._scheduled_events.get(event_id)
+        if event is None:
+            _log.debug(
+                (
+                    "GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATE referencing an unknown scheduled event ID:"
+                    " %s. Discarding."
+                ),
+                event_id,
+            )
+            return
+
+        exception_id = int(data["event_exception_id"])
+        exc_obj = event._exceptions.get(exception_id)
+        if exc_obj is None:
+            _log.debug(
+                (
+                    "GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATE referencing an unknown scheduled event exception"
+                    " ID: %s. Discarding."
+                ),
+                exception_id,
+            )
+            return
+
+        old_exception = copy.copy(exc_obj)
+        exc_obj._update(data)
+
+        self.dispatch("scheduled_event_exception_update", old_exception, exc_obj)
+
+    def parse_guild_scheduled_event_exception_delete(self, data) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        if guild is None:
+            _log.debug(
+                (
+                    "GUILD_SCHEDULED_EVENT_EXCEPTION_DELETE referencing an unknown guild ID:"
+                    " %s. Discarding."
+                ),
+                data["guild_id"],
+            )
+            return
+
+        event_id = int(data["event_id"])
+        event = guild._scheduled_events.get(event_id)
+        if event is None:
+            _log.debug(
+                (
+                    "GUILD_SCHEDULED_EVENT_EXCEPTION_DELETE referencing an unknown scheduled event ID:"
+                    " %s. Discarding."
+                ),
+                event_id,
+            )
+            return
+
+        exception_id = int(data["event_exception_id"])
+        exception = event._exceptions.pop(exception_id, ScheduledEventException(data=data, event=event))
+        self.dispatch("scheduled_event_exception_delete", exception)
+
     def parse_guild_integrations_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is not None:
