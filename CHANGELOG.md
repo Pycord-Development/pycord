@@ -34,6 +34,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Add `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
   `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+- Add `Asset.size` and `Asset.extension` properties.
+  ([#3294](https://github.com/Pycord-Development/pycord/pull/3294))
 
 ### Fixed
 
@@ -71,6 +73,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
 - Fix `PartialMessage.edit()` to work with `DesignerView`.
   ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
+- Fix animated asset url extension from `.gif` to `.webp`
+  ([#3294](https://github.com/Pycord-Development/pycord/pull/3294))
 
 ## [2.8.0] - 2026-05-18
 
