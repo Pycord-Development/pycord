@@ -60,10 +60,10 @@ if TYPE_CHECKING:
     from .types.channel import StageChannel, VoiceChannel
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.scheduled_events import (
-        ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
+        ScheduledEventException as ScheduledEventExceptionPayload,
     )
     from .types.scheduled_events import (
-        ScheduledEventException as ScheduledEventExceptionPayload,
+        ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
     )
 
     Week = Literal[1, 2, 3, 4, 5]
@@ -190,8 +190,12 @@ class ScheduledEventException(Hashable):
     def _update(self, data: ScheduledEventExceptionPayload) -> None:
         self.id: int = int(data["event_exception_id"])
         self.canceled: bool = data["is_canceled"]
-        self.start_time: datetime.datetime | None = utils.parse_time(data.get("scheduled_start_time"))
-        self.end_time: datetime.datetime | None = utils.parse_time(data.get("scheduled_end_time"))
+        self.start_time: datetime.datetime | None = utils.parse_time(
+            data.get("scheduled_start_time")
+        )
+        self.end_time: datetime.datetime | None = utils.parse_time(
+            data.get("scheduled_end_time")
+        )
 
     @property
     def cancelled(self) -> bool:
@@ -221,17 +225,17 @@ class ScheduledEventException(Hashable):
         reason: :class:`str` | :data:`None`
             The reason for updating the exception.
 
+        Returns
+        -------
+        :class:`ScheduledEventException`
+            The updated exception.
+
         Raises
         ------
         Forbidden
             You do not have the proper permissions to edit the exception.
         HTTPException
             The exception could not be updated.
-
-        Returns
-        -------
-        :class:`ScheduledEventException`
-            The updated exception.
         """
 
         payload = {}
@@ -1219,6 +1223,11 @@ class ScheduledEvent(Hashable):
         reason: :class:`str` | :data:`None`
             The reason for creating the exception.
 
+        Returns
+        -------
+        :class:`ScheduledEventException`
+            The newly created exception.
+
         Raises
         ------
         ValueError
@@ -1227,11 +1236,6 @@ class ScheduledEvent(Hashable):
             You do no thave the proper permissions to create an exception.
         HTTPException
             Creating the exception failed.
-
-        Returns
-        -------
-        :class:`ScheduledEventException`
-            The newly created exception.
         """
 
         payload: dict[str, Any] = {
@@ -1239,14 +1243,20 @@ class ScheduledEvent(Hashable):
         }
 
         if new_start_time is not MISSING:
-            payload["scheduled_start_time"] = new_start_time.isoformat() if new_start_time is not None else None
+            payload["scheduled_start_time"] = (
+                new_start_time.isoformat() if new_start_time is not None else None
+            )
         if new_end_time is not MISSING:
-            payload["scheduled_end_time"] = new_end_time.isoformat() if new_end_time is not None else None
+            payload["scheduled_end_time"] = (
+                new_end_time.isoformat() if new_end_time is not None else None
+            )
         if cancel is not MISSING:
             payload["is_canceled"] = cancel
 
         if len(payload) < 2:
-            raise ValueError("You must provide at least one parameter of new_start_time, new_end_time, or cancel")
+            raise ValueError(
+                "You must provide at least one parameter of new_start_time, new_end_time, or cancel"
+            )
 
         data = await self._state.http.create_scheduled_event_exception(
             self.guild.id,
