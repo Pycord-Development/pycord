@@ -38,7 +38,6 @@ from .invite import Invite
 from .mixins import Hashable
 from .object import Object
 from .permissions import PermissionOverwrite, Permissions
-from .scheduled_events import ScheduledEvent, ScheduledEventException
 
 __all__ = (
     "AuditLogDiff",
@@ -57,6 +56,7 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .sticker import GuildSticker
     from .threads import Thread
+    from .scheduled_events import ScheduledEvent, ScheduledEventException
     from .types.audit_log import AuditLogChange as AuditLogChangePayload
     from .types.audit_log import AuditLogEntry as AuditLogEntryPayload
     from .types.automod import AutoModAction as AutoModActionPayload
@@ -223,6 +223,8 @@ def _transform_scheduled_event(
     entry: AuditLogEntry,
     data: Snowflake,
 ) -> ScheduledEvent | Object:
+    from .scheduled_events import ScheduledEvent
+    
     id = int(data)
     return entry.guild.get_scheduled_event(id) or Object(id=id, type=ScheduledEvent)
 
@@ -739,6 +741,8 @@ class AuditLogEntry(Hashable):
     def _convert_target_scheduled_event_exception(
         self, target_id: int
     ) -> ScheduledEventException | Object:
+        from .scheduled_events import ScheduledEventException
+
         changeset = (
             self.before
             if self.action is enums.AuditLogAction.scheduled_event_exception_delete
