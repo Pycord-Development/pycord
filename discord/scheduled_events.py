@@ -725,7 +725,7 @@ class ScheduledEvent(Hashable):
     recurrence_rule: Optional[:class:`ScheduledEventRecurrenceRule`]
         The recurrence rule this scheduled event follows.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.9
     """
 
     __slots__ = (
@@ -853,7 +853,10 @@ class ScheduledEvent(Hashable):
 
     @property
     def exceptions(self) -> list[ScheduledEventException]:
-        """The exceptions to this scheduled event's recurrence rule."""
+        """The exceptions to this scheduled event's recurrence rule.
+
+        .. versionadded:: 2.9
+        """
         return list(self._exceptions.values())
 
     def get_exception(self, id: int, /) -> ScheduledEventException | None:
@@ -933,7 +936,7 @@ class ScheduledEvent(Hashable):
             The recurrence rule this event will follow, or ``None`` to set it to a
             one-time event.
 
-            .. versionadded:: 2.7
+            .. versionadded:: 2.9
 
         Returns
         -------
