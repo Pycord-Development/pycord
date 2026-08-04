@@ -317,7 +317,8 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         """Checks if the channel is NSFW."""
         return self.nsfw
 
-    def is_spoiler(self) -> bool:
+    @property
+    def spoiler(self) -> bool:
         """Checks if the channel is a spoiler channel.
 
         .. versionadded:: 2.9
@@ -1872,7 +1873,8 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """Checks if the channel is NSFW."""
         return self.nsfw
 
-    def is_spoiler(self) -> bool:
+    @property
+    def spoiler(self) -> bool:
         """Checks if the channel is a spoiler channel.
 
         .. versionadded:: 2.9
@@ -2491,7 +2493,8 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         """Checks if the channel is NSFW."""
         return self.nsfw
 
-    def is_spoiler(self) -> bool:
+    @property
+    def spoiler(self) -> bool:
         """Checks if the channel is a spoiler channel.
 
         .. versionadded:: 2.9
