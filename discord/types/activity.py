@@ -46,6 +46,7 @@ class PartialPresenceUpdate(TypedDict):
 class ClientStatus(TypedDict, total=False):
     desktop: str
     mobile: str
+    vr: str
     web: str
 
 
