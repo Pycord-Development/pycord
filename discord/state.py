@@ -1853,7 +1853,9 @@ class ConnectionState:
             return
 
         exception_id = int(data["event_exception_id"])
-        exception = event._exceptions.pop(exception_id, ScheduledEventException(data=data, event=event))
+        exception = event._exceptions.pop(
+            exception_id, ScheduledEventException(data=data, event=event)
+        )
         self.dispatch("scheduled_event_exception_delete", exception)
 
     def parse_guild_integrations_update(self, data) -> None:
