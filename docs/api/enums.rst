@@ -1674,6 +1674,42 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.5
 
+    .. attribute:: scheduled_event_exception_create
+
+        A scheduled event exception was created.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.event`
+        - :attr:`~AuditLogDiff.event_exception_id`
+        - :attr:`~AuditLogDiff.start_time`
+        - :attr:`~AuditLogDiff.end_time`
+        - :attr:`~AuditLogDiff.canceled`
+
+    .. attribute:: scheduled_event_exception_update
+
+        A scheduled event exception was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.event`
+        - :attr:`~AuditLogDiff.event_exception_id`
+        - :attr:`~AuditLogDiff.start_time`
+        - :attr:`~AuditLogDiff.end_time`
+        - :attr:`~AuditLogDiff.canceled`
+
+    .. attribute:: scheduled_event_exception_delete
+
+        A scheduled event exception was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.event`
+        - :attr:`~AuditLogDiff.event_exception_id`
+        - :attr:`~AuditLogDiff.start_time`
+        - :attr:`~AuditLogDiff.end_time`
+        - :attr:`~AuditLogDiff.canceled`
+
 
 .. class:: AuditLogActionCategory
 
