@@ -849,7 +849,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            Whether the channel is marked as NSFW.
+            Whether the channel is marked as NSFW. Mutually exclusive with :attr:`spoiler`, although
+            this will convert a spoiler channel into an nsfw channel.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -875,7 +876,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
             .. versionadded:: 2.3
         spoiler: :class:`bool`
-            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
+            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`, although
+            this will convert an nsfw channel into a spoiler channel.
 
             .. versionadded:: 2.9
 
@@ -897,7 +899,13 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         """
         if "spoiler" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
-            options["flags"].is_spoiler_channel = options.pop("spoiler")
+            options["flags"].is_spoiler_channel = options["spoiler"]
+
+            if options.get("nsfw") and options["spoiler"]:
+                raise ValueError(
+                    "NSFW setting is mutually exclusive with spoiler setting"
+                )
+            options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
