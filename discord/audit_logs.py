@@ -52,11 +52,11 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .role import Role
+    from .scheduled_events import ScheduledEvent, ScheduledEventException
     from .stage_instance import StageInstance
     from .state import ConnectionState
     from .sticker import GuildSticker
     from .threads import Thread
-    from .scheduled_events import ScheduledEvent, ScheduledEventException
     from .types.audit_log import AuditLogChange as AuditLogChangePayload
     from .types.audit_log import AuditLogEntry as AuditLogEntryPayload
     from .types.automod import AutoModAction as AutoModActionPayload
@@ -224,7 +224,7 @@ def _transform_scheduled_event(
     data: Snowflake,
 ) -> ScheduledEvent | Object:
     from .scheduled_events import ScheduledEvent
-    
+
     id = int(data)
     return entry.guild.get_scheduled_event(id) or Object(id=id, type=ScheduledEvent)
 
