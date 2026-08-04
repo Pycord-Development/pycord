@@ -464,6 +464,9 @@ class AuditLogAction(Enum):
     server_guide_update = 191
     voice_channel_status_update = 192
     voice_channel_status_delete = 193
+    scheduled_event_exception_create = 200
+    scheduled_event_exception_update = 201
+    scheduled_event_exception_delete = 202
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -533,6 +536,9 @@ class AuditLogAction(Enum):
             AuditLogAction.server_guide_update: AuditLogActionCategory.update,
             AuditLogAction.voice_channel_status_update: AuditLogActionCategory.update,
             AuditLogAction.voice_channel_status_delete: AuditLogActionCategory.delete,
+            AuditLogAction.scheduled_event_exception_create: AuditLogActionCategory.create,
+            AuditLogAction.scheduled_event_exception_update: AuditLogActionCategory.update,
+            AuditLogAction.scheduled_event_exception_delete: AuditLogActionCategory.delete,
         }
         return lookup[self]
 
@@ -581,6 +587,8 @@ class AuditLogAction(Enum):
             return "server_guide"
         elif v < 194:
             return "voice_channel_status"
+        elif 200 <= v <= 202:
+            return "scheduled_event_exception"
 
 
 class UserFlags(Enum):

@@ -38,6 +38,7 @@ from .invite import Invite
 from .mixins import Hashable
 from .object import Object
 from .permissions import PermissionOverwrite, Permissions
+from .scheduled_events import ScheduledEvent, ScheduledEventException
 
 __all__ = (
     "AuditLogDiff",
@@ -52,7 +53,6 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .role import Role
-    from .scheduled_events import ScheduledEvent
     from .stage_instance import StageInstance
     from .state import ConnectionState
     from .sticker import GuildSticker
@@ -64,6 +64,7 @@ if TYPE_CHECKING:
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .types.role import Role as RolePayload
     from .types.snowflake import Snowflake
+    from .types.scheduled_events import ScheduledEventException as ScheduledEventExceptionPayload
     from .user import User
 
 
@@ -210,12 +211,19 @@ def _transform_trigger_metadata(
         return AutoModTriggerMetadata.from_dict(data)
 
 
-def _transform_communication_disabled_until(
+def _transform_timestamp(
     entry: AuditLogEntry, data: str
 ) -> datetime.datetime | None:
     if data:
         return utils.parse_time(data)
     return None
+
+
+def _transform_scheduled_event(
+    entry: AuditLogEntry, data: Snowflake,
+) -> ScheduledEvent | Object:
+    id = int(data)
+    return entry.guild.get_scheduled_event(id) or Object(id=id, type=ScheduledEvent)
 
 
 class AuditLogDiff:
@@ -290,7 +298,12 @@ class AuditLogChanges:
         "trigger_metadata": (None, _transform_trigger_metadata),
         "exempt_roles": (None, _transform_roles),
         "exempt_channels": (None, _transform_channels),
-        "communication_disabled_until": (None, _transform_communication_disabled_until),
+        "communication_disabled_until": (None, _transform_timestamp),
+        "event_id": ("event", _transform_scheduled_event),
+        "event_exception_id": (None, _transform_snowflake),
+        "scheduled_start_time": ("start_time", _transform_timestamp),
+        "scheduled_end_time": ("end_time", _transform_timestamp),
+        "is_canceled": ("canceled", None),
     }
 
     def __init__(
@@ -395,6 +408,9 @@ class AuditLogChanges:
         if hasattr(self.after, "expire_behavior"):
             self.after.expire_behaviour = self.after.expire_behavior
             self.before.expire_behaviour = self.before.expire_behavior
+        if hasattr(self.after, "canceled"):
+            self.after.cancelled = self.after.canceled
+            self.before.cancelled = self.before.canceled
 
     def __repr__(self) -> str:
         return f"<AuditLogChanges before={self.before!r} after={self.after!r}>"
@@ -717,4 +733,35 @@ class AuditLogEntry(Hashable):
     def _convert_target_scheduled_event(
         self, target_id: int
     ) -> ScheduledEvent | Object:
-        return self.guild.get_scheduled_event(target_id) or Object(id=target_id)
+        return _transform_scheduled_event(self, target_id)
+
+    def _convert_target_scheduled_event_exception(
+        self, target_id: int
+    ) -> ScheduledEventException | Object:
+        changeset = (
+            self.before
+            if self.action is enums.AuditLogAction.scheduled_event_exception_delete
+            else self.after
+        )
+        event = changeset.event if isinstance(changeset.event, ScheduledEvent) else self.guild.get_scheduled_event(changeset.event.id)
+        cached = event and event._exceptions.get(changeset.event_exception_id)
+        if cached:
+            return cached
+
+        fake_payload: ScheduledEventExceptionPayload = {
+            "event_exception_id": changeset.event_exception_id,
+            "event_id": changeset.event.id,
+            "is_canceled": changeset.canceled,
+            "scheduled_end_time": changeset.end_time.isoformat() if changeset.end_time is not None else None,
+            "scheduled_start_time": changeset.start_time.isoformat() if changeset.start_time is not None else None,
+        }
+
+        if not event:
+            event = Object(id=changeset.event.id, type=ScheduledEvent)
+            event.guild = self.guild  # type: ignore
+            event._state = self._state  # type: ignore
+
+        return ScheduledEventException(
+            data=fake_payload,
+            event=event,  # type: ignore
+        )
