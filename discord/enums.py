@@ -88,6 +88,7 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+    "SharedClientThemeBaseType",
 )
 
 
@@ -1210,6 +1211,14 @@ class InviteTargetUsersJobStatusCode(Enum):
     processing = 1
     completed = 2
     failed = 3
+
+
+class SharedClientThemeBaseType(Enum):
+    unset = 0
+    dark = 1
+    light = 2
+    darker = 3
+    midnight = 4
 
 
 T = TypeVar("T")
