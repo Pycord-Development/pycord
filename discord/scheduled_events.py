@@ -446,7 +446,6 @@ class ScheduledEventRecurrenceRule:
         "_n_weekdays",
         "_month_days",
         "_year_days",
-        "_state",
     )
 
     @overload
