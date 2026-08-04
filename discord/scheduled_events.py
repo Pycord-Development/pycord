@@ -390,27 +390,34 @@ class ScheduledEventRecurrenceRule:
     Examples
     --------
     Creating a recurrence rule that repeats every weekday: ::
+        
         rrule = discord.ScheduledEventRecurrenceRule(
             start_date=...,
             frequency=discord.ScheduledEventRecurrenceFrequency.daily,
             interval=1,
             weekdays=[0, 1, 2, 3, 4],  # from monday to friday
         )
+        
     Creating a recurrence rule that repeats every Wednesday: ::
+        
         rrule = discord.ScheduledEventRecurrenceRule(
             start_date=...,
             frequency=discord.ScheduledEventRecurrenceFrequency.weekly,
             interval=1,  # interval must be 1 for the rule to be "every Wednesday"
             weekdays=[2],  # wednesday
         )
+        
     Creating a recurrence rule that repeats every other Wednesday: ::
+        
         rrule = discord.ScheduledEventRecurrenceRule(
             start_date=...,
             frequency=discord.ScheduledEventRecurrenceFrequency.weekly,
             interval=2,  # interval CAN ONLY BE 2 in this context, and makes the rule be "every other Wednesday"
             weekdays=[2],
         )
+        
     Creating a recurrence rule that repeats every month on the fourth Wednesday: ::
+        
         rrule = discord.ScheduledEventRecurrenceRule(
             start_date=...,
             frequency=discord.ScheduledEventRecurrenceFrequency.monthly,
@@ -422,7 +429,9 @@ class ScheduledEventRecurrenceRule:
                 ),
             ],
         )
+        
     Creating a recurrence rule that repeats anually on July 4: ::
+        
         rrule = discord.ScheduledEventRecurrenceRule(
             start_date=...,
             frequency=discord.ScheduledEventRecurrenceFrequency.yearly,
@@ -434,6 +443,7 @@ class ScheduledEventRecurrenceRule:
                 ),
             ],
         )
+        
     """
 
     __slots__ = (
