@@ -28,7 +28,7 @@ import os
 from typing import TYPE_CHECKING
 
 from ..components import FileUpload as FileUploadComponent
-from ..enums import ComponentType
+from ..enums import ComponentType, FileType
 from ..message import Attachment
 from .item import ModalItem
 
@@ -58,6 +58,14 @@ class FileUpload(ModalItem):
         Whether the file upload field is required or not. Defaults to ``True``.
     id: Optional[:class:`int`]
         The file upload field's ID.
+    file_types: List[:class:`str`, :class:`FileType`]
+        The file types allowed in this file upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
+        A maximum of 10 file types can be provided, up to 16 characters each.
+
+        .. warning::
+            This only checks the file extension - you will still need to validate the file contents yourself.
+
+        .. versionadded:: 2.9
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -65,6 +73,7 @@ class FileUpload(ModalItem):
         "min_values",
         "max_values",
         "custom_id",
+        "file_types",
         "id",
     )
 
@@ -75,6 +84,7 @@ class FileUpload(ModalItem):
         min_values: int | None = None,
         max_values: int | None = None,
         required: bool = True,
+        file_types: list[str | FileType] | None = None,
         id: int | None = None,
     ):
         super().__init__()
@@ -88,6 +98,22 @@ class FileUpload(ModalItem):
             )
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
+        if file_types is not None:
+            if not isinstance(file_types, list):
+                raise TypeError(
+                    f"file_types must be a list, not {file_types.__class__.__name__}"
+                )
+            if len(file_types) > 10:
+                raise ValueError("file_types must be between 0 and 10 in length")
+            for f in file_types:
+                if not isinstance(f, (str, FileType)):
+                    raise TypeError(
+                        "items in file_types must be of type str or FileType"
+                    )
+                if len(str(f)) > 16:
+                    raise ValueError(
+                        "items in file_types must be a maximum of 16 characters in length"
+                    )
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._attachments: list[Attachment] | None = None
 
@@ -96,6 +122,7 @@ class FileUpload(ModalItem):
             min_values=min_values,
             max_values=max_values,
             required=required,
+            file_types=file_types,
             id=id,
         )
 
@@ -105,6 +132,7 @@ class FileUpload(ModalItem):
         min_values: int | None = None,
         max_values: int | None = None,
         required: bool | None = None,
+        file_types: list[str | FileType] | None = None,
         id: int | None = None,
     ) -> FileUploadComponent:
         super()._generate_underlying(FileUploadComponent)
@@ -114,6 +142,7 @@ class FileUpload(ModalItem):
             min_values=min_values if min_values is not None else self.min_values,
             max_values=max_values if max_values is not None else self.max_values,
             required=required if required is not None else self.required,
+            file_types=file_types if file_types else [],
             id=id or self.id,
         )
 
@@ -168,6 +197,38 @@ class FileUpload(ModalItem):
         self.underlying.required = bool(value)
 
     @property
+    def file_types(self) -> list[str | FileType]:
+        """The file types allowed in this file upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
+        A maximum of 10 file types can be provided, up to 16 characters each.
+
+        .. warning::
+            This only checks the file extension - you will still need to validate the file contents yourself.
+
+        .. versionadded:: 2.9
+        """
+        return self.underlying.file_types
+
+    @file_types.setter
+    def file_types(self, value: list[str | FileType] | None):
+        if value:
+            if not isinstance(value, list):
+                raise TypeError(
+                    f"file_types must be a list, not {value.__class__.__name__}"
+                )
+            if len(value) > 10:
+                raise ValueError("file_types must be between 0 and 10 in length")
+            for f in value:
+                if not isinstance(f, (str, FileType)):
+                    raise TypeError(
+                        "items in file_types must be of type str or FileType"
+                    )
+                if len(str(f)) > 16:
+                    raise ValueError(
+                        "items in file_types must be a maximum of 16 characters in length"
+                    )
+        self.underlying.file_types = value or []
+
+    @property
     def values(self) -> list[Attachment] | None:
         """The files that were uploaded to the field. This will be ``None`` if the file upload has not been submitted via a modal yet."""
         return self._attachments
@@ -195,5 +256,6 @@ class FileUpload(ModalItem):
             min_values=component.min_values,
             max_values=component.max_values,
             required=component.required,
+            file_types=component.file_types,
             id=component.id,
         )
