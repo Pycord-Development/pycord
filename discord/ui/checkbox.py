@@ -63,7 +63,7 @@ class Checkbox(ModalItem):
         self,
         *,
         custom_id: str | None = None,
-        default: bool = False,
+        default: bool | None = None,
         id: int | None = None,
     ):
         super().__init__()
@@ -71,8 +71,8 @@ class Checkbox(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
-        if not isinstance(default, bool):
-            raise TypeError(f"default must be bool, not {default.__class__.__name__}")
+            
+        default = False if default is None else default
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._value: bool | None = None
 

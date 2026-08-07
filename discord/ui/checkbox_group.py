@@ -83,7 +83,7 @@ class CheckboxGroup(ModalItem):
         options: list[CheckboxGroupOption] | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
-        required: bool = True,
+        required: bool | None = None,
         id: int | None = None,
     ):
         super().__init__()
@@ -95,8 +95,8 @@ class CheckboxGroup(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
-        if not isinstance(required, bool):
-            raise TypeError(f"required must be bool not {required.__class__.__name__}")
+            
+        required = True if required is None else required
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._selected_values: list[str] | None = None
 
