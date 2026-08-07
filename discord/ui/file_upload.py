@@ -90,7 +90,7 @@ class FileUpload(ModalItem):
         required = True if required is None else required
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
-                    
+
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._attachments: list[Attachment] | None = None
 
