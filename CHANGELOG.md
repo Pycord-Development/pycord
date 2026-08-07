@@ -27,6 +27,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
+- Deprecated `Invite.id` in favor of `Invite.code`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+
 ### Removed
 
 ## [2.8.1] - 2026-07-25

@@ -30,7 +30,7 @@ import io
 import os
 from typing import TYPE_CHECKING, TypeVar, Union
 
-from typing_extensions import override
+from typing_extensions import deprecated, override
 
 from .appinfo import PartialAppInfo
 from .asset import Asset
@@ -62,12 +62,12 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.channel import PartialChannel as InviteChannelPayload
     from .types.invite import GatewayInvite as GatewayInvitePayload
+    from .types.invite import IncompleteInvite as IncompleteInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
-    from .types.invite import VanityInvite as VanityInvitePayload
     from .types.role import Role as RolePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.snowflake import Snowflake
@@ -512,25 +512,25 @@ class Invite(Hashable):
     """
 
     __slots__ = (
-        "max_age",
-        "code",
-        "guild",
-        "revoked",
-        "created_at",
-        "uses",
-        "temporary",
-        "max_uses",
-        "inviter",
-        "channel",
-        "target_user",
-        "target_type",
         "_state",
         "approximate_member_count",
         "approximate_presence_count",
+        "channel",
+        "code",
+        "created_at",
+        "expires_at",
+        "guild",
+        "inviter",
+        "max_age",
+        "max_uses",
+        "revoked",
+        "roles",
         "scheduled_event",
         "target_application",
-        "expires_at",
-        "roles",
+        "target_type",
+        "target_user",
+        "temporary",
+        "uses",
     )
 
     BASE = "https://discord.gg"
@@ -539,7 +539,7 @@ class Invite(Hashable):
         self,
         *,
         state: ConnectionState,
-        data: InvitePayload | VanityInvitePayload,
+        data: InvitePayload | IncompleteInvitePayload,
         guild: PartialInviteGuild | Guild | None = None,
         channel: PartialInviteChannel | GuildChannel | None = None,
     ):
@@ -705,13 +705,18 @@ class Invite(Hashable):
         return hash(self.code)
 
     @property
-    def id(self) -> str:
+    @deprecated(
+        "Invite.id is deprecated since version 2.9, consider using Invite.code instead."
+    )
+    def id(self) -> str:  # type: ignore[override]
         """Returns the proper code portion of the invite."""
         return self.code
 
     @property
     def url(self) -> str:
         """A property that retrieves the invite URL."""
+        if self.code is None:
+            raise ValueError("Cannot build an invite URL when code is None")
         return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
 
     @property
@@ -795,7 +800,6 @@ class Invite(Hashable):
         HTTPException
             Revoking the invite failed.
         """
-
         await self._state.http.delete_invite(self.code, reason=reason)
 
     def set_scheduled_event(self, event: ScheduledEvent) -> None:
