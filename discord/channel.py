@@ -318,6 +318,14 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         return self.nsfw
 
     @property
+    def spoiler(self) -> bool:
+        """Checks if the channel is a spoiler channel.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.is_spoiler_channel
+
+    @property
     def last_message(self) -> Message | None:
         """Fetches the last message from this channel in cache.
 
@@ -809,6 +817,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         default_thread_slowmode_delay: int = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+        spoiler: bool = ...,
     ) -> TextChannel | None: ...
 
     @overload
@@ -840,7 +849,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            Whether the channel is marked as NSFW.
+            Whether the channel is marked as NSFW. Mutually exclusive with :attr:`spoiler`, although
+            this will convert a spoiler channel into an nsfw channel.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -865,6 +875,11 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             The new default slowmode delay in seconds for threads created in this channel.
 
             .. versionadded:: 2.3
+        spoiler: :class:`bool`
+            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`, although
+            this will convert an nsfw channel into a spoiler channel.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -882,6 +897,16 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         HTTPException
             Editing the channel failed.
         """
+        if "spoiler" in options:
+            options["flags"] = ChannelFlags._from_value(self.flags.value)
+            options["flags"].is_spoiler_channel = options["spoiler"]
+
+            if options.get("nsfw") and options["spoiler"]:
+                raise ValueError(
+                    "NSFW setting is mutually exclusive with spoiler setting"
+                )
+            options.pop("spoiler")
+
         payload = await self._edit(options, reason=reason)
         if payload is not None:
             # the payload will always be the proper channel payload
@@ -1123,6 +1148,7 @@ class ForumChannel(_TextChannel):
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+        spoiler: bool = ...,
     ) -> ForumChannel | None: ...
 
     @overload
@@ -1185,6 +1211,10 @@ class ForumChannel(_TextChannel):
             Whether a tag should be required to be specified when creating a thread in this channel.
 
             .. versionadded:: 2.3
+        spoiler: :class:`bool`
+            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -1205,6 +1235,10 @@ class ForumChannel(_TextChannel):
         if "require_tag" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].require_tag = options.pop("require_tag")
+        if "spoiler" in options:
+            if "flags" not in options:
+                options["flags"] = ChannelFlags._from_value(self.flags.value)
+            options["flags"].is_spoiler_channel = options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
@@ -1504,6 +1538,7 @@ class MediaChannel(ForumChannel):
         require_tag: bool = ...,
         hide_media_download_options: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+        spoiler: bool = ...,
     ) -> ForumChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
@@ -1560,6 +1595,11 @@ class MediaChannel(ForumChannel):
         hide_media_download_options: :class:`bool`
             Whether media download options should be hidden in this media channel.
 
+        spoiler: :class:`bool`
+            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
+
+            .. versionadded:: 2.9
+
         Returns
         -------
         Optional[:class:`.MediaChannel`]
@@ -1577,14 +1617,18 @@ class MediaChannel(ForumChannel):
             Editing the channel failed.
         """
 
-        if "require_tag" in options or "hide_media_download_options" in options:
+        if (
+            "require_tag" in options
+            or "hide_media_download_options" in options
+            or "spoiler" in options
+        ):
             flags = ChannelFlags._from_value(self.flags.value)
             flags.require_tag = options.pop("require_tag", flags.require_tag)
             flags.hide_media_download_options = options.pop(
                 "hide_media_download_options", flags.hide_media_download_options
             )
+            flags.is_spoiler_channel = options.pop("spoiler", flags.is_spoiler_channel)
             options["flags"] = flags
-
         payload = await self._edit(options, reason=reason)
         if payload is not None:
             # the payload will always be the proper channel payload
@@ -1814,6 +1858,14 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
     def is_nsfw(self) -> bool:
         """Checks if the channel is NSFW."""
         return self.nsfw
+
+    @property
+    def spoiler(self) -> bool:
+        """Checks if the channel is a spoiler channel.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.is_spoiler_channel
 
     @property
     def last_message(self) -> Message | None:
@@ -2096,6 +2148,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         slowmode_delay: int = ...,
         nsfw: bool = ...,
         reason: str | None = ...,
+        spoiler: bool = ...,
     ) -> VoiceChannel | None: ...
 
     @overload
@@ -2154,6 +2207,11 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
             .. versionadded:: 2.7
 
+        spoiler: :class:`bool`
+            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
+
+            .. versionadded:: 2.9
+
         Returns
         -------
         Optional[:class:`.VoiceChannel`]
@@ -2169,6 +2227,9 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         HTTPException
             Editing the channel failed.
         """
+        if "spoiler" in options:
+            options["flags"] = ChannelFlags._from_value(self.flags.value)
+            options["flags"].is_spoiler_channel = options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
@@ -2402,6 +2463,14 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     def is_nsfw(self) -> bool:
         """Checks if the channel is NSFW."""
         return self.nsfw
+
+    @property
+    def spoiler(self) -> bool:
+        """Checks if the channel is a spoiler channel.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.is_spoiler_channel
 
     @property
     def last_message(self) -> Message | None:
