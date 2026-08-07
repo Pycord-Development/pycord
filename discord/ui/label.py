@@ -264,7 +264,7 @@ class Label(ModalItem[M]):
         options: list[SelectOption] | None = ...,
         required: bool = ...,
         id: int | None = ...,
-    ) -> None: ...
+    ) -> Self: ...
 
     @overload
     def set_select(
@@ -279,7 +279,7 @@ class Label(ModalItem[M]):
         required: bool = ...,
         id: int | None = ...,
         default_values: Sequence[SelectDefaultValue] | None = ...,
-    ) -> None: ...
+    ) -> Self: ...
 
     @overload
     def set_select(
@@ -297,7 +297,7 @@ class Label(ModalItem[M]):
         required: bool = ...,
         id: int | None = ...,
         default_values: Sequence[SelectDefaultValue] | None = ...,
-    ) -> None: ...
+    ) -> Self: ...
 
     def set_select(
         self,
@@ -432,7 +432,7 @@ class Label(ModalItem[M]):
 
         radio = RadioGroup(
             custom_id=custom_id,
-            option=options,
+            options=options,
             required=required,
             id=id,
         )
@@ -474,7 +474,7 @@ class Label(ModalItem[M]):
 
         checkboxes = CheckboxGroup(
             custom_id=custom_id,
-            option=options,
+            options=options,
             min_values=min_values,
             max_values=max_values,
             required=required,
