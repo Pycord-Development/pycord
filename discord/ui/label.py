@@ -29,22 +29,17 @@ from typing import TYPE_CHECKING, Literal, TypeVar, overload
 
 from ..components import (
     CheckboxGroupOption,
-)
-from ..components import Label as LabelComponent
-from ..components import (
     RadioGroupOption,
     SelectDefaultValue,
     SelectOption,
-    _component_factory,
 )
-from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
-from ..utils import find, get
-from .button import Button
+from ..components import Label as LabelComponent
+from ..enums import ChannelType, ComponentType, InputTextStyle
 from .checkbox import Checkbox
 from .checkbox_group import CheckboxGroup
 from .file_upload import FileUpload
 from .input_text import InputText
-from .item import ItemCallbackType, ModalItem
+from .item import ModalItem
 from .radio_group import RadioGroup
 from .select import Select
 
@@ -53,9 +48,7 @@ __all__ = ("Label",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..emoji import AppEmoji, GuildEmoji
     from ..interactions import Interaction
-    from ..partial_emoji import PartialEmoji, _EmojiTag
     from ..types.components import LabelComponent as LabelComponentPayload
     from .modal import DesignerModal
 
