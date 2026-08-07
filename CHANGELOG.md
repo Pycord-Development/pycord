@@ -29,6 +29,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `option` keyword argument in `Label.set_radio_group` and
   `Label.set_checkbox_group`.
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
+- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
+  ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 
 ### Deprecated
 
