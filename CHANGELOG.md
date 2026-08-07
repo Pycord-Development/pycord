@@ -22,16 +22,13 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
-- Fix `Select.__init__` type overloads so that a non-literal
-  `ComponentType` is accepted.
+- Fix `required` parameter not accepting `None` in `RadioGroup`,
+  `CheckboxGroup`, and `FileUpload`.
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
-- Fix `RadioGroup`, `CheckboxGroup`, and `FileUpload` not accepting `None`
-  for the `required` parameter.
+- Fix `default` parameter not accepting `None` in `Checkbox`.
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
-- Fix `Checkbox` not accepting `None` for the `default` parameter.
-  ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
-- Fix the `option` keyword argument name to `options` in
-  `Label.set_radio_group` and `Label.set_checkbox_group`.
+- Fix `option` keyword argument in `Label.set_radio_group` and
+  `Label.set_checkbox_group`.
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
 
 ### Deprecated
