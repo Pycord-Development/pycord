@@ -562,6 +562,14 @@ class Member(discord.abc.Messageable, _UserTag):
         return try_enum(Status, self._client_status.get("desktop", "offline"))
 
     @property
+    def vr_status(self) -> Status:
+        """The member's status set for an active virtual reality application session, if applicable.
+
+        .. versionadded:: 2.9
+        """
+        return try_enum(Status, self._client_status.get("vr", "offline"))
+
+    @property
     def web_status(self) -> Status:
         """The member's status on the web client, if applicable."""
         return try_enum(Status, self._client_status.get("web", "offline"))

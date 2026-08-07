@@ -3223,7 +3223,7 @@ class Guild(Hashable):
             The emoji name. Must be at least 2 characters.
         image: :class:`bytes`
             The :term:`py:bytes-like object` representing the image data to use.
-            Only JPG, PNG and GIF images are supported.
+            Only JPEG, PNG, GIF, WebP and AVIF images are supported.
         roles: List[:class:`Role`]
             A :class:`list` of :class:`Role`\s that can use this emoji. Leave empty to make it available to everyone.
         reason: Optional[:class:`str`]
