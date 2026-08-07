@@ -73,6 +73,9 @@ class Checkbox(ModalItem):
             )
             
         default = False if default is None else default
+        if not isinstance(default, bool):
+            raise TypeError(f"default must be bool, not {default.__class__.__name__}")
+
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._value: bool | None = None
 
