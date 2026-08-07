@@ -86,7 +86,7 @@ class FileUpload(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
-            
+
         required = True if required is None else required
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
