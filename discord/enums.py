@@ -536,49 +536,49 @@ class AuditLogAction(Enum):
 
     @property
     def target_type(self) -> str | None:
-        match self.value:
-            case -1:
-                return "all"
-            case v if v < 10:
-                return "guild"
-            case v if v < 20:
-                return "channel"
-            case v if v < 30:
-                return "user"
-            case v if v < 40:
-                return "role"
-            case v if v < 50:
-                return "invite"
-            case v if v < 60:
-                return "webhook"
-            case v if v < 70:
-                return "emoji"
-            case 73:
-                return "channel"
-            case v if v < 80:
-                return "message"
-            case v if v < 83:
-                return "integration"
-            case v if v < 90:
-                return "stage_instance"
-            case v if v < 93:
-                return "sticker"
-            case v if v < 103:
-                return "scheduled_event"
-            case v if v < 113:
-                return "thread"
-            case v if v < 122:
-                return "application_command_permission"
-            case v if v < 146:
-                return "auto_moderation_rule"
-            case v if v < 152:
-                return "monetization"
-            case v if v < 168:
-                return "onboarding"
-            case v if v < 192:
-                return "server_guide"
-            case v if v < 194:
-                return "voice_channel_status"
+        v = self.value
+        if v == -1:
+            return "all"
+        elif v < 10:
+            return "guild"
+        elif v < 20:
+            return "channel"
+        elif v < 30:
+            return "user"
+        elif v < 40:
+            return "role"
+        elif v < 50:
+            return "invite"
+        elif v < 60:
+            return "webhook"
+        elif v < 70:
+            return "emoji"
+        elif v == 73:
+            return "channel"
+        elif v < 80:
+            return "message"
+        elif v < 83:
+            return "integration"
+        elif v < 90:
+            return "stage_instance"
+        elif v < 93:
+            return "sticker"
+        elif v < 103:
+            return "scheduled_event"
+        elif v < 113:
+            return "thread"
+        elif v < 122:
+            return "application_command_permission"
+        elif v < 146:
+            return "auto_moderation_rule"
+        elif v < 152:
+            return "monetization"
+        elif v < 168:
+            return "onboarding"
+        elif v < 192:
+            return "server_guide"
+        elif v < 194:
+            return "voice_channel_status"
 
 
 class UserFlags(Enum):
