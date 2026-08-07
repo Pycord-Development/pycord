@@ -54,7 +54,7 @@ class FileUpload(ModalItem):
     max_values: Optional[:class:`int`]
         The maximum number of files that can be uploaded.
         Must be between 1 and 10, inclusive.
-    required: Optional[:class:`bool`]
+    required: :class:`bool`
         Whether the file upload field is required or not. Defaults to ``True``.
     id: Optional[:class:`int`]
         The file upload field's ID.
@@ -74,7 +74,7 @@ class FileUpload(ModalItem):
         custom_id: str | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
-        required: bool | None = None,
+        required: bool = True,
         id: int | None = None,
     ):
         super().__init__()
@@ -87,10 +87,8 @@ class FileUpload(ModalItem):
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
 
-        required = True if required is None else required
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
-
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._attachments: list[Attachment] | None = None
 

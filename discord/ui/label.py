@@ -371,7 +371,7 @@ class Label(ModalItem[M]):
         custom_id: str | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
-        required: bool | None = True,
+        required: bool = True,
         id: int | None = None,
     ) -> Self:
         """Set this label's item to a file upload.
@@ -389,7 +389,7 @@ class Label(ModalItem[M]):
         max_values: Optional[:class:`int`]
             The maximum number of files that can be uploaded.
             Must be between 1 and 10, inclusive.
-        required: Optional[:class:`bool`]
+        required: :class:`bool`
             Whether the file upload field is required or not. Defaults to ``True``.
         id: Optional[:class:`int`]
             The file upload field's ID.
@@ -410,7 +410,7 @@ class Label(ModalItem[M]):
         *,
         custom_id: str | None = None,
         options: list[RadioGroupOption] | None = None,
-        required: bool | None = True,
+        required: bool = True,
         id: int | None = None,
     ) -> Self:
         """Set this label's item to a radio group.
