@@ -71,7 +71,7 @@ class Checkbox(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
-            
+
         default = False if default is None else default
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._value: bool | None = None
