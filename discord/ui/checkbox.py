@@ -48,7 +48,7 @@ class Checkbox(ModalItem):
     custom_id: Optional[:class:`str`]
         The ID of the checkbox that gets received during an interaction.
     default: :class:`bool`
-        Whether this checkbox is selected by default or not. Defaults to ``True``.
+        Whether this checkbox is selected by default or not. Defaults to ``False``.
     id: Optional[:class:`int`]
         The checkbox's ID.
     """
@@ -63,7 +63,7 @@ class Checkbox(ModalItem):
         self,
         *,
         custom_id: str | None = None,
-        default: bool = True,
+        default: bool = False,
         id: int | None = None,
     ):
         super().__init__()
