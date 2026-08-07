@@ -40,6 +40,8 @@ from typing import (
 )
 from urllib.parse import parse_qs, urlparse
 
+from typing_extensions import deprecated
+
 from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
@@ -275,7 +277,19 @@ class Attachment(Hashable):
             return None
         return datetime.datetime.utcfromtimestamp(int(self._is, 16))
 
+    @deprecated(
+        "Attachment.is_spoiler() is deprecated since version 2.9, consider using Attachment.spoiler instead"
+    )
     def is_spoiler(self) -> bool:
+        """Whether this attachment contains a spoiler.
+
+        .. deprecated:: 2.9
+            Use :attr:`spoiler` instead.
+        """
+        return self.filename.startswith("SPOILER_")
+
+    @property
+    def spoiler(self) -> bool:
         """Whether this attachment contains a spoiler."""
         return self.filename.startswith("SPOILER_")
 
@@ -1505,6 +1519,9 @@ class Message(Hashable):
     def poll(self) -> Poll | None:
         return self._state._polls.get(self.id)
 
+    @deprecated(
+        "Message.is_system() is deprecated since version 2.9, consider using Message.system instead"
+    )
     def is_system(self) -> bool:
         """Whether the message is a system message.
 
@@ -1512,6 +1529,23 @@ class Message(Hashable):
         in response to something.
 
         .. versionadded:: 1.3
+
+        .. deprecated:: 2.9
+            Use :attr:`system` instead.
+        """
+        return self.type not in (
+            MessageType.default,
+            MessageType.reply,
+            MessageType.application_command,
+            MessageType.thread_starter_message,
+        )
+
+    @property
+    def system(self) -> bool:
+        """Whether the message is a system message.
+
+        A system message is a message that is constructed entirely by the Discord API
+        in response to something.
         """
         return self.type not in (
             MessageType.default,

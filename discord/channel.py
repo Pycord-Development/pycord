@@ -313,8 +313,15 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             if thread.parent_id == self.id
         ]
 
+    @deprecated(
+        "Channel.is_nsfw() is deprecated since version 2.9, consider using Channel.nsfw instead"
+    )
     def is_nsfw(self) -> bool:
-        """Checks if the channel is NSFW."""
+        """Checks if the channel is NSFW.
+
+        .. deprecated:: 2.9
+            Use :attr:`nsfw` instead.
+        """
         return self.nsfw
 
     @property
@@ -751,10 +758,6 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         :attr:`~Permissions.manage_messages` bypass slowmode.
     nsfw: :class:`bool`
         If the channel is marked as "not safe for work".
-
-        .. note::
-
-            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
     default_auto_archive_duration: :class:`int`
         The default auto archive duration in minutes for threads created in this channel.
 
@@ -784,14 +787,21 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
     async def _get_channel(self) -> TextChannel:
         return self
 
+    @deprecated(
+        "TextChannel.is_news() is deprecated since version 2.9, consider using TextChannel.news instead"
+    )
     def is_news(self) -> bool:
-        """Checks if the channel is a news/announcements channel."""
-        return self._type == ChannelType.news.value
+        """Checks if the channel is a news/announcements channel.
+
+        .. deprecated:: 2.9
+            Use :attr:`news` instead.
+        """
+        return self.news
 
     @property
     def news(self) -> bool:
-        """Equivalent to :meth:`is_news`."""
-        return self.is_news()
+        """Checks if the channel is a news/announcements channel."""
+        return self._type == ChannelType.news.value
 
     @overload
     async def edit(
@@ -1811,8 +1821,15 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
     async def _get_channel(self):
         return self
 
+    @deprecated(
+        "VoiceChannel.is_nsfw() is deprecated since version 2.9, consider using VoiceChannel.nsfw instead."
+    )
     def is_nsfw(self) -> bool:
-        """Checks if the channel is NSFW."""
+        """Checks if the channel is NSFW.
+
+        .. deprecated:: 2.9
+            Use :attr:`nsfw` instead.
+        """
         return self.nsfw
 
     @property
@@ -2399,8 +2416,15 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     async def _get_channel(self):
         return self
 
+    @deprecated(
+        "StageChannel.is_nsfw() is deprecated since version 2.9, consider using StageChannel.nsfw instead"
+    )
     def is_nsfw(self) -> bool:
-        """Checks if the channel is NSFW."""
+        """Checks if the channel is NSFW.
+
+        .. deprecated:: 2.9
+            Use :attr:`nsfw` instead.
+        """
         return self.nsfw
 
     @property
