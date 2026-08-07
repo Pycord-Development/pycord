@@ -169,13 +169,13 @@ class KeepAliveHandler(threading.Thread):
 
                 try:
                     f.result()
-                except Exception:
+                except BaseException:
                     _log.exception(
                         "An error occurred while stopping the gateway. Ignoring."
                     )
                 finally:
                     self.stop()
-                    return
+                return
 
             data = self.get_payload()
             _log.debug(self.msg, self.shard_id, data["d"])
