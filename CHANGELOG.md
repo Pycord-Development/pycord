@@ -23,7 +23,7 @@ These changes are available on the `master` branch, but have not yet been releas
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
-  ([#3332](https://github.com/Pycord-Development/pycord/pull/3332))
+  ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 
 ### Deprecated
 
