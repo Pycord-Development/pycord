@@ -237,6 +237,8 @@ class Client:
         The WebSocket gateway the client is currently connected to. Could be ``None``.
     loop: :class:`asyncio.AbstractEventLoop`
         The event loop that the client uses for asynchronous operations.
+    closed: :class:`bool`
+        Indicates if the WebSocket connection is closed.
     """
 
     def __init__(
@@ -277,7 +279,7 @@ class Client:
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
         self._connection.shard_count = self.shard_count
-        self._closed: bool = False
+        self.closed: bool = False
         self._ready: asyncio.Event = asyncio.Event()
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
@@ -337,6 +339,9 @@ class Client:
         ws = self.ws
         return float("nan") if not ws else ws.latency
 
+    @deprecated(
+        "Client.is_ws_ratelimited() is deprecated since version 2.9, consider using Client.ws_ratelimited instead."
+    )
     def is_ws_ratelimited(self) -> bool:
         """Whether the WebSocket is currently rate limited.
 
@@ -344,6 +349,18 @@ class Client:
         using HTTP or via the gateway.
 
         .. versionadded:: 1.6
+
+        .. deprecated:: 2.9
+            Use :attr:`ws_ratelimited` instead.
+        """
+        return self.ws_ratelimited
+
+    @property
+    def ws_ratelimited(self) -> bool:
+        """Whether the WebSocket is currently rate limited.
+
+        This can be useful to know when deciding whether you should query members
+        using HTTP or via the gateway.
         """
         if self.ws:
             return self.ws.is_ratelimited()
@@ -447,7 +464,19 @@ class Client:
         """
         return self._connection.application_flags  # type: ignore
 
+    @deprecated(
+        "Client.is_ready() is deprecated since version 2.9, consider using Client.ready instead"
+    )
     def is_ready(self) -> bool:
+        """Specifies if the client's internal cache is ready for use.
+
+        .. deprecated:: 2.9
+            Use :attr:`ready` instead.
+        """
+        return self.ready
+
+    @property
+    def ready(self) -> bool:
         """Specifies if the client's internal cache is ready for use."""
         return self._ready.is_set()
 
@@ -779,11 +808,11 @@ class Client:
 
         Closes the connection to Discord.
         """
-        if self._closed:
+        if self.closed:
             return
 
         await self.http.close()
-        self._closed = True
+        self.closed = True
 
         for voice in self.voice_clients:
             try:
@@ -804,7 +833,7 @@ class Client:
         and :meth:`is_ready` both return ``False`` along with the bot's internal
         cache cleared.
         """
-        self._closed = False
+        self.closed = False
         self._ready.clear()
         self._connection.clear()
         self.http.recreate()
@@ -884,9 +913,16 @@ class Client:
 
     # properties
 
+    @deprecated(
+        "Client.is_closed() is deprecated since version 2.9, consider using Client.closed instead."
+    )
     def is_closed(self) -> bool:
-        """Indicates if the WebSocket connection is closed."""
-        return self._closed
+        """Indicates if the WebSocket connection is closed.
+
+        .. deprecated:: 2.9
+            Use :attr:`closed` instead.
+        """
+        return self.closed
 
     @property
     def activity(self) -> ActivityTypes | None:
