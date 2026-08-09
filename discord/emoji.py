@@ -223,12 +223,7 @@ class GuildEmoji(BaseEmoji):
         .. deprecated:: 2.9
             Use :attr:`usable` instead.
         """
-        if not self.available:
-            return False
-        if not self._roles:
-            return True
-        emoji_roles, my_roles = self._roles, self.guild.me._roles
-        return any(my_roles.has(role_id) for role_id in emoji_roles)
+        return self.usable
 
     @property
     def usable(self) -> bool:
@@ -400,7 +395,7 @@ class AppEmoji(BaseEmoji):
         .. deprecated:: 2.9
             Use :attr:`usable` instead.
         """
-        return self.application_id == self._state.application_id
+        return self.usable
 
     @property
     def usable(self) -> bool:

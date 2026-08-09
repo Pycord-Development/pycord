@@ -286,7 +286,7 @@ class Attachment(Hashable):
         .. deprecated:: 2.9
             Use :attr:`spoiler` instead.
         """
-        return self.filename.startswith("SPOILER_")
+        return self.spoiler
 
     @property
     def spoiler(self) -> bool:
@@ -1533,12 +1533,7 @@ class Message(Hashable):
         .. deprecated:: 2.9
             Use :attr:`system` instead.
         """
-        return self.type not in (
-            MessageType.default,
-            MessageType.reply,
-            MessageType.application_command,
-            MessageType.thread_starter_message,
-        )
+        return self.system
 
     @property
     def system(self) -> bool:
