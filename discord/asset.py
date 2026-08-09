@@ -30,7 +30,6 @@ import os
 from typing import TYPE_CHECKING, Any, Literal
 
 import yarl
-from typing_extensions import deprecated
 
 from . import utils
 from .errors import DiscordException, InvalidArgument
@@ -150,17 +149,12 @@ class Asset(AssetMixin):
             Returns the asset's url's hash.
 
             This is equivalent to hash(:attr:`url`).
-
-    Attributes
-    ----------
-    animated: :class:`bool`
-        Whether the asset is animated.
     """
 
     __slots__: tuple[str, ...] = (
         "_state",
         "_url",
-        "animated",
+        "_animated",
         "_key",
     )
 
@@ -169,7 +163,7 @@ class Asset(AssetMixin):
     def __init__(self, state, *, url: str, key: str, animated: bool = False):
         self._state = state
         self._url = url
-        self.animated = animated
+        self._animated = animated
         self._key = key
 
     @classmethod
@@ -383,17 +377,9 @@ class Asset(AssetMixin):
         """Returns the identifying key of the asset."""
         return self._key
 
-    @deprecated(
-        "Asset.is_animated() is deprecated since version 2.9, consider using Asset.animated instead"
-    )
     def is_animated(self) -> bool:
-        """Returns whether the asset is animated.
-
-        .. deprecated:: 2.9
-
-            Use :attr:`animated` instead.
-        """
-        return self.animated
+        """Returns whether the asset is animated."""
+        return self._animated
 
     def replace(
         self,
