@@ -486,9 +486,7 @@ class ApplicationCommandMixin(ABC):
                     match_ = find(
                         lambda x: x["name"] == subcommand.name, match["options"]
                     )
-                    if match_ is None:
-                        return False
-                    elif not _check_command(subcommand, match_):
+                    if match_ is None or not _check_command(subcommand, match_):
                         return False
                 else:
                     return True
