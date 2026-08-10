@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `Member.vr_status` property.
+  ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
+
 ### Changed
 
 - Simplify and optimize `utils.get()`.
@@ -22,6 +25,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
+- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
+  ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 
 ### Deprecated
 
