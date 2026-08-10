@@ -190,9 +190,12 @@ class Asset(AssetMixin):
 
     @classmethod
     def _from_avatar(cls, state, user_id: int, avatar: str) -> Asset:
-        url = f"{cls.BASE}/avatars/{user_id}/{avatar}"
         return cls(
-            state, url=url, key=avatar, animated=avatar.startswith("a_"), size=1024
+            state,
+            url=f"{cls.BASE}/avatars/{user_id}/{avatar}",
+            key=avatar,
+            animated=avatar.startswith("a_"),
+            size=1024,
         )
 
     @classmethod
@@ -245,18 +248,24 @@ class Asset(AssetMixin):
     def _from_guild_avatar(
         cls, state, guild_id: int, member_id: int, avatar: str
     ) -> Asset:
-        url = f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/avatars/{avatar}"
         return cls(
-            state, url=url, key=avatar, animated=avatar.startswith("a_"), size=1024
+            state,
+            url=f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/avatars/{avatar}",
+            key=avatar,
+            animated=avatar.startswith("a_"),
+            size=1024,
         )
 
     @classmethod
     def _from_guild_banner(
         cls, state, guild_id: int, member_id: int, banner: str
     ) -> Asset:
-        url = f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/banners/{banner}"
         return cls(
-            state, url=url, key=banner, animated=banner.startswith("a_"), size=512
+            state,
+            url=f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/banners/{banner}",
+            key=banner,
+            animated=banner.startswith("a_"),
+            size=512,
         )
 
     @classmethod
@@ -284,11 +293,13 @@ class Asset(AssetMixin):
         cls, state: ConnectionState, asset: str, animated: bool = False
     ) -> Asset:
         name = "static" if not animated else "asset"
+        extension = "png" if not animated else "webm"
         return cls(
             state,
             url=f"{cls.BASE}/assets/collectibles/{asset}{name}",
             key=asset,
             animated=animated,
+            extension=extension,
         )
 
     @classmethod
@@ -296,16 +307,19 @@ class Asset(AssetMixin):
         animated = False
         if path == "banners":
             animated = image.startswith("a_")
-
-        url = f"{cls.BASE}/{path}/{guild_id}/{image}"
-        return cls(state, url=url, key=image, animated=animated, size=1024)
+        return cls(
+            state,
+            url=f"{cls.BASE}/{path}/{guild_id}/{image}",
+            key=image,
+            animated=animated,
+            size=1024,
+        )
 
     @classmethod
     def _from_guild_icon(cls, state, guild_id: int, icon_hash: str) -> Asset:
-        url = f"{cls.BASE}/icons/{guild_id}/{icon_hash}"
         return cls(
             state,
-            url=url,
+            url=f"{cls.BASE}/icons/{guild_id}/{icon_hash}",
             key=icon_hash,
             animated=icon_hash.startswith("a_"),
             size=1024,
@@ -322,10 +336,9 @@ class Asset(AssetMixin):
 
     @classmethod
     def _from_user_banner(cls, state, user_id: int, banner_hash: str) -> Asset:
-        url = f"{cls.BASE}/banners/{user_id}/{banner_hash}"
         return cls(
             state,
-            url=url,
+            url=f"{cls.BASE}/banners/{user_id}/{banner_hash}",
             key=banner_hash,
             animated=banner_hash.startswith("a_"),
             size=512,
