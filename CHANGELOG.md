@@ -17,7 +17,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Changed `Label.set_radio_group` and `Label.set_checkbox_group` to no longer accept a
+- Changed `Label.set_radio_group` and `Label.set_file_upload` to no longer accept a
   nullable `required` value.
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
 
