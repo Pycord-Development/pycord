@@ -70,7 +70,7 @@ from .enums import (
 )
 from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
-from .flags import SystemChannelFlags
+from .flags import ChannelFlags, SystemChannelFlags
 from .incidents import IncidentsData
 from .integrations import Integration, _integration_factory
 from .invite import Invite
@@ -1462,6 +1462,11 @@ class Guild(Hashable):
         elif not isinstance(overwrites, dict):
             raise InvalidArgument("overwrites parameter expects a dict.")
 
+        try:
+            options["flags"] = options.pop("flags").value
+        except KeyError:
+            pass
+
         perms = []
         for target, perm in overwrites.items():
             if not isinstance(perm, PermissionOverwrite):
@@ -1506,6 +1511,7 @@ class Guild(Hashable):
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         default_thread_slowmode_delay: int | None = MISSING,
         default_auto_archive_duration: int = MISSING,
+        spoiler: bool = MISSING,
     ) -> TextChannel:
         """|coro|
 
@@ -1557,6 +1563,10 @@ class Guild(Hashable):
             The default auto archive duration in minutes for threads created in this channel.
 
             .. versionadded:: 2.7
+        spoiler: :class:`bool`
+            Whether the channel is marked as a spoiler channel.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -1612,6 +1622,9 @@ class Guild(Hashable):
         if default_auto_archive_duration is not MISSING:
             options["default_auto_archive_duration"] = default_auto_archive_duration
 
+        if spoiler is not MISSING:
+            options["flags"] = ChannelFlags(is_spoiler_channel=True)
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -1640,6 +1653,7 @@ class Guild(Hashable):
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
+        spoiler: bool = MISSING,
     ) -> VoiceChannel:
         """|coro|
 
@@ -1689,6 +1703,11 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
+        spoiler: :class:`bool`
+            Whether the channel is marked as a spoiler channel.
+
+            .. versionadded:: 2.9
+
         Returns
         -------
         :class:`VoiceChannel`
@@ -1725,6 +1744,9 @@ class Guild(Hashable):
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
 
+        if spoiler is not MISSING:
+            options["flags"] = ChannelFlags(is_spoiler_channel=True)
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -1754,6 +1776,7 @@ class Guild(Hashable):
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
+        spoiler: bool = MISSING,
     ) -> StageChannel:
         """|coro|
 
@@ -1815,6 +1838,11 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
+        nsfw: :class:`bool`
+            Whether the channel is marked as a spoiler channel.
+
+            .. versionadded:: 2.9
+
         Returns
         -------
         :class:`StageChannel`
@@ -1854,6 +1882,9 @@ class Guild(Hashable):
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
 
+        if spoiler is not MISSING:
+            options["flags"] = ChannelFlags(is_spoiler_channel=True)
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -1884,6 +1915,7 @@ class Guild(Hashable):
         default_sort_order: SortOrder | None = MISSING,
         default_thread_slowmode_delay: int | None = MISSING,
         default_auto_archive_duration: int = MISSING,
+        spoiler: bool = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1951,6 +1983,10 @@ class Guild(Hashable):
             The default auto archive duration in minutes for threads created in this channel.
 
             .. versionadded:: 2.7
+        spoiler: :class:`bool`
+            Whether the channel is marked as a spoiler channel.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -2013,6 +2049,9 @@ class Guild(Hashable):
 
         if default_auto_archive_duration is not MISSING:
             options["default_auto_archive_duration"] = default_auto_archive_duration
+
+        if spoiler is not MISSING:
+            options["flags"] = ChannelFlags(is_spoiler_channel=True)
 
         if default_reaction_emoji is not MISSING:
             if isinstance(
