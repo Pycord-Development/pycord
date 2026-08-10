@@ -1551,6 +1551,10 @@ class Guild(Hashable):
             A value of `0` disables slowmode. The maximum value possible is `21600`.
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
+
+            .. warning::
+                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+
         reason: :class:`str` | :obj:`None`
             The reason for creating this channel. Shows up on the audit log.
 
@@ -1567,6 +1571,9 @@ class Guild(Hashable):
             Whether the channel is marked as a spoiler channel.
 
             .. versionadded:: 2.9
+
+            .. warning::
+                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1703,10 +1710,16 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
+            .. warning::
+                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+
         spoiler: :class:`bool`
             Whether the channel is marked as a spoiler channel.
 
             .. versionadded:: 2.9
+
+            .. warning::
+                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1838,10 +1851,16 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
+            .. warning::
+                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+
         nsfw: :class:`bool`
             Whether the channel is marked as a spoiler channel.
 
             .. versionadded:: 2.9
+
+            .. warning::
+                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1955,6 +1974,10 @@ class Guild(Hashable):
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
+
+            .. warning::
+                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+
         reason: :class:`str` | :obj:`None`
             The reason for creating this channel. Shows up on the audit log.
         default_reaction_emoji: :class:`GuildEmoji` | :class:`int` | :class:`str` | :obj:`None`
@@ -1987,6 +2010,9 @@ class Guild(Hashable):
             Whether the channel is marked as a spoiler channel.
 
             .. versionadded:: 2.9
+
+            .. warning::
+                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
