@@ -706,7 +706,7 @@ class Invite(Hashable):
 
     @property
     @deprecated(
-        "Invite.id is deprecated if favour Invite.code since 2.9, and will be removed in 3.0"
+        "Invite.id is deprecated in favour of Invite.code since version 2.9, and will be removed in version 3.0"
     )
     def id(self) -> str:  # type: ignore[override]
         """Returns the proper code portion of the invite."""
