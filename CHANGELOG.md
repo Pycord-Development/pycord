@@ -12,7 +12,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added missing `slowmode_delay`, `user_limit`, and `bitrate` params to
+- Added missing `slowmode_delay`, `user_limit`, and `bitrate` parameters to
   `StageChannel.edit`. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
@@ -21,6 +21,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fix `StageChannel.create_instance`'s `send_notification` parameter type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the `sync_permissions` type in the `VoiceChannel.edit` and `StageChannel.edit`
+  overloads. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the return type of the `MediaChannel.edit` overload.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
@@ -41,13 +47,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fix `StageChannel.create_instance` `send_notification` param type.
-  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
-- Fix `VoiceChannel.edit` and `StageChannel.edit` overload `sync_permissions` type.
-  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
-- Fix `MediaChannel.edit` overload return type.
-  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
-- Fixed an `AttributeError` when using `RoleColours.is_holographic` and `secondary` or
 - Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
   `tertiary` is `None`.
   ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
