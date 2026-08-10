@@ -321,6 +321,9 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
     def spoiler(self) -> bool:
         """Checks if the channel is a spoiler channel.
 
+        .. note::
+            This is an alias for :attr:`flags.is_spoiler_channel`.
+
         .. versionadded:: 2.9
         """
         return self.flags.is_spoiler_channel
@@ -817,6 +820,23 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         default_thread_slowmode_delay: int = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> TextChannel | None: ...
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        type: ChannelType = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
         spoiler: bool = ...,
     ) -> TextChannel | None: ...
 
@@ -1136,6 +1156,28 @@ class ForumChannel(_TextChannel):
         topic: str = ...,
         position: int = ...,
         nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: (
+            ThreadArchiveDuration | ThreadArchiveDurationEnum
+        ) = ...,
+        default_thread_slowmode_delay: int = ...,
+        default_sort_order: SortOrder = ...,
+        default_reaction_emoji: GuildEmoji | int | str | None = ...,
+        available_tags: list[ForumTag] = ...,
+        require_tag: bool = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> ForumChannel | None: ...
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
         sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
@@ -1617,11 +1659,7 @@ class MediaChannel(ForumChannel):
             Editing the channel failed.
         """
 
-        if (
-            "require_tag" in options
-            or "hide_media_download_options" in options
-            or "spoiler" in options
-        ):
+        if {"require_tag", "hide_media_download_options", "spoiler"} & options.keys():
             flags = ChannelFlags._from_value(self.flags.value)
             flags.require_tag = options.pop("require_tag", flags.require_tag)
             flags.hide_media_download_options = options.pop(
@@ -1862,6 +1900,9 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
     @property
     def spoiler(self) -> bool:
         """Checks if the channel is a spoiler channel.
+
+        .. note::
+            This is an alias for :attr:`flags.is_spoiler_channel`.
 
         .. versionadded:: 2.9
         """
@@ -2467,6 +2508,9 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     @property
     def spoiler(self) -> bool:
         """Checks if the channel is a spoiler channel.
+
+        .. note::
+            This is an alias for :attr:`flags.is_spoiler_channel`.
 
         .. versionadded:: 2.9
         """

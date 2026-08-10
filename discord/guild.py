@@ -1429,10 +1429,8 @@ class Guild(Hashable):
         elif not isinstance(overwrites, dict):
             raise InvalidArgument("overwrites parameter expects a dict.")
 
-        try:
+        if "flags" in options:
             options["flags"] = options.pop("flags").value
-        except KeyError:
-            pass
 
         perms = []
         for target, perm in overwrites.items():
@@ -1464,6 +1462,37 @@ class Guild(Hashable):
             permission_overwrites=perms,
             **options,
         )
+
+    @overload
+    async def create_text_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = None,
+        category: CategoryChannel | None = None,
+        position: int = MISSING,
+        topic: str = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_thread_slowmode_delay: int | None = MISSING,
+        default_auto_archive_duration: int = MISSING,
+    ) -> TextChannel: ...
+
+    async def create_text_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = None,
+        category: CategoryChannel | None = None,
+        position: int = MISSING,
+        topic: str = MISSING,
+        slowmode_delay: int = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_thread_slowmode_delay: int | None = MISSING,
+        default_auto_archive_duration: int = MISSING,
+        spoiler: bool = MISSING,
+    ) -> TextChannel: ...
 
     async def create_text_channel(
         self,
@@ -1673,7 +1702,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-            .. warning::
+            .. note::
                 Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         spoiler: :class:`bool`
@@ -1681,7 +1710,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.9
 
-            .. warning::
+            .. note::
                 Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
@@ -1736,6 +1765,42 @@ class Guild(Hashable):
         # temporarily add to the cache
         self._channels[channel.id] = channel
         return channel
+
+    @overload
+    async def create_stage_channel(
+        self,
+        name: str,
+        *,
+        topic: str,
+        position: int = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        category: CategoryChannel | None = None,
+        reason: str | None = None,
+        bitrate: int = MISSING,
+        user_limit: int = MISSING,
+        rtc_region: VoiceRegion | None = MISSING,
+        video_quality_mode: VideoQualityMode = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
+    ) -> StageChannel: ...
+
+    @overload
+    async def create_stage_channel(
+        self,
+        name: str,
+        *,
+        topic: str,
+        position: int = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        category: CategoryChannel | None = None,
+        reason: str | None = None,
+        bitrate: int = MISSING,
+        user_limit: int = MISSING,
+        rtc_region: VoiceRegion | None = MISSING,
+        video_quality_mode: VideoQualityMode = MISSING,
+        slowmode_delay: int = MISSING,
+        spoiler: bool = MISSING,
+    ) -> StageChannel: ...
 
     async def create_stage_channel(
         self,
@@ -1971,7 +2036,7 @@ class Guild(Hashable):
             .. versionadded:: 2.9
 
             .. warning::
-                Passing both this and ``nsfw`` as ``True```will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------

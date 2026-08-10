@@ -14,11 +14,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
-- Added `ChannelFlags.is_spoiler_channel` and `.spoiler` property to all applicable
-  channel types. ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
-- Added `spoiler` parameter to the `edit()` function of all applicable channel types.
-  ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
-- Added `spoiler` kwarg to all channel creation methods, except for category channels.
+- Added spoiler channel functionality
   ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
 
 ### Changed
