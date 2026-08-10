@@ -1630,7 +1630,7 @@ class Guild(Hashable):
             options["default_auto_archive_duration"] = default_auto_archive_duration
 
         if spoiler is not MISSING:
-            options["flags"] = ChannelFlags(is_spoiler_channel=True)
+            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
         data = await self._create_channel(
             name,
@@ -1758,7 +1758,7 @@ class Guild(Hashable):
             options["nsfw"] = nsfw
 
         if spoiler is not MISSING:
-            options["flags"] = ChannelFlags(is_spoiler_channel=True)
+            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
         data = await self._create_channel(
             name,
@@ -1902,7 +1902,7 @@ class Guild(Hashable):
             options["nsfw"] = nsfw
 
         if spoiler is not MISSING:
-            options["flags"] = ChannelFlags(is_spoiler_channel=True)
+            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
         data = await self._create_channel(
             name,
@@ -2077,7 +2077,7 @@ class Guild(Hashable):
             options["default_auto_archive_duration"] = default_auto_archive_duration
 
         if spoiler is not MISSING:
-            options["flags"] = ChannelFlags(is_spoiler_channel=True)
+            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
         if default_reaction_emoji is not MISSING:
             if isinstance(
