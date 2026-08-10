@@ -28,6 +28,7 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
+from _warnings import warn
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import (
@@ -1661,6 +1662,11 @@ class Guild(Hashable):
         if spoiler is not MISSING:
             options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
+        if nsfw and spoiler:
+            warn(
+                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+            )
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -1788,6 +1794,11 @@ class Guild(Hashable):
 
         if spoiler is not MISSING:
             options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
+
+        if nsfw and spoiler:
+            warn(
+                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+            )
 
         data = await self._create_channel(
             name,
@@ -1969,6 +1980,11 @@ class Guild(Hashable):
         if spoiler is not MISSING:
             options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
+        if nsfw and spoiler:
+            warn(
+                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+            )
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -2143,6 +2159,11 @@ class Guild(Hashable):
 
         if spoiler is not MISSING:
             options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
+
+        if nsfw and spoiler:
+            warn(
+                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+            )
 
         if default_reaction_emoji is not MISSING:
             if isinstance(
