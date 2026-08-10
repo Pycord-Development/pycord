@@ -1520,7 +1520,7 @@ class Guild(Hashable):
             Whether the channel is marked as NSFW.
 
             .. warning::
-                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
@@ -1540,7 +1540,7 @@ class Guild(Hashable):
             .. versionadded:: 2.9
 
             .. warning::
-                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1674,7 +1674,7 @@ class Guild(Hashable):
             .. versionadded:: 2.7
 
             .. warning::
-                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         spoiler: :class:`bool`
             Whether the channel is marked as a spoiler channel.
@@ -1682,7 +1682,7 @@ class Guild(Hashable):
             .. versionadded:: 2.9
 
             .. warning::
-                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1811,7 +1811,7 @@ class Guild(Hashable):
             .. versionadded:: 2.7
 
             .. warning::
-                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         nsfw: :class:`bool`
             Whether the channel is marked as a spoiler channel.
@@ -1819,7 +1819,7 @@ class Guild(Hashable):
             .. versionadded:: 2.9
 
             .. warning::
-                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1935,7 +1935,7 @@ class Guild(Hashable):
             Whether the channel is marked as NSFW.
 
             .. warning::
-                Passing both this and `spoiler` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
@@ -1971,7 +1971,7 @@ class Guild(Hashable):
             .. versionadded:: 2.9
 
             .. warning::
-                Passing both this and `nsfw` will mark the channel as NSFW and ignore the spoiler flag.
+                Passing both this and ``nsfw`` as ``True```will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
