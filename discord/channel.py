@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from _warnings import warn
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
@@ -922,8 +923,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             options["flags"].is_spoiler_channel = options["spoiler"]
 
             if options.get("nsfw") and options["spoiler"]:
-                raise ValueError(
-                    "NSFW setting is mutually exclusive with spoiler setting"
+                warn(
+                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
                 )
             options.pop("spoiler")
 
@@ -1278,6 +1279,10 @@ class ForumChannel(_TextChannel):
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].require_tag = options.pop("require_tag")
         if "spoiler" in options:
+            if "nsfw" in options:
+                warn(
+                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                )
             if "flags" not in options:
                 options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].is_spoiler_channel = options.pop("spoiler")
@@ -1665,6 +1670,10 @@ class MediaChannel(ForumChannel):
             flags.hide_media_download_options = options.pop(
                 "hide_media_download_options", flags.hide_media_download_options
             )
+            if options.get("nsfw") and options["spoiler"]:
+                warn(
+                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                )
             flags.is_spoiler_channel = options.pop("spoiler", flags.is_spoiler_channel)
             options["flags"] = flags
         payload = await self._edit(options, reason=reason)
@@ -2270,7 +2279,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """
         if "spoiler" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
-            options["flags"].is_spoiler_channel = options.pop("spoiler")
+            options["flags"].is_spoiler_channel = options["spoiler"]
+
+            if options.get("nsfw") and options["spoiler"]:
+                warn(
+                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                )
+            options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
