@@ -99,7 +99,7 @@ class DefaultComparison:
     callback: Callable[[Any, Any], bool]
         A callable that will do additional comparison on the objects if neither are a default value.
         Defaults to a `==` comparison.
-        It should accept the 2 objects as arguments and return True if they should be considered equivalent
+        It should accept local and remote command objects as arguments and return True if they should be considered equivalent
         and False otherwise.
     """
 
@@ -230,6 +230,8 @@ SUBCOMMAND_DEFAULTS: NestedComparison = {
     "description_localizations": DefaultComparison((None, {}, MISSING)),
     "options": DefaultComparison(OPTION_DEFAULT_VALUES, _option_comparison_check),
 }
+PARENT_SUBCOMMAND_DEFAULTS: NestedComparison = SUBCOMMAND_DEFAULTS.copy()
+del PARENT_SUBCOMMAND_DEFAULTS["options"]
 COMMAND_OPTION_DEFAULTS: NestedComparison = {
     "type": DefaultComparison(()),
     "name": DefaultComparison(()),
@@ -456,13 +458,28 @@ class ApplicationCommandMixin(ABC):
             respectively contain the command and the action to perform. Other keys may also be present depending on
             the action, including ``id``.
         """
+        # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
 
         updated_command_defaults = await self._get_command_defaults()
+        updated_parent_command_defaults = updated_command_defaults.copy()
+        del updated_parent_command_defaults["options"]
 
-        # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
         def _check_command(cmd: ApplicationCommand, match: Mapping[str, Any]) -> bool:
             """Returns True If Commands Are Equivalent"""
             if isinstance(cmd, SlashCommandGroup):
+                # Check the fields relevant to the parent command
+                if cmd.parent is None:
+                    parent_equality = _compare_defaults(
+                        cmd.to_dict(), match, updated_parent_command_defaults
+                    )
+                else:
+                    parent_equality = _compare_defaults(
+                        cmd.to_dict(), match, PARENT_SUBCOMMAND_DEFAULTS
+                    )
+                # Return early if the parent commands have a difference
+                if not parent_equality:
+                    return False
+                # Then check the subcommands
                 if len(cmd.subcommands) != len(match.get("options", [])):
                     return False
                 for i, subcommand in enumerate(cmd.subcommands):

@@ -5,7 +5,7 @@ import pytest
 from typing_extensions import override
 
 import discord
-from discord import MISSING, Bot, SlashCommandGroup
+from discord import MISSING, Bot
 from discord.bot import COMMAND_DEFAULTS, DefaultSetComparison
 from discord.enums import IntegrationType
 from discord.types.interactions import ApplicationCommand, ApplicationCommandOption
@@ -40,6 +40,15 @@ class SlashCommand(discord.SlashCommand):
                 discord.InteractionContextType.bot_dm,
                 discord.InteractionContextType.guild,
             }
+
+
+class SlashCommandGroup(discord.SlashCommandGroup):
+    def __init__(self, name, **kwargs):
+        if (desc := kwargs.get("description")) is not None:
+            kwargs.pop("description")
+        else:
+            desc = "desc"
+        super().__init__(name, description=desc, **kwargs)
 
 
 remote_dummy_base: dict = {
@@ -963,6 +972,11 @@ class TestSubCommandSyncing:
             else:
                 remote_dummy["options"][0].update({key: value})
         return remote_dummy
+
+    async def test_default(self):
+        s = SlashCommandGroup("subcommand")
+        s.add_command(SlashCommand())
+        assert not await edit_needed(s, self.dict_factory({}, {}))
 
     async def test_parent_name(self):
         async def edit_needed(
