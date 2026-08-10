@@ -47,6 +47,7 @@ class ClientStatus(TypedDict, total=False):
     desktop: str
     mobile: str
     web: str
+    vr: str
 
 
 class ActivityTimestamps(TypedDict, total=False):
