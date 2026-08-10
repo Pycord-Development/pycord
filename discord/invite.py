@@ -706,7 +706,7 @@ class Invite(Hashable):
 
     @property
     @deprecated(
-        "Invite.id is deprecated since version 2.9, consider using Invite.code instead."
+        "Invite.id is deprecated if favour Invite.code since 2.9, and will be removed in 3.0"
     )
     def id(self) -> str:  # type: ignore[override]
         """Returns the proper code portion of the invite."""
@@ -715,8 +715,6 @@ class Invite(Hashable):
     @property
     def url(self) -> str:
         """A property that retrieves the invite URL."""
-        if self.code is None:
-            raise ValueError("Cannot build an invite URL when code is None")
         return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
 
     @property
