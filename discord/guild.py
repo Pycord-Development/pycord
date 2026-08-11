@@ -1648,6 +1648,39 @@ class Guild(Hashable):
         self._channels[channel.id] = channel
         return channel
 
+    @overload
+    async def create_voice_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = None,
+        category: CategoryChannel | None = None,
+        position: int = MISSING,
+        bitrate: int = MISSING,
+        user_limit: int = MISSING,
+        rtc_region: VoiceRegion | None = MISSING,
+        video_quality_mode: VideoQualityMode = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
+    ) -> VoiceChannel: ...
+
+    async def create_voice_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = None,
+        category: CategoryChannel | None = None,
+        position: int = MISSING,
+        bitrate: int = MISSING,
+        user_limit: int = MISSING,
+        rtc_region: VoiceRegion | None = MISSING,
+        video_quality_mode: VideoQualityMode = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        slowmode_delay: int = MISSING,
+        spoiler: bool = MISSING,
+    ) -> VoiceChannel: ...
+
     async def create_voice_channel(
         self,
         name: str,
@@ -1957,6 +1990,44 @@ class Guild(Hashable):
         # temporarily add to the cache
         self._channels[channel.id] = channel
         return channel
+
+    @overload
+    async def create_forum_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = None,
+        category: CategoryChannel | None = None,
+        position: int = MISSING,
+        topic: str = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_reaction_emoji: GuildEmoji | int | str = MISSING,
+        available_tags: list[ForumTag] = MISSING,
+        default_sort_order: SortOrder | None = MISSING,
+        default_thread_slowmode_delay: int | None = MISSING,
+        default_auto_archive_duration: int = MISSING,
+    ) -> ForumChannel: ...
+
+    @overload
+    async def create_forum_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = None,
+        category: CategoryChannel | None = None,
+        position: int = MISSING,
+        topic: str = MISSING,
+        slowmode_delay: int = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_reaction_emoji: GuildEmoji | int | str = MISSING,
+        available_tags: list[ForumTag] = MISSING,
+        default_sort_order: SortOrder | None = MISSING,
+        default_thread_slowmode_delay: int | None = MISSING,
+        default_auto_archive_duration: int = MISSING,
+        spoiler: bool = MISSING,
+    ) -> ForumChannel: ...
 
     async def create_forum_channel(
         self,
