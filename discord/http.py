@@ -85,7 +85,6 @@ if TYPE_CHECKING:
         template,
         threads,
         user,
-        voice,
         webhook,
         welcome_screen,
         widget,
@@ -95,6 +94,7 @@ if TYPE_CHECKING:
     )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
+    from .types.voice import VoiceRegion as VoiceRegionPayload
 
     T = TypeVar("T")
     BE = TypeVar("BE", bound=BaseException)
@@ -1047,12 +1047,12 @@ class HTTPClient:
     def get_guild_voice_regions(
         self,
         guild_id: Snowflake,
-    ) -> Response[list[voice.VoiceRegionPayload]]:
+    ) -> Response[list[VoiceRegionPayload]]:
         return self.request(
             Route("GET", "/guilds/{guild_id}/regions", guild_id=guild_id)
         )
 
-    def get_voice_regions(self) -> Response[list[voice.VoiceRegionPayload]]:
+    def get_voice_regions(self) -> Response[list[VoiceRegionPayload]]:
         return self.request(Route("GET", "/voice/regions"))
 
     def edit_profile(self, payload: dict[str, Any]) -> Response[user.User]:

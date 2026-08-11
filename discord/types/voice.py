@@ -60,22 +60,7 @@ class VoiceState(TypedDict):
 GuildVoiceState = VoiceState
 
 
-class VoiceRegionPayload(TypedDict):
-    id: str
-    name: str
-    vip: bool
-    optimal: bool
-    deprecated: bool
-    custom: bool
-
-
-@dataclass(frozen=True, slots=True)
-class VoiceRegion:
-    """Represents a voice region a guild can use for voice channels.
-
-    This is returned by :meth:`Guild.fetch_voice_regions`.
-    """
-
+class VoiceRegion(TypedDict):
     id: str
     name: str
     vip: bool

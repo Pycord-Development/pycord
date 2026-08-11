@@ -29,6 +29,7 @@ import copy
 import datetime
 import unicodedata
 from collections.abc import Sequence
+from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -65,9 +66,9 @@ from .enums import (
     SortOrder,
     VerificationLevel,
     VideoQualityMode,
-    VoiceRegion,
     try_enum,
 )
+from .enums import VoiceRegion as VoiceRegionType
 from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
 from .flags import SystemChannelFlags
@@ -91,7 +92,6 @@ from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
-from .types.voice import VoiceRegion as VoiceRegionData
 from .user import User
 from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
@@ -146,6 +146,21 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+@dataclass(frozen=True, slots=True)
+class VoiceRegion:
+    """Represents a voice region a guild can use for voice channels.
+
+    This is returned by :meth:`Guild.fetch_voice_regions`.
+    """
+
+    id: str
+    name: str
+    vip: bool
+    optimal: bool
+    deprecated: bool
+    custom: bool
 
 
 class GuildRoleCounts(dict[int, int]):
@@ -1603,7 +1618,7 @@ class Guild(Hashable):
         position: int = MISSING,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | str | None = MISSING,
+        rtc_region: VoiceRegionType | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
@@ -1719,7 +1734,7 @@ class Guild(Hashable):
         reason: str | None = None,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | str | None = MISSING,
+        rtc_region: VoiceRegionType | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
@@ -3797,7 +3812,7 @@ class Guild(Hashable):
         payload["uses"] = payload.get("uses", 0)
         return Invite(state=self._state, data=payload, guild=self, channel=channel)
 
-    async def fetch_voice_regions(self) -> list[VoiceRegionData]:
+    async def fetch_voice_regions(self) -> list[VoiceRegion]:
         """|coro|
 
         Retrieves the voice regions that the guild has access to.
@@ -3806,7 +3821,7 @@ class Guild(Hashable):
         recommended way to get the currently available regions.
         .. versionadded:: 2.9
 
-        Each :class:`~discord.types.voice.VoiceRegion` has the following attributes:
+        Each :class:`~discord.guild.VoiceRegion` has the following attributes:
 
         :attr:`~discord.types.voice.VoiceRegion.id`
             The region ID, e.g. ``"us-west"``. Use this as the
@@ -3822,7 +3837,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        List[:class:`~discord.types.voice.VoiceRegion`]
+        List[:class:`~discord.guild.VoiceRegion`]
             The list of voice regions the guild has access to.
 
         Raises
@@ -3831,7 +3846,7 @@ class Guild(Hashable):
             Retrieving the voice regions failed.
         """
         regions = await self._state.http.get_guild_voice_regions(self.id)
-        return [VoiceRegionData(**region) for region in regions]
+        return [VoiceRegion(**region) for region in regions]
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(
