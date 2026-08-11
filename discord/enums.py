@@ -31,6 +31,8 @@ from collections.abc import Callable
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
+from .utils import warn_deprecated
+
 if TYPE_CHECKING:
     from typing_extensions import deprecated
 else:
@@ -41,8 +43,6 @@ else:
 
         return decorator
 
-
-from .utils import warn_deprecated
 
 __all__ = (
     "Enum",
