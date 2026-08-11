@@ -3803,9 +3803,7 @@ class Guild(Hashable):
         Retrieves the voice regions that the guild has access to.
 
         The list of voice regions is dynamic, so this method is the
-        recommended way to get the currently available regions instead of
-        relying on the deprecated :class:`VoiceRegion` enum.
-
+        recommended way to get the currently available regions.
         .. versionadded:: 2.9
 
         Each payload is a :class:`~discord.types.voice.VoiceRegion` TypedDict
