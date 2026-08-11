@@ -1287,7 +1287,7 @@ class ForumChannel(_TextChannel):
         if "spoiler" in options:
             if "nsfw" in options:
                 warn(
-                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                    "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel."
                 )
             if "flags" not in options:
                 options["flags"] = ChannelFlags._from_value(self.flags.value)
