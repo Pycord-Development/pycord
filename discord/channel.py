@@ -870,8 +870,11 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            Whether the channel is marked as NSFW. Mutually exclusive with :attr:`spoiler`, although
-            this will convert a spoiler channel into an nsfw channel.
+            Whether the channel is marked as NSFW.
+
+            .. note::
+                This setting is mutually exclusive with :attr:`spoiler`. Applying this to a spoiler channel will convert it to an NSFW channel.
+                Passing both as ``True`` will make the channel an NSFW channel.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -897,8 +900,11 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
             .. versionadded:: 2.3
         spoiler: :class:`bool`
-            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`, although
-            this will convert an nsfw channel into a spoiler channel.
+            Whether the channel should be a spoiler channel.
+
+            .. note::
+                This setting is mutually exclusive with :attr:`nsfw`. Applying this to an NSFW channel will convert it to a spoiler channel.
+                Passing both as ``True`` will make the channel an NSFW channel.
 
             .. versionadded:: 2.9
 
