@@ -324,6 +324,12 @@ class _VoiceRegionMeta(Enum.__class__):
         cls._warn(f"VoiceRegion({', '.join(map(repr, args))})")
         return super().__call__(*args, **kwargs)
 
+    def __getattr__(cls, name: str) -> Any:
+        if name.startswith("_"):
+            raise AttributeError(name)
+        cls._warn(f"VoiceRegion.{name}")
+        return create_unknown_value(cls, name)
+
 
 @deprecated(
     "VoiceRegion is deprecated in favour of the region ID str or "
