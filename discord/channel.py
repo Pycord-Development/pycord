@@ -48,12 +48,11 @@ from .enums import (
     InviteTarget,
     SortOrder,
     StagePrivacyLevel,
-    VideoQualityMode,
-    VoiceChannelEffectAnimationType,
-    try_enum,
 )
 from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
+from .enums import VideoQualityMode, VoiceChannelEffectAnimationType
 from .enums import VoiceRegion as VoiceRegionType
+from .enums import try_enum
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import ChannelFlags, MessageFlags
