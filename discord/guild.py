@@ -3813,15 +3813,15 @@ class Guild(Hashable):
         ``custom``
             Whether the region is a custom region.
 
-        Raises
-        -------
-        HTTPException
-            Retrieving the voice regions failed.
-
         Returns
-        --------
+        -------
         List[:class:`~discord.types.voice.VoiceRegion`]
             The list of voice regions the guild has access to.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the voice regions failed.
         """
         return await self._state.http.get_guild_voice_regions(self.id)
 
