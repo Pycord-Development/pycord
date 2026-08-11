@@ -66,9 +66,9 @@ from .enums import (
     SortOrder,
     VerificationLevel,
     VideoQualityMode,
+    VoiceRegion,
+    try_enum,
 )
-from .enums import VoiceRegion as VoiceRegionType
-from .enums import try_enum
 from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
 from .flags import SystemChannelFlags
@@ -149,7 +149,7 @@ class _GuildLimit(NamedTuple):
 
 
 @dataclass(frozen=True, slots=True)
-class VoiceRegion:
+class VoiceServerRegion:
     """Represents a voice region a guild can use for voice channels.
 
     This is returned by :meth:`Guild.fetch_voice_regions`.
@@ -1618,7 +1618,7 @@ class Guild(Hashable):
         position: int = MISSING,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegionType | str | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
@@ -1734,7 +1734,7 @@ class Guild(Hashable):
         reason: str | None = None,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegionType | str | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
@@ -3812,7 +3812,7 @@ class Guild(Hashable):
         payload["uses"] = payload.get("uses", 0)
         return Invite(state=self._state, data=payload, guild=self, channel=channel)
 
-    async def fetch_voice_regions(self) -> list[VoiceRegion]:
+    async def fetch_voice_regions(self) -> list[VoiceServerRegion]:
         """|coro|
 
         Retrieves the voice regions that the guild has access to.
@@ -3821,7 +3821,7 @@ class Guild(Hashable):
         recommended way to get the currently available regions.
         .. versionadded:: 2.9
 
-        Each :class:`~discord.guild.VoiceRegion` has the following attributes:
+        Each :class:`~discord.guild.VoiceServerRegion` has the following attributes:
 
         :attr:`~discord.types.voice.VoiceRegion.id`
             The region ID, e.g. ``"us-west"``. Use this as the
@@ -3837,7 +3837,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        List[:class:`~discord.guild.VoiceRegion`]
+        List[:class:`~discord.guild.VoiceServerRegion`]
             The list of voice regions the guild has access to.
 
         Raises
@@ -3846,7 +3846,7 @@ class Guild(Hashable):
             Retrieving the voice regions failed.
         """
         regions = await self._state.http.get_guild_voice_regions(self.id)
-        return [VoiceRegion(**region) for region in regions]
+        return [VoiceServerRegion(**region) for region in regions]
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(
