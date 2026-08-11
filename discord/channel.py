@@ -48,14 +48,12 @@ from .enums import (
     InviteTarget,
     SortOrder,
     StagePrivacyLevel,
-)
-from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
-from .enums import (
     VideoQualityMode,
     VoiceChannelEffectAnimationType,
-    VoiceRegion,
     try_enum,
 )
+from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
+from .enums import VoiceRegion as VoiceRegionType
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import ChannelFlags, MessageFlags
@@ -1638,8 +1636,8 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
             rtc = data.get("rtc_region")
-            self.rtc_region: VoiceRegion | None = (
-                try_enum(VoiceRegion, rtc) if rtc is not None else None
+            self.rtc_region: VoiceRegionType | None = (
+                try_enum(VoiceRegionType, rtc) if rtc is not None else None
             )
             self.video_quality_mode: VideoQualityMode = try_enum(
                 VideoQualityMode, data.get("video_quality_mode", 1)
@@ -2091,7 +2089,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         sync_permissions: int = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
-        rtc_region: VoiceRegion | str | None = ...,
+        rtc_region: VoiceRegionType | str | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
         nsfw: bool = ...,
@@ -2783,7 +2781,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         sync_permissions: int = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
-        rtc_region: VoiceRegion | str | None = ...,
+        rtc_region: VoiceRegionType | str | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         reason: str | None = ...,
     ) -> StageChannel | None: ...

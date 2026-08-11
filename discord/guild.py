@@ -66,9 +66,9 @@ from .enums import (
     SortOrder,
     VerificationLevel,
     VideoQualityMode,
+    try_enum,
 )
 from .enums import VoiceRegion as VoiceRegionType
-from .enums import try_enum
 from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
 from .flags import SystemChannelFlags
