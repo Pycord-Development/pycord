@@ -14,6 +14,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
+- Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
+  regions for the guild.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Changed
 
@@ -26,6 +29,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 
 ### Deprecated
+
+- Deprecated the `VoiceRegion` enum in favor of the region ID `str` or
+  `Guild.fetch_voice_regions()`.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Removed
 

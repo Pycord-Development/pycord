@@ -121,6 +121,7 @@ if TYPE_CHECKING:
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
+    from .types.voice import VoiceRegion as VoiceRegionPayload
     from .types.voice import VoiceState as GuildVoiceState
     from .voice import VoiceClient
     from .webhook import Webhook
@@ -3785,6 +3786,44 @@ class Guild(Hashable):
         payload["max_age"] = 0
         payload["uses"] = payload.get("uses", 0)
         return Invite(state=self._state, data=payload, guild=self, channel=channel)
+
+    async def fetch_voice_regions(self) -> list[VoiceRegionPayload]:
+        """|coro|
+
+        Retrieves the voice regions that the guild has access to.
+
+        The list of voice regions is dynamic, so this method is the
+        recommended way to get the currently available regions instead of
+        relying on the deprecated :class:`VoiceRegion` enum.
+
+        .. versionadded:: 2.9
+
+        Each payload is a :class:`~discord.types.voice.VoiceRegion` TypedDict
+        with the following keys:
+
+        ``id``
+            The region ID, e.g. ``"us-west"``. Use this as the
+            :attr:`~discord.VoiceChannel.rtc_region` of a voice channel.
+        ``name``
+            The region's display name, e.g. ``"US West"``.
+        ``optimal``
+            Whether the region is optimal for the guild's members.
+        ``deprecated``
+            Whether the region is deprecated.
+        ``custom``
+            Whether the region is a custom region.
+
+        Raises
+        -------
+        HTTPException
+            Retrieving the voice regions failed.
+
+        Returns
+        --------
+        List[:class:`~discord.types.voice.VoiceRegion`]
+            The list of voice regions the guild has access to.
+        """
+        return await self._state.http.get_guild_voice_regions(self.id)
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(

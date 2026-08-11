@@ -85,6 +85,7 @@ if TYPE_CHECKING:
         template,
         threads,
         user,
+        voice,
         webhook,
         welcome_screen,
         widget,
@@ -1042,6 +1043,12 @@ class HTTPClient:
             payload["deaf"] = deafen
 
         return self.request(r, json=payload, reason=reason)
+
+    def get_guild_voice_regions(self, guild_id: Snowflake) -> Response[list[voice.VoiceRegion]]:
+        return self.request(Route("GET", "/guilds/{guild_id}/regions", guild_id=guild_id))
+
+    def get_voice_regions(self) -> Response[list[voice.VoiceRegion]]:
+        return self.request(Route("GET", "/voice/regions"))
 
     def edit_profile(self, payload: dict[str, Any]) -> Response[user.User]:
         return self.request(Route("PATCH", "/users/@me"), json=payload)
