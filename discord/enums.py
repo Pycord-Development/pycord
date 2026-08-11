@@ -34,12 +34,13 @@ from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 if TYPE_CHECKING:
     from typing_extensions import deprecated
 else:
-    
+
     def deprecated(message: str) -> Callable[[T], T]:
         def decorator(value: T) -> T:
             return value
-            
+
         return decorator
+
 
 from .utils import warn_deprecated
 
