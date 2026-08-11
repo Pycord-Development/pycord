@@ -27,8 +27,19 @@ from __future__ import annotations
 
 import types
 from collections import namedtuple
+from collections.abc import Callable
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
+
+if TYPE_CHECKING:
+    from typing_extensions import deprecated
+else:
+    
+    def deprecated(message: str) -> Callable[[T], T]:
+        def decorator(value: T) -> T:
+            return value
+            
+        return decorator
 
 from .utils import warn_deprecated
 
@@ -309,7 +320,15 @@ class _VoiceRegionMeta(Enum.__class__):
         cls._warn(f"VoiceRegion[{name!r}]")
         return member
 
+    def __call__(cls, *args: Any, **kwargs: Any) -> Any:
+        cls._warn(f"VoiceRegion({', '.join(map(repr, args))})")
+        return super().__call__(*args, **kwargs)
 
+
+@deprecated(
+    "VoiceRegion is deprecated in favour of the region ID str or "
+    "Guild.fetch_voice_regions() since version 2.9, and will be removed in version 3.0."
+)
 class VoiceRegion(Enum, metaclass=_VoiceRegionMeta):
     """Specifies the region a voice server belongs to.
 
