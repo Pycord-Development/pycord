@@ -1603,7 +1603,7 @@ class Guild(Hashable):
         position: int = MISSING,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
@@ -1630,9 +1630,14 @@ class Guild(Hashable):
             The channel's preferred audio bitrate in bits per second.
         user_limit: :class:`int`
             The channel's limit for number of members that can be in a voice channel.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is still accepted, but it is
+                deprecated in favor of the region ID :class:`str`.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -1714,7 +1719,7 @@ class Guild(Hashable):
         reason: str | None = None,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
@@ -1753,9 +1758,14 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is still accepted, but it is
+                deprecated in favor of the region ID :class:`str`.
 
             .. versionadded:: 2.7
 

@@ -20,6 +20,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- The `rtc_region` parameters of channel creation and edit methods now also accept a
+  region ID `str` in addition to a `VoiceRegion` member.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
+
 ### Fixed
 
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
