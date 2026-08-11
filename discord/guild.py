@@ -91,6 +91,7 @@ from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
+from .types.voice import VoiceRegion as VoiceRegionData
 from .user import User
 from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
@@ -121,7 +122,6 @@ if TYPE_CHECKING:
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
-    from .types.voice import VoiceRegion as VoiceRegionPayload
     from .types.voice import VoiceState as GuildVoiceState
     from .voice import VoiceClient
     from .webhook import Webhook
@@ -3797,7 +3797,7 @@ class Guild(Hashable):
         payload["uses"] = payload.get("uses", 0)
         return Invite(state=self._state, data=payload, guild=self, channel=channel)
 
-    async def fetch_voice_regions(self) -> list[VoiceRegionPayload]:
+    async def fetch_voice_regions(self) -> list[VoiceRegionData]:
         """|coro|
 
         Retrieves the voice regions that the guild has access to.
@@ -3806,19 +3806,18 @@ class Guild(Hashable):
         recommended way to get the currently available regions.
         .. versionadded:: 2.9
 
-        Each payload is a :class:`~discord.types.voice.VoiceRegion` TypedDict
-        with the following keys:
+        Each :class:`~discord.types.voice.VoiceRegion` has the following attributes:
 
-        ``id``
+        :attr:`~discord.types.voice.VoiceRegion.id`
             The region ID, e.g. ``"us-west"``. Use this as the
             :attr:`~discord.VoiceChannel.rtc_region` of a voice channel.
-        ``name``
+        :attr:`~discord.types.voice.VoiceRegion.name`
             The region's display name, e.g. ``"US West"``.
-        ``optimal``
+        :attr:`~discord.types.voice.VoiceRegion.optimal`
             Whether the region is optimal for the guild's members.
-        ``deprecated``
+        :attr:`~discord.types.voice.VoiceRegion.deprecated`
             Whether the region is deprecated.
-        ``custom``
+        :attr:`~discord.types.voice.VoiceRegion.custom`
             Whether the region is a custom region.
 
         Returns
@@ -3831,7 +3830,8 @@ class Guild(Hashable):
         HTTPException
             Retrieving the voice regions failed.
         """
-        return await self._state.http.get_guild_voice_regions(self.id)
+        regions = await self._state.http.get_guild_voice_regions(self.id)
+        return [VoiceRegionData(**region) for region in regions]
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(

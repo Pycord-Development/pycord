@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
@@ -59,7 +60,22 @@ class VoiceState(TypedDict):
 GuildVoiceState = VoiceState
 
 
-class VoiceRegion(TypedDict):
+class VoiceRegionPayload(TypedDict):
+    id: str
+    name: str
+    vip: bool
+    optimal: bool
+    deprecated: bool
+    custom: bool
+
+
+@dataclass(frozen=True, slots=True)
+class VoiceRegion:
+    """Represents a voice region a guild can use for voice channels.
+
+    This is returned by :meth:`Guild.fetch_voice_regions`.
+    """
+
     id: str
     name: str
     vip: bool
