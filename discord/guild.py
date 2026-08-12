@@ -153,11 +153,12 @@ class VoiceServerRegion:
     """Represents a voice region a guild can use for voice channels.
 
     This is returned by :meth:`Guild.fetch_voice_regions`.
+
+    .. versionadded:: 2.9
     """
 
     id: str
     name: str
-    vip: bool
     optimal: bool
     deprecated: bool
     custom: bool
@@ -1652,7 +1653,8 @@ class Guild(Hashable):
             .. versionchanged:: 2.9
 
                 A :class:`VoiceRegion` member is still accepted, but it is
-                deprecated in favor of the region ID :class:`str`.
+                deprecated in favor of the region ID :class:`str`, which
+                can be retrieved via :meth:`Guild.fetch_voice_regions`.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -1780,7 +1782,8 @@ class Guild(Hashable):
             .. versionchanged:: 2.9
 
                 A :class:`VoiceRegion` member is still accepted, but it is
-                deprecated in favor of the region ID :class:`str`.
+                deprecated in favor of the region ID :class:`str`, which
+                can be retrieved via :meth:`Guild.fetch_voice_regions`.
 
             .. versionadded:: 2.7
 
@@ -3819,20 +3822,21 @@ class Guild(Hashable):
 
         The list of voice regions is dynamic, so this method is the
         recommended way to get the currently available regions.
+
         .. versionadded:: 2.9
 
         Each :class:`~discord.guild.VoiceServerRegion` has the following attributes:
 
-        :attr:`~discord.types.voice.VoiceRegion.id`
+        :attr:`~discord.guild.VoiceServerRegion.id`
             The region ID, e.g. ``"us-west"``. Use this as the
             :attr:`~discord.VoiceChannel.rtc_region` of a voice channel.
-        :attr:`~discord.types.voice.VoiceRegion.name`
+        :attr:`~discord.guild.VoiceServerRegion.name`
             The region's display name, e.g. ``"US West"``.
-        :attr:`~discord.types.voice.VoiceRegion.optimal`
+        :attr:`~discord.guild.VoiceServerRegion.optimal`
             Whether the region is optimal for the guild's members.
-        :attr:`~discord.types.voice.VoiceRegion.deprecated`
+        :attr:`~discord.guild.VoiceServerRegion.deprecated`
             Whether the region is deprecated.
-        :attr:`~discord.types.voice.VoiceRegion.custom`
+        :attr:`~discord.guild.VoiceServerRegion.custom`
             Whether the region is a custom region.
 
         Returns

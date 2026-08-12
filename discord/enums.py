@@ -341,8 +341,8 @@ class VoiceRegion(Enum, metaclass=_VoiceRegionMeta):
 
     .. deprecated:: 2.9
         The list of voice regions is dynamic, so this enum is deprecated in favor
-        of the region ID :class:`str` or :meth:`Guild.fetch_voice_regions` and
-        will be removed in version 3.0.
+        of the region ID :class:`str`, which can be retrieved via
+        :meth:`Guild.fetch_voice_regions`, and will be removed in version 3.0.
     """
 
     brazil = "brazil"
