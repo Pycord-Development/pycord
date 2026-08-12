@@ -31,6 +31,7 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
+    Literal,
     NamedTuple,
     TypeVar,
     overload,
@@ -821,6 +822,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         default_thread_slowmode_delay: int = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+        spoiler: Literal[False] = ...,
     ) -> TextChannel | None: ...
 
     @overload
@@ -831,6 +833,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         name: str = ...,
         topic: str = ...,
         position: int = ...,
+        nsfw: Literal[False] = ...,
         sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
@@ -1175,6 +1178,7 @@ class ForumChannel(_TextChannel):
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+        spoiler: Literal[False] = ...,
     ) -> ForumChannel | None: ...
 
     @overload
@@ -1185,6 +1189,7 @@ class ForumChannel(_TextChannel):
         name: str = ...,
         topic: str = ...,
         position: int = ...,
+        nsfw: Literal[False] = ...,
         sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
@@ -1580,6 +1585,29 @@ class MediaChannel(ForumChannel):
         topic: str = ...,
         position: int = ...,
         nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        default_sort_order: SortOrder = ...,
+        default_reaction_emoji: GuildEmoji | int | str | None = ...,
+        available_tags: list[ForumTag] = ...,
+        require_tag: bool = ...,
+        hide_media_download_options: bool = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+        spoiler: Literal[False] = ...,
+    ) -> ForumChannel | None: ...
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: Literal[False] = ...,
         sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
@@ -2203,6 +2231,25 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
         nsfw: bool = ...,
+        reason: str | None = ...,
+        spoiler: Literal[False] = ...,
+    ) -> VoiceChannel | None: ...
+
+    @overload
+    async def edit(
+        self,
+        *,
+        name: str = ...,
+        bitrate: int = ...,
+        user_limit: int = ...,
+        position: int = ...,
+        sync_permissions: int = ...,
+        category: CategoryChannel | None = ...,
+        overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
+        rtc_region: VoiceRegion | None = ...,
+        video_quality_mode: VideoQualityMode = ...,
+        slowmode_delay: int = ...,
+        nsfw: Literal[False] = ...,
         reason: str | None = ...,
         spoiler: bool = ...,
     ) -> VoiceChannel | None: ...
@@ -2915,6 +2962,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         reason: str | None = ...,
+        spoiler: bool = ...,
     ) -> StageChannel | None: ...
 
     @overload
