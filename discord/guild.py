@@ -1515,6 +1515,7 @@ class Guild(Hashable):
         spoiler: Literal[False] = ...,
     ) -> TextChannel: ...
 
+    @overload
     async def create_text_channel(
         self,
         name: str,
@@ -1702,6 +1703,7 @@ class Guild(Hashable):
         spoiler: Literal[False] = ...,
     ) -> VoiceChannel: ...
 
+    @overload
     async def create_voice_channel(
         self,
         name: str,
@@ -1970,7 +1972,7 @@ class Guild(Hashable):
             .. warning::
                 Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
-        nsfw: :class:`bool`
+        spoiler: :class:`bool`
             Whether the channel is marked as a spoiler channel.
 
             .. versionadded:: 2.9
