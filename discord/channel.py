@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from _warnings import warn
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
@@ -36,6 +35,7 @@ from typing import (
     TypeVar,
     overload,
 )
+from warnings import warn
 
 from typing_extensions import deprecated
 
@@ -931,7 +931,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].is_spoiler_channel = options["spoiler"]
 
-            if options.get("nsfw") and options["spoiler"]:
+            if options.get("nsfw") and options.get("spoiler"):
                 warn(
                     "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
                 )
@@ -1289,11 +1289,10 @@ class ForumChannel(_TextChannel):
         if "require_tag" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].require_tag = options.pop("require_tag")
-        if "spoiler" in options:
-            if "nsfw" in options:
-                warn(
-                    "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel."
-                )
+        if options.get("nsfw") and options.get("spoiler"):
+            warn(
+                "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel."
+            )
             if "flags" not in options:
                 options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].is_spoiler_channel = options.pop("spoiler")
@@ -1704,7 +1703,7 @@ class MediaChannel(ForumChannel):
             flags.hide_media_download_options = options.pop(
                 "hide_media_download_options", flags.hide_media_download_options
             )
-            if options.get("nsfw") and options["spoiler"]:
+            if options.get("nsfw") and options.get("spoiler"):
                 warn(
                     "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
                 )
@@ -2334,7 +2333,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].is_spoiler_channel = options["spoiler"]
 
-            if options.get("nsfw") and options["spoiler"]:
+            if options.get("nsfw") and options.get("spoiler"):
                 warn(
                     "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
                 )
