@@ -55,11 +55,6 @@ class MediaGallery(ViewItem[V]):
         The initial items contained in this gallery, up to 10.
     id: Optional[:class:`int`]
         The gallery's ID.
-
-    Attributes
-    ----------
-    items: List[:class:`~discord.MediaGalleryItem`]
-        The list of media items in this gallery.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
