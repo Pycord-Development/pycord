@@ -1618,6 +1618,7 @@ class ChannelFlags(BaseFlags):
         """
         return 1 << 15
 
+    @flag_value
     def obfuscated(self):
         """:class:`bool`: Returns ``True`` if the channel is obfuscated by the gateway."""
 
