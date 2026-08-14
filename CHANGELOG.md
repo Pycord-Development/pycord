@@ -14,7 +14,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
-- Documented `SlashCommandGroup.add_command`.
+- Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
 
 ### Changed
