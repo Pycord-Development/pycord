@@ -2303,7 +2303,7 @@ class Client:
             The emoji name. Must be at least 2 characters.
         image: :class:`bytes`
             The :term:`py:bytes-like object` representing the image data to use.
-            Only JPG, PNG and GIF images are supported.
+            Only JPEG, PNG, GIF, WebP and AVIF images are supported.
 
         Raises
         -------
