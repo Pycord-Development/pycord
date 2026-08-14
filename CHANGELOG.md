@@ -24,7 +24,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
-- Fix AttributeError when setting `delete_existing=False` in `register_commands`.
+- Fix `AttributeError` when setting `delete_existing=False` in `register_commands()`.
   ([#3325](https://github.com/Pycord-Development/pycord/pull/3325))
 
 ### Deprecated
