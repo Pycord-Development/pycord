@@ -615,60 +615,37 @@ of :class:`enum.Enum`.
 
     Specifies the region a voice server belongs to.
 
-    .. attribute:: amsterdam
+    .. deprecated:: 2.9
 
-        The Amsterdam region.
+        The list of voice regions is dynamic, so this enum is deprecated in favor
+        of the region ID :class:`str`, which can be retrieved via
+        :meth:`Guild.fetch_voice_regions`, and will be removed in version 3.0.
+
     .. attribute:: brazil
 
         The Brazil region.
-    .. attribute:: dubai
-
-        The Dubai region.
-
-        .. versionadded:: 1.3
-
-    .. attribute:: eu_central
-
-        The EU Central region.
-    .. attribute:: eu_west
-
-        The EU West region.
-    .. attribute:: europe
-
-        The Europe region.
-
-        .. versionadded:: 1.3
-
-    .. attribute:: frankfurt
-
-        The Frankfurt region.
     .. attribute:: hongkong
 
         The Hong Kong region.
     .. attribute:: india
 
         The India region.
-
-        .. versionadded:: 1.2
-
     .. attribute:: japan
 
         The Japan region.
-    .. attribute:: london
+    .. attribute:: rotterdam
 
-        The London region.
-    .. attribute:: russia
+        The Rotterdam region.
 
-        The Russia region.
     .. attribute:: singapore
 
         The Singapore region.
-    .. attribute:: southafrica
-
-        The South Africa region.
     .. attribute:: south_korea
 
         The South Korea region.
+    .. attribute:: southafrica
+
+        The South Africa region.
     .. attribute:: sydney
 
         The Sydney region.
@@ -684,15 +661,6 @@ of :class:`enum.Enum`.
     .. attribute:: us_west
 
         The US West region.
-    .. attribute:: vip_amsterdam
-
-        The Amsterdam region for VIP guilds.
-    .. attribute:: vip_us_east
-
-        The US East region for VIP guilds.
-    .. attribute:: vip_us_west
-
-        The US West region for VIP guilds.
 
 .. class:: VerificationLevel
 
