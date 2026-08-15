@@ -700,6 +700,8 @@ class GuildChannel:
     def obfuscated(self) -> bool:
         """Whether the channel is obfuscated.
 
+        This is an alias for :attr:`~ChannelFlags.channel_obfuscated`.
+
         .. versionadded:: 2.9
         """
         return self.flags.channel_obfuscated
