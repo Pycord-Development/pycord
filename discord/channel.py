@@ -933,7 +933,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
             if options.get("nsfw") and options.get("spoiler"):
                 warn(
-                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                    "The nsfw setting is mutually exclusive with the spoiler setting. "
+                    "The channel will become an nsfw channel."
                 )
             options.pop("spoiler")
 
@@ -1705,7 +1706,8 @@ class MediaChannel(ForumChannel):
             )
             if options.get("nsfw") and options.get("spoiler"):
                 warn(
-                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                    "The nsfw setting is mutually exclusive with the spoiler setting. "
+                    "The channel will become an nsfw channel."
                 )
             flags.is_spoiler_channel = options.pop("spoiler", flags.is_spoiler_channel)
             options["flags"] = flags

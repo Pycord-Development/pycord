@@ -1635,7 +1635,8 @@ class Guild(Hashable):
 
         if nsfw and spoiler:
             warn(
-                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                "The nsfw setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an nsfw channel."
             )
 
         data = await self._create_channel(
@@ -1800,7 +1801,8 @@ class Guild(Hashable):
 
         if nsfw and spoiler:
             warn(
-                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                "The nsfw setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an nsfw channel."
             )
 
         data = await self._create_channel(
@@ -1983,7 +1985,8 @@ class Guild(Hashable):
 
         if nsfw and spoiler:
             warn(
-                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                "The nsfw setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an nsfw channel."
             )
 
         data = await self._create_channel(
@@ -2203,7 +2206,8 @@ class Guild(Hashable):
 
         if nsfw and spoiler:
             warn(
-                "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                "The nsfw setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an nsfw channel."
             )
 
         if default_reaction_emoji is not MISSING:
