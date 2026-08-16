@@ -412,7 +412,16 @@ class ApplicationCommandMixin(ABC):
                     return
                 return command
 
-    async def _get_command_defaults(self):
+    async def _get_command_defaults(self) -> NestedComparison:
+        """|coro|
+
+        Provides an object containing the dynamic fields of command defaults based on application info.
+
+        Returns
+        -------
+        NestedComparison
+            The NestedComparison for command defaults with the dynamic fields filled in.
+        """
         app_info = await self._bot.application_info()
         integration_contexts = app_info.integration_types_config._to_payload().keys()
 
