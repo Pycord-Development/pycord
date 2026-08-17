@@ -28,7 +28,6 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
-from _warnings import warn
 from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
@@ -41,6 +40,7 @@ from typing import (
     Union,
     overload,
 )
+from warnings import warn
 
 from typing_extensions import override
 
