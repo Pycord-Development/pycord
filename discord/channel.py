@@ -1290,13 +1290,18 @@ class ForumChannel(_TextChannel):
         if "require_tag" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].require_tag = options.pop("require_tag")
-        if options.get("nsfw") and options.get("spoiler"):
-            warn(
-                "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel."
-            )
+        if "spoiler" in options:
             if "flags" not in options:
-                options["flags"] = ChannelFlags._from_value(self.flags.value)
-            options["flags"].is_spoiler_channel = options.pop("spoiler")
+                options["flags"] = ChannelFlags._from_value(
+                    self.flags.value
+                )  # Reconstruct existing flags
+            options["flags"].is_spoiler_channel = options["spoiler"]
+
+            if options.get("nsfw") and options.get("spoiler"):
+                warn(
+                    "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel."
+                )
+            options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
