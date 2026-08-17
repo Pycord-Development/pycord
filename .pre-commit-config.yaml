@@ -27,7 +27,7 @@ repos:
         exclude: \.(po|pot|yml|yaml)$
         args: [--py310-plus]
   - repo: https://github.com/PyCQA/isort
-    rev: 9.0.0b2
+    rev: 9.0.0b5
     hooks:
       - id: isort
         exclude: \.(po|pot|yml|yaml)$
