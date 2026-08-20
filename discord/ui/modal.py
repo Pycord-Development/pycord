@@ -360,7 +360,7 @@ class Modal(BaseModal):
 
         super().remove_item(item)
         try:
-            self.__weights.remove_item(item)
+            self._weights.remove_item(item)
         except ValueError:
             pass
         return self
