@@ -86,6 +86,9 @@ __all__ = (
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
+    "SearchEmbedType",
+    "SearchSortMode",
+    "SearchSortOrder",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
 )
@@ -1144,6 +1147,39 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class SearchEmbedType(Enum):
+    """The types of media embedded on a message."""
+
+    image = "image"
+    video = "video"
+    gif = "gif"
+    sound = "sound"
+    article = "article"
+
+    def __str__(self):
+        return self.value
+
+
+class SearchSortMode(Enum):
+    """The sorting algorithm used for message searches."""
+
+    timestamp = "timestamp"
+    relevance = "relevance"
+
+    def __str__(self):
+        return self.value
+
+
+class SearchSortOrder(Enum):
+    """The order to sort message searches."""
+
+    asc = "asc"
+    desc = "desc"
+
+    def __str__(self):
+        return self.value
 
 
 class RoleType(IntEnum):
