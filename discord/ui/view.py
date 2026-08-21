@@ -47,8 +47,9 @@ from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
 from ..components import Checkbox as CheckboxComponent
 from ..components import CheckboxGroup as CheckboxGroupComponent
-from ..components import Component, FileComponent, _component_factory
+from ..components import Component
 from ..components import Container as ContainerComponent
+from ..components import FileComponent
 from ..components import FileUpload as FileUploadComponent
 from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
@@ -59,6 +60,7 @@ from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
+from ..components import _component_factory
 from ..enums import ChannelType
 from ..errors import Forbidden, NotFound
 from .core import ItemInterface
