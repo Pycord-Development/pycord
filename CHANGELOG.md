@@ -21,11 +21,13 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
+- Fixed `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
-- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
+- Fixed `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
+- Fixed `AttributeError` when fetching a message from a `PartialMessageable` that has a thread.
+  ([#3309](https://github.com/Pycord-Development/pycord/pull/3309))
 
 ### Deprecated
 
