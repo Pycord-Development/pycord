@@ -12,6 +12,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `Member.vr_status` property.
+  ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
+- Added `SlashCommandGroup.add_command`.
+  ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+
 ### Changed
 
 ### Fixed
@@ -19,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
+- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
+  ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 
 ### Deprecated
 
@@ -1829,7 +1836,7 @@ These changes are available on the `master` branch, but have not yet been releas
 [unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.1...HEAD
 [2.8.1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0
-[2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0rc2
+[2.8.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0rc2
 [2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0rc1
 [2.7.2]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
