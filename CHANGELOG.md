@@ -16,6 +16,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+- Added spoiler channels.
+  ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
 
 ### Changed
 

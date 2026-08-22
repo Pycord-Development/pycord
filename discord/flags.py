@@ -1624,6 +1624,14 @@ class ChannelFlags(BaseFlags):
 
         return 1 << 17
 
+    @flag_value
+    def is_spoiler_channel(self):
+        """:class:`bool`: Returns ``True`` if the channel is a spoiler channel.
+
+        .. versionadded:: 2.9
+        """
+        return 1 << 21
+
 
 @fill_with_flags()
 class AttachmentFlags(BaseFlags):
