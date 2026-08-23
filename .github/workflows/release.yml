@@ -1,13 +1,3 @@
-# DISABLED PRODUCTION TEMPLATE
-#
-# GitHub ignores this file because it does not end in .yml or .yaml.
-# To activate it, review it after the development rehearsal and replace
-# .github/workflows/release.yml with this file's contents.
-#
-# Do not deploy this as release_prod.yml. The py-cord trusted publisher on PyPI
-# is bound to repository Pycord-Development/pycord, environment release, and
-# the exact workflow filename release.yml.
-
 name: "Release"
 
 on:
