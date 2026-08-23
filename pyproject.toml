@@ -67,6 +67,9 @@ dev = [
     "tox>=4.27.0",
     "tox-gh>=1.5.0",
     "tox-uv>=1.36.0",
+    "mdformat~=1.0",
+    "mdformat-gfm~=1.0",
+    "mdformat-gfm-alerts~=2.1",
     { include-group = "test" },
 ]
 test = [
