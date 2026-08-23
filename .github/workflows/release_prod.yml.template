@@ -1,0 +1,538 @@
+# DISABLED PRODUCTION TEMPLATE
+#
+# GitHub ignores this file because it does not end in .yml or .yaml.
+# To activate it, review it after the development rehearsal and replace
+# .github/workflows/release.yml with this file's contents.
+#
+# Do not deploy this as release_prod.yml. The py-cord trusted publisher on PyPI
+# is bound to repository Pycord-Development/pycord, environment release, and
+# the exact workflow filename release.yml.
+
+name: "Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        type: choice
+        description: "Release phase to run"
+        required: true
+        options:
+          - prepare
+          - publish
+          - finalize
+      version:
+        type: string
+        description: "Canonical production version (for example, 2.9.0 or 2.9.0rc1)"
+        required: true
+      sync_readthedocs:
+        type: boolean
+        description: "Finalize: sync and activate the matching Read the Docs version"
+        required: true
+        default: true
+      close_milestone:
+        type: boolean
+        description: "Finalize: idempotently close the exact release milestone"
+        required: true
+        default: true
+      notify_discord:
+        type: boolean
+        description: "Finalize: send Discord notification (not idempotent; default off)"
+        required: true
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: pycord-production-release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: "Prepare committed release state"
+    if: ${{ inputs.operation == 'prepare' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    permissions:
+      contents: read
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: "Security Check"
+        uses: Pycord-Development/execute-whitelist-action@107fcb23ce15f46d7fa11ffceb0d803140d7f220 # v2.2.0
+        with:
+          whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # ADMIN_GITHUB_TOKEN authenticates as NyuwBot. The NyuwBot ruleset team is
+      # the explicit bypass actor for protected master and version-branch writes.
+      - name: "Checkout Repository as NyuwBot"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          persist-credentials: true
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: "Validate and derive production release values"
+        id: release
+        run: >-
+          node .github/scripts/release-tools.mjs derive
+          --channel production
+          --version "$VERSION"
+
+      - name: "Require a branch dispatch and verify checkout"
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+          REF_TYPE: ${{ github.ref_type }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          test "$REF_TYPE" = "branch"
+          git check-ref-format --branch "$BRANCH"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+          test -z "$(git status --porcelain)"
+
+      - name: "Require the NyuwBot automation identity"
+        env:
+          ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        run: >-
+          node .github/scripts/release-tools.mjs check-github-identity
+          --expected-login NyuwBot
+          --token-env ADMIN_GITHUB_TOKEN
+
+      - name: "Derive previous production tags"
+        id: history
+        run: >-
+          node .github/scripts/release-tools.mjs release-history
+          --repository "$GITHUB_WORKSPACE"
+          --version "$VERSION"
+
+      - name: "Prepare production changelog"
+        env:
+          PREVIOUS_TAG: ${{ steps.history.outputs.previous_tag }}
+          PREVIOUS_FINAL_TAG: ${{ steps.history.outputs.previous_final_tag }}
+          BRANCH: ${{ github.ref_name }}
+        run: >-
+          node .github/scripts/release-tools.mjs update-changelog
+          --path CHANGELOG.md
+          --version "$VERSION"
+          --previous-tag "$PREVIOUS_TAG"
+          --previous-final-tag "$PREVIOUS_FINAL_TAG"
+          --branch "$BRANCH"
+          --repository "$GITHUB_REPOSITORY"
+
+      - name: "Commit prepared changelog as NyuwBot"
+        run: |
+          set -euo pipefail
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          git add -- CHANGELOG.md
+          git diff --cached --exit-code && {
+            echo "::error::The changelog helper produced no committed change."
+            exit 1
+          }
+          git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
+
+      - name: "Update version branch with an explicit lease"
+        env:
+          VERSION_BRANCH: ${{ steps.release.outputs.version_branch }}
+        run: |
+          set -euo pipefail
+          git check-ref-format --branch "$VERSION_BRANCH"
+          remote_line="$(git ls-remote --heads origin "refs/heads/$VERSION_BRANCH")"
+          if [[ "$(printf '%s\n' "$remote_line" | sed '/^$/d' | wc -l)" -gt 1 ]]; then
+            echo "::error::Remote returned ambiguous state for refs/heads/$VERSION_BRANCH."
+            exit 1
+          fi
+          remote_sha="${remote_line%%[[:space:]]*}"
+          git push \
+            --force-with-lease="refs/heads/$VERSION_BRANCH:$remote_sha" \
+            origin "HEAD:refs/heads/$VERSION_BRANCH"
+
+      - name: "Push prepared commit to the dispatch branch"
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: git push origin "HEAD:refs/heads/$BRANCH"
+
+  publish:
+    name: "Build, attest, and publish py-cord"
+    if: ${{ inputs.operation == 'publish' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+      url: https://pypi.org/p/py-cord
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: "Security Check"
+        uses: Pycord-Development/execute-whitelist-action@107fcb23ce15f46d7fa11ffceb0d803140d7f220 # v2.2.0
+        with:
+          whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: "Validate and derive production release values"
+        id: release
+        run: >-
+          node .github/scripts/release-tools.mjs derive
+          --channel production
+          --version "$VERSION"
+
+      - name: "Verify prepared source commit"
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+          test -z "$(git status --porcelain)"
+          node .github/scripts/release-tools.mjs check-changelog \
+            --path CHANGELOG.md \
+            --version "$VERSION" \
+            --repository "$GITHUB_REPOSITORY"
+
+      - name: "Derive reproducible build timestamp"
+        id: source_date
+        run: >-
+          node .github/scripts/release-tools.mjs source-date-epoch
+          --repository "$GITHUB_WORKSPACE"
+          --commit "$GITHUB_SHA"
+
+      - name: "Require immutable GitHub releases"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMMUTABLE_STATE: ${{ runner.temp }}/immutable-releases.json
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/immutable-releases" > "$IMMUTABLE_STATE"
+          node .github/scripts/release-tools.mjs check-immutable --state-file "$IMMUTABLE_STATE"
+
+      - name: "Require an unused PyPI production version"
+        run: >-
+          node .github/scripts/release-tools.mjs check-pypi-unused
+          --project py-cord
+          --version "$VERSION"
+
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
+        with:
+          python-version: "3.14"
+          groups: "release"
+          frozen: "true"
+
+      - name: "Build wheel and source distribution"
+        env:
+          SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.release.outputs.version }}
+          SOURCE_DATE_EPOCH: ${{ steps.source_date.outputs.source_date_epoch }}
+        run: uv build --no-sources --clear --no-create-gitignore
+
+      - name: "Validate production distributions"
+        id: artifacts
+        run: >-
+          node .github/scripts/release-tools.mjs validate-artifacts
+          --channel production
+          --version "$VERSION"
+          --dist-dir "$GITHUB_WORKSPACE/dist"
+
+      - name: "Validate distribution metadata"
+        run: twine check --strict "${{ steps.artifacts.outputs.wheel_path }}" "${{ steps.artifacts.outputs.sdist_path }}"
+
+      - name: "Install and import the built wheel"
+        env:
+          EXPECTED_VERSION: ${{ steps.release.outputs.version }}
+          WHEEL_PATH: ${{ steps.artifacts.outputs.wheel_path }}
+          VERIFY_ENV: ${{ runner.temp }}/pycord-prod-verify
+        run: |
+          uv venv --clear --python 3.14 "$VERIFY_ENV"
+          uv pip install --python "$VERIFY_ENV/bin/python" "$WHEEL_PATH"
+          cd "$VERIFY_ENV"
+          "$VERIFY_ENV/bin/python" -c 'import importlib.metadata as metadata, os; import discord; expected = os.environ["EXPECTED_VERSION"]; assert metadata.version("py-cord") == expected; assert discord.__version__ == expected'
+
+      - name: "Generate build provenance attestations"
+        id: attest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.0.0
+        with:
+          subject-path: |
+            ${{ steps.artifacts.outputs.wheel_path }}
+            ${{ steps.artifacts.outputs.sdist_path }}
+
+      - name: "Verify wheel provenance"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh attestation verify "${{ steps.artifacts.outputs.wheel_path }}"
+          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --repo "$GITHUB_REPOSITORY"
+          --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml"
+          --source-digest "$GITHUB_SHA"
+          --deny-self-hosted-runners
+
+      - name: "Verify source distribution provenance"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh attestation verify "${{ steps.artifacts.outputs.sdist_path }}"
+          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --repo "$GITHUB_REPOSITORY"
+          --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml"
+          --source-digest "$GITHUB_SHA"
+          --deny-self-hosted-runners
+
+      - name: "Check production tag state"
+        id: tag
+        run: >-
+          node .github/scripts/release-tools.mjs check-tag
+          --repository "$GITHUB_WORKSPACE"
+          --remote origin
+          --tag "${{ steps.release.outputs.tag }}"
+          --expected-commit "$GITHUB_SHA"
+
+      - name: "Check production release state"
+        id: release_state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/release-tools.mjs check-github-release
+          --channel production
+          --version "$VERSION"
+          --expected-commit "$GITHUB_SHA"
+          --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
+          --repository "$GITHUB_REPOSITORY"
+          --tag-state "${{ steps.tag.outputs.tag_state }}"
+
+      - name: "Create and push annotated production tag"
+        if: ${{ steps.tag.outputs.create_tag == 'true' }}
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag --annotate "$TAG" "$GITHUB_SHA" --message "Release $VERSION"
+          git push origin "refs/tags/$TAG"
+
+      - name: "Verify final production tag state"
+        id: final_tag
+        run: >-
+          node .github/scripts/release-tools.mjs check-tag
+          --repository "$GITHUB_WORKSPACE"
+          --remote origin
+          --tag "${{ steps.release.outputs.tag }}"
+          --expected-commit "$GITHUB_SHA"
+
+      - name: "Create immutable GitHub release"
+        if: ${{ steps.release_state.outputs.create_release == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          TITLE: ${{ steps.release.outputs.title }}
+          PRERELEASE: ${{ steps.release.outputs.prerelease }}
+          LATEST: ${{ steps.release.outputs.latest }}
+        run: >-
+          gh release create "$TAG"
+          "${{ steps.artifacts.outputs.wheel_path }}"
+          "${{ steps.artifacts.outputs.sdist_path }}"
+          --repo "$GITHUB_REPOSITORY"
+          --verify-tag
+          --target "$GITHUB_SHA"
+          --title "$TITLE"
+          --generate-notes
+          --prerelease="$PRERELEASE"
+          --latest="$LATEST"
+
+      - name: "Upload missing wheel to interrupted draft"
+        if: ${{ steps.release_state.outputs.resume_draft == 'true' && steps.release_state.outputs.wheel_missing == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: gh release upload "$TAG" "${{ steps.artifacts.outputs.wheel_path }}" --repo "$GITHUB_REPOSITORY"
+
+      - name: "Upload missing source distribution to interrupted draft"
+        if: ${{ steps.release_state.outputs.resume_draft == 'true' && steps.release_state.outputs.sdist_missing == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: gh release upload "$TAG" "${{ steps.artifacts.outputs.sdist_path }}" --repo "$GITHUB_REPOSITORY"
+
+      - name: "Publish interrupted draft"
+        if: ${{ steps.release_state.outputs.resume_draft == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          TITLE: ${{ steps.release.outputs.title }}
+          PRERELEASE: ${{ steps.release.outputs.prerelease }}
+          LATEST: ${{ steps.release.outputs.latest }}
+        run: >-
+          gh release edit "$TAG"
+          --repo "$GITHUB_REPOSITORY"
+          --verify-tag
+          --target "$GITHUB_SHA"
+          --title "$TITLE"
+          --draft=false
+          --prerelease="$PRERELEASE"
+          --latest="$LATEST"
+
+      - name: "Verify immutable release and assets"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/release-tools.mjs check-github-release
+          --channel production
+          --version "$VERSION"
+          --expected-commit "$GITHUB_SHA"
+          --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
+          --repository "$GITHUB_REPOSITORY"
+          --tag-state "${{ steps.final_tag.outputs.tag_state }}"
+
+      - name: "Publish distributions to PyPI"
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist/
+
+      # This phase intentionally ends after trusted publishing.
+
+  finalize:
+    name: "Finalize published release"
+    if: ${{ inputs.operation == 'finalize' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+    permissions:
+      contents: read
+      issues: write
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: "Security Check"
+        uses: Pycord-Development/execute-whitelist-action@107fcb23ce15f46d7fa11ffceb0d803140d7f220 # v2.2.0
+        with:
+          whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: "Validate and derive production release values"
+        id: release
+        run: >-
+          node .github/scripts/release-tools.mjs derive
+          --channel production
+          --version "$VERSION"
+
+      - name: "Derive previous production tags"
+        id: history
+        run: >-
+          node .github/scripts/release-tools.mjs release-history
+          --repository "$GITHUB_WORKSPACE"
+          --version "$VERSION"
+
+      - name: "Resolve published annotated tag"
+        id: tag
+        run: >-
+          node .github/scripts/release-tools.mjs resolve-tag
+          --repository "$GITHUB_WORKSPACE"
+          --remote origin
+          --tag "${{ steps.release.outputs.tag }}"
+
+      - name: "Download immutable release assets"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          WHEEL: ${{ steps.release.outputs.wheel_name }}
+          SDIST: ${{ steps.release.outputs.sdist_name }}
+        run: |
+          set -euo pipefail
+          test ! -e "$GITHUB_WORKSPACE/dist"
+          mkdir "$GITHUB_WORKSPACE/dist"
+          gh release download "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern "$WHEEL" \
+            --pattern "$SDIST" \
+            --dir "$GITHUB_WORKSPACE/dist"
+
+      - name: "Validate downloaded distributions"
+        id: artifacts
+        run: >-
+          node .github/scripts/release-tools.mjs validate-artifacts
+          --channel production
+          --version "$VERSION"
+          --dist-dir "$GITHUB_WORKSPACE/dist"
+
+      - name: "Verify immutable GitHub release and assets"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/release-tools.mjs check-github-release
+          --channel production
+          --version "$VERSION"
+          --expected-commit "${{ steps.tag.outputs.tag_commit }}"
+          --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
+          --repository "$GITHUB_REPOSITORY"
+          --tag-state "${{ steps.tag.outputs.tag_state }}"
+
+      - name: "Verify exact PyPI publication"
+        run: >-
+          node .github/scripts/release-tools.mjs check-pypi-published
+          --project py-cord
+          --channel production
+          --version "$VERSION"
+          --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
+
+      - name: "Sync and activate Read the Docs version"
+        if: ${{ inputs.sync_readthedocs }}
+        env:
+          READTHEDOCS_TOKEN: ${{ secrets.READTHEDOCS_TOKEN }}
+        run: >-
+          node .github/scripts/release-tools.mjs rtd-release
+          --project pycord
+          --version "$VERSION"
+          --sync true
+          --attempts 24
+
+      - name: "Close exact release milestone"
+        if: ${{ inputs.close_milestone }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/release-tools.mjs close-milestone
+          --repository "$GITHUB_REPOSITORY"
+          --version "$VERSION"
+
+      - name: "Notify Discord"
+        if: ${{ inputs.notify_discord }}
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PREVIOUS_TAG: ${{ steps.history.outputs.previous_tag }}
+          PREVIOUS_FINAL_TAG: ${{ steps.history.outputs.previous_final_tag }}
+        run: >-
+          node .github/scripts/release-tools.mjs notify-discord
+          --version "$VERSION"
+          --previous-tag "$PREVIOUS_TAG"
+          --previous-final-tag "$PREVIOUS_FINAL_TAG"
+          --repository "$GITHUB_REPOSITORY"

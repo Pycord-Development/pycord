@@ -8,7 +8,10 @@ on:
       - "uv.lock"
       - "tests/**"
       - ".github/actions/**"
+      - ".github/scripts/**"
       - ".github/workflows/lib-checks.yml"
+      - ".github/workflows/release_dev.yml"
+      - ".github/workflows/release_prod.yml.template"
       - "LICENSE"
       - "README.rst"
       - "*.toml"
@@ -33,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       lib: ${{ steps.filter.outputs.lib }}
+      release_tools: ${{ steps.filter.outputs.release_tools }}
     steps:
       - name: "Check changed paths"
         id: filter
@@ -41,6 +45,7 @@ jobs:
           script: |
             if (context.eventName !== 'pull_request') {
               core.setOutput('lib', 'true');
+              core.setOutput('release_tools', 'true');
               return;
             }
 
@@ -50,7 +55,7 @@ jobs:
               pull_number: context.payload.pull_request.number,
             });
 
-            const matches = (file) => (
+            const matchesLibrary = (file) => (
               file.startsWith('discord/') ||
               file.startsWith('examples/') ||
               file === 'uv.lock' ||
@@ -64,16 +69,43 @@ jobs:
               /^\.[^/]+$/.test(file)
             );
 
-            const changed = files.some((file) => matches(file.filename));
-            core.setOutput('lib', changed ? 'true' : 'false');
+            const matchesReleaseTools = (file) => (
+              file.startsWith('.github/scripts/') ||
+              file === '.github/workflows/lib-checks.yml' ||
+              file === '.github/workflows/release_dev.yml' ||
+              file === '.github/workflows/release_prod.yml.template'
+            );
 
-            if (!changed) {
+            const libraryChanged = files.some((file) => matchesLibrary(file.filename));
+            const releaseToolsChanged = files.some((file) => matchesReleaseTools(file.filename));
+            core.setOutput('lib', libraryChanged ? 'true' : 'false');
+            core.setOutput('release_tools', releaseToolsChanged ? 'true' : 'false');
+
+            if (!libraryChanged) {
               core.notice('Library checks skipped because no changed files matched the library check paths.');
               await core.summary
                 .addHeading('Library checks skipped', 2)
                 .addRaw('No changed files matched the library check paths.')
                 .write();
             }
+
+            if (!releaseToolsChanged) {
+              core.notice('Release tooling checks skipped because no changed files matched the release tooling paths.');
+            }
+
+  release-tooling:
+    needs: [ changes ]
+    if: ${{ needs.changes.outputs.release_tools == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: "Setup Node.js"
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+      - name: "Test release tooling"
+        run: node --test .github/scripts/release-tools.test.mjs
 
   codespell:
     needs: [ changes ]
@@ -222,7 +254,7 @@ jobs:
         run: tox
   tests-pass: # ref: https://github.com/orgs/community/discussions/4324#discussioncomment-3477871
     runs-on: ubuntu-latest
-    needs: [ changes, tests, tests-full ]
+    needs: [ changes, release-tooling, tests, tests-full ]
     if: always()
     steps:
       - name: Tests succeeded

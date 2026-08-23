@@ -1,0 +1,271 @@
+name: "Development Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: "PEP 440 development version to release (for example, 2.8.2.dev1)"
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: pycord-development-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: "Build, attest, and publish py-cord-dev"
+    runs-on: ubuntu-latest
+    environment:
+      name: release
+      url: https://pypi.org/p/py-cord-dev
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: "Security Check"
+        uses: Pycord-Development/execute-whitelist-action@107fcb23ce15f46d7fa11ffceb0d803140d7f220 # v2.2.0
+        with:
+          whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      # Production reuse: this derives the production tag, title, branch, and artifact names when channel=production.
+      - name: "Validate and derive release values"
+        id: release
+        run: >-
+          node .github/scripts/release-tools.mjs derive
+          --channel dev
+          --version "$VERSION"
+
+      - name: "Verify the triggering commit"
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+
+      - name: "Derive reproducible build timestamp"
+        id: source_date
+        run: >-
+          node .github/scripts/release-tools.mjs source-date-epoch
+          --repository "$GITHUB_WORKSPACE"
+          --commit "$GITHUB_SHA"
+
+      - name: "Require immutable GitHub releases"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMMUTABLE_STATE: ${{ runner.temp }}/immutable-releases.json
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/immutable-releases" > "$IMMUTABLE_STATE"
+          node .github/scripts/release-tools.mjs check-immutable --state-file "$IMMUTABLE_STATE"
+
+      - name: "Require an unused PyPI development version"
+        run: >-
+          node .github/scripts/release-tools.mjs check-pypi-unused
+          --project py-cord-dev
+          --version "$VERSION"
+
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
+        with:
+          python-version: "3.14"
+          groups: "release"
+          frozen: "true"
+
+      - name: "Prepare isolated py-cord-dev source"
+        id: source
+        env:
+          SOURCE_DIR: ${{ runner.temp }}/pycord-dev-source
+        run: >-
+          node .github/scripts/release-tools.mjs prepare-dev-source
+          --source "$GITHUB_WORKSPACE"
+          --destination "$SOURCE_DIR"
+
+      # Production reuse: production builds directly from the checkout with the same UV and Hatch VCS path.
+      - name: "Build wheel and source distribution"
+        working-directory: ${{ steps.source.outputs.source_dir }}
+        env:
+          SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.release.outputs.version }}
+          SOURCE_DATE_EPOCH: ${{ steps.source_date.outputs.source_date_epoch }}
+        run: uv build --no-sources --clear --no-create-gitignore
+
+      # Production reuse: channel=production validates py-cord artifact names with the same strict policy.
+      - name: "Validate and stage distributions"
+        id: artifacts
+        run: >-
+          node .github/scripts/release-tools.mjs stage-artifacts
+          --channel dev
+          --version "$VERSION"
+          --source-dir "${{ steps.source.outputs.source_dir }}/dist"
+          --destination "$GITHUB_WORKSPACE/dist-dev"
+
+      - name: "Validate distribution metadata"
+        run: twine check --strict "${{ steps.artifacts.outputs.wheel_path }}" "${{ steps.artifacts.outputs.sdist_path }}"
+
+      - name: "Install and import the built wheel"
+        env:
+          EXPECTED_VERSION: ${{ steps.release.outputs.version }}
+          WHEEL_PATH: ${{ steps.artifacts.outputs.wheel_path }}
+          VERIFY_ENV: ${{ runner.temp }}/pycord-dev-verify
+        run: |
+          uv venv --clear --python 3.14 "$VERIFY_ENV"
+          uv pip install --python "$VERIFY_ENV/bin/python" "$WHEEL_PATH"
+          cd "$VERIFY_ENV"
+          "$VERIFY_ENV/bin/python" -c 'import importlib.metadata as metadata, os; import discord; expected = os.environ["EXPECTED_VERSION"]; assert metadata.version("py-cord-dev") == expected; assert discord.__version__ == expected'
+
+      - name: "Generate build provenance attestations"
+        id: attest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.0.0
+        with:
+          subject-path: |
+            ${{ steps.artifacts.outputs.wheel_path }}
+            ${{ steps.artifacts.outputs.sdist_path }}
+
+      - name: "Verify wheel provenance"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh attestation verify "${{ steps.artifacts.outputs.wheel_path }}"
+          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --repo "$GITHUB_REPOSITORY"
+          --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release_dev.yml"
+          --source-digest "$GITHUB_SHA"
+          --deny-self-hosted-runners
+
+      - name: "Verify source distribution provenance"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh attestation verify "${{ steps.artifacts.outputs.sdist_path }}"
+          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --repo "$GITHUB_REPOSITORY"
+          --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release_dev.yml"
+          --source-digest "$GITHUB_SHA"
+          --deny-self-hosted-runners
+
+      # Production reuse: the production migration will use the same state check before its explicit Git writes.
+      - name: "Check development tag state"
+        id: tag
+        run: >-
+          node .github/scripts/release-tools.mjs check-tag
+          --repository "$GITHUB_WORKSPACE"
+          --remote origin
+          --tag "${{ steps.release.outputs.tag }}"
+          --expected-commit "$GITHUB_SHA"
+
+      # Production reuse: release state and asset digests are channel-aware and shared with the future production workflow.
+      - name: "Check development release state"
+        id: release_state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/release-tools.mjs check-github-release
+          --channel dev
+          --version "$VERSION"
+          --expected-commit "$GITHUB_SHA"
+          --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
+          --repository "$GITHUB_REPOSITORY"
+          --tag-state "${{ steps.tag.outputs.tag_state }}"
+
+      - name: "Create and push annotated development tag"
+        if: ${{ steps.tag.outputs.create_tag == 'true' }}
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag --annotate "$TAG" "$GITHUB_SHA" --message "Development release $VERSION"
+          git push origin "refs/tags/$TAG"
+
+      - name: "Verify final development tag state"
+        id: final_tag
+        run: >-
+          node .github/scripts/release-tools.mjs check-tag
+          --repository "$GITHUB_WORKSPACE"
+          --remote origin
+          --tag "${{ steps.release.outputs.tag }}"
+          --expected-commit "$GITHUB_SHA"
+
+      # Production reuse: GitHub release mutations stay explicit while the helper validates all policy and state.
+      - name: "Create immutable GitHub prerelease"
+        if: ${{ steps.release_state.outputs.create_release == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          TITLE: ${{ steps.release.outputs.title }}
+        run: >-
+          gh release create "$TAG"
+          "${{ steps.artifacts.outputs.wheel_path }}"
+          "${{ steps.artifacts.outputs.sdist_path }}"
+          --repo "$GITHUB_REPOSITORY"
+          --verify-tag
+          --target "$GITHUB_SHA"
+          --title "$TITLE"
+          --generate-notes
+          --prerelease
+          --latest=false
+
+      - name: "Upload missing wheel to interrupted draft"
+        if: ${{ steps.release_state.outputs.resume_draft == 'true' && steps.release_state.outputs.wheel_missing == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: gh release upload "$TAG" "${{ steps.artifacts.outputs.wheel_path }}" --repo "$GITHUB_REPOSITORY"
+
+      - name: "Upload missing source distribution to interrupted draft"
+        if: ${{ steps.release_state.outputs.resume_draft == 'true' && steps.release_state.outputs.sdist_missing == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: gh release upload "$TAG" "${{ steps.artifacts.outputs.sdist_path }}" --repo "$GITHUB_REPOSITORY"
+
+      - name: "Publish interrupted draft as a prerelease"
+        if: ${{ steps.release_state.outputs.resume_draft == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          TITLE: ${{ steps.release.outputs.title }}
+        run: >-
+          gh release edit "$TAG"
+          --repo "$GITHUB_REPOSITORY"
+          --verify-tag
+          --target "$GITHUB_SHA"
+          --title "$TITLE"
+          --draft=false
+          --prerelease
+          --latest=false
+
+      - name: "Verify immutable release and assets"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/release-tools.mjs check-github-release
+          --channel dev
+          --version "$VERSION"
+          --expected-commit "$GITHUB_SHA"
+          --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
+          --repository "$GITHUB_REPOSITORY"
+          --tag-state "${{ steps.final_tag.outputs.tag_state }}"
+
+      # Production reuse: trusted publishing uses the same action without static PyPI credentials.
+      - name: "Publish distributions to PyPI"
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist-dev/
+
+      # Production-only follow-up commands are update-changelog, rtd-release, close-milestone, and notify-discord.
+      # Development releases intentionally stop after trusted publishing.
