@@ -104,7 +104,7 @@ jobs:
           python-version: "3.14"
           groups: "dev"
       - name: "Run bandit"
-        run: bandit --recursive  --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
+        run: bandit --recursive --exclude ./.venv --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
   pylint:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
