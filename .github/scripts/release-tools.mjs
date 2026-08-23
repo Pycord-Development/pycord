@@ -14,17 +14,32 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import {
+  basename,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
+} from "node:path";
 import { fileURLToPath } from "node:url";
 
 const VERSION_PATTERNS = Object.freeze({
   dev: /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.dev(0|[1-9][0-9]*)$/,
-  production: /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:rc(0|[1-9][0-9]*))?$/,
+  production:
+    /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:rc(0|[1-9][0-9]*))?$/,
 });
 
 const OUTPUT_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const SHA_PATTERN = /^[0-9a-f]{40}$/;
-const CHANGELOG_CATEGORIES = Object.freeze(["Added", "Changed", "Fixed", "Deprecated", "Removed"]);
+const CHANGELOG_CATEGORIES = Object.freeze([
+  "Added",
+  "Changed",
+  "Fixed",
+  "Deprecated",
+  "Removed",
+]);
 const READTHEDOCS_API_BASE = "https://readthedocs.org/api/v3";
 const CLI_USAGE = `Usage: node .github/scripts/release-tools.mjs <command> [options]
 
@@ -91,7 +106,9 @@ export function parseReleaseVersion(channel, version) {
   const match = VERSION_PATTERNS[channel].exec(candidate);
   if (!match) {
     const expected = channel === "dev" ? "X.Y.Z.devN" : "X.Y.Z or X.Y.ZrcN";
-    fail(`invalid ${channel} version '${candidate}'; expected canonical ${expected}`);
+    fail(
+      `invalid ${channel} version '${candidate}'; expected canonical ${expected}`,
+    );
   }
 
   return Object.freeze({
@@ -148,10 +165,15 @@ export function classifyMilestoneState(version, milestones) {
   }
   const candidates = milestoneTitleCandidates(version);
   const matches = milestones.filter(
-    (milestone) => milestone && typeof milestone.title === "string" && candidates.includes(milestone.title),
+    (milestone) =>
+      milestone &&
+      typeof milestone.title === "string" &&
+      candidates.includes(milestone.title),
   );
   if (matches.length > 1) {
-    fail(`multiple milestones match ${version}: ${matches.map((item) => item.title).join(", ")}`);
+    fail(
+      `multiple milestones match ${version}: ${matches.map((item) => item.title).join(", ")}`,
+    );
   }
   return Object.freeze({
     state: matches.length === 0 ? "absent" : "matched",
@@ -203,10 +225,16 @@ export async function closeReleaseMilestone(
   const repo = requireRepository(repository);
   deriveRelease("production", version);
   const authToken = requireString(token, "GitHub token");
-  const milestones = await fetchGitHubMilestones(repo, authToken, fetchImplementation);
+  const milestones = await fetchGitHubMilestones(
+    repo,
+    authToken,
+    fetchImplementation,
+  );
   const match = classifyMilestoneState(version, milestones);
   if (match.state === "absent") {
-    fail(`no milestone matches release ${version}; expected one of: ${match.candidates.join(", ")}`);
+    fail(
+      `no milestone matches release ${version}; expected one of: ${match.candidates.join(", ")}`,
+    );
   }
 
   const milestone = match.milestone;
@@ -214,12 +242,16 @@ export async function closeReleaseMilestone(
     fail(`milestone '${milestone.title}' has an invalid number`);
   }
   if (milestone.state !== "open" && milestone.state !== "closed") {
-    fail(`milestone '${milestone.title}' has invalid state '${milestone.state}'`);
+    fail(
+      `milestone '${milestone.title}' has invalid state '${milestone.state}'`,
+    );
   }
   const result = {
     number: milestone.number,
     title: milestone.title,
-    openIssues: Number.isInteger(milestone.open_issues) ? milestone.open_issues : null,
+    openIssues: Number.isInteger(milestone.open_issues)
+      ? milestone.open_issues
+      : null,
     alreadyClosed: milestone.state === "closed",
     dryRun: Boolean(dryRun),
     closed: milestone.state === "closed",
@@ -243,7 +275,10 @@ export async function closeReleaseMilestone(
     },
   );
   if (!response.ok) {
-    await responseError(response, `closing GitHub milestone '${milestone.title}'`);
+    await responseError(
+      response,
+      `closing GitHub milestone '${milestone.title}'`,
+    );
   }
   const updated = await response.json();
   if (updated.number !== milestone.number || updated.state !== "closed") {
@@ -281,12 +316,19 @@ export function buildUnreleasedChangelogBlock(branch) {
 }
 
 export function parseChangelogCategories(sectionBody) {
-  const categories = Object.fromEntries(CHANGELOG_CATEGORIES.map((name) => [name, []]));
+  const categories = Object.fromEntries(
+    CHANGELOG_CATEGORIES.map((name) => [name, []]),
+  );
   let current = null;
-  for (const line of requireString(sectionBody || "\n", "changelog section").split(/\r?\n/)) {
+  for (const line of requireString(
+    sectionBody || "\n",
+    "changelog section",
+  ).split(/\r?\n/)) {
     const heading = /^###\s+(.+)$/.exec(line);
     if (heading) {
-      current = Object.hasOwn(categories, heading[1].trim()) ? heading[1].trim() : null;
+      current = Object.hasOwn(categories, heading[1].trim())
+        ? heading[1].trim()
+        : null;
       continue;
     }
     if (current !== null) {
@@ -305,7 +347,9 @@ function mergeChangelogCategories(destination, source) {
 export function renderChangelogReleaseBody(categories) {
   const parts = [];
   for (const category of CHANGELOG_CATEGORIES) {
-    const lines = (categories[category] ?? []).filter((line) => line.trim() !== "");
+    const lines = (categories[category] ?? []).filter(
+      (line) => line.trim() !== "",
+    );
     if (lines.length === 0) {
       continue;
     }
@@ -314,9 +358,17 @@ export function renderChangelogReleaseBody(categories) {
   return parts.join("\n").replace(/\n+$/, "");
 }
 
-function replaceOrAppendChangelogLinks(text, version, previousTag, previousFinalTag, repository) {
+function replaceOrAppendChangelogLinks(
+  text,
+  version,
+  previousTag,
+  previousFinalTag,
+  repository,
+) {
   const unreleasedLink = `[unreleased]: https://github.com/${repository}/compare/v${version}...HEAD`;
-  const baseTag = version.includes("rc") ? previousTag : previousFinalTag || previousTag;
+  const baseTag = version.includes("rc")
+    ? previousTag
+    : previousFinalTag || previousTag;
   const releaseLink = `[${version}]: https://github.com/${repository}/compare/${baseTag}...v${version}`;
 
   let updated = text.replace(/^\[unreleased]: .*$/m, unreleasedLink);
@@ -326,7 +378,10 @@ function replaceOrAppendChangelogLinks(text, version, previousTag, previousFinal
     return updated.replace(versionLink, releaseLink);
   }
   if (/^\[unreleased]: .*$/m.test(updated)) {
-    return updated.replace(/^\[unreleased]: .*$/m, (match) => `${match}\n${releaseLink}`);
+    return updated.replace(
+      /^\[unreleased]: .*$/m,
+      (match) => `${match}\n${releaseLink}`,
+    );
   }
   return `${updated.replace(/\n+$/, "")}\n${releaseLink}\n`;
 }
@@ -343,7 +398,9 @@ export function updateChangelogText({
   const contents = requireString(text, "changelog");
   deriveRelease("production", version);
   const escapedHeadingVersion = version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  if (new RegExp(`^## \\[${escapedHeadingVersion}](?:\\s|$)`, "m").test(contents)) {
+  if (
+    new RegExp(`^## \\[${escapedHeadingVersion}](?:\\s|$)`, "m").test(contents)
+  ) {
     fail(`changelog already contains a release section for ${version}`);
   }
   requireString(previousTag, "previous tag");
@@ -362,7 +419,9 @@ export function updateChangelogText({
   const start = unreleasedHeading.index;
   const bodyStart = contents.indexOf("\n", start) + 1;
   const followingHeader = /^## \[/m.exec(contents.slice(bodyStart));
-  const end = followingHeader ? bodyStart + followingHeader.index : contents.length;
+  const end = followingHeader
+    ? bodyStart + followingHeader.index
+    : contents.length;
   const unreleasedBody = contents.slice(bodyStart, end).replace(/\n+$/, "");
   const rest = contents.slice(end);
 
@@ -385,10 +444,13 @@ export function updateChangelogText({
         continue;
       }
       const rcBodyStart = match.index + match[0].length;
-      const rcBodyEnd = index + 1 < matches.length ? matches[index + 1].index : rest.length;
+      const rcBodyEnd =
+        index + 1 < matches.length ? matches[index + 1].index : rest.length;
       mergeChangelogCategories(
         aggregated,
-        parseChangelogCategories(rest.slice(rcBodyStart, rcBodyEnd).replace(/\n+$/, "")),
+        parseChangelogCategories(
+          rest.slice(rcBodyStart, rcBodyEnd).replace(/\n+$/, ""),
+        ),
       );
     }
   }
@@ -411,9 +473,14 @@ export function assertChangelogPreparedText(text, version, repository) {
   deriveRelease("production", version);
   const repo = requireRepository(repository);
   const escapedVersion = version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const headings = contents.match(new RegExp(`^## \\[${escapedVersion}] - \\d{4}-\\d{2}-\\d{2}$`, "gm")) ?? [];
+  const headings =
+    contents.match(
+      new RegExp(`^## \\[${escapedVersion}] - \\d{4}-\\d{2}-\\d{2}$`, "gm"),
+    ) ?? [];
   if (headings.length !== 1) {
-    fail(`expected exactly one dated changelog section for ${version}, found ${headings.length}`);
+    fail(
+      `expected exactly one dated changelog section for ${version}, found ${headings.length}`,
+    );
   }
   const releaseLink = new RegExp(
     `^\\[${escapedVersion}]: https://github\\.com/${repo.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/compare/.+\\.\\.\\.v${escapedVersion}$`,
@@ -434,7 +501,10 @@ export function updateChangelogFile(options) {
   if (!existsSync(changelogPath) || !lstatSync(changelogPath).isFile()) {
     fail(`changelog not found at '${changelogPath}'`);
   }
-  const updated = updateChangelogText({ ...options, text: readFileSync(changelogPath, "utf8") });
+  const updated = updateChangelogText({
+    ...options,
+    text: readFileSync(changelogPath, "utf8"),
+  });
   writeFileSync(changelogPath, updated, "utf8");
   return Object.freeze({ path: changelogPath, version: options.version });
 }
@@ -455,7 +525,9 @@ async function responseError(response, operation) {
   } catch {
     // The status is still sufficient when the response body cannot be read.
   }
-  fail(`${operation} failed with HTTP ${response.status}${detail ? `: ${detail}` : ""}`);
+  fail(
+    `${operation} failed with HTTP ${response.status}${detail ? `: ${detail}` : ""}`,
+  );
 }
 
 function delay(milliseconds) {
@@ -479,7 +551,11 @@ export async function manageReadTheDocsRelease(
     fail(`invalid Read the Docs project '${projectSlug}'`);
   }
   const plan = deriveReadTheDocsRelease(version);
-  const result = Object.freeze({ project: projectSlug, ...plan, sync: Boolean(sync) });
+  const result = Object.freeze({
+    project: projectSlug,
+    ...plan,
+    sync: Boolean(sync),
+  });
   if (dryRun) {
     return result;
   }
@@ -487,22 +563,38 @@ export async function manageReadTheDocsRelease(
   if (!Number.isInteger(attempts) || attempts < 1 || attempts > 60) {
     fail("Read the Docs attempts must be an integer from 1 to 60");
   }
-  if (!Number.isInteger(retryDelayMs) || retryDelayMs < 0 || retryDelayMs > 60_000) {
-    fail("Read the Docs retry delay must be an integer from 0 to 60000 milliseconds");
+  if (
+    !Number.isInteger(retryDelayMs) ||
+    retryDelayMs < 0 ||
+    retryDelayMs > 60_000
+  ) {
+    fail(
+      "Read the Docs retry delay must be an integer from 0 to 60000 milliseconds",
+    );
   }
-  const fetchImplementation = dependencies.fetchImplementation ?? globalThis.fetch;
+  const fetchImplementation =
+    dependencies.fetchImplementation ?? globalThis.fetch;
   const delayImplementation = dependencies.delayImplementation ?? delay;
-  const headers = { Authorization: `Token ${authToken}`, "Content-Type": "application/json" };
+  const headers = {
+    Authorization: `Token ${authToken}`,
+    "Content-Type": "application/json",
+  };
   const projectUrl = `${READTHEDOCS_API_BASE}/projects/${encodeURIComponent(projectSlug)}`;
 
   if (sync) {
-    const syncResponse = await fetchImplementation(`${projectUrl}/sync-versions/`, {
-      method: "POST",
-      headers,
-      body: "{}",
-    });
+    const syncResponse = await fetchImplementation(
+      `${projectUrl}/sync-versions/`,
+      {
+        method: "POST",
+        headers,
+        body: "{}",
+      },
+    );
     if (!syncResponse.ok) {
-      await responseError(syncResponse, `Read the Docs sync for ${projectSlug}`);
+      await responseError(
+        syncResponse,
+        `Read the Docs sync for ${projectSlug}`,
+      );
     }
   }
 
@@ -510,20 +602,28 @@ export async function manageReadTheDocsRelease(
   if (sync) {
     let available = false;
     for (let attempt = 1; attempt <= attempts; attempt += 1) {
-      const response = await fetchImplementation(versionUrl, { method: "GET", headers });
+      const response = await fetchImplementation(versionUrl, {
+        method: "GET",
+        headers,
+      });
       if (response.ok) {
         available = true;
         break;
       }
       if (response.status !== 404) {
-        await responseError(response, `Read the Docs version lookup for ${plan.docsVersion}`);
+        await responseError(
+          response,
+          `Read the Docs version lookup for ${plan.docsVersion}`,
+        );
       }
       if (attempt < attempts) {
         await delayImplementation(retryDelayMs);
       }
     }
     if (!available) {
-      fail(`Read the Docs version '${plan.docsVersion}' did not appear after ${attempts} attempts`);
+      fail(
+        `Read the Docs version '${plan.docsVersion}' did not appear after ${attempts} attempts`,
+      );
     }
   }
 
@@ -533,15 +633,25 @@ export async function manageReadTheDocsRelease(
     body: JSON.stringify({ active: true, hidden: plan.hidden }),
   });
   if (!activationResponse.ok) {
-    await responseError(activationResponse, `Read the Docs activation for ${plan.docsVersion}`);
+    await responseError(
+      activationResponse,
+      `Read the Docs activation for ${plan.docsVersion}`,
+    );
   }
   return result;
 }
 
-export function buildDiscordReleaseMessage({ version, previousTag, previousFinalTag = null, repository }) {
+export function buildDiscordReleaseMessage({
+  version,
+  previousTag,
+  previousFinalTag = null,
+  repository,
+}) {
   const release = deriveRelease("production", version);
   const previous = requireString(previousTag, "previous tag");
-  const previousFinal = previousFinalTag ? requireString(previousFinalTag, "previous final tag") : previous;
+  const previousFinal = previousFinalTag
+    ? requireString(previousFinalTag, "previous final tag")
+    : previous;
   const repo = requireRepository(repository);
   const majorMinor = `${release.major}.${release.minor}`;
   const docsUrl = `https://docs.pycord.dev/en/v${version}/changelog.html`;
@@ -578,12 +688,17 @@ export function buildDiscordReleasePayload(options) {
   });
 }
 
-export async function sendDiscordReleaseNotification(options, fetchImplementation = globalThis.fetch) {
+export async function sendDiscordReleaseNotification(
+  options,
+  fetchImplementation = globalThis.fetch,
+) {
   const payload = buildDiscordReleasePayload(options);
   if (options.dryRun) {
     return Object.freeze({ payload, sent: false });
   }
-  const webhook = new URL(requireString(options.webhookUrl, "Discord webhook URL"));
+  const webhook = new URL(
+    requireString(options.webhookUrl, "Discord webhook URL"),
+  );
   if (
     webhook.protocol !== "https:" ||
     !["discord.com", "discordapp.com"].includes(webhook.hostname) ||
@@ -596,7 +711,8 @@ export async function sendDiscordReleaseNotification(options, fetchImplementatio
     headers: {
       Accept: "*/*",
       "Content-Type": "application/json",
-      "User-Agent": "pycord-release-bot/1.0 (+https://github.com/Pycord-Development/pycord)",
+      "User-Agent":
+        "pycord-release-bot/1.0 (+https://github.com/Pycord-Development/pycord)",
     },
     body: JSON.stringify(payload),
     redirect: "error",
@@ -620,7 +736,10 @@ function outputValue(value) {
   return String(value);
 }
 
-export function formatGitHubOutputs(outputs, delimiterFactory = () => `ghadelimiter_${randomUUID()}`) {
+export function formatGitHubOutputs(
+  outputs,
+  delimiterFactory = () => `ghadelimiter_${randomUUID()}`,
+) {
   if (!outputs || typeof outputs !== "object" || Array.isArray(outputs)) {
     fail("GitHub outputs must be an object");
   }
@@ -646,12 +765,17 @@ export function formatGitHubOutputs(outputs, delimiterFactory = () => `ghadelimi
 
 export function writeGitHubOutputs(outputPath, outputs) {
   const destination = requireString(outputPath, "GitHub output path");
-  appendFileSync(destination, formatGitHubOutputs(outputs), { encoding: "utf8" });
+  appendFileSync(destination, formatGitHubOutputs(outputs), {
+    encoding: "utf8",
+  });
 }
 
 function isInsideOrEqual(root, candidate) {
   const rel = relative(root, candidate);
-  return rel === "" || (!rel.startsWith(`..${sep}`) && rel !== ".." && !isAbsolute(rel));
+  return (
+    rel === "" ||
+    (!rel.startsWith(`..${sep}`) && rel !== ".." && !isAbsolute(rel))
+  );
 }
 
 function validateTrackedPath(file) {
@@ -693,12 +817,15 @@ export function rewriteProjectNameText(contents) {
     }
 
     assignments += 1;
-    const assignment = /^(\s*name\s*=\s*)(["'])([^"']*)(\2)(\s*(?:#.*)?)(\r?\n)?$/.exec(line);
+    const assignment =
+      /^(\s*name\s*=\s*)(["'])([^"']*)(\2)(\s*(?:#.*)?)(\r?\n)?$/.exec(line);
     if (!assignment) {
       fail("[project].name must be a simple quoted string");
     }
     if (assignment[3] !== "py-cord") {
-      fail(`[project].name must be exactly 'py-cord', found '${assignment[3]}'`);
+      fail(
+        `[project].name must be exactly 'py-cord', found '${assignment[3]}'`,
+      );
     }
     return `${assignment[1]}${assignment[2]}py-cord-dev${assignment[4]}${assignment[5]}${assignment[6] ?? ""}`;
   });
@@ -707,18 +834,26 @@ export function rewriteProjectNameText(contents) {
     fail(`expected exactly one [project] table, found ${projectTables}`);
   }
   if (assignments !== 1) {
-    fail(`expected exactly one [project].name assignment, found ${assignments}`);
+    fail(
+      `expected exactly one [project].name assignment, found ${assignments}`,
+    );
   }
   return rewritten.join("");
 }
 
 export function listTrackedFiles(sourceDirectory) {
-  const source = realpathSync(requireString(sourceDirectory, "source directory"));
-  const output = execFileSync("git", ["-C", source, "ls-files", "-z", "--cached"], {
-    encoding: "utf8",
-    maxBuffer: 32 * 1024 * 1024,
-    windowsHide: true,
-  });
+  const source = realpathSync(
+    requireString(sourceDirectory, "source directory"),
+  );
+  const output = execFileSync(
+    "git",
+    ["-C", source, "ls-files", "-z", "--cached"],
+    {
+      encoding: "utf8",
+      maxBuffer: 32 * 1024 * 1024,
+      windowsHide: true,
+    },
+  );
   return output.split("\0").filter(Boolean);
 }
 
@@ -731,26 +866,43 @@ export function parseSourceDateEpoch(value) {
 }
 
 export function deriveSourceDateEpoch(repositoryDirectory, commit) {
-  const repository = realpathSync(requireString(repositoryDirectory, "repository directory"));
+  const repository = realpathSync(
+    requireString(repositoryDirectory, "repository directory"),
+  );
   const commitSha = requireSha(commit, "source commit");
-  const output = execFileSync("git", ["-C", repository, "show", "-s", "--format=%ct", commitSha], {
-    encoding: "utf8",
-    maxBuffer: 1024 * 1024,
-    windowsHide: true,
-  });
+  const output = execFileSync(
+    "git",
+    ["-C", repository, "show", "-s", "--format=%ct", commitSha],
+    {
+      encoding: "utf8",
+      maxBuffer: 1024 * 1024,
+      windowsHide: true,
+    },
+  );
   return parseSourceDateEpoch(output);
 }
 
-export function prepareDevSource(sourceDirectory, destinationDirectory, options = {}) {
-  const source = realpathSync(requireString(sourceDirectory, "source directory"));
-  const destinationInput = resolve(requireString(destinationDirectory, "destination directory"));
+export function prepareDevSource(
+  sourceDirectory,
+  destinationDirectory,
+  options = {},
+) {
+  const source = realpathSync(
+    requireString(sourceDirectory, "source directory"),
+  );
+  const destinationInput = resolve(
+    requireString(destinationDirectory, "destination directory"),
+  );
   if (existsSync(destinationInput)) {
     fail(`destination '${destinationInput}' already exists`);
   }
 
   const destinationParent = realpathSync(dirname(destinationInput));
   const destination = join(destinationParent, basename(destinationInput));
-  if (isInsideOrEqual(source, destination) || isInsideOrEqual(destination, source)) {
+  if (
+    isInsideOrEqual(source, destination) ||
+    isInsideOrEqual(destination, source)
+  ) {
     fail("source and destination must not overlap");
   }
 
@@ -782,7 +934,9 @@ export function prepareDevSource(sourceDirectory, destinationDirectory, options 
     }
     const realSourcePath = realpathSync(sourcePath);
     if (!isInsideOrEqual(source, realSourcePath)) {
-      fail(`tracked path '${trackedFile}' resolves outside the source directory`);
+      fail(
+        `tracked path '${trackedFile}' resolves outside the source directory`,
+      );
     }
 
     const destinationPath = resolve(destination, ...parts);
@@ -792,11 +946,15 @@ export function prepareDevSource(sourceDirectory, destinationDirectory, options 
     validated.push({ normalized, sourcePath: realSourcePath, destinationPath });
   }
 
-  const pyproject = validated.find((file) => file.normalized === "pyproject.toml");
+  const pyproject = validated.find(
+    (file) => file.normalized === "pyproject.toml",
+  );
   if (!pyproject) {
     fail("pyproject.toml must be Git-tracked");
   }
-  const rewrittenPyproject = rewriteProjectNameText(readFileSync(pyproject.sourcePath, "utf8"));
+  const rewrittenPyproject = rewriteProjectNameText(
+    readFileSync(pyproject.sourcePath, "utf8"),
+  );
 
   mkdirSync(destination);
   for (const file of validated) {
@@ -819,7 +977,9 @@ export function sha256File(filePath) {
 
 export function validateArtifacts(channel, version, distDirectory) {
   const release = deriveRelease(channel, version);
-  const distDir = realpathSync(requireString(distDirectory, "distribution directory"));
+  const distDir = realpathSync(
+    requireString(distDirectory, "distribution directory"),
+  );
   const entries = readdirSync(distDir, { withFileTypes: true });
   const names = entries.map((entry) => entry.name).sort();
   const expectedNames = [release.sdistName, release.wheelName].sort();
@@ -827,8 +987,13 @@ export function validateArtifacts(channel, version, distDirectory) {
   if (entries.some((entry) => !entry.isFile() || entry.isSymbolicLink())) {
     fail("distribution directory must contain regular files only");
   }
-  if (names.length !== expectedNames.length || names.some((name, index) => name !== expectedNames[index])) {
-    fail(`expected exactly ${expectedNames.join(" and ")}; found ${names.join(", ") || "nothing"}`);
+  if (
+    names.length !== expectedNames.length ||
+    names.some((name, index) => name !== expectedNames[index])
+  ) {
+    fail(
+      `expected exactly ${expectedNames.join(" and ")}; found ${names.join(", ") || "nothing"}`,
+    );
   }
 
   const wheelPath = join(distDir, release.wheelName);
@@ -846,23 +1011,41 @@ export function validateArtifacts(channel, version, distDirectory) {
   });
 }
 
-export function stageArtifacts(channel, version, sourceDirectory, destinationDirectory) {
+export function stageArtifacts(
+  channel,
+  version,
+  sourceDirectory,
+  destinationDirectory,
+) {
   const sourceArtifacts = validateArtifacts(channel, version, sourceDirectory);
-  const destination = resolve(requireString(destinationDirectory, "artifact staging directory"));
+  const destination = resolve(
+    requireString(destinationDirectory, "artifact staging directory"),
+  );
   if (existsSync(destination)) {
     fail(`artifact staging directory '${destination}' already exists`);
   }
   const destinationParent = realpathSync(dirname(destination));
   const canonicalDestination = join(destinationParent, basename(destination));
   if (isInsideOrEqual(sourceArtifacts.distDir, canonicalDestination)) {
-    fail("artifact staging directory must not be inside the build distribution directory");
+    fail(
+      "artifact staging directory must not be inside the build distribution directory",
+    );
   }
 
   mkdirSync(canonicalDestination);
-  copyFileSync(sourceArtifacts.wheelPath, join(canonicalDestination, sourceArtifacts.wheelName));
-  copyFileSync(sourceArtifacts.sdistPath, join(canonicalDestination, sourceArtifacts.sdistName));
+  copyFileSync(
+    sourceArtifacts.wheelPath,
+    join(canonicalDestination, sourceArtifacts.wheelName),
+  );
+  copyFileSync(
+    sourceArtifacts.sdistPath,
+    join(canonicalDestination, sourceArtifacts.sdistName),
+  );
   const staged = validateArtifacts(channel, version, canonicalDestination);
-  if (staged.wheelDigest !== sourceArtifacts.wheelDigest || staged.sdistDigest !== sourceArtifacts.sdistDigest) {
+  if (
+    staged.wheelDigest !== sourceArtifacts.wheelDigest ||
+    staged.sdistDigest !== sourceArtifacts.sdistDigest
+  ) {
     fail("staged artifact digests do not match the build outputs");
   }
   return staged;
@@ -881,7 +1064,10 @@ export function parseRemoteTagOutput(output, tag) {
       }
       return { sha: match[1], ref: match[2] };
     })
-    .filter((record) => record.ref === expectedRef || record.ref === `${expectedRef}^{}`);
+    .filter(
+      (record) =>
+        record.ref === expectedRef || record.ref === `${expectedRef}^{}`,
+    );
   return records;
 }
 
@@ -899,11 +1085,16 @@ export function resolveAnnotatedTagState(tag, records) {
   if (direct.length !== 1 || peeled.length !== 1) {
     fail(`tag '${tagName}' must exist exactly once as an annotated tag`);
   }
-  return Object.freeze({ state: "annotated", commit: requireSha(peeled[0].sha, "tag commit") });
+  return Object.freeze({
+    state: "annotated",
+    commit: requireSha(peeled[0].sha, "tag commit"),
+  });
 }
 
 export function resolveRemoteAnnotatedTag(repositoryDirectory, remote, tag) {
-  const repository = realpathSync(requireString(repositoryDirectory, "repository directory"));
+  const repository = realpathSync(
+    requireString(repositoryDirectory, "repository directory"),
+  );
   const remoteName = requireString(remote, "Git remote");
   if (!/^[A-Za-z0-9._-]+$/.test(remoteName)) {
     fail(`invalid Git remote '${remoteName}'`);
@@ -911,7 +1102,15 @@ export function resolveRemoteAnnotatedTag(repositoryDirectory, remote, tag) {
   const tagName = requireTag(tag);
   const output = execFileSync(
     "git",
-    ["-C", repository, "ls-remote", "--tags", remoteName, `refs/tags/${tagName}`, `refs/tags/${tagName}^{}`],
+    [
+      "-C",
+      repository,
+      "ls-remote",
+      "--tags",
+      remoteName,
+      `refs/tags/${tagName}`,
+      `refs/tags/${tagName}^{}`,
+    ],
     { encoding: "utf8", maxBuffer: 1024 * 1024, windowsHide: true },
   );
   const state = resolveAnnotatedTagState(
@@ -958,22 +1157,35 @@ export function deriveReleaseHistory(version, tags) {
       // Historical noncanonical tags are intentionally ignored.
     }
   }
-  parsedTags.sort((left, right) => compareParsedVersions(right.parsed, left.parsed));
+  parsedTags.sort((left, right) =>
+    compareParsedVersions(right.parsed, left.parsed),
+  );
   const previous = parsedTags[0];
-  const previousFinal = parsedTags.find((entry) => entry.parsed.prereleaseNumber === null);
+  const previousFinal = parsedTags.find(
+    (entry) => entry.parsed.prereleaseNumber === null,
+  );
   if (!previous || !previousFinal) {
     fail(`could not determine previous production tags for ${version}`);
   }
-  return Object.freeze({ previousTag: previous.tag, previousFinalTag: previousFinal.tag });
+  return Object.freeze({
+    previousTag: previous.tag,
+    previousFinalTag: previousFinal.tag,
+  });
 }
 
 export function readReleaseHistory(repositoryDirectory, version) {
-  const repository = realpathSync(requireString(repositoryDirectory, "repository directory"));
-  const output = execFileSync("git", ["-C", repository, "tag", "--merged", "HEAD", "--list", "v*"], {
-    encoding: "utf8",
-    maxBuffer: 4 * 1024 * 1024,
-    windowsHide: true,
-  });
+  const repository = realpathSync(
+    requireString(repositoryDirectory, "repository directory"),
+  );
+  const output = execFileSync(
+    "git",
+    ["-C", repository, "tag", "--merged", "HEAD", "--list", "v*"],
+    {
+      encoding: "utf8",
+      maxBuffer: 4 * 1024 * 1024,
+      windowsHide: true,
+    },
+  );
   return deriveReleaseHistory(version, output.split(/\r?\n/).filter(Boolean));
 }
 
@@ -984,14 +1196,24 @@ export function classifyTagState(tag, expectedCommit, records) {
     fail("tag records must be an array");
   }
   if (records.length === 0) {
-    return Object.freeze({ state: "absent", createTag: true, commit: null, reason: null });
+    return Object.freeze({
+      state: "absent",
+      createTag: true,
+      commit: null,
+      reason: null,
+    });
   }
 
   const expectedRef = `refs/tags/${tagName}`;
   const direct = records.filter((record) => record.ref === expectedRef);
   const peeled = records.filter((record) => record.ref === `${expectedRef}^{}`);
   if (direct.length !== 1 || peeled.length > 1) {
-    return Object.freeze({ state: "conflicting", createTag: false, commit: null, reason: "ambiguous tag refs" });
+    return Object.freeze({
+      state: "conflicting",
+      createTag: false,
+      commit: null,
+      reason: "ambiguous tag refs",
+    });
   }
   if (peeled.length === 0) {
     return Object.freeze({
@@ -1009,11 +1231,23 @@ export function classifyTagState(tag, expectedCommit, records) {
       reason: `existing tag targets ${peeled[0].sha}, expected ${expected}`,
     });
   }
-  return Object.freeze({ state: "reusable", createTag: false, commit: expected, reason: null });
+  return Object.freeze({
+    state: "reusable",
+    createTag: false,
+    commit: expected,
+    reason: null,
+  });
 }
 
-export function readRemoteTagState(repositoryDirectory, remote, tag, expectedCommit) {
-  const repository = realpathSync(requireString(repositoryDirectory, "repository directory"));
+export function readRemoteTagState(
+  repositoryDirectory,
+  remote,
+  tag,
+  expectedCommit,
+) {
+  const repository = realpathSync(
+    requireString(repositoryDirectory, "repository directory"),
+  );
   const remoteName = requireString(remote, "Git remote");
   if (!/^[A-Za-z0-9._-]+$/.test(remoteName)) {
     fail(`invalid Git remote '${remoteName}'`);
@@ -1021,10 +1255,22 @@ export function readRemoteTagState(repositoryDirectory, remote, tag, expectedCom
   const tagName = requireTag(tag);
   const output = execFileSync(
     "git",
-    ["-C", repository, "ls-remote", "--tags", remoteName, `refs/tags/${tagName}`, `refs/tags/${tagName}^{}`],
+    [
+      "-C",
+      repository,
+      "ls-remote",
+      "--tags",
+      remoteName,
+      `refs/tags/${tagName}`,
+      `refs/tags/${tagName}^{}`,
+    ],
     { encoding: "utf8", maxBuffer: 1024 * 1024, windowsHide: true },
   );
-  return classifyTagState(tagName, expectedCommit, output.trim() ? parseRemoteTagOutput(output, tagName) : []);
+  return classifyTagState(
+    tagName,
+    expectedCommit,
+    output.trim() ? parseRemoteTagOutput(output, tagName) : [],
+  );
 }
 
 function normalizeReleasePayload(payload) {
@@ -1057,11 +1303,19 @@ export function classifyReleaseState(payload, expectedRelease, artifacts) {
       sdistMissing: true,
     });
   }
-  if (expectedRelease.tagState !== undefined && expectedRelease.tagState !== "reusable") {
-    fail(`an existing release requires a reusable annotated tag, found '${expectedRelease.tagState}'`);
+  if (
+    expectedRelease.tagState !== undefined &&
+    expectedRelease.tagState !== "reusable"
+  ) {
+    fail(
+      `an existing release requires a reusable annotated tag, found '${expectedRelease.tagState}'`,
+    );
   }
 
-  const expectedCommit = requireSha(expectedRelease.commit, "expected release commit");
+  const expectedCommit = requireSha(
+    expectedRelease.commit,
+    "expected release commit",
+  );
   const required = {
     tagName: expectedRelease.tag,
     title: expectedRelease.title,
@@ -1070,7 +1324,9 @@ export function classifyReleaseState(payload, expectedRelease, artifacts) {
   };
   for (const [field, value] of Object.entries(required)) {
     if (release[field] !== value) {
-      fail(`release ${field} is ${JSON.stringify(release[field])}, expected ${JSON.stringify(value)}`);
+      fail(
+        `release ${field} is ${JSON.stringify(release[field])}, expected ${JSON.stringify(value)}`,
+      );
     }
   }
   if (!Array.isArray(release.assets)) {
@@ -1078,8 +1334,14 @@ export function classifyReleaseState(payload, expectedRelease, artifacts) {
   }
 
   const expectedAssets = new Map([
-    [artifacts.wheelName, { digest: artifacts.wheelDigest, size: artifacts.wheelSize }],
-    [artifacts.sdistName, { digest: artifacts.sdistDigest, size: artifacts.sdistSize }],
+    [
+      artifacts.wheelName,
+      { digest: artifacts.wheelDigest, size: artifacts.wheelSize },
+    ],
+    [
+      artifacts.sdistName,
+      { digest: artifacts.sdistDigest, size: artifacts.sdistSize },
+    ],
   ]);
   const seen = new Set();
   for (const asset of release.assets) {
@@ -1095,10 +1357,14 @@ export function classifyReleaseState(payload, expectedRelease, artifacts) {
       fail(`release contains unexpected asset '${asset.name}'`);
     }
     if (asset.digest !== expected.digest) {
-      fail(`release asset '${asset.name}' has digest ${asset.digest ?? "missing"}, expected ${expected.digest}`);
+      fail(
+        `release asset '${asset.name}' has digest ${asset.digest ?? "missing"}, expected ${expected.digest}`,
+      );
     }
     if (asset.size !== expected.size) {
-      fail(`release asset '${asset.name}' has size ${asset.size}, expected ${expected.size}`);
+      fail(
+        `release asset '${asset.name}' has size ${asset.size}, expected ${expected.size}`,
+      );
     }
   }
 
@@ -1171,10 +1437,17 @@ export function assertImmutableReleaseSetting(payload) {
   if (!payload || typeof payload !== "object" || payload.enabled !== true) {
     fail("GitHub immutable releases must be enabled before running a release");
   }
-  return Object.freeze({ enabled: true, enforcedByOwner: payload.enforced_by_owner === true });
+  return Object.freeze({
+    enabled: true,
+    enforcedByOwner: payload.enforced_by_owner === true,
+  });
 }
 
-export async function assertPypiVersionUnused(project, version, fetchImplementation = globalThis.fetch) {
+export async function assertPypiVersionUnused(
+  project,
+  version,
+  fetchImplementation = globalThis.fetch,
+) {
   const projectName = requireString(project, "PyPI project");
   if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(projectName)) {
     fail(`invalid PyPI project '${projectName}'`);
@@ -1235,13 +1508,21 @@ export async function assertPypiVersionPublished(
   }
 
   const expectedFiles = new Map([
-    [artifacts.wheelName, { digest: artifacts.wheelDigest, size: artifacts.wheelSize }],
-    [artifacts.sdistName, { digest: artifacts.sdistDigest, size: artifacts.sdistSize }],
+    [
+      artifacts.wheelName,
+      { digest: artifacts.wheelDigest, size: artifacts.wheelSize },
+    ],
+    [
+      artifacts.sdistName,
+      { digest: artifacts.sdistDigest, size: artifacts.sdistSize },
+    ],
   ]);
   const seen = new Set();
   for (const file of payload.urls) {
     if (!file || typeof file.filename !== "string") {
-      fail("PyPI published-version response contains a file without a valid filename");
+      fail(
+        "PyPI published-version response contains a file without a valid filename",
+      );
     }
     if (seen.has(file.filename)) {
       fail(`PyPI contains duplicate distribution '${file.filename}'`);
@@ -1253,10 +1534,14 @@ export async function assertPypiVersionPublished(
     }
     const digest = file.digests?.sha256;
     if (`sha256:${digest}` !== expected.digest) {
-      fail(`PyPI distribution '${file.filename}' does not match the local SHA-256 digest`);
+      fail(
+        `PyPI distribution '${file.filename}' does not match the local SHA-256 digest`,
+      );
     }
     if (file.size !== expected.size) {
-      fail(`PyPI distribution '${file.filename}' has size ${file.size}, expected ${expected.size}`);
+      fail(
+        `PyPI distribution '${file.filename}' has size ${file.size}, expected ${expected.size}`,
+      );
     }
   }
   for (const filename of expectedFiles.keys()) {
@@ -1294,7 +1579,9 @@ export async function assertGitHubIdentity(
   }
   const payload = await response.json();
   if (!payload || payload.login !== expected) {
-    fail(`GitHub token authenticates as '${payload?.login ?? "unknown"}', expected '${expected}'`);
+    fail(
+      `GitHub token authenticates as '${payload?.login ?? "unknown"}', expected '${expected}'`,
+    );
   }
   return Object.freeze({ login: expected, verified: true });
 }
@@ -1417,7 +1704,10 @@ async function runCli(argv) {
     const history = readReleaseHistory(options.repository, options.version);
     emitResult(
       history,
-      { previous_tag: history.previousTag, previous_final_tag: history.previousFinalTag },
+      {
+        previous_tag: history.previousTag,
+        previous_final_tag: history.previousFinalTag,
+      },
       defaultOutput,
     );
     return;
@@ -1425,7 +1715,9 @@ async function runCli(argv) {
 
   if (command === "check-changelog") {
     requireOptions(options, ["path", "version", "repository"]);
-    const changelogPath = resolve(requireString(options.path, "changelog path"));
+    const changelogPath = resolve(
+      requireString(options.path, "changelog path"),
+    );
     if (!existsSync(changelogPath) || !lstatSync(changelogPath).isFile()) {
       fail(`changelog not found at '${changelogPath}'`);
     }
@@ -1458,7 +1750,11 @@ async function runCli(argv) {
       sync: parseBooleanOption(options.sync, "--sync"),
       dryRun: parseBooleanOption(options["dry-run"], "--dry-run"),
       attempts: parseIntegerOption(options.attempts, "--attempts", 12),
-      retryDelayMs: parseIntegerOption(options["retry-delay-ms"], "--retry-delay-ms", 5_000),
+      retryDelayMs: parseIntegerOption(
+        options["retry-delay-ms"],
+        "--retry-delay-ms",
+        5_000,
+      ),
     });
     emitResult(result, {}, null);
     return;
@@ -1496,13 +1792,25 @@ async function runCli(argv) {
   if (command === "source-date-epoch") {
     requireOptions(options, ["repository", "commit"], ["github-output"]);
     const epoch = deriveSourceDateEpoch(options.repository, options.commit);
-    emitResult({ sourceDateEpoch: epoch }, { source_date_epoch: epoch }, defaultOutput);
+    emitResult(
+      { sourceDateEpoch: epoch },
+      { source_date_epoch: epoch },
+      defaultOutput,
+    );
     return;
   }
 
   if (command === "validate-artifacts") {
-    requireOptions(options, ["channel", "version", "dist-dir"], ["github-output"]);
-    const artifacts = validateArtifacts(options.channel, options.version, options["dist-dir"]);
+    requireOptions(
+      options,
+      ["channel", "version", "dist-dir"],
+      ["github-output"],
+    );
+    const artifacts = validateArtifacts(
+      options.channel,
+      options.version,
+      options["dist-dir"],
+    );
     emitResult(
       artifacts,
       {
@@ -1548,7 +1856,11 @@ async function runCli(argv) {
   }
 
   if (command === "check-tag") {
-    requireOptions(options, ["repository", "remote", "tag", "expected-commit"], ["github-output"]);
+    requireOptions(
+      options,
+      ["repository", "remote", "tag", "expected-commit"],
+      ["github-output", "require-existing"],
+    );
     const state = readRemoteTagState(
       options.repository,
       options.remote,
@@ -1558,13 +1870,29 @@ async function runCli(argv) {
     if (state.state === "conflicting") {
       fail(`tag '${options.tag}' conflicts: ${state.reason}`);
     }
-    emitResult(state, { tag_state: state.state, create_tag: state.createTag }, defaultOutput);
+    if (
+      parseBooleanOption(options["require-existing"], "--require-existing") &&
+      state.state !== "reusable"
+    ) {
+      fail(
+        `tag '${options.tag}' must already exist and target ${options["expected-commit"]}`,
+      );
+    }
+    emitResult(
+      state,
+      { tag_state: state.state, create_tag: state.createTag },
+      defaultOutput,
+    );
     return;
   }
 
   if (command === "resolve-tag") {
     requireOptions(options, ["repository", "remote", "tag"], ["github-output"]);
-    const state = resolveRemoteAnnotatedTag(options.repository, options.remote, options.tag);
+    const state = resolveRemoteAnnotatedTag(
+      options.repository,
+      options.remote,
+      options.tag,
+    );
     emitResult(
       state,
       { tag_state: "reusable", tag_commit: state.commit },
@@ -1580,7 +1908,11 @@ async function runCli(argv) {
       ["github-output"],
     );
     const derived = deriveRelease(options.channel, options.version);
-    const artifacts = validateArtifacts(options.channel, options.version, options["dist-dir"]);
+    const artifacts = validateArtifacts(
+      options.channel,
+      options.version,
+      options["dist-dir"],
+    );
     const payload = JSON.parse(readFileSync(options["state-file"], "utf8"));
     const state = classifyReleaseState(
       payload,
@@ -1610,7 +1942,14 @@ async function runCli(argv) {
   if (command === "check-github-release") {
     requireOptions(
       options,
-      ["channel", "version", "expected-commit", "dist-dir", "repository", "tag-state"],
+      [
+        "channel",
+        "version",
+        "expected-commit",
+        "dist-dir",
+        "repository",
+        "tag-state",
+      ],
       ["github-output", "token-env"],
     );
     const tokenEnvironment = options["token-env"] ?? "GITHUB_TOKEN";
@@ -1618,7 +1957,11 @@ async function runCli(argv) {
       fail(`invalid token environment variable '${tokenEnvironment}'`);
     }
     const derived = deriveRelease(options.channel, options.version);
-    const artifacts = validateArtifacts(options.channel, options.version, options["dist-dir"]);
+    const artifacts = validateArtifacts(
+      options.channel,
+      options.version,
+      options["dist-dir"],
+    );
     const payload = await fetchGitHubReleaseState(
       options.repository,
       derived.tag,
@@ -1659,15 +2002,27 @@ async function runCli(argv) {
 
   if (command === "check-pypi-unused") {
     requireOptions(options, ["project", "version"]);
-    emitResult(await assertPypiVersionUnused(options.project, options.version), {}, null);
+    emitResult(
+      await assertPypiVersionUnused(options.project, options.version),
+      {},
+      null,
+    );
     return;
   }
 
   if (command === "check-pypi-published") {
     requireOptions(options, ["project", "version", "channel", "dist-dir"]);
-    const artifacts = validateArtifacts(options.channel, options.version, options["dist-dir"]);
+    const artifacts = validateArtifacts(
+      options.channel,
+      options.version,
+      options["dist-dir"],
+    );
     emitResult(
-      await assertPypiVersionPublished(options.project, options.version, artifacts),
+      await assertPypiVersionPublished(
+        options.project,
+        options.version,
+        artifacts,
+      ),
       {},
       null,
     );
@@ -1694,12 +2049,20 @@ async function runCli(argv) {
   if (command === "milestone-candidates") {
     requireOptions(options, ["version"], ["github-output"]);
     const candidates = milestoneTitleCandidates(options.version);
-    emitResult({ candidates }, { milestone_candidates: candidates }, defaultOutput);
+    emitResult(
+      { candidates },
+      { milestone_candidates: candidates },
+      defaultOutput,
+    );
     return;
   }
 
   if (command === "close-milestone") {
-    requireOptions(options, ["repository", "version"], ["dry-run", "token-env"]);
+    requireOptions(
+      options,
+      ["repository", "version"],
+      ["dry-run", "token-env"],
+    );
     const tokenEnvironment = options["token-env"] ?? "GITHUB_TOKEN";
     if (!OUTPUT_NAME_PATTERN.test(tokenEnvironment)) {
       fail(`invalid token environment variable '${tokenEnvironment}'`);
@@ -1723,7 +2086,9 @@ if (invokedPath && invokedPath === fileURLToPath(import.meta.url)) {
     await runCli(process.argv.slice(2));
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    process.stderr.write(`release-tools: ${message.replace(/[\r\n]+/g, " ")}\n`);
+    process.stderr.write(
+      `release-tools: ${message.replace(/[\r\n]+/g, " ")}\n`,
+    );
     process.exitCode = 1;
   }
 }

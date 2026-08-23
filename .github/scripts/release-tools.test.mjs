@@ -87,8 +87,16 @@ function matchingReleasePayload(artifacts, overrides = {}) {
     prerelease: true,
     target_commitish: "a".repeat(40),
     assets: [
-      releaseAsset(artifacts.wheelName, artifacts.wheelDigest, artifacts.wheelSize),
-      releaseAsset(artifacts.sdistName, artifacts.sdistDigest, artifacts.sdistSize),
+      releaseAsset(
+        artifacts.wheelName,
+        artifacts.wheelDigest,
+        artifacts.wheelSize,
+      ),
+      releaseAsset(
+        artifacts.sdistName,
+        artifacts.sdistDigest,
+        artifacts.sdistSize,
+      ),
     ],
     ...overrides,
   };
@@ -127,7 +135,10 @@ test("accepts canonical development versions", () => {
 
 test("accepts canonical production final and release candidate versions", () => {
   assert.equal(parseReleaseVersion("production", "2.9.0").isPrerelease, false);
-  assert.equal(parseReleaseVersion("production", "2.9.0rc1").isPrerelease, true);
+  assert.equal(
+    parseReleaseVersion("production", "2.9.0rc1").isPrerelease,
+    true,
+  );
 });
 
 test("rejects malformed, noncanonical, and hostile versions", () => {
@@ -147,31 +158,34 @@ test("rejects malformed, noncanonical, and hostile versions", () => {
   for (const version of rejected) {
     assert.throws(() => parseReleaseVersion("dev", version));
   }
-  for (const version of ["2.9.0.dev1", "2.9.0rc.1", "2.9", "v2.9.0", "2.9.0+local"]) {
+  for (const version of [
+    "2.9.0.dev1",
+    "2.9.0rc.1",
+    "2.9",
+    "v2.9.0",
+    "2.9.0+local",
+  ]) {
     assert.throws(() => parseReleaseVersion("production", version));
   }
 });
 
 test("derives development release values", () => {
-  assert.deepEqual(
-    deriveRelease("dev", "2.8.2.dev1"),
-    {
-      channel: "dev",
-      version: "2.8.2.dev1",
-      major: 2,
-      minor: 8,
-      patch: 2,
-      prereleaseNumber: 1,
-      isPrerelease: true,
-      distribution: "py-cord-dev",
-      normalizedDistribution: "py_cord_dev",
-      tag: "dev-v2.8.2.dev1",
-      title: "Pycord Development 2.8.2.dev1",
-      versionBranch: null,
-      wheelName: "py_cord_dev-2.8.2.dev1-py3-none-any.whl",
-      sdistName: "py_cord_dev-2.8.2.dev1.tar.gz",
-    },
-  );
+  assert.deepEqual(deriveRelease("dev", "2.8.2.dev1"), {
+    channel: "dev",
+    version: "2.8.2.dev1",
+    major: 2,
+    minor: 8,
+    patch: 2,
+    prereleaseNumber: 1,
+    isPrerelease: true,
+    distribution: "py-cord-dev",
+    normalizedDistribution: "py_cord_dev",
+    tag: "dev-v2.8.2.dev1",
+    title: "Pycord Development 2.8.2.dev1",
+    versionBranch: null,
+    wheelName: "py_cord_dev-2.8.2.dev1-py3-none-any.whl",
+    sdistName: "py_cord_dev-2.8.2.dev1.tar.gz",
+  });
 });
 
 test("derives future production branch, tag, artifacts, and prerelease state", () => {
@@ -194,14 +208,24 @@ test("rewrites only the project name", () => {
 });
 
 test("rejects missing, duplicate, or unexpected project names", () => {
-  assert.throws(() => rewriteProjectNameText('[project]\ndescription = "missing"\n'), /assignment, found 0/);
   assert.throws(
-    () => rewriteProjectNameText('[project]\nname = "py-cord"\nname = "py-cord"\n'),
+    () => rewriteProjectNameText('[project]\ndescription = "missing"\n'),
+    /assignment, found 0/,
+  );
+  assert.throws(
+    () =>
+      rewriteProjectNameText('[project]\nname = "py-cord"\nname = "py-cord"\n'),
     /assignment, found 2/,
   );
-  assert.throws(() => rewriteProjectNameText('[project]\nname = "py-cord-dev"\n'), /must be exactly/);
   assert.throws(
-    () => rewriteProjectNameText('[project]\nname = "py-cord"\n\n[project]\nname = "py-cord"\n'),
+    () => rewriteProjectNameText('[project]\nname = "py-cord-dev"\n'),
+    /must be exactly/,
+  );
+  assert.throws(
+    () =>
+      rewriteProjectNameText(
+        '[project]\nname = "py-cord"\n\n[project]\nname = "py-cord"\n',
+      ),
     /one \[project] table/,
   );
 });
@@ -213,10 +237,19 @@ test("copies only declared tracked files into an isolated development source", (
     trackedFiles: ["pyproject.toml", "discord/__init__.py"],
   });
   assert.equal(result.fileCount, 2);
-  assert.match(readFileSync(join(destination, "pyproject.toml"), "utf8"), /name = "py-cord-dev"/);
-  assert.equal(readFileSync(join(destination, "discord", "__init__.py"), "utf8"), "__version__ = 'test'\n");
+  assert.match(
+    readFileSync(join(destination, "pyproject.toml"), "utf8"),
+    /name = "py-cord-dev"/,
+  );
+  assert.equal(
+    readFileSync(join(destination, "discord", "__init__.py"), "utf8"),
+    "__version__ = 'test'\n",
+  );
   assert.throws(() => readFileSync(join(destination, "untracked.txt")));
-  assert.match(readFileSync(join(source, "pyproject.toml"), "utf8"), /name = "py-cord"/);
+  assert.match(
+    readFileSync(join(source, "pyproject.toml"), "utf8"),
+    /name = "py-cord"/,
+  );
 });
 
 test("accepts only canonical source date epochs", () => {
@@ -229,7 +262,10 @@ test("accepts only canonical source date epochs", () => {
 test("rejects source and destination overlap", () => {
   const source = createSourceFixture();
   assert.throws(
-    () => prepareDevSource(source, join(source, "prepared"), { trackedFiles: ["pyproject.toml"] }),
+    () =>
+      prepareDevSource(source, join(source, "prepared"), {
+        trackedFiles: ["pyproject.toml"],
+      }),
     /must not overlap/,
   );
 });
@@ -238,7 +274,10 @@ test("rejects tracked path traversal", () => {
   const source = createSourceFixture();
   const destination = join(temporaryDirectory(), "prepared");
   assert.throws(
-    () => prepareDevSource(source, destination, { trackedFiles: ["pyproject.toml", "../secret.txt"] }),
+    () =>
+      prepareDevSource(source, destination, {
+        trackedFiles: ["pyproject.toml", "../secret.txt"],
+      }),
     /unsafe component/,
   );
 });
@@ -251,7 +290,10 @@ test("rejects tracked paths that escape through a directory symlink", () => {
   symlinkSync(outside, link, process.platform === "win32" ? "junction" : "dir");
   const destination = join(temporaryDirectory(), "prepared");
   assert.throws(
-    () => prepareDevSource(source, destination, { trackedFiles: ["pyproject.toml", "linked/secret.txt"] }),
+    () =>
+      prepareDevSource(source, destination, {
+        trackedFiles: ["pyproject.toml", "linked/secret.txt"],
+      }),
     /resolves outside/,
   );
 });
@@ -266,7 +308,12 @@ test("accepts exactly the expected wheel and sdist", () => {
 test("stages only validated artifacts and preserves their digests", () => {
   const source = createArtifacts();
   const destination = join(temporaryDirectory(), "dist-dev");
-  const staged = stageArtifacts("dev", "2.8.2.dev1", source.distDir, destination);
+  const staged = stageArtifacts(
+    "dev",
+    "2.8.2.dev1",
+    source.distDir,
+    destination,
+  );
   assert.equal(staged.wheelDigest, source.wheelDigest);
   assert.equal(staged.sdistDigest, source.sdistDigest);
   assert.throws(
@@ -277,15 +324,30 @@ test("stages only validated artifacts and preserves their digests", () => {
 
 test("rejects missing, wrong, duplicate-equivalent, and extra distributions", () => {
   const directory = temporaryDirectory();
-  writeFileSync(join(directory, "py_cord_dev-2.8.2.dev1-py3-none-any.whl"), "wheel");
-  assert.throws(() => validateArtifacts("dev", "2.8.2.dev1", directory), /expected exactly/);
+  writeFileSync(
+    join(directory, "py_cord_dev-2.8.2.dev1-py3-none-any.whl"),
+    "wheel",
+  );
+  assert.throws(
+    () => validateArtifacts("dev", "2.8.2.dev1", directory),
+    /expected exactly/,
+  );
   writeFileSync(join(directory, "py_cord_dev-2.8.2.dev1.tar.gz"), "sdist");
   writeFileSync(join(directory, "py_cord_dev-2.8.2.dev1.zip"), "extra");
-  assert.throws(() => validateArtifacts("dev", "2.8.2.dev1", directory), /expected exactly/);
+  assert.throws(
+    () => validateArtifacts("dev", "2.8.2.dev1", directory),
+    /expected exactly/,
+  );
   rmSync(join(directory, "py_cord_dev-2.8.2.dev1.zip"));
   rmSync(join(directory, "py_cord_dev-2.8.2.dev1.tar.gz"));
-  writeFileSync(join(directory, "py_cord_dev-2.8.2.dev2.tar.gz"), "wrong version");
-  assert.throws(() => validateArtifacts("dev", "2.8.2.dev1", directory), /expected exactly/);
+  writeFileSync(
+    join(directory, "py_cord_dev-2.8.2.dev2.tar.gz"),
+    "wrong version",
+  );
+  assert.throws(
+    () => validateArtifacts("dev", "2.8.2.dev1", directory),
+    /expected exactly/,
+  );
 });
 
 test("classifies absent, reusable annotated, lightweight, and conflicting tags", () => {
@@ -300,7 +362,9 @@ test("classifies absent, reusable annotated, lightweight, and conflicting tags",
     "reusable",
   );
   assert.match(
-    classifyTagState(tag, expected, [{ ref: `refs/tags/${tag}`, sha: expected }]).reason,
+    classifyTagState(tag, expected, [
+      { ref: `refs/tags/${tag}`, sha: expected },
+    ]).reason,
     /lightweight/,
   );
   assert.match(
@@ -310,7 +374,10 @@ test("classifies absent, reusable annotated, lightweight, and conflicting tags",
     ]).reason,
     /targets/,
   );
-  assert.throws(() => classifyTagState("dev-v2.8.2.dev1;bad", expected, []), /invalid Git tag/);
+  assert.throws(
+    () => classifyTagState("dev-v2.8.2.dev1;bad", expected, []),
+    /invalid Git tag/,
+  );
 });
 
 test("resolves only a single annotated tag and exposes its peeled commit", () => {
@@ -325,28 +392,42 @@ test("resolves only a single annotated tag and exposes its peeled commit", () =>
     { state: "annotated", commit },
   );
   assert.throws(
-    () => resolveAnnotatedTagState(tag, [{ ref: `refs/tags/${tag}`, sha: commit }]),
+    () =>
+      resolveAnnotatedTagState(tag, [{ ref: `refs/tags/${tag}`, sha: commit }]),
     /annotated tag/,
   );
 });
 
 test("derives ordered production history while ignoring noncanonical tags", () => {
   assert.deepEqual(
-    deriveReleaseHistory("2.9.0", ["v2.8.1", "v2.9.0rc1", "v2.9.0rc2", "v2.9.0rc.3", "dev-v2.9.0.dev1"]),
+    deriveReleaseHistory("2.9.0", [
+      "v2.8.1",
+      "v2.9.0rc1",
+      "v2.9.0rc2",
+      "v2.9.0rc.3",
+      "dev-v2.9.0.dev1",
+    ]),
     { previousTag: "v2.9.0rc2", previousFinalTag: "v2.8.1" },
   );
   assert.deepEqual(
     deriveReleaseHistory("2.9.0rc1", ["v2.8.0", "v2.8.1", "v2.9.0"]),
     { previousTag: "v2.8.1", previousFinalTag: "v2.8.1" },
   );
-  assert.throws(() => deriveReleaseHistory("1.0.0", ["v1.0.0rc1"]), /previous production tags/);
+  assert.throws(
+    () => deriveReleaseHistory("1.0.0", ["v1.0.0rc1"]),
+    /previous production tags/,
+  );
 });
 
 test("classifies an absent release", () => {
   const artifacts = createArtifacts();
   const state = classifyReleaseState(
     null,
-    { tag: "dev-v2.8.2.dev1", title: "Pycord Development 2.8.2.dev1", commit: "a".repeat(40) },
+    {
+      tag: "dev-v2.8.2.dev1",
+      title: "Pycord Development 2.8.2.dev1",
+      commit: "a".repeat(40),
+    },
     artifacts,
   );
   assert.equal(state.state, "absent");
@@ -358,11 +439,21 @@ test("classifies a matching resumable draft and identifies missing assets", () =
   const payload = matchingReleasePayload(artifacts, {
     draft: true,
     immutable: false,
-    assets: [releaseAsset(artifacts.wheelName, artifacts.wheelDigest, artifacts.wheelSize)],
+    assets: [
+      releaseAsset(
+        artifacts.wheelName,
+        artifacts.wheelDigest,
+        artifacts.wheelSize,
+      ),
+    ],
   });
   const state = classifyReleaseState(
     payload,
-    { tag: payload.tag_name, title: payload.name, commit: payload.target_commitish },
+    {
+      tag: payload.tag_name,
+      title: payload.name,
+      commit: payload.target_commitish,
+    },
     artifacts,
   );
   assert.equal(state.state, "draft");
@@ -375,7 +466,11 @@ test("classifies a matching immutable published release", () => {
   const payload = matchingReleasePayload(artifacts);
   const state = classifyReleaseState(
     payload,
-    { tag: payload.tag_name, title: payload.name, commit: payload.target_commitish },
+    {
+      tag: payload.tag_name,
+      title: payload.name,
+      commit: payload.target_commitish,
+    },
     artifacts,
   );
   assert.equal(state.state, "published");
@@ -392,8 +487,16 @@ test("classifies final production releases as non-prereleases", () => {
     prerelease: false,
     target_commitish: "a".repeat(40),
     assets: [
-      releaseAsset(artifacts.wheelName, artifacts.wheelDigest, artifacts.wheelSize),
-      releaseAsset(artifacts.sdistName, artifacts.sdistDigest, artifacts.sdistSize),
+      releaseAsset(
+        artifacts.wheelName,
+        artifacts.wheelDigest,
+        artifacts.wheelSize,
+      ),
+      releaseAsset(
+        artifacts.sdistName,
+        artifacts.sdistDigest,
+        artifacts.sdistSize,
+      ),
     ],
   };
   assert.equal(
@@ -433,11 +536,21 @@ test("rejects mismatched release metadata, mutable publication, assets, and dige
     commit: "a".repeat(40),
   };
   assert.throws(
-    () => classifyReleaseState(matchingReleasePayload(artifacts, { name: "wrong" }), expected, artifacts),
+    () =>
+      classifyReleaseState(
+        matchingReleasePayload(artifacts, { name: "wrong" }),
+        expected,
+        artifacts,
+      ),
     /title/,
   );
   assert.throws(
-    () => classifyReleaseState(matchingReleasePayload(artifacts, { immutable: false }), expected, artifacts),
+    () =>
+      classifyReleaseState(
+        matchingReleasePayload(artifacts, { immutable: false }),
+        expected,
+        artifacts,
+      ),
     /must be immutable/,
   );
   assert.throws(
@@ -445,7 +558,11 @@ test("rejects mismatched release metadata, mutable publication, assets, and dige
       classifyReleaseState(
         matchingReleasePayload(artifacts, {
           assets: [
-            releaseAsset(artifacts.wheelName, artifacts.wheelDigest, artifacts.wheelSize),
+            releaseAsset(
+              artifacts.wheelName,
+              artifacts.wheelDigest,
+              artifacts.wheelSize,
+            ),
             releaseAsset("unexpected.txt", `sha256:${"0".repeat(64)}`, 1),
           ],
         }),
@@ -459,8 +576,16 @@ test("rejects mismatched release metadata, mutable publication, assets, and dige
       classifyReleaseState(
         matchingReleasePayload(artifacts, {
           assets: [
-            releaseAsset(artifacts.wheelName, `sha256:${"0".repeat(64)}`, artifacts.wheelSize),
-            releaseAsset(artifacts.sdistName, artifacts.sdistDigest, artifacts.sdistSize),
+            releaseAsset(
+              artifacts.wheelName,
+              `sha256:${"0".repeat(64)}`,
+              artifacts.wheelSize,
+            ),
+            releaseAsset(
+              artifacts.sdistName,
+              artifacts.sdistDigest,
+              artifacts.sdistSize,
+            ),
           ],
         }),
         expected,
@@ -498,7 +623,12 @@ test("fetches GitHub release state and treats only 404 as absent", async () => {
     "token",
     async (url, options) => {
       request = { url, options };
-      return { ...response(200), async json() { return payload; } };
+      return {
+        ...response(200),
+        async json() {
+          return payload;
+        },
+      };
     },
   );
   assert.deepEqual(found, payload);
@@ -525,24 +655,38 @@ test("fetches GitHub release state and treats only 404 as absent", async () => {
 });
 
 test("requires immutable releases to be enabled", () => {
-  assert.deepEqual(assertImmutableReleaseSetting({ enabled: true, enforced_by_owner: false }), {
-    enabled: true,
-    enforcedByOwner: false,
-  });
-  assert.throws(() => assertImmutableReleaseSetting({ enabled: false }), /must be enabled/);
+  assert.deepEqual(
+    assertImmutableReleaseSetting({ enabled: true, enforced_by_owner: false }),
+    {
+      enabled: true,
+      enforcedByOwner: false,
+    },
+  );
+  assert.throws(
+    () => assertImmutableReleaseSetting({ enabled: false }),
+    /must be enabled/,
+  );
 });
 
 test("treats only a PyPI 404 as an unused version", async () => {
   assert.equal(
-    (await assertPypiVersionUnused("py-cord-dev", "2.8.2.dev1", async () => response(404))).unused,
+    (
+      await assertPypiVersionUnused("py-cord-dev", "2.8.2.dev1", async () =>
+        response(404),
+      )
+    ).unused,
     true,
   );
   await assert.rejects(
-    assertPypiVersionUnused("py-cord-dev", "2.8.2.dev1", async () => response(200)),
+    assertPypiVersionUnused("py-cord-dev", "2.8.2.dev1", async () =>
+      response(200),
+    ),
     /already exists/,
   );
   await assert.rejects(
-    assertPypiVersionUnused("py-cord-dev", "2.8.2.dev1", async () => response(503)),
+    assertPypiVersionUnused("py-cord-dev", "2.8.2.dev1", async () =>
+      response(503),
+    ),
     /HTTP 503/,
   );
 });
@@ -554,7 +698,11 @@ test("matches a published PyPI version to the exact local artifacts", async () =
     return {
       filename,
       size: wheel ? artifacts.wheelSize : artifacts.sdistSize,
-      digests: { sha256: (wheel ? artifacts.wheelDigest : artifacts.sdistDigest).slice(7) },
+      digests: {
+        sha256: (wheel ? artifacts.wheelDigest : artifacts.sdistDigest).slice(
+          7,
+        ),
+      },
     };
   });
   const result = await assertPypiVersionPublished(
@@ -565,39 +713,43 @@ test("matches a published PyPI version to the exact local artifacts", async () =
   );
   assert.equal(result.published, true);
   await assert.rejects(
-    assertPypiVersionPublished(
-      "py-cord",
-      "2.9.0",
-      artifacts,
-      async () => jsonResponse(200, { urls: urls.slice(0, 1) }),
+    assertPypiVersionPublished("py-cord", "2.9.0", artifacts, async () =>
+      jsonResponse(200, { urls: urls.slice(0, 1) }),
     ),
     /missing expected distribution/,
   );
   await assert.rejects(
-    assertPypiVersionPublished(
-      "py-cord",
-      "2.9.0",
-      artifacts,
-      async () => jsonResponse(200, { urls: [{ ...urls[0], digests: { sha256: "0".repeat(64) } }, urls[1]] }),
+    assertPypiVersionPublished("py-cord", "2.9.0", artifacts, async () =>
+      jsonResponse(200, {
+        urls: [{ ...urls[0], digests: { sha256: "0".repeat(64) } }, urls[1]],
+      }),
     ),
     /SHA-256/,
   );
   await assert.rejects(
-    assertPypiVersionPublished("py-cord", "2.9.0", artifacts, async () => response(404)),
+    assertPypiVersionPublished("py-cord", "2.9.0", artifacts, async () =>
+      response(404),
+    ),
     /not published/,
   );
 });
 
 test("requires the exact GitHub automation identity", async () => {
   let request;
-  const result = await assertGitHubIdentity("NyuwBot", "token", async (url, options) => {
-    request = { url, options };
-    return jsonResponse(200, { login: "NyuwBot" });
-  });
+  const result = await assertGitHubIdentity(
+    "NyuwBot",
+    "token",
+    async (url, options) => {
+      request = { url, options };
+      return jsonResponse(200, { login: "NyuwBot" });
+    },
+  );
   assert.deepEqual(result, { login: "NyuwBot", verified: true });
   assert.equal(request.options.headers.Authorization, "Bearer token");
   await assert.rejects(
-    assertGitHubIdentity("NyuwBot", "token", async () => jsonResponse(200, { login: "someone-else" })),
+    assertGitHubIdentity("NyuwBot", "token", async () =>
+      jsonResponse(200, { login: "someone-else" }),
+    ),
     /expected 'NyuwBot'/,
   );
   await assert.rejects(
@@ -614,9 +766,16 @@ test("generates future production milestone candidates and rejects ambiguity", (
     "2.9.0rc.1",
     "v2.9.0rc.1",
   ]);
-  assert.equal(classifyMilestoneState("2.9.0", [{ title: "2.9.0" }]).state, "matched");
+  assert.equal(
+    classifyMilestoneState("2.9.0", [{ title: "2.9.0" }]).state,
+    "matched",
+  );
   assert.throws(
-    () => classifyMilestoneState("2.9.0", [{ title: "2.9.0" }, { title: "v2.9.0" }]),
+    () =>
+      classifyMilestoneState("2.9.0", [
+        { title: "2.9.0" },
+        { title: "v2.9.0" },
+      ]),
     /multiple milestones/,
   );
 });
@@ -661,7 +820,11 @@ test("closes the exact release milestone and verifies the response", async () =>
     async (url, options) => {
       calls.push({ url, options });
       if (options.method === "PATCH") {
-        return jsonResponse(200, { number: 9, title: "v2.9.0rc.1", state: "closed" });
+        return jsonResponse(200, {
+          number: 9,
+          title: "v2.9.0rc.1",
+          state: "closed",
+        });
       }
       return jsonResponse(200, [
         { number: 9, title: "v2.9.0rc.1", state: "open", open_issues: 2 },
@@ -677,20 +840,35 @@ test("closes the exact release milestone and verifies the response", async () =>
 
 test("milestone closing is idempotent and rejects absent or ambiguous matches", async () => {
   const closed = await closeReleaseMilestone(
-    { repository: "Pycord-Development/pycord", version: "2.9.0", token: "token" },
-    async () => jsonResponse(200, [{ number: 13, title: "2.9.0", state: "closed", open_issues: 0 }]),
+    {
+      repository: "Pycord-Development/pycord",
+      version: "2.9.0",
+      token: "token",
+    },
+    async () =>
+      jsonResponse(200, [
+        { number: 13, title: "2.9.0", state: "closed", open_issues: 0 },
+      ]),
   );
   assert.equal(closed.alreadyClosed, true);
   await assert.rejects(
     closeReleaseMilestone(
-      { repository: "Pycord-Development/pycord", version: "2.9.0", token: "token" },
+      {
+        repository: "Pycord-Development/pycord",
+        version: "2.9.0",
+        token: "token",
+      },
       async () => jsonResponse(200, []),
     ),
     /no milestone matches/,
   );
   await assert.rejects(
     closeReleaseMilestone(
-      { repository: "Pycord-Development/pycord", version: "2.9.0", token: "token" },
+      {
+        repository: "Pycord-Development/pycord",
+        version: "2.9.0",
+        token: "token",
+      },
       async () =>
         jsonResponse(200, [
           { number: 13, title: "2.9.0", state: "open", open_issues: 0 },
@@ -713,7 +891,10 @@ test("serializes safe multiline GitHub outputs", () => {
     formatted,
     "version<<delimiter_0\n2.8.2.dev1\ndelimiter_0\nnotes<<delimiter_1\nline one\nline two\ndelimiter_1\n",
   );
-  assert.throws(() => formatGitHubOutputs({ "bad-name": "value" }), /invalid GitHub output name/);
+  assert.throws(
+    () => formatGitHubOutputs({ "bad-name": "value" }),
+    /invalid GitHub output name/,
+  );
 });
 
 test("appends GitHub outputs without truncating earlier values", () => {
@@ -727,7 +908,9 @@ test("appends GitHub outputs without truncating earlier values", () => {
 test("builds and parses changelog categories in stable order", () => {
   const block = buildUnreleasedChangelogBlock("master");
   assert.match(block, /`master` branch/);
-  const categories = parseChangelogCategories("### Fixed\n\n- Fixed a thing\n\n### Added\n- Added a thing\n");
+  const categories = parseChangelogCategories(
+    "### Fixed\n\n- Fixed a thing\n\n### Added\n- Added a thing\n",
+  );
   assert.equal(
     renderChangelogReleaseBody(categories),
     "### Added\n\n- Added a thing\n\n### Fixed\n\n- Fixed a thing",
@@ -818,7 +1001,11 @@ test("derives stable and RC Read the Docs versions", () => {
 });
 
 test("Read the Docs dry run does not require a token", async () => {
-  const result = await manageReadTheDocsRelease({ version: "2.9.0", sync: true, dryRun: true });
+  const result = await manageReadTheDocsRelease({
+    version: "2.9.0",
+    sync: true,
+    dryRun: true,
+  });
   assert.equal(result.docsVersion, "v2.9.0");
   assert.equal(result.sync, true);
 });
@@ -827,7 +1014,13 @@ test("Read the Docs sync waits for the version before activation", async () => {
   const calls = [];
   const statuses = [202, 404, 404, 200, 200];
   const result = await manageReadTheDocsRelease(
-    { version: "2.9.0rc1", token: "token", sync: true, attempts: 3, retryDelayMs: 0 },
+    {
+      version: "2.9.0rc1",
+      token: "token",
+      sync: true,
+      attempts: 3,
+      retryDelayMs: 0,
+    },
     {
       fetchImplementation: async (url, options) => {
         calls.push({ url, options });
@@ -837,16 +1030,26 @@ test("Read the Docs sync waits for the version before activation", async () => {
     },
   );
   assert.equal(result.docsVersion, "v2.9.x");
-  assert.deepEqual(calls.map((call) => call.options.method), ["POST", "GET", "GET", "GET", "PATCH"]);
+  assert.deepEqual(
+    calls.map((call) => call.options.method),
+    ["POST", "GET", "GET", "GET", "PATCH"],
+  );
   assert.equal(JSON.parse(calls.at(-1).options.body).hidden, true);
 });
 
 test("Read the Docs sync fails when the version never appears", async () => {
   await assert.rejects(
     manageReadTheDocsRelease(
-      { version: "2.9.0", token: "token", sync: true, attempts: 2, retryDelayMs: 0 },
       {
-        fetchImplementation: async (url, options) => response(options.method === "POST" ? 202 : 404),
+        version: "2.9.0",
+        token: "token",
+        sync: true,
+        attempts: 2,
+        retryDelayMs: 0,
+      },
+      {
+        fetchImplementation: async (url, options) =>
+          response(options.method === "POST" ? 202 : 404),
         delayImplementation: async () => {},
       },
     ),
@@ -869,7 +1072,9 @@ test("builds Discord payloads for final and RC releases", () => {
     repository: "Pycord-Development/pycord",
   });
   assert.match(rcPayload.content, /@here/);
-  assert.deepEqual(rcPayload.allowed_mentions, { parse: ["everyone", "roles"] });
+  assert.deepEqual(rcPayload.allowed_mentions, {
+    parse: ["everyone", "roles"],
+  });
 });
 
 test("Discord dry run does not require a webhook and live send validates the endpoint", async () => {
@@ -878,9 +1083,15 @@ test("Discord dry run does not require a webhook and live send validates the end
     previousTag: "v2.8.1",
     repository: "Pycord-Development/pycord",
   };
-  assert.equal((await sendDiscordReleaseNotification({ ...options, dryRun: true })).sent, false);
+  assert.equal(
+    (await sendDiscordReleaseNotification({ ...options, dryRun: true })).sent,
+    false,
+  );
   await assert.rejects(
-    sendDiscordReleaseNotification({ ...options, webhookUrl: "https://example.com/hook" }),
+    sendDiscordReleaseNotification({
+      ...options,
+      webhookUrl: "https://example.com/hook",
+    }),
     /Discord webhook URL/,
   );
   let request;
@@ -893,7 +1104,10 @@ test("Discord dry run does not require a webhook and live send validates the end
   );
   assert.equal(sent.sent, true);
   assert.equal(request.init.method, "POST");
-  assert.equal(JSON.parse(request.init.body).allowed_mentions.parse[0], "everyone");
+  assert.equal(
+    JSON.parse(request.init.body).allowed_mentions.parse[0],
+    "everyone",
+  );
 });
 
 test("artifact digest helper agrees with Node crypto", () => {
