@@ -1553,7 +1553,7 @@ class Guild(Hashable):
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
 
-            .. warning::
+            .. note::
                 Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         reason: Optional[:class:`str`]
@@ -1573,7 +1573,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.9
 
-            .. warning::
+            .. note::
                 Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
@@ -1930,7 +1930,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-            .. warning::
+            .. note::
                 Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         spoiler: :class:`bool`
@@ -1938,7 +1938,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.9
 
-            .. warning::
+            .. note::
                 Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
@@ -2100,7 +2100,7 @@ class Guild(Hashable):
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
 
-            .. warning::
+            .. note::
                 Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         reason: Optional[:class:`str`]
@@ -2136,7 +2136,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.9
 
-            .. warning::
+            .. note::
                 Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns

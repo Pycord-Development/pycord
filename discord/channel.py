@@ -1226,7 +1226,10 @@ class ForumChannel(_TextChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            Whether the channel is marked as NSFW.
+            Whether the channel is marked as NSFW. Mutually exclusive with :attr:`spoiler`.
+
+            .. note::
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -1270,6 +1273,9 @@ class ForumChannel(_TextChannel):
             Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
 
             .. versionadded:: 2.9
+
+            .. note::
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1644,7 +1650,10 @@ class MediaChannel(ForumChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            Whether the channel is marked as NSFW.
+            Whether the channel is marked as NSFW. Mutually exclusive with :attr:`spoiler`.
+
+            .. note::
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -1685,6 +1694,9 @@ class MediaChannel(ForumChannel):
             Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
 
             .. versionadded:: 2.9
+
+            .. note::
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -2312,14 +2324,20 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             A value of `0` disables slowmode. The maximum value possible is `21600`.
 
         nsfw: :class:`bool`
-            Whether the channel is marked as NSFW.
+            Whether the channel is marked as NSFW. Mutually exclusive with :attr:`spoiler`.
 
             .. versionadded:: 2.7
+
+            .. note::
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         spoiler: :class:`bool`
             Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
 
             .. versionadded:: 2.9
+
+            .. note::
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
