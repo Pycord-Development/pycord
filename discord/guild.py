@@ -2707,9 +2707,6 @@ class Guild(Hashable):
         ``PRUNE_REQUIRES_ADMIN`` guild feature, you must have the
         :attr:`~Permissions.administrator` permission instead.
 
-        .. versionchanged:: 2.9
-            The ``PRUNE_REQUIRES_ADMIN`` guild feature requirement was added.
-
         To check how many members you would prune without actually pruning,
         see the :meth:`estimate_pruned_members` function.
 
