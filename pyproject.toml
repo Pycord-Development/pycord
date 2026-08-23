@@ -140,7 +140,7 @@ extension-pkg-whitelist = [
     "pydantic",
     "ujson"
 ]
-py-version = 3.10
+py-version = "3.10"
 
 [tool.pylint.messages_control]
 enable = [
