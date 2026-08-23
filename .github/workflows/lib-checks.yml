@@ -5,12 +5,11 @@ on:
     paths:
       - "discord/**"
       - "examples/**"
-      - "requirements/**"
+      - "uv.lock"
       - "tests/**"
       - ".github/actions/**"
       - ".github/workflows/lib-checks.yml"
       - "LICENSE"
-      - "MANIFEST.in"
       - "README.rst"
       - "*.toml"
       - "*.py"
@@ -54,12 +53,11 @@ jobs:
             const matches = (file) => (
               file.startsWith('discord/') ||
               file.startsWith('examples/') ||
-              file.startsWith('requirements/') ||
+              file === 'uv.lock' ||
               file.startsWith('tests/') ||
               file.startsWith('.github/actions/') ||
               file === '.github/workflows/lib-checks.yml' ||
               file === 'LICENSE' ||
-              file === 'MANIFEST.in' ||
               file === 'README.rst' ||
               (!file.includes('/') && file.endsWith('.toml')) ||
               (!file.includes('/') && file.endsWith('.py')) ||
@@ -84,10 +82,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Run codespell"
         run:
           codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" \
@@ -99,10 +98,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Run bandit"
         run: bandit --recursive  --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
   pylint:
@@ -112,10 +112,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Setup cache"
         id: cache-pylint
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -133,10 +134,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Setup cache"
         id: cache-mypy
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -157,10 +159,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Lint with flake8"
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -176,11 +179,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: ${{ matrix.python-version }}
-          install-voice: "true"
+          groups: "dev"
 
       - name: "Run tests"
         run: tox
@@ -195,11 +198,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: ${{ matrix.python-version }}
-          install-voice: "true"
+          groups: "dev"
 
       - name: "Run tests"
         run: tox
