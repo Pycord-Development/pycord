@@ -56,7 +56,10 @@ jobs:
       - name: "Verify the triggering commit"
         env:
           EXPECTED_COMMIT: ${{ github.sha }}
-        run: test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+          test -z "$(git status --porcelain)"
 
       - name: "Derive reproducible build timestamp"
         id: source_date
@@ -99,6 +102,7 @@ jobs:
       - name: "Build wheel and source distribution"
         working-directory: ${{ steps.source.outputs.source_dir }}
         env:
+          # hatch-vcs exposes no override of its own, and the copied source has no .git
           SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.release.outputs.version }}
           SOURCE_DATE_EPOCH: ${{ steps.source_date.outputs.source_date_epoch }}
         run: uv build --no-sources --clear --no-create-gitignore
@@ -127,20 +131,24 @@ jobs:
           cd "$VERIFY_ENV"
           "$VERIFY_ENV/bin/python" -c 'import importlib.metadata as metadata, os; import discord; expected = os.environ["EXPECTED_VERSION"]; assert metadata.version("py-cord-dev") == expected; assert discord.__version__ == expected'
 
-      - name: "Generate build provenance attestations"
-        id: attest
+      - name: "Generate wheel build provenance attestation"
+        id: attest_wheel
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.0.0
         with:
-          subject-path: |
-            ${{ steps.artifacts.outputs.wheel_path }}
-            ${{ steps.artifacts.outputs.sdist_path }}
+          subject-path: ${{ steps.artifacts.outputs.wheel_path }}
+
+      - name: "Generate source distribution build provenance attestation"
+        id: attest_sdist
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.0.0
+        with:
+          subject-path: ${{ steps.artifacts.outputs.sdist_path }}
 
       - name: "Verify wheel provenance"
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify "${{ steps.artifacts.outputs.wheel_path }}"
-          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --bundle "${{ steps.attest_wheel.outputs.bundle-path }}"
           --repo "$GITHUB_REPOSITORY"
           --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release_dev.yml"
           --source-digest "$GITHUB_SHA"
@@ -151,7 +159,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify "${{ steps.artifacts.outputs.sdist_path }}"
-          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --bundle "${{ steps.attest_sdist.outputs.bundle-path }}"
           --repo "$GITHUB_REPOSITORY"
           --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release_dev.yml"
           --source-digest "$GITHUB_SHA"
@@ -185,9 +193,10 @@ jobs:
         if: ${{ steps.tag.outputs.create_tag == 'true' }}
         env:
           TAG: ${{ steps.release.outputs.tag }}
+          GIT_COMMITTER_NAME: ${{ github.actor }}
+          GIT_COMMITTER_EMAIL: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
           git tag --annotate "$TAG" "$GITHUB_SHA" --message "Development release $VERSION"
           git push origin "refs/tags/$TAG"
 
@@ -199,6 +208,7 @@ jobs:
           --remote origin
           --tag "${{ steps.release.outputs.tag }}"
           --expected-commit "$GITHUB_SHA"
+          --require-existing true
 
       # Production reuse: GitHub release mutations stay explicit while the helper validates all policy and state.
       - name: "Create immutable GitHub prerelease"
@@ -261,11 +271,16 @@ jobs:
           --repository "$GITHUB_REPOSITORY"
           --tag-state "${{ steps.final_tag.outputs.tag_state }}"
 
-      # Production reuse: trusted publishing uses the same action without static PyPI credentials.
+      - name: "Convert build provenance attestations for PyPI"
+        run: >-
+          python .github/scripts/convert_attestations.py
+          --bundle "${{ steps.attest_wheel.outputs.bundle-path }}"
+          --bundle "${{ steps.attest_sdist.outputs.bundle-path }}"
+          "${{ steps.artifacts.outputs.wheel_path }}"
+          "${{ steps.artifacts.outputs.sdist_path }}"
+
       - name: "Publish distributions to PyPI"
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
-        with:
-          packages-dir: dist-dev/
+        run: uv publish --trusted-publishing always dist-dev/*
 
       # Production-only follow-up commands are update-changelog, rtd-release, close-milestone, and notify-discord.
       # Development releases intentionally stop after trusted publishing.

@@ -70,6 +70,13 @@ jobs:
         with:
           node-version: "24"
 
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
+        with:
+          python-version: "3.14"
+          groups: "release"
+          frozen: "true"
+
       - name: "Validate and derive production release values"
         id: release
         run: >-
@@ -118,6 +125,9 @@ jobs:
           --branch "$BRANCH"
           --repository "$GITHUB_REPOSITORY"
 
+      - name: "Format the prepared changelog"
+        run: mdformat CHANGELOG.md
+
       - name: "Commit prepared changelog as NyuwBot"
         run: |
           set -euo pipefail
@@ -130,26 +140,26 @@ jobs:
           }
           git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
 
-      - name: "Update version branch with an explicit lease"
+      - name: "Update version branch"
         env:
           VERSION_BRANCH: ${{ steps.release.outputs.version_branch }}
         run: |
           set -euo pipefail
           git check-ref-format --branch "$VERSION_BRANCH"
-          remote_line="$(git ls-remote --heads origin "refs/heads/$VERSION_BRANCH")"
-          if [[ "$(printf '%s\n' "$remote_line" | sed '/^$/d' | wc -l)" -gt 1 ]]; then
-            echo "::error::Remote returned ambiguous state for refs/heads/$VERSION_BRANCH."
-            exit 1
-          fi
-          remote_sha="${remote_line%%[[:space:]]*}"
-          git push \
-            --force-with-lease="refs/heads/$VERSION_BRANCH:$remote_sha" \
-            origin "HEAD:refs/heads/$VERSION_BRANCH"
+          git push origin "HEAD:refs/heads/$VERSION_BRANCH"
 
       - name: "Push prepared commit to the dispatch branch"
         env:
           BRANCH: ${{ github.ref_name }}
         run: git push origin "HEAD:refs/heads/$BRANCH"
+
+      - name: "Create and push the annotated production tag"
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git tag --annotate "$TAG" HEAD --message "Release $VERSION"
+          git push origin "refs/tags/$TAG"
 
   publish:
     name: "Build, attest, and publish py-cord"
@@ -196,10 +206,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
           test -z "$(git status --porcelain)"
-          node .github/scripts/release-tools.mjs check-changelog \
-            --path CHANGELOG.md \
-            --version "$VERSION" \
-            --repository "$GITHUB_REPOSITORY"
+
+      - name: "Verify the prepared changelog"
+        run: >-
+          node .github/scripts/release-tools.mjs check-changelog
+          --path CHANGELOG.md
+          --version "$VERSION"
+          --repository "$GITHUB_REPOSITORY"
 
       - name: "Derive reproducible build timestamp"
         id: source_date
@@ -222,6 +235,16 @@ jobs:
           --project py-cord
           --version "$VERSION"
 
+      - name: "Verify the production tag"
+        id: tag
+        run: >-
+          node .github/scripts/release-tools.mjs check-tag
+          --repository "$GITHUB_WORKSPACE"
+          --remote origin
+          --tag "${{ steps.release.outputs.tag }}"
+          --expected-commit "$GITHUB_SHA"
+          --require-existing true
+
       - name: "Setup uv"
         uses: ./.github/actions/setup-uv
         with:
@@ -231,7 +254,6 @@ jobs:
 
       - name: "Build wheel and source distribution"
         env:
-          SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.release.outputs.version }}
           SOURCE_DATE_EPOCH: ${{ steps.source_date.outputs.source_date_epoch }}
         run: uv build --no-sources --clear --no-create-gitignore
 
@@ -257,20 +279,24 @@ jobs:
           cd "$VERIFY_ENV"
           "$VERIFY_ENV/bin/python" -c 'import importlib.metadata as metadata, os; import discord; expected = os.environ["EXPECTED_VERSION"]; assert metadata.version("py-cord") == expected; assert discord.__version__ == expected'
 
-      - name: "Generate build provenance attestations"
-        id: attest
+      - name: "Generate wheel build provenance attestation"
+        id: attest_wheel
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.0.0
         with:
-          subject-path: |
-            ${{ steps.artifacts.outputs.wheel_path }}
-            ${{ steps.artifacts.outputs.sdist_path }}
+          subject-path: ${{ steps.artifacts.outputs.wheel_path }}
+
+      - name: "Generate source distribution build provenance attestation"
+        id: attest_sdist
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.0.0
+        with:
+          subject-path: ${{ steps.artifacts.outputs.sdist_path }}
 
       - name: "Verify wheel provenance"
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify "${{ steps.artifacts.outputs.wheel_path }}"
-          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --bundle "${{ steps.attest_wheel.outputs.bundle-path }}"
           --repo "$GITHUB_REPOSITORY"
           --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml"
           --source-digest "$GITHUB_SHA"
@@ -281,20 +307,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh attestation verify "${{ steps.artifacts.outputs.sdist_path }}"
-          --bundle "${{ steps.attest.outputs.bundle-path }}"
+          --bundle "${{ steps.attest_sdist.outputs.bundle-path }}"
           --repo "$GITHUB_REPOSITORY"
           --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml"
           --source-digest "$GITHUB_SHA"
           --deny-self-hosted-runners
-
-      - name: "Check production tag state"
-        id: tag
-        run: >-
-          node .github/scripts/release-tools.mjs check-tag
-          --repository "$GITHUB_WORKSPACE"
-          --remote origin
-          --tag "${{ steps.release.outputs.tag }}"
-          --expected-commit "$GITHUB_SHA"
 
       - name: "Check production release state"
         id: release_state
@@ -308,25 +325,6 @@ jobs:
           --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
           --repository "$GITHUB_REPOSITORY"
           --tag-state "${{ steps.tag.outputs.tag_state }}"
-
-      - name: "Create and push annotated production tag"
-        if: ${{ steps.tag.outputs.create_tag == 'true' }}
-        env:
-          TAG: ${{ steps.release.outputs.tag }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag --annotate "$TAG" "$GITHUB_SHA" --message "Release $VERSION"
-          git push origin "refs/tags/$TAG"
-
-      - name: "Verify final production tag state"
-        id: final_tag
-        run: >-
-          node .github/scripts/release-tools.mjs check-tag
-          --repository "$GITHUB_WORKSPACE"
-          --remote origin
-          --tag "${{ steps.release.outputs.tag }}"
-          --expected-commit "$GITHUB_SHA"
 
       - name: "Create immutable GitHub release"
         if: ${{ steps.release_state.outputs.create_release == 'true' }}
@@ -390,12 +388,18 @@ jobs:
           --expected-commit "$GITHUB_SHA"
           --dist-dir "${{ steps.artifacts.outputs.dist_dir }}"
           --repository "$GITHUB_REPOSITORY"
-          --tag-state "${{ steps.final_tag.outputs.tag_state }}"
+          --tag-state "${{ steps.tag.outputs.tag_state }}"
+
+      - name: "Convert build provenance attestations for PyPI"
+        run: >-
+          python .github/scripts/convert_attestations.py
+          --bundle "${{ steps.attest_wheel.outputs.bundle-path }}"
+          --bundle "${{ steps.attest_sdist.outputs.bundle-path }}"
+          "${{ steps.artifacts.outputs.wheel_path }}"
+          "${{ steps.artifacts.outputs.sdist_path }}"
 
       - name: "Publish distributions to PyPI"
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
-        with:
-          packages-dir: dist/
+        run: uv publish --trusted-publishing always
 
       # This phase intentionally ends after trusted publishing.
 

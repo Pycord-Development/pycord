@@ -13,8 +13,8 @@ authors = [
 description = "A Python wrapper for the Discord API"
 readme = { content-type = "text/x-rst", file = "README.rst" }
 requires-python = ">=3.10, <3.15"
-license = "MIT"
-license-files = ["LICENSE"]
+license = "MIT AND BSD-3-Clause"
+license-files = ["LICENSE", "discord/bin/COPYING"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -67,16 +67,18 @@ dev = [
     "tox>=4.27.0",
     "tox-gh>=1.5.0",
     "tox-uv>=1.36.0",
-    "mdformat~=1.0",
-    "mdformat-gfm~=1.0",
-    "mdformat-gfm-alerts~=2.1",
+    { include-group = "mdformat" },
     { include-group = "test" },
 ]
 test = [
     "pytest~=9.1.1",
     "pytest-asyncio~=1.4.0",
 ]
-
+mdformat = [
+    "mdformat~=1.0",
+    "mdformat-gfm~=1.0",
+    "mdformat-gfm-alerts~=2.1",
+]
 docs = [
     "sphinx==9.1.0",
     "sphinxcontrib_trio==1.2.0",
@@ -91,8 +93,9 @@ docs = [
     "beautifulsoup4~=4.12",
 ]
 release = [
-    "build>=1.2.1",
-    "twine>=5.1.1",
+    "twine>=5.1.1",  # twine check --strict only used to fail the release if the RST README would not render on PyPI
+    "pypi-attestations~=0.0.30",
+    { include-group = "mdformat" }
 ]
 
 [tool.uv.dependency-groups]
