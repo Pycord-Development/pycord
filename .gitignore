@@ -197,3 +197,5 @@ remote-release.yml
 *.wav
 *.ogg
 *.ps1
+
+discord/_version.py

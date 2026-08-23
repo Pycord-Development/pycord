@@ -1,0 +1,67 @@
+name: "Setup uv"
+description: "Install uv and sync the environment from uv.lock. Requires actions/checkout to have run first."
+
+inputs:
+  groups:
+    description: "Dependency groups to sync, comma- or space-separated. Empty syncs no groups."
+    required: false
+    default: ""
+  extras:
+    description: "Extras to sync, comma- or space-separated. Empty syncs no extras."
+    required: false
+    default: ""
+  frozen:
+    description: "Sync straight from uv.lock without re-resolving."
+    required: false
+    default: "true"
+  cache:
+    description: "Cache the uv download and its dependency cache."
+    required: false
+    default: "true"
+  python-version:
+    description: "Python version to sync against. Defaults to the project's .python-version."
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Install uv"
+      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      with:
+        enable-cache: ${{ inputs.cache }}
+        cache-dependency-glob: "uv.lock"
+        python-version: ${{ inputs.python-version }}
+
+    - name: "Sync environment"
+      shell: bash
+      env:
+        INPUT_GROUPS: ${{ inputs.groups }}
+        INPUT_EXTRAS: ${{ inputs.extras }}
+        INPUT_FROZEN: ${{ inputs.frozen }}
+      run: |
+        set -euo pipefail
+
+        args=(--no-default-groups)
+        if [[ "$INPUT_FROZEN" == "true" ]]; then
+          args+=(--frozen)
+        fi
+        for group in ${INPUT_GROUPS//,/ }; do
+          args+=(--group "$group")
+        done
+        for extra in ${INPUT_EXTRAS//,/ }; do
+          args+=(--extra "$extra")
+        done
+
+        echo "::notice::uv sync ${args[*]}"
+        uv sync "${args[@]}"
+
+    - name: "Put the synced environment on PATH"
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [[ "$RUNNER_OS" == "Windows" ]]; then
+          echo "$GITHUB_WORKSPACE/.venv/Scripts" >> "$GITHUB_PATH"
+        else
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+        fi
