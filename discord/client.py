@@ -133,7 +133,7 @@ def _cleanup_loop(loop: asyncio.AbstractEventLoop) -> None:
         loop.close()
 
 
-class Client:
+class Client:  # pylint: disable=function-redefined
     r"""Represents a client connection that connects to Discord.
     This class is used to interact with the Discord WebSocket and API.
 

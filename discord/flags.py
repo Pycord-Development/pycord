@@ -97,8 +97,8 @@ def fill_with_flags(*, inverted: bool = False):
 
 # n.b. flags must inherit from this and use the decorator above
 class BaseFlags:
-    VALID_FLAGS: ClassVar[dict[str, int]]
-    DEFAULT_VALUE: ClassVar[int]
+    VALID_FLAGS: ClassVar[dict[str, int]]  # pylint: disable=declare-non-slot
+    DEFAULT_VALUE: ClassVar[int]  # pylint: disable=declare-non-slot
 
     value: int
 

@@ -131,6 +131,7 @@ jobs:
         with:
           python-version: "3.14"
           groups: "dev"
+          extras: "voice,speed"
       - name: "Setup cache"
         id: cache-pylint
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -140,7 +141,11 @@ jobs:
           restore-keys: |
             pylint-${{ runner.os }}-py3.14-
       - name: "Run pylint"
-        run: pylint discord/ --exit-zero
+        run: |
+          pylint discord/ \
+            --output-format=github,json:pylint.json \
+            --fail-under=0 \
+            --fail-on=E,F
   mypy:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}

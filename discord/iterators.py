@@ -428,7 +428,9 @@ class HistoryIterator(_AsyncIterator["Message"]):
                     self.state.create_message(channel=channel, data=element)
                 )
 
-    async def _retrieve_messages(self, retrieve: int) -> list[MessagePayload]:
+    async def _retrieve_messages(  # pylint: disable=method-hidden
+        self, retrieve: int
+    ) -> list[MessagePayload]:
         """Retrieve messages and update next parameters."""
         raise NotImplementedError
 
@@ -657,7 +659,9 @@ class GuildIterator(_AsyncIterator["Guild"]):
             for element in data:
                 await self.guilds.put(self.create_guild(element))
 
-    async def _retrieve_guilds(self, retrieve) -> list[Guild]:
+    async def _retrieve_guilds(  # pylint: disable=method-hidden
+        self, retrieve
+    ) -> list[Guild]:
         """Retrieve guilds and update next parameters."""
         raise NotImplementedError
 
@@ -1055,7 +1059,9 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         for element in data:
             await self.entitlements.put(self.create_entitlement(element))
 
-    async def _retrieve_entitlements(self, retrieve) -> list[EntitlementPayload]:
+    async def _retrieve_entitlements(  # pylint: disable=method-hidden
+        self, retrieve
+    ) -> list[EntitlementPayload]:
         """Retrieve entitlements and update next parameters."""
         raise NotImplementedError
 
@@ -1170,7 +1176,9 @@ class SubscriptionIterator(_AsyncIterator["Subscription"]):
             for element in data:
                 await self.subscriptions.put(self.create_subscription(element))
 
-    async def _retrieve_subscriptions(self, retrieve) -> list[SubscriptionPayload]:
+    async def _retrieve_subscriptions(  # pylint: disable=method-hidden
+        self, retrieve
+    ) -> list[SubscriptionPayload]:
         raise NotImplementedError
 
     async def _retrieve_subscriptions_before_strategy(self, retrieve):

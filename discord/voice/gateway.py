@@ -148,7 +148,7 @@ class VoiceWebSocket(DiscordWebSocket):
     def self_id(self) -> int:
         return self._connection.self_id
 
-    async def _hook(self, *args: Any) -> Any:
+    async def _hook(self, *args: Any) -> Any:  # pylint: disable=method-hidden
         pass
 
     async def send_as_bytes(self, op: ConvertibleToInt, data: bytes) -> None:
@@ -276,7 +276,7 @@ class VoiceWebSocket(DiscordWebSocket):
             op_type = msg[3]
             result = state.dave_session.process_proposals(
                 (
-                    davey.ProposalsOperationType.append
+                    davey.ProposalsOperationType.append  # pylint: disable=possibly-used-before-assignment
                     if op_type == 0
                     else davey.ProposalsOperationType.revoke
                 ),

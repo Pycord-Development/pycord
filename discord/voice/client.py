@@ -430,7 +430,9 @@ class VoiceClient(VoiceProtocol):
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data: Any) -> bytes:
         # deprecated
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
+        box = nacl.secret.SecretBox(  # pylint: disable=possibly-used-before-assignment
+            bytes(self.secret_key)
+        )
         nonce = bytearray(24)
         nonce[:12] = header
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext

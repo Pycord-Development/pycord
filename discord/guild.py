@@ -222,7 +222,7 @@ class GuildRoleCounts(dict[int, int]):
         return super().__contains__(key)
 
 
-class Guild(Hashable):
+class Guild(Hashable):  # pylint: disable=function-redefined
     """Represents a Discord guild.
 
     This is referred to as a "server" in the official Discord UI.
