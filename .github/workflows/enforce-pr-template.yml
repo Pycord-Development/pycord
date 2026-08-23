@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'Pull request number to validate'
+        description: "Pull request number to validate"
         required: true
         type: number
 

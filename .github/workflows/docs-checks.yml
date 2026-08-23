@@ -12,7 +12,7 @@ on:
       - "README.rst"
       - "*.toml"
       - "*.py"
-    branches: [ master ]
+    branches: [master]
   pull_request:
   workflow_dispatch:
     inputs:
@@ -77,7 +77,7 @@ jobs:
             }
 
   docs:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.docs == 'true' }}
     runs-on: ubuntu-latest
     steps:

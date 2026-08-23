@@ -5,7 +5,7 @@ on:
     paths:
       - "discord/**"
       - "docs/**"
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * 1"
@@ -36,8 +36,7 @@ jobs:
           sphinx-build  -b gettext . ./build/locales
         working-directory: ./docs
       - name: "Build locales"
-        run:
-          sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
+        run: sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
         working-directory: ./docs
       - name: "Crowdin"
         uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2.17.1

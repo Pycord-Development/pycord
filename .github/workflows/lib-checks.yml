@@ -17,7 +17,7 @@ on:
       - "*.toml"
       - "*.py"
       - ".*"
-    branches: [ master ]
+    branches: [master]
   pull_request:
   workflow_dispatch:
   schedule:
@@ -94,7 +94,7 @@ jobs:
             }
 
   release-tooling:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.release_tools == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -108,7 +108,7 @@ jobs:
         run: node --test .github/scripts/release-tools.test.mjs
 
   codespell:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
@@ -120,11 +120,10 @@ jobs:
           python-version: "3.14"
           groups: "dev"
       - name: "Run codespell"
-        run:
-          codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" \
+        run: codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" \
           --exclude-file=".github/workflows/codespell.yml"
   bandit:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
@@ -138,7 +137,7 @@ jobs:
       - name: "Run bandit"
         run: bandit --recursive --exclude ./.venv --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
   mdformat:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
@@ -152,7 +151,7 @@ jobs:
       - name: "Run mdformat"
         run: git ls-files -z '*.md' | xargs -0 -r mdformat --check
   pylint:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
@@ -174,7 +173,7 @@ jobs:
       - name: "Run pylint"
         run: pylint discord/ --exit-zero
   mypy:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
@@ -199,7 +198,7 @@ jobs:
       - name: "Run mypy"
         run: mypy --non-interactive discord/
   flake8:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -215,13 +214,13 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
   tests:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' && github.event_name != 'workflow_dispatch' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.10", "3.14" ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.14"]
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -234,13 +233,13 @@ jobs:
       - name: "Run tests"
         run: tox
   tests-full:
-    needs: [ changes ]
+    needs: [changes]
     if: ${{ needs.changes.outputs.lib == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -254,7 +253,7 @@ jobs:
         run: tox
   tests-pass: # ref: https://github.com/orgs/community/discussions/4324#discussioncomment-3477871
     runs-on: ubuntu-latest
-    needs: [ changes, release-tooling, tests, tests-full ]
+    needs: [changes, release-tooling, tests, tests-full]
     if: always()
     steps:
       - name: Tests succeeded

@@ -13,10 +13,9 @@ permissions:
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
-    if:
-      ${{
-        contains(format(',{0},', vars.AUTOMATED_DEPENDENCY_BOT_IDS), format(',{0},', github.event.pull_request.user.id)) ||
-        contains(format(',{0},', vars.AUTOMATED_DEPENDENCY_BOT_IDS), format(', {0},', github.event.pull_request.user.id))
+    if: ${{
+      contains(format(',{0},', vars.AUTOMATED_DEPENDENCY_BOT_IDS), format(',{0},', github.event.pull_request.user.id)) ||
+      contains(format(',{0},', vars.AUTOMATED_DEPENDENCY_BOT_IDS), format(', {0},', github.event.pull_request.user.id))
       }}
     continue-on-error: true
     steps:

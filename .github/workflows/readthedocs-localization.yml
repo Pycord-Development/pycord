@@ -19,7 +19,20 @@ jobs:
     environment: documentation
     strategy:
       matrix:
-        rdt_projects: ["pycord-spanish", "pycord-japanese", "pycord-brazilian", "pycord-russian", "pycord-german", "pycord-hindi", "pycord-korean", "pycord-italian", "pycord-chinese", "pycord-french", "pycord-turkish"]
+        rdt_projects:
+          [
+            "pycord-spanish",
+            "pycord-japanese",
+            "pycord-brazilian",
+            "pycord-russian",
+            "pycord-german",
+            "pycord-hindi",
+            "pycord-korean",
+            "pycord-italian",
+            "pycord-chinese",
+            "pycord-french",
+            "pycord-turkish",
+          ]
     steps:
       - name: "Trigger RDT ${{ matrix.rdt_projects }}"
         run: |

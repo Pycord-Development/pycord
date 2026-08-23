@@ -31,8 +31,7 @@ jobs:
           sphinx-build -b gettext . ./build/locales
         working-directory: ./docs
       - name: "Build locales"
-        run:
-          sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
+        run: sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
         working-directory: ./docs
       - name: "Crowdin"
         id: crowdin
@@ -65,7 +64,7 @@ jobs:
 
   pr:
     name: "PR operations"
-    needs: [ download ]
+    needs: [download]
     runs-on: ubuntu-latest
     permissions:
       contents: read
