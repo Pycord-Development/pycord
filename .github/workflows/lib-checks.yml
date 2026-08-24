@@ -11,7 +11,7 @@ on:
       - ".github/scripts/**"
       - ".github/workflows/lib-checks.yml"
       - ".github/workflows/release_dev.yml"
-      - ".github/workflows/release_prod.yml.template"
+      - ".github/workflows/release.yml"
       - "LICENSE"
       - "README.rst"
       - "*.toml"
@@ -73,7 +73,7 @@ jobs:
               file.startsWith('.github/scripts/') ||
               file === '.github/workflows/lib-checks.yml' ||
               file === '.github/workflows/release_dev.yml' ||
-              file === '.github/workflows/release_prod.yml.template'
+              file === '.github/workflows/release.yml'
             );
 
             const libraryChanged = files.some((file) => matchesLibrary(file.filename));
