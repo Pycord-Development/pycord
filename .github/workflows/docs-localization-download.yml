@@ -18,18 +18,13 @@ jobs:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-tags: true
-      - name: "Install Python"
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+          fetch-depth: 0
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
-          cache: "pip"
-          cache-dependency-path: "requirements/_locale.txt"
-      - name: "Install Dependencies"
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -r requirements/_locale.txt
-          pip install .[speed,voice,docs]
+          groups: "docs"
+          extras: "speed,voice"
       - name: "Get locales"
         run: |
           make html

@@ -1,9 +1,9 @@
 [build-system]
 requires = [
-    "setuptools>=77.0.3,<=80.9.0",
-    "setuptools-scm>=9.2,<=9.2.2",
+    "hatchling>=1.27",
+    "hatch-vcs>=0.5",
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "hatchling.build"
 
 [project]
 name = "py-cord"
@@ -31,7 +31,21 @@ classifiers = [
     "Topic :: Utilities",
     "Typing :: Typed",
 ]
-dynamic = ["version", "dependencies", "optional-dependencies"]
+dynamic = ["version"]
+dependencies = [
+    "aiohttp>=3.13.2,<4.0",
+    "typing_extensions>=4.12.0,<5",
+]
+
+[project.optional-dependencies]
+speed = [
+    "msgspec~=0.21.0",
+    "aiohttp[speedups]",
+]
+voice = [
+    "PyNaCl>=1.6.2,<1.7",
+    "davey>=0.1.4,<1",
+]
 
 [project.urls]
 Homepage = "https://pycord.dev"
@@ -40,31 +54,6 @@ Source = "https://github.com/Pycord-Development/pycord"
 Documentation = "https://docs.pycord.dev"
 Tracker = "https://github.com/Pycord-Development/pycord/issues"
 Funding = "https://patreon.com/pycord"
-
-[tool.setuptools]
-packages = [
-    "discord",
-    "discord.types",
-    "discord.sinks",
-    "discord.ui",
-    "discord.webhook",
-    "discord.commands",
-    "discord.ext.commands",
-    "discord.ext.tasks",
-    "discord.ext.pages",
-    "discord.ext.bridge",
-    "discord.bin",
-    "discord.voice",
-]
-
-[tool.setuptools.dynamic]
-dependencies = { file = "requirements/_.txt" }
-readme = { content-type = "text/x-rst", file = "README.rst" }
-
-[tool.setuptools.dynamic.optional-dependencies]
-docs = { file = "requirements/docs.txt" }
-speed = { file = "requirements/speed.txt" }
-voice = { file = "requirements/voice.txt" }
 
 [dependency-groups]
 dev = [
@@ -76,13 +65,60 @@ dev = [
     "bandit==1.9.4",
     "flake8==7.3.0",
     "tox>=4.27.0",
-    "tox-gh>=1.5.0"
+    "tox-gh>=1.5.0",
+    "tox-uv>=1.36.0",
+    "mdformat~=1.0",
+    "mdformat-gfm~=1.0",
+    "mdformat-gfm-alerts~=2.1",
+    { include-group = "test" },
 ]
 test = [
     "pytest~=9.1.1",
     "pytest-asyncio~=1.4.0",
 ]
-[tool.setuptools_scm]
+
+docs = [
+    "sphinx==9.1.0",
+    "sphinxcontrib_trio==1.2.0",
+    "myst-parser[linkify]==5.1.0",
+    "sphinxext-opengraph==0.13.0",
+    "sphinx-copybutton==0.5.2",
+    "furo==2025.12.19",
+    "sphinx-autodoc-typehints==3.13.2",
+    "sphinx-intl==2.3.2",
+    "typing_extensions==4.16.0",
+    # used by scripts/docs_json_exporter.py to parse the built HTML
+    "beautifulsoup4~=4.12",
+]
+release = [
+    "build>=1.2.1",
+    "twine>=5.1.1",
+]
+
+[tool.uv.dependency-groups]
+docs = { requires-python = ">=3.13" }
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build]
+artifacts = [
+    "/discord/emojis.json",
+    "/discord/_version.py",
+]
+
+[tool.hatch.build.hooks.vcs]
+version-file = "discord/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["discord"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/discord",
+    "/LICENSE",
+    "/README.rst",
+]
 
 [tool.black]
 target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
@@ -104,7 +140,7 @@ extension-pkg-whitelist = [
     "pydantic",
     "ujson"
 ]
-py-version = 3.10
+py-version = "3.10"
 
 [tool.pylint.messages_control]
 enable = [
@@ -125,12 +161,14 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.tox]
-requires = ["tox>=4"]
+requires = ["tox>=4", "tox-uv>=1.36.0"]
 env_list = ["3.14", "3.13", "3.12", "3.11", "3.10", "3.14-novoice"]
 
 [tool.tox.env_run_base]
 description = "run unit tests"
 commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
+runner = "uv-venv-lock-runner"
+uv_sync_flags = ["--frozen"]
 dependency_groups = ["test"]
 extras = ["voice"]
 
