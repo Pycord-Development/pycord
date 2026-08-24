@@ -57,6 +57,7 @@ if TYPE_CHECKING:
     DecryptRTP = Callable[[RTPPacket], bytes]
     DecryptRTCP = Callable[[bytes], bytes]
     SpeakingEvent = Literal["member_speaking_start", "member_speaking_stop"]
+    # pylint: disable-next=possibly-used-before-assignment
     EncryptionBox = nacl.secret.SecretBox | nacl.secret.Aead
 
 _log = logging.getLogger(__name__)
@@ -187,7 +188,7 @@ class AudioReader:
                         packet.type,
                         type(packet),
                     )
-        except CryptoError as exc:
+        except CryptoError as exc:  # pylint: disable=possibly-used-before-assignment
             _log.error("CryptoError while decoding a voice packet", exc_info=exc)
             return
         except Exception as exc:
@@ -303,7 +304,7 @@ class PacketDecryptor:
                 try:
                     decrypted_audio = dave.decrypt(
                         uid,
-                        davey.MediaType.audio,
+                        davey.MediaType.audio,  # pylint: disable=possibly-used-before-assignment
                         raw_payload,
                     )
 

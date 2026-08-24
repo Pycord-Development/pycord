@@ -132,9 +132,9 @@ class Component:
 
     __slots__: tuple[str, ...] = ("type", "id")
 
-    __repr_info__: ClassVar[tuple[str, ...]]
+    __repr_info__: ClassVar[tuple[str, ...]]  # pylint: disable=declare-non-slot
     type: ComponentType
-    versions: tuple[int, ...]
+    versions: tuple[int, ...]  # pylint: disable=declare-non-slot
 
     def __repr__(self) -> str:
         attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__repr_info__)

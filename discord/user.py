@@ -609,7 +609,7 @@ class User(BaseUser, discord.abc.Messageable):
     @classmethod
     def _copy(cls, user: User):
         self = super()._copy(user)
-        self._stored = False
+        self._stored = False  # pylint: disable=assigning-non-slot
         return self
 
     async def _get_channel(self) -> DMChannel:

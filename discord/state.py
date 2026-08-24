@@ -153,7 +153,7 @@ async def logging_coroutine(coroutine: Coroutine[Any, Any, T], *, info: str) -> 
         _log.exception("Exception occurred during %s", info)
 
 
-class ConnectionState:
+class ConnectionState:  # pylint: disable=function-redefined
     if TYPE_CHECKING:
         _get_websocket: Callable[..., DiscordWebSocket]
         _get_client: Callable[..., Client]
@@ -369,7 +369,7 @@ class ConnectionState:
         for vc in self.voice_clients:
             vc.main_ws = ws  # type: ignore
 
-    def store_user(self, data: UserPayload) -> User:
+    def store_user(self, data: UserPayload) -> User:  # pylint: disable=method-hidden
         user_id = int(data["id"])
         try:
             user = self._users[user_id]
@@ -388,7 +388,7 @@ class ConnectionState:
             copied_user._update(data)
             return copied_user
 
-    def deref_user(self, user_id: int) -> None:
+    def deref_user(self, user_id: int) -> None:  # pylint: disable=method-hidden
         self._users.pop(user_id, None)
 
     def create_user(self, data: UserPayload) -> User:

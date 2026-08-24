@@ -48,8 +48,8 @@ from .commands import (
     ApplicationCommand,
     ApplicationContext,
     SlashCommandGroup,
-    _BaseCommand,
 )
+from .commands.core import _BaseCommand
 
 if TYPE_CHECKING:
     from .ext.bridge import BridgeCommand

@@ -149,7 +149,8 @@ enable = [
 ]
 disable = [
     "protected-access",
-    "fixme"
+    "fixme",
+    "typecheck",
 ]
 
 [tool.pylint.format]

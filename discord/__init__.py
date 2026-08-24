@@ -92,12 +92,14 @@ if TYPE_CHECKING:
     @deprecated(
         "discord.VoiceClient is deprecated in favour of discord.voice.VoiceClient since 2.7 and will be removed in 3.0",
     )
-    class VoiceClient(VoiceClientC): ...
+    class VoiceClient(VoiceClientC): ...  # pylint: disable=function-redefined
 
     @deprecated(
         "discord.VoiceProtocol is deprecated in favour of discord.voice.VoiceProtocol since 2.7 and will be removed in 3.0",
     )
-    class VoiceProtocol(VoiceProtocolC[C], Generic[C]): ...
+    class VoiceProtocol(  # pylint: disable=function-redefined
+        VoiceProtocolC[C], Generic[C]
+    ): ...
 
 else:
     from .utils import warn_deprecated

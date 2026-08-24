@@ -39,7 +39,7 @@ from urllib.parse import quote as _uriquote
 
 import aiohttp
 
-from . import __version__, utils
+from . import __version__, utils  # pylint: disable=no-name-in-module
 from .errors import (
     DiscordServerError,
     Forbidden,
