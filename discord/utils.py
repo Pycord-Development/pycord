@@ -61,7 +61,6 @@ from typing import (
     ForwardRef,
     Generic,
     Literal,
-    Mapping,
     ParamSpec,
     Protocol,
     TypeVar,
