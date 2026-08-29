@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, ClassVar, Iterator, TypeVar, overload
+from collections.abc import Callable, Iterator
+from typing import Any, ClassVar, TypeVar, overload
 
 from .enums import UserFlags
 
@@ -34,6 +35,7 @@ __all__ = (
     "MessageFlags",
     "AttachmentFlags",
     "PublicUserFlags",
+    "GatewayCapabilities",
     "Intents",
     "MemberCacheFlags",
     "ApplicationFlags",
@@ -585,6 +587,36 @@ class PublicUserFlags(BaseFlags):
             for public_flag in UserFlags
             if self._has_flag(public_flag.value)
         ]
+
+
+@fill_with_flags()
+class GatewayCapabilities(BaseFlags):
+    """Wraps Discord gateway capabilities.
+
+    These bits are mostly undocumented and meant for specialized clients. They are
+    sent with the IDENTIFY payload as the ``capabilities`` field.
+
+    Attributes
+    ----------
+    value: :class:`int`
+        The raw capability value. Prefer toggling via the provided attributes.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    def none(cls) -> GatewayCapabilities:
+        """Creates a :class:`GatewayCapabilities` instance with no bits enabled."""
+
+        self = cls.__new__(cls)
+        self.value = cls.DEFAULT_VALUE
+        return self
+
+    @flag_value
+    def obfuscated_channels(self):
+        """:class:`bool`: Obfuscates channel identifiers in gateway events."""
+
+        return 1 << 15
 
 
 @fill_with_flags()
@@ -1585,6 +1617,12 @@ class ChannelFlags(BaseFlags):
         .. versionadded:: 2.7
         """
         return 1 << 15
+
+    @flag_value
+    def obfuscated(self):
+        """:class:`bool`: Returns ``True`` if the channel is obfuscated by the gateway."""
+
+        return 1 << 17
 
 
 @fill_with_flags()

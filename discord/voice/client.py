@@ -93,12 +93,6 @@ class VoiceClient(VoiceProtocol["Client"]):
 
     Attributes
     ----------
-    session_id: :class:`str`
-        The voice connection session ID.
-    token: :class:`str`
-        The voice connection token.
-    endpoint: :class:`str`
-        The endpoint we are connecting to.
     channel: Union[:class:`VoiceChannel`, :class:`StageChannel`]
         The channel we are connected to.
 

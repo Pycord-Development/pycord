@@ -30,6 +30,9 @@ from typing import TYPE_CHECKING, Any, Literal, NamedTuple
 
 from .core import OPUS_SILENCE, Packet
 
+if TYPE_CHECKING:
+    from typing import Final
+
 MAX_UINT_32 = 0xFFFFFFFF
 MAX_UINT_16 = 0xFFFF
 

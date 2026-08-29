@@ -32,13 +32,11 @@ import itertools
 import logging
 import os
 from collections import OrderedDict, deque
+from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
     Deque,
-    Sequence,
     TypeVar,
     Union,
 )
@@ -51,7 +49,7 @@ from .channel import *
 from .channel import _channel_factory
 from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, InteractionType, ScheduledEventStatus, Status, try_enum
-from .flags import ApplicationFlags, Intents, MemberCacheFlags
+from .flags import ApplicationFlags, GatewayCapabilities, Intents, MemberCacheFlags
 from .guild import Guild
 from .integrations import _integration_factory
 from .interactions import Interaction
@@ -248,6 +246,18 @@ class ConnectionState:
         self._activity: ActivityPayload | None = activity
         self._status: str | None = status
         self._intents: Intents = intents
+
+        capabilities = options.get("capabilities")
+        if capabilities is None:
+            capabilities = GatewayCapabilities.none()
+        elif isinstance(capabilities, int):
+            capabilities = GatewayCapabilities._from_value(capabilities)
+        elif not isinstance(capabilities, GatewayCapabilities):
+            raise TypeError(
+                "capabilities parameter must be GatewayCapabilities or int."
+            )
+
+        self.capabilities: GatewayCapabilities = capabilities
 
         if not intents.members or cache_flags._empty:
             self.store_user = self.create_user  # type: ignore
