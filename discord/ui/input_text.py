@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING
 
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
+from .constant import ComponentLimits
 from .item import ModalItem
 
 __all__ = ("InputText", "TextInput")
@@ -101,16 +102,35 @@ class InputText(ModalItem):
         id: int | None = None,
     ):
         super().__init__()
-        if label and len(str(label)) > 45:
-            raise ValueError("label must be 45 characters or fewer")
-        if min_length and (min_length < 0 or min_length > 4000):
-            raise ValueError("min_length must be between 0 and 4000")
-        if max_length and (max_length < 0 or max_length > 4000):
-            raise ValueError("max_length must be between 1 and 4000")
-        if value and len(str(value)) > 4000:
-            raise ValueError("value must be 4000 characters or fewer")
-        if placeholder and len(str(placeholder)) > 100:
-            raise ValueError("placeholder must be 100 characters or fewer")
+        if label and len(str(label)) > ComponentLimits.TEXT_INPUT_LABEL_MAX:
+            raise ValueError(
+                f"label must be {ComponentLimits.TEXT_INPUT_LABEL_MAX} characters or fewer"
+            )
+        if min_length and (
+            min_length < ComponentLimits.TEXT_INPUT_MIN_LENGTH_MIN
+            or min_length > ComponentLimits.TEXT_INPUT_MIN_LENGTH_MAX
+        ):
+            raise ValueError(
+                f"min_length must be between {ComponentLimits.TEXT_INPUT_MIN_LENGTH_MIN} and {ComponentLimits.TEXT_INPUT_MIN_LENGTH_MAX}"
+            )
+        if max_length and (
+            max_length < ComponentLimits.TEXT_INPUT_MAX_LENGTH_MIN
+            or max_length > ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX
+        ):
+            raise ValueError(
+                f"max_length must be between {ComponentLimits.TEXT_INPUT_MAX_LENGTH_MIN} and {ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX}"
+            )
+        if value and len(str(value)) > ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX:
+            raise ValueError(
+                f"value must be {ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX} characters or fewer"
+            )
+        if (
+            placeholder
+            and len(str(placeholder)) > ComponentLimits.TEXT_INPUT_PLACEHOLDER_MAX
+        ):
+            raise ValueError(
+                f"placeholder must be {ComponentLimits.TEXT_INPUT_PLACEHOLDER_MAX} characters or fewer"
+            )
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -180,8 +200,10 @@ class InputText(ModalItem):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
-        if len(value) > 100:
-            raise ValueError("custom_id must be 100 characters or fewer")
+        if len(value) > ComponentLimits.CUSTOM_ID_MAX:
+            raise ValueError(
+                f"custom_id must be {ComponentLimits.CUSTOM_ID_MAX} characters or fewer"
+            )
         self.underlying.custom_id = value
 
     @property
@@ -193,8 +215,10 @@ class InputText(ModalItem):
     def label(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"label should be str not {value.__class__.__name__}")
-        if len(value) > 45:
-            raise ValueError("label must be 45 characters or fewer")
+        if len(value) > ComponentLimits.TEXT_INPUT_LABEL_MAX:
+            raise ValueError(
+                f"label must be {ComponentLimits.TEXT_INPUT_LABEL_MAX} characters or fewer"
+            )
         self.underlying.label = value
 
     @property
@@ -205,9 +229,13 @@ class InputText(ModalItem):
     @placeholder.setter
     def placeholder(self, value: str | None):
         if value and not isinstance(value, str):
-            raise TypeError(f"placeholder must be None or str not {value.__class__.__name__}")  # type: ignore
-        if value and len(value) > 100:
-            raise ValueError("placeholder must be 100 characters or fewer")
+            raise TypeError(
+                f"placeholder must be None or str not {value.__class__.__name__}"
+            )  # type: ignore
+        if value and len(value) > ComponentLimits.TEXT_INPUT_PLACEHOLDER_MAX:
+            raise ValueError(
+                f"placeholder must be {ComponentLimits.TEXT_INPUT_PLACEHOLDER_MAX} characters or fewer"
+            )
         self.underlying.placeholder = value
 
     @property
@@ -218,9 +246,16 @@ class InputText(ModalItem):
     @min_length.setter
     def min_length(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
-        if value and (value < 0 or value) > 4000:
-            raise ValueError("min_length must be between 0 and 4000")
+            raise TypeError(
+                f"min_length must be None or int not {value.__class__.__name__}"
+            )  # type: ignore
+        if value and (
+            value < ComponentLimits.TEXT_INPUT_MIN_LENGTH_MIN
+            or value > ComponentLimits.TEXT_INPUT_MIN_LENGTH_MAX
+        ):
+            raise ValueError(
+                f"min_length must be between {ComponentLimits.TEXT_INPUT_MIN_LENGTH_MIN} and {ComponentLimits.TEXT_INPUT_MIN_LENGTH_MAX}"
+            )
         self.underlying.min_length = value
 
     @property
@@ -231,9 +266,16 @@ class InputText(ModalItem):
     @max_length.setter
     def max_length(self, value: int | None):
         if value and not isinstance(value, int):
-            raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
-        if value and (value <= 0 or value > 4000):
-            raise ValueError("max_length must be between 1 and 4000")
+            raise TypeError(
+                f"max_length must be None or int not {value.__class__.__name__}"
+            )  # type: ignore
+        if value and (
+            value < ComponentLimits.TEXT_INPUT_MAX_LENGTH_MIN
+            or value > ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX
+        ):
+            raise ValueError(
+                f"max_length must be between {ComponentLimits.TEXT_INPUT_MAX_LENGTH_MIN} and {ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX}"
+            )
         self.underlying.max_length = value
 
     @property
@@ -259,8 +301,10 @@ class InputText(ModalItem):
     def value(self, value: str | None):
         if value and not isinstance(value, str):
             raise TypeError(f"value must be None or str not {value.__class__.__name__}")  # type: ignore
-        if value and len(str(value)) > 4000:
-            raise ValueError("value must be 4000 characters or fewer")
+        if value and len(str(value)) > ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX:
+            raise ValueError(
+                f"value must be {ComponentLimits.TEXT_INPUT_MAX_LENGTH_MAX} characters or fewer"
+            )
         self.underlying.value = value
 
     @property
