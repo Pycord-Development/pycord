@@ -26,7 +26,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
 - Fixed `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
-- Fixed `AttributeError` when fetching a message from a `PartialMessageable` that has a
+- Fixed `AttributeError` when fetching a message from a `PartialMessageable` object that has a
   thread. ([#3309](https://github.com/Pycord-Development/pycord/pull/3309))
 
 ### Deprecated
