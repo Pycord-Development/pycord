@@ -1203,7 +1203,7 @@ class Message(Hashable):
 
         self.thread: Thread | None = None
         if thread_data := data.get("thread"):
-            # When fetching from a PartialMessageable we don't have a guild so we need to fallback here
+            # When fetching from a PartialMessageable, we don't have a guild so we need to fallback here
             guild = self.guild or state._get_guild(
                 utils._get_as_snowflake(thread_data, "guild_id")
             )
