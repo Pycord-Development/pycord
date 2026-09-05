@@ -4723,7 +4723,7 @@ class Guild(Hashable):
         """
         return self._sounds.get(sound_id)
 
-    def fetch_join_requests(
+    def join_requests(
         self,
         *,
         status: JoinRequestStatus | None = None,
@@ -4787,16 +4787,16 @@ class Guild(Hashable):
 
         Usage ::
 
-            async for request in guild.fetch_join_requests(limit=250):
+            async for request in guild.join_requests(limit=250):
                 print(request.user, request.status)
-
+s
         Flattening into a list ::
 
-            requests = await guild.fetch_join_requests(limit=None).flatten()
+            requests = await guild.join_requests(limit=None).flatten()
             # requests is now a list of JoinRequest...
 
             # need the total number of submitted join requests? do this:
-            iterator = guild.fetch_join_requests(limit=None)
+            iterator = guild.join_requests(limit=None)
             await iterator.next()
             print(iterator.total)  # prints the total number of submitted join requests
             requests = await iterator.flatten()
