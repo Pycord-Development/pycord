@@ -71,19 +71,19 @@ from typing_extensions import deprecated as ext_deprecated
 
 if TYPE_CHECKING:
     from discord import (
-        Client,
-        VoiceChannel,
-        TextChannel,
-        ForumChannel,
-        StageChannel,
-        CategoryChannel,
-        Thread,
-        Member,
-        User,
-        Guild,
-        Role,
-        GuildEmoji,
         AppEmoji,
+        CategoryChannel,
+        Client,
+        ForumChannel,
+        Guild,
+        GuildEmoji,
+        Member,
+        Role,
+        StageChannel,
+        TextChannel,
+        Thread,
+        User,
+        VoiceChannel,
     )
 
 from .errors import HTTPException, InvalidArgument, InvalidData
@@ -96,32 +96,32 @@ else:
     HAS_MSGSPEC = True
 
 __all__ = (
-    "parse_time",
-    "warn_deprecated",
+    "MISSING",
+    "as_chunks",
+    "basic_autocomplete",
     "deprecated",
-    "oauth_url",
-    "snowflake_time",
-    "time_snowflake",
-    "find",
-    "get",
-    "get_or_fetch",
-    "sleep_until",
-    "utcnow",
-    "resolve_invite",
-    "resolve_template",
-    "remove_markdown",
     "escape_markdown",
     "escape_mentions",
-    "raw_mentions",
-    "raw_channel_mentions",
-    "raw_role_mentions",
-    "as_chunks",
+    "filter_params",
+    "find",
     "format_dt",
     "generate_snowflake",
-    "basic_autocomplete",
-    "filter_params",
-    "MISSING",
+    "get",
+    "get_or_fetch",
+    "oauth_url",
+    "parse_time",
+    "raw_channel_mentions",
+    "raw_mentions",
+    "raw_role_mentions",
+    "remove_markdown",
+    "resolve_invite",
+    "resolve_template",
+    "sleep_until",
+    "snowflake_time",
+    "time_snowflake",
     "users_to_csv",
+    "utcnow",
+    "warn_deprecated",
 )
 
 _log = logging.getLogger(__name__)
@@ -158,7 +158,7 @@ class _MissingSentinel:
 MISSING: Any = _MissingSentinel()
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
@@ -205,17 +205,6 @@ class CachedSlotProperty(Generic[T, T_co]):
             value = self.function(instance)
             setattr(instance, self.name, value)
             return value
-
-
-class classproperty(Generic[T_co]):
-    def __init__(self, fget: Callable[[Any], T_co]) -> None:
-        self.fget = fget
-
-    def __get__(self, instance: Any | None, owner: type[Any]) -> T_co:
-        return self.fget(owner)
-
-    def __set__(self, instance, value) -> None:
-        raise AttributeError("cannot set attribute")
 
 
 def cached_slot_property(
@@ -1321,20 +1310,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     return _chunk(iterator, max_size)
 
 
-PY_310 = sys.version_info >= (3, 10)
-
-
-def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    params = []
-    literal_cls = type(Literal[0])
-    for p in parameters:
-        if isinstance(p, literal_cls):
-            params.extend(p.__args__)
-        else:
-            params.append(p)
-    return tuple(params)
-
-
 def normalise_optional_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
     none_cls = type(None)
     return tuple(p for p in parameters if p is not none_cls) + (none_cls,)
@@ -1365,7 +1340,7 @@ def evaluate_annotation(
         is_literal = False
         args = tp.__args__
         if not hasattr(tp, "__origin__"):
-            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
+            if tp.__class__ is types.UnionType:  # type: ignore
                 converted = Union[args]  # type: ignore
                 return evaluate_annotation(converted, globals, locals, cache)
 
@@ -1377,8 +1352,6 @@ def evaluate_annotation(
             except ValueError:
                 pass
         if tp.__origin__ is Literal:
-            if not PY_310:
-                args = flatten_literal_params(tp.__args__)
             implicit_str = False
             is_literal = True
 
