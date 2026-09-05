@@ -88,6 +88,9 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+    "JoinRequestStatus",
+    "JoinRequestFormFieldType",
+    "JoinRequestAction",
 )
 
 
@@ -1210,6 +1213,31 @@ class InviteTargetUsersJobStatusCode(Enum):
     processing = 1
     completed = 2
     failed = 3
+
+
+class JoinRequestStatus(Enum):
+    """Represents the status of a guild join request application."""
+
+    STARTED = "STARTED"
+    SUBMITTED = "SUBMITTED"
+    APPROVED = "APPROVED"
+    DENIED = "DENIED"
+
+
+class JoinRequestFormFieldType(Enum):
+    """Represents the type of a guild join request form field."""
+
+    TERMS = "TERMS"
+    TEXT_INPUT = "TEXT_INPUT"
+    PARAGRAPH = "PARAGRAPH"
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
+
+
+class JoinRequestAction(Enum):
+    """Represents the action of a guild join request application."""
+
+    APPROVE = "APPROVED"
+    REJECT = "REJECTED"
 
 
 T = TypeVar("T")

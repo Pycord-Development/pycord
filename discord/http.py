@@ -33,6 +33,7 @@ from collections.abc import AsyncGenerator, Coroutine, Iterable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
+    Literal,
     TypeVar,
 )
 from urllib.parse import quote as _uriquote
@@ -71,6 +72,7 @@ if TYPE_CHECKING:
         embed,
         emoji,
         guild,
+        guild_join_request,
         integration,
         interactions,
         invite,
@@ -1706,6 +1708,54 @@ class HTTPClient:
         return self.request(
             Route("GET", "/guilds/{guild_id}/prune", guild_id=guild_id), params=params
         )
+
+    def get_guild_join_requests(
+        self,
+        guild_id: Snowflake,
+        *,
+        status: guild_join_request.ApplicationStatus | None = None,
+        limit: int | None = 100,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
+    ) -> Response[guild_join_request.ListGuildJoinRequests]:
+        params: dict[str, Any] = {
+            "limit": limit,
+        }
+        if status:
+            params["status"] = status
+        if before:
+            params["before"] = before
+        if after:
+            params["after"] = after
+
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/requests",
+                guild_id=guild_id,
+            ),
+            params=params,
+        )
+
+    def action_guild_join_request(
+        self,
+        guild_id: Snowflake,
+        request_id: Snowflake,
+        *,
+        action: Literal["APPROVED", "REJECTED"] | None = None,
+        rejection_reason: str | None = None,
+    ) -> Response[guild_join_request.JoinRequest]:
+        return self.request(
+            Route(
+                "PATCH  ",
+                "/guilds/{guild_id}/requests/{request_id}",
+                guild_id=guild_id,
+                request_id=request_id,
+            ),
+            json={"action": action, "rejection_reason": rejection_reason},
+        )
+
+    # Guild stickers & emojis Management
 
     def get_sticker(self, sticker_id: Snowflake) -> Response[sticker.Sticker]:
         return self.request(

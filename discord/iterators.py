@@ -38,6 +38,7 @@ from typing import (
 from typing_extensions import deprecated, override
 
 from .audit_logs import AuditLogEntry
+from .enums import JoinRequestStatus
 from .errors import NoMoreItems
 from .object import Object
 from .utils import maybe_coroutine, snowflake_time, time_snowflake
@@ -52,11 +53,13 @@ __all__ = (
     "EntitlementIterator",
     "SubscriptionIterator",
     "MessagePinIterator",
+    "JoinRequestIterator",
 )
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel, Snowflake
     from .guild import BanEntry, Guild
+    from .guild_join_request import JoinRequest
     from .http import HTTPClient
     from .member import Member
     from .message import Message, MessagePin
@@ -65,6 +68,10 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
+    from .types.guild_join_request import JoinRequest as JoinRequestPayload
+    from .types.guild_join_request import (
+        ListGuildJoinRequests as ListGuildJoinRequestsPayload,
+    )
     from .types.message import Message as MessagePayload
     from .types.message import MessagePin as MessagePinPayload
     from .types.monetization import Entitlement as EntitlementPayload
@@ -1297,3 +1304,98 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
     )
     def __await__(self) -> Generator[Any, Any, list[Message]]:
         return self.retrieve_inner().__await__()
+
+
+class JoinRequestIterator(_AsyncIterator["JoinRequest"]):
+    def __init__(
+        self,
+        guild: Guild,
+        status: JoinRequestStatus | None = None,
+        limit: int | None = None,
+        before: Snowflake | datetime.datetime | None = None,
+        after: Snowflake | datetime.datetime | None = None,
+    ):
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=False))
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+
+        self.guild = guild
+        self.status = status
+        self.limit = limit
+        self.before = before
+        self.after = after
+        self.total: int | None = None
+        self._has_retrieved = False
+
+        self.state = self.guild._state
+        self.get_join_requests = self.state.http.get_guild_join_requests
+        self.join_requests = asyncio.Queue()
+
+        if self.after:
+            self._retrieve_join_requests = self._retrieve_join_requests_after_strategy
+        else:
+            self._retrieve_join_requests = self._retrieve_join_requests_before_strategy
+
+    async def next(self) -> JoinRequest:
+        if self.join_requests.empty():
+            await self.fill_join_requests()
+
+        try:
+            return self.join_requests.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self) -> bool:
+        self.retrieve = 100 if self.limit is None else min(self.limit, 100)
+        return self.retrieve > 0
+
+    def create_join_request(self, data: JoinRequestPayload) -> JoinRequest:
+        from .guild_join_request import JoinRequest
+
+        return JoinRequest(guild=self.guild, state=self.state, data=data)
+
+    async def fill_join_requests(self) -> None:
+        if self._get_retrieve():
+            data = await self._retrieve_join_requests(self.retrieve)
+            if len(data) < self.retrieve:
+                self.limit = 0
+
+            for element in data:
+                await self.join_requests.put(self.create_join_request(element))
+
+    async def _retrieve_join_requests(self, retrieve: int) -> list[JoinRequestPayload]:
+        raise NotImplementedError
+
+    async def _retrieve_join_requests_before_strategy(self, retrieve: int):
+        before = self.before.id if self.before else None
+        params = {"limit": retrieve, "before": before}
+        if self.status:
+            params["status"] = self.status.value
+        response = await self.get_join_requests(self.guild.id, **params)
+        self._set_total(response)
+        data = response.get("guild_join_requests", [])
+        if data:
+            if self.limit is not None:
+                self.limit -= len(data)
+            self.before = Object(id=int(data[-1]["id"]))
+        return data
+
+    async def _retrieve_join_requests_after_strategy(self, retrieve: int):
+        after = self.after.id if self.after else None
+        params = {"limit": retrieve, "after": after}
+        if self.status:
+            params["status"] = self.status.value
+        response = await self.get_join_requests(self.guild.id, **params)
+        self._set_total(response)
+        data = response.get("guild_join_requests", [])
+        if data:
+            if self.limit is not None:
+                self.limit -= len(data)
+            self.after = Object(id=int(data[0]["id"]))
+        return data
+
+    def _set_total(self, response: ListGuildJoinRequestsPayload) -> None:
+        if not self._has_retrieved:
+            self.total = response.get("total")
+            self._has_retrieved = True

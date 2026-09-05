@@ -56,6 +56,7 @@ from .enums import (
     ChannelType,
     ContentFilter,
     EntitlementOwnerType,
+    JoinRequestStatus,
     NotificationLevel,
     NSFWLevel,
     OnboardingMode,
@@ -78,6 +79,7 @@ from .iterators import (
     AuditLogIterator,
     BanIterator,
     EntitlementIterator,
+    JoinRequestIterator,
     MemberIterator,
 )
 from .member import Member, VoiceState
@@ -111,6 +113,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .guild_join_request import JoinRequest
     from .onboarding import OnboardingPrompt
     from .permissions import Permissions
     from .state import ConnectionState
@@ -4719,3 +4722,89 @@ class Guild(Hashable):
             The sound or ``None`` if not found.
         """
         return self._sounds.get(sound_id)
+
+    def join_requests(
+        self,
+        *,
+        status: JoinRequestStatus | None = None,
+        limit: int | None = 100,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+    ) -> JoinRequestIterator:
+        """Retrieves an :class:`.AsyncIterator` that enables receiving the guild's
+                join requests.
+
+                This requires either the :attr:`~Permissions.kick_members` or
+                :attr:`~Permissions.manage_guild` permission. Apps with only
+                :attr:`~Permissions.manage_guild` receive no join requests, but the
+                iterator's :attr:`~JoinRequestIterator.total` attribute is populated with the
+                pending-request count after its first request.
+
+                The :attr:`~JoinRequestIterator.total` attribute is only populated when `status` is set to
+                either ``None`` or :attr:`JoinRequestStatus.SUBMITTED`. It's always ``None`` otherwise.
+
+                Only have the request ID and want to take action? Consider using :meth:`JoinRequest.partial`.
+
+                .. versionadded:: 2.9
+
+                Parameters
+                ----------
+                status: Optional[:class:`JoinRequestStatus`]
+                    The single status to which results are restricted. If ``None``,
+                    fetches submitted join requests.
+
+                    Defaults to :data:`None`.
+                limit: Optional[:class:`int`]
+                    The number of join requests to retrieve.
+                    If ``None``, retrieves every join request, which may be slow.
+
+                    Defaults to ``100``.
+                before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+                    Retrieves join requests before this date or object.
+                    If a datetime is provided, it is recommended to use a UTC-aware datetime.
+                    If the datetime is naive, it is assumed to be local time.
+
+                    Defaults to :data:`None`.
+                after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+                    Retrieve join requests after this date or object.
+                    If a datetime is provided, it is recommended to use a UTC-aware datetime.
+                    If the datetime is naive, it is assumed to be local time.
+
+                    Defaults to :data:`None`.
+
+                Yields
+                ------
+                :class:`JoinRequest`
+                    The join request.
+
+                Raises
+                ------
+                :exc:`HTTPException`
+                    Retrieving the join requests failed.
+
+                Examples
+                --------
+
+                Usage ::
+
+                    async for request in guild.join_requests(limit=250):
+                        print(request.user, request.status)
+        s
+                Flattening into a list ::
+
+                    requests = await guild.join_requests(limit=None).flatten()
+                    # requests is now a list of JoinRequest...
+
+                    # need the total number of submitted join requests? do this:
+                    iterator = guild.join_requests(limit=None)
+                    await iterator.next()
+                    print(iterator.total)  # prints the total number of submitted join requests
+                    requests = await iterator.flatten()
+        """
+        return JoinRequestIterator(
+            self,
+            status=status,
+            limit=limit,
+            before=before,
+            after=after,
+        )

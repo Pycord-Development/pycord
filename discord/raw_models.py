@@ -50,6 +50,7 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.guild_join_request import JoinRequestDelete as JoinRequestDeletePayload
     from .types.member import MemberUpdateEvent
     from .types.raw_models import (
         AuditLogEntryEvent,
@@ -99,6 +100,7 @@ __all__ = (
     "RawVoiceServerUpdateEvent",
     "RawVoiceStateUpdateEvent",
     "RawMemberUpdateEvent",
+    "RawGuildJoinRequestDeleteEvent",
 )
 
 
@@ -1030,3 +1032,30 @@ class RawMemberUpdateEvent(_RawReprMixin):
         self.data: MemberUpdateEvent = data
         self.cached_member: Member | None = None
         self.member: Member = member
+
+
+class RawGuildJoinRequestDeleteEvent(_RawReprMixin):
+    """Represents the payload for a :func:`on_raw_guild_join_request_delete` event.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The ID of the join request that was deleted / withdrawn.
+    guild_id: :class:`int`
+        The ID of the guild where the join request was deleted / withdrawn.
+    user_id: :class:`int`
+        The ID of the user whose join request was deleted / withdrawn.
+    data: :class:`dict`
+        The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#guild-join-request-delete>`_.
+    """
+
+    __slots__ = ("data", "guild_id", "user_id", "id")
+
+    def __init__(self, data: JoinRequestDeletePayload) -> None:
+        self.data: JoinRequestDeletePayload = data
+
+        self.guild_id: int = int(data["guild_id"])
+        self.user_id: int = int(data["user_id"])
+        self.id: int = int(data["id"])
