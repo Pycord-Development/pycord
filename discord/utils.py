@@ -61,6 +61,7 @@ from typing import (
     ForwardRef,
     Generic,
     Literal,
+    ParamSpec,
     Protocol,
     TypeVar,
     Union,
@@ -178,6 +179,8 @@ else:
 
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
+_MC_P = ParamSpec("_MC_P")
+_MC_T = TypeVar("_MC_T")
 _Iter = Union[Iterator[T], AsyncIterator[T]]
 
 
@@ -882,7 +885,11 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
     return (reset - now).total_seconds()
 
 
-async def maybe_coroutine(f, *args, **kwargs):
+async def maybe_coroutine(
+    f: Callable[_MC_P, _MC_T | Awaitable[_MC_T]],
+    *args: _MC_P.args,
+    **kwargs: _MC_P.kwargs,
+) -> _MC_T:
     value = f(*args, **kwargs)
     if _isawaitable(value):
         return await value
