@@ -16,8 +16,15 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+- Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
+  regions for the guild.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Changed
+
+- The `rtc_region` parameters of channel creation and edit methods now also accept a
+  region ID `str` in addition to a `VoiceRegion` member.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Fixed
 
@@ -28,6 +35,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 
 ### Deprecated
+
+- Deprecated the `VoiceRegion` enum in favor of the region ID `str` or
+  `Guild.fetch_voice_regions()`.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Removed
 

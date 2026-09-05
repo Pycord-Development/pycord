@@ -2091,7 +2091,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         sync_permissions: int = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
-        rtc_region: VoiceRegion | None = ...,
+        rtc_region: VoiceRegion | str | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
         nsfw: bool = ...,
@@ -2135,9 +2135,15 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The new region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The new region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is still accepted, but it is
+                deprecated in favor of the region ID :class:`str`, which
+                can be retrieved via :meth:`Guild.fetch_voice_regions`.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -2778,7 +2784,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         sync_permissions: int = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
-        rtc_region: VoiceRegion | None = ...,
+        rtc_region: VoiceRegion | str | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         reason: str | None = ...,
     ) -> StageChannel | None: ...
@@ -2816,9 +2822,15 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The new region for the stage channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The new region ID for the stage channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is still accepted, but it is
+                deprecated in favor of the region ID :class:`str`, which
+                can be retrieved via :meth:`Guild.fetch_voice_regions`.
         video_quality_mode: :class:`VideoQualityMode`
             The camera video quality for the stage channel's participants.
 

@@ -27,8 +27,22 @@ from __future__ import annotations
 
 import types
 from collections import namedtuple
+from collections.abc import Callable
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
+
+from .utils import warn_deprecated
+
+if TYPE_CHECKING:
+    from typing_extensions import deprecated
+else:
+
+    def deprecated(message: str) -> Callable[[T], T]:
+        def decorator(value: T) -> T:
+            return value
+
+        return decorator
+
 
 __all__ = (
     "Enum",
@@ -286,32 +300,64 @@ class MessageType(Enum):
     poll_result = 46
 
 
-class VoiceRegion(Enum):
-    """Voice region"""
+class _VoiceRegionMeta(Enum.__class__):
+    def _warn(self, label: str) -> None:
+        warn_deprecated(
+            label,
+            instead="the region ID string or Guild.fetch_voice_regions()",
+            since="2.9",
+            removed="3.0",
+            stacklevel=4,
+        )
 
-    us_west = "us-west"
-    us_east = "us-east"
-    us_south = "us-south"
-    us_central = "us-central"
-    eu_west = "eu-west"
-    eu_central = "eu-central"
-    singapore = "singapore"
-    london = "london"
-    sydney = "sydney"
-    amsterdam = "amsterdam"
-    frankfurt = "frankfurt"
+    def __getattribute__(cls, name: str) -> Any:
+        members = super().__getattribute__("_enum_member_map_")
+        if name in members:
+            cls._warn(f"VoiceRegion.{name}")
+        return super().__getattribute__(name)
+
+    def __getitem__(cls, name: str) -> Any:
+        member = super().__getitem__(name)
+        cls._warn(f"VoiceRegion[{name!r}]")
+        return member
+
+    def __call__(cls, *args: Any, **kwargs: Any) -> Any:
+        cls._warn(f"VoiceRegion({', '.join(map(repr, args))})")
+        return super().__call__(*args, **kwargs)
+
+    def __getattr__(cls, name: str) -> Any:
+        if name.startswith("_"):
+            raise AttributeError(name)
+        cls._warn(f"VoiceRegion.{name}")
+        return create_unknown_value(cls, name)
+
+
+@deprecated(
+    "VoiceRegion is deprecated in favour of the region ID str or "
+    "Guild.fetch_voice_regions() since version 2.9, and will be removed in version 3.0."
+)
+class VoiceRegion(Enum, metaclass=_VoiceRegionMeta):
+    """Specifies the region a voice server belongs to.
+
+    .. deprecated:: 2.9
+        The list of voice regions is dynamic, so this enum is deprecated in favor
+        of the region ID :class:`str`, which can be retrieved via
+        :meth:`Guild.fetch_voice_regions`, and will be removed in version 3.0.
+    """
+
     brazil = "brazil"
     hongkong = "hongkong"
-    russia = "russia"
-    japan = "japan"
-    southafrica = "southafrica"
-    south_korea = "south-korea"
     india = "india"
-    europe = "europe"
-    dubai = "dubai"
-    vip_us_east = "vip-us-east"
-    vip_us_west = "vip-us-west"
-    vip_amsterdam = "vip-amsterdam"
+    japan = "japan"
+    rotterdam = "rotterdam"
+    singapore = "singapore"
+    south_korea = "south-korea"
+    southafrica = "southafrica"
+    sydney = "sydney"
+    us_central = "us-central"
+    us_east = "us-east"
+    us_south = "us-south"
+    us_west = "us-west"
 
     def __str__(self):
         return self.value
