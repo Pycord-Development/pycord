@@ -26,6 +26,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
+- Fix `ctx.command.qualified_name` returning only the parent `SlashCommandGroup` name
+  instead of the full subcommand path when accessed inside `cog_check`.
+  ([#3363](https://github.com/Pycord-Development/pycord/pull/3363))
 
 ### Deprecated
 
