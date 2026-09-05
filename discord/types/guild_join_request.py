@@ -74,9 +74,7 @@ class ListJoinRequestsWithPermissions(_BaseListJoinRequests):
     guild_join_requests: list[JoinRequest]
 
 
-ListJoinRequests = (
-    ListJoinRequestsWithPermissions | _BaseListJoinRequests
-)
+ListJoinRequests = ListJoinRequestsWithPermissions | _BaseListJoinRequests
 
 
 class JoinRequestCreate(TypedDict):

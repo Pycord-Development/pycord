@@ -50,6 +50,7 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.guild_join_request import JoinRequestDelete as JoinRequestDeletePayload
     from .types.member import MemberUpdateEvent
     from .types.raw_models import (
         AuditLogEntryEvent,
@@ -74,7 +75,6 @@ if TYPE_CHECKING:
         VoiceServerUpdateEvent,
         VoiceStateEvent,
     )
-    from .types.guild_join_request import JoinRequestDelete as JoinRequestDeletePayload
     from .user import User
 
 

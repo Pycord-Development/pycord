@@ -51,6 +51,7 @@ from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, InteractionType, ScheduledEventStatus, Status, try_enum
 from .flags import ApplicationFlags, GatewayCapabilities, Intents, MemberCacheFlags
 from .guild import Guild
+from .guild_join_request import JoinRequest
 from .integrations import _integration_factory
 from .interactions import Interaction
 from .invite import Invite
@@ -71,7 +72,6 @@ from .threads import Thread, ThreadMember
 from .ui.modal import BaseModal, ModalStore
 from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
-from .guild_join_request import JoinRequest
 
 if TYPE_CHECKING:
     from .abc import PrivateChannel
@@ -84,17 +84,15 @@ if TYPE_CHECKING:
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
     from .types.guild import Guild as GuildPayload
+    from .types.guild_join_request import JoinRequestCreate as JoinRequestCreatePayload
+    from .types.guild_join_request import JoinRequestDelete as JoinRequestDeletePayload
+    from .types.guild_join_request import JoinRequestUpdate as JoinRequestUpdatePayload
     from .types.member import MemberUpdateEvent
     from .types.message import Message as MessagePayload
     from .types.poll import Poll as PollPayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
     from .voice import VoiceProtocol
-    from .types.guild_join_request import (
-        JoinRequestCreate as JoinRequestCreatePayload,
-        JoinRequestDelete as JoinRequestDeletePayload,
-        JoinRequestUpdate as JoinRequestUpdatePayload,
-    )
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
@@ -1805,9 +1803,7 @@ class ConnectionState:
         raw = RawGuildJoinRequestDeleteEvent(data)
         self.dispatch("raw_guild_join_request_delete", raw)
 
-    def parse_guild_join_request_update(
-        self, data: JoinRequestUpdatePayload
-    ) -> None:
+    def parse_guild_join_request_update(self, data: JoinRequestUpdatePayload) -> None:
         guild = self._get_guild(int(data["guild_id"]))
         request = data["request"]
         if guild is not None:
