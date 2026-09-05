@@ -71,6 +71,7 @@ from .threads import Thread, ThreadMember
 from .ui.modal import BaseModal, ModalStore
 from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
+from .guild_join_request import JoinRequest
 
 if TYPE_CHECKING:
     from .abc import PrivateChannel
@@ -89,6 +90,11 @@ if TYPE_CHECKING:
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
     from .voice import VoiceProtocol
+    from .types.guild_join_request import (
+        JoinRequestCreate as JoinRequestCreatePayload,
+        JoinRequestDelete as JoinRequestDeletePayload,
+        JoinRequestUpdate as JoinRequestUpdatePayload,
+    )
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
@@ -1775,6 +1781,42 @@ class ConnectionState:
             _log.debug(
                 (
                     "GUILD_INTEGRATIONS_UPDATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
+                data["guild_id"],
+            )
+
+    def parse_guild_join_request_create(self, data: JoinRequestCreatePayload) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        request = data["request"]
+        if guild is not None:
+            join_request = JoinRequest(guild=guild, state=self, data=request)
+            self.dispatch("guild_join_request_create", join_request)
+        else:
+            _log.debug(
+                (
+                    "GUILD_JOIN_REQUEST_CREATE referencing an unknown guild ID: %s."
+                    " Discarding."
+                ),
+                data["guild_id"],
+            )
+
+    def parse_guild_join_request_delete(self, data: JoinRequestDeletePayload) -> None:
+        raw = RawGuildJoinRequestDeleteEvent(data)
+        self.dispatch("raw_guild_join_request_delete", raw)
+
+    def parse_guild_join_request_update(
+        self, data: JoinRequestUpdatePayload
+    ) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        request = data["request"]
+        if guild is not None:
+            join_request = JoinRequest(guild=guild, state=self, data=request)
+            self.dispatch("guild_join_request_update", join_request)
+        else:
+            _log.debug(
+                (
+                    "GUILD_JOIN_REQUEST_UPDATE referencing an unknown guild ID: %s."
                     " Discarding."
                 ),
                 data["guild_id"],

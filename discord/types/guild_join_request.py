@@ -65,17 +65,17 @@ FormResponse = (
 )
 
 
-class _BaseListGuildJoinRequests(TypedDict):
+class _BaseListJoinRequests(TypedDict):
     total: NotRequired[int]  # only when status is "SUBMITTED" or omitted
 
 
 # only returned with the kick_member permission
-class ListGuildJoinRequestsWithPermissions(_BaseListGuildJoinRequests):
+class ListJoinRequestsWithPermissions(_BaseListJoinRequests):
     guild_join_requests: list[JoinRequest]
 
 
-ListGuildJoinRequests = (
-    ListGuildJoinRequestsWithPermissions | _BaseListGuildJoinRequests
+ListJoinRequests = (
+    ListJoinRequestsWithPermissions | _BaseListJoinRequests
 )
 
 

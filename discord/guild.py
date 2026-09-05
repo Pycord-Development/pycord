@@ -4743,14 +4743,15 @@ class Guild(Hashable):
         The :attr:`~JoinRequestIterator.total` attribute is only populated when `status` is set to
         either ``None`` or :attr:`JoinRequestStatus.SUBMITTED`. It's always ``None`` otherwise.
 
+        Only have the request ID and want to take action? Consider using :meth:`JoinRequest.partial`.
+
         .. versionadded:: 2.9
 
         Parameters
         ----------
         status: Optional[:class:`JoinRequestStatus`]
             The single status to which results are restricted. If ``None``,
-            fetches submitted join requests. The iterator's :attr:`total`
-            attribute is only available for submitted join requests.
+            fetches submitted join requests. 
 
             Defaults to :data:`None`.
         limit: Optional[:class:`int`]
