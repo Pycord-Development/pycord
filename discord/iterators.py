@@ -1329,7 +1329,7 @@ class JoinRequestIterator(_AsyncIterator["JoinRequest"]):
         self._has_retrieved = False
 
         self.state = self.guild._state
-        self.get_join_requests = self.state.http.get_guild_join_requets
+        self.get_join_requests = self.state.http.get_guild_join_requests
         self.join_requests = asyncio.Queue()
 
         if self.after:

@@ -1709,7 +1709,7 @@ class HTTPClient:
             Route("GET", "/guilds/{guild_id}/prune", guild_id=guild_id), params=params
         )
 
-    def get_guild_join_requets(
+    def get_guild_join_requests(
         self,
         guild_id: Snowflake,
         *,
