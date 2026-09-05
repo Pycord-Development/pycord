@@ -59,6 +59,7 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import MessageableChannel, Snowflake
     from .guild import BanEntry, Guild
+    from .guild_join_request import JoinRequest
     from .http import HTTPClient
     from .member import Member
     from .message import Message, MessagePin
@@ -67,8 +68,8 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
+    from .types.guild_join_request import JoinRequest as JoinRequestPayload
     from .types.guild_join_request import (
-        JoinRequest as JoinRequestPayload,
         ListGuildJoinRequests as ListGuildJoinRequestsPayload,
     )
     from .types.message import Message as MessagePayload
@@ -78,7 +79,6 @@ if TYPE_CHECKING:
     from .types.threads import Thread as ThreadPayload
     from .types.user import PartialUser as PartialUserPayload
     from .user import User
-    from .guild_join_request import JoinRequest
 
 T = TypeVar("T")
 OT = TypeVar("OT")

@@ -79,8 +79,8 @@ from .iterators import (
     AuditLogIterator,
     BanIterator,
     EntitlementIterator,
-    MemberIterator,
     JoinRequestIterator,
+    MemberIterator,
 )
 from .member import Member, VoiceState
 from .mixins import Hashable
@@ -98,7 +98,6 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-
 __all__ = ("BanEntry", "Guild", "GuildRoleCounts")
 
 MISSING = utils.MISSING
@@ -114,6 +113,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .guild_join_request import JoinRequest
     from .onboarding import OnboardingPrompt
     from .permissions import Permissions
     from .state import ConnectionState
@@ -127,7 +127,6 @@ if TYPE_CHECKING:
     from .types.voice import VoiceState as GuildVoiceState
     from .voice import VoiceClient
     from .webhook import Webhook
-    from .guild_join_request import JoinRequest
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
     GuildChannel = Union[
@@ -4773,7 +4772,7 @@ class Guild(Hashable):
             Defaults to :data:`None`.
 
         Yields
-        -------
+        ------
         :class:`JoinRequest`
             The join request.
 
@@ -4800,7 +4799,6 @@ class Guild(Hashable):
             await iterator.next()
             print(iterator.total)  # prints the total number of submitted join requests
             requests = await iterator.flatten()
-
         """
         return JoinRequestIterator(
             self,

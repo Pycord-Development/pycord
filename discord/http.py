@@ -72,6 +72,7 @@ if TYPE_CHECKING:
         embed,
         emoji,
         guild,
+        guild_join_request,
         integration,
         interactions,
         invite,
@@ -89,7 +90,6 @@ if TYPE_CHECKING:
         webhook,
         welcome_screen,
         widget,
-        guild_join_request,
     )
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,

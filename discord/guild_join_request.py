@@ -23,29 +23,28 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+
 import datetime
 from typing import TYPE_CHECKING
 
-from .mixins import Hashable
+from . import utils
 from .enums import (
-    JoinRequestStatus,
-    JoinRequestFormFieldType,
     JoinRequestAction,
+    JoinRequestFormFieldType,
+    JoinRequestStatus,
     try_enum,
 )
-from . import utils
+from .mixins import Hashable
 
 __all__ = ("FormResponse", "JoinRequest")
 
 if TYPE_CHECKING:
-    from .state import ConnectionState
-    from .types.guild_join_request import (
-        FormResponse as FormResponsePayload,
-        JoinRequest as JoinRequestPayload,
-    )
-    from .user import User
     from .guild import Guild
     from .object import Object
+    from .state import ConnectionState
+    from .types.guild_join_request import FormResponse as FormResponsePayload
+    from .types.guild_join_request import JoinRequest as JoinRequestPayload
+    from .user import User
 
 
 class FormResponse:
@@ -234,6 +233,11 @@ class JoinRequest(Hashable):
 
             Only applicable if the `action` is :attr:`JoinRequestAction.REJECT`.
 
+        Returns
+        -------
+        :class:`JoinRequest`
+            The updated join request.
+
         Raises
         ------
         ValueError
@@ -243,11 +247,6 @@ class JoinRequest(Hashable):
             Or the `status` is not :attr:`JoinRequestStatus.SUBMITTED`.
         HTTPException
             Taking action on the join request failed.
-
-        Returns
-        -------
-        :class:`JoinRequest`
-            The updated join request.
         """
         if self.status is not JoinRequestStatus.SUBMITTED:
             raise ValueError(

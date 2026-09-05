@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Literal, NotRequired, TypedDict
+
 from .snowflake import Snowflake
 from .user import User
 
@@ -62,7 +63,6 @@ FormResponse = (
     | ParagraphFormResponse
     | MultipleChoiceFormResponse
 )
-
 
 
 class _BaseListGuildJoinRequests(TypedDict):
