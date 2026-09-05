@@ -61,7 +61,7 @@ class CheckboxGroup(ModalItem):
     max_values: Optional[:class:`int`]
         The maximum number of options that can be selected.
         Must be between 1 and 10, inclusive.
-    required: Optional[:class:`bool`]
+    required: :class:`bool`
         Whether an option selection is required or not. Defaults to ``True``.
     id: Optional[:class:`int`]
         The checkbox group's ID.
@@ -95,6 +95,7 @@ class CheckboxGroup(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
