@@ -2702,3 +2702,64 @@ of :class:`enum.Enum`.
     .. attribute:: read_only
 
         Represents the team read only role.
+
+
+.. class:: JoinRequestStatus
+
+    Represents the status of a guild join request.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: STARTED
+
+        The application has been started but not submitted.
+
+    .. attribute:: SUBMITTED
+
+        The application is awaiting review.
+
+    .. attribute:: APPROVED
+
+        The application was approved.
+
+    .. attribute:: DENIED
+
+        The application was denied.
+
+
+.. class:: JoinRequestFormFieldType
+
+    Represents the type of a guild join-request form field.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: TERMS
+
+        The applicant must agree to terms.
+
+    .. attribute:: TEXT_INPUT
+
+        The applicant supplies a short text response.
+
+    .. attribute:: PARAGRAPH
+
+        The applicant supplies a multi-line text response.
+
+    .. attribute:: MULTIPLE_CHOICE
+
+        The applicant selects one response from a set of choices.
+
+
+.. class:: JoinRequestAction
+
+    Represents an action to take on a submitted guild join request.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: APPROVE
+
+        Approves the application.
+
+    .. attribute:: REJECT
+
+        Rejects the application.

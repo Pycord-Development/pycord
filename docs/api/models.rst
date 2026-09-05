@@ -146,13 +146,29 @@ Guild
 
 .. autoclass:: Guild()
     :members:
-    :exclude-members: fetch_members, audit_logs
+    :exclude-members: fetch_members, audit_logs, fetch_join_requests
 
     .. automethod:: fetch_members
         :async-for:
 
     .. automethod:: audit_logs
         :async-for:
+
+    .. automethod:: fetch_join_requests
+        :async-for:
+
+Guild Join Requests
+-------------------
+
+.. attributetable:: JoinRequest
+
+.. autoclass:: JoinRequest()
+    :members:
+
+.. attributetable:: FormResponse
+
+.. autoclass:: FormResponse()
+    :members:
 
 .. class:: BanEntry
 
