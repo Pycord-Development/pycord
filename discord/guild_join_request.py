@@ -293,7 +293,8 @@ class FormResponse:
         The response to the form field, depending on the `field_type`:
 
         - If the `field_type` is :attr:`JoinRequestFormFieldType.TEXT_INPUT` or :attr:`JoinRequestFormFieldType.PARAGRAPH`, this will be a :class:`str`.
-        - If the `field_type` is :attr:`JoinRequestFormFieldType.MULTIPLE_CHOICE`, this will be an :class:`int` representing the index of the selected choice.
+        - If the `field_type` is :attr:`JoinRequestFormFieldType.MULTIPLE_CHOICE`, this will be an :class:`str` representing the selected choice by the applicant.
+            Also see :attr:`choice_index` for the index of the selected choice.
         - If the `field_type` is :attr:`JoinRequestFormFieldType.TERMS`, this will be a :class:`bool` indicating whether the applicant agreed to the terms.
     placeholder: Optional[:class:`str`]
         The placeholder text for the form field shown in empty text boxes.
@@ -303,6 +304,9 @@ class FormResponse:
         The choices the applicant can select from.
 
         Only set if the `field_type` is :attr:`JoinRequestFormFieldType.MULTIPLE_CHOICE`.
+    choice_index: :class:`int` | :data:`None`:
+        The index of the selected choice for multiple choice form fields. Only set if the `field_type` is
+        :attr:`JoinRequestFormFieldType.MULTIPLE_CHOICE`.
     """
 
     def __init__(self, data: FormResponsePayload) -> None:
@@ -314,6 +318,19 @@ class FormResponse:
         self.required: bool = data.get("required", False)
 
         self.values: list[str] | None = data.get("values")
-        self.response: str | int | bool | None = data.get("response")
         self.placeholder: str | None = data.get("placeholder")
+
         self.choices: list[str] | None = data.get("choices")
+        self.choice_index: int | None = None
+
+        self.response: str | bool | None = None
+
+        response: str | int | bool | None = data.get("response")
+        if (
+            self.field_type is JoinRequestFormFieldType.MULTIPLE_CHOICE
+            and isinstance(response, int)
+            and self.choices is not None
+            and 0 <= response < len(self.choices)
+        ):
+            self.choice_index = response
+            self.response = self.choices[self.choice_index]
