@@ -43,16 +43,13 @@ FormFieldType = Literal[
 ]
 
 
-class BaseJoinRequest(TypedDict):
+class JoinRequest(TypedDict):
     id: Snowflake
     guild_id: Snowflake
     application_status: ApplicationStatus | None
-
-
-class JoinRequest(BaseJoinRequest):
     created_at: str  # iso
     reviewed_at: str | None  # iso
-    application_status: ApplicationStatus | None
+    reviewed_by_user: NotRequired[User]
     rejection_reason: str | None
     user_id: Snowflake
     user: NotRequired[User]
