@@ -64,7 +64,7 @@ class PartialJoinRequest(Hashable):
         The status of the join request application.
     """
 
-    __slots__ = ("_state", "application_status", "guild", "guild_id", "id")
+    __slots__ = ("_state", "application_status", "guild_id", "id")
 
     def __init__(
         self,
