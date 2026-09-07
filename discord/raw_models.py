@@ -1051,7 +1051,7 @@ class RawGuildJoinRequestDeleteEvent(_RawReprMixin):
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#guild-join-request-delete>`_.
     """
 
-    __slots__ = ("data", "guild", "guild_id", "id", "user", "user_id")
+    __slots__ = ("data", "guild_id", "id", "user_id")
 
     def __init__(
         self,
