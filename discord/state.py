@@ -932,11 +932,13 @@ class ConnectionState:
                 if answer.id in counts:
                     counts[answer.id].count += 1
                 else:
-                    counts[answer.id] = PollAnswerCount({
-                        "id": answer.id,
-                        "count": 1,
-                        "me_voted": False,
-                    })
+                    counts[answer.id] = PollAnswerCount(
+                        {
+                            "id": answer.id,
+                            "count": 1,
+                            "me_voted": False,
+                        }
+                    )
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
             if answer is not None:

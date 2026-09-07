@@ -69,9 +69,7 @@ if TYPE_CHECKING:
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
     from .types.guild_join_request import JoinRequest as JoinRequestPayload
-    from .types.guild_join_request import (
-        ListJoinRequests as ListJoinRequestsPayload,
-    )
+    from .types.guild_join_request import ListJoinRequests as ListJoinRequestsPayload
     from .types.message import Message as MessagePayload
     from .types.message import MessagePin as MessagePinPayload
     from .types.monetization import Entitlement as EntitlementPayload

@@ -43,9 +43,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .state import ConnectionState
     from .types.guild_join_request import FormResponse as FormResponsePayload
-    from .types.guild_join_request import (
-        JoinRequest as JoinRequestPayload,
-    )
+    from .types.guild_join_request import JoinRequest as JoinRequestPayload
     from .user import User
 
 
@@ -276,6 +274,7 @@ class FormResponse:
 
     .. versionadded:: 2.9
         If the join request has already been approved or rejected, this will raise :exc:`ValueError`.
+
     Attributes
     ----------
     field_type: :class:`JoinRequestFormFieldType`
