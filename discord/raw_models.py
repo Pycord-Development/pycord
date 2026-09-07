@@ -1037,7 +1037,7 @@ class RawMemberUpdateEvent(_RawReprMixin):
 class RawGuildJoinRequestDeleteEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_guild_join_request_delete` event.
 
-    .. versionadded:: 2.8
+    .. versionadded:: 2.9
 
     Attributes
     ----------
@@ -1051,11 +1051,31 @@ class RawGuildJoinRequestDeleteEvent(_RawReprMixin):
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#guild-join-request-delete>`_.
     """
 
-    __slots__ = ("data", "guild_id", "user_id", "id")
+    __slots__ = ("data", "guild", "guild_id", "id", "user", "user_id")
 
-    def __init__(self, data: JoinRequestDeletePayload) -> None:
+    def __init__(
+        self,
+        *,
+        data: JoinRequestDeletePayload,
+        state: ConnectionState,
+    ) -> None:
+        self._state: ConnectionState = state
         self.data: JoinRequestDeletePayload = data
 
+        self.id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
         self.user_id: int = int(data["user_id"])
-        self.id: int = int(data["id"])
+
+    @property
+    def guild(self) -> Guild | None:
+        """:class:`discord.Guild` | :data:`None`: The guild where the join request was deleted / withdrawn,
+        if found in the internal cache.
+        """
+        return self._state._get_guild(self.guild_id)
+
+    @property
+    def user(self) -> User | None:
+        """:class:`discord.User` | :data:`None`: The user whose join request was deleted / withdrawn,
+        if found in the internal cache.
+        """
+        return self._state.get_user(self.user_id)

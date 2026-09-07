@@ -2722,9 +2722,9 @@ of :class:`enum.Enum`.
 
         The application was approved.
 
-    .. attribute:: DENIED
+    .. attribute:: REJECTED
 
-        The application was denied.
+        The application was rejected.
 
 
 .. class:: JoinRequestFormFieldType

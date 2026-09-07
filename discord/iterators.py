@@ -70,7 +70,7 @@ if TYPE_CHECKING:
     from .types.guild import Guild as GuildPayload
     from .types.guild_join_request import JoinRequest as JoinRequestPayload
     from .types.guild_join_request import (
-        ListGuildJoinRequests as ListGuildJoinRequestsPayload,
+        ListJoinRequests as ListJoinRequestsPayload,
     )
     from .types.message import Message as MessagePayload
     from .types.message import MessagePin as MessagePinPayload
@@ -1395,7 +1395,7 @@ class JoinRequestIterator(_AsyncIterator["JoinRequest"]):
             self.after = Object(id=int(data[0]["id"]))
         return data
 
-    def _set_total(self, response: ListGuildJoinRequestsPayload) -> None:
+    def _set_total(self, response: ListJoinRequestsPayload) -> None:
         if not self._has_retrieved:
             self.total = response.get("total")
             self._has_retrieved = True

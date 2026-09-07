@@ -1221,7 +1221,7 @@ class JoinRequestStatus(Enum):
     STARTED = "STARTED"
     SUBMITTED = "SUBMITTED"
     APPROVED = "APPROVED"
-    DENIED = "DENIED"
+    REJECTED = "REJECTED"
 
 
 class JoinRequestFormFieldType(Enum):

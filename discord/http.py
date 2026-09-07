@@ -1747,7 +1747,7 @@ class HTTPClient:
     ) -> Response[guild_join_request.JoinRequest]:
         return self.request(
             Route(
-                "PATCH  ",
+                "PATCH",
                 "/guilds/{guild_id}/requests/{request_id}",
                 guild_id=guild_id,
                 request_id=request_id,

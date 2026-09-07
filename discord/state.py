@@ -932,13 +932,11 @@ class ConnectionState:
                 if answer.id in counts:
                     counts[answer.id].count += 1
                 else:
-                    counts[answer.id] = PollAnswerCount(
-                        {
-                            "id": answer.id,
-                            "count": 1,
-                            "me_voted": False,
-                        }
-                    )
+                    counts[answer.id] = PollAnswerCount({
+                        "id": answer.id,
+                        "count": 1,
+                        "me_voted": False,
+                    })
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
             if answer is not None:
@@ -1785,38 +1783,20 @@ class ConnectionState:
             )
 
     def parse_guild_join_request_create(self, data: JoinRequestCreatePayload) -> None:
-        guild = self._get_guild(int(data["guild_id"]))
-        request = data["request"]
-        if guild is not None:
-            join_request = JoinRequest(guild=guild, state=self, data=request)
-            self.dispatch("guild_join_request_create", join_request)
-        else:
-            _log.debug(
-                (
-                    "GUILD_JOIN_REQUEST_CREATE referencing an unknown guild ID: %s."
-                    " Discarding."
-                ),
-                data["guild_id"],
-            )
+        self.dispatch(
+            "guild_join_request_create", JoinRequest(state=self, data=data["request"])
+        )
 
     def parse_guild_join_request_delete(self, data: JoinRequestDeletePayload) -> None:
-        raw = RawGuildJoinRequestDeleteEvent(data)
-        self.dispatch("raw_guild_join_request_delete", raw)
+        self.dispatch(
+            "raw_guild_join_request_delete",
+            RawGuildJoinRequestDeleteEvent(state=self, data=data),
+        )
 
     def parse_guild_join_request_update(self, data: JoinRequestUpdatePayload) -> None:
-        guild = self._get_guild(int(data["guild_id"]))
-        request = data["request"]
-        if guild is not None:
-            join_request = JoinRequest(guild=guild, state=self, data=request)
-            self.dispatch("guild_join_request_update", join_request)
-        else:
-            _log.debug(
-                (
-                    "GUILD_JOIN_REQUEST_UPDATE referencing an unknown guild ID: %s."
-                    " Discarding."
-                ),
-                data["guild_id"],
-            )
+        self.dispatch(
+            "guild_join_request_update", JoinRequest(state=self, data=data["request"])
+        )
 
     def parse_integration_create(self, data) -> None:
         guild_id = int(data.pop("guild_id"))
