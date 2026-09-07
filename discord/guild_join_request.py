@@ -166,7 +166,7 @@ class PartialJoinRequest(Hashable):
 
 class JoinRequest(PartialJoinRequest):
     __slots__ = (
-        "actioned_by_user",
+        "actioned_by",
         "created_at",
         "form_responses",
         "rejection_reason",
@@ -202,7 +202,7 @@ class JoinRequest(PartialJoinRequest):
         The reason the join request was rejected, if applicable.
     form_responses: list[:class:`discord.FormResponse`]
         The form responses of the join request, if applicable.
-    actioned_by_user:  :class:`discord.User` | :data:`None`
+    actioned_by: :class:`discord.User` | :data:`None`
         The user who actioned the join request, if applicable.
     """
 
@@ -232,7 +232,7 @@ class JoinRequest(PartialJoinRequest):
         ]
 
         actioned_by_user = data.get("actioned_by_user")
-        self.actioned_by_user: User | None = (
+        self.actioned_by: User | None = (
             self._state.create_user(actioned_by_user)
             if actioned_by_user is not None
             else None
