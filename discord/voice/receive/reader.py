@@ -68,6 +68,31 @@ def is_rtcp(data: bytes) -> bool:
     return 200 <= data[1] <= 204
 
 
+def _strip_rtp_padding(padding: bool, payload: bytes) -> bytes:
+    """Strip RTP tail padding (RFC 3550 5.1) from a decrypted payload.
+
+    When the P bit is set in the RTP header, the last octet of the payload
+    holds the padding length (including itself). Opus tolerates trailing
+    garbage, so this never mattered before DAVE: the E2EE layer looks for its
+    frame marker at the *tail* of the payload, and padding buries it, making
+    the whole frame fail to decrypt.
+
+    Only acts when the P bit is set, and only when the length is in range.
+    Deliberately does *not* guess based on "the tail is a run of equal bytes"
+    -- that would corrupt legitimate ciphertext that happens to look like
+    that, and a corrupted frame is indistinguishable from a dropped one in
+    the logs.
+    """
+    if not padding or not payload:
+        return payload
+    pad_len = payload[-1]
+    if pad_len < 1 or pad_len > len(payload):
+        # Out of range means the P bit can't be trusted; passing the payload
+        # through untouched is safer than truncating it.
+        return payload
+    return payload[:-pad_len]
+
+
 class AudioReader:
     def __init__(
         self,
@@ -295,7 +320,7 @@ class PacketDecryptor:
         state = self.client._connection
         dave = state.dave_session
 
-        raw_payload = self._decryptor_rtp(packet)
+        raw_payload = _strip_rtp_padding(packet.padding, self._decryptor_rtp(packet))
 
         if dave is not None and dave.ready:
             uid = state.ssrc_user_map.get(packet.ssrc)
