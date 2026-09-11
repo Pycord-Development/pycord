@@ -37,7 +37,7 @@ class MultiDataEvent(Generic[T]):
     with accompanying data object for convenience.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._items: list[T] = []
         self._ready: threading.Event = threading.Event()
 
