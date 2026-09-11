@@ -1652,9 +1652,7 @@ class Guild(Hashable):
 
             .. versionchanged:: 2.9
 
-                A :class:`VoiceRegion` member is still accepted, but it is
-                deprecated in favor of the region ID :class:`str`, which
-                can be retrieved via :meth:`Guild.fetch_voice_regions`.
+                A :class:`VoiceRegion` member is now accepted.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -1781,9 +1779,7 @@ class Guild(Hashable):
 
             .. versionchanged:: 2.9
 
-                A :class:`VoiceRegion` member is still accepted, but it is
-                deprecated in favor of the region ID :class:`str`, which
-                can be retrieved via :meth:`Guild.fetch_voice_regions`.
+                A :class:`VoiceRegion` member is now accepted.
 
             .. versionadded:: 2.7
 

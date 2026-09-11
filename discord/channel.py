@@ -2141,9 +2141,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
             .. versionchanged:: 2.9
 
-                A :class:`VoiceRegion` member is still accepted, but it is
-                deprecated in favor of the region ID :class:`str`, which
-                can be retrieved via :meth:`Guild.fetch_voice_regions`.
+                A :class:`VoiceRegion` member is now accepted.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -2828,9 +2826,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
             .. versionchanged:: 2.9
 
-                A :class:`VoiceRegion` member is still accepted, but it is
-                deprecated in favor of the region ID :class:`str`, which
-                can be retrieved via :meth:`Guild.fetch_voice_regions`.
+                A :class:`VoiceRegion` member is now accepted.
         video_quality_mode: :class:`VideoQualityMode`
             The camera video quality for the stage channel's participants.
 

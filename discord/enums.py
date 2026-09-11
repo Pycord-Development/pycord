@@ -333,16 +333,16 @@ class _VoiceRegionMeta(Enum.__class__):
 
 
 @deprecated(
-    "VoiceRegion is deprecated in favour of the region ID str or "
-    "Guild.fetch_voice_regions() since version 2.9, and will be removed in version 3.0."
+    "VoiceRegion is deprecated since version 2.9 and will be removed in version 3.0. "
+    "Use Guild.fetch_voice_regions() to retrieve available regions as a list of VoiceServerRegion objects."
 )
 class VoiceRegion(Enum, metaclass=_VoiceRegionMeta):
     """Specifies the region a voice server belongs to.
 
     .. deprecated:: 2.9
-        The list of voice regions is dynamic, so this enum is deprecated in favor
-        of the region ID :class:`str`, which can be retrieved via
-        :meth:`Guild.fetch_voice_regions`, and will be removed in version 3.0.
+        The list of voice regions is dynamic, so this enum is deprecated.
+        Use :meth:`Guild.fetch_voice_regions` to retrieve available regions
+        as a list of :class:`VoiceServerRegion` objects. This enum will be removed in version 3.0.
     """
 
     brazil = "brazil"

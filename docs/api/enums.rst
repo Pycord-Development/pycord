@@ -617,9 +617,9 @@ of :class:`enum.Enum`.
 
     .. deprecated:: 2.9
 
-        The list of voice regions is dynamic, so this enum is deprecated in favor
-        of the region ID :class:`str`, which can be retrieved via
-        :meth:`Guild.fetch_voice_regions`, and will be removed in version 3.0.
+        The list of voice regions is dynamic, so this enum is deprecated.
+        Use :meth:`Guild.fetch_voice_regions` to retrieve available regions
+        as a list of :class:`VoiceServerRegion` objects. This enum will be removed in version 3.0.
 
     .. attribute:: brazil
 
