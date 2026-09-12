@@ -23,17 +23,20 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
-  `SlashCommandGroup.guild_only` when `contexts` is `None`.
-  ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
-- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
-  ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 - Fix `StageChannel.create_instance`'s `send_notification` parameter type.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix the `sync_permissions` type in the `VoiceChannel.edit` and `StageChannel.edit`
   overloads. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix the return type of the `MediaChannel.edit` overload.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
+  `SlashCommandGroup.guild_only` when `contexts` is `None`.
+  ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
+- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
+  ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
+- Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
+  user leaves the event.
+  ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
 
 ### Deprecated
 
