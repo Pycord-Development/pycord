@@ -1527,6 +1527,32 @@ class SlashCommandGroup(ApplicationCommand):
 
         return inner
 
+    async def prepare(self, ctx: ApplicationContext) -> None:
+        # Resolve down to the actual leaf subcommand
+        leaf, data = self, ctx.interaction.data
+        while isinstance(leaf, SlashCommandGroup):
+            data = data["options"][0]
+            leaf = find(lambda x: x.name == data["name"], leaf.subcommands)
+
+        ctx.command = leaf
+
+        if not await self.can_run(ctx):
+            raise CheckFailure(
+                f"The check functions for the command {self.name} failed"
+            )
+
+        if self._max_concurrency is not None:
+            # For this application, context can be duck-typed as a Message
+            await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
+
+        try:
+            self._prepare_cooldowns(ctx)
+            await self.call_before_hooks(ctx)
+        except:
+            if self._max_concurrency is not None:
+                await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
+            raise
+
     async def _invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
         resolved = ctx.interaction.data.get("resolved", None)
