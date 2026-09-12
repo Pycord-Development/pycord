@@ -37,6 +37,7 @@ from typing import (
     Optional,
     TypeVar,
     Union,
+    cast,
     overload,
 )
 
@@ -119,6 +120,7 @@ if TYPE_CHECKING:
     from .types.guild import Guild as GuildPayload
     from .types.guild import GuildFeature, MFALevel
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
+    from .types.invite import IncompleteInvite
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import VoiceState as GuildVoiceState
@@ -3784,7 +3786,13 @@ class Guild(Hashable):
         payload["max_uses"] = 0
         payload["max_age"] = 0
         payload["uses"] = payload.get("uses", 0)
-        return Invite(state=self._state, data=payload, guild=self, channel=channel)
+
+        return Invite(
+            state=self._state,
+            data=cast("IncompleteInvite", payload),
+            guild=self,
+            channel=channel,
+        )
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(

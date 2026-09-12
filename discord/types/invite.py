@@ -40,22 +40,20 @@ from .user import PartialUser
 InviteTargetType = Literal[1, 2]
 
 
-class _InviteMetadata(TypedDict, total=False):
-    uses: int
-    max_uses: int
-    max_age: int
-    temporary: bool
-    created_at: str
-    expires_at: str | None
-
-
-class VanityInvite(_InviteMetadata):
+class VanityInvite(TypedDict):
     code: str | None
+    uses: int
 
 
-class IncompleteInvite(_InviteMetadata):
+class IncompleteInvite(TypedDict):
     code: str
     channel: PartialChannel
+    uses: NotRequired[int]
+    max_uses: NotRequired[int]
+    max_age: NotRequired[int]
+    temporary: NotRequired[bool]
+    created_at: NotRequired[str]
+    expires_at: NotRequired[str | None]
 
 
 class Invite(IncompleteInvite):
