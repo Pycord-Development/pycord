@@ -31,7 +31,6 @@ import functools
 import inspect
 import re
 import types
-from collections import OrderedDict
 from collections.abc import Callable, Coroutine, Generator
 from enum import Enum
 from typing import (
@@ -84,9 +83,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing import Concatenate
+    from typing import Concatenate, ParamSpec
 
-    from typing_extensions import Never, ParamSpec
+    from typing_extensions import Never
 
     from .. import Permissions
     from ..bot import C
@@ -479,7 +478,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             ctx.bot.dispatch("application_command_error", ctx, error)
 
     def _get_signature_parameters(self):
-        return OrderedDict(inspect.signature(self.callback).parameters)
+        return dict(inspect.signature(self.callback).parameters)
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
@@ -915,7 +914,7 @@ class SlashCommand(ApplicationCommand):
                 )
             o._parameter_name = p_name
 
-        left_out_params = OrderedDict()
+        left_out_params = {}
         for k, v in params:
             left_out_params[k] = v
         options.extend(self._parse_options(left_out_params, check_params=False))
