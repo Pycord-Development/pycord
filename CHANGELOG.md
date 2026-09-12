@@ -21,13 +21,16 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed `AttributeError` when using `Modal.remove_item()`.
+  ([#3357](https://github.com/Pycord-Development/pycord/pull/3357))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
-- Fixed `AttributeError` when using `Modal.remove_item()`.
-  ([#3357](https://github.com/Pycord-Development/pycord/pull/3357))
+- Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
+  user leaves the event.
+  ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
 
 ### Deprecated
 
