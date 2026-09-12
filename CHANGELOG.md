@@ -16,11 +16,19 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+- Added missing `slowmode_delay`, `user_limit`, and `bitrate` parameters to
+  `StageChannel.edit`. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 
 ### Changed
 
 ### Fixed
 
+- Fix `StageChannel.create_instance`'s `send_notification` parameter type.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the `sync_permissions` type in the `VoiceChannel.edit` and `StageChannel.edit`
+  overloads. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the return type of the `MediaChannel.edit` overload.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
