@@ -21,6 +21,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed `AttributeError` when using `Modal.remove_item()`.
+  ([#3357](https://github.com/Pycord-Development/pycord/pull/3357))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
