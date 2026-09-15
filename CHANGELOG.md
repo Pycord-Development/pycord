@@ -17,6 +17,10 @@ These changes are available on the `master` branch, but have not yet been releas
   `Guild.create_scheduled_event`, and `ScheduledEvent.edit`, and added `use_cache` to
   `ScheduledEvent.subscribers()`.
   ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
+- Added `Member.vr_status` property.
+  ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
+- Added `SlashCommandGroup.add_command`.
+  ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
 
 ### Changed
 
@@ -30,6 +34,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
 - Fixed `ScheduledEvent` subscriber cache not being kept in sync correctly.
   ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
+- Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
+  `SlashCommandGroup.guild_only` when `contexts` is `None`.
+  ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
+- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
+  ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
+- Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
+  user leaves the event.
+  ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
 
 ### Deprecated
 
@@ -38,6 +50,51 @@ These changes are available on the `master` branch, but have not yet been releas
   API-aligned names. ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
 
 ### Removed
+
+## [2.8.1] - 2026-07-25
+
+### Added
+
+- Add `RoleColours.HOLOGRAPHIC_PRIMARY`, `RoleColours.HOLOGRAPHIC_SECONDARY`, and
+  `RoleColours.HOLOGRAPHIC_TERTIARY` class constants.
+  ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+
+### Fixed
+
+- Fix an attribute error in `RoleColours.is_holographic()` when `secondary` or
+  `tertiary` is `None`.
+  ([#3268](https://github.com/Pycord-Development/pycord/pull/3268))
+- Fix error message for `Guild.create_sticker()`.
+  ([#3263](https://github.com/Pycord-Development/pycord/pull/3263))
+- Fix typehint for `SlashCommandGroup.__new__()`.
+  ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
+- Include `bypass_slowmode` in `Permissions.all()`.
+  ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
+- Allow `ForumTag` objects to be created without an emoji.
+  ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
+- Fix a type error when checking the equality of two `PartialSoundboardSound` instances.
+  ([#3262](https://github.com/Pycord-Development/pycord/pull/3262))
+- Fix an attribute error when using `Invite.edit_target_users()`.
+  ([#3257](https://github.com/Pycord-Development/pycord/pull/3257))
+- Fix a type error in `Poll.to_dict()` for closed polls.
+  ([#3261](https://github.com/Pycord-Development/pycord/pull/3261))
+- Fix an attribute error when accessing the `User.system` attribute on copied `User`
+  objects. ([#3265](https://github.com/Pycord-Development/pycord/pull/3265))
+- Fix an attribute error when using `Webhook.edit_message()` with views.
+  ([#3239](https://github.com/Pycord-Development/pycord/pull/3239))
+- Fix `PollAnswer.to_dict()` incorrectly setting the `PollAnswer.answer_id` attribute as
+  a tuple instead of an integer.
+  ([#3260](https://github.com/Pycord-Development/pycord/pull/3260))
+- Fix an issue where an `Embed` object's `colour` parameter would be ignored when set to
+  `0`. ([#3256](https://github.com/Pycord-Development/pycord/pull/3256))
+- Fix an issue where `TextChannel.archived_threads` would ignore any limit parameter
+  smaller than 50 and use 50 instead.
+  ([#3266](https://github.com/Pycord-Development/pycord/pull/3266))
+- Fix an issue where the `SubscriptionStatus.inactive` and `SubscriptionStatus.ending`
+  enum values were swapped.
+  ([#3278](https://github.com/Pycord-Development/pycord/pull/3278))
+- Fix `PartialMessage.edit()` to work with `DesignerView`.
+  ([#3237](https://github.com/Pycord-Development/pycord/pull/3237))
 
 ## [2.8.0] - 2026-05-18
 
@@ -1796,9 +1853,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.8.1...HEAD
+[2.8.1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0
-[2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0rc2
+[2.8.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.8.0rc1...v2.8.0rc2
 [2.8.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.7.2...v2.8.0rc1
 [2.7.2]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1

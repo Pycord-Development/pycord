@@ -24,8 +24,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, ClassVar, TypeVar
 
 from ..components import Section as SectionComponent
 from ..components import _component_factory

@@ -156,6 +156,7 @@ Useful Links
 - `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
+- `SonoLink, a high-performance Lavalink v4 wrapper for Python <https://github.com/sonolink/sonolink>`_
 
 Translations
 ------------

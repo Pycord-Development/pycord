@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Callable, ClassVar, Iterator, TypeVar, overload
+from collections.abc import Callable, Iterator
+from typing import Any, ClassVar, TypeVar, overload
 
 from .enums import UserFlags
 
@@ -34,6 +35,7 @@ __all__ = (
     "MessageFlags",
     "AttachmentFlags",
     "PublicUserFlags",
+    "GatewayCapabilities",
     "Intents",
     "MemberCacheFlags",
     "ApplicationFlags",
@@ -588,6 +590,36 @@ class PublicUserFlags(BaseFlags):
 
 
 @fill_with_flags()
+class GatewayCapabilities(BaseFlags):
+    """Wraps Discord gateway capabilities.
+
+    These bits are mostly undocumented and meant for specialized clients. They are
+    sent with the IDENTIFY payload as the ``capabilities`` field.
+
+    Attributes
+    ----------
+    value: :class:`int`
+        The raw capability value. Prefer toggling via the provided attributes.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    def none(cls) -> GatewayCapabilities:
+        """Creates a :class:`GatewayCapabilities` instance with no bits enabled."""
+
+        self = cls.__new__(cls)
+        self.value = cls.DEFAULT_VALUE
+        return self
+
+    @flag_value
+    def obfuscated_channels(self):
+        """:class:`bool`: Obfuscates channel identifiers in gateway events."""
+
+        return 1 << 15
+
+
+@fill_with_flags()
 class Intents(BaseFlags):
     r"""Wraps up a Discord gateway intent flag.
 
@@ -765,15 +797,6 @@ class Intents(BaseFlags):
         return 1 << 2
 
     @flag_value
-    def emojis(self):
-        """:class:`bool`: Alias of :attr:`.emojis_and_stickers`.
-
-        .. versionchanged:: 2.0
-            Changed to an alias.
-        """
-        return 1 << 3
-
-    @alias_flag_value
     def emojis_and_stickers(self):
         """:class:`bool`: Whether guild emoji and sticker related events are enabled.
 
@@ -794,6 +817,15 @@ class Intents(BaseFlags):
         - :meth:`Client.stickers`
         - :attr:`Guild.emojis`
         - :attr:`Guild.stickers`
+        """
+        return 1 << 3
+
+    @alias_flag_value
+    def emojis(self):
+        """:class:`bool`: Alias of :attr:`.emojis_and_stickers`.
+
+        .. versionchanged:: 2.0
+            Changed to an alias.
         """
         return 1 << 3
 
@@ -1495,8 +1527,8 @@ class ApplicationFlags(BaseFlags):
 
     @flag_value
     def gateway_message_content_limited(self):
-        """:class:`bool`: Returns ``True`` if the application is currently pending verification
-        and has hit the guild limit.
+        """:class:`bool`: Returns ``True`` if the application is allowed to receive limited
+        message content information over the gateway.
         """
         return 1 << 19
 
@@ -1585,6 +1617,12 @@ class ChannelFlags(BaseFlags):
         .. versionadded:: 2.7
         """
         return 1 << 15
+
+    @flag_value
+    def obfuscated(self):
+        """:class:`bool`: Returns ``True`` if the channel is obfuscated by the gateway."""
+
+        return 1 << 17
 
 
 @fill_with_flags()

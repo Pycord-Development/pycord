@@ -27,7 +27,8 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-from typing import TYPE_CHECKING, Any, Coroutine, Union, overload
+from collections.abc import Coroutine
+from typing import TYPE_CHECKING, Any, Union, overload
 
 from typing_extensions import deprecated
 

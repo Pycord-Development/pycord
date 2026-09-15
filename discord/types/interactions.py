@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Literal, Union
+from typing import TYPE_CHECKING, Literal, Union
 
 from ..permissions import Permissions
 from .channel import ChannelType
@@ -272,7 +272,7 @@ InteractionContextType = Literal[0, 1, 2]
 ApplicationIntegrationType = Literal[0, 1]
 _StringApplicationIntegrationType = Literal["0", "1"]
 
-AuthorizingIntegrationOwners = Dict[_StringApplicationIntegrationType, Snowflake]
+AuthorizingIntegrationOwners = dict[_StringApplicationIntegrationType, Snowflake]
 
 
 class InteractionCallbackResponse(TypedDict):

@@ -24,8 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import TYPE_CHECKING, Iterator, Literal, TypeVar, overload
+from collections.abc import Iterator, Sequence
+from typing import TYPE_CHECKING, Literal, TypeVar, overload
 
 from ..components import (
     CheckboxGroupOption,

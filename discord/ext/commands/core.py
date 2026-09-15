@@ -30,11 +30,10 @@ import datetime
 import functools
 import inspect
 import types
+from collections.abc import Callable, Generator
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Generator,
     Generic,
     Literal,
     TypeVar,
@@ -67,7 +66,9 @@ from .cooldowns import (
 from .errors import *
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec, TypeGuard
+    from typing import Concatenate, TypeGuard
+
+    from typing_extensions import ParamSpec
 
     from discord.message import Message
 

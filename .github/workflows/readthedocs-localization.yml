@@ -10,7 +10,8 @@ on:
   schedule:
     - cron: "0 0 * * 1"
 
-permissions: write-all
+permissions:
+  contents: read
 
 jobs:
   localization_builds:
@@ -18,7 +19,7 @@ jobs:
     environment: documentation
     strategy:
       matrix:
-        rdt_projects: ["pycord-spanish", "pycord-japanese", "pycord-brazilian", "pycord-russian", "pycord-german", "pycord-hindi", "pycord-korean", "pycord-italian", "pycord-chinese", "pycord-french", "pyord-turkish"]
+        rdt_projects: ["pycord-spanish", "pycord-japanese", "pycord-brazilian", "pycord-russian", "pycord-german", "pycord-hindi", "pycord-korean", "pycord-italian", "pycord-chinese", "pycord-french", "pycord-turkish"]
     steps:
       - name: "Trigger RDT ${{ matrix.rdt_projects }}"
         run: |

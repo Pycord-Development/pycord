@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Iterator, Literal
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, Any, Literal
 
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
@@ -364,7 +365,7 @@ class AppEmoji(BaseEmoji):
         return f"<AppEmoji id={self.id} name={self.name!r} animated={self.animated}>"
 
     @property
-    def guild(self) -> Guild:
+    def guild(self) -> None:
         """The guild this emoji belongs to. This is always `None` for :class:`AppEmoji`."""
         return None
 

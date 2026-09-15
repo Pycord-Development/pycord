@@ -24,7 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Coroutine
+from collections.abc import Coroutine
+from typing import TYPE_CHECKING, Any
 
 from typing_extensions import override
 
@@ -41,7 +42,6 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .http import HTTPClient
     from .state import ConnectionState
-
 
 __all__ = (
     "PartialSoundboardSound",
@@ -100,7 +100,7 @@ class PartialSoundboardSound(Hashable):
     def __eq__(
         self, other: PartialSoundboardSound
     ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        if isinstance(other, self, __class__):
+        if isinstance(other, __class__):
             return self.id == other.id
         return NotImplemented
 

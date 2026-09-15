@@ -178,6 +178,7 @@ class BaseUser(_UserTag):
         self._public_flags = user._public_flags
         self.primary_guild = user.primary_guild
         self._collectibles = user._collectibles
+        self.system = user.system
 
         return self
 

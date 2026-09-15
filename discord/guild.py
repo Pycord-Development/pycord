@@ -28,15 +28,13 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    List,
     NamedTuple,
     Optional,
-    Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
@@ -129,10 +127,7 @@ if TYPE_CHECKING:
     from .template import Template
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
-    from .types.guild import (
-        GuildFeature,
-        MFALevel,
-    )
+    from .types.guild import GuildFeature, MFALevel
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
@@ -144,7 +139,7 @@ if TYPE_CHECKING:
     GuildChannel = Union[
         VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
     ]
-    ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+    ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
 
 T = TypeVar("T")
 
@@ -3094,7 +3089,7 @@ class Guild(Hashable):
             raise TypeError('"name" parameter must be 2 to 30 characters long.')
 
         if description and not (2 <= len(description) <= 100):
-            raise TypeError('"description" parameter must be 2 to 200 characters long.')
+            raise TypeError('"description" parameter must be 2 to 100 characters long.')
 
         payload = {"name": name, "description": description or ""}
 
@@ -3236,7 +3231,7 @@ class Guild(Hashable):
             The emoji name. Must be at least 2 characters.
         image: :class:`bytes`
             The :term:`py:bytes-like object` representing the image data to use.
-            Only JPG, PNG and GIF images are supported.
+            Only JPEG, PNG, GIF, WebP and AVIF images are supported.
         roles: List[:class:`Role`]
             A :class:`list` of :class:`Role`\s that can use this emoji. Leave empty to make it available to everyone.
         reason: Optional[:class:`str`]
@@ -3337,7 +3332,7 @@ class Guild(Hashable):
         data = await self._state.http.get_role(self.id, role_id)
         return Role(guild=self, state=self._state, data=data)
 
-    async def _fetch_role(self, role_id: int) -> Role:
+    async def _fetch_role(self, role_id: int) -> Role | None:
         """|coro|
 
         Retrieves a :class:`Role` that the guild has.
