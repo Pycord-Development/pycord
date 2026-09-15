@@ -28,7 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
-- Fix `TypeError` in `Label.set_radio_group()` and `Label.set_checkbox_group()` when providing the `option` keyword argument.
+- Fix `TypeError` in `Label.set_radio_group()` and `Label.set_checkbox_group()` when
+  providing the `option` keyword argument.
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
