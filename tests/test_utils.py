@@ -63,6 +63,7 @@ def test_get_multiple_attrs_no_match_returns_none():
     items = [ns(name="foo", value=1), ns(name="bar", value=2)]
     assert discord.utils.get(items, name="foo", value=2) is None
 
+
 def test_get_nested_attr():
     items = [
         ns(inner=ns(name="foo")),
@@ -71,6 +72,7 @@ def test_get_nested_attr():
     result = discord.utils.get(items, inner__name="bar")
     assert result is not None
     assert result.inner.name == "bar"
+
 
 def test_get_match_at_end():
     items = [ns(name="foo"), ns(name="bar"), ns(name="baz")]
