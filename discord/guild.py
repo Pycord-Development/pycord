@@ -1635,8 +1635,8 @@ class Guild(Hashable):
 
         if nsfw and spoiler:
             warn(
-                "The nsfw setting is mutually exclusive with the spoiler setting. "
-                "The channel will be created as an nsfw channel."
+                "The NSFW setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an NSFW channel."
             )
 
         data = await self._create_channel(
@@ -1801,8 +1801,8 @@ class Guild(Hashable):
 
         if nsfw and spoiler:
             warn(
-                "The nsfw setting is mutually exclusive with the spoiler setting. "
-                "The channel will be created as an nsfw channel."
+                "The NSFW setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an NSFW channel."
             )
 
         data = await self._create_channel(
@@ -1985,8 +1985,8 @@ class Guild(Hashable):
 
         if nsfw and spoiler:
             warn(
-                "The nsfw setting is mutually exclusive with the spoiler setting. "
-                "The channel will be created as an nsfw channel."
+                "The NSFW setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an NSFW channel."
             )
 
         data = await self._create_channel(
