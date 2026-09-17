@@ -26,12 +26,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fix typehint for `SlashCommandGroup.__new__`.
-  ([#3235](https://github.com/Pycord-Development/pycord/pull/3235))
-- Include `bypass_slowmode` in `Permissions.all`.
-  ([#3231](https://github.com/Pycord-Development/pycord/pull/3231))
-- Allow `ForumTag` to be created without an emoji.
-  ([#3245](https://github.com/Pycord-Development/pycord/pull/3245))
 - Fixed `ScheduledEvent` subscriber cache not being kept in sync correctly.
   ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
