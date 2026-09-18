@@ -1,7 +1,7 @@
 import importlib
 import inspect
 import re
-from collections import OrderedDict, namedtuple
+from collections import namedtuple
 
 from docutils import nodes
 from sphinx import addnodes
@@ -200,12 +200,10 @@ def get_class_results(lookup, modulename, name, fullname):
     module = importlib.import_module(modulename)
     cls = getattr(module, name)
 
-    groups = OrderedDict(
-        [
-            (_("Attributes"), []),
-            (_("Methods"), []),
-        ]
-    )
+    groups = {
+        _("Attributes"): [],
+        _("Methods"): [],
+    }
 
     try:
         members = lookup[fullname]
