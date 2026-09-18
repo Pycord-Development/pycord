@@ -457,6 +457,45 @@ Guilds
     :param after: The guild after being updated.
     :type after: :class:`Guild`
 
+.. function:: on_guild_join_request_create(join_request)
+
+    Called when a user submits a new join request to a guild.
+
+    This requires :attr:`Intents.moderation` to be enabled and is only sent to
+    bots with the :attr:`~Permissions.kick_members` permission.
+
+    .. versionadded:: 2.9
+
+    :param join_request: The newly submitted join request.
+    :type join_request: :class:`JoinRequest`
+
+.. function:: on_guild_join_request_update(join_request)
+
+    Called when a guild join request is updated, such as when an applicant
+    submits a request they had already started or when a request is approved
+    or rejected.
+
+    This requires :attr:`Intents.moderation` to be enabled and is only sent to
+    bots with the :attr:`~Permissions.kick_members` permission.
+
+    .. versionadded:: 2.9
+
+    :param join_request: The updated join request.
+    :type join_request: :class:`JoinRequest`
+
+.. function:: on_raw_guild_join_request_delete(payload)
+
+    Called when a guild join request is deleted, such as when the applicant
+    withdraws it.
+
+    This requires :attr:`Intents.moderation` to be enabled and is only sent to
+    bots with the :attr:`~Permissions.kick_members` permission.
+
+    .. versionadded:: 2.9
+
+    :param payload: The raw join-request deletion payload.
+    :type payload: :class:`RawGuildJoinRequestDeleteEvent`
+
 .. function:: on_guild_role_create(role)
               on_guild_role_delete(role)
 
