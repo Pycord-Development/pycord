@@ -37,7 +37,10 @@ from ..types import snowflake
 from .errors import SinkException
 
 if TYPE_CHECKING:
+    from ..member import Member
+    from ..user import User
     from ..voice import VoiceClient
+    from ..voice.packets import VoiceData
 
 __all__ = (
     "Filters",
@@ -210,6 +213,8 @@ class Sink(Filters):
         Audio may only be formatted after recording is finished.
     """
 
+    __sink_listeners__: list[tuple[str, str]] = []
+
     def __init__(self, *, filters=None):
         if filters is None:
             filters = default_filters
@@ -222,18 +227,38 @@ class Sink(Filters):
     def client(self) -> VoiceClient | None:
         return self.vc
 
+    @property
+    def recording(self) -> bool:
+        """Whether the voice client is currently recording."""
+        return self.vc is not None and self.vc.is_recording()
+
+    def is_opus(self) -> bool:
+        """Whether this sink accepts raw opus packets instead of decoded PCM."""
+        return False
+
+    def walk_children(self):
+        """Yields child sinks. Base implementation yields nothing."""
+        return
+        yield  # make it a generator
+
     def init(self, vc: VoiceClient):  # called under listen
         self.vc = vc
         super().init()
 
     @Filters.container
-    def write(self, data, user):
+    def write(self, data: VoiceData | bytes, user: User | Member | None) -> None:
+        from ..voice.packets import VoiceData
+
+        if isinstance(data, VoiceData):
+            pcm_data = data.pcm
+        else:
+            pcm_data = data
+
         if user not in self.audio_data:
             file = io.BytesIO()
             self.audio_data.update({user: AudioData(file)})
 
-        file = self.audio_data[user]
-        file.write(data)
+        self.audio_data[user].write(pcm_data)
 
     def cleanup(self):
         self.finished = True

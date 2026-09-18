@@ -55,7 +55,7 @@ class OGGSink(Sink):
         OGGSinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.recording:
             raise OGGSinkError(
                 "Audio may only be formatted after recording is finished."
             )

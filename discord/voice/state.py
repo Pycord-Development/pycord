@@ -33,10 +33,12 @@ import threading
 from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
+import davey
+
 from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.errors import ConnectionClosed
-from discord.voice.utils.dependencies import DAVE_PROTOCOL_VERSION, HAS_DAVEY
+from discord.voice.utils.dependencies import dave_protocol_version
 
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
@@ -56,9 +58,6 @@ MISSING = utils.MISSING
 SocketReaderCallback = Callable[[bytes], Any]
 _log = logging.getLogger(__name__)
 _recv_log = logging.getLogger("discord.voice.receiver")
-
-if HAS_DAVEY:
-    import davey
 
 
 class SocketReader(threading.Thread):
@@ -261,7 +260,7 @@ class VoiceConnectionState:
         self.recording_done_callbacks: list[
             tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]
         ] = []
-        self._dispatch_task_set: set[asyncio.Task] = set()
+        self._dispatch_task_set: set[asyncio.Task[None]] = set()
 
         if not self._connection.self_id:
             raise RuntimeError("client self ID is not set")
@@ -279,11 +278,11 @@ class VoiceConnectionState:
 
     @property
     def ssrc_user_map(self) -> dict[int, int]:
-        return {v: k for k, v in self.user_ssrc_map.items()}
+        return self.client._ssrc_to_id
 
     @property
     def max_dave_proto_version(self) -> int:
-        return DAVE_PROTOCOL_VERSION
+        return dave_protocol_version
 
     @property
     def state(self) -> ConnectionFlowState:
@@ -312,8 +311,8 @@ class VoiceConnectionState:
         return self.client.user
 
     @property
-    def channel_id(self) -> int | None:
-        return self.client.channel is not None and self.client.channel.id
+    def channel_id(self) -> int:
+        return self.client.channel.id
 
     @property
     def guild_id(self) -> int:
@@ -393,7 +392,7 @@ class VoiceConnectionState:
         self.server_id = data.guild_id
         endpoint = data.endpoint
 
-        if self.token is None or endpoint is None:
+        if endpoint is None:
             _log.warning(
                 "Awaiting endpoint... This requires waiting. "
                 "If timeout occurred considering raising the timeout and reconnecting."
@@ -713,8 +712,10 @@ class VoiceConnectionState:
         self, *, self_deaf: bool = False, self_mute: bool = False
     ) -> None:
         channel = self.client.channel
-        await channel.guild.change_voice_state(
-            channel=channel, self_deaf=self_deaf, self_mute=self_mute
+        await self.guild.change_voice_state(
+            channel=channel,
+            self_deaf=self_deaf,
+            self_mute=self_mute,  # pyright: ignore[reportArgumentType]
         )
 
     async def _voice_disconnect(self) -> None:
@@ -725,7 +726,7 @@ class VoiceConnectionState:
         )
 
         self.state = ConnectionFlowState.disconnected
-        await self.client.channel.guild.change_voice_state(
+        await self.guild.change_voice_state(
             channel=None
         )  # pyright: ignore[reportAttributeAccessIssue]
         self._expecting_disconnect = True
@@ -901,9 +902,9 @@ class VoiceConnectionState:
             await previous_ws.close()
 
     async def _move_to(self, channel: abc.Snowflake) -> None:
-        await self.client.channel.guild.change_voice_state(
-            channel=channel
-        )  # pyright: ignore[reportAttributeAccessIssue]
+        await self.guild.change_voice_state(
+            channel=channel  # pyright: ignore[reportArgumentType]
+        )
         self.state = ConnectionFlowState.set_guild_voice_state
 
     def _update_voice_channel(self, channel_id: int | None) -> None:
