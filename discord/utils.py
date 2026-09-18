@@ -1257,31 +1257,23 @@ def raw_role_mentions(text: str) -> list[int]:
 
 
 def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
-    ret = []
-    n = 0
-    for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iter(iterator)
+    while chunk := list(itertools.islice(it, max_size)):
+        yield chunk
+
+
+async def _atake(it: AsyncIterator[T], n: int) -> AsyncIterator[T]:
+    for _ in range(n):
+        try:
+            yield await it.__anext__()
+        except StopAsyncIteration:
+            return
 
 
 async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
-    ret = []
-    n = 0
-    async for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iterator.__aiter__()
+    while chunk := [x async for x in _atake(it, max_size)]:
+        yield chunk
 
 
 @overload
