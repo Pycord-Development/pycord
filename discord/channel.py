@@ -903,13 +903,12 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
             .. versionadded:: 2.3
         spoiler: :class:`bool`
-            Whether the channel should be a spoiler channel.
-
-            .. note::
-                This setting is mutually exclusive with :attr:`nsfw`. Applying this to an NSFW channel will convert it to a spoiler channel.
-                Passing both as ``True`` will make the channel an NSFW channel.
+            Whether the channel should be a spoiler channel. Mutually exclusive with :attr:`nsfw`.
 
             .. versionadded:: 2.9
+
+            .. note::
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
