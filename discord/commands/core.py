@@ -956,7 +956,7 @@ class SlashCommand(ApplicationCommand):
             self._validate_parameters()
 
     @property
-    def is_subcommand(self) -> bool:
+    def subcommand(self) -> bool:
         return self.parent is not None
 
     @property
@@ -973,7 +973,7 @@ class SlashCommand(ApplicationCommand):
             as_dict["name_localizations"] = self.name_localizations
         if self.description_localizations is not MISSING:
             as_dict["description_localizations"] = self.description_localizations
-        if self.is_subcommand:
+        if self.subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
         if self.nsfw is not None:
@@ -984,7 +984,7 @@ class SlashCommand(ApplicationCommand):
                 self.default_member_permissions.value
             )
 
-        if not self.guild_ids and not self.is_subcommand:
+        if not self.guild_ids and not self.subcommand:
             as_dict["integration_types"] = [it.value for it in self.integration_types]
             as_dict["contexts"] = [ctx.value for ctx in self.contexts]
 

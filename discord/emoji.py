@@ -28,6 +28,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, Literal
 
+from typing_extensions import deprecated
+
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .user import User
@@ -211,11 +213,21 @@ class GuildEmoji(BaseEmoji):
         """The guild this emoji belongs to."""
         return self._state._get_guild(self.guild_id)
 
+    @deprecated(
+        "GuildEmoji.is_usable() is deprecated since version 2.9, consider using GuildEmoji.usable instead"
+    )
     def is_usable(self) -> bool:
         """Whether the bot can use this emoji.
 
         .. versionadded:: 1.3
+        .. deprecated:: 2.9
+            Use :attr:`usable` instead.
         """
+        return self.usable
+
+    @property
+    def usable(self) -> bool:
+        """Whether the bot can use this emoji."""
         if not self.available:
             return False
         if not self._roles:
@@ -374,7 +386,19 @@ class AppEmoji(BaseEmoji):
         """A :class:`list` of roles that is allowed to use this emoji. This is always empty for :class:`AppEmoji`."""
         return []
 
+    @deprecated(
+        "AppEmoji.is_usable() is deprecated since version 2.9, consider using AppEmoji.usable instead"
+    )
     def is_usable(self) -> bool:
+        """Whether the bot can use this emoji.
+
+        .. deprecated:: 2.9
+            Use :attr:`usable` instead.
+        """
+        return self.usable
+
+    @property
+    def usable(self) -> bool:
         """Whether the bot can use this emoji."""
         return self.application_id == self._state.application_id
 
