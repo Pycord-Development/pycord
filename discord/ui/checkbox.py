@@ -47,8 +47,8 @@ class Checkbox(ModalItem):
     ----------
     custom_id: Optional[:class:`str`]
         The ID of the checkbox that gets received during an interaction.
-    default: Optional[:class:`bool`]
-        Whether this checkbox is selected by default or not.
+    default: :class:`bool`
+        Whether this checkbox is selected by default or not. Defaults to ``False``.
     id: Optional[:class:`int`]
         The checkbox's ID.
     """
@@ -71,6 +71,7 @@ class Checkbox(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+
         if not isinstance(default, bool):
             raise TypeError(f"default must be bool, not {default.__class__.__name__}")
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
