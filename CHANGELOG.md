@@ -12,6 +12,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `ScheduledEventEntityType` enum and `ScheduledEventEntityMetadata` class, added
+  missing attributes and API-aligned parameters to `ScheduledEvent`,
+  `Guild.create_scheduled_event`, and `ScheduledEvent.edit`, and added `use_cache` to
+  `ScheduledEvent.subscribers()`.
+  ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
@@ -21,6 +26,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed `ScheduledEvent` subscriber cache not being kept in sync correctly.
+  ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
@@ -31,6 +38,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
 
 ### Deprecated
+
+- Deprecated `ScheduledEventLocationType`, `ScheduledEventLocation`, and several
+  `ScheduledEvent` attributes and related methods' parameters in favor of their
+  API-aligned names. ([#3025](https://github.com/Pycord-Development/pycord/pull/3025))
 
 ### Removed
 

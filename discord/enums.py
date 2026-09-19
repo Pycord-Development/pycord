@@ -30,6 +30,8 @@ from collections import namedtuple
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
+from typing_extensions import deprecated
+
 __all__ = (
     "Enum",
     "ChannelType",
@@ -62,6 +64,7 @@ __all__ = (
     "EmbeddedActivity",
     "ScheduledEventStatus",
     "ScheduledEventPrivacyLevel",
+    "ScheduledEventEntityType",
     "ScheduledEventLocationType",
     "InputTextStyle",
     "SlashCommandOptionType",
@@ -96,21 +99,17 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value <= other.value
+        cls.__le__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value <= other.value
         )
-        cls.__ge__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value >= other.value
+        cls.__ge__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value >= other.value
         )
-        cls.__lt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value < other.value
+        cls.__lt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value < other.value
         )
-        cls.__gt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value > other.value
+        cls.__gt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value > other.value
         )
     return cls
 
@@ -970,12 +969,19 @@ class ScheduledEventPrivacyLevel(Enum):
         return self.value
 
 
-class ScheduledEventLocationType(Enum):
-    """Scheduled event location type"""
+class ScheduledEventEntityType(Enum):
+    """Scheduled event entity type"""
 
     stage_instance = 1
     voice = 2
     external = 3
+
+    def __int__(self):
+        return self.value
+
+
+# TODO(Paillat-dev): Add @deprecated notice using warnings.deprecated or in some other way
+ScheduledEventLocationType = ScheduledEventEntityType
 
 
 class AutoModTriggerType(Enum):
