@@ -12,7 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Methods to store and restore states of UI components.
+- Added `View.to_component_instances()`/`from_components()` for snapshotting and
+  restoring UI component state.
   ([#3208](https://github.com/Pycord-Development/pycord/pull/3208))
 
 ### Changed
