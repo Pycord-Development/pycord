@@ -32,6 +32,12 @@ from discord.components import Container as ContainerComponent
 from discord.components import InputText as InputTextComponent
 
 
+@pytest.fixture(autouse=True)
+def _restore_event_loop_after_async_tests():
+    yield
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
+
 @pytest.mark.asyncio
 async def test_view_component_instances_roundtrip():
     view = discord.ui.View(timeout=90.0)
