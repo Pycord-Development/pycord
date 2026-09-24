@@ -13,19 +13,10 @@ permissions:
 jobs:
   auto-approve:
     runs-on: ubuntu-latest
-    # Bot IDs:
-    # - renovate[bot]: 29139614
-    # - dependabot[bot]: 49699333
-    # - pre-commit-ci[bot]: 66853113
-    # - crowdin-bot: 58779643
-    # - NyuwBot: 106019021
     if:
       ${{
-        github.event.pull_request.user.id == 29139614 ||
-        github.event.pull_request.user.id == 49699333 ||
-        github.event.pull_request.user.id == 66853113 ||
-        github.event.pull_request.user.id == 58779643 ||
-        github.event.pull_request.user.id == 106019021
+        contains(format(',{0},', vars.AUTOMATED_DEPENDENCY_BOT_IDS), format(',{0},', github.event.pull_request.user.id)) ||
+        contains(format(',{0},', vars.AUTOMATED_DEPENDENCY_BOT_IDS), format(', {0},', github.event.pull_request.user.id))
       }}
     continue-on-error: true
     steps:
