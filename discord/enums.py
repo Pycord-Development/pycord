@@ -28,7 +28,7 @@ from __future__ import annotations
 import types
 from collections import namedtuple
 from enum import IntEnum
-from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar, Union
 
 __all__ = (
     "Enum",
@@ -874,6 +874,11 @@ class SlashCommandOptionType(Enum):
             return cls.attachment
         if datatype_name == "Mentionable":
             return cls.mentionable
+
+        # Check for Literal types (e.g., Literal["jpeg", "png"])
+        # These should be treated as string types
+        if getattr(datatype, "__origin__", None) is Literal:
+            return cls.string
 
         if isinstance(datatype, str) or issubclass(datatype, str):
             return cls.string
