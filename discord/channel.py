@@ -2141,7 +2141,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
             .. versionchanged:: 2.9
 
-                A :class:`VoiceRegion` member is now accepted.
+                A region ID string is now accepted.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
