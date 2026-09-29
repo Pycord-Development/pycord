@@ -19,7 +19,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Refactored backend logic for `sync_commands` to only sync when needed and be easily
+- Refactored backend logic for `Bot.sync_commands()` to only sync when needed and be easily
   extensible. ([#2990](https://github.com/Pycord-Development/pycord/pull/2990))
 
 ### Fixed
