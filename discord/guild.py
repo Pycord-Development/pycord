@@ -3846,7 +3846,16 @@ class Guild(Hashable):
             Retrieving the voice regions failed.
         """
         regions = await self._state.http.get_guild_voice_regions(self.id)
-        return [VoiceServerRegion(**region) for region in regions]
+        return [
+            VoiceServerRegion(
+                id=region.get("id", ""),
+                name=region.get("name", ""),
+                optimal=region.get("optimal", False),
+                deprecated=region.get("deprecated", False),
+                custom=region.get("custom", False),
+            )
+            for region in regions
+        ]
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(
