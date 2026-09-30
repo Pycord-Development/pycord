@@ -28,6 +28,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 - Fixed `AttributeError` when fetching a message from a `PartialMessageable` object that
   has a thread. ([#3309](https://github.com/Pycord-Development/pycord/pull/3309))
+- Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
+  user leaves the event.
+  ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
 
 ### Deprecated
 
