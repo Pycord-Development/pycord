@@ -137,7 +137,10 @@ BridgeContext
 
 .. autoclass:: discord.ext.bridge.BridgeContext
     :members:
-    :exclude-members: _respond, _defer, _edit, _get_super
+    :exclude-members: _respond, _defer, _typing, _edit, _get_super, typing
+
+    .. automethod:: typing
+        :async-with:
 
 BridgeContext Subclasses
 ~~~~~~~~~~~~~~~~~~~~~~~~
