@@ -1392,9 +1392,22 @@ class SlashCommandGroup(ApplicationCommand):
         return as_dict
 
     def add_command(self, command: SlashCommand | SlashCommandGroup) -> None:
+        """Adds a :class:`.SlashCommand` or :class:`.SlashCommandGroup` as a subcommand.
+
+        This is usually not called, instead the :meth:`command` or
+        other shortcut decorators are used instead.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        command: Union[:class:`.SlashCommand`, :class:`.SlashCommandGroup`]
+            The command to add.
+        """
         if command.cog is None and self.cog is not None:
             command.cog = self.cog
 
+        command.parent = self
         self.subcommands.append(command)
 
     def command(
@@ -1410,7 +1423,7 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         def wrap(func) -> T:
-            command = cls(func, parent=self, **kwargs)
+            command = cls(func, **kwargs)
             self.add_command(command)
             return command
 
@@ -1508,7 +1521,6 @@ class SlashCommandGroup(ApplicationCommand):
                     else "No description provided"
                 ),
                 guild_ids=guild_ids,
-                parent=self,
             )
             self.add_command(group)
             return group
