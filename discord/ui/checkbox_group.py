@@ -25,9 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING
-
-from typing_extensions import Self
+from typing import TYPE_CHECKING, Self
 
 from ..components import CheckboxGroup as CheckboxGroupComponent
 from ..components import CheckboxGroupOption

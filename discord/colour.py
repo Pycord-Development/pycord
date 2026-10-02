@@ -27,9 +27,9 @@ from __future__ import annotations
 
 import colorsys
 import random
-from typing import Any
+from typing import Any, Self
 
-from typing_extensions import Self, deprecated, override
+from typing_extensions import deprecated, override
 
 __all__ = (
     "Colour",

@@ -35,11 +35,12 @@ from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
+    Self,
     TypeVar,
 )
 
 import aiohttp
-from typing_extensions import Self, deprecated
+from typing_extensions import deprecated
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -732,7 +733,7 @@ class Client:
                 GatewayNotFound,
                 ConnectionClosed,
                 aiohttp.ClientError,
-                asyncio.TimeoutError,
+                TimeoutError,
             ) as exc:
                 self.dispatch("disconnect")
                 if not reconnect:

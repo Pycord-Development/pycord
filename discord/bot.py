@@ -63,7 +63,7 @@ from .user import User
 from .utils import MISSING, async_all, find, get
 
 if TYPE_CHECKING:
-    from typing_extensions import Never
+    from typing import Never
 
     from .cog import Cog
     from .commands import Option
@@ -907,7 +907,7 @@ class ApplicationCommandMixin(ABC):
                 check=lambda i, c: c == command,
                 timeout=3,
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return
         else:
             if not autocomplete_task.done():

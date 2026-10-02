@@ -25,7 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
+from typing import NotRequired
+
+from typing_extensions import TypedDict
 
 from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji

@@ -2087,7 +2087,7 @@ class Connectable(Protocol):
 
         try:
             await voice.connect(timeout=timeout, reconnect=reconnect)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             try:
                 await voice.disconnect(force=True)
             except Exception:
