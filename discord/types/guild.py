@@ -25,10 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, NotRequired, Required
 
 from typing_extensions import TypedDict
-from typing import NotRequired, Required
 
 from .activity import PartialPresenceUpdate
 from .channel import GuildChannel

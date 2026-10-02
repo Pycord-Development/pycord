@@ -50,8 +50,9 @@ from discord.gateway import KeepAliveHandler as KeepAliveHandlerBase
 from .enums import OpCodes
 
 if TYPE_CHECKING:
-    from _typeshed import ConvertibleToInt
     from typing import Self
+
+    from _typeshed import ConvertibleToInt
 
     from .state import VoiceConnectionState
 

@@ -25,10 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal, NotRequired, Union
 
 from typing_extensions import TypedDict
-from typing import NotRequired
 
 from .snowflake import Snowflake
 from .user import User

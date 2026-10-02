@@ -25,10 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, NotRequired
 
 from typing_extensions import TypedDict
-from typing import NotRequired
 
 
 class EmbedFooter(TypedDict):

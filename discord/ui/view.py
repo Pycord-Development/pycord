@@ -38,10 +38,9 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Self,
     TypeVar,
 )
-
-from typing import Self
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent

@@ -24,10 +24,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, NotRequired
 
 from typing_extensions import TypedDict
-from typing import NotRequired
 
 ApplicationRoleConnectionMetadataType = Literal[1, 2, 3, 4, 5, 6, 7, 8]
 

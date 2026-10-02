@@ -39,13 +39,12 @@ from typing import (
     Any,
     Generic,
     Literal,
+    Self,
     TypeVar,
     Union,
     get_args,
     get_origin,
 )
-
-from typing import Self
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
@@ -83,9 +82,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing import Concatenate, ParamSpec
-
-    from typing import Never
+    from typing import Concatenate, Never, ParamSpec
 
     from .. import Permissions
     from ..bot import C

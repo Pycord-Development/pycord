@@ -35,12 +35,12 @@ from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
+    Self,
     TypeVar,
 )
 
 import aiohttp
 from typing_extensions import deprecated
-from typing import Self
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -727,7 +727,14 @@ class Client:
                     session=self.ws.session_id,
                 )
                 continue
-            except (OSError, HTTPException, GatewayNotFound, ConnectionClosed, aiohttp.ClientError, TimeoutError) as exc:
+            except (
+                OSError,
+                HTTPException,
+                GatewayNotFound,
+                ConnectionClosed,
+                aiohttp.ClientError,
+                TimeoutError,
+            ) as exc:
                 self.dispatch("disconnect")
                 if not reconnect:
                     await self.close()

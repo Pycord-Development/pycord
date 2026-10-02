@@ -398,18 +398,14 @@ class Game(BaseActivity):
     def start(self) -> datetime.datetime | None:
         """When the user started playing this game in UTC, if applicable."""
         if self._start:
-            return datetime.datetime.fromtimestamp(
-                self._start / 1000, tz=datetime.UTC
-            )
+            return datetime.datetime.fromtimestamp(self._start / 1000, tz=datetime.UTC)
         return None
 
     @property
     def end(self) -> datetime.datetime | None:
         """When the user will stop playing this game in UTC, if applicable."""
         if self._end:
-            return datetime.datetime.fromtimestamp(
-                self._end / 1000, tz=datetime.UTC
-            )
+            return datetime.datetime.fromtimestamp(self._end / 1000, tz=datetime.UTC)
         return None
 
     def __str__(self) -> str:
