@@ -1856,44 +1856,6 @@ class Guild(Hashable):
         self._channels[channel.id] = channel
         return channel
 
-    @overload
-    async def create_stage_channel(
-        self,
-        name: str,
-        *,
-        topic: str,
-        position: int = ...,
-        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
-        category: CategoryChannel | None = ...,
-        reason: str | None = ...,
-        bitrate: int = ...,
-        user_limit: int = ...,
-        rtc_region: VoiceRegion | None = ...,
-        video_quality_mode: VideoQualityMode = ...,
-        slowmode_delay: int = ...,
-        nsfw: bool = ...,
-        spoiler: Literal[False] = ...,
-    ) -> StageChannel: ...
-
-    @overload
-    async def create_stage_channel(
-        self,
-        name: str,
-        *,
-        topic: str,
-        position: int = ...,
-        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
-        category: CategoryChannel | None = None,
-        reason: str | None = None,
-        bitrate: int = ...,
-        user_limit: int = ...,
-        rtc_region: VoiceRegion | None = ...,
-        video_quality_mode: VideoQualityMode = ...,
-        slowmode_delay: int = ...,
-        nsfw: Literal[False] = ...,
-        spoiler: bool = ...,
-    ) -> StageChannel: ...
-
     async def create_stage_channel(
         self,
         name: str,
@@ -1909,7 +1871,6 @@ class Guild(Hashable):
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
-        spoiler: bool = MISSING,
     ) -> StageChannel:
         """|coro|
 
@@ -1970,17 +1931,6 @@ class Guild(Hashable):
             Whether the channel is marked as NSFW.
 
             .. versionadded:: 2.7
-
-            .. note::
-                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
-
-        spoiler: :class:`bool`
-            Whether the channel is marked as a spoiler channel.
-
-            .. versionadded:: 2.9
-
-            .. note::
-                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------

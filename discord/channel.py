@@ -2634,17 +2634,6 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         return self.nsfw
 
     @property
-    def spoiler(self) -> bool:
-        """Checks if the channel is a spoiler channel.
-
-        .. note::
-            This is an alias for :attr:`flags.is_spoiler_channel`.
-
-        .. versionadded:: 2.9
-        """
-        return self.flags.is_spoiler_channel
-
-    @property
     def last_message(self) -> Message | None:
         """Fetches the last message from this channel in cache.
 
@@ -3025,7 +3014,6 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         user_limit: int = ...,
         slowmode_delay: int = ...,
         reason: str | None = ...,
-        spoiler: bool = ...,
     ) -> StageChannel | None: ...
 
     @overload
