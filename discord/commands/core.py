@@ -45,7 +45,7 @@ from typing import (
     get_origin,
 )
 
-from typing_extensions import Self
+from typing import Self
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
@@ -85,7 +85,7 @@ __all__ = (
 if TYPE_CHECKING:
     from typing import Concatenate, ParamSpec
 
-    from typing_extensions import Never
+    from typing import Never
 
     from .. import Permissions
     from ..bot import C

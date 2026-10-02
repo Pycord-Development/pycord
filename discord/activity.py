@@ -130,7 +130,7 @@ class BaseActivity:
         """
         if self._created_at is not None:
             return datetime.datetime.fromtimestamp(
-                self._created_at / 1000, tz=datetime.timezone.utc
+                self._created_at / 1000, tz=datetime.UTC
             )
 
     def to_dict(self) -> ActivityPayload:
@@ -288,7 +288,7 @@ class Activity(BaseActivity):
         except KeyError:
             return None
         else:
-            return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
+            return datetime.datetime.fromtimestamp(timestamp, tz=datetime.UTC)
 
     @property
     def end(self) -> datetime.datetime | None:
@@ -298,7 +298,7 @@ class Activity(BaseActivity):
         except KeyError:
             return None
         else:
-            return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
+            return datetime.datetime.fromtimestamp(timestamp, tz=datetime.UTC)
 
     @property
     def large_image_url(self) -> str | None:
@@ -399,7 +399,7 @@ class Game(BaseActivity):
         """When the user started playing this game in UTC, if applicable."""
         if self._start:
             return datetime.datetime.fromtimestamp(
-                self._start / 1000, tz=datetime.timezone.utc
+                self._start / 1000, tz=datetime.UTC
             )
         return None
 
@@ -408,7 +408,7 @@ class Game(BaseActivity):
         """When the user will stop playing this game in UTC, if applicable."""
         if self._end:
             return datetime.datetime.fromtimestamp(
-                self._end / 1000, tz=datetime.timezone.utc
+                self._end / 1000, tz=datetime.UTC
             )
         return None
 
@@ -606,7 +606,7 @@ class Spotify:
         """
         if self._created_at is not None:
             return datetime.datetime.fromtimestamp(
-                self._created_at / 1000, tz=datetime.timezone.utc
+                self._created_at / 1000, tz=datetime.UTC
             )
 
     @property
@@ -713,14 +713,14 @@ class Spotify:
     def start(self) -> datetime.datetime:
         """When the user started playing this song in UTC."""
         return datetime.datetime.fromtimestamp(
-            self._timestamps["start"] / 1000, tz=datetime.timezone.utc
+            self._timestamps["start"] / 1000, tz=datetime.UTC
         )
 
     @property
     def end(self) -> datetime.datetime:
         """When the user will stop playing this song in UTC."""
         return datetime.datetime.fromtimestamp(
-            self._timestamps["end"] / 1000, tz=datetime.timezone.utc
+            self._timestamps["end"] / 1000, tz=datetime.UTC
         )
 
     @property

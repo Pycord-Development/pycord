@@ -31,7 +31,8 @@ from collections.abc import Callable, Sequence
 from functools import partial
 from typing import TYPE_CHECKING, Any, Generic, Literal, overload
 
-from typing_extensions import Self, TypeVar
+from typing_extensions import TypeVar
+from typing import Self
 
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectDefaultValue, SelectMenu, SelectOption

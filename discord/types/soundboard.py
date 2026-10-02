@@ -24,7 +24,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
+from typing import NotRequired
 
 from discord.types.user import User
 

@@ -39,7 +39,8 @@ from typing import (
 )
 
 import aiohttp
-from typing_extensions import Self, deprecated
+from typing_extensions import deprecated
+from typing import Self
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -726,14 +727,7 @@ class Client:
                     session=self.ws.session_id,
                 )
                 continue
-            except (
-                OSError,
-                HTTPException,
-                GatewayNotFound,
-                ConnectionClosed,
-                aiohttp.ClientError,
-                asyncio.TimeoutError,
-            ) as exc:
+            except (OSError, HTTPException, GatewayNotFound, ConnectionClosed, aiohttp.ClientError, TimeoutError) as exc:
                 self.dispatch("disconnect")
                 if not reconnect:
                     await self.close()

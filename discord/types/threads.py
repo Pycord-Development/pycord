@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
+from typing import NotRequired
 
 from ..flags import ChannelFlags
 from .snowflake import Snowflake

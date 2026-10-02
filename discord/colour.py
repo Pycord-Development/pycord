@@ -29,7 +29,8 @@ import colorsys
 import random
 from typing import Any
 
-from typing_extensions import Self, deprecated, override
+from typing_extensions import deprecated, override
+from typing import Self
 
 __all__ = (
     "Colour",

@@ -41,7 +41,7 @@ from typing import (
     TypeVar,
 )
 
-from typing_extensions import Self
+from typing import Self
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent

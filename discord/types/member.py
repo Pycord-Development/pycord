@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import TypedDict
 
-from typing_extensions import NotRequired
+from typing import NotRequired
 
 from .collectibles import AvatarDecoration, Collectibles
 from .snowflake import Snowflake, SnowflakeList

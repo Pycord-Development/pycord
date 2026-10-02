@@ -51,7 +51,7 @@ from .enums import OpCodes
 
 if TYPE_CHECKING:
     from _typeshed import ConvertibleToInt
-    from typing_extensions import Self
+    from typing import Self
 
     from .state import VoiceConnectionState
 

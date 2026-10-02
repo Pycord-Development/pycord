@@ -40,7 +40,7 @@ from .select import Select
 __all__ = ("ActionRow",)
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from ..emoji import AppEmoji, GuildEmoji
     from ..partial_emoji import PartialEmoji, _EmojiTag

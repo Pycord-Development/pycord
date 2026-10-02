@@ -28,7 +28,8 @@ from __future__ import annotations
 from contextlib import suppress
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from typing_extensions import Self, deprecated
+from typing_extensions import deprecated
+from typing import Self
 
 from .asset import Asset
 from .colour import Colour
