@@ -401,11 +401,11 @@ class VoiceClient(VoiceProtocol):
 
     def is_playing(self) -> bool:
         """INdicates if we're playing audio."""
-        return self._player is not None and self._player.is_playing()
+        return self._player is not None and self._player.playing
 
     def is_paused(self) -> bool:
         """Indicates if we're playing audio, but if we're paused."""
-        return self._player is not None and self._player.is_paused()
+        return self._player is not None and self._player.paused
 
     # audio related
 
@@ -567,7 +567,7 @@ class VoiceClient(VoiceProtocol):
             raise TypeError(
                 f"Source must be an AudioSource, not {source.__class__.__name__}",
             )
-        if not self.encoder and not source.is_opus():
+        if not self.encoder and not source.opus:
             self.encoder = opus.Encoder(
                 application=application,
                 bitrate=bitrate,

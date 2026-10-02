@@ -41,6 +41,8 @@ from collections.abc import Callable
 from math import floor
 from typing import IO, TYPE_CHECKING, Any, Generic, TypeVar
 
+from typing_extensions import deprecated
+
 from .enums import SpeakingState
 from .errors import ClientException
 from .oggparse import OggStream
@@ -95,7 +97,7 @@ class AudioSource:
         If the audio is complete, then returning an empty
         :term:`py:bytes-like object` to signal this is the way to do so.
 
-        If :meth:`~AudioSource.is_opus` method returns ``True``, then it must return
+        If :attr:`opus` returns ``True``, then it must return
         20ms worth of Opus encoded audio. Otherwise, it must be 20ms
         worth of 16-bit 48KHz stereo PCM, which is about 3,840 bytes
         per frame (20ms worth of audio).
@@ -107,7 +109,19 @@ class AudioSource:
         """
         raise NotImplementedError
 
+    @deprecated(
+        "AudioSource.is_opus() is deprecated since version 2.9, consider using AudioSource.opus instead"
+    )
     def is_opus(self) -> bool:
+        """Checks if the audio source is already encoded in Opus.
+
+        .. deprecated:: 2.9
+            Use :attr:`opus` instead.
+        """
+        return self.opus
+
+    @property
+    def opus(self) -> bool:
         """Checks if the audio source is already encoded in Opus."""
         return False
 
@@ -739,6 +753,10 @@ class FFmpegOpusAudio(FFmpegAudio):
         return next(self._packet_iter, b"")
 
     def is_opus(self) -> bool:
+        return self.opus
+
+    @property
+    def opus(self) -> bool:
         return True
 
 
@@ -768,7 +786,7 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
         if not isinstance(original, AudioSource):
             raise TypeError(f"expected AudioSource not {original.__class__.__name__}.")
 
-        if original.is_opus():
+        if original.opus:
             raise ClientException("AudioSource must not be Opus encoded.")
 
         self.original: AT = original
@@ -865,7 +883,7 @@ class AudioPlayer(threading.Thread):
                 self.loops = 0
                 self._start = time.perf_counter()
 
-            play_audio(data, encode=not self.source.is_opus())
+            play_audio(data, encode=not self.source.opus)
             self.loops += 1
             next_time = self._start + self.DELAY * self.loops
             delay = max(0, self.DELAY + (next_time - time.perf_counter()))
@@ -914,10 +932,12 @@ class AudioPlayer(threading.Thread):
         if update_speaking:
             self._speak(SpeakingState.voice)
 
-    def is_playing(self) -> bool:
+    @property
+    def playing(self) -> bool:
         return self._resumed.is_set() and not self._end.is_set()
 
-    def is_paused(self) -> bool:
+    @property
+    def paused(self) -> bool:
         return not self._end.is_set() and not self._resumed.is_set()
 
     def set_source(self, source: AudioSource) -> None:
