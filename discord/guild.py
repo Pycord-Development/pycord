@@ -155,6 +155,20 @@ class VoiceServerRegion:
     This is returned by :meth:`Guild.fetch_voice_regions`.
 
     .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`str`
+        The region ID, e.g. ``"us-west"``. Use this as the
+        :attr:`VoiceChannel.rtc_region` of a voice channel.
+    name: :class:`str`
+        The region's display name, e.g. ``"US West"``.
+    optimal: :class:`bool`
+        Whether the region is optimal for the guild's members.
+    deprecated: :class:`bool`
+        Whether the region is deprecated.
+    custom: :class:`bool`
+        Whether the region is a custom region.
     """
 
     id: str
@@ -3821,23 +3835,9 @@ class Guild(Hashable):
 
         .. versionadded:: 2.9
 
-        Each :class:`~discord.guild.VoiceServerRegion` has the following attributes:
-
-        :attr:`~discord.guild.VoiceServerRegion.id`
-            The region ID, e.g. ``"us-west"``. Use this as the
-            :attr:`~discord.VoiceChannel.rtc_region` of a voice channel.
-        :attr:`~discord.guild.VoiceServerRegion.name`
-            The region's display name, e.g. ``"US West"``.
-        :attr:`~discord.guild.VoiceServerRegion.optimal`
-            Whether the region is optimal for the guild's members.
-        :attr:`~discord.guild.VoiceServerRegion.deprecated`
-            Whether the region is deprecated.
-        :attr:`~discord.guild.VoiceServerRegion.custom`
-            Whether the region is a custom region.
-
         Returns
         -------
-        List[:class:`~discord.guild.VoiceServerRegion`]
+        List[:class:`VoiceServerRegion`]
             The list of voice regions the guild has access to.
 
         Raises
