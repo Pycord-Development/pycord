@@ -27,6 +27,8 @@ from __future__ import annotations
 
 import copy
 import datetime
+import warnings
+
 import unicodedata
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -40,7 +42,6 @@ from typing import (
     cast,
     overload,
 )
-from warnings import warn
 
 from typing_extensions import override
 
@@ -1667,9 +1668,10 @@ class Guild(Hashable):
             options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
         if nsfw and spoiler:
-            warn(
+            warnings.warn(
                 "The NSFW setting is mutually exclusive with the spoiler setting. "
-                "The channel will be created as an NSFW channel."
+                "The channel will be created as an NSFW channel.",
+                stacklevel=2,
             )
 
         data = await self._create_channel(
@@ -1837,9 +1839,10 @@ class Guild(Hashable):
             options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
         if nsfw and spoiler:
-            warn(
+            warnings.warn(
                 "The NSFW setting is mutually exclusive with the spoiler setting. "
-                "The channel will be created as an NSFW channel."
+                "The channel will be created as an NSFW channel.",
+                stacklevel=2,
             )
 
         data = await self._create_channel(
@@ -1970,15 +1973,6 @@ class Guild(Hashable):
 
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
-
-        if spoiler is not MISSING:
-            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
-
-        if nsfw and spoiler:
-            warn(
-                "The NSFW setting is mutually exclusive with the spoiler setting. "
-                "The channel will be created as an NSFW channel."
-            )
 
         data = await self._create_channel(
             name,
@@ -2196,9 +2190,10 @@ class Guild(Hashable):
             options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
 
         if nsfw and spoiler:
-            warn(
+            warnings.warn(
                 "The NSFW setting is mutually exclusive with the spoiler setting. "
-                "The channel will be created as an NSFW channel."
+                "The channel will be created as an NSFW channel.",
+                stacklevel=2,
             )
 
         if default_reaction_emoji is not MISSING:
