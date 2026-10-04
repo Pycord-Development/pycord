@@ -1674,6 +1674,42 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.5
 
+    .. attribute:: scheduled_event_exception_create
+
+        A scheduled event exception was created.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.event`
+        - :attr:`~AuditLogDiff.event_exception_id`
+        - :attr:`~AuditLogDiff.start_time`
+        - :attr:`~AuditLogDiff.end_time`
+        - :attr:`~AuditLogDiff.canceled`
+
+    .. attribute:: scheduled_event_exception_update
+
+        A scheduled event exception was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.event`
+        - :attr:`~AuditLogDiff.event_exception_id`
+        - :attr:`~AuditLogDiff.start_time`
+        - :attr:`~AuditLogDiff.end_time`
+        - :attr:`~AuditLogDiff.canceled`
+
+    .. attribute:: scheduled_event_exception_delete
+
+        A scheduled event exception was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.event`
+        - :attr:`~AuditLogDiff.event_exception_id`
+        - :attr:`~AuditLogDiff.start_time`
+        - :attr:`~AuditLogDiff.end_time`
+        - :attr:`~AuditLogDiff.canceled`
+
 
 .. class:: AuditLogActionCategory
 
@@ -2595,6 +2631,63 @@ of :class:`enum.Enum`.
 
         The subscription is inactive and the subscription owner is not being charged.
 
+
+.. class:: ScheduledEventRecurrenceRuleFrequency
+
+    A scheduled event recurrence rule's frequency.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: yearly
+
+        The event will repeat on a yearly basis.
+
+    .. attribute:: monthly
+
+        The event will repeat on a monthly basis.
+
+    .. attribute:: weekly
+
+        The event will repeat on a weekly basis.
+
+    .. attribute:: daily
+
+        The event will repeat on a daily basis.
+
+
+.. class:: ScheduledEventWeekday
+
+    Represents a scheduled event weekday.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: monday
+
+        Monday, with an index of 0.
+
+    .. attribute:: tuesday
+
+        Tuesday, with an index of 1.
+
+    .. attribute:: wednesday
+
+        Wednesday, with an index of 2.
+
+    .. attribute:: thursday
+
+        Thursday, with an index of 3.
+
+    .. attribute:: friday
+
+        Friday, with an index of 4.
+
+    .. attribute:: saturday
+
+        Saturday, with an index of 5.
+
+    .. attribute:: sunday
+
+        Sunday, with an index of 6.
 
 
 .. class:: ThreadArchiveDuration

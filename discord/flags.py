@@ -1166,6 +1166,9 @@ class Intents(BaseFlags):
         - :func:`on_raw_scheduled_event_user_add`
         - :func:`on_scheduled_event_user_remove`
         - :func:`on_raw_scheduled_event_user_remove`
+        - :func:`on_scheduled_event_exception_create`
+        - :func:`on_scheduled_event_exception_update`
+        - :func:`on_scheduled_event_exception_delete`
 
         This also corresponds to the following attributes and classes in terms of cache:
 
