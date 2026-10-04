@@ -33,6 +33,7 @@ from ..components import CheckboxGroup as CheckboxGroupComponent
 from ..components import CheckboxGroupOption
 from ..enums import ComponentType
 from ..utils import MISSING
+from .constant import ComponentLimits
 from .item import ModalItem
 
 __all__ = ("CheckboxGroup",)
@@ -87,10 +88,20 @@ class CheckboxGroup(ModalItem):
         id: int | None = None,
     ):
         super().__init__()
-        if min_values and (min_values < 0 or min_values > 10):
-            raise ValueError("min_values must be between 0 and 10")
-        if max_values and (max_values < 1 or max_values > 10):
-            raise ValueError("max_values must be between 1 and 10")
+        if min_values and (
+            min_values < ComponentLimits.CHECKBOX_MIN_VALUES_MIN
+            or min_values > ComponentLimits.CHECKBOX_MIN_VALUES_MAX
+        ):
+            raise ValueError(
+                f"min_values must be between {ComponentLimits.CHECKBOX_MIN_VALUES_MIN} and {ComponentLimits.CHECKBOX_MIN_VALUES_MAX}"
+            )
+        if max_values and (
+            max_values < ComponentLimits.CHECKBOX_MAX_VALUES_MIN
+            or max_values > ComponentLimits.CHECKBOX_MAX_VALUES_MAX
+        ):
+            raise ValueError(
+                f"max_values must be between {ComponentLimits.CHECKBOX_MAX_VALUES_MIN} and {ComponentLimits.CHECKBOX_MAX_VALUES_MAX}"
+            )
         if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -140,8 +151,10 @@ class CheckboxGroup(ModalItem):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError(f"custom_id must be str not {value.__class__.__name__}")
-        if len(value) > 100:
-            raise ValueError("custom_id must be 100 characters or fewer")
+        if len(value) > ComponentLimits.CUSTOM_ID_MAX:
+            raise ValueError(
+                f"custom_id must be {ComponentLimits.CUSTOM_ID_MAX} characters or fewer"
+            )
         self.underlying.custom_id = value
 
     @property
@@ -155,8 +168,13 @@ class CheckboxGroup(ModalItem):
             raise TypeError(
                 f"min_values must be None or int not {value.__class__.__name__}"
             )
-        if value and (value < 0 or value > 10):
-            raise ValueError("min_values must be between 0 and 10")
+        if value and (
+            value < ComponentLimits.CHECKBOX_MIN_VALUES_MIN
+            or value > ComponentLimits.CHECKBOX_MIN_VALUES_MAX
+        ):
+            raise ValueError(
+                f"min_values must be between {ComponentLimits.CHECKBOX_MIN_VALUES_MIN} and {ComponentLimits.CHECKBOX_MIN_VALUES_MAX}"
+            )
         self.underlying.min_values = value
 
     @property
@@ -170,8 +188,13 @@ class CheckboxGroup(ModalItem):
             raise TypeError(
                 f"max_values must be None or int not {value.__class__.__name__}"
             )
-        if value and (value < 1 or value > 10):
-            raise ValueError("max_values must be between 1 and 10")
+        if value and (
+            value < ComponentLimits.CHECKBOX_MAX_VALUES_MIN
+            or value > ComponentLimits.CHECKBOX_MAX_VALUES_MAX
+        ):
+            raise ValueError(
+                f"max_values must be between {ComponentLimits.CHECKBOX_MAX_VALUES_MIN} and {ComponentLimits.CHECKBOX_MAX_VALUES_MAX}"
+            )
         self.underlying.max_values = value
 
     @property
@@ -199,8 +222,10 @@ class CheckboxGroup(ModalItem):
     def options(self, value: list[CheckboxGroupOption]):
         if not isinstance(value, list):
             raise TypeError("options must be a list of CheckboxGroupOption")
-        if len(value) > 10:
-            raise ValueError("you may only provide up to 10 options.")
+        if len(value) > ComponentLimits.CHECKBOX_OPTIONS_MAX:
+            raise ValueError(
+                f"you may only provide up to {ComponentLimits.CHECKBOX_OPTIONS_MAX} options."
+            )
         if not all(isinstance(obj, CheckboxGroupOption) for obj in value):
             raise TypeError("all list items must subclass CheckboxGroupOption")
 
@@ -262,8 +287,10 @@ class CheckboxGroup(ModalItem):
             The number of options exceeds 10.
         """
 
-        if len(self.underlying.options) >= 10:
-            raise ValueError("maximum number of options already provided")
+        if len(self.underlying.options) >= ComponentLimits.CHECKBOX_OPTIONS_MAX:
+            raise ValueError(
+                f"maximum number of options already provided ({ComponentLimits.CHECKBOX_OPTIONS_MAX})"
+            )
 
         self.underlying.options.append(option)
         return self
