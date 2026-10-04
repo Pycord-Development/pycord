@@ -52,7 +52,7 @@ if HAS_NACL:
     import nacl.utils
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from discord import abc
     from discord.client import Client
