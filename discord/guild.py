@@ -27,9 +27,8 @@ from __future__ import annotations
 
 import copy
 import datetime
-import warnings
-
 import unicodedata
+import warnings
 from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
