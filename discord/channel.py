@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+import warnings
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
@@ -35,7 +36,6 @@ from typing import (
     TypeVar,
     overload,
 )
-from warnings import warn
 
 from typing_extensions import deprecated
 
@@ -324,7 +324,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         """Checks if the channel is a spoiler channel.
 
         .. note::
-            This is an alias for :attr:`flags.is_spoiler_channel`.
+            This is an alias for :attr:`ChannelFlags.is_spoiler_channel`.
 
         .. versionadded:: 2.9
         """
@@ -931,9 +931,10 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             options["flags"].is_spoiler_channel = options["spoiler"]
 
             if options.get("nsfw") and options.get("spoiler"):
-                warn(
+                warnings.warn(
                     "The NSFW setting is mutually exclusive with the spoiler setting. "
-                    "The channel will become an NSFW channel."
+                    "The channel will become an NSFW channel.",
+                    stacklevel=2,
                 )
             options.pop("spoiler")
 
@@ -1303,8 +1304,9 @@ class ForumChannel(_TextChannel):
             options["flags"].is_spoiler_channel = options["spoiler"]
 
             if options.get("nsfw") and options.get("spoiler"):
-                warn(
-                    "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel."
+                warnings.warn(
+                    "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel.",
+                    stacklevel=2,
                 )
             options.pop("spoiler")
 
@@ -1721,9 +1723,10 @@ class MediaChannel(ForumChannel):
                 "hide_media_download_options", flags.hide_media_download_options
             )
             if options.get("nsfw") and options.get("spoiler"):
-                warn(
+                warnings.warn(
                     "The NSFW setting is mutually exclusive with the spoiler setting. "
-                    "The channel will become an NSFW channel."
+                    "The channel will become an NSFW channel.",
+                    stacklevel=2,
                 )
             flags.is_spoiler_channel = options.pop("spoiler", flags.is_spoiler_channel)
             options["flags"] = flags
@@ -1962,7 +1965,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """Checks if the channel is a spoiler channel.
 
         .. note::
-            This is an alias for :attr:`flags.is_spoiler_channel`.
+            This is an alias for :attr:`ChannelFlags.is_spoiler_channel`.
 
         .. versionadded:: 2.9
         """
@@ -1974,13 +1977,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         The message might not be valid or point to an existing message.
 
-        .. admonition:: Reliable Fetching
-            :class: helpful
+            .. admonition:: Reliable Fetching
+                :class: helpful
 
-            For a slightly more reliable method of fetching the
-            last message, consider using either :meth:`history`
-            or :meth:`fetch_message` with the :attr:`last_message_id`
-            attribute.
+                For a slightly more reliable method of fetching the
+                last message, consider using either :meth:`history`
+                or :meth:`fetch_message` with the :attr:`last_message_id`
+                attribute.
 
         Returns
         -------
@@ -2358,8 +2361,9 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             options["flags"].is_spoiler_channel = options["spoiler"]
 
             if options.get("nsfw") and options.get("spoiler"):
-                warn(
-                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel."
+                warnings.warn(
+                    "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel.",
+                    stacklevel=2,
                 )
             options.pop("spoiler")
 
