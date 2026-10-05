@@ -22,8 +22,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- The `rtc_region` parameters of channel creation and edit methods now also accept a
-  region ID `str` in addition to a `VoiceRegion` member.
+- Simplify and optimize the `utils.get()` function.
+  ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+- Changed `rtc_region` parameters of channel creation and edit methods to accept a
+  region ID `str`.
   ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Fixed
