@@ -19,6 +19,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Simplify and optimize the `utils.get()` function.
+  ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+
 ### Fixed
 
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
