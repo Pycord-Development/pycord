@@ -25,8 +25,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Simplify and optimize the `utils.get()` function.
   ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
 - Changed `rtc_region` parameters of channel creation and edit methods to accept a
-  region ID `str`.
-  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
+  region ID `str`. ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Fixed
 
