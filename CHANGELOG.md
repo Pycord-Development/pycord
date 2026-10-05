@@ -12,15 +12,16 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added `PRUNE_REQUIRES_ADMIN`, `GUESTS_ENABLED`, `GUILD_TAGS`, and `CREATOR_STORE_PAGE`
-  to the `GuildFeature` type.
-  ([#3350](https://github.com/Pycord-Development/pycord/pull/3350))
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
 
 ### Changed
+
+- Updated the `GuildFeature` type with  `PRUNE_REQUIRES_ADMIN`, `GUESTS_ENABLED`, `GUILD_TAGS`,
+  and `CREATOR_STORE_PAGE`.
+  ([#3350](https://github.com/Pycord-Development/pycord/pull/3350))
 
 ### Fixed
 
