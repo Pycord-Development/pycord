@@ -61,9 +61,8 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..enums import ChannelType, SeparatorSpacingSize
+from ..enums import ChannelType
 from ..errors import Forbidden, NotFound
-from ..utils import find
 from .core import ItemInterface
 from .item import Item, ItemCallbackType, ModalItem, ViewItem
 
@@ -1002,9 +1001,11 @@ class ViewStore:
             self._synced_message_views[message_id] = view
 
     def remove_view(self, view: BaseView):
-        for item in view.walk_children():
-            if item.is_storable():
-                self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
+        keys_to_remove = [
+            key for key, (stored_view, _) in self._views.items() if stored_view is view
+        ]
+        for key in keys_to_remove:
+            del self._views[key]
 
         for key, value in self._synced_message_views.items():
             if value.id == view.id:
