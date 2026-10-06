@@ -236,6 +236,24 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         default_values: Sequence[SelectDefaultValue | ST] | None = ...,
     ) -> None: ...
 
+    @overload
+    def __init__(
+        self,
+        select_type: ComponentType = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        options: list[SelectOption] | None = ...,
+        channel_types: list[ChannelType] | None = ...,
+        disabled: bool = ...,
+        row: int | None = ...,
+        id: int | None = ...,
+        required: bool | None = ...,
+        default_values: Sequence[SelectDefaultValue | ST] | None = ...,
+    ) -> None: ...
+
     def __init__(
         self,
         select_type: ComponentType = ComponentType.string_select,
