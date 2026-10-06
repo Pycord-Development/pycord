@@ -559,25 +559,15 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
         Keyword arguments that denote attributes to search with.
     """
 
-    # global -> local
-    _all = all
-    attrget = attrgetter
-
-    # Special case the single element call
-    if len(attrs) == 1:
-        k, v = attrs.popitem()
-        pred = attrget(k.replace("__", "."))
-        for elem in iterable:
-            if pred(elem) == v:
-                return elem
-        return None
-
     converted = [
-        (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
+        (attrgetter(attr.replace("__", ".")), value) for attr, value in attrs.items()
     ]
 
     for elem in iterable:
-        if _all(pred(elem) == value for pred, value in converted):
+        for pred, value in converted:
+            if pred(elem) != value:
+                break
+        else:
             return elem
     return None
 
