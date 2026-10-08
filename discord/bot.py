@@ -136,7 +136,7 @@ class ApplicationCommandMixin(ABC):
         command: :class:`.ApplicationCommand`
             The command to add.
         """
-        if isinstance(command, SlashCommand) and command.is_subcommand:
+        if isinstance(command, SlashCommand) and command.subcommand:
             raise TypeError("The provided command is a sub-command of group")
 
         if self._bot.debug_guilds and command.guild_ids is None:
