@@ -174,6 +174,7 @@ class FileUploadComponent(BaseComponent):
     max_values: NotRequired[int]
     min_values: NotRequired[int]
     required: NotRequired[bool]
+    file_types: NotRequired[list[str]]
 
 
 class RadioGroupOption(TypedDict):
