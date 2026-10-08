@@ -19,6 +19,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Simplify and optimize the `utils.get()` function.
+  ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+
 ### Fixed
 
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
@@ -26,8 +29,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
+- Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
+  user leaves the event.
+  ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
 
 ### Deprecated
+
+- Deprecated `Invite.id` in favour of `Invite.code`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 
 ### Removed
 
