@@ -42,8 +42,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Deprecated `Invite.id` in favour of `Invite.code`.
   ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
-- Deprecated the `VoiceRegion` enum in favor of the region ID `str` or
-  `Guild.fetch_voice_regions()`.
+- Deprecated the `VoiceRegion` enum in favor of `Guild.fetch_voice_regions()`.
   ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Removed
