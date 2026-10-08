@@ -16,11 +16,16 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+- Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
+  regions for the guild.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Changed
 
 - Simplify and optimize the `utils.get()` function.
   ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+- Changed `rtc_region` parameters of channel creation and edit methods to accept a
+  region ID `str`. ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Fixed
 
@@ -37,6 +42,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Deprecated `Invite.id` in favour of `Invite.code`.
   ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+- Deprecated the `VoiceRegion` enum in favor of `Guild.fetch_voice_regions()`.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Removed
 
