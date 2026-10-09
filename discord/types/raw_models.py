@@ -140,6 +140,12 @@ class VoiceChannelStatusUpdateEvent(TypedDict):
     status: NotRequired[str]
 
 
+class VoiceChannelStartTimeUpdateEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    voice_start_time: NotRequired[int]
+
+
 class ThreadMembersUpdateEvent(TypedDict):
     id: Snowflake
     guild_id: Snowflake
