@@ -1270,7 +1270,7 @@ class GuildChannel:
 
             .. versionadded:: 2.0
 
-        roles: Optional[List[:class:.Role | :class:.Object]]
+        roles: Optional[List[:class:`.Role` | :class:`.Object`]]
             The roles to give a user when joining through this invite.
 
             You must have the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
@@ -1530,7 +1530,7 @@ class Messageable:
 
             .. versionadded:: 1.4
 
-        reference: :class:~discord.Message | :class:~discord.MessageReference | :class:~discord.PartialMessage
+        reference: :class:`~discord.Message` | :class:`~discord.MessageReference` | :class:`~discord.PartialMessage`
             A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using
             :meth:`~discord.Message.to_reference`.
             When replying, you can control whether this mentions the author of the referenced message using the
@@ -1549,7 +1549,7 @@ class Messageable:
             A list of embeds to upload. Must be a maximum of 10.
 
             .. versionadded:: 2.0
-        stickers: Sequence[:class:~discord.GuildSticker | :class:~discord.StickerItem]
+        stickers: Sequence[:class:`~discord.GuildSticker` | :class:`~discord.StickerItem`]
             A list of stickers to upload. Must be a maximum of 3.
 
             .. versionadded:: 2.0
