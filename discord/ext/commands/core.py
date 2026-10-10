@@ -1081,7 +1081,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     def _is_typing_optional(self, annotation: T | T | None) -> TypeGuard[T | None]:
         return (
             getattr(annotation, "__origin__", None) is Union
-            or type(annotation) is getattr(types, "UnionType", Union)
+            or type(annotation) is types.UnionType
         ) and type(
             None
         ) in annotation.__args__  # type: ignore
@@ -1599,7 +1599,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 # Decorators
 
 
-@overload  # for py 3.10
+@overload
 def command(
     name: str = ...,
     cls: type[Command[CogT, P, T]] = ...,

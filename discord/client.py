@@ -255,9 +255,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             _get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
-            {}
-        )
+        self._listeners: dict[
+            str, list[tuple[asyncio.Future, Callable[..., bool]]]
+        ] = {}
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
@@ -1274,7 +1274,7 @@ class Client:
 
         The ``timeout`` parameter is passed onto :func:`asyncio.wait_for`. By default,
         it does not timeout. Note that this does propagate the
-        :exc:`asyncio.TimeoutError` for you in case of timeout and is provided for
+        :exc:`TimeoutError` for you in case of timeout and is provided for
         ease of use.
 
         In case the event returns multiple arguments, a :class:`tuple` containing those
@@ -1294,7 +1294,7 @@ class Client:
             parameters of the event being waited for.
         timeout: Optional[:class:`float`]
             The number of seconds to wait before timing out and raising
-            :exc:`asyncio.TimeoutError`.
+            :exc:`TimeoutError`.
 
         Returns
         -------
@@ -1305,7 +1305,7 @@ class Client:
 
         Raises
         ------
-        asyncio.TimeoutError
+        TimeoutError
             Raised if a timeout is provided and reached.
 
         Examples
@@ -1338,7 +1338,7 @@ class Client:
 
                     try:
                         reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
-                    except asyncio.TimeoutError:
+                    except TimeoutError:
                         await channel.send('\N{THUMBS DOWN SIGN}')
                     else:
                         await channel.send('\N{THUMBS UP SIGN}')

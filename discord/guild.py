@@ -3995,7 +3995,7 @@ class Guild(Hashable):
 
         Raises
         ------
-        asyncio.TimeoutError
+        TimeoutError
             The query timed out waiting for the members.
         ValueError
             Invalid parameters were passed to the function

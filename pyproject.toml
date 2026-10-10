@@ -12,7 +12,7 @@ authors = [
 ]
 description = "A Python wrapper for the Discord API"
 readme = { content-type = "text/x-rst", file = "README.rst" }
-requires-python = ">=3.10, <3.15"
+requires-python = ">=3.11, <3.15"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
@@ -20,7 +20,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -85,7 +84,7 @@ test = [
 [tool.setuptools_scm]
 
 [tool.black]
-target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
+target-version = ['py311', 'py312', 'py313', 'py314']
 
 [tool.isort]
 profile = "black"
@@ -104,7 +103,7 @@ extension-pkg-whitelist = [
     "pydantic",
     "ujson"
 ]
-py-version = 3.10
+py-version = 3.11
 
 [tool.pylint.messages_control]
 enable = [
@@ -126,7 +125,7 @@ asyncio_default_fixture_loop_scope = "function"
 
 [tool.tox]
 requires = ["tox>=4"]
-env_list = ["3.14", "3.13", "3.12", "3.11", "3.10", "3.14-novoice"]
+env_list = ["3.14", "3.13", "3.12", "3.11", "3.14-novoice"]
 
 [tool.tox.env_run_base]
 description = "run unit tests"
@@ -149,4 +148,3 @@ extras = []
 "3.13" = ["3.13"]
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
-"3.10" = ["3.10"]

@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import types
 from collections import namedtuple
+from enum import Enum as _Enum
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
@@ -844,9 +845,7 @@ class SlashCommandOptionType(Enum):
             isinstance(datatype, types.UnionType)
             or getattr(datatype, "__origin__", None) is Union
         ):
-            # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
-            # Type checking fails for this case, so ignore it.
-            return cls.from_datatype(datatype.__args__)  # type: ignore
+            return cls.from_datatype(datatype.__args__)
 
         if isinstance(datatype, str):
             datatype_name = datatype
@@ -1126,6 +1125,8 @@ class ThreadArchiveDuration(IntEnum):
     three_days = 4320
     one_week = 10080
 
+    __str__ = _Enum.__str__
+
 
 class SeparatorSpacingSize(Enum):
     """A separator component's spacing size."""
@@ -1194,6 +1195,8 @@ class RoleType(IntEnum):
     INTEGRATION = 7
     CONNECTION = 8
     UNKNOWN = 9
+
+    __str__ = _Enum.__str__
 
 
 class ApplicationEventWebhookStatus(Enum):

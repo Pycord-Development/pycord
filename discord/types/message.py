@@ -41,9 +41,7 @@ from .user import User
 if TYPE_CHECKING:
     from .interactions import InteractionMetadata, MessageInteraction
 
-from typing import NotRequired
-
-from typing_extensions import TypedDict
+from typing import NotRequired, TypedDict
 
 
 class ChannelMention(TypedDict):

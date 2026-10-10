@@ -115,7 +115,7 @@ class Loop(Generic[LF]):
             discord.GatewayNotFound,
             discord.ConnectionClosed,
             aiohttp.ClientError,
-            asyncio.TimeoutError,
+            TimeoutError,
         )
 
         self._before_loop = None

@@ -32,7 +32,7 @@ Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for D
 Note
 ----
 
-Pycord supports Python ``3.10`` - ``3.14``
+Pycord supports Python ``3.11`` - ``3.14``
 
 Key Features
 ------------
@@ -45,7 +45,7 @@ Key Features
 Installing
 ----------
 
-**Python 3.10 or higher is required**
+**Python 3.11 or higher is required**
 
 To install the library without full voice support, run the following command:
 
@@ -105,7 +105,7 @@ Optional Packages
 Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
 * libffi-dev (or ``libffi-devel`` on some systems)
-* python-dev (e.g. ``python3.10-dev`` for Python 3.10)
+* python-dev (e.g. ``python3.11-dev`` for Python 3.11)
 
 Quick Example
 -------------

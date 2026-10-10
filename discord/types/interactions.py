@@ -42,9 +42,7 @@ if TYPE_CHECKING:
     from .message import AllowedMentions, Message
     from ..interactions import InteractionChannel
 
-from typing import NotRequired
-
-from typing_extensions import TypedDict
+from typing import NotRequired, TypedDict
 
 ApplicationCommandType = Literal[1, 2, 3]
 

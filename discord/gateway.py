@@ -652,7 +652,7 @@ class DiscordWebSocket:
                 self._keep_alive.stop()
                 self._keep_alive = None
 
-            if isinstance(e, asyncio.TimeoutError):
+            if isinstance(e, TimeoutError):
                 _log.info("Timed out receiving packet. Attempting a reconnect.")
                 raise ReconnectWebSocket(self.shard_id) from None
 

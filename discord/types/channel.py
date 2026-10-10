@@ -25,9 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, NotRequired, Union
-
-from typing_extensions import TypedDict
+from typing import Literal, NotRequired, TypedDict, Union
 
 from ..enums import SortOrder
 from ..flags import ChannelFlags
