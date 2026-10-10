@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import logging
 import signal
 import sys
@@ -37,6 +38,7 @@ from typing import (
     Any,
     Self,
     TypeVar,
+    overload,
 )
 
 import aiohttp
@@ -1396,7 +1398,7 @@ class Client:
         if not name.startswith("on_"):
             raise ValueError("The 'name' parameter must start with 'on_'")
 
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Listeners must be coroutines")
 
         if name in self._event_handlers:
@@ -1430,7 +1432,15 @@ class Client:
             except ValueError:
                 pass
 
-    def listen(self, name: str = MISSING, once: bool = False) -> Callable[[Coro], Coro]:
+    @overload
+    def listen(self, name: Coro, once: bool = False) -> Coro: ...
+
+    @overload
+    def listen(
+        self, name: str = MISSING, once: bool = False
+    ) -> Callable[[Coro], Coro]: ...
+
+    def listen(self, name=MISSING, once=False):
         """A decorator that registers another function as an external
         event listener. Basically this allows you to listen to multiple
         events from different places e.g. such as :func:`.on_ready`
@@ -1476,7 +1486,7 @@ class Client:
             self.add_listener(func, name)
             return func
 
-        if asyncio.iscoroutinefunction(name):
+        if inspect.iscoroutinefunction(name):
             coro = name
             name = coro.__name__
             return decorator(coro)
@@ -1511,7 +1521,7 @@ class Client:
                 print('Ready!')
         """
 
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("event registered must be a coroutine function")
 
         setattr(self, coro.__name__, coro)

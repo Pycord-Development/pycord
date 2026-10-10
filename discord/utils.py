@@ -53,6 +53,7 @@ from collections.abc import (
     Sequence,
 )
 from inspect import isawaitable as _isawaitable
+from inspect import iscoroutinefunction as _iscoroutinefunction
 from inspect import signature as _signature
 from operator import attrgetter
 from typing import (
@@ -1533,7 +1534,7 @@ def basic_autocomplete(
 
         if callable(_values):
             _values = _values(ctx)
-        if asyncio.iscoroutine(_values):
+        if _isawaitable(_values):
             _values = await _values
 
         if filter is None:
@@ -1544,7 +1545,7 @@ def basic_autocomplete(
 
             gen = (val for val in _values if _filter(ctx, val))
 
-        elif asyncio.iscoroutinefunction(filter):
+        elif _iscoroutinefunction(filter):
             gen = (val for val in _values if await filter(ctx, val))
 
         elif callable(filter):
