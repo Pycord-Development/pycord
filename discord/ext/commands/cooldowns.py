@@ -118,7 +118,7 @@ class Cooldown:
 
         Parameters
         ----------
-        current: Optional[:class:`float`]
+        current: :class:`float` | :obj:`None`
             The time in seconds since Unix epoch to calculate tokens at.
             If not supplied then :func:`time.time()` is used.
 
@@ -141,7 +141,7 @@ class Cooldown:
 
         Parameters
         ----------
-        current: Optional[:class:`float`]
+        current: :class:`float` | :obj:`None`
             The current time in seconds since Unix epoch.
             If not supplied, then :func:`time.time()` is used.
 
@@ -163,13 +163,13 @@ class Cooldown:
 
         Parameters
         ----------
-        current: Optional[:class:`float`]
+        current: :class:`float` | :obj:`None`
             The time in seconds since Unix epoch to update the rate limit at.
             If not supplied, then :func:`time.time()` is used.
 
         Returns
         -------
-        Optional[:class:`float`]
+        :class:`float` | :obj:`None`
             The retry-after time in seconds if rate limited.
         """
         current = current or time.time()

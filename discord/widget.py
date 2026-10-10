@@ -138,19 +138,19 @@ class WidgetMember(BaseUser):
         Whether the member is a bot.
     status: :class:`Status`
         The member's status.
-    nick: Optional[:class:`str`]
+    nick: :class:`str` | :obj:`None`
         The member's nickname.
-    avatar: Optional[:class:`str`]
+    avatar: :class:`str` | :obj:`None`
         The member's avatar hash.
-    activity: Optional[:class:`BaseActivity` | :class:`Spotify`]
+    activity: :class:`BaseActivity` | :class:`Spotify` | :obj:`None`
         The member's activity.
-    deafened: Optional[:class:`bool`]
+    deafened: :class:`bool` | :obj:`None`
         Whether the member is currently deafened.
-    muted: Optional[:class:`bool`]
+    muted: :class:`bool` | :obj:`None`
         Whether the member is currently muted.
-    suppress: Optional[:class:`bool`]
+    suppress: :class:`bool` | :obj:`None`
         Whether the member is currently being suppressed.
-    connected_channel: Optional[:class:`WidgetChannel`]
+    connected_channel: :class:`WidgetChannel` | :obj:`None`
         Which channel the member is connected to.
     """
 

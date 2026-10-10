@@ -101,7 +101,7 @@ class VoiceState:
 
         .. versionadded:: 1.7
 
-    requested_to_speak_at: Optional[:class:`datetime.datetime`]
+    requested_to_speak_at: :class:`datetime.datetime` | :obj:`None`
         An aware datetime object that specifies the date and time in UTC that the member
         requested to speak. It will be ``None`` if they are not requesting to speak
         anymore or have been accepted to speak.
@@ -112,7 +112,7 @@ class VoiceState:
 
     afk: :class:`bool`
         Indicates if the user is currently in the AFK channel in the guild.
-    channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
+    channel: :class:`VoiceChannel` | :class:`StageChannel` | :obj:`None`
         The voice channel that the user is currently connected to. ``None`` if the user
         is not currently in a voice channel.
     """
@@ -262,7 +262,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
     Attributes
     ----------
-    joined_at: Optional[:class:`datetime.datetime`]
+    joined_at: :class:`datetime.datetime` | :obj:`None`
         An aware datetime object that specifies the date and time in UTC that the member joined the guild.
         If the member left and rejoined the guild, this will be the latest date. In certain cases, this can be ``None``.
     activities: Tuple[:class:`BaseActivity` | :class:`Spotify`]
@@ -276,16 +276,16 @@ class Member(discord.abc.Messageable, _UserTag):
 
     guild: :class:`Guild`
         The guild that the member belongs to.
-    nick: Optional[:class:`str`]
+    nick: :class:`str` | :obj:`None`
         The guild specific nickname of the user.
     pending: :class:`bool`
         Whether the member is pending member verification.
 
         .. versionadded:: 1.6
-    premium_since: Optional[:class:`datetime.datetime`]
+    premium_since: :class:`datetime.datetime` | :obj:`None`
         An aware datetime object that specifies the date and time in UTC when the member used their
         "Nitro boost" on the guild, if available. This could be ``None``.
-    communication_disabled_until: Optional[:class:`datetime.datetime`]
+    communication_disabled_until: :class:`datetime.datetime` | :obj:`None`
         An aware datetime object that specifies the date and time in UTC when the member will be removed from timeout.
 
         .. versionadded:: 2.0
@@ -930,7 +930,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Parameters
         ----------
-        nick: Optional[:class:`str`]
+        nick: :class:`str` | :obj:`None`
             The member's new nickname. Use ``None`` to remove the nickname.
         mute: :class:`bool`
             Indicates if the member should be guild muted or un-muted.
@@ -943,35 +943,35 @@ class Member(discord.abc.Messageable, _UserTag):
 
         roles: List[:class:`Role`]
             The member's new list of roles. This *replaces* the roles.
-        voice_channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
+        voice_channel: :class:`VoiceChannel` | :class:`StageChannel` | :obj:`None`
             The voice channel to move the member to.
             Pass ``None`` to kick them from voice.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this member. Shows up on the audit log.
-        communication_disabled_until: Optional[:class:`datetime.datetime`]
+        communication_disabled_until: :class:`datetime.datetime` | :obj:`None`
             Temporarily puts the member in timeout until this time. If the value is ``None``, then the user is removed
             from timeout.
 
             .. versionadded:: 2.0
-        bypass_verification: Optional[:class:`bool`]
+        bypass_verification: :class:`bool` | :obj:`None`
             Indicates if the member should bypass the guild's verification requirements.
 
             .. versionadded:: 2.6
-        banner: Optional[:class:`bytes`]
+        banner: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the banner.
             Could be ``None`` to denote removal of the banner.
 
             This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
 
             .. versionadded:: 2.7
-        avatar: Optional[:class:`bytes`]
+        avatar: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the avatar.
             Could be ``None`` to denote removal of the avatar.
 
             This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
 
             .. versionadded:: 2.7
-        bio: Optional[:class:`str`]
+        bio: :class:`str` | :obj:`None`
             The new bio for the member. Could be ``None`` to denote removal of the bio.
 
             This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
@@ -980,7 +980,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Returns
         -------
-        Optional[:class:`.Member`]
+        :class:`.Member` | :obj:`None`
             The newly updated member, if applicable. This is only returned
             when certain fields are updated.
 
@@ -1092,7 +1092,7 @@ class Member(discord.abc.Messageable, _UserTag):
         ----------
         until: :class:`datetime.datetime`
             The date and time to timeout the member for. If this is ``None`` then the member is removed from timeout.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
 
         Raises
@@ -1119,7 +1119,7 @@ class Member(discord.abc.Messageable, _UserTag):
         ----------
         duration: :class:`datetime.timedelta`
             The duration to timeout the member for.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
 
         Raises
@@ -1143,7 +1143,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
 
         Raises
@@ -1204,10 +1204,10 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Parameters
         ----------
-        channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
+        channel: :class:`VoiceChannel` | :class:`StageChannel` | :obj:`None`
             The new voice channel to move the member to.
             Pass ``None`` to kick them from voice.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
         """
         await self.edit(voice_channel=channel, reason=reason)
@@ -1228,7 +1228,7 @@ class Member(discord.abc.Messageable, _UserTag):
         \*roles: :class:`abc.Snowflake`
             An argument list of :class:`abc.Snowflake` representing a :class:`Role`
             to give to the member.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for adding these roles. Shows up on the audit log.
         atomic: :class:`bool`
             Whether to atomically add roles. This will ensure that multiple
@@ -1271,7 +1271,7 @@ class Member(discord.abc.Messageable, _UserTag):
         \*roles: :class:`abc.Snowflake`
             An argument list of :class:`abc.Snowflake` representing a :class:`Role`
             to remove from the member.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for removing these roles. Shows up on the audit log.
         atomic: :class:`bool`
             Whether to atomically remove roles. This will ensure that multiple
@@ -1314,7 +1314,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Returns
         -------
-        Optional[:class:`Role`]
+        :class:`Role` | :obj:`None`
             The role or ``None`` if not found in the member's roles.
         """
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
