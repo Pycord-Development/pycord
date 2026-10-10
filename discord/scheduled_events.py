@@ -75,7 +75,7 @@ class ScheduledEventLocation:
 
     Attributes
     ----------
-    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
+    value: :class:`str` | :class:`StageChannel` | :class:`VoiceChannel` | :class:`Object`
         The actual location of the scheduled event.
     type: :class:`ScheduledEventLocationType`
         The type of location.
@@ -534,18 +534,18 @@ class ScheduledEvent(Hashable):
             Whether to fetch :class:`Member` objects instead of user objects.
             There may still be :class:`User` objects if the user is outside
             the guild.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Retrieves users before this date or object. If a datetime is provided,
             it is recommended to use a UTC aware datetime. If the datetime is naive,
             it is assumed to be local time.
-        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Retrieves users after this date or object. If a datetime is provided,
             it is recommended to use a UTC aware datetime. If the datetime is naive,
             it is assumed to be local time.
 
         Yields
         ------
-        Union[:class:`User`, :class:`Member`]
+        :class:`User` | :class:`Member`
             The subscribed :class:`Member`. If ``as_member`` is set to
             ``False`` or the user is outside the guild, it will be a
             :class:`User` object.

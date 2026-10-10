@@ -822,7 +822,7 @@ class Role(Hashable):
             The new role name to change to.
         permissions: :class:`Permissions`
             The new permissions to change to.
-        colour: Union[:class:`Colour`, :class:`int`]
+        colour: :class:`Colour` | :class:`int`
             The new colour to change to. (aliased to color as well)
         hoist: :class:`bool`
             Indicates if the role should be shown separately in the member list.

@@ -56,7 +56,7 @@ class PaginatorButton(discord.ui.Button):
     label: :class:`str`
         The label shown on the button.
         Defaults to a capitalized version of ``button_type`` (e.g. "Next", "Prev", etc.)
-    emoji: Union[:class:`str`, :class:`discord.GuildEmoji`, :class:`discord.AppEmoji`, :class:`discord.PartialEmoji`]
+    emoji: :class:`str` | :class:`discord.GuildEmoji` | :class:`discord.AppEmoji` | :class:`discord.PartialEmoji`
         The emoji shown on the button in front of the label.
     disabled: :class:`bool`
         Whether to initially show the button as disabled.
@@ -141,7 +141,7 @@ class Page:
     ----------
     content: :class:`str`
         The content of the page. Corresponds to the :class:`discord.Message.content` attribute.
-    embeds: Optional[List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+    embeds: Optional[List[List[:class:`discord.Embed`] | :class:`discord.Embed`]]
         The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute.
     files: Optional[List[:class:`discord.File`]]
         A list of local files to be shown with the page.
@@ -241,14 +241,14 @@ class PageGroup:
 
     Parameters
     ----------
-    pages: Union[List[:class:`str`], List[:class:`Page`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+    pages: List[:class:`str`] | List[:class:`Page`] | List[List[:class:`discord.Embed`] | :class:`discord.Embed`]
         The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group.
     label: :class:`str`
         The label shown on the corresponding PaginatorMenu dropdown option.
         Also used as the SelectOption value.
     description: Optional[:class:`str`]
         The description shown on the corresponding PaginatorMenu dropdown option.
-    emoji: Union[:class:`str`, :class:`discord.GuildEmoji`, :class:`discord.AppEmoji`, :class:`discord.PartialEmoji`]
+    emoji: :class:`str` | :class:`discord.GuildEmoji` | :class:`discord.AppEmoji` | :class:`discord.PartialEmoji`
         The emoji shown on the corresponding PaginatorMenu dropdown option.
     default: Optional[:class:`bool`]
         Whether the page group should be the default page group initially shown when the paginator response is sent.
@@ -325,7 +325,7 @@ class Paginator(discord.ui.View):
 
     Parameters
     ----------
-    pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+    pages: List[:class:`PageGroup`] | List[:class:`Page`] | List[:class:`str`] | List[List[:class:`discord.Embed`] | :class:`discord.Embed`]
         The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
         If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``,
         only the first page group will be displayed.
@@ -374,11 +374,11 @@ class Paginator(discord.ui.View):
         A zero-indexed value showing the current page number.
     page_count: :class:`int`
         A zero-indexed value showing the total number of pages.
-    buttons: Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
+    buttons: Dict[:class:`str`, Dict[:class:`str`, :class:`~PaginatorButton` | :class:`bool`]]
         A dictionary containing the :class:`~PaginatorButton` objects included in this paginator.
-    user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
+    user: Optional[:class:`~discord.User` | :class:`~discord.Member`]
         The user or member that invoked the paginator.
-    message: Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
+    message: :class:`~discord.Message` | :class:`~discord.WebhookMessage`
         The message the paginator is attached to.
     """
 
@@ -487,7 +487,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
+        pages: Optional[List[:class:`PageGroup`] | List[:class:`Page`] | List[:class:`str`] | List[List[:class:`discord.Embed`] | :class:`discord.Embed`]]
             The list of :class:`PageGroup` objects, :class:`Page` objects, strings,
             embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
@@ -624,7 +624,7 @@ class Paginator(discord.ui.View):
         ----------
         include_custom: :class:`bool`
             Whether to disable components added via custom views.
-        page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+        page: Optional[:class:`str` | List[:class:`discord.Embed`] | :class:`discord.Embed`]
             The page content to show after disabling the paginator.
         """
         page = self.get_page_content(page)
@@ -655,7 +655,7 @@ class Paginator(discord.ui.View):
         ----------
         include_custom: :class:`bool`
             Whether to remove components added via custom views.
-        page: Optional[Union[:class:`str`, Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
+        page: Optional[:class:`str` | List[:class:`discord.Embed`] | :class:`discord.Embed`]
             The page content to show after canceling the paginator.
         """
         items = self.children.copy()
@@ -842,7 +842,7 @@ class Paginator(discord.ui.View):
 
         Returns
         -------
-        Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]
+        Dict[:class:`str`, Dict[:class:`str`, :class:`~PaginatorButton` | :class:`bool`]]
             The dictionary of buttons that were updated.
         """
         for key, button in self.buttons.items():
@@ -976,13 +976,13 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        ctx: Union[:class:`~discord.ext.commands.Context`]
+        ctx: :class:`~discord.ext.commands.Context`
             A command's invocation context.
         target: Optional[:class:`~discord.abc.Messageable`]
             A target where the paginated message should be sent, if different from the original :class:`Context`
         target_message: Optional[:class:`str`]
             An optional message shown when the paginator message is sent elsewhere.
-        reference: Optional[Union[:class:`discord.Message`, :class:`discord.MessageReference`, :class:`discord.PartialMessage`]]
+        reference: Optional[:class:`discord.Message` | :class:`discord.MessageReference` | :class:`discord.PartialMessage`]
             A reference to the :class:`~discord.Message` to which you are replying with the paginator.
             This can be created using :meth:`~discord.Message.to_reference` or passed directly as a
             :class:`~discord.Message`. You can control whether this mentions the author of the referenced message
@@ -1104,7 +1104,7 @@ class Paginator(discord.ui.View):
             are used instead.
         delete_after: Optional[:class:`float`]
             If set, deletes the paginator after the specified time.
-        user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
+        user: Optional[:class:`~discord.User` | :class:`~discord.Member`]
             If set, changes the user that this paginator belongs to.
 
         Returns
@@ -1162,7 +1162,7 @@ class Paginator(discord.ui.View):
 
         Parameters
         ----------
-        interaction: Union[:class:`discord.Interaction`, :class:`BridgeContext`]
+        interaction: :class:`discord.Interaction` | :class:`BridgeContext`
             The interaction or BridgeContext which invoked the paginator.
             If passing a BridgeContext object, you cannot make this an ephemeral paginator.
         ephemeral: :class:`bool`
@@ -1182,7 +1182,7 @@ class Paginator(discord.ui.View):
 
         Returns
         -------
-        Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
+        :class:`~discord.Message` | :class:`~discord.WebhookMessage`
             The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator.
         """
 
