@@ -32,6 +32,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     TypeVar,
+    Union,
 )
 
 from typing_extensions import deprecated, override
