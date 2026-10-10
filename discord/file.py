@@ -46,7 +46,7 @@ class File:
 
     Attributes
     -----------
-    fp: Union[:class:`os.PathLike`, :class:`io.BufferedIOBase`]
+    fp: :class:`os.PathLike` | :class:`io.BufferedIOBase`
         A file-like object opened in binary mode and read mode
         or a filename representing a file in the hard drive to
         open.
@@ -161,7 +161,7 @@ class VoiceMessage(File):
 
     Attributes
     ----------
-    fp: Union[:class:`os.PathLike`, :class:`io.BufferedIOBase`]
+    fp: :class:`os.PathLike` | :class:`io.BufferedIOBase`
         A audio file-like object opened in binary mode and read mode
         or a filename representing a file in the hard drive to
         open.

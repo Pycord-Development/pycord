@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Union, overload
+from typing import TYPE_CHECKING, Any, overload
 
 from .asset import Asset
 from .colour import Colour
@@ -180,12 +180,12 @@ class Activity(BaseActivity):
         - ``small_image``: A string representing the ID for the small image asset.
         - ``small_text``: A string representing the text when hovering over the small image asset.
 
-    party: Dict[:class:`str`, Union[:class:`str`, List[:class:`int`]]]
+    party: Dict[:class:`str`, :class:`str` | List[:class:`int`]]
         A dictionary representing the activity party. It contains the following optional keys:
 
         - ``id``: A string representing the party ID.
         - ``size``: A list of up to two integer elements denoting (current_size, maximum_size).
-    buttons: Union[List[Dict[:class:`str`, :class:`str`]], List[:class:`str`]]
+    buttons: List[Dict[:class:`str`, :class:`str`]] | List[:class:`str`]
         A list of dictionaries representing custom buttons shown in a rich presence.
         Each dictionary contains the following keys:
 
@@ -839,7 +839,7 @@ class CustomActivity(BaseActivity):
         return f"<CustomActivity name={self.name!r} emoji={self.emoji!r}>"
 
 
-ActivityTypes = Union[Activity, Game, CustomActivity, Streaming, Spotify]
+ActivityTypes = Activity | Game | CustomActivity | Streaming | Spotify
 
 
 @overload

@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Literal
 
 from ..permissions import Permissions
 from .channel import ChannelType
@@ -161,14 +161,14 @@ class _ApplicationCommandInteractionDataOptionNumber(
     value: float
 
 
-ApplicationCommandInteractionDataOption = Union[
-    _ApplicationCommandInteractionDataOptionString,
-    _ApplicationCommandInteractionDataOptionInteger,
-    _ApplicationCommandInteractionDataOptionSubcommand,
-    _ApplicationCommandInteractionDataOptionBoolean,
-    _ApplicationCommandInteractionDataOptionSnowflake,
-    _ApplicationCommandInteractionDataOptionNumber,
-]
+ApplicationCommandInteractionDataOption = (
+    _ApplicationCommandInteractionDataOptionString
+    | _ApplicationCommandInteractionDataOptionInteger
+    | _ApplicationCommandInteractionDataOptionSubcommand
+    | _ApplicationCommandInteractionDataOptionBoolean
+    | _ApplicationCommandInteractionDataOptionSnowflake
+    | _ApplicationCommandInteractionDataOptionNumber
+)
 
 
 class ApplicationCommandResolvedPartialChannel(TypedDict):
@@ -201,7 +201,7 @@ class ComponentInteractionData(TypedDict):
     component_type: ComponentType
 
 
-InteractionData = Union[ApplicationCommandInteractionData, ComponentInteractionData]
+InteractionData = ApplicationCommandInteractionData | ComponentInteractionData
 
 
 class Interaction(TypedDict):

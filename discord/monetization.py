@@ -189,17 +189,17 @@ class Entitlement(Hashable):
         The ID of the SKU this entitlement is for.
     application_id: :class:`int`
         The ID of the application this entitlement belongs to.
-    user_id: Union[:class:`int`, :class:`MISSING`]
+    user_id: :class:`int` | :class:`MISSING`
         The ID of the user that owns this entitlement.
     type: :class:`EntitlementType`
         The type of entitlement.
     deleted: :class:`bool`
         Whether the entitlement has been deleted.
-    starts_at: Union[:class:`datetime.datetime`, :class:`MISSING`]
+    starts_at: :class:`datetime.datetime` | :class:`MISSING`
         When the entitlement starts.
-    ends_at: Union[:class:`datetime.datetime`, :class:`MISSING`]
+    ends_at: :class:`datetime.datetime` | :class:`MISSING`
         When the entitlement expires.
-    guild_id: Union[:class:`int`, :class:`MISSING`]
+    guild_id: :class:`int` | :class:`MISSING`
         The ID of the guild that owns this entitlement.
     consumed: :class:`bool`
         Whether or not this entitlement has been consumed.

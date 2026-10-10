@@ -252,7 +252,7 @@ class BridgeCommand:
 
         Parameters
         ----------
-        bot: Union[:class:`.Bot`, :class:`.AutoShardedBot`]
+        bot: :class:`.Bot` | :class:`.AutoShardedBot`
             The bot to add the command to.
         """
         bot.add_application_command(self.slash_variant)

@@ -1400,7 +1400,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         Parameters
         ----------
-        command: Union[:class:`.SlashCommand`, :class:`.SlashCommandGroup`]
+        command: :class:`.SlashCommand` | :class:`.SlashCommandGroup`
             The command to add.
         """
         if command.cog is None and self.cog is not None:

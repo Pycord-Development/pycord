@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -62,7 +62,7 @@ class GuildSticker(BaseSticker):
     guild_id: Snowflake
 
 
-Sticker = Union[BaseSticker, StandardSticker, GuildSticker]
+Sticker = BaseSticker | StandardSticker | GuildSticker
 
 
 class StickerPack(TypedDict):

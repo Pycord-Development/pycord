@@ -28,7 +28,7 @@ from __future__ import annotations
 import datetime
 import io
 import os
-from typing import TYPE_CHECKING, TypeVar, Union
+from typing import TYPE_CHECKING, TypeVar
 
 from typing_extensions import deprecated, override
 
@@ -73,8 +73,8 @@ if TYPE_CHECKING:
     from .types.snowflake import Snowflake
     from .user import User
 
-    InviteGuildType = Union[Guild, "PartialInviteGuild", Object]
-    InviteChannelType = Union[GuildChannel, "PartialInviteChannel", Object]
+    InviteGuildType = Guild | "PartialInviteGuild" | Object
+    InviteChannelType = GuildChannel | "PartialInviteChannel" | Object
 
 
 class PartialInviteChannel:
@@ -344,7 +344,7 @@ class InviteTargetUsers:
 
         Parameters
         ----------
-        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+        fp: :class:`io.BufferedIOBase` | :class:`os.PathLike`
             The file-like object to save this file to or the filename
             to use. If a filename is passed then a file is created with that
             filename and used instead.
@@ -458,7 +458,7 @@ class Invite(Hashable):
         A value of ``0`` indicates that it doesn't expire.
     code: :class:`str`
         The URL fragment used for the invite.
-    guild: Optional[Union[:class:`Guild`, :class:`Object`, :class:`PartialInviteGuild`]]
+    guild: Optional[:class:`Guild` | :class:`Object` | :class:`PartialInviteGuild`]
         The guild the invite is for. Can be ``None`` if it's from a group direct message.
     revoked: :class:`bool`
         Indicates if the invite has been revoked.
@@ -485,7 +485,7 @@ class Invite(Hashable):
 
         .. versionadded:: 2.0
 
-    channel: Union[:class:`abc.GuildChannel`, :class:`Object`, :class:`PartialInviteChannel`]
+    channel: :class:`abc.GuildChannel` | :class:`Object` | :class:`PartialInviteChannel`
         The channel the invite is for.
     target_type: :class:`InviteTarget`
         The type of target for the voice channel invite.
@@ -503,7 +503,7 @@ class Invite(Hashable):
         .. versionadded:: 2.0
     scheduled_event: Optional[:class:`ScheduledEvent`]
         The scheduled event linked with the invite.
-    roles: List[Union[:class:`Role`, :class:`Object`]]
+    roles: List[:class:`Role` | :class:`Object`]
         The roles that will be assigned to a user that joins via this invite.
 
         When using `Client.fetch_invite`, these may be partial role objects and have nullish attributes.

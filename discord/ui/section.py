@@ -171,7 +171,7 @@ class Section(ViewItem[V]):
 
         Parameters
         ----------
-        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+        item: :class:`ViewItem` | :class:`int` | :class:`str`
             The item, item ``id``, or item ``custom_id`` to remove from the section.
         """
 
@@ -193,7 +193,7 @@ class Section(ViewItem[V]):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The id or custom_id of the item to get.
 
         Returns
