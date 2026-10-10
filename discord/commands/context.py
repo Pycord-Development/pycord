@@ -144,7 +144,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def channel(self) -> InteractionChannel | None:
-        """Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]:
+        """:class:`abc.GuildChannel` | :class:`PartialMessageable` | :class:`Thread`:
         Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`.
         """
         return self.interaction.channel
@@ -190,7 +190,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def me(self) -> Member | ClientUser | None:
-        """Union[:class:`.Member`, :class:`.ClientUser`]:
+        """:class:`.Member` | :class:`.ClientUser`:
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
         """

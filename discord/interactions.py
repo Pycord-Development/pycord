@@ -28,7 +28,7 @@ from __future__ import annotations
 import asyncio
 import datetime
 from collections.abc import Coroutine
-from typing import TYPE_CHECKING, Any, Union, overload
+from typing import TYPE_CHECKING, Any, overload
 
 from typing_extensions import deprecated
 
@@ -95,17 +95,17 @@ if TYPE_CHECKING:
     from .ui.modal import BaseModal
     from .ui.view import BaseView
 
-    InteractionChannel = Union[
-        VoiceChannel,
-        StageChannel,
-        TextChannel,
-        ForumChannel,
-        CategoryChannel,
-        Thread,
-        DMChannel,
-        GroupChannel,
-        PartialMessageable,
-    ]
+    InteractionChannel = (
+        VoiceChannel
+        | StageChannel
+        | TextChannel
+        | ForumChannel
+        | CategoryChannel
+        | Thread
+        | DMChannel
+        | GroupChannel
+        | PartialMessageable
+    )
 
 MISSING: Any = utils.MISSING
 
@@ -126,13 +126,13 @@ class Interaction:
         The interaction type.
     guild_id: Optional[:class:`int`]
         The guild ID the interaction was sent from.
-    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]
+    channel: Optional[:class:`abc.GuildChannel` | :class:`abc.PrivateChannel` | :class:`Thread` | :class:`PartialMessageable`]
         The channel the interaction was sent from.
     channel_id: Optional[:class:`int`]
         The ID of the channel the interaction was sent from.
     application_id: :class:`int`
         The application ID that the interaction was for.
-    user: Optional[Union[:class:`User`, :class:`Member`]]
+    user: Optional[:class:`User` | :class:`Member`]
         The user or member that sent the interaction. Will be `None` in PING interactions.
     message: Optional[:class:`Message`]
         The message that sent this interaction.
@@ -812,7 +812,7 @@ class Interaction:
 
         Returns
         -------
-        Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
+        :class:`discord.Interaction` | :class:`discord.WebhookMessage`:
             The response, its type depending on whether it's an interaction response or a followup.
         """
         try:
@@ -831,7 +831,7 @@ class Interaction:
 
         Returns
         -------
-        Union[:class:`discord.InteractionMessage`, :class:`discord.WebhookMessage`]:
+        :class:`discord.InteractionMessage` | :class:`discord.WebhookMessage`:
             The response, its type depending on whether it's an interaction response or a followup.
         """
         try:

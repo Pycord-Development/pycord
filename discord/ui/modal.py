@@ -180,7 +180,7 @@ class BaseModal(ItemInterface):
 
         Parameters
         ----------
-        item: Union[:class:`ModalItem`]
+        item: :class:`ModalItem`
             The item to add to the modal
         """
 
@@ -270,7 +270,7 @@ class Modal(BaseModal):
 
     Parameters
     ----------
-    children: Union[:class:`InputText`]
+    children: :class:`InputText`
         The initial items that are displayed in the modal. Only supports :class:`discord.ui.InputText`; for newer modal features, see :class:`DesignerModal`.
     title: :class:`str`
         The title of the modal.
@@ -354,7 +354,7 @@ class Modal(BaseModal):
 
         Parameters
         ----------
-        item: Union[class:`InputText`]
+        item: class:`InputText`
             The item to remove from the modal.
         """
 
@@ -387,7 +387,7 @@ class DesignerModal(BaseModal):
 
     Parameters
     ----------
-    children: Union[:class:`ModalItem`]
+    children: :class:`ModalItem`
         The initial items that are displayed in the modal..
     title: :class:`str`
         The title of the modal.
@@ -437,7 +437,7 @@ class DesignerModal(BaseModal):
 
         Parameters
         ----------
-        item: Union[:class:`ModalItem`]
+        item: :class:`ModalItem`
             The item to add to the modal
         """
 

@@ -1611,7 +1611,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         Parameters
         ----------
-        user: Union[:class:`.abc.User`, :class:`.member.Member`]
+        user: :class:`.abc.User` | :class:`.member.Member`
             The user to check for.
 
         Returns

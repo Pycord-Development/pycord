@@ -374,7 +374,7 @@ class Cog(metaclass=CogMeta):
 
         Yields
         ------
-        Union[:class:`.Command`, :class:`.Group`]
+        :class:`.Command` | :class:`.Group`
             A command or group from the cog.
         """
         for command in self.__cog_commands__:
@@ -897,7 +897,7 @@ class CogMixin:
 
         Returns
         -------
-        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+        Optional[Dict[:class:`str`, :exc:`errors.ExtensionError` | :class:`bool`] | List[:class:`str`]]
             If the store parameter is set to ``True``, a dictionary will be returned that
             contains keys to represent the loaded extension names. The values bound to
             each key can either be an exception that occurred when loading that extension
@@ -1020,7 +1020,7 @@ class CogMixin:
 
         Returns
         -------
-        Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]
+        Optional[Dict[:class:`str`, :exc:`errors.ExtensionError` | :class:`bool`] | List[:class:`str`]]
             If the store parameter is set to ``True``, a dictionary will be returned that
             contains keys to represent the loaded extension names. The values bound to
             each key can either be an exception that occurred when loading that extension
