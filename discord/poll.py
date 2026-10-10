@@ -62,7 +62,7 @@ class PollMedia:
     text: :class:`str`
         The question/answer text. May have up to 300 characters for questions and 55 characters for answers.
 
-    emoji: Optional[:class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str`]
+    emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str` | :obj:`None`
         The answer's emoji.
     """
 
@@ -195,11 +195,11 @@ class PollAnswer:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The maximum number of results to return.
             If not provided, returns all the users who
             voted with this answer.
-        after: Optional[:class:`abc.Snowflake`]
+        after: :class:`abc.Snowflake` | :obj:`None`
             For pagination, answers are sorted by member.
 
         Yields
@@ -326,7 +326,7 @@ class Poll:
     ----------
     question: :class:`PollMedia` | :class:`str`
         The poll's question media, or a ``str`` representing the question text. Question text can be up to 300 characters.
-    answers: Optional[List[:class:`PollAnswer`]]
+    answers: List[:class:`PollAnswer`] | :obj:`None`
         A list of the poll's answers. A maximum of 10 answers can be set.
     duration: :class:`int`
         The number of hours until this poll expires. Users must specify this when creating a poll, but existing polls return :attr:`expiry` instead. Defaults to 24.
@@ -334,7 +334,7 @@ class Poll:
         Whether multiple answers can be selected. Defaults to ``False``.
     layout_type: :class:`PollLayoutType`
         The poll's layout type. Only one exists at the moment.
-    results: Optional[:class:`PollResults`]
+    results: :class:`PollResults` | :obj:`None`
         The results of this poll received from Discord. If ``None``, this should be considered "unknown" rather than "no" results.
     """
 
@@ -413,7 +413,7 @@ class Poll:
 
         Returns
         -------
-        Optional[:class:`bool`]
+        :class:`bool` | :obj:`None`
             Returns a boolean if :attr:`results` is available, otherwise ``None``.
         """
         if not self.results:
@@ -426,7 +426,7 @@ class Poll:
 
         Returns
         -------
-        Optional[:class:`int`]
+        :class:`int` | :obj:`None`
             The total number of votes on this poll if :attr:`results` is available, otherwise ``None``.
         """
         if not self.results:
@@ -444,7 +444,7 @@ class Poll:
 
         Returns
         -------
-        Optional[:class:`.PollAnswer`]
+        :class:`.PollAnswer` | :obj:`None`
             The returned answer or ``None`` if not found.
         """
         return utils.get(self.answers, id=id)
@@ -464,7 +464,7 @@ class Poll:
         ----------
         text: :class:`str`
             The answer text. Maximum 55 characters.
-        emoji: Optional[:class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str`]
+        emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str` | :obj:`None`
             The answer's emoji.
 
         Raises

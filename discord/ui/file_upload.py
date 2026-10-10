@@ -46,17 +46,17 @@ class FileUpload(ModalItem):
 
     Parameters
     ----------
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the file upload field that gets received during an interaction.
-    min_values: Optional[:class:`int`]
+    min_values: :class:`int` | :obj:`None`
         The minimum number of files that must be uploaded.
         Defaults to 0 and must be between 0 and 10, inclusive.
-    max_values: Optional[:class:`int`]
+    max_values: :class:`int` | :obj:`None`
         The maximum number of files that can be uploaded.
         Must be between 1 and 10, inclusive.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the file upload field is required or not. Defaults to ``True``.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The file upload field's ID.
     """
 

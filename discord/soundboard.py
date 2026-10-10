@@ -202,13 +202,13 @@ class SoundboardSound(PartialSoundboardSound):
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The new name of the sound.
-        volume: Optional[:class:`float`]
+        volume: :class:`float` | :obj:`None`
             The new volume of the sound.
-        emoji: Optional[:class:`PartialEmoji` | :class:`str`]
+        emoji: :class:`PartialEmoji` | :class:`str` | :obj:`None`
             The new emoji of the sound.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing the sound. Shows up in the audit log.
 
         Returns
@@ -253,7 +253,7 @@ class SoundboardSound(PartialSoundboardSound):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the sound. Shows up in the audit log.
 
         Raises

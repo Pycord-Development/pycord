@@ -223,13 +223,13 @@ class Reaction:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The maximum number of results to return.
             If not provided, returns all the users who
             reacted to the message.
-        after: Optional[:class:`abc.Snowflake`]
+        after: :class:`abc.Snowflake` | :obj:`None`
             For pagination, reactions are sorted by member.
-        type: Optional[:class:`ReactionType`]
+        type: :class:`ReactionType` | :obj:`None`
             The type of reaction to get users for. Defaults to `normal`.
 
         Yields

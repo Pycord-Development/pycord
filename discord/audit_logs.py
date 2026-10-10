@@ -491,7 +491,7 @@ class AuditLogEntry(Hashable):
     -----------
     action: :class:`AuditLogAction`
         The action that was done.
-    user: Optional[:class:`abc.User`]
+    user: :class:`abc.User` | :obj:`None`
         The user who initiated this action. Usually a :class:`Member`\, unless gone
         then it's a :class:`User`.
     id: :class:`int`
@@ -499,7 +499,7 @@ class AuditLogEntry(Hashable):
     target: Any
         The target that got changed. The exact type of this depends on
         the action being done.
-    reason: Optional[:class:`str`]
+    reason: :class:`str` | :obj:`None`
         The reason this action was done.
     extra: Any
         Extra information that this entry has that might be useful.

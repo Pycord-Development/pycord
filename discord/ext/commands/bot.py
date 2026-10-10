@@ -439,7 +439,7 @@ class Bot(BotBase, discord.Bot):
         Whether the commands should be case-insensitive. Defaults to ``False``. This
         attribute does not carry over to groups. You must set it to every group if
         you require group commands to be case-insensitive as well.
-    help_command: Optional[:class:`.HelpCommand`]
+    help_command: :class:`.HelpCommand` | :obj:`None`
         The help command implementation to use. This can be dynamically
         set at runtime. To remove the help command pass ``None``. For more
         information on implementing a help command, see :ref:`ext_commands_help_command`.

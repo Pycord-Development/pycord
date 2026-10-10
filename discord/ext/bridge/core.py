@@ -158,9 +158,9 @@ class BridgeCommand:
     callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
         The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
         and any additional arguments will be passed to the callback. This callback must be a coroutine.
-    parent: Optional[:class:`.BridgeCommandGroup`]:
+    parent: :class:`.BridgeCommandGroup` | :obj:`None`
         Parent of the BridgeCommand.
-    kwargs: Optional[Dict[:class:`str`, Any]]
+    kwargs: Dict[:class:`str`, Any] | :obj:`None`
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
 
     Attributes
@@ -348,7 +348,7 @@ class BridgeCommandGroup(BridgeCommand):
     callback: Callable[[:class:`.BridgeContext`, ...], Awaitable[Any]]
         The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`,
         and any additional arguments will be passed to the callback. This callback must be a coroutine.
-    kwargs: Optional[Dict[:class:`str`, Any]]
+    kwargs: Dict[:class:`str`, Any] | :obj:`None`
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
 
     Attributes
@@ -359,7 +359,7 @@ class BridgeCommandGroup(BridgeCommand):
         The prefix-based version of this command group.
     subcommands: List[:class:`.BridgeCommand`]
         List of bridge commands in this group
-    mapped: Optional[:class:`.SlashCommand`]
+    mapped: :class:`.SlashCommand` | :obj:`None`
         If :func:`map_to` is used, the mapped slash command.
     """
 
@@ -406,7 +406,7 @@ class BridgeCommandGroup(BridgeCommand):
 
         Parameters
         ----------
-        kwargs: Optional[Dict[:class:`str`, Any]]
+        kwargs: Dict[:class:`str`, Any] | :obj:`None`
             Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
         """
 
@@ -435,7 +435,7 @@ def bridge_command(**kwargs):
 
     Parameters
     ----------
-    kwargs: Optional[Dict[:class:`str`, Any]]
+    kwargs: Dict[:class:`str`, Any] | :obj:`None`
         Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)
     """
 
@@ -450,7 +450,7 @@ def bridge_group(**kwargs):
 
     Parameters
     ----------
-    kwargs: Optional[Dict[:class:`str`, Any]]
+    kwargs: Dict[:class:`str`, Any] | :obj:`None`
         Keyword arguments that are directly passed to the respective command constructors (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`).
     """
 
@@ -467,7 +467,7 @@ def map_to(name, description=None):
     ----------
     name: :class:`str`
         The new name of the mapped command.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The new description of the mapped command.
 
     Example

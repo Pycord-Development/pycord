@@ -66,7 +66,7 @@ class ActionRow(ViewItem[V]):
     ----------
     *items: :class:`ViewItem`
         The initial items in this action row.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The action's ID.
     """
 
@@ -190,7 +190,7 @@ class ActionRow(ViewItem[V]):
 
         Returns
         -------
-        Optional[:class:`ViewItem`]
+        :class:`ViewItem` | :obj:`None`
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -220,20 +220,20 @@ class ActionRow(ViewItem[V]):
         ----------
         style: :class:`discord.ButtonStyle`
             The style of the button.
-        custom_id: Optional[:class:`str`]
+        custom_id: :class:`str` | :obj:`None`
             The custom ID of the button that gets received during an interaction.
             If this button is for a URL, it does not have a custom ID.
-        url: Optional[:class:`str`]
+        url: :class:`str` | :obj:`None`
             The URL this button sends you to.
         disabled: :class:`bool`
             Whether the button is disabled or not.
-        label: Optional[:class:`str`]
+        label: :class:`str` | :obj:`None`
             The label of the button, if any. Maximum of 80 chars.
-        emoji: Optional[:class:`.PartialEmoji` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`str`]
+        emoji: :class:`.PartialEmoji` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`str` | :obj:`None`
             The emoji of the button, if any.
-        sku_id: Optional[:class:`int`]
+        sku_id: :class:`int` | :obj:`None`
             The ID of the SKU this button refers to.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The button's ID.
         """
 
@@ -326,7 +326,7 @@ class ActionRow(ViewItem[V]):
         custom_id: :class:`str`
             The custom ID of the select menu that gets received during an interaction.
             If not given then one is generated for you.
-        placeholder: Optional[:class:`str`]
+        placeholder: :class:`str` | :obj:`None`
             The placeholder text that is shown if nothing is selected, if any.
         min_values: :class:`int`
             The minimum number of items that must be chosen for this select menu.
@@ -342,9 +342,9 @@ class ActionRow(ViewItem[V]):
             Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
         disabled: :class:`bool`
             Whether the select is disabled or not. Defaults to ``False``.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The select menu's ID.
-        default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
+        default_values: Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`] | :obj:`None`
             The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
@@ -384,7 +384,7 @@ class ActionRow(ViewItem[V]):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.children` to not disable.
         """
         for item in self.walk_items():
@@ -398,7 +398,7 @@ class ActionRow(ViewItem[V]):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.children` to not enable.
         """
         for item in self.walk_items():

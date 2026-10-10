@@ -54,7 +54,7 @@ class TextDisplay(ViewItem[V], ModalItem[M]):
     ----------
     content: :class:`str`
         The text display's content, up to 4000 characters.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The text display's ID.
     """
 
