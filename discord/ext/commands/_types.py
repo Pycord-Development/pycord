@@ -49,5 +49,5 @@ Hook = (
 
 Error = (
     Callable[["Cog", "Context[Any]", "CommandError"], Coro[Any]]
-    | Callable[["Context[Any]", "CommandError"], Coro[Any]],
+    | Callable[["Context[Any]", "CommandError"], Coro[Any]]
 )
