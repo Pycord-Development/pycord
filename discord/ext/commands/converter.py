@@ -1195,7 +1195,7 @@ async def run_converters(
         The invocation context to run the converters under.
     converter: Any
         The converter to run, this corresponds to the annotation in the function.
-    argument: Optional[:class:`str`]
+    argument: :class:`str` | :obj:`None`
         The argument to convert to.
     param: :class:`inspect.Parameter`
         The parameter being converted. This is mainly for error reporting.
