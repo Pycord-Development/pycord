@@ -178,7 +178,7 @@ else:
 
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
-_Iter = Union[Iterator[T], AsyncIterator[T]]
+_Iter = Iterator[T] | AsyncIterator[T]
 
 
 class CachedSlotProperty(Generic[T, T_co]):
@@ -408,7 +408,7 @@ def oauth_url(
 
     Parameters
     ----------
-    client_id: Union[:class:`int`, :class:`str`]
+    client_id: :class:`int` | :class:`str`
         The client ID for your bot.
     permissions: :class:`~discord.Permissions`
         The permissions you're requesting. If not given then you won't be requesting any
@@ -1001,7 +1001,7 @@ def resolve_invite(invite: Invite | str) -> str:
 
     Parameters
     ----------
-    invite: Union[:class:`~discord.Invite`, :class:`str`]
+    invite: :class:`~discord.Invite` | :class:`str`
         The invite.
 
     Returns
@@ -1028,7 +1028,7 @@ def resolve_template(code: Template | str) -> str:
 
     Parameters
     ----------
-    code: Union[:class:`~discord.Template`, :class:`str`]
+    code: :class:`~discord.Template` | :class:`str`
         The code.
 
     Returns
@@ -1282,14 +1282,14 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
 
     Parameters
     ----------
-    iterator: Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
+    iterator: :class:`collections.abc.Iterator` | :class:`collections.abc.AsyncIterator`
         The iterator to chunk, can be sync or async.
     max_size: :class:`int`
         The maximum chunk size.
 
     Returns
     -------
-    Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
+    :class:`collections.abc.Iterator` | :class:`collections.abc.AsyncIterator`
         A new iterator which yields chunks of a given size.
     """
     if max_size <= 0:
@@ -1420,7 +1420,7 @@ def format_dt(
 
     Parameters
     ----------
-    dt: Union[:class:`datetime.datetime`, :class:`datetime.time`]
+    dt: :class:`datetime.datetime` | :class:`datetime.time`
         The datetime to format.
     style: :class:`str`
         The style to format the datetime with.
@@ -1457,11 +1457,11 @@ def generate_snowflake(dt: datetime.datetime | None = None) -> int:
     return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3FFFFF
 
 
-V = Union[Iterable[OptionChoice], Iterable[str], Iterable[int], Iterable[float]]
+V = Iterable[OptionChoice] | Iterable[str] | Iterable[int] | Iterable[float]
 AV = Awaitable[V]
-Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
+Values = V | Callable[[AutocompleteContext], V | AV] | AV
 AutocompleteFunc = Callable[[AutocompleteContext], AV]
-FilterFunc = Callable[[AutocompleteContext, Any], Union[bool, Awaitable[bool]]]
+FilterFunc = Callable[[AutocompleteContext, Any], bool | Awaitable[bool]]
 
 
 def basic_autocomplete(
@@ -1475,10 +1475,10 @@ def basic_autocomplete(
 
     Parameters
     ----------
-    values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    values: Iterable[:class:`.OptionChoice`] | Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`] | Callable[[:class:`.AutocompleteContext`], Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`] | Awaitable[Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]] | Awaitable[Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
-    filter: Optional[Callable[[:class:`.AutocompleteContext`, Any], Union[:class:`bool`, Awaitable[:class:`bool`]]]]
+    filter: Optional[Callable[[:class:`.AutocompleteContext`, Any], :class:`bool` | Awaitable[:class:`bool`]]]
         An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments:
         the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.
 
@@ -1486,7 +1486,7 @@ def basic_autocomplete(
 
     Returns
     -------
-    Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    Callable[[:class:`.AutocompleteContext`], Awaitable[Iterable[:class:`.OptionChoice`] | Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]]
         A wrapped callback for the autocomplete.
 
     Examples

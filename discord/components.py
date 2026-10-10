@@ -217,7 +217,7 @@ class ActionRow(Component):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The custom_id or id of the component to get.
 
         Returns
@@ -861,7 +861,7 @@ class Section(Component):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The custom_id or id of the component to get.
 
         Returns
@@ -1297,7 +1297,7 @@ class Container(Component):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The custom_id or id of the component to get.
 
         Returns

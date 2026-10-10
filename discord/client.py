@@ -997,7 +997,7 @@ class Client:
 
         Returns
         -------
-        Optional[Union[:class:`.abc.GuildChannel`, :class:`.Thread`, :class:`.abc.PrivateChannel`]]
+        Optional[:class:`.abc.GuildChannel` | :class:`.Thread` | :class:`.abc.PrivateChannel`]
             The returned channel or ``None`` if not found.
         """
         return self._connection.get_channel(id)
@@ -1599,11 +1599,11 @@ class Client:
             If ``None``, it retrieves every guild you have access to. Note, however,
             that this would make it a slow operation.
             Defaults to ``100``.
-        before: Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime`
             Retrieves guilds before this date or object.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        after: Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime`
             Retrieve guilds after this date or object.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -1649,7 +1649,7 @@ class Client:
 
         Parameters
         ----------
-        code: Union[:class:`.Template`, :class:`str`]
+        code: :class:`.Template` | :class:`str`
             The Discord Template Code or URL (must be a discord.new URL).
 
         Returns
@@ -1759,7 +1759,7 @@ class Client:
 
         Parameters
         ----------
-        url: Union[:class:`.Invite`, :class:`str`]
+        url: :class:`.Invite` | :class:`str`
             The Discord invite ID or URL (must be a discord.gg URL).
         with_counts: :class:`bool`
             Whether to include count information in the invite. This fills the
@@ -1810,7 +1810,7 @@ class Client:
 
         Parameters
         ----------
-        invite: Union[:class:`.Invite`, :class:`str`]
+        invite: :class:`.Invite` | :class:`str`
             The invite to revoke.
 
         Raises
@@ -1923,7 +1923,7 @@ class Client:
 
         Returns
         -------
-        Union[:class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, :class:`.Thread`]
+        :class:`.abc.GuildChannel` | :class:`.abc.PrivateChannel` | :class:`.Thread`
             The channel from the ID.
 
         Raises
@@ -1985,7 +1985,7 @@ class Client:
 
         Returns
         -------
-        Union[:class:`.StandardSticker`, :class:`.GuildSticker`]
+        :class:`.StandardSticker` | :class:`.GuildSticker`
             The sticker you requested.
 
         Raises

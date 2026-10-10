@@ -35,7 +35,6 @@ from typing import (
     Any,
     ClassVar,
     TypeVar,
-    Union,
     overload,
 )
 from urllib.parse import parse_qs, urlparse
@@ -95,7 +94,7 @@ if TYPE_CHECKING:
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
-    EmojiInputType = Union[GuildEmoji, AppEmoji, PartialEmoji, str]
+    EmojiInputType = GuildEmoji | AppEmoji | PartialEmoji | str
 
 __all__ = (
     "Attachment",
@@ -299,7 +298,7 @@ class Attachment(Hashable):
 
         Parameters
         ----------
-        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+        fp: :class:`io.BufferedIOBase` | :class:`os.PathLike`
             The file-like object to save this attachment to or the filename
             to use. If a filename is passed then a file is created with that
             filename and used instead.
@@ -561,7 +560,7 @@ class MessageReference:
 
         .. versionadded:: 1.7
 
-    resolved: Optional[Union[:class:`Message`, :class:`DeletedReferencedMessage`]]
+    resolved: Optional[:class:`Message` | :class:`DeletedReferencedMessage`]
         The message that this reference resolved to. If this is ``None``
         then the original message was not fetched either due to the Discord API
         not attempting to resolve it or it not being available at the time of creation.
@@ -733,11 +732,11 @@ class ForwardedMessage:
     type: :class:`MessageType`
         The type of the original message. In most cases this should not be checked, but it is helpful
         in cases where it might be a system message for :attr:`system_content`.
-    original_message: Optional[Union[:class:`Message`, :class:`PartialMessage`]]
+    original_message: Optional[:class:`Message` | :class:`PartialMessage`]
         The original message that was forwarded, if available.
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+    channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`GroupChannel` | :class:`PartialMessageable`
         The :class:`TextChannel` or :class:`Thread` that the original message was sent from.
-    guild: Optional[Union[:class:`Guild`, :class:`Object`]]
+    guild: Optional[:class:`Guild` | :class:`Object`]
         The guild that the original message belonged to, if applicable.
     content: :class:`str`
         The contents of the original message.
@@ -931,17 +930,17 @@ class Message(Hashable):
     type: :class:`MessageType`
         The type of message. In most cases this should not be checked, but it is helpful
         in cases where it might be a system message for :attr:`system_content`.
-    author: Union[:class:`Member`, :class:`abc.User`]
+    author: :class:`Member` | :class:`abc.User`
         A :class:`Member` that sent the message. If :attr:`channel` is a
         private channel or the user has the left the guild, then it is a :class:`User` instead.
     content: :class:`str`
         The actual contents of the message.
-    nonce: Optional[Union[:class:`str`, :class:`int`]]
+    nonce: Optional[:class:`str` | :class:`int`]
         The value used by the discord guild and the client to verify that the message is successfully sent.
         This is not stored long term within Discord's servers and is only used ephemerally.
     embeds: List[:class:`Embed`]
         A list of embeds the message has.
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+    channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`GroupChannel` | :class:`PartialMessageable`
         The :class:`TextChannel` or :class:`Thread` that the message was sent from.
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
     reference: Optional[:class:`~discord.MessageReference`]
@@ -2015,7 +2014,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`Reaction` | :class:`PartialEmoji` | :class:`str`
             The emoji to react with.
 
         Raises
@@ -2050,7 +2049,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`Reaction` | :class:`PartialEmoji` | :class:`str`
             The emoji to remove.
         member: :class:`abc.Snowflake`
             The member for which to remove the reaction.
@@ -2089,7 +2088,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`Reaction` | :class:`PartialEmoji` | :class:`str`
             The emoji to clear.
 
         Raises
@@ -2223,7 +2222,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+        channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`GroupChannel` | :class:`PartialMessageable`
             The channel to forward this to.
 
         Returns
@@ -2325,7 +2324,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The id or custom_id the item to get
 
         Returns
@@ -2379,7 +2378,7 @@ class PartialMessage(Hashable):
 
     Attributes
     ----------
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`, :class:`PartialMessageable`]
+    channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`VoiceChannel` | :class:`StageChannel` | :class:`PartialMessageable`
         The channel associated with this partial message.
     id: :class:`int`
         The message ID.

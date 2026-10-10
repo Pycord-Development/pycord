@@ -61,13 +61,13 @@ class AllowedMentions:
     ----------
     everyone: :class:`bool`
         Whether to allow everyone and here mentions. Defaults to ``True``.
-    users: Union[:class:`bool`, List[:class:`abc.Snowflake`]]
+    users: :class:`bool` | List[:class:`abc.Snowflake`]
         Controls the users being mentioned. If ``True`` (the default) then
         users are mentioned based on the message content. If ``False`` then
         users are not mentioned at all. If a list of :class:`abc.Snowflake`
         is given then only the users provided will be mentioned, provided those
         users are in the message content.
-    roles: Union[:class:`bool`, List[:class:`abc.Snowflake`]]
+    roles: :class:`bool` | List[:class:`abc.Snowflake`]
         Controls the roles being mentioned. If ``True`` (the default) then
         roles are mentioned based on the message content. If ``False`` then
         roles are not mentioned at all. If a list of :class:`abc.Snowflake`

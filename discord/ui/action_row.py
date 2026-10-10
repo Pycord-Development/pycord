@@ -166,7 +166,7 @@ class ActionRow(ViewItem[V]):
 
         Parameters
         ----------
-        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+        item: :class:`ViewItem` | :class:`int` | :class:`str`
             The item, ``id``, or item ``custom_id`` to remove from the action row.
         """
 
@@ -185,7 +185,7 @@ class ActionRow(ViewItem[V]):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The id or custom_id of the item to get.
 
         Returns
@@ -229,9 +229,9 @@ class ActionRow(ViewItem[V]):
             Whether the button is disabled or not.
         label: Optional[:class:`str`]
             The label of the button, if any. Maximum of 80 chars.
-        emoji: Optional[Union[:class:`.PartialEmoji`, :class:`GuildEmoji`, :class:`AppEmoji`, :class:`str`]]
+        emoji: Optional[:class:`.PartialEmoji` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`str`]
             The emoji of the button, if any.
-        sku_id: Optional[Union[:class:`int`]]
+        sku_id: Optional[:class:`int`]
             The ID of the SKU this button refers to.
         id: Optional[:class:`int`]
             The button's ID.
@@ -344,7 +344,7 @@ class ActionRow(ViewItem[V]):
             Whether the select is disabled or not. Defaults to ``False``.
         id: Optional[:class:`int`]
             The select menu's ID.
-        default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+        default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
             The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`

@@ -136,7 +136,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         Whether the select is required or not. Only useable when added to :class:`Label` for modals. Defaults to ``True`` in modals.
 
         .. versionadded:: 2.7
-    default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+    default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
         The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
         These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
@@ -534,7 +534,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
         Parameters
         ----------
-        value: Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]
+        value: :class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`
             The default value to append to this select.
 
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue`
@@ -614,7 +614,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         description: Optional[:class:`str`]
             An additional description of the option, if any.
             Can only be up to 100 characters.
-        emoji: Optional[Union[:class:`str`, :class:`GuildEmoji`, :class:`AppEmoji`, :class:`.PartialEmoji`]]
+        emoji: Optional[:class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji`]
             The emoji of the option, if available. This can either be a string representing
             the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`.
         default: :class:`bool`
@@ -954,7 +954,7 @@ def select(
         Whether the select is disabled or not. Defaults to ``False``.
     id: Optional[:class:`int`]
         The select menu's ID.
-    default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+    default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
         The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
         This can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
