@@ -187,7 +187,7 @@ class _FilteredAsyncIterator(_AsyncIterator[T]):
                 return item
 
 
-class ReactionIterator(_AsyncIterator["User" | "Member"]):
+class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
     def __init__(self, message, emoji, limit=100, after=None, type=None):
         self.message = message
         self.limit = limit
@@ -243,7 +243,7 @@ class ReactionIterator(_AsyncIterator["User" | "Member"]):
                         await self.users.put(User(state=self.state, data=element))
 
 
-class VoteIterator(_AsyncIterator["User" | "Member"]):
+class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
     def __init__(self, message, answer, limit=100, after=None):
         self.message = message
         self.limit = limit
@@ -888,7 +888,7 @@ class ArchivedThreadIterator(_AsyncIterator["Thread"]):
         return Thread(guild=self.guild, state=self.guild._state, data=data)
 
 
-class ScheduledEventSubscribersIterator(_AsyncIterator["User" | "Member"]):
+class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]]):
     def __init__(
         self,
         event: ScheduledEvent,
