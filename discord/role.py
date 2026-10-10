@@ -75,7 +75,7 @@ def _parse_tag_bool(data: RoleTagPayload, key: str) -> bool | None:
 
     Returns
     -------
-    :class:`bool` | :class:`None`
+    :class:`bool` | :obj:`None`
         The parsed boolean value or None if the key is not present.
     """
     # if it is False, False is not None -> False
@@ -99,7 +99,7 @@ def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
 
     Returns
     -------
-    :class:`int` | :class:`None`
+    :class:`int` | :obj:`None`
         The parsed integer value or None if the key is not present or the value is not an integer string.
     """
     if value := data.get(key):
