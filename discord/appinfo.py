@@ -62,7 +62,7 @@ class AppInfo:
         The application name.
     owner: :class:`User`
         The application owner.
-    team: Optional[:class:`Team`]
+    team: :class:`Team` | :obj:`None`
         The application's team.
 
         .. versionadded:: 1.3
@@ -75,7 +75,7 @@ class AppInfo:
     bot_require_code_grant: :class:`bool`
         Whether the bot requires the completion of the full OAuth2 code
         grant flow to join.
-    rpc_origins: Optional[List[:class:`str`]]
+    rpc_origins: List[:class:`str`] | :obj:`None`
         A list of RPC origin URLs, if RPC is enabled.
 
     verify_key: :class:`str`
@@ -83,104 +83,104 @@ class AppInfo:
 
         .. versionadded:: 1.3
 
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         If this application is a game sold on Discord,
         this field will be the guild to which it has been linked to.
 
         .. versionadded:: 1.3
 
-    primary_sku_id: Optional[:class:`int`]
+    primary_sku_id: :class:`int` | :obj:`None`
         If this application is a game sold on Discord,
         this field will be the id of the "Game SKU" that is created,
         if it exists.
 
         .. versionadded:: 1.3
 
-    slug: Optional[:class:`str`]
+    slug: :class:`str` | :obj:`None`
         If this application is a game sold on Discord,
         this field will be the URL slug that links to the store page.
 
         .. versionadded:: 1.3
 
-    terms_of_service_url: Optional[:class:`str`]
+    terms_of_service_url: :class:`str` | :obj:`None`
         The application's terms of service URL, if set.
 
         .. versionadded:: 2.0
 
-    privacy_policy_url: Optional[:class:`str`]
+    privacy_policy_url: :class:`str` | :obj:`None`
         The application's privacy policy URL, if set.
 
         .. versionadded:: 2.0
 
-    approximate_guild_count: Optional[:class:`int`]
+    approximate_guild_count: :class:`int` | :obj:`None`
         The approximate count of guilds to which the app has been added, if any.
 
         .. versionadded:: 2.7
 
-    approximate_user_install_count: Optional[:class:`int`]
+    approximate_user_install_count: :class:`int` | :obj:`None`
         The approximate count of users who have installed the application, if any.
 
         .. versionadded:: 2.7
 
-    redirect_uris: Optional[List[:class:`str`]]
+    redirect_uris: List[:class:`str`] | :obj:`None`
         The list of redirect URIs for the application, if set.
 
         .. versionadded:: 2.7
 
-    interactions_endpoint_url: Optional[:class:`str`]
+    interactions_endpoint_url: :class:`str` | :obj:`None`
         The interactions endpoint URL for the application, if set.
 
         .. versionadded:: 2.7
 
-    role_connections_verification_url: Optional[:class:`str`]
+    role_connections_verification_url: :class:`str` | :obj:`None`
         The role connection verification URL for the application, if set.
 
         .. versionadded:: 2.7
 
-    install_params: Optional[:class:`AppInstallParams`]
+    install_params: :class:`AppInstallParams` | :obj:`None`
         The settings for the application's default in-app authorization link, if set.
 
         .. versionchanged:: 2.8
                 Fixed incorrect type documentation.
 
-    integration_types_config: Optional[:class:`IntegrationTypesConfig`]
+    integration_types_config: :class:`IntegrationTypesConfig` | :obj:`None`
         Per-installation context configuration for guild (``0``) and user (``1``) contexts.
 
         .. versionadded:: 2.8
 
-    event_webhooks_url: Optional[:class:`str`]
+    event_webhooks_url: :class:`str` | :obj:`None`
         The URL used to receive application event webhooks, if set.
 
         .. versionadded:: 2.8
 
-    event_webhooks_status: Optional[:class:`ApplicationEventWebhookStatus`]
+    event_webhooks_status: :class:`ApplicationEventWebhookStatus` | :obj:`None`
         The status of event webhooks for the application, if set.
 
         .. versionadded:: 2.8
 
-    event_webhooks_types: Optional[List[:class:`str`]]
+    event_webhooks_types: List[:class:`str`] | :obj:`None`
         List of event webhook types subscribed to, if set.
 
         .. versionadded:: 2.8
 
-    tags: Optional[List[:class:`str`]]
+    tags: List[:class:`str`] | :obj:`None`
         The list of tags describing the content and functionality of the app, if set.
 
         Maximum of 5 tags.
 
         .. versionadded:: 2.7
 
-    custom_install_url: Optional[:class:`str`]
+    custom_install_url: :class:`str` | :obj:`None`
         The default custom authorization URL for the application, if set.
 
         .. versionadded:: 2.7
 
-    approximate_user_authorization_count: Optional[:class:`int`]
+    approximate_user_authorization_count: :class:`int` | :obj:`None`
         The approximate count of users who have authorized the application, if any.
 
         .. versionadded:: 2.8
 
-    bot: Optional[:class:`User`]
+    bot: :class:`User` | :obj:`None`
         The bot user associated with this application, if any.
 
         .. versionadded:: 2.8
@@ -335,37 +335,37 @@ class AppInfo:
 
         Parameters
         ----------
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The new application description or ``None`` to clear.
-        icon: Optional[:class:`bytes`]
+        icon: :class:`bytes` | :obj:`None`
             New icon image. If ``bytes`` is given it will be base64 encoded automatically. Pass ``None`` to clear.
-        cover_image: Optional[:class:`bytes`]
+        cover_image: :class:`bytes` | :obj:`None`
             New cover image for the store embed. If ``bytes`` is given it will be base64 encoded automatically. Pass ``None`` to clear.
-        tags: Optional[List[:class:`str`]]
+        tags: List[:class:`str`] | :obj:`None`
             List of tags for the application (max 5). Pass ``None`` to clear.
-        terms_of_service_url: Optional[:class:`str`]
+        terms_of_service_url: :class:`str` | :obj:`None`
             The application's Terms of Service URL. Pass ``None`` to clear.
-        privacy_policy_url: Optional[:class:`str`]
+        privacy_policy_url: :class:`str` | :obj:`None`
             The application's Privacy Policy URL. Pass ``None`` to clear.
-        interactions_endpoint_url: Optional[:class:`str`]
+        interactions_endpoint_url: :class:`str` | :obj:`None`
             The interactions endpoint callback URL. Pass ``None`` to clear.
-        role_connections_verification_url: Optional[:class:`str`]
+        role_connections_verification_url: :class:`str` | :obj:`None`
             The role connection verification URL for the application. Pass ``None`` to clear.
-        install_params: Optional[:class:`AppInstallParams`]
+        install_params: :class:`AppInstallParams` | :obj:`None`
             Settings for the application's default in-app authorization link. Pass ``None`` to clear. Omit entirely to leave unchanged.
-        custom_install_url: Optional[:class:`str`]
+        custom_install_url: :class:`str` | :obj:`None`
             The default custom authorization URL for the application. Pass ``None`` to clear.
-        integration_types_config: Optional[:class:`IntegrationTypesConfig`]
+        integration_types_config: :class:`IntegrationTypesConfig` | :obj:`None`
             Object specifying per-installation context configuration (guild and/or user). You may set contexts individually
             and omit others to leave them unchanged. Pass the object with a context explicitly set to ``None`` to clear just that
             context, or pass ``None`` to clear the entire integration types configuration.
-        flags: Optional[:class:`ApplicationFlags`]
+        flags: :class:`ApplicationFlags` | :obj:`None`
             Application public flags. Pass ``None`` to clear (not typical).
-        event_webhooks_url: Optional[:class:`str`]
+        event_webhooks_url: :class:`str` | :obj:`None`
             Event webhooks callback URL for receiving application webhook events. Pass ``None`` to clear.
         event_webhooks_status: :class:`ApplicationEventWebhookStatus`
             The desired webhook status.
-        event_webhooks_types: Optional[List[:class:`str`]]
+        event_webhooks_types: List[:class:`str`] | :obj:`None`
             List of webhook event types to subscribe to. Pass ``None`` to clear.
 
         Returns
@@ -481,16 +481,16 @@ class PartialAppInfo:
         The application name.
     description: :class:`str`
         The application description.
-    rpc_origins: Optional[List[:class:`str`]]
+    rpc_origins: List[:class:`str`] | :obj:`None`
         A list of RPC origin URLs, if RPC is enabled.
     summary: :class:`str`
         If this application is a game sold on Discord,
         this field will be the summary field for the store page of its primary SKU.
     verify_key: :class:`str`
         The hex encoded key for verification in interactions.
-    terms_of_service_url: Optional[:class:`str`]
+    terms_of_service_url: :class:`str` | :obj:`None`
         The application's terms of service URL, if set.
-    privacy_policy_url: Optional[:class:`str`]
+    privacy_policy_url: :class:`str` | :obj:`None`
         The application's privacy policy URL, if set.
     """
 
@@ -578,9 +578,9 @@ class IntegrationTypesConfig:
 
     Parameters
     ----------
-    guild: Optional[:class:`AppInstallParams`]
+    guild: :class:`AppInstallParams` | :obj:`None`
         The configuration for the guild installation context. Omit to leave unchanged; pass ``None`` to clear.
-    user: Optional[:class:`AppInstallParams`]
+    user: :class:`AppInstallParams` | :obj:`None`
         The configuration for the user installation context. Omit to leave unchanged; pass ``None`` to clear.
     """
 

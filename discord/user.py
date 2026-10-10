@@ -421,7 +421,7 @@ class ClientUser(BaseUser):
         .. versionadded:: 1.3
     verified: :class:`bool`
         Specifies if the user's email is verified.
-    locale: Optional[:class:`str`]
+    locale: :class:`str` | :obj:`None`
         The IETF language tag used to identify the language the user is using.
     mfa_enabled: :class:`bool`
         Specifies if the user has MFA turned on and working.
@@ -574,7 +574,7 @@ class User(BaseUser, discord.abc.Messageable):
         Specifies if the user is a bot account.
     system: :class:`bool`
         Specifies if the user is a system user (i.e. represents Discord officially).
-    primary_guild: Optional[:class:`PrimaryGuild`]
+    primary_guild: :class:`PrimaryGuild` | :obj:`None`
         The user's primary guild, if the user has one. Represent what guild the user's tag is from.
 
         .. versionadded:: 2.7
@@ -711,7 +711,7 @@ class User(BaseUser, discord.abc.Messageable):
             Retrieve guilds after this date or object.
             If a datetime is provided, it is recommended to use a UTC-aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of entitlements to retrieve.
             If ``None``, retrieves every entitlement, which may be slow.
             Defaults to ``100``.

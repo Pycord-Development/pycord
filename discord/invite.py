@@ -171,7 +171,7 @@ class PartialInviteGuild:
         The partial guild's verification level.
     features: List[:class:`str`]
         A list of features the guild has. See :attr:`Guild.features` for more information.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The partial guild's description.
     """
 
@@ -251,11 +251,11 @@ class InviteTargetUsersJobStatus:
         The total number of users to process.
     processed_users: :class:`int`
         The number of users that have been processed so far.
-    created_at: Optional[:class:`datetime.datetime`]
+    created_at: :class:`datetime.datetime` | :obj:`None`
         When the job was created. ``None`` if the creation time is not available.
-    completed_at: Optional[:class:`datetime.datetime`]
+    completed_at: :class:`datetime.datetime` | :obj:`None`
         When the job was completed. ``None`` if the job is still processing.
-    error_message: Optional[:class:`str`]
+    error_message: :class:`str` | :obj:`None`
         The error message if the job failed. ``None`` if no error occurred.
     status: :class:`InviteTargetUsersJobStatusCode`
         The current status of the job.
@@ -458,7 +458,7 @@ class Invite(Hashable):
         A value of ``0`` indicates that it doesn't expire.
     code: :class:`str`
         The URL fragment used for the invite.
-    guild: Optional[:class:`Guild` | :class:`Object` | :class:`PartialInviteGuild`]
+    guild: :class:`Guild` | :class:`Object` | :class:`PartialInviteGuild` | :obj:`None`
         The guild the invite is for. Can be ``None`` if it's from a group direct message.
     revoked: :class:`bool`
         Indicates if the invite has been revoked.
@@ -472,14 +472,14 @@ class Invite(Hashable):
     max_uses: :class:`int`
         How many times the invite can be used.
         A value of ``0`` indicates that it has unlimited uses.
-    inviter: Optional[:class:`User`]
+    inviter: :class:`User` | :obj:`None`
         The user who created the invite.
-    approximate_member_count: Optional[:class:`int`]
+    approximate_member_count: :class:`int` | :obj:`None`
         The approximate number of members in the guild.
-    approximate_presence_count: Optional[:class:`int`]
+    approximate_presence_count: :class:`int` | :obj:`None`
         The approximate number of members currently active in the guild.
         This includes idle, dnd, online, and invisible members. Offline members are excluded.
-    expires_at: Optional[:class:`datetime.datetime`]
+    expires_at: :class:`datetime.datetime` | :obj:`None`
         The expiration date of the invite. If the value is ``None`` when received through
         `Client.fetch_invite` with `with_expiration` enabled, the invite will never expire.
 
@@ -492,16 +492,16 @@ class Invite(Hashable):
 
         .. versionadded:: 2.0
 
-    target_user: Optional[:class:`User`]
+    target_user: :class:`User` | :obj:`None`
         The user whose stream to display for this invite, if any.
 
         .. versionadded:: 2.0
 
-    target_application: Optional[:class:`PartialAppInfo`]
+    target_application: :class:`PartialAppInfo` | :obj:`None`
         The embedded application the invite targets, if any.
 
         .. versionadded:: 2.0
-    scheduled_event: Optional[:class:`ScheduledEvent`]
+    scheduled_event: :class:`ScheduledEvent` | :obj:`None`
         The scheduled event linked with the invite.
     roles: List[:class:`Role` | :class:`Object`]
         The roles that will be assigned to a user that joins via this invite.
@@ -786,7 +786,7 @@ class Invite(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this invite. Shows up on the audit log.
 
         Raises

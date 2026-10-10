@@ -845,7 +845,7 @@ class GuildChannel:
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this channel.
             Shows up on the audit log.
 
@@ -927,13 +927,13 @@ class GuildChannel:
         -----------
         target: :class:`~discord.Member` | :class:`~discord.Role`
             The member or role to overwrite permissions for.
-        overwrite: Optional[:class:`~discord.PermissionOverwrite`]
+        overwrite: :class:`~discord.PermissionOverwrite` | :obj:`None`
             The permissions to allow and deny to the target, or ``None`` to
             delete the overwrite.
         \*\*permissions
             A keyword argument list of permissions to set for ease of use.
             Cannot be mixed with ``overwrite``.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
 
         Raises
@@ -1016,10 +1016,10 @@ class GuildChannel:
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The name of the new channel. If not provided, defaults to this
             channel name.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for cloning this channel. Shows up on the audit log.
 
         Returns
@@ -1120,7 +1120,7 @@ class GuildChannel:
             while a negative number moves it above. Note that this
             number is relative and computed after the ``beginning``,
             ``end``, ``before``, and ``after`` parameters.
-        category: Optional[:class:`~discord.abc.Snowflake`]
+        category: :class:`~discord.abc.Snowflake` | :obj:`None`
             The category to move this channel under.
             If ``None`` is given then it moves it out of the category.
             This parameter is ignored if moving a category channel.
@@ -1242,26 +1242,26 @@ class GuildChannel:
             Indicates if a unique invite URL should be created. Defaults to True.
             If this is set to ``False`` then it will return a previously created
             invite.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this invite. Shows up on the audit log.
-        target_type: Optional[:class:`.InviteTarget`]
+        target_type: :class:`.InviteTarget` | :obj:`None`
             The type of target for the voice channel invite, if any.
 
             .. versionadded:: 2.0
 
-        target_user: Optional[:class:`User`]
+        target_user: :class:`User` | :obj:`None`
             The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`.
             The user must be streaming in the channel.
 
             .. versionadded:: 2.0
 
-        target_application_id: Optional[:class:`int`]
+        target_application_id: :class:`int` | :obj:`None`
             The id of the embedded application for the invite, required if `target_type` is
             `TargetType.embedded_application`.
 
             .. versionadded:: 2.0
 
-        target_event: Optional[:class:`.ScheduledEvent`]
+        target_event: :class:`.ScheduledEvent` | :obj:`None`
             The scheduled event object to link to the event.
             Shortcut to :meth:`.Invite.set_scheduled_event`
 
@@ -1270,14 +1270,14 @@ class GuildChannel:
 
             .. versionadded:: 2.0
 
-        roles: Optional[List[:class:`.Role` | :class:`.Object`]]
+        roles: List[:class:`.Role` | :class:`.Object`] | :obj:`None`
             The roles to give a user when joining through this invite.
 
             You must have the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
 
             .. versionadded:: 2.8
 
-        target_users_file: Optional[:class:`File`]
+        target_users_file: :class:`File` | :obj:`None`
             A CSV file with a single column of user IDs for all the users able to accept this invite.
 
             You can use :func:`utils.users_to_csv` to generate a virtual CSV file from a sequence of user IDs.
@@ -1499,7 +1499,7 @@ class Messageable:
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content of the message to send.
         tts: :class:`bool`
             Indicates if the message should be sent using text-to-speech.
@@ -1512,7 +1512,7 @@ class Messageable:
         nonce: :class:`str` | :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
-        enforce_nonce: Optional[:class:`bool`]
+        enforce_nonce: :class:`bool` | :obj:`None`
             Whether :attr:`nonce` is enforced to be validated.
 
             .. versionadded:: 2.5
@@ -1539,7 +1539,7 @@ class Messageable:
 
             .. versionadded:: 1.6
 
-        mention_author: Optional[:class:`bool`]
+        mention_author: :class:`bool` | :obj:`None`
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
 
             .. versionadded:: 1.6
@@ -1815,10 +1815,10 @@ class Messageable:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of pinned messages to retrieve.
             If ``None``, retrieves every pinned message in the channel.
-        before: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
+        before: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages pinned before this datetime.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -1933,25 +1933,25 @@ class Messageable:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of messages to retrieve.
             If ``None``, retrieves every message in the channel. Note, however,
             that this would make it a slow operation.
-        before: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
+        before: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages before this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        after: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
+        after: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages after this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        around: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
+        around: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages around this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
             When using this argument, the maximum limit is 101. Note that if the limit is an
             even number, then this will return at most limit + 1 messages.
-        oldest_first: Optional[:class:`bool`]
+        oldest_first: :class:`bool` | :obj:`None`
             If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if
             ``after`` is specified, otherwise ``False``.
 

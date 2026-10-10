@@ -914,11 +914,11 @@ class WebhookMessage(Message):
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content to edit the message with or ``None`` to clear it.
         embeds: List[:class:`Embed`]
             A list of embeds to edit the message with.
-        embed: Optional[:class:`Embed`]
+        embed: :class:`Embed` | :obj:`None`
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
         file: :class:`File`
@@ -938,16 +938,16 @@ class WebhookMessage(Message):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.BaseView`]
+        view: :class:`~discord.ui.BaseView` | :obj:`None`
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
 
             .. versionadded:: 2.0
-        suppress: Optional[:class:`bool`]
+        suppress: :class:`bool` | :obj:`None`
             Whether to suppress embeds for the message.
 
             .. deprecated:: 2.8
-        suppress_embeds: Optional[:class:`bool`]
+        suppress_embeds: :class:`bool` | :obj:`None`
             Whether to suppress embeds for the message.
 
             .. versionadded:: 2.8
@@ -1010,7 +1010,7 @@ class WebhookMessage(Message):
 
         Parameters
         ----------
-        delay: Optional[:class:`float`]
+        delay: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait before deleting the message.
             The waiting is done in the background and deletion failures are ignored.
 
@@ -1204,31 +1204,31 @@ class Webhook(BaseWebhook):
 
         .. versionadded:: 1.3
 
-    token: Optional[:class:`str`]
+    token: :class:`str` | :obj:`None`
         The authentication token of the webhook. If this is ``None``
         then the webhook cannot be used to make requests.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID this webhook is for.
-    channel_id: Optional[:class:`int`]
+    channel_id: :class:`int` | :obj:`None`
         The channel ID this webhook is for.
-    user: Optional[:class:`abc.User`]
+    user: :class:`abc.User` | :obj:`None`
         The user this webhook was created by. If the webhook was
         received without authentication then this will be ``None``.
-    name: Optional[:class:`str`]
+    name: :class:`str` | :obj:`None`
         The default name of the webhook.
-    source_guild: Optional[:class:`PartialWebhookGuild`]
+    source_guild: :class:`PartialWebhookGuild` | :obj:`None`
         The guild of the channel that this webhook is following.
         Only given if :attr:`type` is :attr:`WebhookType.channel_follower`.
 
         .. versionadded:: 2.0
 
-    source_channel: Optional[:class:`PartialWebhookChannel`]
+    source_channel: :class:`PartialWebhookChannel` | :obj:`None`
         The channel that this webhook is following.
         Only given if :attr:`type` is :attr:`WebhookType.channel_follower`.
 
         .. versionadded:: 2.0
 
-    parent: Optional[:class:`Interaction`]
+    parent: :class:`Interaction` | :obj:`None`
         The interaction this webhook belongs to.
         Only set if :attr:`type` is :attr:`WebhookType.application`.
 
@@ -1286,7 +1286,7 @@ class Webhook(BaseWebhook):
             will not close it.
 
             .. versionadded:: 2.0
-        bot_token: Optional[:class:`str`]
+        bot_token: :class:`str` | :obj:`None`
             The bot authentication token for authenticated requests
             involving the webhook.
 
@@ -1328,7 +1328,7 @@ class Webhook(BaseWebhook):
             will not close it.
 
             .. versionadded:: 2.0
-        bot_token: Optional[:class:`str`]
+        bot_token: :class:`str` | :obj:`None`
             The bot authentication token for authenticated requests
             involving the webhook.
 
@@ -1499,7 +1499,7 @@ class Webhook(BaseWebhook):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this webhook. Shows up on the audit log.
 
             .. versionadded:: 1.4
@@ -1561,15 +1561,15 @@ class Webhook(BaseWebhook):
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The webhook's new default name.
-        avatar: Optional[:class:`bytes`]
+        avatar: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the webhook's new default avatar.
-        channel: Optional[:class:`abc.Snowflake`]
+        channel: :class:`abc.Snowflake` | :obj:`None`
             The webhook's new channel. This requires an authenticated webhook.
 
             .. versionadded:: 2.0
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this webhook. Shows up on the audit log.
 
             .. versionadded:: 1.4
@@ -1825,7 +1825,7 @@ class Webhook(BaseWebhook):
 
         Returns
         -------
-        Optional[:class:`WebhookMessage`]
+        :class:`WebhookMessage` | :obj:`None`
             If ``wait`` is ``True`` then the message that was sent, otherwise ``None``.
 
         Raises
@@ -1967,7 +1967,7 @@ class Webhook(BaseWebhook):
         ----------
         id: :class:`int`
             The message ID to look for.
-        thread_id: Optional[:class:`int`]
+        thread_id: :class:`int` | :obj:`None`
             The ID of the thread that contains the message.
 
         Returns
@@ -2040,11 +2040,11 @@ class Webhook(BaseWebhook):
         ----------
         message_id: :class:`int`
             The message ID to edit.
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content to edit the message with or ``None`` to clear it.
         embeds: List[:class:`Embed`]
             A list of embeds to edit the message with.
-        embed: Optional[:class:`Embed`]
+        embed: :class:`Embed` | :obj:`None`
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
         attachments: List[:class:`Attachment`]
@@ -2062,13 +2062,13 @@ class Webhook(BaseWebhook):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.BaseView`]
+        view: :class:`~discord.ui.BaseView` | :obj:`None`
             The updated view to update this message with. If ``None`` is passed then
             the view is removed. The webhook must have state attached, similar to
             :meth:`send`.
 
             .. versionadded:: 2.0
-        thread: Optional[:class:`~discord.abc.Snowflake`]
+        thread: :class:`~discord.abc.Snowflake` | :obj:`None`
             The thread that contains the message.
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
@@ -2185,7 +2185,7 @@ class Webhook(BaseWebhook):
         ----------
         message_id: :class:`int`
             The message ID to delete.
-        thread_id: Optional[:class:`int`]
+        thread_id: :class:`int` | :obj:`None`
             The ID of the thread that contains the message.
 
         Raises
