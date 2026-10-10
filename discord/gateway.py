@@ -43,7 +43,7 @@ from .activity import BaseActivity
 from .errors import ConnectionClosed, InvalidArgument
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from .client import Client
     from .state import ConnectionState
@@ -646,13 +646,13 @@ class DiscordWebSocket:
             ):
                 _log.debug("Received %s", msg)
                 raise WebSocketClosure
-        except (asyncio.TimeoutError, WebSocketClosure) as e:
+        except (TimeoutError, WebSocketClosure) as e:
             # Ensure the keep alive handler is closed
             if self._keep_alive:
                 self._keep_alive.stop()
                 self._keep_alive = None
 
-            if isinstance(e, asyncio.TimeoutError):
+            if isinstance(e, TimeoutError):
                 _log.info("Timed out receiving packet. Attempting a reconnect.")
                 raise ReconnectWebSocket(self.shard_id) from None
 

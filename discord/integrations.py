@@ -288,7 +288,7 @@ class StreamIntegration(Integration):
             Syncing the integration failed.
         """
         await self._state.http.sync_integration(self.guild.id, self.id)
-        self.synced_at = datetime.datetime.now(datetime.timezone.utc)
+        self.synced_at = datetime.datetime.now(datetime.UTC)
 
 
 class IntegrationApplication:

@@ -266,14 +266,14 @@ class Attachment(Hashable):
         """This attachment URL's expiry time in UTC."""
         if not self._ex:
             return None
-        return datetime.datetime.utcfromtimestamp(int(self._ex, 16))
+        return datetime.datetime.fromtimestamp(int(self._ex, 16), tz=datetime.UTC)
 
     @property
     def issued_at(self) -> datetime.datetime | None:
         """The attachment URL's issue time in UTC."""
         if not self._is:
             return None
-        return datetime.datetime.utcfromtimestamp(int(self._is, 16))
+        return datetime.datetime.fromtimestamp(int(self._is, 16), tz=datetime.UTC)
 
     def is_spoiler(self) -> bool:
         """Whether this attachment contains a spoiler."""

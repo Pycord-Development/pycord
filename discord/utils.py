@@ -53,6 +53,7 @@ from collections.abc import (
     Sequence,
 )
 from inspect import isawaitable as _isawaitable
+from inspect import iscoroutinefunction as _iscoroutinefunction
 from inspect import signature as _signature
 from operator import attrgetter
 from typing import (
@@ -460,7 +461,7 @@ def snowflake_time(id: int) -> datetime.datetime:
         An aware datetime in UTC representing the creation time of the snowflake.
     """
     timestamp = ((id >> 22) + DISCORD_EPOCH) / 1000
-    return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
+    return datetime.datetime.fromtimestamp(timestamp, tz=datetime.UTC)
 
 
 def time_snowflake(dt: datetime.datetime, high: bool = False) -> int:
@@ -853,7 +854,7 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
     reset_after: str | None = request.headers.get("X-Ratelimit-Reset-After")
     if not use_clock and reset_after:
         return float(reset_after)
-    utc = datetime.timezone.utc
+    utc = datetime.UTC
     now = datetime.datetime.now(utc)
     reset = datetime.datetime.fromtimestamp(
         float(request.headers["X-Ratelimit-Reset"]), utc
@@ -885,7 +886,7 @@ async def sane_wait_for(futures, *, timeout):
     )
 
     if len(pending) != 0:
-        raise asyncio.TimeoutError()
+        raise TimeoutError()
 
     return done
 
@@ -901,7 +902,7 @@ def get_slots(cls: type[Any]) -> Iterator[str]:
 def compute_timedelta(dt: datetime.datetime):
     if dt.tzinfo is None:
         dt = dt.astimezone()
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.UTC)
     return max((dt - now).total_seconds(), 0)
 
 
@@ -939,7 +940,7 @@ def utcnow() -> datetime.datetime:
     :class:`datetime.datetime`
         The current aware datetime in UTC.
     """
-    return datetime.datetime.now(datetime.timezone.utc)
+    return datetime.datetime.now(datetime.UTC)
 
 
 def valid_icon_size(size: int) -> bool:
@@ -1523,7 +1524,7 @@ def basic_autocomplete(
 
         if callable(_values):
             _values = _values(ctx)
-        if asyncio.iscoroutine(_values):
+        if _isawaitable(_values):
             _values = await _values
 
         if filter is None:
@@ -1534,7 +1535,7 @@ def basic_autocomplete(
 
             gen = (val for val in _values if _filter(ctx, val))
 
-        elif asyncio.iscoroutinefunction(filter):
+        elif _iscoroutinefunction(filter):
             gen = (val for val in _values if await filter(ctx, val))
 
         elif callable(filter):

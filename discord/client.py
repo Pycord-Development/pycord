@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import logging
 import signal
 import sys
@@ -35,11 +36,13 @@ from types import TracebackType
 from typing import (
     TYPE_CHECKING,
     Any,
+    Self,
     TypeVar,
+    overload,
 )
 
 import aiohttp
-from typing_extensions import Self, deprecated
+from typing_extensions import deprecated
 
 from . import utils
 from .activity import ActivityTypes, BaseActivity, create_activity
@@ -732,7 +735,7 @@ class Client:
                 GatewayNotFound,
                 ConnectionClosed,
                 aiohttp.ClientError,
-                asyncio.TimeoutError,
+                TimeoutError,
             ) as exc:
                 self.dispatch("disconnect")
                 if not reconnect:
@@ -1273,7 +1276,7 @@ class Client:
 
         The ``timeout`` parameter is passed onto :func:`asyncio.wait_for`. By default,
         it does not timeout. Note that this does propagate the
-        :exc:`asyncio.TimeoutError` for you in case of timeout and is provided for
+        :exc:`TimeoutError` for you in case of timeout and is provided for
         ease of use.
 
         In case the event returns multiple arguments, a :class:`tuple` containing those
@@ -1293,7 +1296,7 @@ class Client:
             parameters of the event being waited for.
         timeout: Optional[:class:`float`]
             The number of seconds to wait before timing out and raising
-            :exc:`asyncio.TimeoutError`.
+            :exc:`TimeoutError`.
 
         Returns
         -------
@@ -1304,7 +1307,7 @@ class Client:
 
         Raises
         ------
-        asyncio.TimeoutError
+        TimeoutError
             Raised if a timeout is provided and reached.
 
         Examples
@@ -1337,7 +1340,7 @@ class Client:
 
                     try:
                         reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
-                    except asyncio.TimeoutError:
+                    except TimeoutError:
                         await channel.send('\N{THUMBS DOWN SIGN}')
                     else:
                         await channel.send('\N{THUMBS UP SIGN}')
@@ -1395,7 +1398,7 @@ class Client:
         if not name.startswith("on_"):
             raise ValueError("The 'name' parameter must start with 'on_'")
 
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Listeners must be coroutines")
 
         if name in self._event_handlers:
@@ -1429,7 +1432,15 @@ class Client:
             except ValueError:
                 pass
 
-    def listen(self, name: str = MISSING, once: bool = False) -> Callable[[Coro], Coro]:
+    @overload
+    def listen(self, name: Coro, once: bool = False) -> Coro: ...
+
+    @overload
+    def listen(
+        self, name: str = MISSING, once: bool = False
+    ) -> Callable[[Coro], Coro]: ...
+
+    def listen(self, name=MISSING, once=False):
         """A decorator that registers another function as an external
         event listener. Basically this allows you to listen to multiple
         events from different places e.g. such as :func:`.on_ready`
@@ -1475,7 +1486,7 @@ class Client:
             self.add_listener(func, name)
             return func
 
-        if asyncio.iscoroutinefunction(name):
+        if inspect.iscoroutinefunction(name):
             coro = name
             name = coro.__name__
             return decorator(coro)
@@ -1510,7 +1521,7 @@ class Client:
                 print('Ready!')
         """
 
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("event registered must be a coroutine function")
 
         setattr(self, coro.__name__, coro)

@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import asyncio
 import collections
 import collections.abc
 import copy
@@ -63,7 +62,7 @@ from .user import User
 from .utils import MISSING, async_all, find, get
 
 if TYPE_CHECKING:
-    from typing_extensions import Never
+    from typing import Never
 
     from .cog import Cog
     from .commands import Option
@@ -907,7 +906,7 @@ class ApplicationCommandMixin(ABC):
                 check=lambda i, c: c == command,
                 timeout=3,
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return
         else:
             if not autocomplete_task.done():
@@ -1535,7 +1534,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
@@ -1567,7 +1566,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
             The coroutine passed is not actually a coroutine.
 
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro

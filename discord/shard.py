@@ -114,7 +114,7 @@ class Shard:
             GatewayNotFound,
             ConnectionClosed,
             aiohttp.ClientError,
-            asyncio.TimeoutError,
+            TimeoutError,
         )
 
     @property

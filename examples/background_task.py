@@ -1,6 +1,6 @@
 import asyncio
 import random
-from datetime import time, timezone
+from datetime import UTC, time
 
 import discord
 from discord.ext import tasks
@@ -26,9 +26,7 @@ class MyClient(discord.Client):
         self.counter += 1
         await channel.send(str(self.counter))
 
-    @tasks.loop(
-        time=time(3, 0, tzinfo=timezone.utc)
-    )  # Task that runs every day at 3 AM UTC
+    @tasks.loop(time=time(3, 0, tzinfo=UTC))  # Task that runs every day at 3 AM UTC
     async def time_task(self):
         channel = self.get_channel(1234567)  # Your Channel ID goes here
         await channel.send("It's 3 AM!")
