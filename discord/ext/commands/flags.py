@@ -217,7 +217,7 @@ def get_flags(
         # List[str] -> (max_args=-1)
         # Tuple[int, ...] -> (max_args=1)
         # Dict[K, V] -> (max_args=-1, override=True)
-        # Union[str, int] -> (max_args=1)
+        # str | int -> (max_args=1)
         # Optional[str] -> (default=None, max_args=1)
 
         try:
@@ -478,7 +478,7 @@ async def convert_flag(ctx, argument: str, flag: Flag, annotation: Any = None) -
             return await convert_flag(ctx, argument, flag, annotation)
         elif origin is Union and annotation.__args__[-1] is type(None):
             # typing.Optional[x]
-            annotation = Union[annotation.__args__[:-1]]
+            annotation = annotation.__args__[:-1]
             return await run_converters(ctx, annotation, argument, param)
         elif origin is dict:
             # typing.Dict[K, V] -> typing.Tuple[K, V]

@@ -234,7 +234,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         The short help text for the command.
     usage: Optional[:class:`str`]
         A replacement for arguments in the default help text.
-    aliases: Union[List[:class:`str`], Tuple[:class:`str`]]
+    aliases: List[:class:`str`] | Tuple[:class:`str`]
         The list of aliases the command can be invoked under.
     enabled: :class:`bool`
         A boolean that indicates if the command is currently enabled.
@@ -1335,7 +1335,7 @@ class GroupMixin(Generic[CogT]):
 
         Yields
         ------
-        Union[:class:`.Command`, :class:`.Group`]
+        :class:`.Command` | :class:`.Group`
             A command or group from the internal list of commands.
         """
         for command in self.commands:
@@ -1953,7 +1953,7 @@ def has_role(item: int | str) -> Callable[[T], T]:
 
     Parameters
     ----------
-    item: Union[:class:`int`, :class:`str`]
+    item: :class:`int` | :class:`str`
         The name or ID of the role to check.
     """
 
@@ -1991,7 +1991,7 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
 
     Parameters
     ----------
-    items: List[Union[:class:`str`, :class:`int`]]
+    items: List[:class:`str` | :class:`int`]
         An argument list of names or IDs to check that the member has roles wise.
 
     Example
@@ -2337,7 +2337,7 @@ def cooldown(
         The number of times a command can be used before triggering a cooldown.
     per: :class:`float`
         The amount of seconds to wait for a cooldown when it's been triggered.
-    type: Union[:class:`.BucketType`, Callable[[:class:`.Message`], Any]]
+    type: :class:`.BucketType` | Callable[[:class:`.Message`], Any]
         The type of cooldown to have. If callable, should return a key for the mapping.
 
         .. versionchanged:: 1.7

@@ -70,42 +70,43 @@ if TYPE_CHECKING:
     from ..role import Role
     from ..user import User
 
-    InputType = Union[
-        type[str],
-        type[bool],
-        type[int],
-        type[float],
-        type[GuildChannel],
-        type[Thread],
-        type[Member],
-        type[User],
-        type[Attachment],
-        type[Role],
-        type[Mentionable],
-        SlashCommandOptionType,
-        Converter,
-        type[Converter],
-        type[Enum],
-        type[DiscordEnum],
-    ]
+    InputType = (
+        type[str]
+        | type[bool]
+        | type[int]
+        | type[float]
+        | type[GuildChannel]
+        | type[Thread]
+        | type[Member]
+        | type[User]
+        | type[Attachment]
+        | type[Role]
+        | type[Mentionable]
+        | SlashCommandOptionType
+        | Converter
+        | type[Converter]
+        | type[Enum]
+        | type[DiscordEnum]
+    )
 
-    AutocompleteReturnType = Union[
-        Iterable["OptionChoice"], Iterable[str], Iterable[int], Iterable[float]
-    ]
+    AutocompleteReturnType = (
+        Iterable["OptionChoice"] | Iterable[str] | Iterable[int] | Iterable[float]
+    )
+
     T = TypeVar("T", bound=AutocompleteReturnType)
-    MaybeAwaitable = Union[T, Awaitable[T]]
-    AutocompleteFunction = Union[
-        Callable[[AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]],
-        Callable[[Cog, AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]],
-        Callable[
+    MaybeAwaitable = T | Awaitable[T]
+    AutocompleteFunction = (
+        Callable[[AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]]
+        | Callable[[Cog, AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]]
+        | Callable[
             [AutocompleteContext, Any],  # pyright: ignore [reportExplicitAny]
             MaybeAwaitable[AutocompleteReturnType],
-        ],
-        Callable[
+        ]
+        | Callable[
             [Cog, AutocompleteContext, Any],  # pyright: ignore [reportExplicitAny]
             MaybeAwaitable[AutocompleteReturnType],
-        ],
-    ]
+        ]
+    )
 
 
 __all__ = (
@@ -154,7 +155,7 @@ class Option:
 
     Attributes
     ----------
-    input_type: Union[Type[:class:`str`], Type[:class:`bool`], Type[:class:`int`], Type[:class:`float`], Type[:class:`.abc.GuildChannel`], Type[:class:`Thread`], Type[:class:`Member`], Type[:class:`User`], Type[:class:`Attachment`], Type[:class:`Role`], Type[:class:`.abc.Mentionable`], :class:`SlashCommandOptionType`, Type[:class:`.ext.commands.Converter`], Type[:class:`enums.Enum`], Type[:class:`Enum`]]
+    input_type: Type[:class:`str`] | Type[:class:`bool`] | Type[:class:`int`] | Type[:class:`float`] | Type[:class:`.abc.GuildChannel`] | Type[:class:`Thread`] | Type[:class:`Member`] | Type[:class:`User`] | Type[:class:`Attachment`] | Type[:class:`Role`] | Type[:class:`.abc.Mentionable`] | :class:`SlashCommandOptionType` | Type[:class:`.ext.commands.Converter`] | Type[:class:`enums.Enum`] | Type[:class:`Enum`]
         The type of input that is expected for this option. This can be a :class:`SlashCommandOptionType`,
         an associated class, a channel type, a :class:`Converter`, a converter class or an :class:`enum.Enum`.
         If a :class:`enum.Enum` is used and it has up to 25 values, :attr:`choices` will be automatically filled. If the :class:`enum.Enum` has more than 25 values, :attr:`autocomplete` will be implemented with :func:`discord.utils.basic_autocomplete` instead.
@@ -164,7 +165,7 @@ class Option:
     description: Optional[:class:`str`]
         The description of this option.
         Must be 100 characters or fewer. If :attr:`input_type` is a :class:`enum.Enum` and :attr:`description` is not specified, :attr:`input_type`'s docstring will be used.
-    choices: Optional[List[Union[:class:`Any`, :class:`OptionChoice`]]]
+    choices: Optional[List[:class:`Any` | :class:`OptionChoice`]]
         The list of available choices for this option.
         Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair).
         If provided, the input from the user must match one of the choices in the list.
@@ -325,7 +326,7 @@ class Option:
             minmax_typehint = Optional[int]
         elif self.input_type == SlashCommandOptionType.number:
             minmax_types = (int, float, type(None))
-            minmax_typehint = Optional[Union[int, float]]
+            minmax_typehint = Optional[int | float]
         else:
             minmax_types = (type(None),)
             minmax_typehint = type(None)
@@ -506,7 +507,7 @@ class OptionChoice:
     ----------
     name: :class:`str`
         The name of the choice. Shown in the UI when selecting an option.
-    value: Optional[Union[:class:`str`, :class:`int`, :class:`float`]]
+    value: Optional[:class:`str` | :class:`int` | :class:`float`]
         The value of the choice. If not provided, will use the value of ``name``.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this choice. The values of this should be ``"locale": "name"``.

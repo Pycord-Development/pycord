@@ -206,7 +206,7 @@ class SoundboardSound(PartialSoundboardSound):
             The new name of the sound.
         volume: Optional[:class:`float`]
             The new volume of the sound.
-        emoji: Optional[Union[:class:`PartialEmoji`, :class:`str`]]
+        emoji: Optional[:class:`PartialEmoji` | :class:`str`]
             The new emoji of the sound.
         reason: Optional[:class:`str`]
             The reason for editing the sound. Shows up in the audit log.

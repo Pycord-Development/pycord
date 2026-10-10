@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import inspect
 import re
-from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 import discord.abc
 import discord.utils
@@ -54,7 +54,7 @@ MISSING: Any = discord.utils.MISSING
 
 
 T = TypeVar("T")
-BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+BotT = TypeVar("BotT", bound="Bot | AutoShardedBot")
 CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
@@ -299,14 +299,14 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def author(self) -> User | Member:
-        """Union[:class:`~discord.User`, :class:`.Member`]:
+        """:class:`~discord.User` | :class:`.Member`:
         Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
         """
         return self.message.author
 
     @property
     def me(self) -> Member | ClientUser:
-        """Union[:class:`.Member`, :class:`.ClientUser`]:
+        """:class:`.Member` | :class:`.ClientUser`:
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
         """
@@ -345,7 +345,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
         Parameters
         ----------
-        entity: Optional[Union[:class:`Command`, :class:`Cog`, :class:`str`]]
+        entity: Optional[:class:`Command` | :class:`Cog` | :class:`str`]
             The entity to show help for.
 
         Returns

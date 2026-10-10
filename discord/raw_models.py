@@ -606,7 +606,7 @@ class AutoModActionExecutionEvent:
         The member that triggered the action, if cached.
     channel_id: Optional[:class:`int`]
         The ID of the channel in which the member's content was posted.
-    channel: Optional[Union[:class:`TextChannel`, :class:`Thread`, :class:`VoiceChannel`, :class:`StageChannel`]]
+    channel: Optional[:class:`TextChannel` | :class:`Thread` | :class:`VoiceChannel` | :class:`StageChannel`]
         The channel in which the member's content was posted, if cached.
     message_id: Optional[:class:`int`]
         The ID of the message that triggered the action. This is only available if the
@@ -900,7 +900,7 @@ class RawVoiceStateUpdateEvent(_PayloadLike):
         anymore or have been accepted to.
     afk: :class:`bool`
         Whether the user is connected on the guild's AFK channel.
-    channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+    channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
         The voice channel that the user is currently connected to. ``None`` if the user
         is not currently in a voice channel.
 

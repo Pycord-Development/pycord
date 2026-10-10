@@ -730,7 +730,7 @@ class Loop(Generic[LF]):
             The number of minutes between every iteration.
         hours: :class:`float`
             The number of hours between every iteration.
-        time: Union[:class:`datetime.time`, Sequence[:class:`datetime.time`]]
+        time: :class:`datetime.time` | Sequence[:class:`datetime.time`]
             The exact times to run this loop at. Either a non-empty list or a single
             value of :class:`datetime.time` should be passed.
             This cannot be used in conjunction with the relative time parameters.
@@ -804,7 +804,7 @@ def loop(
         The number of minutes between every iteration.
     hours: :class:`float`
         The number of hours between every iteration.
-    time: Union[:class:`datetime.time`, Sequence[:class:`datetime.time`]]
+    time: :class:`datetime.time` | Sequence[:class:`datetime.time`]
         The exact times to run this loop at. Either a non-empty list or a single
         value of :class:`datetime.time` should be passed. Timezones are supported.
         If no timezone is given for the times, it is assumed to represent UTC time.
@@ -827,7 +827,7 @@ def loop(
     loop: :class:`asyncio.AbstractEventLoop`
         The loop to use to register the task, if not given the default event loop is used via
         :func:`asyncio.get_event_loop()` if it exists or one is created via :func:`asyncio.new_event_loop()`.
-    overlap: Union[:class:`bool`, :class:`int`]
+    overlap: :class:`bool` | :class:`int`
         Controls whether overlapping executions of the task loop are allowed.
         Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.
 
