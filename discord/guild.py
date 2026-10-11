@@ -1629,7 +1629,7 @@ class Guild(Hashable):
             The channel's preferred audio bitrate in bits per second.
         user_limit: :class:`int`
             The channel's limit for number of members that can be in a voice channel.
-        :class:`VoiceRegion` | :obj:`None`
+        rtc_region: :class:`VoiceRegion` | :obj:`None`
             The region for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 
@@ -1752,7 +1752,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-        :class:`VoiceRegion` | :obj:`None`
+        rtc_region: :class:`VoiceRegion` | :obj:`None`
             The region for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 

@@ -614,7 +614,7 @@ class FFmpegOpusAudio(FFmpegAudio):
 
         Returns
         -------
-        Tuple[:class:`str` | :obj`None`, :class:`int`] | :obj:`None`
+        Tuple[:class:`str` | :obj:`None`, :class:`int`] | :obj:`None`
             A 2-tuple with the codec and bitrate of the input source.
 
         Raises

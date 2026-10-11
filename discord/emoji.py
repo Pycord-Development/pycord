@@ -269,7 +269,7 @@ class GuildEmoji(BaseEmoji):
         -----------
         name: :class:`str`
             The new emoji name.
-        roles: List[:class:`~discord.abc.Snowflake`] | :obj`None`
+        roles: List[:class:`~discord.abc.Snowflake`] | :obj:`None`
             A list of roles that can use this emoji. An empty list can be passed to make it available to everyone.
         reason: :class:`str` | :obj:`None`
             The reason for editing this emoji. Shows up on the audit log.
