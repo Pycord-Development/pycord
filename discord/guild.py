@@ -35,7 +35,6 @@ from typing import (
     Any,
     ClassVar,
     NamedTuple,
-    Optional,
     TypeVar,
     cast,
     overload,
@@ -132,7 +131,7 @@ if TYPE_CHECKING:
     GuildChannel = (
         VoiceChannel | StageChannel | TextChannel | ForumChannel | CategoryChannel
     )
-    ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
+    ByCategoryItem = tuple[CategoryChannel | None, list[GuildChannel]]
 
 T = TypeVar("T")
 
