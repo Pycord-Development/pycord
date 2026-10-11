@@ -549,7 +549,7 @@ class Thread(Messageable, Hashable):
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj: `None`
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``before`` in :meth:`history`.
         after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``after`` in :meth:`history`.
