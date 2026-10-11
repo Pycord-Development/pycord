@@ -376,7 +376,7 @@ class Paginator(discord.ui.View):
         A zero-indexed value showing the total number of pages.
     buttons: Dict[:class:`str`, Dict[:class:`str`, :class:`~PaginatorButton` | :class:`bool`]]
         A dictionary containing the :class:`~PaginatorButton` objects included in this paginator.
-    user::class:`~discord.User` | :class:`~discord.Member` | :obj:`None`
+    user: :class:`~discord.User` | :class:`~discord.Member` | :obj:`None`
         The user or member that invoked the paginator.
     message: :class:`~discord.Message` | :class:`~discord.WebhookMessage`
         The message the paginator is attached to.
@@ -1104,7 +1104,7 @@ class Paginator(discord.ui.View):
             are used instead.
         delete_after: :class:`float` | :obj:`None`
             If set, deletes the paginator after the specified time.
-        user::class:`~discord.User` | :class:`~discord.Member` | :obj:`None`
+        user: :class:`~discord.User` | :class:`~discord.Member` | :obj:`None`
             If set, changes the user that this paginator belongs to.
 
         Returns
