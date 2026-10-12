@@ -354,7 +354,7 @@ class Modal(BaseModal):
 
         Parameters
         ----------
-        item: class:`InputText`
+        item: :class:`InputText`
             The item to remove from the modal.
         """
 
