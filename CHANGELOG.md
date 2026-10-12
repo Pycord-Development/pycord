@@ -19,6 +19,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Simplify and optimize the `utils.get()` function.
+  ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+
 ### Fixed
 
 - Fix `ctx.command.qualified_name` returning only the parent `SlashCommandGroup` name
@@ -34,6 +37,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
 
 ### Deprecated
+
+- Deprecated `Invite.id` in favour of `Invite.code`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 
 ### Removed
 
