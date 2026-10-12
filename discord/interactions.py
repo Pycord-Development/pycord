@@ -417,7 +417,7 @@ class Interaction:
         return Webhook.from_interaction(interaction=self)
 
     def is_guild_authorised(self) -> bool:
-        """:class:`bool`: Checks if the interaction is guild authorised.
+        """Checks if the interaction is guild authorised.
 
         There is an alias for this called :meth:`.is_guild_authorized`.
 
@@ -428,7 +428,7 @@ class Interaction:
         return False
 
     def is_user_authorised(self) -> bool:
-        """:class:`bool`: Checks if the interaction is user authorised.
+        """Checks if the interaction is user authorised.
 
         There is an alias for this called :meth:`.is_user_authorized`.
 
@@ -441,7 +441,7 @@ class Interaction:
         return False
 
     def is_guild_authorized(self) -> bool:
-        """:class:`bool`: Checks if the interaction is guild authorized.
+        """Checks if the interaction is guild authorized.
 
         There is an alias for this called :meth:`.is_guild_authorised`.
 
@@ -450,7 +450,7 @@ class Interaction:
         return self.is_guild_authorised()
 
     def is_user_authorized(self) -> bool:
-        """:class:`bool`: Checks if the interaction is user authorized.
+        """Checks if the interaction is user authorized.
 
         There is an alias for this called :meth:`.is_user_authorised`.
 

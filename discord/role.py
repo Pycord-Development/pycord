@@ -172,7 +172,7 @@ class RoleTags:
 
     @cached_slot_property("_type")
     def type(self) -> RoleType:
-        """:class:`RoleType`: The type of the role.
+        """The type of the role.
 
         Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
         In order to make your life easier, pycord provides a :attr:`RoleTags.type` attribute that attempts to determine the role type based on the role tags. Its value is not provided by Discord but is rather computed based on the role tags.
