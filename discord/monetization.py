@@ -104,7 +104,7 @@ class SKU(Hashable):
 
     @property
     def url(self) -> str:
-        """:class:`str`: Returns the URL for the SKU."""
+        """Returns the URL for the SKU."""
         return f"https://discord.com/application-directory/{self.application_id}/store/{self.id}"
 
     def fetch_subscriptions(

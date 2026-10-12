@@ -299,15 +299,12 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def author(self) -> User | Member:
-        """:class:`~discord.User` | :class:`.Member`:
-        Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
-        """
+        """Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`"""
         return self.message.author
 
     @property
     def me(self) -> Member | ClientUser:
-        """:class:`.Member` | :class:`.ClientUser`:
-        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
+        """Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
         """
         # bot.user will never be None at this point.
