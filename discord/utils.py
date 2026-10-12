@@ -1547,7 +1547,7 @@ def filter_params(params, **kwargs):
     ----------
     params: Dict[str, Any]
         The initial parameters to filter.
-    **kwargs: Dict[str, str | None]
+    **kwargs: Dict[:class:`str`, :class:`str` | :obj:`None`]
         Key to value pairs where the key's contents would be moved to the
         value, or if the value is None, remove key's contents (see code example).
 

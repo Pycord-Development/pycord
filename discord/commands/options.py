@@ -469,7 +469,7 @@ class Option:
 
         Returns
         -------
-        AutocompleteFunction | :obj:`None`
+        :class:`AutocompleteFunction` | :obj:`None`
 
         .. versionchanged:: 2.7
 
