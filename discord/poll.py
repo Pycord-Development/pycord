@@ -62,7 +62,7 @@ class PollMedia:
     text: :class:`str`
         The question/answer text. May have up to 300 characters for questions and 55 characters for answers.
 
-    emoji: Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]]
+    emoji: Optional[:class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str`]
         The answer's emoji.
     """
 
@@ -204,7 +204,7 @@ class PollAnswer:
 
         Yields
         ------
-        Union[:class:`User`, :class:`Member`]
+        :class:`User` | :class:`Member`
             The member (if retrievable) or the user that has voted
             with this answer. The case where it can be a :class:`Member` is
             in a guild message context. Sometimes it can be a :class:`User`
@@ -324,7 +324,7 @@ class Poll:
 
     Attributes
     ----------
-    question: Union[:class:`PollMedia`, :class:`str`]
+    question: :class:`PollMedia` | :class:`str`
         The poll's question media, or a ``str`` representing the question text. Question text can be up to 300 characters.
     answers: Optional[List[:class:`PollAnswer`]]
         A list of the poll's answers. A maximum of 10 answers can be set.
@@ -464,7 +464,7 @@ class Poll:
         ----------
         text: :class:`str`
             The answer text. Maximum 55 characters.
-        emoji: Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]]
+        emoji: Optional[:class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str`]
             The answer's emoji.
 
         Raises

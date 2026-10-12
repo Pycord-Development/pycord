@@ -144,9 +144,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def channel(self) -> InteractionChannel | None:
-        """Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]:
-        Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`.
-        """
+        """Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`."""
         return self.interaction.channel
 
     @property
@@ -190,7 +188,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def me(self) -> Member | ClientUser | None:
-        """Union[:class:`.Member`, :class:`.ClientUser`]:
+        """
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
         """
@@ -390,7 +388,7 @@ class ApplicationContext(discord.abc.Messageable):
         return self.command.cog
 
     def is_guild_authorised(self) -> bool:
-        """:class:`bool`: Checks if the invoked command is guild-installed.
+        """Checks if the invoked command is guild-installed.
         This is a shortcut for :meth:`Interaction.is_guild_authorised`.
 
         There is an alias for this called :meth:`.is_guild_authorized`.
@@ -400,7 +398,7 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.is_guild_authorised()
 
     def is_user_authorised(self) -> bool:
-        """:class:`bool`: Checks if the invoked command is user-installed.
+        """Checks if the invoked command is user-installed.
         This is a shortcut for :meth:`Interaction.is_user_authorised`.
 
         There is an alias for this called :meth:`.is_user_authorized`.
@@ -410,14 +408,14 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.is_user_authorised()
 
     def is_guild_authorized(self) -> bool:
-        """:class:`bool`: An alias for :meth:`.is_guild_authorised`.
+        """An alias for :meth:`.is_guild_authorised`.
 
         .. versionadded:: 2.7
         """
         return self.is_guild_authorised()
 
     def is_user_authorized(self) -> bool:
-        """:class:`bool`: An alias for :meth:`.is_user_authorised`.
+        """An alias for :meth:`.is_user_authorised`.
 
         .. versionadded:: 2.7
         """

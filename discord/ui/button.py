@@ -67,9 +67,9 @@ class Button(ViewItem[V]):
         Whether the button is disabled or not.
     label: Optional[:class:`str`]
         The label of the button, if any. Maximum of 80 chars.
-    emoji: Optional[Union[:class:`.PartialEmoji`, :class:`GuildEmoji`, :class:`AppEmoji`, :class:`str`]]
+    emoji: Optional[:class:`.PartialEmoji` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`str`]
         The emoji of the button, if available.
-    sku_id: Optional[Union[:class:`int`]]
+    sku_id: Optional[:class:`int`]
         The ID of the SKU this button refers to.
     row: Optional[:class:`int`]
         The relative row this button belongs to. A Discord component can only have 5
@@ -385,7 +385,7 @@ def button(
         The style of the button. Defaults to :attr:`.ButtonStyle.grey`.
     disabled: :class:`bool`
         Whether the button is disabled or not. Defaults to ``False``.
-    emoji: Optional[Union[:class:`str`, :class:`GuildEmoji`, :class:`AppEmoji`, :class:`.PartialEmoji`]]
+    emoji: Optional[:class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji`]
         The emoji of the button. This can be in string form or a :class:`.PartialEmoji`
         or a full :class:`GuildEmoji` or :class:`AppEmoji`.
     row: Optional[:class:`int`]

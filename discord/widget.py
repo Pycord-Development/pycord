@@ -142,7 +142,7 @@ class WidgetMember(BaseUser):
         The member's nickname.
     avatar: Optional[:class:`str`]
         The member's avatar hash.
-    activity: Optional[Union[:class:`BaseActivity`, :class:`Spotify`]]
+    activity: Optional[:class:`BaseActivity` | :class:`Spotify`]
         The member's activity.
     deafened: Optional[:class:`bool`]
         Whether the member is currently deafened.

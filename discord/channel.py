@@ -444,11 +444,11 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``before`` in :meth:`history`.
-        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``after`` in :meth:`history`.
-        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        around: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``around`` in :meth:`history`.
         oldest_first: Optional[:class:`bool`]
             Same as ``oldest_first`` in :meth:`history`.
@@ -675,7 +675,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             The number of threads to retrieve.
             If ``None``, retrieves every archived thread in the channel. Note, however,
             that this would make it a slow operation.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Retrieve archived channels before the given date or ID.
         private: :class:`bool`
             Whether to retrieve private archived threads.
@@ -856,7 +856,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
@@ -1157,7 +1157,7 @@ class ForumChannel(_TextChannel):
             A value of `0` disables slowmode. The maximum value possible is `21600`.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
@@ -1255,11 +1255,11 @@ class ForumChannel(_TextChannel):
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
-        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
+        stickers: Sequence[:class:`~discord.GuildSticker` | :class:`~discord.StickerItem`]
             A list of stickers to upload. Must be a maximum of 3.
         delete_message_after: :class:`int`
             The time to wait before deleting the thread.
-        nonce: Union[:class:`str`, :class:`int`]
+        nonce: :class:`str` | :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
         allowed_mentions: :class:`~discord.AllowedMentions`
@@ -1535,7 +1535,7 @@ class MediaChannel(ForumChannel):
             A value of `0` disables slowmode. The maximum value possible is `21600`.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
@@ -1947,11 +1947,11 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``before`` in :meth:`history`.
-        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``after`` in :meth:`history`.
-        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        around: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``around`` in :meth:`history`.
         oldest_first: Optional[:class:`bool`]
             Same as ``oldest_first`` in :meth:`history`.
@@ -2133,7 +2133,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             category.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the voice channel's voice communication.
@@ -2187,7 +2187,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Parameters
         ----------
-        activity: Union[:class:`discord.EmbeddedActivity`, :class:`int`]
+        activity: :class:`discord.EmbeddedActivity` | :class:`int`
             The activity to create an invite for which can be an application id as well.
         max_age: :class:`int`
             How long the invite should last in seconds. If it's 0 then the invite
@@ -2241,7 +2241,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Parameters
         ----------
-        status: Union[:class:`str`, None]
+        status: :class:`str` | None
             The new status.
         reason: Optional[:class:`str`]
             The reason for setting the status. Shows up on the audit log.
@@ -2535,11 +2535,11 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``before`` in :meth:`history`.
-        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``after`` in :meth:`history`.
-        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        around: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
             Same as ``around`` in :meth:`history`.
         oldest_first: Optional[:class:`bool`]
             Same as ``oldest_first`` in :meth:`history`.
@@ -2814,7 +2814,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             category.
         reason: Optional[:class:`str`]
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         rtc_region: Optional[:class:`VoiceRegion`]
             The new region for the stage channel's voice communication.
@@ -2980,7 +2980,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             The new category's position.
         reason: Optional[:class:`str`]
             The reason for editing this category. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
 
         Returns

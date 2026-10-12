@@ -156,7 +156,7 @@ class Label(ModalItem[M]):
 
         Parameters
         ----------
-        item: Union[:class:`ModalItem`]
+        item: :class:`ModalItem`
             The item to set.
 
         Raises
@@ -183,7 +183,7 @@ class Label(ModalItem[M]):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The id or custom_id of the item to match.
 
         Returns
@@ -343,7 +343,7 @@ class Label(ModalItem[M]):
             Whether the select is required or not. Defaults to ``True``.
         id: Optional[:class:`int`]
             The select menu's ID.
-        default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+        default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
             The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
