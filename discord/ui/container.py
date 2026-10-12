@@ -75,9 +75,9 @@ class Container(ViewItem[V]):
         The initial items in this container.
     colour: :class:`Colour` | :class:`int`
         The accent colour of the container. Aliased to ``color`` as well.
-    spoiler: Optional[:class:`bool`]
+    spoiler: :class:`bool` | :obj:`None`
         Whether this container has the spoiler overlay.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The container's ID.
 
     Attributes
@@ -208,7 +208,7 @@ class Container(ViewItem[V]):
 
         Returns
         -------
-        Optional[:class:`ViewItem`]
+        :class:`ViewItem` | :obj:`None`
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -235,7 +235,7 @@ class Container(ViewItem[V]):
         ----------
         *items: :class:`Button` | :class:`Select`
             The items this action row contains.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The action row's ID.
         """
 
@@ -259,10 +259,10 @@ class Container(ViewItem[V]):
         *items: :class:`ViewItem`
             The items contained in this section, up to 3.
             Currently only supports :class:`~discord.ui.TextDisplay`.
-        accessory: Optional[:class:`ViewItem`]
+        accessory: :class:`ViewItem` | :obj:`None`
             The section's accessory. This is displayed in the top right of the section.
             Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The section's ID.
         """
 
@@ -277,7 +277,7 @@ class Container(ViewItem[V]):
         ----------
         content: :class:`str`
             The content of the TextDisplay
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The text displays' ID.
         """
 
@@ -298,7 +298,7 @@ class Container(ViewItem[V]):
         ----------
         *items: :class:`MediaGalleryItem`
             The media this gallery contains.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The gallery's ID.
         """
 
@@ -313,9 +313,9 @@ class Container(ViewItem[V]):
         ----------
         url: :class:`str`
             The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
-        spoiler: Optional[:class:`bool`]
+        spoiler: :class:`bool` | :obj:`None`
             Whether the file has the spoiler overlay. Defaults to ``False``.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The file's ID.
         """
 
@@ -338,7 +338,7 @@ class Container(ViewItem[V]):
             Whether the separator is a divider. Defaults to ``True``.
         spacing: :class:`~discord.SeparatorSpacingSize`
             The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The separator's ID.
         """
 
@@ -391,7 +391,7 @@ class Container(ViewItem[V]):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
@@ -407,7 +407,7 @@ class Container(ViewItem[V]):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():

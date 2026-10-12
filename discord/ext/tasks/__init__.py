@@ -817,7 +817,7 @@ def loop(
 
         .. versionadded:: 2.0
 
-    count: Optional[:class:`int`]
+    count: :class:`int` | :obj:`None`
         The number of loops to do, ``None`` if it should be an
         infinite loop.
     reconnect: :class:`bool`

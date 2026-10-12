@@ -275,13 +275,13 @@ class Modal(BaseModal):
     title: :class:`str`
         The title of the modal.
         Must be 45 characters or fewer.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the modal that gets received during an interaction.
         Must be 100 characters or fewer.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 
@@ -392,13 +392,13 @@ class DesignerModal(BaseModal):
     title: :class:`str`
         The title of the modal.
         Must be 45 characters or fewer.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the modal that gets received during an interaction.
         Must be 100 characters or fewer.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 

@@ -121,11 +121,11 @@ class RawMessageDeleteEvent(_RawReprMixin):
     ----------
     channel_id: :class:`int`
         The channel ID where the deletion took place.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the deletion took place, if applicable.
     message_id: :class:`int`
         The message ID that got deleted.
-    cached_message: Optional[:class:`Message`]
+    cached_message: :class:`Message` | :obj:`None`
         The cached message, if found in the internal message cache.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#message-delete>`__.
@@ -152,7 +152,7 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
         A :class:`set` of the message IDs that were deleted.
     channel_id: :class:`int`
         The channel ID where the message got deleted.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the message got deleted, if applicable.
     cached_messages: List[:class:`Message`]
         The cached messages, if found in the internal message cache.
@@ -183,14 +183,14 @@ class RawMessageUpdateEvent(_RawReprMixin):
         The channel ID where the update took place.
 
         .. versionadded:: 1.3
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the message got updated, if applicable.
 
         .. versionadded:: 1.7
 
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events#message-update>`__
-    cached_message: Optional[:class:`Message`]
+    cached_message: :class:`Message` | :obj:`None`
         The cached message, if found in the internal message cache. Represents the message before
         it is modified by the data in :attr:`RawMessageUpdateEvent.data`.
     new_message: :class:`Message`
@@ -223,11 +223,11 @@ class RawReactionActionEvent(_RawReprMixin):
         The user ID who added the reaction or whose reaction was removed.
     channel_id: :class:`int`
         The channel ID where the reaction got added or removed.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the reaction got added or removed, if applicable.
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being used.
-    member: Optional[:class:`Member`]
+    member: :class:`Member` | :obj:`None`
         The member who added the reaction. Only available if the reaction occurs within a guild.
 
         .. versionadded:: 1.3
@@ -240,10 +240,10 @@ class RawReactionActionEvent(_RawReprMixin):
         .. versionadded:: 1.3
     burst: :class:`bool`
         Whether this reaction is a burst (super) reaction.
-    burst_colours: Optional[:class:`list`]
+    burst_colours: :class:`list` | :obj:`None`
         A list of hex codes this reaction can be. Only available if `event_type` is `REACTION_ADD`
         and this emoji has super reactions available.
-    burst_colors: Optional[:class:`list`]
+    burst_colors: :class:`list` | :obj:`None`
         Alias for :attr:`burst_colours`.
     type: :class:`ReactionType`
         The type of reaction added.
@@ -294,7 +294,7 @@ class RawReactionClearEvent(_RawReprMixin):
         The message ID that got its reactions cleared.
     channel_id: :class:`int`
         The channel ID where the reactions got cleared.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the reactions got cleared.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#message-reaction-remove-all>`__.
@@ -322,7 +322,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         The message ID that got its reactions cleared.
     channel_id: :class:`int`
         The channel ID where the reactions got cleared.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the reactions got cleared.
     emoji: :class:`PartialEmoji`
         The custom or unicode emoji being removed.
@@ -330,7 +330,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         Whether this reaction was a burst (super) reaction.
     burst_colours: :class:`list`
         The available HEX codes of the removed super reaction.
-    burst_colors: Optional[:class:`list`]
+    burst_colors: :class:`list` | :obj:`None`
         Alias for :attr:`burst_colours`.
     type: :class:`ReactionType`
         The type of reaction removed.
@@ -373,7 +373,7 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     ----------
     integration_id: :class:`int`
         The ID of the integration that got deleted.
-    application_id: Optional[:class:`int`]
+    application_id: :class:`int` | :obj:`None`
         The ID of the bot/OAuth2 application for this deleted integration.
     guild_id: :class:`int`
         The guild ID where the integration got deleted.
@@ -442,7 +442,7 @@ class RawThreadDeleteEvent(_RawReprMixin):
         The ID of the guild the deleted thread belonged to.
     parent_id: :class:`int`
         The ID of the channel the thread belonged to.
-    thread: Optional[:class:`discord.Thread`]
+    thread: :class:`discord.Thread` | :obj:`None`
         The thread that was deleted. This may be ``None`` if deleted thread is not found in internal cache.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#thread-delete>`__.
@@ -472,7 +472,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
         The channel ID where the voice channel status update originated from.
     guild_id: :class:`int`
         The guild ID where the voice channel status update originated from.
-    status: Optional[:class:`str`]
+    status: :class:`str` | :obj:`None`
         The new voice channel status.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#voice-channel-status-update>`__.
@@ -500,9 +500,9 @@ class RawTypingEvent(_RawReprMixin):
         The ID of the user that started typing.
     when: :class:`datetime.datetime`
         When the typing started as an aware datetime in UTC.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the typing originated from, if applicable.
-    member: Optional[:class:`Member`]
+    member: :class:`Member` | :obj:`None`
         The member who started typing. Only available if the member started typing in a guild.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#typing-start>`__.
@@ -560,7 +560,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
         The event ID where the typing originated from.
     user_id: :class:`int`
         The ID of the user that subscribed/unsubscribed.
-    guild: Optional[:class:`Guild`]
+    guild: :class:`Guild` | :obj:`None`
         The guild where the subscription/unsubscription happened.
     event_type: :class:`str`
         Can be either ``USER_ADD`` or ``USER_REMOVE`` depending on
@@ -598,25 +598,25 @@ class AutoModActionExecutionEvent:
         .. versionadded:: 2.4
     guild_id: :class:`int`
         The ID of the guild that the action was executed in.
-    guild: Optional[:class:`Guild`]
+    guild: :class:`Guild` | :obj:`None`
         The guild that the action was executed in, if cached.
     user_id: :class:`int`
         The ID of the user that triggered the action.
-    member: Optional[:class:`Member`]
+    member: :class:`Member` | :obj:`None`
         The member that triggered the action, if cached.
-    channel_id: Optional[:class:`int`]
+    channel_id: :class:`int` | :obj:`None`
         The ID of the channel in which the member's content was posted.
-    channel: Optional[:class:`TextChannel` | :class:`Thread` | :class:`VoiceChannel` | :class:`StageChannel`]
+    channel: :class:`TextChannel` | :class:`Thread` | :class:`VoiceChannel` | :class:`StageChannel` | :obj:`None`
         The channel in which the member's content was posted, if cached.
-    message_id: Optional[:class:`int`]
+    message_id: :class:`int` | :obj:`None`
         The ID of the message that triggered the action. This is only available if the
         message was not blocked.
-    message: Optional[:class:`Message`]
+    message: :class:`Message` | :obj:`None`
         The message that triggered the action, if cached.
-    alert_system_message_id: Optional[:class:`int`]
+    alert_system_message_id: :class:`int` | :obj:`None`
         The ID of the system auto moderation message that was posted as a result
         of the action.
-    alert_system_message: Optional[:class:`Message`]
+    alert_system_message: :class:`Message` | :obj:`None`
         The system auto moderation message that was posted as a result of the action,
         if cached.
     content: :class:`str`
@@ -729,13 +729,13 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         The entry ID.
     guild_id: :class:`int`
         The ID of the guild this action came from.
-    user_id: Optional[:class:`int`]
+    user_id: :class:`int` | :obj:`None`
         The ID of the user who initiated this action.
-    target_id: Optional[:class:`int`]
+    target_id: :class:`int` | :obj:`None`
         The ID of the target that got changed.
-    reason: Optional[:class:`str`]
+    reason: :class:`str` | :obj:`None`
         The reason this action was done.
-    changes: Optional[:class:`list`]
+    changes: :class:`list` | :obj:`None`
         The changes that were made to the target.
     extra: Any
         Extra information that this entry has that might be useful.
@@ -787,7 +787,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         The message ID of the poll that received the vote.
     channel_id: :class:`int`
         The channel ID where the vote was updated.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID where the vote was updated, if applicable.
     answer_id: :class:`int`
         The answer ID of the vote that was updated.
@@ -894,22 +894,22 @@ class RawVoiceStateUpdateEvent(_PayloadLike):
         Whether the user is currently broadcasting video.
     suppress: :class:`bool`
         Whether the user is suppressed from speaking in a stage channel.
-    requested_to_speak_at: Optional[:class:`datetime.datetime`]
+    requested_to_speak_at: :class:`datetime.datetime` | :obj:`None`
         An aware datetime object that specifies when a member has requested to speak
         in a stage channel. It will be ``None`` if they are not requesting to speak
         anymore or have been accepted to.
     afk: :class:`bool`
         Whether the user is connected on the guild's AFK channel.
-    channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
+    channel: :class:`VoiceChannel` | :class:`StageChannel` | :obj:`None`
         The voice channel that the user is currently connected to. ``None`` if the user
         is not currently in a voice channel.
 
         There are certain scenarios in which this is impossible to be ``None``.
     session_id: :class:`str`
         The voice connection session ID.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID the user channel is from.
-    channel_id: Optional[:class:`int`]
+    channel_id: :class:`int` | :obj:`None`
         The channel ID the user is connected to. Or ``None`` if not connected to any.
     """
 
@@ -968,7 +968,7 @@ class RawVoiceServerUpdateEvent(_PayloadLike):
         The voice connection token. This should not be shared.
     guild_id: :class:`int`
         The guild ID this token is part from.
-    endpoint: Optional[:class:`str`]
+    endpoint: :class:`str` | :obj:`None`
         The voice server host to connect to.
     """
 
@@ -1016,7 +1016,7 @@ class RawMemberUpdateEvent(_RawReprMixin):
     ----------
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#guild-member-update>`_
-    cached_member: Optional[:class:`Member`]
+    cached_member: :class:`Member` | :obj:`None`
         The cached member, if found in the internal member cache.
     member: :class:`Member`
         The new member object after the update.

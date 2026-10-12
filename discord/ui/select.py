@@ -108,7 +108,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     custom_id: :class:`str`
         The ID of the select menu that gets received during an interaction.
         If not given then one is generated for you.
-    placeholder: Optional[:class:`str`]
+    placeholder: :class:`str` | :obj:`None`
         The placeholder text that is shown if nothing is selected, if any.
     min_values: :class:`int`
         The minimum number of items that must be chosen for this select menu.
@@ -124,19 +124,19 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not. Only useable in views. Defaults to ``False`` in views.
-    row: Optional[:class:`int`]
+    row: :class:`int` | :obj:`None`
         The relative row this select menu belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed). Does not work in :class:`ActionRow` or :class:`Label`.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The select menu's ID.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the select is required or not. Only useable when added to :class:`Label` for modals. Defaults to ``True`` in modals.
 
         .. versionadded:: 2.7
-    default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
+    default_values: Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`] | :obj:`None`
         The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
         These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
@@ -611,10 +611,10 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         value: :class:`str`
             The value of the option. This is not displayed to users.
             If not given, defaults to the label. Can only be up to 100 characters.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             An additional description of the option, if any.
             Can only be up to 100 characters.
-        emoji: Optional[:class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji`]
+        emoji: :class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji` | :obj:`None`
             The emoji of the option, if available. This can either be a string representing
             the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`.
         default: :class:`bool`
@@ -759,7 +759,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
         Returns
         -------
-        Optional[:class:`int`]
+        :class:`int` | :obj:`None`
             The row position of the item, or ``None`` if not explicitly set.
 
         Raises
@@ -926,12 +926,12 @@ def select(
         :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
         :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
         or :attr:`discord.ComponentType.channel_select`.
-    placeholder: Optional[:class:`str`]
+    placeholder: :class:`str` | :obj:`None`
         The placeholder text that is shown if nothing is selected, if any.
     custom_id: :class:`str`
         The ID of the select menu that gets received during an interaction.
         It is recommended not to set this parameter to prevent conflicts.
-    row: Optional[:class:`int`]
+    row: :class:`int` | :obj:`None`
         The relative row this select menu belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
@@ -952,9 +952,9 @@ def select(
         Defaults to all channel types.
     disabled: :class:`bool`
         Whether the select is disabled or not. Defaults to ``False``.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The select menu's ID.
-    default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
+    default_values: Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`] | :obj:`None`
         The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
         This can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`

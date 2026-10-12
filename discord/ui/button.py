@@ -58,20 +58,20 @@ class Button(ViewItem[V]):
     ----------
     style: :class:`discord.ButtonStyle`
         The style of the button.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the button that gets received during an interaction.
         If this button is for a URL, it does not have a custom ID.
-    url: Optional[:class:`str`]
+    url: :class:`str` | :obj:`None`
         The URL this button sends you to.
     disabled: :class:`bool`
         Whether the button is disabled or not.
-    label: Optional[:class:`str`]
+    label: :class:`str` | :obj:`None`
         The label of the button, if any. Maximum of 80 chars.
-    emoji: Optional[:class:`.PartialEmoji` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`str`]
+    emoji: :class:`.PartialEmoji` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`str` | :obj:`None`
         The emoji of the button, if available.
-    sku_id: Optional[:class:`int`]
+    sku_id: :class:`int` | :obj:`None`
         The ID of the SKU this button refers to.
-    row: Optional[:class:`int`]
+    row: :class:`int` | :obj:`None`
         The relative row this button belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
@@ -82,7 +82,7 @@ class Button(ViewItem[V]):
 
             This parameter does not work in :class:`ActionRow`.
 
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The button's ID.
     """
 
@@ -300,7 +300,7 @@ class Button(ViewItem[V]):
 
         Returns
         -------
-        Optional[:class:`int`]
+        :class:`int` | :obj:`None`
             The row position of the item, or ``None`` if not explicitly set.
 
         Raises
@@ -376,19 +376,19 @@ def button(
 
     Parameters
     ----------
-    label: Optional[:class:`str`]
+    label: :class:`str` | :obj:`None`
         The label of the button, if any.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the button that gets received during an interaction.
         It is recommended not to set this parameter to prevent conflicts.
     style: :class:`.ButtonStyle`
         The style of the button. Defaults to :attr:`.ButtonStyle.grey`.
     disabled: :class:`bool`
         Whether the button is disabled or not. Defaults to ``False``.
-    emoji: Optional[:class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji`]
+    emoji: :class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji` | :obj:`None`
         The emoji of the button. This can be in string form or a :class:`.PartialEmoji`
         or a full :class:`GuildEmoji` or :class:`AppEmoji`.
-    row: Optional[:class:`int`]
+    row: :class:`int` | :obj:`None`
         The relative row this button belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.

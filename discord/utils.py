@@ -272,12 +272,12 @@ def parse_time(timestamp: str | None) -> datetime.datetime | None:
 
     Parameters
     ----------
-    timestamp: Optional[:class:`str`]
+    timestamp: :class:`str` | :obj:`None`
         The timestamp to convert.
 
     Returns
     -------
-    Optional[:class:`datetime.datetime`]
+    :class:`datetime.datetime` | :obj:`None`
         The converted datetime object.
     """
     if timestamp:
@@ -309,15 +309,15 @@ def warn_deprecated(
     ----------
     name: str
         The name of the deprecated function.
-    instead: Optional[:class:`str`]
+    instead: :class:`str` | :obj:`None`
         A recommended alternative to the function.
-    since: Optional[:class:`str`]
+    since: :class:`str` | :obj:`None`
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str`]
+    removed: :class:`str` | :obj:`None`
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
-    reference: Optional[:class:`str`]
+    reference: :class:`str` | :obj:`None`
         A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
         issue/PR.
     stacklevel: :class:`int`
@@ -357,15 +357,15 @@ def deprecated(
 
     Parameters
     ----------
-    instead: Optional[:class:`str`]
+    instead: :class:`str` | :obj:`None`
         A recommended alternative to the function.
-    since: Optional[:class:`str`]
+    since: :class:`str` | :obj:`None`
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str`]
+    removed: :class:`str` | :obj:`None`
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
-    reference: Optional[:class:`str`]
+    reference: :class:`str` | :obj:`None`
         A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
         issue/PR.
     stacklevel: :class:`int`
@@ -1478,7 +1478,7 @@ def basic_autocomplete(
     values: Iterable[:class:`.OptionChoice`] | Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`] | Callable[[:class:`.AutocompleteContext`], Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`] | Awaitable[Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]] | Awaitable[Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
-    filter: Optional[Callable[[:class:`.AutocompleteContext`, Any], :class:`bool` | Awaitable[:class:`bool`]]]
+    filter: Callable[[:class:`.AutocompleteContext`, Any], :class:`bool` | Awaitable[:class:`bool`]] | :obj:`None`
         An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments:
         the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.
 
@@ -1555,7 +1555,7 @@ def filter_params(params, **kwargs):
     ----------
     params: Dict[str, Any]
         The initial parameters to filter.
-    **kwargs: Dict[str, Optional[str]]
+    **kwargs: Dict[:class:`str`, :class:`str` | :obj:`None`]
         Key to value pairs where the key's contents would be moved to the
         value, or if the value is None, remove key's contents (see code example).
 

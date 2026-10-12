@@ -237,7 +237,7 @@ class ApplicationContext(discord.abc.Messageable):
 
         Returns
         -------
-        Optional[List[Dict[:class:`str`, Any]]]
+        List[Dict[:class:`str`, Any]] | :obj:`None`
             A dictionary containing the options and values that were selected by the user when the command
             was processed, if applicable. Returns ``None`` if the command has not yet been invoked,
             or if there are no options defined for that command.
@@ -250,7 +250,7 @@ class ApplicationContext(discord.abc.Messageable):
 
         Returns
         -------
-        Optional[List[:class:`.Option`]]
+        List[:class:`.Option`] | :obj:`None`
             A list of Option objects (if any) that were not selected by the user when the command was processed.
             Returns ``None`` if there are no options defined for that command.
         """
@@ -357,7 +357,7 @@ class ApplicationContext(discord.abc.Messageable):
 
         Parameters
         ----------
-        delay: Optional[:class:`float`]
+        delay: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait before deleting the message.
 
         Raises
