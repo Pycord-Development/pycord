@@ -2229,7 +2229,7 @@ class Client:
 
     @property
     def store_url(self) -> str:
-        """:class:`str`: The URL that leads to the application's store page for monetization.
+        """The URL that leads to the application's store page for monetization.
 
         .. versionadded:: 2.6
         """
