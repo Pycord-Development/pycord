@@ -115,7 +115,7 @@ class Loop(Generic[LF]):
             discord.GatewayNotFound,
             discord.ConnectionClosed,
             aiohttp.ClientError,
-            asyncio.TimeoutError,
+            TimeoutError,
         )
 
         self._before_loop = None
@@ -192,7 +192,7 @@ class Loop(Generic[LF]):
             self._prepare_time_index()
             self._next_iteration = self._get_next_sleep_time()
         else:
-            self._next_iteration = datetime.datetime.now(datetime.timezone.utc)
+            self._next_iteration = datetime.datetime.now(datetime.UTC)
         try:
             await self._try_sleep_until(self._next_iteration)
             while True:
@@ -225,7 +225,7 @@ class Loop(Generic[LF]):
                     if self._stop_next_iteration:
                         return
 
-                    now = datetime.datetime.now(datetime.timezone.utc)
+                    now = datetime.datetime.now(datetime.UTC)
                     if now > self._next_iteration:
                         self._next_iteration = now
                         if self._time is not MISSING:
@@ -629,7 +629,7 @@ class Loop(Generic[LF]):
             if self._current_loop == 0:
                 # if we're at the last index on the first iteration, we need to sleep until tomorrow
                 return datetime.datetime.combine(
-                    datetime.datetime.now(self._time[0].tzinfo or datetime.timezone.utc)
+                    datetime.datetime.now(self._time[0].tzinfo or datetime.UTC)
                     + datetime.timedelta(days=1),
                     self._time[0],
                 )
@@ -640,17 +640,15 @@ class Loop(Generic[LF]):
             self._time_index += 1
             if (
                 next_time
-                > datetime.datetime.now(
-                    next_time.tzinfo or datetime.timezone.utc
-                ).timetz()
+                > datetime.datetime.now(next_time.tzinfo or datetime.UTC).timetz()
             ):
                 return datetime.datetime.combine(
-                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc),
+                    datetime.datetime.now(next_time.tzinfo or datetime.UTC),
                     next_time,
                 )
             else:
                 return datetime.datetime.combine(
-                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc)
+                    datetime.datetime.now(next_time.tzinfo or datetime.UTC)
                     + datetime.timedelta(days=1),
                     next_time,
                 )
@@ -672,7 +670,7 @@ class Loop(Generic[LF]):
         time_now = (
             now
             if now is not MISSING
-            else datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
+            else datetime.datetime.now(datetime.UTC).replace(microsecond=0)
         )
         for idx, time in enumerate(self._time):
             if time >= time_now.astimezone(time.tzinfo).timetz():
@@ -686,7 +684,7 @@ class Loop(Generic[LF]):
         time: datetime.time | Sequence[datetime.time],
         *,
         dt: type[datetime.time] = datetime.time,
-        utc: datetime.timezone = datetime.timezone.utc,
+        utc: datetime.timezone = datetime.UTC,
     ) -> list[datetime.time]:
         if isinstance(time, dt):
             inner = time if time.tzinfo is not None else time.replace(tzinfo=utc)

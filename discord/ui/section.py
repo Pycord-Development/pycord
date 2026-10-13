@@ -40,7 +40,7 @@ from .thumbnail import Thumbnail
 __all__ = ("Section",)
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from ..types.components import SectionComponent as SectionComponentPayload
     from .view import DesignerView

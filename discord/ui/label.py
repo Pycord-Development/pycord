@@ -51,7 +51,7 @@ from .select import Select
 __all__ = ("Label",)
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from ..emoji import AppEmoji, GuildEmoji
     from ..interactions import Interaction
