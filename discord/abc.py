@@ -351,8 +351,7 @@ class GuildChannel:
         ): ...
 
     def __str__(self) -> str:
-        flags = getattr(self, "flags", None)
-        if flags is not None and getattr(flags, "obfuscated", False):
+        if self.obfuscated:
             return f"Obfuscated Channel ({self.id})"
 
         return self.name
@@ -696,6 +695,16 @@ class GuildChannel:
 
         category = self.guild.get_channel(self.category_id)
         return bool(category and category.overwrites == self.overwrites)
+
+    @property
+    def obfuscated(self) -> bool:
+        """Whether the channel is obfuscated.
+
+        This is an alias for :attr:`~ChannelFlags.channel_obfuscated`.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.channel_obfuscated
 
     def permissions_for(self, obj: Member | Role, /) -> Permissions:
         """Handles permission resolution for the :class:`~discord.Member`
