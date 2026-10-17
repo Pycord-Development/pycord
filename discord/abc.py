@@ -133,9 +133,6 @@ async def _purge_messages_helper(
     bulk: bool = True,
     reason: str | None = None,
 ) -> list[Message]:
-    if check is MISSING:
-        check = lambda m: True
-
     iterator = channel.history(
         limit=limit,
         before=before,
@@ -156,7 +153,7 @@ async def _purge_messages_helper(
             count = 0
             await asyncio.sleep(1)
 
-        if not check(message):
+        if check is not MISSING and not check(message):
             continue
 
         if message.id < minimum_time:
@@ -626,13 +623,13 @@ class GuildChannel:
         """
 
         if isinstance(obj, User):
-            predicate = lambda p: p.is_member()
+            overwrites = [o for o in self._overwrites if o.is_member()]
         elif isinstance(obj, Role):
-            predicate = lambda p: p.is_role()
+            overwrites = [o for o in self._overwrites if o.is_role()]
         else:
-            predicate = lambda p: True
+            overwrites = self._overwrites
 
-        for overwrite in filter(predicate, self._overwrites):
+        for overwrite in overwrites:
             if overwrite.id == obj.id:
                 allow = Permissions(overwrite.allow)
                 deny = Permissions(overwrite.deny)
@@ -756,7 +753,7 @@ class GuildChannel:
         if isinstance(obj, Role):
             base.value |= obj._permissions
 
-            if base.administrator:
+            if base.administrator:  # pylint: disable=using-constant-test
                 return Permissions.all()
 
             # Apply @everyone allow/deny first since it's special
@@ -789,7 +786,7 @@ class GuildChannel:
 
         # Guild-wide Administrator -> True for everything
         # Bypass all channel-specific overrides
-        if base.administrator:
+        if base.administrator:  # pylint: disable=using-constant-test
             return Permissions.all()
 
         # Apply @everyone allow/deny first since it's special

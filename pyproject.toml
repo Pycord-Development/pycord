@@ -141,20 +141,90 @@ extension-pkg-whitelist = [
     "ujson"
 ]
 py-version = "3.10"
+ignore-patterns = ["_version\\.py"]
+load-plugins = [
+    "pylint.extensions.comparison_placement",
+    "pylint.extensions.consider_refactoring_into_while_condition",
+    "pylint.extensions.dict_init_mutate",
+    "pylint.extensions.dunder",
+    "pylint.extensions.empty_comment",
+    "pylint.extensions.for_any_all",
+    "pylint.extensions.overlapping_exceptions",
+]
+
+[tool.pylint.dunder]
+good-dunder-names = ["__members__"]
 
 [tool.pylint.messages_control]
+# Allowlist so we only have messages not already covered by type checkers or by black/isort/pre-commit/codespell etc...
+disable = ["all"]
 enable = [
-    "bad-indentation",
-    "line-too-long"
+    # whole checkers:
+    "bad-chained-comparison", "dataclass", "lambda-expressions", "logging", "modified_iteration",
+    "nested_min_max", "newstyle", "nonascii-checker", "threading", "unicode_checker",
+    "unnecessary-dunder-call", "unnecessary_ellipsis",
+    # extensions
+    "comparison-placement", "consider_refactoring_into_while", "dict-init-mutate", "dunder",
+    "empty-comment", "consider-using-any-or-all", "overlap-except",
+    # pragma hygiene
+    "bad-inline-option", "deprecated-pragma", "unrecognized-inline-option", "use-symbolic-message-instead",
+    "useless-suppression",
+    # basic
+    "assert-on-string-literal", "bad-reversed-sequence", "break-in-finally", "comparison-of-constants",
+    "comparison-with-callable", "comparison-with-itself", "confusing-with-statement",
+    "contextmanager-generator-missing-cleanup", "continue-in-finally", "dangerous-default-value",
+    "duplicate-key", "duplicate-value", "empty-docstring", "eval-used", "exec-used", "init-is-generator",
+    "literal-comparison", "lost-exception", "misplaced-format-function", "missing-module-docstring",
+    "missing-parentheses-for-call-in-test", "nan-comparison", "nonexistent-operator",
+    "pointless-exception-statement", "pointless-string-statement", "redeclared-assigned-name",
+    "return-in-finally", "return-in-init", "self-assigning-variable", "singleton-comparison",
+    "unidiomatic-typecheck", "unnecessary-pass", "useless-else-on-loop", "using-constant-test",
+    # classes
+    "access-member-before-definition", "implicit-flag-alias", "invalid-slots", "invalid-slots-object",
+    "no-classmethod-decorator", "no-staticmethod-decorator", "property-with-parameters",
+    "redefined-slots-in-subclass", "single-string-used-for-slots", "super-without-brackets",
+    "unexpected-special-method-signature", "useless-object-inheritance", "useless-parent-delegation",
+    # exceptions
+    "bare-except", "binary-op-exception", "broad-exception-raised", "duplicate-except",
+    "misplaced-bare-raise", "notimplemented-raised", "raising-format-tuple", "try-except-raise",
+    "wrong-exception-operation",
+    # imports
+    "consider-using-from-import", "misplaced-future", "reimported", "shadowed-import",
+    # match
+    "bare-name-capture-pattern", "match-class-bind-self", "match-class-positional-attributes",
+    "multiple-class-sub-patterns", "too-many-positional-sub-patterns",
+    # method_args
+    "missing-timeout",
+    # refactoring
+    "chained-comparison", "condition-evals-to-constant", "consider-iterating-dictionary",
+    "consider-merging-isinstance", "consider-swap-variables", "consider-using-dict-comprehension",
+    "consider-using-dict-items", "consider-using-enumerate", "consider-using-generator", "consider-using-get",
+    "consider-using-in", "consider-using-join", "consider-using-max-builtin", "consider-using-min-builtin",
+    "consider-using-set-comprehension", "consider-using-sys-exit", "consider-using-ternary",
+    "no-else-break", "no-else-continue", "redefined-argument-from-local", "simplifiable-condition",
+    "simplifiable-if-expression", "simplifiable-if-statement", "simplify-boolean-expression",
+    "stop-iteration-return", "super-with-arguments", "trailing-comma-tuple", "unnecessary-comprehension",
+    "unnecessary-dict-index-lookup", "unnecessary-list-index-lookup", "unnecessary-negation",
+    "use-a-generator", "use-dict-literal", "use-implicit-booleaness-not-comparison",
+    "use-implicit-booleaness-not-comparison-to-string", "use-implicit-booleaness-not-len", "use-list-literal",
+    "use-maxsplit-arg", "use-sequence-for-iteration", "use-yield-from", "useless-return",
+    # stdlib (deprecated-* left to basedpyright's reportDeprecated)
+    "bad-open-mode", "bad-thread-instantiation", "boolean-datetime", "forgotten-debug-statement",
+    "invalid-envvar-default", "invalid-envvar-value", "method-cache-max-size-none", "redundant-unittest-assert",
+    "shallow-copy-environ", "singledispatch-method", "singledispatchmethod-function",
+    "subprocess-popen-preexec-fn", "subprocess-run-check", "unspecified-encoding",
+    # string (anomalous-backslash / implicit-str-concat left to basedpyright)
+    "anomalous-unicode-escape-in-string", "bad-format-character", "bad-format-string", "bad-format-string-key",
+    "bad-str-strip-call", "bad-string-format-type", "duplicate-string-formatting-argument",
+    "f-string-without-interpolation", "format-combined-specification", "format-needs-mapping",
+    "format-string-without-interpolation", "invalid-format-index", "missing-format-argument-key",
+    "missing-format-attribute", "missing-format-string-key", "mixed-format-string", "too-few-format-args",
+    "too-many-format-args", "truncated-format-string", "unused-format-string-argument",
+    "unused-format-string-key",
+    # variables
+    "global-at-module-level", "global-variable-not-assigned", "global-variable-undefined",
+    "possibly-unused-variable", "self-cls-assignment", "unbalanced-dict-unpacking", "undefined-loop-variable",
 ]
-disable = [
-    "protected-access",
-    "fixme"
-]
-
-[tool.pylint.format]
-indent-string = '    '
-max-line-length = 120
 
 [tool.pytest]
 asyncio_mode = "auto"

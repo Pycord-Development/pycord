@@ -1224,8 +1224,8 @@ class InteractionResponse:
             )
         finally:
             if files:
-                for file in files:
-                    file.close()
+                for f in files:
+                    f.close()
 
         self._responded = True
         await self._process_callback_response(callback_response)
@@ -1402,8 +1402,8 @@ class InteractionResponse:
             )
         finally:
             if files:
-                for file in files:
-                    file.close()
+                for f in files:
+                    f.close()
 
         self._responded = True
         await self._process_callback_response(callback_response)

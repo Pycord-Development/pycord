@@ -37,7 +37,6 @@ if TYPE_CHECKING:
     from .emoji import GuildEmoji
     from .guild import Guild
     from .object import Object
-    from .partial_emoji import PartialEmoji
     from .types.onboarding import Onboarding as OnboardingPayload
     from .types.onboarding import OnboardingPrompt as OnboardingPromptPayload
     from .types.onboarding import PromptOption as PromptOptionPayload

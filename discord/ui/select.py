@@ -624,9 +624,11 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         ------
         ValueError
             The number of options exceeds 25.
+        InvalidArgument
+            This is not a string select.
         """
         if self.underlying.type is not ComponentType.string_select:
-            raise Exception("options can only be set on string selects")
+            raise InvalidArgument("options can only be set on string selects")
 
         option = SelectOption(
             label=label,
@@ -650,9 +652,11 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         ------
         ValueError
             The number of options exceeds 25.
+        InvalidArgument
+            This is not a string select.
         """
         if self.underlying.type is not ComponentType.string_select:
-            raise Exception("options can only be set on string selects")
+            raise InvalidArgument("options can only be set on string selects")
 
         if len(self.underlying.options) > 25:
             raise ValueError("maximum number of options already provided")
