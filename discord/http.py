@@ -2521,8 +2521,8 @@ class HTTPClient:
         event_id: Snowflake,
         limit: int,
         with_member: bool = False,
-        before: Snowflake = None,
-        after: Snowflake = None,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
     ) -> Response[list[scheduled_events.ScheduledEventSubscriber]]:
         params = {
             "limit": int(limit),
@@ -2541,6 +2541,108 @@ class HTTPClient:
                 "/guilds/{guild_id}/scheduled-events/{event_id}/users",
                 guild_id=guild_id,
                 event_id=event_id,
+            ),
+            params=params,
+        )
+
+    def create_scheduled_event_exception(
+        self,
+        guild_id: Snowflake,
+        event_id: Snowflake,
+        reason: str | None = None,
+        **payload: Any,
+    ) -> Response[scheduled_events.ScheduledEventException]:
+        valid_keys = (
+            "original_scheduled_start_time",
+            "scheduled_start_time",
+            "scheduled_end_time",
+            "is_canceled",
+        )
+        payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        return self.request(
+            Route(
+                "POST",
+                "/guilds/{guild_id}/scheduled-events/{event_id}/exceptions",
+                guild_id=guild_id,
+                event_id=event_id,
+            ),
+            json=payload,
+            reason=reason,
+        )
+
+    def edit_scheduled_event_exception(
+        self,
+        guild_id: Snowflake,
+        event_id: Snowflake,
+        exception_id: Snowflake,
+        reason: str | None = None,
+        **payload: Any,
+    ) -> Response[scheduled_events.ScheduledEventException]:
+        valid_keys = (
+            "scheduled_start_time",
+            "scheduled_end_time",
+            "is_canceled",
+        )
+        payload = {k: v for k, v in payload.items() if k in valid_keys}
+
+        return self.request(
+            Route(
+                "PATCH",
+                "/guilds/{guild_id}/scheduled-events/{event_id}/exceptions/{exception_id}",
+                guild_id=guild_id,
+                event_id=event_id,
+                exception_id=exception_id,
+            ),
+            json=payload,
+            reason=reason,
+        )
+
+    def delete_scheduled_event_exception(
+        self,
+        guild_id: Snowflake,
+        event_id: Snowflake,
+        exception_id: Snowflake,
+        reason: str | None = None,
+    ) -> Response[None]:
+        return self.request(
+            Route(
+                "DELETE",
+                "/guilds/{guild_id}/scheduled-events/{event_id}/exceptions/{exception_id}",
+                guild_id=guild_id,
+                event_id=event_id,
+                exception_id=exception_id,
+            ),
+            reason=reason,
+        )
+
+    def get_scheduled_event_exception_users(
+        self,
+        guild_id: Snowflake,
+        event_id: Snowflake,
+        exception_id: Snowflake,
+        limit: int,
+        with_member: bool = False,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
+    ) -> Response[list[scheduled_events.ScheduledEventSubscriber]]:
+        params = {
+            "limit": int(limit),
+            "with_member": int(with_member),
+        }
+
+        if before is not None:
+            params["before"] = int(before)
+        if after is not None:
+            params["after"] = int(after)
+
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/scheduled-events/{event_id}/exceptions/{exception_id}/users",
+                guild_id=guild_id,
+                event_id=event_id,
+                exception_id=exception_id,
             ),
             params=params,
         )
