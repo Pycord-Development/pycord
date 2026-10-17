@@ -402,7 +402,7 @@ class DesignerModal(BaseModal):
         Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=useless-parent-delegation
         self,
         *children: ModalItem,
         title: str,
@@ -428,7 +428,7 @@ class DesignerModal(BaseModal):
                 )
             if isinstance(item, (InputText,)):
                 raise TypeError(
-                    f"DesignerModal does not accept InputText directly. Use Label instead."
+                    "DesignerModal does not accept InputText directly. Use Label instead."
                 )
         self._children = value
 
@@ -443,7 +443,7 @@ class DesignerModal(BaseModal):
 
         if isinstance(item, (InputText,)):
             raise TypeError(
-                f"DesignerModal does not accept InputText directly. Use Label instead."
+                "DesignerModal does not accept InputText directly. Use Label instead."
             )
 
         super().add_item(item)
@@ -460,7 +460,9 @@ class _ModalWeights:
     def __init__(self, children: list[InputText]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
-        key = lambda i: sys.maxsize if i.row is None else i.row
+        def key(i):
+            return sys.maxsize if i.row is None else i.row
+
         children = sorted(children, key=key)
         for row, group in groupby(children, key=key):
             for item in group:

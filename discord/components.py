@@ -233,7 +233,7 @@ class ActionRow(Component):
     @classmethod
     def with_components(cls, *components, id=None):
         return cls._raw_construct(
-            type=ComponentType.action_row, id=id, children=[c for c in components]
+            type=ComponentType.action_row, id=id, children=list(components)
         )
 
 
@@ -265,7 +265,6 @@ class InputText(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "style",
         "custom_id",
         "label",
@@ -274,7 +273,6 @@ class InputText(Component):
         "max_length",
         "required",
         "value",
-        "id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1392,12 +1390,10 @@ class FileUpload(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
         "min_values",
         "max_values",
         "required",
-        "id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1455,11 +1451,9 @@ class RadioGroup(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
         "options",
         "required",
-        "id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1605,13 +1599,11 @@ class CheckboxGroup(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
         "options",
         "min_values",
         "max_values",
         "required",
-        "id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1757,10 +1749,8 @@ class Checkbox(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
         "default",
-        "id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__

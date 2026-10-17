@@ -719,25 +719,25 @@ def handle_message_parameters(
 
     if files:
         voice_message = False
-        for index, file in enumerate(files):
+        for index, attachment in enumerate(files):
             multipart_files.append(
                 {
                     "name": f"files[{index}]",
-                    "value": file.fp,
-                    "filename": file.filename,
+                    "value": attachment.fp,
+                    "filename": attachment.filename,
                     "content_type": "application/octet-stream",
                 }
             )
             attachment_info = {
                 "id": index,
-                "filename": file.filename,
-                "description": file.description,
+                "filename": attachment.filename,
+                "description": attachment.description,
             }
-            if isinstance(file, VoiceMessage):
+            if isinstance(attachment, VoiceMessage):
                 voice_message = True
                 attachment_info.update(
-                    waveform=file.waveform,
-                    duration_secs=file.duration_secs,
+                    waveform=attachment.waveform,
+                    duration_secs=attachment.duration_secs,
                 )
             _attachments.append(attachment_info)
         if voice_message:

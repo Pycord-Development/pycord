@@ -107,7 +107,7 @@ class PacketRouter(threading.Thread):
 
     def destroy_all_decoders(self) -> None:
         with self._lock:
-            for ssrc in self.decoders.keys():
+            for ssrc in list(self.decoders):
                 self.destroy_decoder(ssrc)
 
     def stop(self) -> None:

@@ -314,7 +314,7 @@ class PollResults:
         :class:`int`
             The total number of votes on this poll.
         """
-        return sum([a.count for a in self.answer_counts])
+        return sum(a.count for a in self.answer_counts)
 
 
 class Poll:

@@ -619,7 +619,7 @@ class Cog(metaclass=CogMeta):
                 if _is_bridge_command(command):
                     bot.bridge_commands.remove(command)
                     continue
-                elif isinstance(command, ApplicationCommand):
+                if isinstance(command, ApplicationCommand):
                     bot.remove_application_command(command)
                 elif command.parent is None:
                     bot.remove_command(command.name)

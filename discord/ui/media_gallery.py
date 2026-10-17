@@ -74,7 +74,7 @@ class MediaGallery(ViewItem[V]):
         return MediaGalleryComponent._raw_construct(
             type=ComponentType.media_gallery,
             id=id or self.id,
-            items=[i for i in items] if items else [i for i in self.items or []],
+            items=list(items) if items else list(self.items or []),
         )
 
     @property
@@ -88,7 +88,7 @@ class MediaGallery(ViewItem[V]):
             raise ValueError("may not set more than 10 items in a gallery.")
 
         if not all(isinstance(i, MediaGalleryItem) for i in value):
-            raise TypeError(f"items must be a list of MediaGalleryItem.")
+            raise TypeError("items must be a list of MediaGalleryItem.")
 
         self.underlying.items = value
 

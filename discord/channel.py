@@ -769,7 +769,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         .. versionadded:: 2.3
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=useless-parent-delegation
         self, *, state: ConnectionState, guild: Guild, data: TextChannelPayload
     ):
         super().__init__(state=state, guild=guild, data=data)
@@ -1052,7 +1052,7 @@ class ForumChannel(_TextChannel):
         .. versionadded:: 2.5
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=useless-parent-delegation
         self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload
     ):
         super().__init__(state=state, guild=guild, data=data)
