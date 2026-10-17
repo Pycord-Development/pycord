@@ -811,7 +811,7 @@ class Member(discord.abc.Messageable, _UserTag):
         for r in self.roles:
             base.value |= r.permissions.value
 
-        if base.administrator:
+        if base.administrator:  # pylint: disable=using-constant-test
             return Permissions.all()
 
         return base

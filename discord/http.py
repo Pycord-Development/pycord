@@ -1281,7 +1281,7 @@ class HTTPClient:
         if flags:
             message["flags"] = flags
 
-        if message != {}:
+        if message:
             payload["message"] = message
 
         route = Route(

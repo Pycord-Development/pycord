@@ -203,7 +203,8 @@ class Activity(BaseActivity):
         The emoji that belongs to this activity.
     """
 
-    __slots__ = (
+    # _created_at is repeated because to_dict() iterates this class's __slots__ directly
+    __slots__ = (  # pylint: disable=redefined-slots-in-subclass
         "state",
         "details",
         "_created_at",

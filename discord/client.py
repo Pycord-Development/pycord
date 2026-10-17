@@ -86,8 +86,6 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .poll import Poll
-    from .soundboard import SoundboardSound
-    from .threads import Thread
     from .ui.item import ViewItem
     from .voice import VoiceProtocol
 
@@ -726,7 +724,7 @@ class Client:
                     session=self.ws.session_id,
                 )
                 continue
-            except (
+            except (  # pylint: disable=overlapping-except  # asyncio.TimeoutError is not an OSError before 3.11
                 OSError,
                 HTTPException,
                 GatewayNotFound,
@@ -855,7 +853,7 @@ class Client:
         try:
             loop.add_signal_handler(signal.SIGINT, loop.stop)
             loop.add_signal_handler(signal.SIGTERM, loop.stop)
-        except (NotImplementedError, RuntimeError):
+        except RuntimeError:
             pass
 
         async def runner():

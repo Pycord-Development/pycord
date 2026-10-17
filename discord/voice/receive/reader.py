@@ -154,11 +154,11 @@ class AudioReader:
                     "An error occurred while calling the after callback on audio reader"
                 )
 
-        """for sink in self.sink.root.walk_children(with_self=True):
-            try:
-                sink.cleanup()
-            except Exception as exc:
-                _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)"""
+        # for sink in self.sink.root.walk_children(with_self=True):
+        #     try:
+        #         sink.cleanup()
+        #     except Exception as exc:
+        #         _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)
 
     def set_sink(self, sink: Sink) -> Sink:
         old_sink = self.sink
@@ -275,21 +275,21 @@ class PacketDecryptor:
         else:
             return nacl.secret.SecretBox(secret_key)
 
-    """def decrypt_rtp(self, packet: RTPPacket) -> bytes:
-        state = self.client._connection
-        dave = state.dave_session
-        data = self._decryptor_rtp(packet)
+    # def decrypt_rtp(self, packet: RTPPacket) -> bytes:
+    #     state = self.client._connection
+    #     dave = state.dave_session
+    #     data = self._decryptor_rtp(packet)
 
-        if dave is not None and dave.ready and packet.ssrc in state.ssrc_user_map:
-            data = dave.decrypt(
-                state.ssrc_user_map[packet.ssrc], davey.MediaType.audio, data
-            )
+    #     if dave is not None and dave.ready and packet.ssrc in state.ssrc_user_map:
+    #         data = dave.decrypt(
+    #             state.ssrc_user_map[packet.ssrc], davey.MediaType.audio, data
+    #         )
 
-        if packet.extended:
-            offset = packet.update_extended_header(data)
-            data = data[offset:]
+    #     if packet.extended:
+    #         offset = packet.update_extended_header(data)
+    #         data = data[offset:]
 
-        return data"""
+    #     return data
 
     def decrypt_rtp(self, packet: RTPPacket) -> bytes:
         state = self.client._connection
