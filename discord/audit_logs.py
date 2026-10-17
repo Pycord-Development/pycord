@@ -310,10 +310,10 @@ class AuditLogChanges:
             if attr == "$add":
                 self._handle_role(self.before, self.after, entry, elem["new_value"])  # type: ignore
                 continue
-            elif attr == "$remove":
+            if attr == "$remove":
                 self._handle_role(self.after, self.before, entry, elem["new_value"])  # type: ignore
                 continue
-            elif attr in [
+            if attr in [
                 "$add_keyword_filter",
                 "$add_regex_patterns",
                 "$add_allow_list",
@@ -322,7 +322,7 @@ class AuditLogChanges:
                     self.before, self.after, entry, elem["new_value"], attr  # type: ignore
                 )
                 continue
-            elif attr in [
+            if attr in [
                 "$remove_keyword_filter",
                 "$remove_regex_patterns",
                 "$remove_allow_list",

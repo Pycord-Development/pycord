@@ -21,6 +21,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Simplify and optimize the `utils.get()` function.
   ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+- `ui.Select.add_option()` and `ui.Select.append_option()` now raise `InvalidArgument` instead of
+  `Exception` when called on a non-string select.
+  ([#3411](https://github.com/Pycord-Development/pycord/pull/3411))
+- `SlashCommandGroup.create_subgroup()` now raises `ClientException` instead of `Exception` when
+  called on a subgroup. ([#3411](https://github.com/Pycord-Development/pycord/pull/3411))
 
 ### Fixed
 

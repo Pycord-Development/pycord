@@ -196,8 +196,9 @@ class VoiceWebSocket(DiscordWebSocket):
             self._keep_alive.ack()
         elif op == OpCodes.resumed:
             _log.info(
-                f"Voice connection on channel ID {self.state.channel_id} (guild {self.state.guild_id}) was "
-                "successfully RESUMED.",
+                "Voice connection on channel ID %s (guild %s) was successfully RESUMED.",
+                self.state.channel_id,
+                self.state.guild_id,
             )
         elif op == OpCodes.session_description:
             state.mode = data["mode"]
@@ -346,7 +347,9 @@ class VoiceWebSocket(DiscordWebSocket):
         state.endpoint_ip = data["ip"]
 
         _log.debug(
-            f"Connecting to {state.endpoint_ip} (port {state.voice_port}).",
+            "Connecting to %s (port %s).",
+            state.endpoint_ip,
+            state.voice_port,
         )
 
         await self.loop.sock_connect(
@@ -391,7 +394,9 @@ class VoiceWebSocket(DiscordWebSocket):
         struct.pack_into(">I", packet, 4, state.ssrc)
 
         _log.debug(
-            f"Sending IP discovery packet for voice in channel {state.channel_id} (guild {state.guild_id})"
+            "Sending IP discovery packet for voice in channel %s (guild %s)",
+            state.channel_id,
+            state.guild_id,
         )
         await self.loop.sock_sendall(state.socket, packet)
 
@@ -429,7 +434,9 @@ class VoiceWebSocket(DiscordWebSocket):
 
     async def load_secret_key(self, data: dict[str, Any]) -> None:
         _log.debug(
-            f"Received secret key for voice connection in channel {self.state.channel_id} (guild {self.state.guild_id})"
+            "Received secret key for voice connection in channel %s (guild %s)",
+            self.state.channel_id,
+            self.state.guild_id,
         )
         self.secret_key = self.state.secret_key = data["secret_key"]
         await self.speak(SpeakingState.none)

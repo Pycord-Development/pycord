@@ -435,7 +435,9 @@ class ClientUser(BaseUser):
         mfa_enabled: bool
         _flags: int
 
-    def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
+    def __init__(  # pylint: disable=useless-parent-delegation
+        self, *, state: ConnectionState, data: UserPayload
+    ) -> None:
         super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:

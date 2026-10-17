@@ -103,7 +103,7 @@ __all__ = (
 
 
 class _RawReprMixin:
-    __slots__: tuple[str, ...]
+    __slots__: tuple[str, ...] = ()
 
     def __repr__(self) -> str:
         value = " ".join(
@@ -200,7 +200,14 @@ class RawMessageUpdateEvent(_RawReprMixin):
         .. versionadded:: 2.7
     """
 
-    __slots__ = ("message_id", "channel_id", "guild_id", "data", "cached_message")
+    __slots__ = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "data",
+        "cached_message",
+        "new_message",
+    )
 
     def __init__(self, data: MessageUpdateEvent, new_message: Message) -> None:
         self.message_id: int = int(data["id"])
