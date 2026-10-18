@@ -154,12 +154,6 @@ class AudioReader:
                     "An error occurred while calling the after callback on audio reader"
                 )
 
-        # for sink in self.sink.root.walk_children(with_self=True):
-        #     try:
-        #         sink.cleanup()
-        #     except Exception as exc:
-        #         _log.exception("Error calling cleanup() for %s", sink, exc_info=exc)
-
     def set_sink(self, sink: Sink) -> Sink:
         old_sink = self.sink
         # old_sink._client = None
