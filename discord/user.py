@@ -435,6 +435,7 @@ class ClientUser(BaseUser):
         mfa_enabled: bool
         _flags: int
 
+    # Narrows the type of "data" from the parent.
     def __init__(  # pylint: disable=useless-parent-delegation
         self, *, state: ConnectionState, data: UserPayload
     ) -> None:

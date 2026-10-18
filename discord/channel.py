@@ -769,6 +769,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         .. versionadded:: 2.3
     """
 
+    # Narrows the type of "data" from the parent.
     def __init__(  # pylint: disable=useless-parent-delegation
         self, *, state: ConnectionState, guild: Guild, data: TextChannelPayload
     ):
@@ -1052,6 +1053,7 @@ class ForumChannel(_TextChannel):
         .. versionadded:: 2.5
     """
 
+    # Narrows the type of "data" from the parent.
     def __init__(  # pylint: disable=useless-parent-delegation
         self, *, state: ConnectionState, guild: Guild, data: ForumChannelPayload
     ):

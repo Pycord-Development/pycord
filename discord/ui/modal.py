@@ -402,18 +402,6 @@ class DesignerModal(BaseModal):
         Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 
-    def __init__(  # pylint: disable=useless-parent-delegation
-        self,
-        *children: ModalItem,
-        title: str,
-        custom_id: str | None = None,
-        timeout: float | None = None,
-        store: bool = True,
-    ) -> None:
-        super().__init__(
-            *children, title=title, custom_id=custom_id, timeout=timeout, store=store
-        )
-
     @property
     def children(self) -> list[ModalItem]:
         return self._children
