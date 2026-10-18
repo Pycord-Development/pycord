@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final, TypeVar, cast
+from typing import TYPE_CHECKING, Final, TypeVar
 
 from typing_extensions import Sentinel, override
 
@@ -132,7 +132,7 @@ class AllowedMentions:
 
     def to_dict(self) -> AllowedMentionsPayload:
         parse = []
-        data: AllowedMentionsPayload = {} # type: ignore
+        data: AllowedMentionsPayload = {}  # type: ignore
 
         if self.everyone:
             parse.append("everyone")
