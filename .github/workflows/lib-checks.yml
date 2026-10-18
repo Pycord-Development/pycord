@@ -119,6 +119,20 @@ jobs:
           groups: "dev"
       - name: "Run mdformat"
         run: git ls-files -z '*.md' | xargs -0 -r mdformat --check
+  black:
+    needs: [ changes ]
+    if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
+        with:
+          python-version: "3.14"
+          groups: "dev"
+      - name: "Run black"
+        run: black --check .
   pylint:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
