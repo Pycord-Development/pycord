@@ -838,17 +838,6 @@ class DesignerView(BaseView):
                         "The @button and @select decorators are incompatible with DesignerView. Use ActionRow instead."
                     )
 
-    def __init__(  # pylint: disable=useless-parent-delegation
-        self,
-        *items: ViewItem[V],
-        timeout: float | None = 180.0,
-        disable_on_timeout: bool = False,
-        store: bool = True,
-    ):
-        super().__init__(
-            *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
-        )
-
     @property
     def items(self) -> list[ViewItem[V]]:
         return self.children
