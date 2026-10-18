@@ -67,9 +67,11 @@ dev = [
     "tox>=4.27.0",
     "tox-gh>=1.5.0",
     "tox-uv>=1.36.0",
-    "mdformat~=1.0",
+    # Formatters are strongly pinned to avoid formatting breaking in production
+    "mdformat==1.0",
     "mdformat-gfm~=1.0",
     "mdformat-gfm-alerts~=2.1",
+    "black==26.10.0",
     { include-group = "test" },
 ]
 test = [
