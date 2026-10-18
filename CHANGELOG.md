@@ -24,6 +24,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Simplify and optimize the `utils.get()` function.
   ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+- Changed `Label.set_radio_group()` and `Label.set_file_upload()` to no longer accept a
+  nullable `required` value.
+  ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
 - Changed `rtc_region` parameters of channel creation and edit methods to accept a
   region ID `str`. ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
@@ -32,6 +35,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
+- Fix `TypeError` in `Label.set_radio_group()` and `Label.set_checkbox_group()` when
+  providing the `option` keyword argument.
+  ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
 - Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
