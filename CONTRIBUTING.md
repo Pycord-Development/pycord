@@ -45,6 +45,26 @@ If the bug report is missing this information then it'll take us longer to fix t
 probably ask for clarification, and barring that if no response was given then the issue will be
 closed.
 
+## Setting Up a Development Environment
+
+Pycord uses [uv](https://docs.astral.sh/uv/) to manage its development environment. Once
+[uv is installed](https://docs.astral.sh/uv/getting-started/installation/), you can setup your dev
+environment with:
+
+```sh
+uv sync --extra voice
+```
+
+Here are some additional useful commands:
+
+- Run the tests: `uv run pytest`, or `uv run tox` to test against every supported Python version.
+- Run the linter: `uv run pylint discord/`
+- Run the formatters:
+  - `uv run black` to format python source files
+  - `uv run mdformat` to format markdown files
+- Build the documentation (requires Python 3.13 or newer): `uv sync --extra voice --group docs`,
+  then `uv run sphinx-build -b html docs docs/_build/html`.
+
 ## Submitting a Pull Request
 
 Submitting a pull request is fairly simple, just make sure it focuses on a single aspect and doesn't
