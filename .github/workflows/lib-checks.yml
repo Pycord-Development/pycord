@@ -33,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       lib: ${{ steps.filter.outputs.lib }}
+      deps: ${{ steps.filter.outputs.deps }}
     steps:
       - name: "Check changed paths"
         id: filter
@@ -41,6 +42,7 @@ jobs:
           script: |
             if (context.eventName !== 'pull_request') {
               core.setOutput('lib', 'true');
+              core.setOutput('deps', 'false');
               return;
             }
 
@@ -66,6 +68,7 @@ jobs:
 
             const changed = files.some((file) => matches(file.filename));
             core.setOutput('lib', changed ? 'true' : 'false');
+            core.setOutput('deps', files.some((file) => file.filename === 'uv.lock') ? 'true' : 'false');
 
             if (!changed) {
               core.notice('Library checks skipped because no changed files matched the library check paths.');
@@ -198,7 +201,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
   tests:
     needs: [ changes ]
-    if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' && github.event_name != 'workflow_dispatch' }}
+    if: ${{ needs.changes.outputs.lib == 'true' && needs.changes.outputs.deps != 'true' && github.event_name != 'schedule' && github.event_name != 'workflow_dispatch' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -217,7 +220,7 @@ jobs:
         run: tox
   tests-full:
     needs: [ changes ]
-    if: ${{ needs.changes.outputs.lib == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ needs.changes.outputs.lib == 'true' && (needs.changes.outputs.deps == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
