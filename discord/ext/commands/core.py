@@ -2010,7 +2010,7 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
             raise NoPrivateMessage()
 
         # ctx.guild is None doesn't narrow ctx.author to Member
-        getter = functools.partial(discord.utils.get, ctx.author.roles)  # type: ignore
+        getter = functools.partial(discord.utils.get, ctx.author._roles)  # type: ignore
         if any(
             (
                 getter(id=item) is not None
@@ -2045,9 +2045,9 @@ def bot_has_role(item: int) -> Callable[[T], T]:
 
         me = ctx.me
         if isinstance(item, int):
-            role = discord.utils.get(me.roles, id=item)
+            role = discord.utils.get(me._roles, id=item)
         else:
-            role = discord.utils.get(me.roles, name=item)
+            role = discord.utils.get(me._roles, name=item)
         if role is None:
             raise BotMissingRole(item)
         return True
@@ -2074,7 +2074,7 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
             raise NoPrivateMessage()
 
         me = ctx.me
-        getter = functools.partial(discord.utils.get, me.roles)
+        getter = functools.partial(discord.utils.get, me._roles)
         if any(
             (
                 getter(id=item) is not None

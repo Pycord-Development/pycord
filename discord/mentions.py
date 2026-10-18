@@ -25,7 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Final, TypeVar, cast
+
+from typing_extensions import Sentinel, override
 
 __all__ = ("AllowedMentions",)
 
@@ -34,18 +36,7 @@ if TYPE_CHECKING:
     from .types.message import AllowedMentions as AllowedMentionsPayload
 
 
-class _FakeBool:
-    def __repr__(self):
-        return "True"
-
-    def __eq__(self, other):
-        return other is True
-
-    def __bool__(self):
-        return True
-
-
-default: Any = _FakeBool()
+DEFAULT_MENTIONS: Final = Sentinel("DEFAULT_MENTIONS")
 
 A = TypeVar("A", bound="AllowedMentions")
 
@@ -56,44 +47,72 @@ class AllowedMentions:
     This class can be set during :class:`Client` initialisation to apply
     to every message sent. It can also be applied on a per-message basis
     via :meth:`abc.Messageable.send` for more fine-grained control.
-
-    Attributes
-    ----------
-    everyone: :class:`bool`
-        Whether to allow everyone and here mentions. Defaults to ``True``.
-    users: Union[:class:`bool`, List[:class:`abc.Snowflake`]]
-        Controls the users being mentioned. If ``True`` (the default) then
-        users are mentioned based on the message content. If ``False`` then
-        users are not mentioned at all. If a list of :class:`abc.Snowflake`
-        is given then only the users provided will be mentioned, provided those
-        users are in the message content.
-    roles: Union[:class:`bool`, List[:class:`abc.Snowflake`]]
-        Controls the roles being mentioned. If ``True`` (the default) then
-        roles are mentioned based on the message content. If ``False`` then
-        roles are not mentioned at all. If a list of :class:`abc.Snowflake`
-        is given then only the roles provided will be mentioned, provided those
-        roles are in the message content.
-    replied_user: :class:`bool`
-        Whether to mention the author of the message being replied to. Defaults
-        to ``True``.
-
-        .. versionadded:: 1.6
     """
 
-    __slots__ = ("everyone", "users", "roles", "replied_user")
+    __slots__: tuple[str, ...] = ("_everyone", "_users", "_roles", "_replied_user")
 
     def __init__(
         self,
         *,
-        everyone: bool = default,
-        users: bool | list[Snowflake] = default,
-        roles: bool | list[Snowflake] = default,
-        replied_user: bool = default,
+        everyone: bool | DEFAULT_MENTIONS = DEFAULT_MENTIONS,
+        users: bool | list[Snowflake] | DEFAULT_MENTIONS = DEFAULT_MENTIONS,
+        roles: bool | list[Snowflake] | DEFAULT_MENTIONS = DEFAULT_MENTIONS,
+        replied_user: bool | DEFAULT_MENTIONS = DEFAULT_MENTIONS,
     ):
-        self.everyone = everyone
-        self.users = users
-        self.roles = roles
-        self.replied_user = replied_user
+        self._everyone: bool | DEFAULT_MENTIONS = everyone
+        self._users: bool | list[Snowflake] | DEFAULT_MENTIONS = users
+        self._roles: bool | list[Snowflake] | DEFAULT_MENTIONS = roles
+        self._replied_user: bool | DEFAULT_MENTIONS = replied_user
+
+    @property
+    def everyone(self) -> bool:
+        """Whether to allow everyone and here mentions. Defaults to ``True``."""
+        return self._everyone is DEFAULT_MENTIONS or self._everyone
+
+    @everyone.setter
+    def everyone(self, value: bool) -> None:
+        self._everyone = value
+
+    @property
+    def users(self) -> bool | list[Snowflake]:
+        """Controls the users being mentioned. If ``True`` (the default) then
+        users are mentioned based on the message content. If ``False`` then
+        users are not mentioned at all. If a list of :class:`abc.Snowflake`
+        is given then only the users provided will be mentioned, provided those
+        users are in the message content.
+        """
+        return self._users is DEFAULT_MENTIONS or self._users
+
+    @users.setter
+    def users(self, value: bool | list[Snowflake]) -> None:
+        self._users = value
+
+    @property
+    def roles(self) -> bool | list[Snowflake]:
+        """Controls the roles being mentioned. If ``True`` (the default) then
+        roles are mentioned based on the message content. If ``False`` then
+        roles are not mentioned at all. If a list of :class:`abc.Snowflake`
+        is given then only the roles provided will be mentioned, provided those
+        roles are in the message content.
+        """
+        return self._roles is DEFAULT_MENTIONS or self._roles
+
+    @roles.setter
+    def roles(self, value: bool | list[Snowflake]) -> None:
+        self._roles = value
+
+    @property
+    def replied_user(self) -> bool:
+        """Whether to mention the author of the message being replied to. Defaults
+        to ``True``.
+
+        .. versionadded:: 1.6
+        """
+        return self._replied_user is DEFAULT_MENTIONS or self._replied_user
+
+    @replied_user.setter
+    def replied_user(self, value: bool) -> None:
+        self._replied_user = value
 
     @classmethod
     def all(cls: type[A]) -> A:
@@ -113,44 +132,46 @@ class AllowedMentions:
 
     def to_dict(self) -> AllowedMentionsPayload:
         parse = []
-        data = {}
+        data: AllowedMentionsPayload = {} # type: ignore
 
         if self.everyone:
             parse.append("everyone")
 
-        # In the following operations, the comparison operator
-        # must be used instead of the "is" operator as the program
-        # has to invoke _Fakebool.__eq__ to prevent false results.
-        if self.users == True:
+        if self._users is DEFAULT_MENTIONS or self._users is True:
             parse.append("users")
-        elif self.users != False:
-            data["users"] = [x.id for x in self.users]
+        elif self._users is not False:
+            data["users"] = [x.id for x in self._users]
 
-        if self.roles == True:
+        if self._roles is DEFAULT_MENTIONS or self._roles is True:
             parse.append("roles")
-        elif self.roles != False:
-            data["roles"] = [x.id for x in self.roles]
+        elif self._roles is not False:
+            data["roles"] = [x.id for x in self._roles]
 
-        if self.replied_user:
+        if self._replied_user is DEFAULT_MENTIONS or self._replied_user:
             data["replied_user"] = True
 
         data["parse"] = parse
-        return data  # type: ignore
+        return data
 
     def merge(self, other: AllowedMentions) -> AllowedMentions:
         # Creates a new AllowedMentions by merging from another one.
         # Merge is done by using the 'self' values unless explicitly
         # overridden by the 'other' values.
-        everyone = self.everyone if other.everyone is default else other.everyone
-        users = self.users if other.users is default else other.users
-        roles = self.roles if other.roles is default else other.roles
+        everyone = (
+            self._everyone if other._everyone is DEFAULT_MENTIONS else other._everyone
+        )
+        users = self._users if other._users is DEFAULT_MENTIONS else other._users
+        roles = self._roles if other._roles is DEFAULT_MENTIONS else other._roles
         replied_user = (
-            self.replied_user if other.replied_user is default else other.replied_user
+            self._replied_user
+            if other._replied_user is DEFAULT_MENTIONS
+            else other._replied_user
         )
         return AllowedMentions(
             everyone=everyone, roles=roles, users=users, replied_user=replied_user
         )
 
+    @override
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}(everyone={self.everyone}, "
