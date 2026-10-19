@@ -43,9 +43,6 @@ from discord import (
 from ...utils import MISSING, find, get, warn_deprecated
 from ..commands import (
     BadArgument,
-)
-from ..commands import Bot as ExtBot
-from ..commands import (
     Command,
     Context,
     Converter,
@@ -55,6 +52,7 @@ from ..commands import (
     RoleConverter,
     UserConverter,
 )
+from ..commands import Bot as ExtBot
 from ..commands.converter import _convert_to_bool, run_converters
 
 if TYPE_CHECKING:
