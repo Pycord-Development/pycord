@@ -9,5 +9,8 @@
   "assigneesFromCodeOwners": true,
   "github-actions": {
     "pinDigests": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true
   }
 }
