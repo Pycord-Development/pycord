@@ -7,10 +7,10 @@
     ":enablePreCommit"
   ],
   "assigneesFromCodeOwners": true,
-  "pip_requirements": {
-    "managerFilePatterns": ["requirements/*.txt"]
-  },
   "github-actions": {
     "pinDigests": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true
   }
 }
