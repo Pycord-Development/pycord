@@ -78,6 +78,19 @@ jobs:
                 .write();
             }
 
+  uv-lock:
+    needs: [ changes ]
+    if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "Check uv.lock is up to date"
+        run: uv lock --check
   codespell:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
