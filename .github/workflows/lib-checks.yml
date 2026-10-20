@@ -157,7 +157,9 @@ jobs:
           restore-keys: |
             pylint-${{ runner.os }}-py3.14-
       - name: "Run pylint"
-        run: pylint discord/ --exit-zero
+        run: |
+          pylint discord/ \
+            --output-format=github,json:pylint.json
   mypy:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}

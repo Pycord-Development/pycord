@@ -475,7 +475,7 @@ class DiscordWebSocket:
         _log.info("Shard ID %s has sent the RESUME payload.", self.shard_id)
 
     async def received_message(self, msg: Any, /):
-        if type(msg) is bytes:
+        if isinstance(msg, bytes):
             self._buffer.extend(msg)
 
             if len(msg) < 4 or msg[-4:] != b"\x00\x00\xff\xff":

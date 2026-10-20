@@ -121,14 +121,14 @@ class AllowedMentions:
         # In the following operations, the comparison operator
         # must be used instead of the "is" operator as the program
         # has to invoke _Fakebool.__eq__ to prevent false results.
-        if self.users == True:
+        if self.users == True:  # pylint: disable=singleton-comparison
             parse.append("users")
-        elif self.users != False:
+        elif self.users != False:  # pylint: disable=singleton-comparison
             data["users"] = [x.id for x in self.users]
 
-        if self.roles == True:
+        if self.roles == True:  # pylint: disable=singleton-comparison
             parse.append("roles")
-        elif self.roles != False:
+        elif self.roles != False:  # pylint: disable=singleton-comparison
             data["roles"] = [x.id for x in self.roles]
 
         if self.replied_user:

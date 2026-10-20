@@ -181,7 +181,9 @@ class _ViewWeights:
     def __init__(self, children: list[ViewItem[V]]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
-        key = lambda i: sys.maxsize if i.row is None else i.row
+        def key(i):
+            return sys.maxsize if i.row is None else i.row
+
         children = sorted(children, key=key)
         for row, group in groupby(children, key=key):
             for item in group:
@@ -393,7 +395,7 @@ class BaseView(ItemInterface):
 
         A view containing V2 components cannot be sent alongside message content or embeds.
         """
-        return any([item.underlying.is_v2() for item in self.children])
+        return any(item.underlying.is_v2() for item in self.children)
 
     async def _scheduled_task(self, item: ViewItem[V], interaction: Interaction):
         try:
@@ -836,17 +838,6 @@ class DesignerView(BaseView):
                         "The @button and @select decorators are incompatible with DesignerView. Use ActionRow instead."
                     )
 
-    def __init__(
-        self,
-        *items: ViewItem[V],
-        timeout: float | None = 180.0,
-        disable_on_timeout: bool = False,
-        store: bool = True,
-    ):
-        super().__init__(
-            *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
-        )
-
     @property
     def items(self) -> list[ViewItem[V]]:
         return self.children
@@ -931,7 +922,7 @@ class DesignerView(BaseView):
 
         if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
-                f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
+                "cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)
@@ -947,7 +938,7 @@ class DesignerView(BaseView):
         for c in components:
             try:
                 item = self.children[i]
-            except:
+            except IndexError:
                 break
             else:
                 item.refresh_component(c)
@@ -1045,5 +1036,7 @@ class ViewStore:
             view._refresh(components)
         except Exception:
             _log.exception(
-                f"Failed to refresh View {view} from Message {message_id} due to mismatched state. Items may not have complete data."
+                "Failed to refresh View %s from Message %s due to mismatched state. Items may not have complete data.",
+                view,
+                message_id,
             )
