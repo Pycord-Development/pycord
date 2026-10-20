@@ -64,15 +64,18 @@ dev = [
     "codespell==2.4.3",
     "bandit==1.9.4",
     "flake8==7.3.0",
-    "tox>=4.27.0",
-    "tox-gh>=1.5.0",
-    "tox-uv>=1.36.0",
     # Formatters are strongly pinned to avoid formatting breaking in production
     "mdformat==1.0",
     "mdformat-gfm~=1.0",
     "mdformat-gfm-alerts~=2.1",
     "black==26.10.0",
     { include-group = "test" },
+    { include-group = "tox" },
+]
+tox = [
+    "tox>=4.27.0",
+    "tox-gh>=1.5.0",
+    "tox-uv>=1.36.0",
 ]
 test = [
     "pytest~=9.1.1",
