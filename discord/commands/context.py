@@ -188,8 +188,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     def me(self) -> Member | ClientUser | None:
-        """
-        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
+        """Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
         """
         return (
