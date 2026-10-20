@@ -53,5 +53,22 @@ def test_merge_only_overrides_explicitly_set_fields():
         "users": [1],
         "replied_user": True,
     }
+
+
+def test_merge_with_empty():
+    base = discord.AllowedMentions(everyone=False, users=[ns(id=1)])
+
     # Merging with an all-default instance must not reset anything to True.
-    assert merged.merge(discord.AllowedMentions()).to_dict() == merged.to_dict()
+    assert base.merge(discord.AllowedMentions()).to_dict() == base.to_dict()
+
+
+def test_setters() -> None:
+    mentions = discord.AllowedMentions()
+    mentions.everyone = False
+    mentions.users = [ns(id=1)]
+
+    assert mentions.to_dict() == {
+        "parse": ["roles"],
+        "users": [1],
+        "replied_user": True,
+    }
