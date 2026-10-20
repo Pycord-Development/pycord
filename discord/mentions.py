@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final, TypeVar
+from typing import TYPE_CHECKING, Final, TypeVar, Literal
 
 from typing_extensions import Sentinel, override
 
@@ -137,7 +137,7 @@ class AllowedMentions:
         return cls(everyone=False, users=False, roles=False, replied_user=False)
 
     def to_dict(self) -> AllowedMentionsPayload:
-        parse = []
+        parse: list[Literal["everyone", "users", "roles"]] = []
         data: AllowedMentionsPayload = {}  # type: ignore
 
         if self.everyone:
