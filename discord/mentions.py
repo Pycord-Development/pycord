@@ -145,13 +145,13 @@ class AllowedMentions:
 
         if self.users is True:
             parse.append("users")
-        elif isinstance(self._users, list):
-            data["users"] = [x.id for x in self._users]
+        elif self.users is not False:
+            data["users"] = [x.id for x in self.users]
 
         if self.roles is True:
             parse.append("roles")
-        elif isinstance(self._roles, list):
-            data["roles"] = [x.id for x in self._roles]
+        elif self.roles is not False:
+            data["roles"] = [x.id for x in self.roles]
 
         if self.replied_user:
             data["replied_user"] = True
