@@ -7,3 +7,6 @@ ignore =
 
 max-line-length=120
 max-complexity=39
+
+extend-exclude =
+    .venv
