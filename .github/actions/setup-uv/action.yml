@@ -17,7 +17,7 @@ inputs:
   cache:
     description: "Cache the uv download and its dependency cache."
     required: false
-    default: "true"
+    default: "auto"
   python-version:
     description: "Python version to sync against. Defaults to the project's .python-version."
     required: false
