@@ -137,17 +137,17 @@ class AllowedMentions:
         if self.everyone:
             parse.append("everyone")
 
-        if self._users is DEFAULT_MENTIONS or self._users is True:
+        if self.users is True:
             parse.append("users")
-        elif self._users is not False:
+        elif isinstance(self._users, list):
             data["users"] = [x.id for x in self._users]
 
-        if self._roles is DEFAULT_MENTIONS or self._roles is True:
+        if self.roles is True:
             parse.append("roles")
-        elif self._roles is not False:
+        elif isinstance(self._roles, list):
             data["roles"] = [x.id for x in self._roles]
 
-        if self._replied_user is DEFAULT_MENTIONS or self._replied_user:
+        if self.replied_user:
             data["replied_user"] = True
 
         data["parse"] = parse
