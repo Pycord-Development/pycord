@@ -40,6 +40,12 @@ DEFAULT_MENTIONS: Final = Sentinel("DEFAULT_MENTIONS")
 
 A = TypeVar("A", bound="AllowedMentions")
 
+_T = TypeVar("_T")
+
+
+def _override_unless_unset(base: _T, override: _T) -> _T:
+    return base if override is DEFAULT_MENTIONS else override
+
 
 class AllowedMentions:
     """A class that represents what mentions are allowed in a message.
@@ -157,18 +163,13 @@ class AllowedMentions:
         # Creates a new AllowedMentions by merging from another one.
         # Merge is done by using the 'self' values unless explicitly
         # overridden by the 'other' values.
-        everyone = (
-            self._everyone if other._everyone is DEFAULT_MENTIONS else other._everyone
-        )
-        users = self._users if other._users is DEFAULT_MENTIONS else other._users
-        roles = self._roles if other._roles is DEFAULT_MENTIONS else other._roles
-        replied_user = (
-            self._replied_user
-            if other._replied_user is DEFAULT_MENTIONS
-            else other._replied_user
-        )
         return AllowedMentions(
-            everyone=everyone, roles=roles, users=users, replied_user=replied_user
+            everyone=_override_unless_unset(self._everyone, other._everyone),
+            users=_override_unless_unset(self._users, other._users),
+            roles=_override_unless_unset(self._roles, other._roles),
+            replied_user=_override_unless_unset(
+                self._replied_user, other._replied_user
+            ),
         )
 
     @override
