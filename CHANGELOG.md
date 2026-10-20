@@ -23,6 +23,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
 - Changed `Label.set_radio_group()` and `Label.set_file_upload()` to no longer accept a nullable
   `required` value. ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
+- The build backend used is now `hatchling` instead of `setuptools`.
+  ([#3364](https://github.com/Pycord-Development/pycord/pull/3364))
 
 ### Fixed
 
@@ -43,6 +45,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
 
 ### Removed
+
+- Removed support for `pip install py-cord[docs]` and the `docs` extra.
+  ([#3364](https://github.com/Pycord-Development/pycord/pull/3364))
 
 ## [2.8.1] - 2026-07-25
 
