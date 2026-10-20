@@ -2299,6 +2299,11 @@ test = [
     { name = "pytest" },
     { name = "pytest-asyncio" },
 ]
+tox = [
+    { name = "tox" },
+    { name = "tox-gh" },
+    { name = "tox-uv" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -2349,6 +2354,11 @@ release = [
 test = [
     { name = "pytest", specifier = "~=9.1.1" },
     { name = "pytest-asyncio", specifier = "~=1.4.0" },
+]
+tox = [
+    { name = "tox", specifier = ">=4.27.0" },
+    { name = "tox-gh", specifier = ">=1.5.0" },
+    { name = "tox-uv", specifier = ">=1.36.0" },
 ]
 
 [[package]]
