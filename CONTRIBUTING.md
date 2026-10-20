@@ -60,8 +60,8 @@ Here are some additional useful commands:
 - Run the tests: `uv run pytest`, or `uv run tox` to test against every supported Python version.
 - Run the linter: `uv run pylint discord/`
 - Run the formatters:
-  - `uv run black .` to format python source files
-  - `uv run mdformat .` to format markdown files
+  - `uv run black <files>` to format python source files
+  - `uv run mdformat <files>` to format markdown files
 - Build the documentation (requires Python 3.13 or newer): `uv sync --extra voice --group docs`,
   then `uv run sphinx-build -b html docs docs/_build/html`.
 
