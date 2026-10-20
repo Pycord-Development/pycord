@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final, TypeVar, Literal
+from typing import TYPE_CHECKING, Final, Literal, TypeVar
 
 from typing_extensions import Sentinel, override
 
