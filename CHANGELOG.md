@@ -43,6 +43,13 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
   user leaves the event.
   ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
+- Fix the type of `send_notification` in the `StageChannel.create_instance()`.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the type of `sync_permissions` in the overload of `VoiceChannel.edit()` and
+  `StageChannel.edit()`.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the return type of the `MediaChannel.edit()` overload.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 
 ### Deprecated
 
