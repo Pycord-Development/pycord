@@ -27,11 +27,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fix the type of `send_notification` in `StageChannel.create_instance`.
+- Fix the type of `send_notification` in the `StageChannel.create_instance()`.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
-- Fix the type of `sync_permissions` in the `VoiceChannel.edit` and `StageChannel.edit`
-  overloads. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
-- Fix the return type of the `MediaChannel.edit` overload.
+- Fix the type of `sync_permissions` in the overload of `VoiceChannel.edit()` and `StageChannel.edit()`. ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the return type of the `MediaChannel.edit()` overload.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
