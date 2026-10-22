@@ -559,25 +559,15 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
         Keyword arguments that denote attributes to search with.
     """
 
-    # global -> local
-    _all = all
-    attrget = attrgetter
-
-    # Special case the single element call
-    if len(attrs) == 1:
-        k, v = attrs.popitem()
-        pred = attrget(k.replace("__", "."))
-        for elem in iterable:
-            if pred(elem) == v:
-                return elem
-        return None
-
     converted = [
-        (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
+        (attrgetter(attr.replace("__", ".")), value) for attr, value in attrs.items()
     ]
 
     for elem in iterable:
-        if _all(pred(elem) == value for pred, value in converted):
+        for pred, value in converted:
+            if pred(elem) != value:
+                break
+        else:
             return elem
     return None
 
@@ -1246,31 +1236,23 @@ def raw_role_mentions(text: str) -> list[int]:
 
 
 def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
-    ret = []
-    n = 0
-    for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iter(iterator)
+    while chunk := list(itertools.islice(it, max_size)):
+        yield chunk
+
+
+async def _atake(it: AsyncIterator[T], n: int) -> AsyncIterator[T]:
+    for _ in range(n):
+        try:
+            yield await it.__anext__()
+        except StopAsyncIteration:
+            return
 
 
 async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
-    ret = []
-    n = 0
-    async for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iterator.__aiter__()
+    while chunk := [x async for x in _atake(it, max_size)]:
+        yield chunk
 
 
 @overload
