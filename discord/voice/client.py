@@ -85,7 +85,7 @@ class VoiceClient(VoiceProtocol):
 
     Attributes
     ----------
-    channel: Union[:class:`VoiceChannel`, :class:`StageChannel`]
+    channel: :class:`VoiceChannel` | :class:`StageChannel`
         The channel we are connected to.
 
     Warning

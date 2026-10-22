@@ -35,7 +35,6 @@ from typing import (
     Protocol,
     TypeAlias,
     TypeVar,
-    Union,
     overload,
     runtime_checkable,
 )
@@ -105,7 +104,7 @@ if TYPE_CHECKING:
         | PartialMessageable
     )
     MessageableChannel: TypeAlias = PartialMessageableChannel | GroupChannel
-    SnowflakeTime = Union["Snowflake", datetime]
+    SnowflakeTime = "Snowflake" | datetime
 
     from .voice import VoiceClient, VoiceProtocol
 
@@ -615,7 +614,7 @@ class GuildChannel:
 
         Parameters
         ----------
-        obj: Union[:class:`~discord.Role`, :class:`~discord.abc.User`]
+        obj: :class:`~discord.Role` | :class:`~discord.abc.User`
             The role or user denoting
             whose overwrite to get.
 
@@ -650,7 +649,7 @@ class GuildChannel:
 
         Returns
         -------
-        Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], :class:`~discord.PermissionOverwrite`]
+        Dict[:class:`~discord.Role` | :class:`~discord.Member`, :class:`~discord.PermissionOverwrite`]
             The channel's permission overwrites.
         """
         ret = {}
@@ -721,7 +720,7 @@ class GuildChannel:
 
         Parameters
         ----------
-        obj: Union[:class:`~discord.Member`, :class:`~discord.Role`]
+        obj: :class:`~discord.Member` | :class:`~discord.Role`
             The object to resolve permissions for. This could be either
             a member or a role. If it's a role then member overwrites
             are not computed.
@@ -926,7 +925,7 @@ class GuildChannel:
 
         Parameters
         -----------
-        target: Union[:class:`~discord.Member`, :class:`~discord.Role`]
+        target: :class:`~discord.Member` | :class:`~discord.Role`
             The member or role to overwrite permissions for.
         overwrite: Optional[:class:`~discord.PermissionOverwrite`]
             The permissions to allow and deny to the target, or ``None`` to
@@ -1271,7 +1270,7 @@ class GuildChannel:
 
             .. versionadded:: 2.0
 
-        roles: Optional[List[Union[:class:`.Role`, :class:`.Object`]]]
+        roles: Optional[List[:class:`.Role` | :class:`.Object`]]
             The roles to give a user when joining through this invite.
 
             You must have the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
@@ -1510,7 +1509,7 @@ class Messageable:
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
-        nonce: Union[:class:`str`, :class:`int`]
+        nonce: :class:`str` | :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
         enforce_nonce: Optional[:class:`bool`]
@@ -1531,7 +1530,7 @@ class Messageable:
 
             .. versionadded:: 1.4
 
-        reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
+        reference: :class:`~discord.Message` | :class:`~discord.MessageReference` | :class:`~discord.PartialMessage`
             A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using
             :meth:`~discord.Message.to_reference`.
             When replying, you can control whether this mentions the author of the referenced message using the
@@ -1550,7 +1549,7 @@ class Messageable:
             A list of embeds to upload. Must be a maximum of 10.
 
             .. versionadded:: 2.0
-        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
+        stickers: Sequence[:class:`~discord.GuildSticker` | :class:`~discord.StickerItem`]
             A list of stickers to upload. Must be a maximum of 3.
 
             .. versionadded:: 2.0
@@ -1819,7 +1818,7 @@ class Messageable:
         limit: Optional[:class:`int`]
             The number of pinned messages to retrieve.
             If ``None``, retrieves every pinned message in the channel.
-        before: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        before: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
             Retrieve messages pinned before this datetime.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -1938,15 +1937,15 @@ class Messageable:
             The number of messages to retrieve.
             If ``None``, retrieves every message in the channel. Note, however,
             that this would make it a slow operation.
-        before: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        before: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
             Retrieve messages before this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        after: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        after: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
             Retrieve messages after this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        around: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        around: Optional[:class:`~discord.abc.Snowflake` | :class:`datetime.datetime`]
             Retrieve messages around this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
