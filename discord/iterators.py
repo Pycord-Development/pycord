@@ -321,14 +321,14 @@ class HistoryIterator(_AsyncIterator["Message"]):
         Messageable class to retrieve message history from.
     limit: :class:`int`
         Maximum number of messages to retrieve
-    before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+    before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
         Message before which all messages must be.
-    after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+    after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
         Message after which all messages must be.
-    around: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+    around: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
         Message around which all messages must be. Limit max 101. Note that if
         limit is an even number, this will return at most limit+1 messages.
-    oldest_first: Optional[:class:`bool`]
+    oldest_first: :class:`bool` | :obj:`None`
         If set to ``True``, return messages in oldest->newest order. Defaults to
         ``True`` if `after` is specified, otherwise ``False``.
     """
@@ -585,9 +585,9 @@ class GuildIterator(_AsyncIterator["Guild"]):
         The client to retrieve the guilds from.
     limit: :class:`int`
         Maximum number of guilds to retrieve.
-    before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+    before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
         Object before which all guilds must be.
-    after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+    after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
         Object after which all guilds must be.
     with_counts: :class:`bool`
         Whether to include member count information in guilds. This fills the

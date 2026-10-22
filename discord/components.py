@@ -222,7 +222,7 @@ class ActionRow(Component):
 
         Returns
         -------
-        Optional[:class:`Component`]
+        :class:`Component` | :obj:`None`
             The component with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -245,22 +245,22 @@ class InputText(Component):
     ----------
     style: :class:`.InputTextStyle`
         The style of the input text field.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The custom ID of the input text field that gets received during an interaction.
     label: :class:`str`
         The label for the input text field.
-    placeholder: Optional[:class:`str`]
+    placeholder: :class:`str` | :obj:`None`
         The placeholder text that is shown if nothing is selected, if any.
-    min_length: Optional[:class:`int`]
+    min_length: :class:`int` | :obj:`None`
         The minimum number of characters that must be entered
         Defaults to 0
-    max_length: Optional[:class:`int`]
+    max_length: :class:`int` | :obj:`None`
         The maximum number of characters that can be entered
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the input text field is required or not. Defaults to `True`.
-    value: Optional[:class:`str`]
+    value: :class:`str` | :obj:`None`
         The value that has been entered in the input text field.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The input text's ID.
     """
 
@@ -337,18 +337,18 @@ class Button(Component):
     ----------
     style: :class:`.ButtonStyle`
         The style of the button.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the button that gets received during an interaction.
         If this button is for a URL, it does not have a custom ID.
-    url: Optional[:class:`str`]
+    url: :class:`str` | :obj:`None`
         The URL this button sends you to.
     disabled: :class:`bool`
         Whether the button is disabled or not.
-    label: Optional[:class:`str`]
+    label: :class:`str` | :obj:`None`
         The label of the button, if any.
-    emoji: Optional[:class:`PartialEmoji`]
+    emoji: :class:`PartialEmoji` | :obj:`None`
         The emoji of the button, if available.
-    sku_id: Optional[:class:`int`]
+    sku_id: :class:`int` | :obj:`None`
         The ID of the SKU this button refers to.
     """
 
@@ -428,9 +428,9 @@ class SelectMenu(Component):
     ----------
     type: :class:`ComponentType`
         The select menu's type.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the select menu that gets received during an interaction.
-    placeholder: Optional[:class:`str`]
+    placeholder: :class:`str` | :obj:`None`
         The placeholder text that is shown if nothing is selected, if any.
     min_values: :class:`int`
         The minimum number of items that must be chosen for this select menu.
@@ -448,7 +448,7 @@ class SelectMenu(Component):
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not. Not usable in modals. Defaults to ``False``.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the select is required or not. Only useable in modals. Defaults to ``True``.
     """
 
@@ -701,7 +701,7 @@ class SelectOption:
         The value of the option. This is not displayed to users.
         If not provided when constructed then it defaults to the
         label. Can only be up to 100 characters.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         An additional description of the option, if any.
         Can only be up to 100 characters.
     default: :class:`bool`
@@ -821,7 +821,7 @@ class Section(Component):
     ----------
     components: List[:class:`Component`]
         The components contained in this section. Currently supports :class:`TextDisplay`.
-    accessory: Optional[:class:`Component`]
+    accessory: :class:`Component` | :obj:`None`
         The accessory attached to this Section. Currently supports :class:`Button` and :class:`Thumbnail`.
     """
 
@@ -866,7 +866,7 @@ class Section(Component):
 
         Returns
         -------
-        Optional[:class:`Component`]
+        :class:`Component` | :obj:`None`
             The component with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -989,9 +989,9 @@ class Thumbnail(Component):
     ----------
     media: :class:`UnfurledMediaItem`
         The component's underlying media object.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The thumbnail's description, up to 1024 characters.
-    spoiler: Optional[:class:`bool`]
+    spoiler: :class:`bool` | :obj:`None`
         Whether the thumbnail has the spoiler overlay.
     """
 
@@ -1038,9 +1038,9 @@ class MediaGalleryItem:
     ----------
     url: :class:`str`
         The URL of this gallery item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The gallery item's description, up to 1024 characters.
-    spoiler: Optional[:class:`bool`]
+    spoiler: :class:`bool` | :obj:`None`
         Whether the gallery item is a spoiler.
     """
 
@@ -1139,11 +1139,11 @@ class FileComponent(Component):
     ----------
     file: :class:`UnfurledMediaItem`
         The file's media item.
-    name: Optional[:class:`str`]
+    name: :class:`str` | :obj:`None`
         The file's name.
-    size: Optional[:class:`int`]
+    size: :class:`int` | :obj:`None`
         The file's size in bytes.
-    spoiler: Optional[:class:`bool`]
+    spoiler: :class:`bool` | :obj:`None`
         Whether the file has the spoiler overlay.
     """
 
@@ -1191,7 +1191,7 @@ class Separator(Component):
     ----------
     divider: :class:`bool`
         Whether the separator will show a horizontal line in addition to vertical spacing.
-    spacing: Optional[:class:`SeparatorSpacingSize`]
+    spacing: :class:`SeparatorSpacingSize` | :obj:`None`
         The separator's spacing size.
     """
 
@@ -1245,9 +1245,9 @@ class Container(Component):
     ----------
     components: List[:class:`Component`]
         The components contained in this container.
-    accent_color: Optional[:class:`Colour`]
+    accent_color: :class:`Colour` | :obj:`None`
         The accent color of the container.
-    spoiler: Optional[:class:`bool`]
+    spoiler: :class:`bool` | :obj:`None`
         Whether the entire container has the spoiler overlay.
     """
 
@@ -1302,7 +1302,7 @@ class Container(Component):
 
         Returns
         -------
-        Optional[:class:`Component`]
+        :class:`Component` | :obj:`None`
             The component with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -1336,7 +1336,7 @@ class Label(Component):
         The component contained in this label. Currently supports :class:`InputText` and :class:`SelectMenu`.
     label: :class:`str`
         The main text associated with this label's ``component``, up to 45 characters.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description associated with this label's ``component``, up to 100 characters.
     """
 
@@ -1379,15 +1379,15 @@ class FileUpload(Component):
 
     Attributes
     ----------
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The custom ID of the file upload field that gets received during an interaction.
-    min_values: Optional[:class:`int`]
+    min_values: :class:`int` | :obj:`None`
         The minimum number of files that must be uploaded.
-    max_values: Optional[:class:`int`]
+    max_values: :class:`int` | :obj:`None`
         The maximum number of files that can be uploaded.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the file upload field is required or not. Defaults to `True`.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The file upload's ID.
     """
 
@@ -1444,13 +1444,13 @@ class RadioGroup(Component):
 
     Attributes
     ----------
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The custom ID of the radio group that gets received during an interaction.
     options: List[:class:`RadioGroupOption`]
         A list of options that can be selected in this group, between 2 and 10.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the radio group requires a selection or not. Defaults to ``True``.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The radio group's ID.
     """
 
@@ -1505,7 +1505,7 @@ class RadioGroupOption:
         The value of the option. This is not displayed to users.
         If not provided when constructed then it defaults to the
         label. Can only be up to 100 characters.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         An additional description of the option, if any.
         Can only be up to 100 characters.
     default: :class:`bool`
@@ -1588,19 +1588,19 @@ class CheckboxGroup(Component):
 
     Attributes
     ----------
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The custom ID of the checkbox group that gets received during an interaction.
     options: List[:class:`CheckboxGroupOption`]
         A list of options that can be selected in this group.
-    min_values: Optional[:class:`int`]
+    min_values: :class:`int` | :obj:`None`
         The minimum number of options that must be selected.
         Defaults to 1 and must be between 0 and 25. If set to 0, :attr:`required` must be ``False``.
-    max_values: Optional[:class:`int`]
+    max_values: :class:`int` | :obj:`None`
         The maximum number of options that can be selected.
         Must be between 1 and 10.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the checkbox group requires a selection or not. Defaults to ``True``.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The checkbox group's ID.
     """
 
@@ -1665,7 +1665,7 @@ class CheckboxGroupOption:
         The value of the option. This is not displayed to users.
         If not provided when constructed then it defaults to the
         label. Can only be up to 100 characters.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         An additional description of the option, if any.
         Can only be up to 100 characters.
     default: :class:`bool`
@@ -1748,11 +1748,11 @@ class Checkbox(Component):
 
     Attributes
     ----------
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The custom ID of the checkbox group that gets received during an interaction.
-    default: Optional[:class:`bool`]
+    default: :class:`bool` | :obj:`None`
         Whether this checkbox is selected by default.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The checkbox group's ID.
     """
 

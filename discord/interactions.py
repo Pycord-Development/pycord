@@ -124,17 +124,17 @@ class Interaction:
         The interaction's ID.
     type: :class:`InteractionType`
         The interaction type.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild ID the interaction was sent from.
-    channel: Optional[:class:`abc.GuildChannel` | :class:`abc.PrivateChannel` | :class:`Thread` | :class:`PartialMessageable`]
+    channel: :class:`abc.GuildChannel` | :class:`abc.PrivateChannel` | :class:`Thread` | :class:`PartialMessageable` | :obj:`None`
         The channel the interaction was sent from.
-    channel_id: Optional[:class:`int`]
+    channel_id: :class:`int` | :obj:`None`
         The ID of the channel the interaction was sent from.
     application_id: :class:`int`
         The application ID that the interaction was for.
-    user: Optional[:class:`User` | :class:`Member`]
+    user: :class:`User` | :class:`Member` | :obj:`None`
         The user or member that sent the interaction. Will be `None` in PING interactions.
-    message: Optional[:class:`Message`]
+    message: :class:`Message` | :obj:`None`
         The message that sent this interaction.
     token: :class:`str`
         The token to continue the interaction. These are valid
@@ -145,7 +145,7 @@ class Interaction:
         The user's locale.
     guild_locale: :class:`str`
         The guilds preferred locale, if invoked in a guild.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The custom ID for the interaction.
     entitlements: list[:class:`Entitlement`]
         Entitlements that apply to the invoking user, showing access to premium SKUs.
@@ -155,24 +155,24 @@ class Interaction:
         Contains the entities (users or guilds) that authorized this interaction.
 
         .. versionadded:: 2.6
-    context: Optional[:class:`InteractionContextType`]
+    context: :class:`InteractionContextType` | :obj:`None`
         The context in which this command was executed.
 
         .. versionadded:: 2.6
-    callback: Optional[:class:`InteractionCallback`]
+    callback: :class:`InteractionCallback` | :obj:`None`
         The callback of the interaction. Contains information about the status of the interaction response.
         Will be `None` until the interaction is responded to.
 
         .. versionadded:: 2.7
-    command: Optional[:class:`ApplicationCommand`]
+    command: :class:`ApplicationCommand` | :obj:`None`
         The command that this interaction belongs to.
 
         .. versionadded:: 2.7
-    view: Optional[:class:`BaseView`]
+    view: :class:`BaseView` | :obj:`None`
         The view that this interaction belongs to.
 
         .. versionadded:: 2.7
-    modal: Optional[:class:`BaseModal`]
+    modal: :class:`BaseModal` | :obj:`None`
         The modal that this interaction belongs to.
 
         .. versionadded:: 2.7
@@ -552,11 +552,11 @@ class Interaction:
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content to edit the message with or ``None`` to clear it.
         embeds: List[:class:`Embed`]
             A list of embeds to edit the message with.
-        embed: Optional[:class:`Embed`]
+        embed: :class:`Embed` | :obj:`None`
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
         file: :class:`File`
@@ -570,10 +570,10 @@ class Interaction:
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.BaseView`]
+        view: :class:`~discord.ui.BaseView` | :obj:`None`
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
-        delete_after: Optional[:class:`float`]
+        delete_after: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
@@ -688,7 +688,7 @@ class Interaction:
 
         Parameters
         ----------
-        delay: Optional[:class:`float`]
+        delay: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait before deleting the message.
             The waiting is done in the background and deletion failures are ignored.
 
@@ -771,7 +771,7 @@ class Interaction:
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content of the message to send.
         embeds: List[:class:`Embed`]
             A list of embeds to send with the content. Maximum of 10. This cannot
@@ -1075,7 +1075,7 @@ class InteractionResponse:
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content of the message to send.
         embeds: List[:class:`Embed`]
             A list of embeds to send with the content. Maximum of 10. This cannot
@@ -1265,11 +1265,11 @@ class InteractionResponse:
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The new content to replace the message with. ``None`` removes the content.
         embeds: List[:class:`Embed`]
             A list of embeds to edit the message with.
-        embed: Optional[:class:`Embed`]
+        embed: :class:`Embed` | :obj:`None`
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
         file: :class:`File`
@@ -1280,16 +1280,16 @@ class InteractionResponse:
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
-        view: Optional[:class:`~discord.ui.BaseView`]
+        view: :class:`~discord.ui.BaseView` | :obj:`None`
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
-        delete_after: Optional[:class:`float`]
+        delete_after: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
-        suppress: Optional[:class:`bool`]
+        suppress: :class:`bool` | :obj:`None`
             Whether to suppress embeds for the message.
-        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+        allowed_mentions: :class:`~discord.AllowedMentions` | :obj:`None`
             Controls the mentions being processed in this message. If this is
             passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
             The merging behaviour only overrides attributes that have been explicitly passed
@@ -1632,11 +1632,11 @@ class InteractionMessage(Message):
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content to edit the message with or ``None`` to clear it.
         embeds: List[:class:`Embed`]
             A list of embeds to edit the message with.
-        embed: Optional[:class:`Embed`]
+        embed: :class:`Embed` | :obj:`None`
             The embed to edit the message with. ``None`` suppresses the embeds.
             This should not be mixed with the ``embeds`` parameter.
         file: :class:`File`
@@ -1650,18 +1650,18 @@ class InteractionMessage(Message):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.BaseView`]
+        view: :class:`~discord.ui.BaseView` | :obj:`None`
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
-        delete_after: Optional[:class:`float`]
+        delete_after: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
-        suppress: Optional[:class:`bool`]
+        suppress: :class:`bool` | :obj:`None`
             Whether to suppress embeds for the message.
 
             .. deprecated:: 2.8
-        suppress_embeds: Optional[:class:`bool`]
+        suppress_embeds: :class:`bool` | :obj:`None`
             Whether to suppress embeds for the message.
 
             .. versionadded:: 2.8
@@ -1713,7 +1713,7 @@ class InteractionMessage(Message):
 
         Parameters
         ----------
-        delay: Optional[:class:`float`]
+        delay: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait before deleting the message.
             The waiting is done in the background and deletion failures are ignored.
 
@@ -1786,12 +1786,12 @@ class InteractionMetadata:
         The user that sent the interaction.
     authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
         The authorizing user or server for the installation(s) relevant to the interaction.
-    original_response_message_id: Optional[:class:`int`]
+    original_response_message_id: :class:`int` | :obj:`None`
         The ID of the original response message. Only present on interaction follow-up messages.
-    interacted_message_id: Optional[:class:`int`]
+    interacted_message_id: :class:`int` | :obj:`None`
         The ID of the message that triggered the interaction. Only present on interactions of type
         :attr:`InteractionType.component`.
-    triggering_interaction_metadata: Optional[:class:`InteractionMetadata`]
+    triggering_interaction_metadata: :class:`InteractionMetadata` | :obj:`None`
         The metadata of the interaction that opened the model. Only present on interactions of type
         :attr:`InteractionType.modal_submit`.
     """
@@ -1836,7 +1836,7 @@ class InteractionMetadata:
 
     @utils.cached_slot_property("_cs_original_response_message")
     def original_response_message(self) -> Message | None:
-        """Optional[:class:`Message`]: The original response message.
+        """:class:`Message` | :obj:`None`: The original response message.
         Returns ``None`` if the message is not in cache, or if :attr:`original_response_message_id` is ``None``.
         """
         if not self.original_response_message_id:
@@ -1845,7 +1845,7 @@ class InteractionMetadata:
 
     @utils.cached_slot_property("_cs_interacted_message")
     def interacted_message(self) -> Message | None:
-        """Optional[:class:`Message`]: The message that triggered the interaction.
+        """:class:`Message` | :obj:`None`: The message that triggered the interaction.
         Returns ``None`` if the message is not in cache, or if :attr:`interacted_message_id` is ``None``.
         """
         if not self.interacted_message_id:
@@ -1893,7 +1893,7 @@ class AuthorizingIntegrationOwners:
 
     @utils.cached_slot_property("_cs_user")
     def user(self) -> User | None:
-        """Optional[:class:`User`]: The user that authorized the integration.
+        """:class:`User` | :obj:`None`: The user that authorized the integration.
         Returns ``None`` if the user is not in cache, or if :attr:`user_id` is ``None``.
         """
         if not self.user_id:
@@ -1902,7 +1902,7 @@ class AuthorizingIntegrationOwners:
 
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """Optional[:class:`Guild`]: The guild that authorized the integration.
+        """:class:`Guild` | :obj:`None`: The guild that authorized the integration.
         Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is ``0`` or ``None``.
         """
         if not self.guild_id:

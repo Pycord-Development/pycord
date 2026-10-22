@@ -47,26 +47,26 @@ class InputText(ModalItem):
     ----------
     style: :class:`~discord.InputTextStyle`
         The style of the input text field.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the input text field that gets received during an interaction.
     label: :class:`str`
         The label for the input text field.
         Must be 45 characters or fewer.
-    placeholder: Optional[:class:`str`]
+    placeholder: :class:`str` | :obj:`None`
         The placeholder text that is shown if nothing is selected, if any.
         Must be 100 characters or fewer.
-    min_length: Optional[:class:`int`]
+    min_length: :class:`int` | :obj:`None`
         The minimum number of characters that must be entered.
         Defaults to 0 and must be less than 4000.
-    max_length: Optional[:class:`int`]
+    max_length: :class:`int` | :obj:`None`
         The maximum number of characters that can be entered.
         Must be between 1 and 4000.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether the input text field is required or not. Defaults to ``True``.
-    value: Optional[:class:`str`]
+    value: :class:`str` | :obj:`None`
         Pre-fills the input text field with this value.
         Must be 4000 characters or fewer.
-    row: Optional[:class:`int`]
+    row: :class:`int` | :obj:`None`
         The relative row this input text field belongs to. A modal dialog can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.

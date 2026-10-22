@@ -167,7 +167,7 @@ class RadioGroup(ModalItem):
         value: :class:`str`
             The value of the option. This is not displayed to users.
             If not given, defaults to the label. Can only be up to 100 characters.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             An additional description of the option, if any.
             Can only be up to 100 characters.
         default: :class:`bool`

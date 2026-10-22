@@ -173,13 +173,13 @@ class WelcomeScreen:
         Parameters
         ----------
 
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The new description of welcome screen.
-        welcome_channels: Optional[List[:class:`WelcomeScreenChannel`]]
+        welcome_channels: List[:class:`WelcomeScreenChannel`] | :obj:`None`
             The welcome channels. The order of the channels would be same as the passed list order.
-        enabled: Optional[:class:`bool`]
+        enabled: :class:`bool` | :obj:`None`
             Whether the welcome screen should be displayed.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason that shows up on Audit log.
 
         Raises

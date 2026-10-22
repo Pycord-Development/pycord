@@ -167,7 +167,7 @@ class Colour:
 
         Parameters
         ----------
-        seed: Optional[:class:`int` | :class:`str` | :class:`float` | :class:`bytes` | :class:`bytearray`]
+        seed: :class:`int` | :class:`str` | :class:`float` | :class:`bytes` | :class:`bytearray` | :obj:`None`
             The seed to initialize the RNG with. If ``None`` is passed the default RNG is used.
 
             .. versionadded:: 1.7

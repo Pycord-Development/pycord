@@ -51,11 +51,11 @@ class Thumbnail(ViewItem[V]):
     ----------
     url: :class:`str`
         The url of the thumbnail. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The thumbnail's description, up to 1024 characters.
-    spoiler: Optional[:class:`bool`]
+    spoiler: :class:`bool` | :obj:`None`
         Whether the thumbnail has the spoiler overlay. Defaults to ``False``.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The thumbnail's ID.
     """
 
