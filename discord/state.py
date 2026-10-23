@@ -31,12 +31,11 @@ import inspect
 import itertools
 import logging
 import os
-from collections import OrderedDict, deque
+from collections import deque
 from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Deque,
     TypeVar,
     Union,
 )
@@ -49,7 +48,7 @@ from .channel import *
 from .channel import _channel_factory
 from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, InteractionType, ScheduledEventStatus, Status, try_enum
-from .flags import ApplicationFlags, Intents, MemberCacheFlags
+from .flags import ApplicationFlags, GatewayCapabilities, Intents, MemberCacheFlags
 from .guild import Guild
 from .integrations import _integration_factory
 from .interactions import Interaction
@@ -247,6 +246,18 @@ class ConnectionState:
         self._status: str | None = status
         self._intents: Intents = intents
 
+        capabilities = options.get("capabilities")
+        if capabilities is None:
+            capabilities = GatewayCapabilities.none()
+        elif isinstance(capabilities, int):
+            capabilities = GatewayCapabilities._from_value(capabilities)
+        elif not isinstance(capabilities, GatewayCapabilities):
+            raise TypeError(
+                "capabilities parameter must be GatewayCapabilities or int."
+            )
+
+        self.capabilities: GatewayCapabilities = capabilities
+
         if not intents.members or cache_flags._empty:
             self.store_user = self.create_user  # type: ignore
             self.deref_user = self.deref_user_no_intents  # type: ignore
@@ -290,13 +301,13 @@ class ConnectionState:
         self._sounds: dict[int, SoundboardSound] = {}
 
         # LRU of max size 128
-        self._private_channels: OrderedDict[int, PrivateChannel] = OrderedDict()
+        self._private_channels: dict[int, PrivateChannel] = {}
         # extra dict to look up private channels by user id
         self._private_channels_by_user: dict[int, DMChannel] = {}
         if self.max_messages is not None:
-            self._messages: Deque[Message] | None = deque(maxlen=self.max_messages)
+            self._messages: deque[Message] | None = deque(maxlen=self.max_messages)
         else:
-            self._messages: Deque[Message] | None = None
+            self._messages: deque[Message] | None = None
 
     def process_chunk_requests(
         self, guild_id: int, nonce: str | None, members: list[Member], complete: bool
@@ -497,7 +508,7 @@ class ConnectionState:
         except KeyError:
             return None
         else:
-            self._private_channels.move_to_end(channel_id)  # type: ignore
+            self._private_channels[channel_id] = self._private_channels.pop(channel_id)  # type: ignore
             return value
 
     def _get_private_channel_by_user(self, user_id: int | None) -> DMChannel | None:
@@ -509,7 +520,8 @@ class ConnectionState:
         self._private_channels[channel_id] = channel
 
         if len(self._private_channels) > 128:
-            _, to_remove = self._private_channels.popitem(last=False)
+            oldest_key = next(iter(self._private_channels))
+            to_remove = self._private_channels.pop(oldest_key)
             if isinstance(to_remove, DMChannel) and to_remove.recipient:
                 self._private_channels_by_user.pop(to_remove.recipient.id, None)
 
@@ -1514,7 +1526,7 @@ class ConnectionState:
 
         # do a cleanup of the messages cache
         if self._messages is not None:
-            self._messages: Deque[Message] | None = deque(
+            self._messages: deque[Message] | None = deque(
                 (msg for msg in self._messages if msg.guild != guild),
                 maxlen=self.max_messages,
             )
@@ -1751,7 +1763,7 @@ class ConnectionState:
         if member is not None:
             event = guild.get_scheduled_event(data["guild_scheduled_event_id"])
             if event:
-                event.subscriber_count += 1
+                event.subscriber_count -= 1
                 guild._add_scheduled_event(event)
                 self.dispatch("scheduled_event_user_remove", event, member)
 

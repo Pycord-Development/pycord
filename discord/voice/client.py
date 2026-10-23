@@ -52,7 +52,7 @@ if HAS_NACL:
     import nacl.utils
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from discord import abc
     from discord.client import Client
@@ -85,12 +85,6 @@ class VoiceClient(VoiceProtocol):
 
     Attributes
     ----------
-    session_id: :class:`str`
-        The voice connection session ID.
-    token: :class:`str`
-        The voice connection token.
-    endpoint: :class:`str`
-        The endpoint we are connecting to.
     channel: Union[:class:`VoiceChannel`, :class:`StageChannel`]
         The channel we are connected to.
 

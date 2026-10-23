@@ -46,17 +46,6 @@ class RadioGroup(ModalItem):
     """Represents a UI Radio Group component.
 
     .. versionadded:: 2.8
-
-    Attributes
-    ----------
-    custom_id: Optional[:class:`str`]
-        The ID of the radio group that gets received during an interaction.
-    options: List[:class:`discord.RadioGroupOption`]
-        A list of options that can be selected from this group. Must provide between 2 and 10 options.
-    required: Optional[:class:`bool`]
-        Whether an option selection is required or not. Defaults to ``True``.
-    id: Optional[:class:`int`]
-        The radio group's ID.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -79,6 +68,7 @@ class RadioGroup(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
