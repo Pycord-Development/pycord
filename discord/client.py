@@ -234,6 +234,10 @@ class Client:
         Whether to automatically fetch and cache the default soundboard sounds on startup. Defaults to ``True``.
 
         .. versionadded:: 2.8
+    cache_channel_info: :class:`bool`
+        Whether to automatically request and cache voice channel statuses on startup. Defaults to ``False``.
+
+        .. versionadded:: 2.9
 
     Attributes
     -----------
