@@ -1058,7 +1058,7 @@ class RawVoiceChannelStartTimeUpdateEvent(_RawReprMixin):
         self.id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
         self.voice_start_time: datetime.datetime | None = (
-            datetime.datetime.fromtimestamp(data["voice_start_time"], tz=datetime.UTC)
+            datetime.datetime.fromtimestamp(data["voice_start_time"], tz=datetime.timezone.utc)
             if data.get("voice_start_time")
             else None
         )

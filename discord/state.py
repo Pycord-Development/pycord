@@ -728,20 +728,20 @@ class ConnectionState:
                     if (
                         needs_chunk := self._guild_needs_chunking(guild)
                     ) or self._request_channel_info:
+                        chunk_future = None
+                        info_future = None
                         if needs_chunk and self._request_channel_info:
                             chunk_future = await self.chunk_guild(guild, wait=False)
                             info_future = await self.request_guild_channel_info(
                                 guild, wait=False
                             )
-                            states.append((guild, chunk_future, info_future))
                         elif needs_chunk:
-                            future = await self.chunk_guild(guild, wait=False)
-                            states.append((guild, future, None))
+                            chunk_future = await self.chunk_guild(guild, wait=False)
                         else:
-                            future = await self.request_guild_channel_info(
+                            info_future = await self.request_guild_channel_info(
                                 guild, wait=False
                             )
-                            states.append((guild, None, future))
+                        states.append((guild, chunk_future, info_future))
                     elif guild.unavailable is False:
                         self.dispatch("guild_available", guild)
                     else:

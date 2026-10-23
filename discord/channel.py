@@ -1674,7 +1674,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         """
         if self._voice_start_time is None:
             return None
-        return datetime.datetime.fromtimestamp(self._voice_start_time, tz=datetime.UTC)
+        return datetime.datetime.fromtimestamp(self._voice_start_time, tz=datetime.timezone.utc)
 
     @property
     def _sorting_bucket(self) -> int:

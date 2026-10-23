@@ -39,7 +39,6 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 import aiohttp
 
 from . import utils
-from .abc import Snowflake
 from .activity import BaseActivity
 from .errors import ConnectionClosed, InvalidArgument
 from .types.channel import RequestChannelInfoField

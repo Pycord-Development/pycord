@@ -724,10 +724,6 @@ class Client:
             except ReconnectWebSocket as e:
                 _log.info("Got a request to %s the websocket.", e.op)
                 self.dispatch("disconnect")
-                if not e.resume:
-                    # Since we aren't resuming, channel info can fall out of date
-                    # So we re-request it
-                    self._connection._request_channel_info = True
                 ws_params.update(
                     sequence=self.ws.sequence,
                     resume=e.resume,
