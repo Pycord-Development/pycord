@@ -840,11 +840,10 @@ class SlashCommandOptionType(Enum):
             else:
                 raise TypeError("Invalid usage of typing.Union")
 
-        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(
-            datatype, types.UnionType
-        )
-
-        if py_3_10_union_type or getattr(datatype, "__origin__", None) is Union:
+        if (
+            isinstance(datatype, types.UnionType)
+            or getattr(datatype, "__origin__", None) is Union
+        ):
             # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
             # Type checking fails for this case, so ignore it.
             return cls.from_datatype(datatype.__args__)  # type: ignore
