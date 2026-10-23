@@ -617,7 +617,7 @@ class ConnectionState:
                 nonce=request.nonce,
             )
             return await asyncio.wait_for(request.wait(), timeout=30.0)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             _log.warning(
                 (
                     "Timed out waiting for chunks with query %r and limit %d for"
@@ -645,7 +645,7 @@ class ConnectionState:
                     guild = await asyncio.wait_for(
                         self._ready_state.get(), timeout=self.guild_ready_timeout
                     )
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     break
                 else:
                     if self._guild_needs_chunking(guild):
@@ -659,7 +659,7 @@ class ConnectionState:
             for guild, future in states:
                 try:
                     await asyncio.wait_for(future, timeout=5.0)
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     _log.warning(
                         "Shard ID %s timed out waiting for chunks for guild_id %s.",
                         guild.shard_id,
@@ -1460,7 +1460,7 @@ class ConnectionState:
     async def _chunk_and_dispatch(self, guild, unavailable):
         try:
             await asyncio.wait_for(self.chunk_guild(guild), timeout=60.0)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             _log.info("Somehow timed out waiting for chunks.")
 
         if unavailable is False:
@@ -2188,7 +2188,7 @@ class AutoShardedConnectionState(ConnectionState):
                 guild = await asyncio.wait_for(
                     self._ready_state.get(), timeout=self.guild_ready_timeout
                 )
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 break
             else:
                 if self._guild_needs_chunking(guild):
@@ -2204,7 +2204,7 @@ class AutoShardedConnectionState(ConnectionState):
                             await utils.sane_wait_for(
                                 current_bucket, timeout=max_concurrency * 70.0
                             )
-                        except asyncio.TimeoutError:
+                        except TimeoutError:
                             fmt = (
                                 "Shard ID %s failed to wait for chunks from a"
                                 " sub-bucket with length %d"
@@ -2229,7 +2229,7 @@ class AutoShardedConnectionState(ConnectionState):
             timeout = 61 * (len(children) / 110)
             try:
                 await utils.sane_wait_for(futures, timeout=timeout)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 _log.warning(
                     (
                         "Shard ID %s failed to wait for chunks (timeout=%.2f) for %d"

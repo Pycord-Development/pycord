@@ -491,7 +491,7 @@ class VoiceConnectionState:
             _log.debug("Cancelling voice connection")
             await self.soft_disconnect()
             raise
-        except asyncio.TimeoutError:
+        except TimeoutError:
             _log.info("Timed out while connecting to voice")
             await self.disconnect()
             raise
@@ -652,7 +652,7 @@ class VoiceConnectionState:
 
         try:
             await self._wait_for_state(ConnectionFlowState.connected, timeout=timeout)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             _log.warning(
                 "Timed out trying to move to channel %s in guild %s",
                 channel.id,
@@ -707,7 +707,7 @@ class VoiceConnectionState:
             if pending:
                 # if we're here, it means that the state event
                 # has timed out, so just raise the exception
-                raise asyncio.TimeoutError
+                raise TimeoutError
 
     async def _voice_connect(
         self, *, self_deaf: bool = False, self_mute: bool = False
@@ -764,7 +764,7 @@ class VoiceConnectionState:
                 await self.ws.poll_event()
             except asyncio.CancelledError:
                 return
-            except (ConnectionClosed, asyncio.TimeoutError) as exc:
+            except (ConnectionClosed, TimeoutError) as exc:
                 if isinstance(exc, ConnectionClosed):
                     # 1000 - normal closure - not resumable
                     # 4014 - externally disconnected - not resumable
@@ -823,7 +823,7 @@ class VoiceConnectionState:
                                 self_mute=(self.self_voice_state or self).self_mute,
                                 resume=True,
                             )
-                        except asyncio.TimeoutError:
+                        except TimeoutError:
                             _log.info(
                                 "Could not resume the voice connection... Disconnecting..."
                             )
@@ -870,7 +870,7 @@ class VoiceConnectionState:
                         self_mute=(self.self_voice_state or self).self_mute,
                         resume=False,
                     )
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     _log.warning("Could not connect to voice... Retrying...")
                     continue
 
@@ -882,7 +882,7 @@ class VoiceConnectionState:
                 ConnectionFlowState.disconnected,
                 timeout=self.timeout,
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return False
         else:
             if self.state is ConnectionFlowState.disconnected:
@@ -893,7 +893,7 @@ class VoiceConnectionState:
         try:
             self.ws = await self._connect_websocket(False)
             await self._handshake_websocket()
-        except (ConnectionClosed, asyncio.TimeoutError):
+        except (ConnectionClosed, TimeoutError):
             return False
         else:
             return True

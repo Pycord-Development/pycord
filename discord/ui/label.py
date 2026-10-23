@@ -44,7 +44,7 @@ from .select import Select
 __all__ = ("Label",)
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from ..interactions import Interaction
     from ..types.components import LabelComponent as LabelComponentPayload

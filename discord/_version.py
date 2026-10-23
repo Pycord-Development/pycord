@@ -30,11 +30,11 @@ import re
 import warnings
 from importlib.metadata import PackageNotFoundError, version
 
-from typing_extensions import TypedDict, deprecated
+from typing_extensions import deprecated
 
 __all__ = ("__version__", "VersionInfo", "version_info")
 
-from typing import Literal, NamedTuple
+from typing import Literal, NamedTuple, TypedDict
 
 try:
     __version__ = version("py-cord")
