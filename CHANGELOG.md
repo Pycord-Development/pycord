@@ -27,8 +27,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed the `spoiler` parameter for `Thumbnail` components from being ignored when used
-  as a `Section` accessory.
+- Fixed `Thumbnail` components ignoring the `spoiler` parameter when used as a `Section` accessory.
   ([#3403](https://github.com/Pycord-Development/pycord/pull/3403))
 - Fixed `AttributeError` when using `Modal.remove_item()`.
   ([#3357](https://github.com/Pycord-Development/pycord/pull/3357))
