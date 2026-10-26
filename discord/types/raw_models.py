@@ -182,4 +182,3 @@ class ChannelInfoChannel(TypedDict):
 class ChannelInfoEvent(TypedDict):
     guild_id: Snowflake
     channels: list[ChannelInfoChannel]
-
