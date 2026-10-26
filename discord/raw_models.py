@@ -1081,12 +1081,14 @@ class ChannelInfo(_RawReprMixin):
         The voice channel status.
     voice_start_time: :class:`int` | None
         The Unix timestamp (in seconds) of when the voice session started.
+    data: :class:`dict`
+        The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#channel-info>`__.
     """
 
     __slots__ = ("id", "status", "voice_start_time", "data")
 
     def __init__(self, data: ChannelInfoChannel):
         self.id: int = int(data["id"])
-        self.status: str | None = data.get("status", utils.MISSING)
-        self.voice_start_time: int | None = data.get("voice_start_time", utils.MISSING)
+        self.status: str | None = data.get("status")
+        self.voice_start_time: int | None = data.get("voice_start_time")
         self.data: ChannelInfoChannel = data
