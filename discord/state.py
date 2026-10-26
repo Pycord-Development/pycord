@@ -36,9 +36,10 @@ from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
+    Literal,
     TypeVar,
     Union,
-    overload, Literal,
+    overload,
 )
 
 from . import utils
@@ -1619,7 +1620,7 @@ class ConnectionState:
         if self._guild_needs_chunking(guild):
             asyncio.create_task(self._chunk_and_dispatch(guild, unavailable))
             return
-        
+
         # cache the vc info
         if self.cache_channel_info:
             asyncio.create_task(self.request_guild_channel_info(guild))
