@@ -172,10 +172,12 @@ class MessagePollVoteEvent(TypedDict):
     message_id: Snowflake
     answer_id: int
 
+
 class ChannelInfoChannel(TypedDict):
     id: Snowflake
     status: NotRequired[str | None]
     voice_start_time: NotRequired[int | None]
+
 
 class ChannelInfoEvent(TypedDict):
     guild_id: Snowflake
