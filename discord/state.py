@@ -170,10 +170,7 @@ class ChannelInfoRequest:
                     existing = guild.get_channel(channel.id)
                     # check voice_start_time
                     # since stage channels can have that, but not status
-                    if (
-                        existing is not None
-                        and "voice_start_time" in channel.data
-                    ):
+                    if existing is not None and "voice_start_time" in channel.data:
                         try:
                             existing._update_status(
                                 status=channel.status,
@@ -1615,7 +1612,7 @@ class ConnectionState:
         else:
             # If we're waiting for the event, put the rest on hold
             return
-        
+
         # cache the vc info
         if self.cache_channel_info:
             asyncio.create_task(self.request_guild_channel_info(guild))
