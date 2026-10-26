@@ -171,7 +171,7 @@ class ChannelInfoRequest:
                     # since stage channels can have that, but not status
                     if (
                         existing is not None
-                        and channel.voice_start_time is not utils.MISSING
+                        and "voice_start_time" in channel.data
                     ):
                         try:
                             existing._update_status(
@@ -1558,12 +1558,12 @@ class ConnectionState:
 
     @overload
     async def request_guild_channel_info(
-        self, guild: Guild, *, wait: Literal[True] = True, cache: bool | None = None
+        self, guild: Guild, *, wait: Literal[True], cache: bool | None = None
     ) -> list[ChannelInfo]: ...
 
     @overload
     async def request_guild_channel_info(
-        self, guild: Guild, *, wait: Literal[False] = False, cache: bool | None = None
+        self, guild: Guild, *, wait: Literal[False], cache: bool | None = None
     ) -> asyncio.Future[list[ChannelInfo]]: ...
 
     async def request_guild_channel_info(
@@ -1614,15 +1614,15 @@ class ConnectionState:
         else:
             # If we're waiting for the event, put the rest on hold
             return
+        
+        # cache the vc info
+        if self.cache_channel_info:
+            asyncio.create_task(self.request_guild_channel_info(guild))
 
         # check if it requires chunking
         if self._guild_needs_chunking(guild):
             asyncio.create_task(self._chunk_and_dispatch(guild, unavailable))
             return
-        
-        # cache the vc info
-        if self.cache_channel_info:
-            asyncio.create_task(self.request_guild_channel_info(guild))
 
         # Dispatch available if newly available
         if unavailable is False:
