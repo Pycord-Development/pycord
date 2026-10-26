@@ -57,6 +57,7 @@ if TYPE_CHECKING:
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
+        ChannelInfoChannel,
         IntegrationDeleteEvent,
         MemberRemoveEvent,
         MessageDeleteEvent,
@@ -1080,7 +1081,10 @@ class ChannelInfo(_RawReprMixin):
         The Unix timestamp (in seconds) of when the voice session started.
     """
 
-    def __init__(self, data):
+    __slots__ = ("id", "status", "voice_start_time", "data")
+
+    def __init__(self, data: ChannelInfoChannel):
         self.id: int = int(data["id"])
-        self.status: str | None = data.get("status")
-        self.voice_start_time: int | None = data.get("voice_start_time")
+        self.status: str | None = data.get("status", utils.MISSING)
+        self.voice_start_time: int | None = data.get("voice_start_time", utils.MISSING)
+        self.data: ChannelInfoChannel = data

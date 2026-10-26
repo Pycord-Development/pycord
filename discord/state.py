@@ -164,26 +164,24 @@ class ChannelInfoRequest:
         self.channel_info = channel_info
         if self.cache:
             guild = self.resolver(self.guild_id)
-            if guild is None:
-                return
-
-            for channel in channel_info:
-                existing = guild.get_channel(channel.id)
-                # check voice_start_time
-                # since stage channels can have that, but not status
-                if (
-                    existing is not None
-                    and channel.voice_start_time is not utils.MISSING
-                ):
-                    try:
-                        existing._update_status(
-                            status=channel.status,
-                            voice_start_time=channel.voice_start_time,
-                        )
-                    except AttributeError:
-                        # Failsafe, discord sends *all* channels, not just voice
-                        # so if this runs on say, a text channel, we just ignore it
-                        pass
+            if guild is not None:
+                for channel in channel_info:
+                    existing = guild.get_channel(channel.id)
+                    # check voice_start_time
+                    # since stage channels can have that, but not status
+                    if (
+                        existing is not None
+                        and channel.voice_start_time is not utils.MISSING
+                    ):
+                        try:
+                            existing._update_status(
+                                status=channel.status,
+                                voice_start_time=channel.voice_start_time,
+                            )
+                        except AttributeError:
+                            # Failsafe, discord sends *all* channels, not just voice
+                            # so if this runs on say, a text channel, we just ignore it
+                            pass
 
         for future in self.waiters:
             if not future.done():
@@ -2360,10 +2358,12 @@ class AutoShardedConnectionState(ConnectionState):
             except asyncio.TimeoutError:
                 break
             else:
-                if self._guild_needs_chunking(guild):
+                needs_chunk = self._guild_needs_chunking(guild)
+                guild_futures = []
+                if needs_chunk or self._request_channel_info:
                     _log.debug(
                         (
-                            "Guild ID %d requires chunking, will be done in the"
+                            "Guild ID %d requires gateway requests, will be done in the"
                             " background."
                         ),
                         guild.id,
@@ -2375,39 +2375,47 @@ class AutoShardedConnectionState(ConnectionState):
                             )
                         except asyncio.TimeoutError:
                             fmt = (
-                                "Shard ID %s failed to wait for chunks from a"
+                                "Shard ID %s failed to wait for gateway requests from a"
                                 " sub-bucket with length %d"
                             )
                             _log.warning(fmt, guild.shard_id, len(current_bucket))
                         finally:
                             current_bucket = []
 
-                    # Chunk the guild in the background while we wait for GUILD_CREATE streaming
-                    future = asyncio.ensure_future(self.chunk_guild(guild))
-                    current_bucket.append(future)
-                else:
-                    future = self.loop.create_future()
-                    future.set_result([])
+                    # Run gateway requests in the background while we wait for GUILD_CREATE streaming
+                    if needs_chunk:
+                        guild_futures.append(
+                            asyncio.ensure_future(self.chunk_guild(guild))
+                        )
+                    if self._request_channel_info:
+                        guild_futures.append(
+                            asyncio.ensure_future(
+                                self.request_guild_channel_info(guild)
+                            )
+                        )
+                    current_bucket.extend(guild_futures)
 
-                processed.append((guild, future))
+                processed.append((guild, guild_futures))
 
         guilds = sorted(processed, key=lambda g: g[0].shard_id)
         for shard_id, info in itertools.groupby(guilds, key=lambda g: g[0].shard_id):
-            children, futures = zip(*info)
-            # 110 reqs/minute w/ 1 req/guild plus some buffer
-            timeout = 61 * (len(children) / 110)
-            try:
-                await utils.sane_wait_for(futures, timeout=timeout)
-            except asyncio.TimeoutError:
-                _log.warning(
-                    (
-                        "Shard ID %s failed to wait for chunks (timeout=%.2f) for %d"
-                        " guilds"
-                    ),
-                    shard_id,
-                    timeout,
-                    len(guilds),
-                )
+            children, future_lists = zip(*info)
+            futures = [future for fs in future_lists for future in fs]
+            if futures:
+                # 110 reqs/minute w/ 1 req per future plus some buffer
+                timeout = 61 * (len(futures) / 110)
+                try:
+                    await utils.sane_wait_for(futures, timeout=timeout)
+                except asyncio.TimeoutError:
+                    _log.warning(
+                        (
+                            "Shard ID %s failed to wait for gateway requests"
+                            " (timeout=%.2f) for %d guilds"
+                        ),
+                        shard_id,
+                        timeout,
+                        len(children),
+                    )
             for guild in children:
                 if guild.unavailable is False:
                     self.dispatch("guild_available", guild)
