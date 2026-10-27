@@ -141,25 +141,25 @@ class Client:
 
     Parameters
     -----------
-    max_messages: Optional[:class:`int`]
+    max_messages: :class:`int` | :obj:`None`
         The maximum number of messages to store in the internal message cache.
         This defaults to ``1000``. Passing in ``None`` disables the message cache.
 
         .. versionchanged:: 1.3
             Allow disabling the message cache and change the default size to ``1000``.
-    loop: Optional[:class:`asyncio.AbstractEventLoop`]
+    loop: :class:`asyncio.AbstractEventLoop` | :obj:`None`
         The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations.
         Defaults to ``None``, in which case the default event loop is used via
         :func:`asyncio.get_event_loop()` if it exists or one is created via :func:`asyncio.new_event_loop()`.
-    connector: Optional[:class:`aiohttp.BaseConnector`]
+    connector: :class:`aiohttp.BaseConnector` | :obj:`None`
         The connector to use for connection pooling.
-    proxy: Optional[:class:`str`]
+    proxy: :class:`str` | :obj:`None`
         Proxy URL.
-    proxy_auth: Optional[:class:`aiohttp.BasicAuth`]
+    proxy_auth: :class:`aiohttp.BasicAuth` | :obj:`None`
         An object that represents proxy HTTP Basic Authorization.
-    shard_id: Optional[:class:`int`]
+    shard_id: :class:`int` | :obj:`None`
         Integer starting at ``0`` and less than :attr:`.shard_count`.
-    shard_count: Optional[:class:`int`]
+    shard_count: :class:`int` | :obj:`None`
         The total number of shards.
     application_id: :class:`int`
         The client's application ID.
@@ -186,11 +186,11 @@ class Client:
         is ``True``.
 
         .. versionadded:: 1.5
-    status: Optional[:class:`.Status`]
+    status: :class:`.Status` | :obj:`None`
         A status to start your presence with upon logging on to Discord.
-    activity: Optional[:class:`.BaseActivity`]
+    activity: :class:`.BaseActivity` | :obj:`None`
         An activity to start your presence with upon logging on to Discord.
-    allowed_mentions: Optional[:class:`AllowedMentions`]
+    allowed_mentions: :class:`AllowedMentions` | :obj:`None`
         Control how the client handles mentions by default on every message sent.
 
         .. versionadded:: 1.4
@@ -898,7 +898,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.BaseActivity`]
+        :class:`.BaseActivity` | :obj:`None`
         """
         return create_activity(self._connection._activity)
 
@@ -997,7 +997,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.abc.GuildChannel` | :class:`.Thread` | :class:`.abc.PrivateChannel`]
+        :class:`.abc.GuildChannel` | :class:`.Thread` | :class:`.abc.PrivateChannel` | :obj:`None`
             The returned channel or ``None`` if not found.
         """
         return self._connection.get_channel(id)
@@ -1015,7 +1015,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.Message`]
+        :class:`.Message` | :obj:`None`
             The returned message or ``None`` if not found.
         """
         return self._connection._get_message(id)
@@ -1034,7 +1034,7 @@ class Client:
         ----------
         id: :class:`int`
             The channel ID to create a partial messageable for.
-        type: Optional[:class:`.ChannelType`]
+        type: :class:`.ChannelType` | :obj:`None`
             The underlying channel type for the partial messageable.
 
         Returns
@@ -1056,7 +1056,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.StageInstance`]
+        :class:`.StageInstance` | :obj:`None`
             The stage instance or ``None`` if not found.
         """
         from .channel import StageChannel
@@ -1076,7 +1076,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.Guild`]
+        :class:`.Guild` | :obj:`None`
             The guild or ``None`` if not found.
         """
         return self._connection._get_guild(id)
@@ -1091,7 +1091,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`~discord.User`]
+        :class:`~discord.User` | :obj:`None`
             The user or ``None`` if not found.
         """
         return self._connection.get_user(id)
@@ -1106,7 +1106,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.GuildEmoji` | :class:`.AppEmoji`]
+        :class:`.GuildEmoji` | :class:`.AppEmoji` | :obj:`None`
             The custom emoji or ``None`` if not found.
         """
         return self._connection.get_emoji(id)
@@ -1123,7 +1123,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.GuildSticker`]
+        :class:`.GuildSticker` | :obj:`None`
             The sticker or ``None`` if not found.
         """
         return self._connection.get_sticker(id)
@@ -1138,7 +1138,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.Poll`]
+        :class:`.Poll` | :obj:`None`
             The poll or ``None`` if not found.
         """
         return self._connection.get_poll(id)
@@ -1199,7 +1199,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`~discord.User`]
+        :class:`~discord.User` | :obj:`None`
             The user or ``None`` if not found.
         """
 
@@ -1288,10 +1288,10 @@ class Client:
         event: :class:`str`
             The event name, similar to the :ref:`event reference <discord-api-events>`,
             but without the ``on_`` prefix, to wait for.
-        check: Optional[Callable[..., :class:`bool`]]
+        check: Callable[..., :class:`bool`] | :obj:`None`
             A predicate to check what to wait for. The arguments must meet the
             parameters of the event being waited for.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The number of seconds to wait before timing out and raising
             :exc:`asyncio.TimeoutError`.
 
@@ -1529,9 +1529,9 @@ class Client:
 
         Parameters
         ----------
-        activity: Optional[:class:`.BaseActivity`]
+        activity: :class:`.BaseActivity` | :obj:`None`
             The activity being done. ``None`` if no currently active activity is done.
-        status: Optional[:class:`.Status`]
+        status: :class:`.Status` | :obj:`None`
             Indicates what status to change to. If ``None``, then
             :attr:`.Status.online` is used.
 
@@ -1594,7 +1594,7 @@ class Client:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of guilds to retrieve.
             If ``None``, it retrieves every guild you have access to. Note, however,
             that this would make it a slow operation.
@@ -1770,7 +1770,7 @@ class Client:
             :attr:`.Invite.expires_at` field.
 
             .. versionadded:: 2.0
-        event_id: Optional[:class:`int`]
+        event_id: :class:`int` | :obj:`None`
             The ID of the scheduled event to be associated with the event.
 
             See :meth:`Invite.set_scheduled_event` for more
@@ -2062,7 +2062,7 @@ class Client:
         ----------
         view: :class:`discord.ui.BaseView`
             The view to register for dispatching.
-        message_id: Optional[:class:`int`]
+        message_id: :class:`int` | :obj:`None`
             The message ID that the view is attached to. This is currently used to
             refresh the view's state during message update events. If not given
             then message update events are not propagated for the view.
@@ -2182,7 +2182,7 @@ class Client:
             Retrieve guilds after this date or object.
             If a datetime is provided, it is recommended to use a UTC-aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of entitlements to retrieve.
             If ``None``, retrieves every entitlement, which may be slow.
             Defaults to ``100``.
@@ -2356,7 +2356,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.SoundboardSound`]
+        :class:`.SoundboardSound` | :obj:`None`
             The sound with the given ID.
         """
         return self._connection._get_sound(sound_id)

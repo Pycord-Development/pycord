@@ -86,16 +86,16 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         A dictionary of transformed arguments that were passed into the command.
         Similar to :attr:`args`\, if this is accessed in the
         :func:`.on_command_error` event then this dict could be incomplete.
-    current_parameter: Optional[:class:`inspect.Parameter`]
+    current_parameter: :class:`inspect.Parameter` | :obj:`None`
         The parameter that is currently being inspected and converted.
         This is only of use for within converters.
 
         .. versionadded:: 2.0
-    prefix: Optional[:class:`str`]
+    prefix: :class:`str` | :obj:`None`
         The prefix that was used to invoke the command.
-    command: Optional[:class:`Command`]
+    command: :class:`Command` | :obj:`None`
         The command that is being invoked currently.
-    invoked_with: Optional[:class:`str`]
+    invoked_with: :class:`str` | :obj:`None`
         The command name that triggered this invocation. Useful for finding out
         which alias called the command.
     invoked_parents: List[:class:`str`]
@@ -106,10 +106,10 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
         .. versionadded:: 1.7
 
-    invoked_subcommand: Optional[:class:`Command`]
+    invoked_subcommand: :class:`Command` | :obj:`None`
         The subcommand that was invoked.
         If no valid subcommand was invoked then this is equal to ``None``.
-    subcommand_passed: Optional[:class:`str`]
+    subcommand_passed: :class:`str` | :obj:`None`
         The string that was attempted to call a subcommand. This does not have
         to point to a valid registered subcommand and could just point to a
         nonsense string. If nothing was passed to attempt a call to a
@@ -338,11 +338,11 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
             Due to the way this function works, instead of returning
             something similar to :meth:`~.commands.HelpCommand.command_not_found`
-            this returns :class:`None` on bad input or no help command.
+            this returns :obj:`None` on bad input or no help command.
 
         Parameters
         ----------
-        entity: Optional[:class:`Command` | :class:`Cog` | :class:`str`]
+        entity: :class:`Command` | :class:`Cog` | :class:`str` | :obj:`None`
             The entity to show help for.
 
         Returns

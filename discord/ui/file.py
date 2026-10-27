@@ -54,9 +54,9 @@ class File(ViewItem[V]):
     ----------
     url: :class:`str`
         The URL of this file. This must be an ``attachment://`` URL referring to a local file used with :class:`~discord.File`.
-    spoiler: Optional[:class:`bool`]
+    spoiler: :class:`bool` | :obj:`None`
         Whether this file has the spoiler overlay.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The file component's ID.
     """
 

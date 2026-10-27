@@ -171,7 +171,7 @@ class ApplicationCommandMixin(ABC):
 
         Returns
         -------
-        Optional[:class:`.ApplicationCommand`]
+        :class:`.ApplicationCommand` | :obj:`None`
             The command that was removed. If the command has not been added,
             ``None`` is returned instead.
         """
@@ -216,7 +216,7 @@ class ApplicationCommandMixin(ABC):
 
         Returns
         -------
-        Optional[:class:`.ApplicationCommand`]
+        :class:`.ApplicationCommand` | :obj:`None`
             The command that was requested. If not found, returns ``None``.
         """
         commands = self._application_commands.values()
@@ -260,9 +260,9 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        guild_id: Optional[:class:`int`]
+        guild_id: :class:`int` | :obj:`None`
             The guild id to get the desynced commands for, else global commands if unspecified.
-        prefetched: Optional[List[:class:`.ApplicationCommand`]]
+        prefetched: List[:class:`.ApplicationCommand`] | :obj:`None`
             If you already fetched the commands, you can pass them here to be used. Not recommended for typical usage.
 
         Returns
@@ -459,9 +459,9 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        commands: Optional[List[:class:`~.ApplicationCommand`]]
+        commands: List[:class:`~.ApplicationCommand`] | :obj:`None`
             A list of commands to register. If this is not set (``None``), then all commands will be registered.
-        guild_id: Optional[int]
+        guild_id: :class:`int` | :obj:`None`
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
             set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute.
         method: Literal['individual', 'bulk', 'auto']
@@ -728,7 +728,7 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        commands: Optional[List[:class:`~.ApplicationCommand`]]
+        commands: List[:class:`~.ApplicationCommand`] | :obj:`None`
             A list of commands to register. If this is not set (None), then all commands will be registered.
         method: Literal['individual', 'bulk', 'auto']
             The method to use when registering the commands. If this is set to "individual", then each command will be
@@ -737,12 +737,12 @@ class ApplicationCommandMixin(ABC):
         force: :class:`bool`
             Registers the commands regardless of the state of the command on Discord. This uses one less API call, but
             can result in hitting rate limits more often. Defaults to False.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of guild ids to register the commands for. If this is not set, the commands'
             :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
         register_guild_commands: :class:`bool`
             Whether to register guild commands. Defaults to True.
-        check_guilds: Optional[List[:class:`int`]]
+        check_guilds: List[:class:`int`] | :obj:`None`
             A list of guilds ids to check for commands to unregister, since the bot would otherwise have to check all
             guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
             attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
@@ -840,7 +840,7 @@ class ApplicationCommandMixin(ABC):
         ----------
         interaction: :class:`discord.Interaction`
             The interaction to process
-        auto_sync: Optional[:class:`bool`]
+        auto_sync: :class:`bool` | :obj:`None`
             Whether to automatically sync and unregister the command if it is not found in the internal cache. This will
             invoke the :meth:`~.Bot.sync_commands` method on the context of the command, either globally or per-guild,
             based on the type of the command, respectively. Defaults to :attr:`.Bot.auto_sync_commands`.
@@ -1155,9 +1155,9 @@ class ApplicationCommandMixin(ABC):
         ----------
         name: :class:`str`
             The name of the group to create.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The description of the group to create.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
         kwargs:
@@ -1186,11 +1186,11 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The description of the group to create.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
 
@@ -1630,11 +1630,11 @@ class Bot(BotBase, Client):
     ----------
     description: :class:`str`
         The content prefixed into the default help message.
-    owner_id: Optional[:class:`int`]
+    owner_id: :class:`int` | :obj:`None`
         The user ID that owns the bot. If this is not set and is then queried via
         :meth:`.is_owner` then it is fetched automatically using
         :meth:`~.Bot.application_info`, returning the application owner.
-    owner_ids: Optional[Collection[:class:`int`]]
+    owner_ids: Collection[:class:`int`] | :obj:`None`
         The user IDs that owns the bot. This is similar to :attr:`owner_id`.
         If this is not set and the application is team based, then it is
         fetched automatically using :meth:`~.Bot.application_info`,
@@ -1643,7 +1643,7 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-    debug_guilds: Optional[List[:class:`int`]]
+    debug_guilds: List[:class:`int`] | :obj:`None`
         Guild IDs of guilds to use for testing commands.
         The bot will not create any global commands if debug guild IDs are passed.
 

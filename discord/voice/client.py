@@ -382,9 +382,9 @@ class VoiceClient(VoiceProtocol):
 
         Parameters
         ----------
-        channel: Optional[:class:`abc.Snowflake`]
+        channel: :class:`abc.Snowflake` | :obj:`None`
             The channel to move to. If this is ``None``, it is an equivalent of calling :meth:`.disconnect`.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The maximum time in seconds to wait for the channel move to be completed, defaults to 30.
             If it is ``None``, then there is no timeout.
 
@@ -519,7 +519,7 @@ class VoiceClient(VoiceProtocol):
         ----------
         source: :class:`AudioSource`
             The audio source we're reading from.
-        after: Callable[[Optional[:class:`Exception`]], Any]
+        after: Callable[[:class:`Exception` | :obj:`None`], Any]
             The finalizer that is called after the stream is exhausted.
             This function must have a single parameter, ``error``, that
             denotes an optional exception that was raised during playing.
