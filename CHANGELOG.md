@@ -12,6 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added support for sending and receiving client themes.
+  ([#3209](https://github.com/Pycord-Development/pycord/pull/3209))
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
@@ -32,6 +34,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed `Thumbnail` components ignoring the `spoiler` parameter when used as a `Section`
+  accessory. ([#3403](https://github.com/Pycord-Development/pycord/pull/3403))
+- Fixed `AttributeError` when using `Modal.remove_item()`.
+  ([#3357](https://github.com/Pycord-Development/pycord/pull/3357))
 - Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
@@ -43,6 +49,13 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
   user leaves the event.
   ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
+- Fix the type of `send_notification` in the `StageChannel.create_instance()`.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the type of `sync_permissions` in the overload of `VoiceChannel.edit()` and
+  `StageChannel.edit()`.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the return type of the `MediaChannel.edit()` overload.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 
 ### Deprecated
 
