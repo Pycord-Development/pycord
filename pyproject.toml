@@ -39,7 +39,7 @@ dependencies = [
 
 [project.optional-dependencies]
 speed = [
-    "msgspec~=0.21.0",
+    "msgspec~=0.22.0",
     "aiohttp[speedups]",
 ]
 voice = [
