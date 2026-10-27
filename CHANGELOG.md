@@ -51,6 +51,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix the return type of the `MediaChannel.edit()` overload.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix `ctx.command.qualified_name` returning only the parent `SlashCommandGroup` name
+  instead of the full subcommand path when accessed inside `cog_check`.
+  ([#3363](https://github.com/Pycord-Development/pycord/pull/3363))
 
 ### Deprecated
 
