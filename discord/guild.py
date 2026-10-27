@@ -28,11 +28,13 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
+import warnings
 from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Literal,
     NamedTuple,
     Optional,
     TypeVar,
@@ -71,7 +73,7 @@ from .enums import (
 )
 from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
-from .flags import SystemChannelFlags
+from .flags import ChannelFlags, SystemChannelFlags
 from .incidents import IncidentsData
 from .integrations import Integration, _integration_factory
 from .invite import Invite
@@ -1431,6 +1433,9 @@ class Guild(Hashable):
         elif not isinstance(overwrites, dict):
             raise InvalidArgument("overwrites parameter expects a dict.")
 
+        if "flags" in options:
+            options["flags"] = options.pop("flags").value
+
         perms = []
         for target, perm in overwrites.items():
             if not isinstance(perm, PermissionOverwrite):
@@ -1462,6 +1467,40 @@ class Guild(Hashable):
             **options,
         )
 
+    @overload
+    async def create_text_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = ...,
+        category: CategoryChannel | None = ...,
+        position: int = ...,
+        topic: str = ...,
+        slowmode_delay: int = ...,
+        nsfw: bool = ...,
+        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
+        default_thread_slowmode_delay: int | None = ...,
+        default_auto_archive_duration: int = ...,
+        spoiler: Literal[False] = ...,
+    ) -> TextChannel: ...
+
+    @overload
+    async def create_text_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = ...,
+        category: CategoryChannel | None = ...,
+        position: int = ...,
+        topic: str = ...,
+        slowmode_delay: int = ...,
+        nsfw: Literal[False] = ...,
+        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
+        default_thread_slowmode_delay: int | None = ...,
+        default_auto_archive_duration: int = ...,
+        spoiler: bool = ...,
+    ) -> TextChannel: ...
+
     async def create_text_channel(
         self,
         name: str,
@@ -1475,6 +1514,7 @@ class Guild(Hashable):
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         default_thread_slowmode_delay: int | None = MISSING,
         default_auto_archive_duration: int = MISSING,
+        spoiler: bool = MISSING,
     ) -> TextChannel:
         """|coro|
 
@@ -1514,6 +1554,10 @@ class Guild(Hashable):
             A value of `0` disables slowmode. The maximum value possible is `21600`.
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
+
+            .. note::
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
+
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
 
@@ -1526,6 +1570,13 @@ class Guild(Hashable):
             The default auto archive duration in minutes for threads created in this channel.
 
             .. versionadded:: 2.7
+        spoiler: :class:`bool`
+            Whether the channel is marked as a spoiler channel.
+
+            .. versionadded:: 2.9
+
+            .. note::
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1581,6 +1632,16 @@ class Guild(Hashable):
         if default_auto_archive_duration is not MISSING:
             options["default_auto_archive_duration"] = default_auto_archive_duration
 
+        if spoiler is not MISSING:
+            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
+
+        if nsfw and spoiler:
+            warnings.warn(
+                "The NSFW setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an NSFW channel.",
+                stacklevel=2,
+            )
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -1594,6 +1655,42 @@ class Guild(Hashable):
         # temporarily add to the cache
         self._channels[channel.id] = channel
         return channel
+
+    @overload
+    async def create_voice_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = ...,
+        category: CategoryChannel | None = ...,
+        position: int = ...,
+        bitrate: int = ...,
+        user_limit: int = ...,
+        rtc_region: VoiceRegion | None = ...,
+        video_quality_mode: VideoQualityMode = ...,
+        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
+        slowmode_delay: int = ...,
+        nsfw: bool = ...,
+        spoiler: Literal[False] = ...,
+    ) -> VoiceChannel: ...
+
+    @overload
+    async def create_voice_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = ...,
+        category: CategoryChannel | None = ...,
+        position: int = ...,
+        bitrate: int = ...,
+        user_limit: int = ...,
+        rtc_region: VoiceRegion | None = ...,
+        video_quality_mode: VideoQualityMode = ...,
+        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
+        slowmode_delay: int = ...,
+        nsfw: Literal[False] = ...,
+        spoiler: bool = ...,
+    ) -> VoiceChannel: ...
 
     async def create_voice_channel(
         self,
@@ -1609,6 +1706,7 @@ class Guild(Hashable):
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
+        spoiler: bool = MISSING,
     ) -> VoiceChannel:
         """|coro|
 
@@ -1654,6 +1752,17 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
+            .. note::
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
+
+        spoiler: :class:`bool`
+            Whether the channel is marked as a spoiler channel.
+
+            .. versionadded:: 2.9
+
+            .. note::
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
+
         Returns
         -------
         :class:`VoiceChannel`
@@ -1689,6 +1798,16 @@ class Guild(Hashable):
 
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
+
+        if spoiler is not MISSING:
+            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
+
+        if nsfw and spoiler:
+            warnings.warn(
+                "The NSFW setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an NSFW channel.",
+                stacklevel=2,
+            )
 
         data = await self._create_channel(
             name,
@@ -1829,6 +1948,46 @@ class Guild(Hashable):
         self._channels[channel.id] = channel
         return channel
 
+    @overload
+    async def create_forum_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = ...,
+        category: CategoryChannel | None = ...,
+        position: int = ...,
+        topic: str = ...,
+        slowmode_delay: int = ...,
+        nsfw: bool = ...,
+        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
+        default_reaction_emoji: GuildEmoji | int | str = ...,
+        available_tags: list[ForumTag] = ...,
+        default_sort_order: SortOrder | None = ...,
+        default_thread_slowmode_delay: int | None = ...,
+        default_auto_archive_duration: int = ...,
+        spoiler: Literal[False] = ...,
+    ) -> ForumChannel: ...
+
+    @overload
+    async def create_forum_channel(
+        self,
+        name: str,
+        *,
+        reason: str | None = ...,
+        category: CategoryChannel | None = ...,
+        position: int = ...,
+        topic: str = ...,
+        slowmode_delay: int = ...,
+        nsfw: Literal[False] = ...,
+        overwrites: dict[Role | Member, PermissionOverwrite] = ...,
+        default_reaction_emoji: GuildEmoji | int | str = ...,
+        available_tags: list[ForumTag] = ...,
+        default_sort_order: SortOrder | None = ...,
+        default_thread_slowmode_delay: int | None = ...,
+        default_auto_archive_duration: int = ...,
+        spoiler: bool = ...,
+    ) -> ForumChannel: ...
+
     async def create_forum_channel(
         self,
         name: str,
@@ -1845,6 +2004,7 @@ class Guild(Hashable):
         default_sort_order: SortOrder | None = MISSING,
         default_thread_slowmode_delay: int | None = MISSING,
         default_auto_archive_duration: int = MISSING,
+        spoiler: bool = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1884,6 +2044,10 @@ class Guild(Hashable):
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
+
+            .. note::
+                Passing both this and ``spoiler`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
+
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
         default_reaction_emoji: Optional[:class:`GuildEmoji` | :class:`int` | :class:`str`]
@@ -1912,6 +2076,13 @@ class Guild(Hashable):
             The default auto archive duration in minutes for threads created in this channel.
 
             .. versionadded:: 2.7
+        spoiler: :class:`bool`
+            Whether the channel is marked as a spoiler channel.
+
+            .. versionadded:: 2.9
+
+            .. note::
+                Passing both this and ``nsfw`` as ``True`` will mark the channel as NSFW and ignore the spoiler flag.
 
         Returns
         -------
@@ -1974,6 +2145,16 @@ class Guild(Hashable):
 
         if default_auto_archive_duration is not MISSING:
             options["default_auto_archive_duration"] = default_auto_archive_duration
+
+        if spoiler is not MISSING:
+            options["flags"] = ChannelFlags(is_spoiler_channel=spoiler)
+
+        if nsfw and spoiler:
+            warnings.warn(
+                "The NSFW setting is mutually exclusive with the spoiler setting. "
+                "The channel will be created as an NSFW channel.",
+                stacklevel=2,
+            )
 
         if default_reaction_emoji is not MISSING:
             if isinstance(
