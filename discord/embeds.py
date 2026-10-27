@@ -273,7 +273,7 @@ class EmbedField:
 
         Returns
         -------
-        Dict[:class:`str`, Union[:class:`str`, :class:`bool`]]
+        Dict[:class:`str`, :class:`str` | :class:`bool`]
             A dictionary of :class:`str` embed field keys bound to the respective value.
         """
         return {
@@ -327,7 +327,7 @@ class Embed:
         The timestamp of the embed content. This is an aware datetime.
         If a naive datetime is passed, it is converted to an aware
         datetime with the local timezone.
-    colour: Union[:class:`Colour`, :class:`int`]
+    colour: :class:`Colour` | :class:`int`
         The colour code of the embed. Aliased to ``color`` as well.
         This can be set during initialisation.
     """
@@ -1025,7 +1025,7 @@ class Embed:
 
         Returns
         -------
-        Dict[:class:`str`, Union[:class:`str`, :class:`int`, :class:`bool`]]
+        Dict[:class:`str`, :class:`str` | :class:`int` | :class:`bool`]
             A dictionary of :class:`str` embed keys bound to the respective value.
         """
 

@@ -322,7 +322,7 @@ class FFmpegPCMAudio(FFmpegAudio):
 
     Parameters
     ----------
-    source: Union[:class:`str`, :class:`io.BufferedIOBase`]
+    source: :class:`str` | :class:`io.BufferedIOBase`
         The input that ffmpeg will take and convert to PCM bytes.
         If ``pipe`` is ``True`` then this is a file-like object that is
         passed to the stdin of ffmpeg.
@@ -427,7 +427,7 @@ class FFmpegOpusAudio(FFmpegAudio):
 
     Parameters
     ----------
-    source: Union[:class:`str`, :class:`io.BufferedIOBase`]
+    source: :class:`str` | :class:`io.BufferedIOBase`
         The input that ffmpeg will take and convert to Opus bytes.
         If ``pipe`` is ``True`` then this is a file-like object that is
         passed to the stdin of ffmpeg.
@@ -564,7 +564,7 @@ class FFmpegOpusAudio(FFmpegAudio):
         ------------
         source
             Identical to the ``source`` parameter for the constructor.
-        method: Optional[Union[:class:`str`, Callable[:class:`str`, :class:`str`]]]
+        method: Optional[:class:`str` | Callable[:class:`str`, :class:`str`]]
             The probing method used to determine bitrate and codec information. As a string, valid
             values are ``native`` to use ffprobe (or avprobe) and ``fallback`` to use ffmpeg
             (or avconv).  As a callable, it must take two string arguments, ``source`` and

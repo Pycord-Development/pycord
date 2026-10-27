@@ -122,7 +122,7 @@ class ItemInterface:
 
         Parameters
         ----------
-        custom_id: Union[:class:`str`, :class:`int`]
+        custom_id: :class:`str` | :class:`int`
             The id of the item to get
 
         Returns
