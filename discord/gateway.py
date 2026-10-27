@@ -204,8 +204,6 @@ class KeepAliveHandler(threading.Thread):
 
             except Exception:
                 self.stop()
-            else:
-                self._last_send = time.perf_counter()
 
     def get_payload(self) -> dict[str, Any]:
         return {"op": self.ws.HEARTBEAT, "d": self.ws.sequence}
@@ -518,7 +516,7 @@ class DiscordWebSocket:
             if op == self.HEARTBEAT:
                 if self._keep_alive:
                     beat = self._keep_alive.get_payload()
-                    await self.send_as_json(beat)
+                    await self.send_heartbeat(beat)
                 return
 
             if op == self.HELLO:
@@ -527,7 +525,7 @@ class DiscordWebSocket:
                     ws=self, interval=interval, shard_id=self.shard_id
                 )
                 # send a heartbeat immediately
-                await self.send_as_json(self._keep_alive.get_payload())
+                await self.send_heartbeat(self._keep_alive.get_payload())
                 self._keep_alive.start()
                 return
 
@@ -684,6 +682,8 @@ class DiscordWebSocket:
 
     async def send_heartbeat(self, data: Any) -> None:
         # This bypasses the rate limit handling code since it has a higher priority
+        if self._keep_alive:
+            self._keep_alive._last_send = time.perf_counter()
         try:
             await self.socket.send_str(utils._to_json(data))
         except RuntimeError as exc:
