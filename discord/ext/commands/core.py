@@ -324,7 +324,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         ),
         **kwargs: Any,
     ):
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
 
         name = kwargs.get("name") or func.__name__
@@ -852,7 +852,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     def _prepare_cooldowns(self, ctx: Context) -> None:
         if self._buckets.valid:
             dt = ctx.message.edited_at or ctx.message.created_at
-            current = dt.replace(tzinfo=datetime.timezone.utc).timestamp()
+            current = dt.replace(tzinfo=datetime.UTC).timestamp()
             bucket = self._buckets.get_bucket(ctx.message, current)
             if bucket is not None:
                 retry_after = bucket.update_rate_limit(current)
@@ -907,7 +907,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         bucket = self._buckets.get_bucket(ctx.message)
         dt = ctx.message.edited_at or ctx.message.created_at
-        current = dt.replace(tzinfo=datetime.timezone.utc).timestamp()
+        current = dt.replace(tzinfo=datetime.UTC).timestamp()
         return bucket.get_tokens(current) == 0
 
     def reset_cooldown(self, ctx: Context) -> None:
@@ -941,7 +941,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         if self._buckets.valid:
             bucket = self._buckets.get_bucket(ctx.message)
             dt = ctx.message.edited_at or ctx.message.created_at
-            current = dt.replace(tzinfo=datetime.timezone.utc).timestamp()
+            current = dt.replace(tzinfo=datetime.UTC).timestamp()
             return bucket.get_retry_after(current)
 
         return 0.0
@@ -992,7 +992,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             The coroutine passed is not actually a coroutine.
         """
 
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The error handler must be a coroutine.")
 
         self.on_error: Error = coro
@@ -1026,7 +1026,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
@@ -1053,7 +1053,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro
@@ -1081,7 +1081,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     def _is_typing_optional(self, annotation: T | T | None) -> TypeGuard[T | None]:
         return (
             getattr(annotation, "__origin__", None) is Union
-            or type(annotation) is getattr(types, "UnionType", Union)
+            or type(annotation) is types.UnionType
         ) and type(
             None
         ) in annotation.__args__  # type: ignore
@@ -1599,7 +1599,7 @@ class Group(GroupMixin[CogT], Command[CogT, P, T]):
 # Decorators
 
 
-@overload  # for py 3.10
+@overload
 def command(
     name: str = ...,
     cls: type[Command[CogT, P, T]] = ...,

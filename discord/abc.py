@@ -2053,7 +2053,7 @@ class Connectable(Protocol):
 
         Raises
         ------
-        asyncio.TimeoutError
+        TimeoutError
             Could not connect to the voice channel in time.
         ~discord.ClientException
             You are already connected to a voice channel.
@@ -2087,7 +2087,7 @@ class Connectable(Protocol):
 
         try:
             await voice.connect(timeout=timeout, reconnect=reconnect)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             try:
                 await voice.disconnect(force=True)
             except Exception:

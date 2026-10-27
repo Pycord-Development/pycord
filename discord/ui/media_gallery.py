@@ -34,7 +34,7 @@ from .item import ViewItem
 __all__ = ("MediaGallery",)
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .view import DesignerView

@@ -39,13 +39,12 @@ from typing import (
     Any,
     Generic,
     Literal,
+    Self,
     TypeVar,
     Union,
     get_args,
     get_origin,
 )
-
-from typing_extensions import Self
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
@@ -83,9 +82,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing import Concatenate, ParamSpec
-
-    from typing_extensions import Never
+    from typing import Concatenate, Never, ParamSpec
 
     from .. import Permissions
     from ..bot import C
@@ -498,7 +495,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The coroutine passed is not actually a coroutine.
         """
 
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The error handler must be a coroutine.")
 
         self.on_error = coro
@@ -527,7 +524,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The pre-invoke hook must be a coroutine.")
 
         self._before_invoke = coro
@@ -552,7 +549,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         TypeError
             The coroutine passed is not actually a coroutine.
         """
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("The post-invoke hook must be a coroutine.")
 
         self._after_invoke = coro
@@ -731,7 +728,7 @@ class SlashCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 
@@ -922,10 +919,9 @@ class SlashCommand(ApplicationCommand):
         return options
 
     def _is_typing_union(self, annotation):
-        return getattr(annotation, "__origin__", None) is Union or type(
-            annotation
-        ) is getattr(
-            types, "UnionType", Union
+        return (
+            getattr(annotation, "__origin__", None) is Union
+            or type(annotation) is types.UnionType
         )  # type: ignore
 
     def _is_typing_optional(self, annotation):
@@ -1678,7 +1674,7 @@ class ContextMenuCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
         self.callback = func
 

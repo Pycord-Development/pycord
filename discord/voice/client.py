@@ -390,7 +390,7 @@ class VoiceClient(VoiceProtocol):
 
         Raises
         ------
-        asyncio.TimeoutError
+        TimeoutError
             Waiting for channel move timed out.
         """
         await self._connection.move_to(channel, timeout)

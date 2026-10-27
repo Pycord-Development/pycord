@@ -49,7 +49,7 @@ from .opus import Encoder as OpusEncoder
 from .utils import MISSING
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from .voice import VoiceClient
 

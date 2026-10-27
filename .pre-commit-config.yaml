@@ -25,7 +25,7 @@ repos:
     hooks:
       - id: pyupgrade
         exclude: \.(po|pot|yml|yaml)$
-        args: [--py310-plus]
+        args: [--py311-plus]
   - repo: https://github.com/PyCQA/isort
     rev: 9.0.2
     hooks:
