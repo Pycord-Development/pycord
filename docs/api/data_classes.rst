@@ -89,6 +89,11 @@ Message
 .. autoclass:: File
     :members:
 
+.. attributetable:: SharedClientTheme
+
+.. autoclass:: SharedClientTheme
+    :members:
+
 Embed
 ~~~~~
 
