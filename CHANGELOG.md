@@ -55,6 +55,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix animated asset URL extension from `.gif` to `.webp`.
   ([#3294](https://github.com/Pycord-Development/pycord/pull/3294))
+
 ### Deprecated
 
 - Deprecated `Invite.id` in favour of `Invite.code`.
