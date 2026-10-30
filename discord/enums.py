@@ -407,6 +407,7 @@ class AuditLogAction(Enum):
     overwrite_create = 13
     overwrite_update = 14
     overwrite_delete = 15
+    channel_position_update = 16
     kick = 20
     member_prune = 21
     ban = 22
@@ -419,6 +420,7 @@ class AuditLogAction(Enum):
     role_create = 30
     role_update = 31
     role_delete = 32
+    role_position_update = 33
     invite_create = 40
     invite_update = 41
     invite_delete = 42
@@ -474,6 +476,7 @@ class AuditLogAction(Enum):
             AuditLogAction.overwrite_create: AuditLogActionCategory.create,
             AuditLogAction.overwrite_update: AuditLogActionCategory.update,
             AuditLogAction.overwrite_delete: AuditLogActionCategory.delete,
+            AuditLogAction.channel_position_update: AuditLogActionCategory.update,
             AuditLogAction.kick: None,
             AuditLogAction.member_prune: None,
             AuditLogAction.ban: None,
@@ -486,6 +489,7 @@ class AuditLogAction(Enum):
             AuditLogAction.role_create: AuditLogActionCategory.create,
             AuditLogAction.role_update: AuditLogActionCategory.update,
             AuditLogAction.role_delete: AuditLogActionCategory.delete,
+            AuditLogAction.role_position_update: AuditLogActionCategory.update,
             AuditLogAction.invite_create: AuditLogActionCategory.create,
             AuditLogAction.invite_update: AuditLogActionCategory.update,
             AuditLogAction.invite_delete: AuditLogActionCategory.delete,
