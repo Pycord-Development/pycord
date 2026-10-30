@@ -29,6 +29,7 @@ import copy
 import datetime
 import unicodedata
 from collections.abc import Sequence
+from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -97,7 +98,7 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts", "VoiceServerRegion")
 
 MISSING = utils.MISSING
 
@@ -147,6 +148,36 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+@dataclass(frozen=True, slots=True)
+class VoiceServerRegion:
+    """Represents a voice region a guild can use for voice channels.
+
+    This is returned by :meth:`Guild.fetch_voice_regions`.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`str`
+        The region ID, e.g. ``"us-west"``. Use this as the
+        :attr:`VoiceChannel.rtc_region` of a voice channel.
+    name: :class:`str`
+        The region's display name, e.g. ``"US West"``.
+    optimal: :class:`bool`
+        Whether the region is optimal for the guild's members.
+    deprecated: :class:`bool`
+        Whether the region is deprecated.
+    custom: :class:`bool`
+        Whether the region is a custom region.
+    """
+
+    id: str
+    name: str
+    optimal: bool
+    deprecated: bool
+    custom: bool
 
 
 class GuildRoleCounts(dict[int, int]):
@@ -1604,7 +1635,7 @@ class Guild(Hashable):
         position: int = MISSING,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
@@ -1631,9 +1662,13 @@ class Guild(Hashable):
             The channel's preferred audio bitrate in bits per second.
         user_limit: :class:`int`
             The channel's limit for number of members that can be in a voice channel.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A region ID string is now accepted.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -1715,7 +1750,7 @@ class Guild(Hashable):
         reason: str | None = None,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
@@ -1754,9 +1789,13 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is now accepted.
 
             .. versionadded:: 2.7
 
@@ -3793,6 +3832,38 @@ class Guild(Hashable):
             guild=self,
             channel=channel,
         )
+
+    async def fetch_voice_regions(self) -> list[VoiceServerRegion]:
+        """|coro|
+
+        Retrieves the voice regions that the guild has access to.
+
+        The list of voice regions is dynamic, so this method is the
+        recommended way to get the currently available regions.
+
+        .. versionadded:: 2.9
+
+        Returns
+        -------
+        List[:class:`VoiceServerRegion`]
+            The list of voice regions the guild has access to.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the voice regions failed.
+        """
+        regions = await self._state.http.get_guild_voice_regions(self.id)
+        return [
+            VoiceServerRegion(
+                id=region.get("id", ""),
+                name=region.get("name", ""),
+                optimal=region.get("optimal", False),
+                deprecated=region.get("deprecated", False),
+                custom=region.get("custom", False),
+            )
+            for region in regions
+        ]
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(
