@@ -5,12 +5,11 @@ on:
     paths:
       - "discord/**"
       - "examples/**"
-      - "requirements/**"
+      - "uv.lock"
       - "tests/**"
       - ".github/actions/**"
       - ".github/workflows/lib-checks.yml"
       - "LICENSE"
-      - "MANIFEST.in"
       - "README.rst"
       - "*.toml"
       - "*.py"
@@ -34,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       lib: ${{ steps.filter.outputs.lib }}
+      deps: ${{ steps.filter.outputs.deps }}
     steps:
       - name: "Check changed paths"
         id: filter
@@ -42,6 +42,7 @@ jobs:
           script: |
             if (context.eventName !== 'pull_request') {
               core.setOutput('lib', 'true');
+              core.setOutput('deps', 'false');
               return;
             }
 
@@ -54,12 +55,11 @@ jobs:
             const matches = (file) => (
               file.startsWith('discord/') ||
               file.startsWith('examples/') ||
-              file.startsWith('requirements/') ||
+              file === 'uv.lock' ||
               file.startsWith('tests/') ||
               file.startsWith('.github/actions/') ||
               file === '.github/workflows/lib-checks.yml' ||
               file === 'LICENSE' ||
-              file === 'MANIFEST.in' ||
               file === 'README.rst' ||
               (!file.includes('/') && file.endsWith('.toml')) ||
               (!file.includes('/') && file.endsWith('.py')) ||
@@ -68,6 +68,7 @@ jobs:
 
             const changed = files.some((file) => matches(file.filename));
             core.setOutput('lib', changed ? 'true' : 'false');
+            core.setOutput('deps', files.some((file) => file.filename === 'uv.lock') ? 'true' : 'false');
 
             if (!changed) {
               core.notice('Library checks skipped because no changed files matched the library check paths.');
@@ -77,6 +78,19 @@ jobs:
                 .write();
             }
 
+  uv-lock:
+    needs: [ changes ]
+    if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: "Install uv"
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+      - name: "Check uv.lock is up to date"
+        run: uv lock --check
   codespell:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
@@ -84,10 +98,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Run codespell"
         run:
           codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" \
@@ -99,12 +114,13 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Run bandit"
-        run: bandit --recursive  --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
+        run: bandit --recursive --exclude ./.venv --skip B101,B104,B105,B110,B307,B311,B404,B603,B607 .
   pylint:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
@@ -112,10 +128,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Setup cache"
         id: cache-pylint
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -133,10 +150,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Setup cache"
         id: cache-mypy
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -157,17 +175,18 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: "3.14"
+          groups: "dev"
       - name: "Lint with flake8"
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
   tests:
     needs: [ changes ]
-    if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' && github.event_name != 'workflow_dispatch' }}
+    if: ${{ needs.changes.outputs.lib == 'true' && needs.changes.outputs.deps != 'true' && github.event_name != 'schedule' && github.event_name != 'workflow_dispatch' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -176,17 +195,17 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: ${{ matrix.python-version }}
-          install-voice: "true"
+          groups: "tox"
 
       - name: "Run tests"
         run: tox
   tests-full:
     needs: [ changes ]
-    if: ${{ needs.changes.outputs.lib == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ needs.changes.outputs.lib == 'true' && (needs.changes.outputs.deps == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -195,11 +214,11 @@ jobs:
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup Python dev environment"
-        uses: ./.github/actions/setup-python-dev
+      - name: "Setup uv"
+        uses: ./.github/actions/setup-uv
         with:
           python-version: ${{ matrix.python-version }}
-          install-voice: "true"
+          groups: "tox"
 
       - name: "Run tests"
         run: tox
