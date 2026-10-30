@@ -24,7 +24,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
   regions for the guild.
   ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
-  
+
 ### Changed
 
 - Simplify and optimize the `utils.get()` function.
