@@ -1347,6 +1347,9 @@ class GuildChannel:
             for invite in data
         ]
 
+    def search(self, **params):
+        return self.guild.search(channels=[self], **params)
+
 
 class Messageable:
     """An ABC that details the common operations on a model that can send messages.
