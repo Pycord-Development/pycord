@@ -18,10 +18,13 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+- Added `AuditLogAction.channel_position_update` and
+  `AuditLogAction.role_position_update`.
+  ([#3415](https://github.com/Pycord-Development/pycord/pull/3415))
 - Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
   regions for the guild.
   ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
-
+  
 ### Changed
 
 - Simplify and optimize the `utils.get()` function.
