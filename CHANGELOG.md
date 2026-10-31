@@ -16,6 +16,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3209](https://github.com/Pycord-Development/pycord/pull/3209))
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
+- Added `Asset.size` and `Asset.extension` properties.
+  ([#3294](https://github.com/Pycord-Development/pycord/pull/3294))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
 - Added `AuditLogAction.channel_position_update` and
@@ -59,6 +61,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix the return type of the `MediaChannel.edit()` overload.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix animated asset URL extension from `.gif` to `.webp`.
+  ([#3294](https://github.com/Pycord-Development/pycord/pull/3294))
 
 ### Deprecated
 
