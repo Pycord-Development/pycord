@@ -99,6 +99,8 @@ __all__ = (
     "RoleType",
     "SubscriptionStatus",
     "SeparatorSpacingSize",
+    "ScheduledEventRecurrenceFrequency",
+    "ScheduledEventWeekday",
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
@@ -507,6 +509,9 @@ class AuditLogAction(Enum):
     server_guide_update = 191
     voice_channel_status_update = 192
     voice_channel_status_delete = 193
+    scheduled_event_exception_create = 200
+    scheduled_event_exception_update = 201
+    scheduled_event_exception_delete = 202
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -578,6 +583,9 @@ class AuditLogAction(Enum):
             AuditLogAction.server_guide_update: AuditLogActionCategory.update,
             AuditLogAction.voice_channel_status_update: AuditLogActionCategory.update,
             AuditLogAction.voice_channel_status_delete: AuditLogActionCategory.delete,
+            AuditLogAction.scheduled_event_exception_create: AuditLogActionCategory.create,
+            AuditLogAction.scheduled_event_exception_update: AuditLogActionCategory.update,
+            AuditLogAction.scheduled_event_exception_delete: AuditLogActionCategory.delete,
         }
         return lookup[self]
 
@@ -626,6 +634,8 @@ class AuditLogAction(Enum):
             return "server_guide"
         elif v < 194:
             return "voice_channel_status"
+        elif 200 <= v <= 202:
+            return "scheduled_event_exception"
 
 
 class UserFlags(Enum):
@@ -1163,6 +1173,27 @@ class SubscriptionStatus(Enum):
     active = 0
     inactive = 1
     ending = 2
+
+
+class ScheduledEventRecurrenceFrequency(Enum):
+    """A scheduled event recurrence rule's frequency."""
+
+    yearly = 0
+    monthly = 1
+    weekly = 2
+    daily = 3
+
+
+class ScheduledEventWeekday(Enum):
+    """A scheduled event week day."""
+
+    monday = 0
+    tuesday = 1
+    wednesday = 2
+    thursday = 3
+    friday = 4
+    saturday = 5
+    sunday = 6
 
 
 class ThreadArchiveDuration(IntEnum):
