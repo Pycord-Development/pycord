@@ -70,7 +70,7 @@ class Reaction:
 
     Attributes
     ----------
-    emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]
+    emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str`
         The reaction emoji. May be a custom emoji, or a unicode emoji.
     count: :class:`int`
         The combined total of normal and super reactions for this emoji.
@@ -234,7 +234,7 @@ class Reaction:
 
         Yields
         ------
-        Union[:class:`User`, :class:`Member`]
+        :class:`User` | :class:`Member`
             The member (if retrievable) or the user that has reacted
             to this message. The case where it can be a :class:`Member` is
             in a guild message context. Sometimes it can be a :class:`User`

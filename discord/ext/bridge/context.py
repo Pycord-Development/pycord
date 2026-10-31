@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Union, overload
+from typing import TYPE_CHECKING, Any, overload
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
@@ -196,7 +196,7 @@ class BridgeExtContext(BridgeContext, Context):
             await self._original_response_message.delete(delay=delay, reason=reason)
 
 
-Context = Union[BridgeExtContext, BridgeApplicationContext]
+Context = BridgeExtContext | BridgeApplicationContext
 """
 A Union class for either :class:`BridgeExtContext` or :class:`BridgeApplicationContext`.
 Can be used as a type hint for Context for bridge commands.

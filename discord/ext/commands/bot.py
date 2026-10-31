@@ -223,7 +223,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
 
         Returns
         -------
-        Union[List[:class:`str`], :class:`str`]
+        List[:class:`str`] | :class:`str`
             A list of prefixes or a single prefix that the bot is
             listening for.
         """

@@ -37,7 +37,6 @@ from typing import (
     NamedTuple,
     Optional,
     TypeVar,
-    Union,
     cast,
     overload,
 )
@@ -128,10 +127,10 @@ if TYPE_CHECKING:
     from .voice import VoiceClient
     from .webhook import Webhook
 
-    VocalGuildChannel = Union[VoiceChannel, StageChannel]
-    GuildChannel = Union[
-        VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
-    ]
+    VocalGuildChannel = VoiceChannel | StageChannel
+    GuildChannel = (
+        VoiceChannel | StageChannel | TextChannel | ForumChannel | CategoryChannel
+    )
     ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
 
 T = TypeVar("T")
@@ -199,7 +198,7 @@ class GuildRoleCounts(dict[int, int]):
 
         Parameters
         ----------
-        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+        key: :class:`int` | :class:`~discord.abc.Snowflake`
             The role ID or a Snowflake object (e.g., a :class:`Role`).
 
         Returns
@@ -222,7 +221,7 @@ class GuildRoleCounts(dict[int, int]):
 
         Parameters
         ----------
-        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+        key: :class:`int` | :class:`~discord.abc.Snowflake`
             The role ID or a Snowflake object (e.g., a :class:`Role`).
         default: Any
             The value to return if the role ID is not found.
@@ -242,7 +241,7 @@ class GuildRoleCounts(dict[int, int]):
 
         Parameters
         ----------
-        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+        key: :class:`int` | :class:`~discord.abc.Snowflake`
             The role ID or a Snowflake object (e.g., a :class:`Role`).
 
         Returns
@@ -772,7 +771,7 @@ class Guild(Hashable):
             Only MP3 sound files that are less than 5.2 seconds long are supported.
         volume: :class:`float`
             The volume of the sound. Defaults to 1.0.
-        emoji: Optional[Union[:class:`PartialEmoji`, :class:`GuildEmoji`, :class:`str`]]
+        emoji: Optional[:class:`PartialEmoji` | :class:`GuildEmoji` | :class:`str`]
             The emoji of the sound.
         reason: Optional[:class:`str`]
             The reason for creating this sound. Shows up on the audit log.
@@ -1011,7 +1010,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[Union[:class:`Thread`, :class:`.abc.GuildChannel`]]
+        Optional[:class:`Thread` | :class:`.abc.GuildChannel`]
             The returned channel or thread or ``None`` if not found.
         """
         return self._channels.get(channel_id) or self._threads.get(channel_id)
@@ -1529,7 +1528,7 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1649,7 +1648,7 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1767,7 +1766,7 @@ class Guild(Hashable):
             The channel's name.
         topic: :class:`str`
             The new channel's topic.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -1907,7 +1906,7 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
         category: Optional[:class:`CategoryChannel`]
             The category to place the newly created channel under.
@@ -2493,7 +2492,7 @@ class Guild(Hashable):
         limit: Optional[:class:`int`]
             The number of members to retrieve. Defaults to 1000.
             Pass ``None`` to fetch all members. Note that this is potentially slow.
-        after: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+        after: Optional[:class:`.abc.Snowflake` | :class:`datetime.datetime`]
             Retrieve members after this date or object.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -2634,7 +2633,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Union[:class:`.abc.GuildChannel`, :class:`.Thread`]
+        :class:`.abc.GuildChannel` | :class:`.Thread`
             The channel from the ID.
 
         Raises
@@ -3468,7 +3467,7 @@ class Guild(Hashable):
             The role name. Defaults to 'new role'.
         permissions: :class:`Permissions`
             The permissions to have. Defaults to no permissions.
-        colour: Union[:class:`Colour`, :class:`int`]
+        colour: :class:`Colour` | :class:`int`
             The colour for the role. Defaults to :meth:`Colour.default`.
             This is aliased to ``color`` as well.
         hoist: :class:`bool`
@@ -3893,11 +3892,11 @@ class Guild(Hashable):
         ----------
         limit: Optional[:class:`int`]
             The number of entries to retrieve. If ``None`` retrieve all entries.
-        before: Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime`
             Retrieve entries before this date or entry.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        after: Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime`
             Retrieve entries after this date or entry.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -4135,7 +4134,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+        channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
             Channel the client wants to join. Use ``None`` to disconnect.
         self_mute: :class:`bool`
             Indicates if the client should be self-muted.

@@ -112,7 +112,7 @@ class VoiceState:
 
     afk: :class:`bool`
         Indicates if the user is currently in the AFK channel in the guild.
-    channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+    channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
         The voice channel that the user is currently connected to. ``None`` if the user
         is not currently in a voice channel.
     """
@@ -265,7 +265,7 @@ class Member(discord.abc.Messageable, _UserTag):
     joined_at: Optional[:class:`datetime.datetime`]
         An aware datetime object that specifies the date and time in UTC that the member joined the guild.
         If the member left and rejoined the guild, this will be the latest date. In certain cases, this can be ``None``.
-    activities: Tuple[Union[:class:`BaseActivity`, :class:`Spotify`]]
+    activities: Tuple[:class:`BaseActivity` | :class:`Spotify`]
         The activities that the user is currently doing.
 
         .. note::
@@ -943,7 +943,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         roles: List[:class:`Role`]
             The member's new list of roles. This *replaces* the roles.
-        voice_channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+        voice_channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
             The voice channel to move the member to.
             Pass ``None`` to kick them from voice.
         reason: Optional[:class:`str`]
@@ -1204,7 +1204,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Parameters
         ----------
-        channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+        channel: Optional[:class:`VoiceChannel` | :class:`StageChannel`]
             The new voice channel to move the member to.
             Pass ``None`` to kick them from voice.
         reason: Optional[:class:`str`]
