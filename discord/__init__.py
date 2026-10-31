@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING
 
 # We need __version__ to be imported first
 # isort: off
-from ._version import *
+from ._pycord_version import *
 
 # isort: on
 
