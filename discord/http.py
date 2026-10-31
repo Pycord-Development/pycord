@@ -81,6 +81,7 @@ if TYPE_CHECKING:
         poll,
         role,
         scheduled_events,
+        shared_client_theme,
         sticker,
         template,
         threads,
@@ -94,6 +95,7 @@ if TYPE_CHECKING:
     )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
+    from .types.voice import VoiceRegion as VoiceRegionPayload
 
     T = TypeVar("T")
     BE = TypeVar("BE", bound=BaseException)
@@ -504,6 +506,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
+        shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -544,6 +547,9 @@ class HTTPClient:
         if poll:
             payload["poll"] = poll
 
+        if shared_client_theme:
+            payload["shared_client_theme"] = shared_client_theme
+
         return self.request(r, json=payload)
 
     def send_typing(self, channel_id: Snowflake) -> Response[None]:
@@ -568,6 +574,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
+        shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         form = []
 
@@ -594,6 +601,9 @@ class HTTPClient:
             payload["flags"] = flags
         if poll:
             payload["poll"] = poll
+
+        if shared_client_theme:
+            payload["shared_client_theme"] = shared_client_theme
 
         attachments = []
         form.append({"name": "payload_json"})
@@ -638,6 +648,7 @@ class HTTPClient:
         components: list[components.Component] | None = None,
         flags: int | None = None,
         poll: poll.Poll | None = None,
+        shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
@@ -655,6 +666,7 @@ class HTTPClient:
             components=components,
             flags=flags,
             poll=poll,
+            shared_client_theme=shared_client_theme,
         )
 
     def edit_multipart_helper(
@@ -1042,6 +1054,17 @@ class HTTPClient:
             payload["deaf"] = deafen
 
         return self.request(r, json=payload, reason=reason)
+
+    def get_guild_voice_regions(
+        self,
+        guild_id: Snowflake,
+    ) -> Response[list[VoiceRegionPayload]]:
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/regions", guild_id=guild_id)
+        )
+
+    def get_voice_regions(self) -> Response[list[VoiceRegionPayload]]:
+        return self.request(Route("GET", "/voice/regions"))
 
     def edit_profile(self, payload: dict[str, Any]) -> Response[user.User]:
         return self.request(Route("PATCH", "/users/@me"), json=payload)

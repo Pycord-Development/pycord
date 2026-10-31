@@ -56,6 +56,7 @@ from .object import Object
 from .partial_emoji import PartialEmoji
 from .poll import Poll
 from .reaction import Reaction
+from .shared_client_theme import SharedClientTheme
 from .sticker import StickerItem
 from .threads import Thread
 from .utils import MISSING, escape_mentions, find, warn_deprecated
@@ -88,6 +89,7 @@ if TYPE_CHECKING:
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
+    from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
@@ -1037,6 +1039,10 @@ class Message(Hashable):
         The poll associated with this message, if applicable.
 
         .. versionadded:: 2.6
+    shared_client_theme: Optional[:class:`SharedClientTheme`]
+        The shared client theme transmitted via this message, if applicable.
+
+        .. versionadded:: 2.9
     call: Optional[:class:`MessageCall`]
         The call information associated with this message, if applicable.
 
@@ -1085,6 +1091,7 @@ class Message(Hashable):
         "_poll",
         "call",
         "snapshots",
+        "shared_client_theme",
     )
 
     if TYPE_CHECKING:
@@ -1214,6 +1221,13 @@ class Message(Hashable):
             self.call = MessageCall(state=self._state, data=data["call"])
         except KeyError:
             self.call = None
+
+        if shared_client_theme := data.get("shared_client_theme"):
+            self.shared_client_theme: SharedClientTheme | None = (
+                SharedClientTheme.from_dict(shared_client_theme)
+            )
+        else:
+            self.shared_client_theme = None
 
         for handler in ("author", "member", "mentions", "mention_roles"):
             try:

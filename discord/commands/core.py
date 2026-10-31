@@ -31,7 +31,6 @@ import functools
 import inspect
 import re
 import types
-from collections import OrderedDict
 from collections.abc import Callable, Coroutine, Generator
 from enum import Enum
 from typing import (
@@ -84,9 +83,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing import Concatenate
+    from typing import Concatenate, ParamSpec
 
-    from typing_extensions import Never, ParamSpec
+    from typing_extensions import Never
 
     from .. import Permissions
     from ..bot import C
@@ -479,7 +478,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             ctx.bot.dispatch("application_command_error", ctx, error)
 
     def _get_signature_parameters(self):
-        return OrderedDict(inspect.signature(self.callback).parameters)
+        return dict(inspect.signature(self.callback).parameters)
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
@@ -915,7 +914,7 @@ class SlashCommand(ApplicationCommand):
                 )
             o._parameter_name = p_name
 
-        left_out_params = OrderedDict()
+        left_out_params = {}
         for k, v in params:
             left_out_params[k] = v
         options.extend(self._parse_options(left_out_params, check_params=False))
@@ -1392,9 +1391,22 @@ class SlashCommandGroup(ApplicationCommand):
         return as_dict
 
     def add_command(self, command: SlashCommand | SlashCommandGroup) -> None:
+        """Adds a :class:`.SlashCommand` or :class:`.SlashCommandGroup` as a subcommand.
+
+        This is usually not called, instead the :meth:`command` or
+        other shortcut decorators are used instead.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        command: Union[:class:`.SlashCommand`, :class:`.SlashCommandGroup`]
+            The command to add.
+        """
         if command.cog is None and self.cog is not None:
             command.cog = self.cog
 
+        command.parent = self
         self.subcommands.append(command)
 
     def command(
@@ -1410,7 +1422,7 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         def wrap(func) -> T:
-            command = cls(func, parent=self, **kwargs)
+            command = cls(func, **kwargs)
             self.add_command(command)
             return command
 
@@ -1508,7 +1520,6 @@ class SlashCommandGroup(ApplicationCommand):
                     else "No description provided"
                 ),
                 guild_ids=guild_ids,
-                parent=self,
             )
             self.add_command(group)
             return group
