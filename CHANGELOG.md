@@ -18,6 +18,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+- Added `AuditLogAction.channel_position_update` and
+  `AuditLogAction.role_position_update`.
+  ([#3415](https://github.com/Pycord-Development/pycord/pull/3415))
+- Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
+  regions for the guild.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Changed
 
@@ -26,6 +32,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Changed `Label.set_radio_group()` and `Label.set_file_upload()` to no longer accept a
   nullable `required` value.
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
+- Changed `rtc_region` parameters of channel creation and edit methods to accept a
+  region ID `str`. ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Fixed
 
@@ -41,6 +49,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
 - Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
+- Fix `AttributeError` when setting `delete_existing=False` in
+  `Bot.register_commands()`.
+  ([#3325](https://github.com/Pycord-Development/pycord/pull/3325))
 - Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
   user leaves the event.
   ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
@@ -59,6 +70,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Deprecated `Invite.id` in favour of `Invite.code`.
   ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+- Deprecated the `VoiceRegion` enum in favor of `Guild.fetch_voice_regions()`.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Removed
 
