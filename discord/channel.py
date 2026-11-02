@@ -2157,7 +2157,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+        rtc_region: Optional[:class:`str` | :class:`VoiceRegion`]
             The new region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 
@@ -2856,7 +2856,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+        rtc_region: Optional[:class:`str` | :class:`VoiceRegion`]
             The new region ID for the stage channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 
