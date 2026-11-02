@@ -1170,15 +1170,15 @@ class Guild(Hashable):
         object_type: Type[:class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji`]
             Type of object to fetch or get.
 
-        object_id: :class:`int` | :data:`None`
-            ID of the object to get. If :data:`None`, returns `default` if provided, otherwise :data:`None`.
+        object_id: :class:`int` | :obj:`None`
+            ID of the object to get. If :obj:`None`, returns `default` if provided, otherwise :obj:`None`.
 
-        default: Any | :data:`None`
-            The value to return instead of raising if fetching fails or if `object_id` is :data:`None`.
+        default: Any | :obj:`None`
+            The value to return instead of raising if fetching fails or if `object_id` is :obj:`None`.
 
         Returns
         -------
-        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :data:`None`
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :obj:`None`
             The object if found, or `default` if provided when not found.
 
         Raises

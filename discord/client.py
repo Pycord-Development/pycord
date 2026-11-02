@@ -1223,15 +1223,15 @@ class Client:
         object_type: Type[:class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji`]
             Type of object to fetch or get.
 
-        object_id: :class:`int` | :data:`None`
-            ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`.
+        object_id: :class:`int` | :obj:`None`
+            ID of object to get. If :obj:`None`, returns `default` if provided, else :obj:`None`.
 
-        default: Any | :data:`None`
+        default: Any | :obj:`None`
             A default to return instead of raising if fetch fails.
 
         Returns
         -------
-        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :obj:`None`
             The object if found, or `default` if provided when not found.
 
         Raises
