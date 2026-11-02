@@ -31,20 +31,13 @@ from ..components import (
     CheckboxGroupOption,
 )
 from ..components import Label as LabelComponent
-from ..components import (
-    RadioGroupOption,
-    SelectDefaultValue,
-    SelectOption,
-    _component_factory,
-)
-from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
-from ..utils import find, get
-from .button import Button
+from ..components import RadioGroupOption, SelectDefaultValue, SelectOption
+from ..enums import ChannelType, ComponentType, InputTextStyle
 from .checkbox import Checkbox
 from .checkbox_group import CheckboxGroup
 from .file_upload import FileUpload
 from .input_text import InputText
-from .item import ItemCallbackType, ModalItem
+from .item import ModalItem
 from .radio_group import RadioGroup
 from .select import Select
 
@@ -53,9 +46,7 @@ __all__ = ("Label",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..emoji import AppEmoji, GuildEmoji
     from ..interactions import Interaction
-    from ..partial_emoji import PartialEmoji, _EmojiTag
     from ..types.components import LabelComponent as LabelComponentPayload
     from .modal import DesignerModal
 
@@ -264,7 +255,7 @@ class Label(ModalItem[M]):
         options: list[SelectOption] | None = ...,
         required: bool = ...,
         id: int | None = ...,
-    ) -> None: ...
+    ) -> Self: ...
 
     @overload
     def set_select(
@@ -279,7 +270,7 @@ class Label(ModalItem[M]):
         required: bool = ...,
         id: int | None = ...,
         default_values: Sequence[SelectDefaultValue] | None = ...,
-    ) -> None: ...
+    ) -> Self: ...
 
     @overload
     def set_select(
@@ -297,7 +288,7 @@ class Label(ModalItem[M]):
         required: bool = ...,
         id: int | None = ...,
         default_values: Sequence[SelectDefaultValue] | None = ...,
-    ) -> None: ...
+    ) -> Self: ...
 
     def set_select(
         self,
@@ -371,7 +362,7 @@ class Label(ModalItem[M]):
         custom_id: str | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
-        required: bool | None = True,
+        required: bool = True,
         id: int | None = None,
     ) -> Self:
         """Set this label's item to a file upload.
@@ -389,7 +380,7 @@ class Label(ModalItem[M]):
         max_values: Optional[:class:`int`]
             The maximum number of files that can be uploaded.
             Must be between 1 and 10, inclusive.
-        required: Optional[:class:`bool`]
+        required: :class:`bool`
             Whether the file upload field is required or not. Defaults to ``True``.
         id: Optional[:class:`int`]
             The file upload field's ID.
@@ -410,7 +401,7 @@ class Label(ModalItem[M]):
         *,
         custom_id: str | None = None,
         options: list[RadioGroupOption] | None = None,
-        required: bool | None = True,
+        required: bool = True,
         id: int | None = None,
     ) -> Self:
         """Set this label's item to a radio group.
@@ -432,7 +423,7 @@ class Label(ModalItem[M]):
 
         radio = RadioGroup(
             custom_id=custom_id,
-            option=options,
+            options=options,
             required=required,
             id=id,
         )
@@ -474,7 +465,7 @@ class Label(ModalItem[M]):
 
         checkboxes = CheckboxGroup(
             custom_id=custom_id,
-            option=options,
+            options=options,
             min_values=min_values,
             max_values=max_values,
             required=required,

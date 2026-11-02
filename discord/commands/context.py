@@ -33,8 +33,7 @@ from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
-
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     import discord
 

@@ -89,7 +89,7 @@ class Thumbnail(ViewItem[V]):
         self,
         media: UnfurledMediaItem | None = None,
         description: str | None = None,
-        spoiler: bool | None = False,
+        spoiler: bool | None = None,
         id: int | None = None,
     ) -> ThumbnailComponent:
         super()._generate_underlying(ThumbnailComponent)
