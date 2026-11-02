@@ -233,7 +233,7 @@ class ActionRow(Component):
     @classmethod
     def with_components(cls, *components, id=None):
         return cls._raw_construct(
-            type=ComponentType.action_row, id=id, children=[c for c in components]
+            type=ComponentType.action_row, id=id, children=[*components]
         )
 
 

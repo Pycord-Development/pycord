@@ -53,9 +53,6 @@ if TYPE_CHECKING:
     from .types.member import MemberUpdateEvent
     from .types.raw_models import (
         AuditLogEntryEvent,
-    )
-    from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
-    from .types.raw_models import (
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
         MemberRemoveEvent,
@@ -74,6 +71,7 @@ if TYPE_CHECKING:
         VoiceServerUpdateEvent,
         VoiceStateEvent,
     )
+    from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .user import User
 
 
