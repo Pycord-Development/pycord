@@ -39,9 +39,9 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Literal,
-    TypeVar,
     TypeAlias,
     TypedDict,
+    TypeVar,
 )
 
 from typing_extensions import override
