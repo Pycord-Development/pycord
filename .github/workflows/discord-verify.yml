@@ -1,0 +1,56 @@
+name: Arbiterer
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  arbiterer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: sonolink/arbiterer@v1
+        with:
+          exempt-associations: OWNER,MEMBER,COLLABORATOR
+          close-on-failure: true
+          rules: |
+            const PYCORD_GUILD_ID = "881207955029110855";
+            const PYCORD_GUILD_INVITE = "https://discord.gg/pycord";
+            const FAIL_SUFFIX = "to contribute to this repository";
+
+            const DAY_MS = 24 * 60 * 60 * 1000;
+            const MIN_ACCOUNT_AGE_DAYS = 90; // 3 months
+            const MIN_MEMBER_AGE_DAYS = 30;
+
+            const now = Date.now();
+            const failures = [];
+
+            // Discord account must be old enough
+            const accountCreated = Date.parse(user.created_at);
+            if (Number.isNaN(accountCreated) || now - accountCreated < MIN_ACCOUNT_AGE_DAYS * DAY_MS) {
+              failures.push(`Your Discord account must be at least ${MIN_ACCOUNT_AGE_DAYS} days old ${FAIL_SUFFIX}.`);
+            }
+
+            // Discord account must have MFA enabled
+            if (!user.mfa_enabled) {
+              failures.push(`You must have two-factor authentication (MFA) enabled on your Discord account ${FAIL_SUFFIX}.`);
+            }
+
+            // Must be a member of the Pycord server, and for long enough
+            const member = await resolveMember(PYCORD_GUILD_ID);
+            if (!member) {
+              failures.push(`You must be a member of the Pycord Discord server (${PYCORD_GUILD_INVITE}) ${FAIL_SUFFIX}.`);
+            } else {
+              const joined = Date.parse(member.joined_at);
+              if (Number.isNaN(joined) || now - joined < MIN_MEMBER_AGE_DAYS * DAY_MS) {
+                failures.push(`You must have been a member of the Pycord Discord server for at least ${MIN_MEMBER_AGE_DAYS} days ${FAIL_SUFFIX}.`);
+              }
+            }
+
+            if (failures.length > 0) {
+              core.setFailed(failures.join("\n"));
+            }
