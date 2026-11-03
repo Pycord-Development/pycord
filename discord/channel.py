@@ -1671,7 +1671,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
 
     @property
     def voice_start_time(self) -> datetime.datetime | None:
-        """:class:`datetime.datetime` | :class:`None`: The time that the voice session started.
+        """:class:`datetime.datetime` | :obj:`None`: The time that the voice session started.
 
         .. versionadded:: 2.9
         """

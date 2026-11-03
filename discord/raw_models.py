@@ -1047,7 +1047,7 @@ class RawVoiceChannelStartTimeUpdateEvent(_RawReprMixin):
         The channel ID where the voice channel start time update originated from.
     guild_id: :class:`int`
         The guild ID where the voice channel start time update originated from.
-    voice_start_time: Optional[:class:`datetime.datetime`]
+    voice_start_time: :class:`datetime.datetime` | :obj:`None`
         The new new voice channel start time.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#voice-channel-start-time-update>`__.
@@ -1077,9 +1077,9 @@ class ChannelInfo(_RawReprMixin):
     ----------
     id: :class:`int`
         The ID of the channel this info is associated with.
-    status: :class:`str` | None
+    status: :class:`str` | :obj:`None`
         The voice channel status.
-    voice_start_time: :class:`int` | None
+    voice_start_time: :class:`int` | :obj:`None`
         The Unix timestamp (in seconds) of when the voice session started.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#channel-info>`__.
