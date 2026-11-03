@@ -882,7 +882,11 @@ class SlashCommandOptionType(Enum):
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all(x == cls.channel for x in datatypes):
                 return cls.channel
-            elif set(datatypes) <= {cls.role, cls.user}:
+            elif all(x == cls.user for x in datatypes):
+                return cls.user
+            elif all(x == cls.role for x in datatypes):
+                return cls.role
+            elif set(datatypes) <= {cls.role, cls.user, cls.mentionable}:
                 return cls.mentionable
             else:
                 raise TypeError("Invalid usage of typing.Union")
