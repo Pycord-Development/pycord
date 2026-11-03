@@ -169,6 +169,9 @@ Guild
 
         :type: :class:`User`
 
+.. autoclass:: VoiceServerRegion()
+    :members:
+
 .. attributetable:: Member
 
 .. autoclass:: Member()
