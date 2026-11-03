@@ -2053,8 +2053,7 @@ class InteractionResolvedData:
 
     def __repr__(self) -> str:
         counts = " ".join(
-            f"{key}={len(value)}"
-            for key, value in self._data.items()  # type: ignore
+            f"{key}={len(value)}" for key, value in self._data.items()  # type: ignore
         )
         return f"<InteractionResolvedData {counts}>"
 
