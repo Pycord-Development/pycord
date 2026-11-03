@@ -293,7 +293,7 @@ class Interaction:
         self._raw_data: InteractionPayload = data
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
-        self.data: InteractionData | None = data.get("data")
+        self.data: InteractionData = data.get("data", {})  # type: ignore # narrowed
         self.token: str = data["token"]
         self.version: int = data["version"]
         self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")

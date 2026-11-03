@@ -3546,23 +3546,23 @@ class PartialChannel(PartialMessageable):
         The channel's ID.
     type: :class:`ChannelType`
         The channel's type.
-    name: :class:`str` | :data:`None`
+    name: :class:`str` | :obj:`None`
         The channel's name. ``None`` for some DM channels.
-    guild_id: :class:`int` | :data:`None`
+    guild_id: :class:`int` | :obj:`None`
         The ID of the guild the channel belongs to, if any.
-    parent_id: :class:`int` | :data:`None`
+    parent_id: :class:`int` | :obj:`None`
         The ID of the parent category or channel, if any.
     permissions: :class:`Permissions`
         The computed permissions of the invoking user in this channel.
-    topic: :class:`str` | :data:`None`
+    topic: :class:`str` | :obj:`None`
         The channel's topic, if any.
-    position: :class:`int` | :data:`None`
+    position: :class:`int` | :obj:`None`
         The channel's position, if any.
     nsfw: :class:`bool`
         Whether the channel is marked as NSFW.
     slowmode_delay: :class:`int`
         The channel's slowmode delay in seconds.
-    last_message_id: :class:`int` | :data:`None`
+    last_message_id: :class:`int` | :obj:`None`
         The ID of the last message sent in this channel, if any.
     """
 
@@ -3592,7 +3592,7 @@ class PartialChannel(PartialMessageable):
 
     @property
     def guild(self) -> Guild | None:
-        """:class:`Guild` | :py:obj:`None`: The guild the channel belongs to, if cached."""
+        """:class:`Guild` | :obj:`None`: The guild the channel belongs to, if cached."""
         return self._state._get_guild(self.guild_id)
 
     @property

@@ -111,25 +111,6 @@ else:
     P = TypeVar("P")
 
 
-def _get_command_data(
-    ctx: ApplicationContext | AutocompleteContext,
-) -> ApplicationCommandInteractionDataPayload | None:
-    data = ctx.interaction.data
-    if data is None or "custom_id" in data:
-        # no data, or component data (which always has a custom_id)
-        return None
-    return data
-
-
-def _get_options(
-    ctx: ApplicationContext | AutocompleteContext,
-) -> list[ApplicationCommandInteractionDataOptionPayload]:
-    data = _get_command_data(ctx)
-    if data is None:
-        return []
-    return data.get("options", [])
-
-
 def _enter_subcommand(
     ctx: ApplicationContext | AutocompleteContext,
     option: ApplicationCommandInteractionDataOptionPayload,
@@ -137,7 +118,7 @@ def _enter_subcommand(
     # Replaces the interaction data with the subcommand (group)'s data, so the
     # subcommand sees its own name and options. Everything else (id, resolved, ...)
     # is kept from the parent.
-    data = _get_command_data(ctx)
+    data: ApplicationCommandInteractionDataPayload | None = ctx.interaction.data  # type: ignore # narrowed
     if data is None:
         return
     new_data = data.copy()
@@ -1033,7 +1014,10 @@ class SlashCommand(ApplicationCommand):
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
         kwargs: dict[Any, Any] = {}
-        for option in _get_options(ctx):
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
+        for option in options:
             op = get(self.options, name=option["name"])
             if op is None or "value" not in option:
                 continue
@@ -1098,7 +1082,9 @@ class SlashCommand(ApplicationCommand):
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = {i.name: i.default for i in self.options}
 
-        options = _get_options(ctx)
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
         for op in options:
             if not op.get("focused", False):
                 continue
@@ -1520,23 +1506,26 @@ class SlashCommandGroup(ApplicationCommand):
         return inner
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        # the resolved data was already captured on the interaction (``_resolved``)
-        options = _get_options(ctx)
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
         if not options:
             return
         option = options[0]
-        command = find(lambda x: x.name == option["name"], self.subcommands)
+        command = get(self.subcommands, name=option["name"])
         if command is None:
             return
         _enter_subcommand(ctx, option)
         await command.invoke(ctx)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext) -> None:
-        options = _get_options(ctx)
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
         if not options:
             return
         option = options[0]
-        command = find(lambda x: x.name == option["name"], self.subcommands)
+        command = get(self.subcommands, name=option["name"])
         if command is None:
             return
         _enter_subcommand(ctx, option)
@@ -1821,7 +1810,7 @@ class UserCommand(ContextMenuCommand):
         return self
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        data = _get_command_data(ctx)
+        data: ApplicationCommandInteractionDataPayload | None = ctx.interaction.data  # type: ignore # narrowed
         target_id = int(data.get("target_id", 0)) if data is not None else 0
         target = ctx.interaction._resolved.get_user(target_id)
         callback: Callable[..., Coroutine[Any, Any, Any]] = self.callback
@@ -1922,7 +1911,7 @@ class MessageCommand(ContextMenuCommand):
         return self
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        data = _get_command_data(ctx)
+        data: ApplicationCommandInteractionDataPayload | None = ctx.interaction.data  # type: ignore # narrowed
         target_id = int(data.get("target_id", 0)) if data is not None else 0
         target = ctx.interaction._resolved.messages[target_id]
 
