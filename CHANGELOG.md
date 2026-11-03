@@ -62,6 +62,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix the return type of the `MediaChannel.edit()` overload.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the `input_type` of options typed as `Member | User` to be `user` instead of
+  `mentionable`. ([#3425](https://github.com/Pycord-Development/pycord/pull/3425))
 
 ### Deprecated
 
