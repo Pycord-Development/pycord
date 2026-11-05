@@ -1376,6 +1376,8 @@ class GuildChannel:
         ~discord.HTTPException
             An error occurred while fetching the information.
         """
+        from .member import Member
+        
         if isinstance(obj, Role):
             data = await self._state.http.get_channel_role_permissions(self.id, obj.id)
         elif isinstance(obj, Member):
