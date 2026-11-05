@@ -935,7 +935,7 @@ class Role(Hashable):
         await self._state.http.delete_role(self.guild.id, self.id, reason=reason)
 
     async def fetch_permissions(self) -> Permissions:
-        """Fetches the roles's permissions from Discord, combining this role with ``@everyone``.
+        """Fetches the role's permissions from Discord, combining this role with ``@everyone``.
 
         Returns
         -------
