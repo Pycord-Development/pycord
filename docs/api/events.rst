@@ -1424,9 +1424,9 @@ Voice Channel Status Update
     :param channel: The channel where the voice channel start time update originated from.
     :type channel: :class:`VoiceChannel` | :class:`StageChannel`
     :param before: The old voice channel start time.
-    :type before: Optional[:class:`datetime.datetime`]
+    :type before: :class:`datetime.datetime` | :obj:`None`
     :param after: The new voice channel start time.
-    :type after: Optional[:class:`datetime.datetime`]
+    :type after: :class:`datetime.datetime` | :obj:`None`
 
 .. function:: on_raw_voice_channel_start_time_update(payload)
 
