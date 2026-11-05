@@ -1356,7 +1356,7 @@ class GuildChannel:
 
         This can be useful if you do not have a populated cache for whatever reason.
 
-        Requires :attr:`Permissions.view_channel`, as well as :attr:`Permissions.connect` for voice/stage channels.
+        Requires :attr:`~discord.Permissions.view_channel`, as well as :attr:`~discord.Permissions.connect` for voice/stage channels.
 
         Parameters
         ----------
