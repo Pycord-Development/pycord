@@ -21,13 +21,13 @@ repos:
   #          - --remove-duplicate-keys
   #          - --remove-unused-variables
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
+    rev: v3.22.0
     hooks:
       - id: pyupgrade
         exclude: \.(po|pot|yml|yaml)$
         args: [--py310-plus]
   - repo: https://github.com/PyCQA/isort
-    rev: 9.0.2
+    rev: 10.0.0b2
     hooks:
       - id: isort
         exclude: \.(po|pot|yml|yaml)$
