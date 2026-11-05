@@ -933,3 +933,21 @@ class Role(Hashable):
         """
 
         await self._state.http.delete_role(self.guild.id, self.id, reason=reason)
+
+    async def fetch_permissions(self) -> Permissions:
+        """Fetches the roles's permissions from Discord, combining this role with ``@everyone``.
+
+        Returns
+        -------
+        :class:`Permissions`
+            The role's permissions in the guild.
+
+        Raises
+        ------
+        ~discord.Forbidden
+            You do not have proper permissions to get the information.
+        ~discord.HTTPException
+            An error occurred while fetching the information.
+        """
+        data = await self._state.http.get_guild_role_permissions(self.guild.id, self.id)
+        return Permissions(int(data["permissions"]))
