@@ -1318,3 +1318,25 @@ class Member(discord.abc.Messageable, _UserTag):
             The role or ``None`` if not found in the member's roles.
         """
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
+
+    async def fetch_permissions(self) -> Permissions:
+        """Fetches the member's permissions from Discord, combining their roles with ``@everyone``.
+
+        This can be useful if you do not have a populated role cache for whatever reason.
+
+        Returns
+        -------
+        :class:`Permissions`
+            The member's permissions in the guild.
+
+        Raises
+        ------
+        ~discord.Forbidden
+            You do not have proper permissions to get the information.
+        ~discord.HTTPException
+            An error occurred while fetching the information.
+        """
+        data = await self._state.http.get_guild_member_permissions(
+            self.guild.id, self.id
+        )
+        return Permissions(int(data["permissions"]))
