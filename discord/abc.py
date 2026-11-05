@@ -1347,7 +1347,9 @@ class GuildChannel:
             for invite in data
         ]
 
-    async def fetch_permissions_for(self, obj: Member | Role, /, implicit: bool = True) -> Permissions:
+    async def fetch_permissions_for(
+        self, obj: Member | Role, /, implicit: bool = True
+    ) -> Permissions:
         """Fetches the member or role's permissions in this channel from Discord.
 
         For members, this includes their roles and member specific overwrites, as well as ``@everyone``.
@@ -1383,7 +1385,9 @@ class GuildChannel:
         from .member import Member
 
         if isinstance(obj, Role):
-            data = await self._state.http.get_channel_role_permissions(self.id, obj.id, implicit)
+            data = await self._state.http.get_channel_role_permissions(
+                self.id, obj.id, implicit
+            )
         elif isinstance(obj, Member):
             data = await self._state.http.get_channel_member_permissions(
                 self.id, obj.id, implicit
