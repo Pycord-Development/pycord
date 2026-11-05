@@ -1347,7 +1347,9 @@ class GuildChannel:
             for invite in data
         ]
 
-    async def fetch_permissions_for(self, obj: Member | Role | Object, /, implicit: bool = True) -> Permissions:
+    async def fetch_permissions_for(
+        self, obj: Member | Role | Object, /, implicit: bool = True
+    ) -> Permissions:
         """Fetches the member or role's permissions in this channel from Discord.
 
         For members, this includes their roles and member specific overwrites, as well as ``@everyone``.
@@ -1382,16 +1384,22 @@ class GuildChannel:
         """
         from .member import Member
 
-        obj_type: type[Member | Role] = obj.type if isinstance(obj, Object) else type(obj)
+        obj_type: type[Member | Role] = (
+            obj.type if isinstance(obj, Object) else type(obj)
+        )
 
         if issubclass(obj_type, Role):
-            data = await self._state.http.get_channel_role_permissions(self.id, obj.id, implicit)
+            data = await self._state.http.get_channel_role_permissions(
+                self.id, obj.id, implicit
+            )
         elif issubclass(obj_type, Member):
             data = await self._state.http.get_channel_member_permissions(
                 self.id, obj.id, implicit
             )
         else:
-            raise InvalidArgument("obj must be a Member or Role, or Object with matching type")
+            raise InvalidArgument(
+                "obj must be a Member or Role, or Object with matching type"
+            )
         return Permissions(int(data["permissions"]))
 
 
