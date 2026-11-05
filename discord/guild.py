@@ -29,6 +29,7 @@ import copy
 import datetime
 import unicodedata
 from collections.abc import Sequence
+from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -86,6 +87,7 @@ from .mixins import Hashable
 from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
+from .raw_models import ChannelInfo
 from .role import Role, RoleColours
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 from .soundboard import SoundboardSound
@@ -97,7 +99,7 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts", "VoiceServerRegion")
 
 MISSING = utils.MISSING
 
@@ -147,6 +149,36 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+@dataclass(frozen=True, slots=True)
+class VoiceServerRegion:
+    """Represents a voice region a guild can use for voice channels.
+
+    This is returned by :meth:`Guild.fetch_voice_regions`.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`str`
+        The region ID, e.g. ``"us-west"``. Use this as the
+        :attr:`VoiceChannel.rtc_region` of a voice channel.
+    name: :class:`str`
+        The region's display name, e.g. ``"US West"``.
+    optimal: :class:`bool`
+        Whether the region is optimal for the guild's members.
+    deprecated: :class:`bool`
+        Whether the region is deprecated.
+    custom: :class:`bool`
+        Whether the region is a custom region.
+    """
+
+    id: str
+    name: str
+    optimal: bool
+    deprecated: bool
+    custom: bool
 
 
 class GuildRoleCounts(dict[int, int]):
@@ -1604,7 +1636,7 @@ class Guild(Hashable):
         position: int = MISSING,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
@@ -1631,9 +1663,13 @@ class Guild(Hashable):
             The channel's preferred audio bitrate in bits per second.
         user_limit: :class:`int`
             The channel's limit for number of members that can be in a voice channel.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A region ID string is now accepted.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -1715,7 +1751,7 @@ class Guild(Hashable):
         reason: str | None = None,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
@@ -1754,9 +1790,13 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is now accepted.
 
             .. versionadded:: 2.7
 
@@ -2704,8 +2744,10 @@ class Guild(Hashable):
         The inactive members are denoted if they have not logged on in
         ``days`` number of days and have no roles.
 
-        You must have the :attr:`~Permissions.kick_members` permission
-        to use this.
+        You must have the :attr:`~Permissions.kick_members` and
+        :attr:`~Permissions.manage_guild` permissions to use this. If the guild has the
+        ``PRUNE_REQUIRES_ADMIN`` guild feature, you must have the
+        :attr:`~Permissions.administrator` permission instead.
 
         To check how many members you would prune without actually pruning,
         see the :meth:`estimate_pruned_members` function.
@@ -2817,6 +2859,11 @@ class Guild(Hashable):
         Similar to :meth:`prune_members` except instead of actually
         pruning members, it returns how many members it would prune
         from the guild had it been called.
+
+        You must have the :attr:`~Permissions.kick_members` and
+        :attr:`~Permissions.manage_guild` permissions to use this. If the guild has the
+        ``PRUNE_REQUIRES_ADMIN`` guild feature, you must have the
+        :attr:`~Permissions.administrator` permission instead.
 
         Parameters
         ----------
@@ -3794,6 +3841,38 @@ class Guild(Hashable):
             channel=channel,
         )
 
+    async def fetch_voice_regions(self) -> list[VoiceServerRegion]:
+        """|coro|
+
+        Retrieves the voice regions that the guild has access to.
+
+        The list of voice regions is dynamic, so this method is the
+        recommended way to get the currently available regions.
+
+        .. versionadded:: 2.9
+
+        Returns
+        -------
+        List[:class:`VoiceServerRegion`]
+            The list of voice regions the guild has access to.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the voice regions failed.
+        """
+        regions = await self._state.http.get_guild_voice_regions(self.id)
+        return [
+            VoiceServerRegion(
+                id=region.get("id", ""),
+                name=region.get("name", ""),
+                optimal=region.get("optimal", False),
+                deprecated=region.get("deprecated", False),
+                custom=region.get("custom", False),
+            )
+            for region in regions
+        ]
+
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(
         self,
@@ -3956,6 +4035,25 @@ class Guild(Hashable):
 
         if not self._state.is_guild_evicted(self):
             return await self._state.chunk_guild(self, cache=cache)
+
+    async def request_channel_info(
+        self, *, cache: bool = True
+    ) -> None | list[ChannelInfo]:
+        """|coro|
+
+        Requests all channel statuses for this guild over the websocket.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        cache: :class:`bool`
+            Whether to cache the channel statuses as well.
+        """
+
+        if not self._state.is_guild_evicted(self):
+            return await self._state.request_guild_channel_info(self, cache=cache)
+        return None
 
     async def query_members(
         self,

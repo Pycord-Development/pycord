@@ -87,6 +87,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
     from .poll import Poll
+    from .shared_client_theme import SharedClientTheme
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -1346,6 +1347,47 @@ class GuildChannel:
             for invite in data
         ]
 
+    async def fetch_permissions_for(self, obj: Member | Role, /) -> Permissions:
+        """Fetches the member or role's permissions in this channel from Discord.
+
+        For members, this includes their roles and member specific overwrites, as well as ``@everyone``.
+
+        For roles, this includes the role's and ``@everyone``'s overwrites.
+
+        This can be useful if you do not have a populated cache for whatever reason.
+
+        Requires :attr:`~discord.Permissions.view_channel`, as well as :attr:`~discord.Permissions.connect` for voice/stage channels.
+
+        Parameters
+        ----------
+        obj: Union[:class:`~discord.Member`, :class:`~discord.Role`]
+            The object to resolve permissions for. This could be either
+            a member or a role.
+
+        Returns
+        -------
+        :class:`~discord.Permissions`
+            The permissions for the member or role.
+
+        Raises
+        ------
+        ~discord.Forbidden
+            You do not have proper permissions to get the information.
+        ~discord.HTTPException
+            An error occurred while fetching the information.
+        """
+        from .member import Member
+
+        if isinstance(obj, Role):
+            data = await self._state.http.get_channel_role_permissions(self.id, obj.id)
+        elif isinstance(obj, Member):
+            data = await self._state.http.get_channel_member_permissions(
+                self.id, obj.id
+            )
+        else:
+            raise InvalidArgument("obj must be a Member or Role")
+        return Permissions(int(data["permissions"]))
+
 
 class Messageable:
     """An ABC that details the common operations on a model that can send messages.
@@ -1390,6 +1432,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1412,6 +1455,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1434,6 +1478,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1456,6 +1501,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     async def send(
@@ -1479,6 +1525,7 @@ class Messageable:
         suppress=None,
         suppress_embeds=None,
         silent=None,
+        shared_client_theme=None,
     ):
         """|coro|
 
@@ -1570,6 +1617,10 @@ class Messageable:
             The poll to send.
 
             .. versionadded:: 2.6
+        shared_client_theme: :class:`SharedClientTheme`
+            The shared client theme to send.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -1593,6 +1644,9 @@ class Messageable:
         channel = await self._get_channel()
         state = self._state
         content = str(content) if content is not None else None
+
+        if shared_client_theme is not None:
+            shared_client_theme = shared_client_theme.to_dict()
 
         if embed is not None and embeds is not None:
             raise InvalidArgument(
@@ -1708,6 +1762,7 @@ class Messageable:
                     components=components,
                     flags=flags.value,
                     poll=poll,
+                    shared_client_theme=shared_client_theme,
                 )
             finally:
                 for f in files:
@@ -1727,6 +1782,7 @@ class Messageable:
                 components=components,
                 flags=flags.value,
                 poll=poll,
+                shared_client_theme=shared_client_theme,
             )
 
         ret = state.create_message(channel=channel, data=data)
