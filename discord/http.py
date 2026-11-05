@@ -3442,8 +3442,8 @@ class HTTPClient:
                 "/channels/{channel_id}/permissions/member/{user_id}",
                 channel_id=channel_id,
                 user_id=user_id,
-                params={"implicit": int(implicit)},
-            )
+            ),
+            params={"implicit": int(implicit)},
         )
 
     def get_channel_role_permissions(
@@ -3455,6 +3455,6 @@ class HTTPClient:
                 "/channels/{channel_id}/permissions/role/{role_id}",
                 channel_id=channel_id,
                 role_id=role_id,
-                params={"implicit": int(implicit)},
-            )
+            ),
+            params={"implicit": int(implicit)},
         )
