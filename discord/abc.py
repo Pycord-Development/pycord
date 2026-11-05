@@ -1360,7 +1360,7 @@ class GuildChannel:
 
         Parameters
         ----------
-        obj: Union[:class:`~discord.Member`, :class:`~discord.Role`]
+        obj: :class:`~discord.Member` | :class:`~discord.Role`
             The object to resolve permissions for. This could be either
             a member or a role.
 
