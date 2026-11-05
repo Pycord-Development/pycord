@@ -1360,9 +1360,9 @@ class GuildChannel:
 
         Parameters
         ----------
-        obj: :class:`~discord.Member` | :class:`~discord.Role`
-            The object to resolve permissions for. This could be either
-            a member or a role.
+        obj: :class:`~discord.Member` | :class:`~discord.Role` | :class:`~discord.Object`
+            The object to resolve permissions for. This can be either
+            a :class:`.Member` or a :class:`.Role`, or a :class:`.Object` with matching type.
         implicit: bool
             whether to apply `implicit permission masking <https://docs.discord.com/developers/topics/permissions#implicit-permissions>`_
             for missing :attr:`~Permissions.view_channel` or voice/stage :attr:`~Permissions.connect`.
