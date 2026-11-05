@@ -1336,6 +1336,7 @@ class Member(discord.abc.Messageable, _UserTag):
         ~discord.HTTPException
             An error occurred while fetching the information.
         """
-        data = await self._state.http.get_guild_member_permissions(self.guild.id, self.id)
+        data = await self._state.http.get_guild_member_permissions(
+            self.guild.id, self.id
+        )
         return Permissions(int(data["permissions"]))
-

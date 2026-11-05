@@ -1349,7 +1349,7 @@ class GuildChannel:
 
     async def fetch_permissions_for(self, obj: Member | Role, /) -> Permissions:
         """Fetches the member or role's permissions in this channel from Discord.
-        
+
         For members, this includes their roles and member specific overwrites, as well as ``@everyone``.
 
         For roles, this includes the role's and ``@everyone``'s overwrites.
@@ -1379,11 +1379,12 @@ class GuildChannel:
         if isinstance(obj, Role):
             data = await self._state.http.get_channel_role_permissions(self.id, obj.id)
         elif isinstance(obj, Member):
-            data = await self._state.http.get_channel_member_permissions(self.id, obj.id)
+            data = await self._state.http.get_channel_member_permissions(
+                self.id, obj.id
+            )
         else:
             raise InvalidArgument("obj must be a Member or Role")
         return Permissions(int(data["permissions"]))
-
 
 
 class Messageable:
