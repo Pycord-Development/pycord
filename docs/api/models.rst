@@ -724,9 +724,19 @@ Events
 .. autoclass:: RawVoiceChannelStatusUpdateEvent()
     :members:
 
+.. attributetable:: RawVoiceChannelStartTimeUpdateEvent
+
+.. autoclass:: RawVoiceChannelStartTimeUpdateEvent()
+    :members:
+
 .. attributetable:: VoiceChannelEffectSendEvent
 
 .. autoclass:: VoiceChannelEffectSendEvent()
+    :members:
+
+.. attributetable:: ChannelInfo
+
+.. autoclass:: ChannelInfo()
     :members:
 
 

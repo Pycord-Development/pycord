@@ -724,6 +724,10 @@ class Intents(BaseFlags):
         - :func:`on_guild_channel_create`
         - :func:`on_guild_channel_delete`
         - :func:`on_guild_channel_pins_update`
+        - :func:`on_voice_channel_start_time_update`
+        - :func:`on_voice_channel_status_update`
+        - :func:`on_raw_voice_channel_start_time_update`
+        - :func:`on_raw_voice_channel_status_update`
 
         This also corresponds to the following attributes and classes in terms of cache:
 
