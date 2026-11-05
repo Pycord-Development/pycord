@@ -3442,7 +3442,7 @@ class HTTPClient:
                 "/channels/{channel_id}/permissions/member/{user_id}",
                 channel_id=channel_id,
                 user_id=user_id,
-                implicit=implicit,
+                params={"implicit": int(implicit)},
             )
         )
 
@@ -3455,6 +3455,6 @@ class HTTPClient:
                 "/channels/{channel_id}/permissions/role/{role_id}",
                 channel_id=channel_id,
                 role_id=role_id,
-                implicit=implicit,
+                params={"implicit": int(implicit)},
             )
         )
