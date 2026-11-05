@@ -3409,3 +3409,51 @@ class HTTPClient:
             ),
             json=payload,
         )
+
+    def get_guild_member_permissions(
+        self, guild_id: int, user_id: int
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/permissions/member/{user_id}",
+                guild_id=guild_id,
+                user_id=user_id,
+            )
+        )
+
+    def get_guild_role_permissions(
+        self, guild_id: int, role_id: int
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/permissions/role/{role_id}",
+                guild_id=guild_id,
+                role_id=role_id,
+            )
+        )
+
+    def get_channel_member_permissions(
+        self, channel_id: int, user_id: int
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/channels/{channel_id}/permissions/member/{user_id}",
+                channel_id=channel_id,
+                user_id=user_id,
+            )
+        )
+
+    def get_channel_role_permissions(
+        self, channel_id: int, role_id: int
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/channels/{channel_id}/permissions/role/{role_id}",
+                channel_id=channel_id,
+                role_id=role_id,
+            )
+        )
