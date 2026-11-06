@@ -232,7 +232,7 @@ class StickerItem(_StickerTag):
 
         Returns
         -------
-        Union[:class:`StandardSticker`, :class:`GuildSticker`]
+        :class:`StandardSticker` | :class:`GuildSticker`
             The retrieved sticker.
 
         Raises
