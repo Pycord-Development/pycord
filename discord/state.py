@@ -42,7 +42,20 @@ from typing import (
     overload,
 )
 
-from . import utils
+import discord.abc
+from discord.types.raw_models import MessageUpdateEvent
+
+from . import (
+    CategoryChannel,
+    ForumChannel,
+    PartialMessageable,
+    Snowflake,
+    StageChannel,
+    TextChannel,
+    Thread,
+    VoiceChannel,
+    utils,
+)
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
@@ -102,12 +115,12 @@ class ChunkRequest:
         self,
         guild_id: int,
         loop: asyncio.AbstractEventLoop,
-        resolver: Callable[[int], Any],
+        resolver: Callable[[int], Guild | None],
         *,
         cache: bool = True,
     ) -> None:
         self.guild_id: int = guild_id
-        self.resolver: Callable[[int], Any] = resolver
+        self.resolver: Callable[[int], Guild | None] = resolver
         self.loop: asyncio.AbstractEventLoop = loop
         self.cache: bool = cache
         self.nonce: str = os.urandom(16).hex()
@@ -150,12 +163,12 @@ class ChannelInfoRequest:
         self,
         guild_id: int,
         loop: asyncio.AbstractEventLoop,
-        resolver: Callable[[int], Any],
+        resolver: Callable[[int], Guild | None],
         *,
         cache: bool = True,
     ) -> None:
         self.guild_id: int = guild_id
-        self.resolver: Callable[[int], Any] = resolver
+        self.resolver: Callable[[int], Guild | None] = resolver
         self.loop: asyncio.AbstractEventLoop = loop
         self.cache: bool = cache
         self.channel_info: list[ChannelInfo] = []
@@ -231,7 +244,9 @@ class ConnectionState:
         if self.max_messages is not None and self.max_messages <= 0:
             self.max_messages = 1000
 
-        self.dispatch: Callable = dispatch
+        self.dispatch: Callable[[str, Any], Any] = (
+            dispatch  # pyright: ignore[reportExplicitAny] These callbacks are awful
+        )
         self.handlers: dict[str, Callable] = handlers
         self.hooks: dict[str, Callable] = hooks
         self.shard_count: int | None = None
@@ -264,16 +279,14 @@ class ConnectionState:
         status = options.get("status", None)
         if status:
             status = "invisible" if status is Status.offline else str(status)
-        intents = options.get("intents", None)
+        intents: Intents | None = options.get("intents", None)
         if intents is None:
             intents = Intents.default()
 
-        elif not isinstance(intents, Intents):
-            raise TypeError(f"intents parameter must be Intent not {type(intents)!r}")
         if not intents.guilds:
             _log.warning(
                 "Guilds intent seems to be disabled. This may cause state related"
-                " issues."
+                + " issues."
             )
 
         self._chunk_guilds: bool = options.get(
@@ -292,7 +305,7 @@ class ConnectionState:
         elif not isinstance(cache_flags, MemberCacheFlags):
             raise TypeError(
                 "member_cache_flags parameter must be MemberCacheFlags not"
-                f" {type(cache_flags)!r}"
+                + f" {type(cache_flags)!r}"
             )
 
         else:
@@ -329,10 +342,12 @@ class ConnectionState:
         self._request_channel_info: bool = self.cache_channel_info
         self._channel_info_requests: dict[int | str, ChannelInfoRequest] = {}
 
-        self.parsers = parsers = {}
+        self.parsers: dict[str, Callable[..., Any]] = (
+            {}
+        )  # pyright: ignore[reportExplicitAny]
         for attr, func in inspect.getmembers(self):
             if attr.startswith("parse_"):
-                parsers[attr[6:].upper()] = func
+                self.parsers[attr[6:].upper()] = func
 
         self.clear()
 
@@ -351,14 +366,14 @@ class ConnectionState:
         # using __del__. Testing this for memory leaks led to no discernible leaks,
         # though more testing will have to be done.
         self._users: dict[int, User] = {}
-        self._emojis: dict[int, (GuildEmoji, AppEmoji)] = {}
+        self._emojis: dict[int, GuildEmoji | AppEmoji] = {}
         self._stickers: dict[int, GuildSticker] = {}
         self._guilds: dict[int, Guild] = {}
         self._polls: dict[int, Poll] = {}
         if views:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)
-        self._voice_clients: dict[int, VoiceProtocol] = {}
+        self._voice_clients: dict[int, VoiceProtocol[Client]] = {}
         self._sounds: dict[int, SoundboardSound] = {}
 
         # LRU of max size 128
@@ -373,7 +388,7 @@ class ConnectionState:
     def process_chunk_requests(
         self, guild_id: int, nonce: str | None, members: list[Member], complete: bool
     ) -> None:
-        removed = []
+        removed: list[int | str] = []
         for key, request in self._chunk_requests.items():
             if request.guild_id == guild_id and request.nonce == nonce:
                 request.add_members(members)
@@ -387,7 +402,7 @@ class ConnectionState:
     def process_info_requests(
         self, guild_id: int, channel_info: list[ChannelInfo]
     ) -> None:
-        removed = []
+        removed: list[int | str] = []
         for key, request in self._channel_info_requests.items():
             if request.guild_id == guild_id:
                 request.parse_response(channel_info)
@@ -424,18 +439,18 @@ class ConnectionState:
         return ret
 
     @property
-    def voice_clients(self) -> list[VoiceProtocol]:
+    def voice_clients(self) -> list[VoiceProtocol[Client]]:
         return list(self._voice_clients.values())
 
-    def _get_voice_client(self, guild_id: int | None) -> VoiceProtocol | None:
+    def _get_voice_client(self, guild_id: int | None) -> VoiceProtocol[Client] | None:
         # the keys of self._voice_clients are ints
         return self._voice_clients.get(guild_id)  # type: ignore
 
-    def _add_voice_client(self, guild_id: int, voice: VoiceProtocol) -> None:
+    def _add_voice_client(self, guild_id: int, voice: VoiceProtocol[Client]) -> None:
         self._voice_clients[guild_id] = voice
 
     def _remove_voice_client(self, guild_id: int) -> None:
-        self._voice_clients.pop(guild_id, None)
+        _ = self._voice_clients.pop(guild_id, None)
 
     def _update_references(self, ws: DiscordWebSocket) -> None:
         for vc in self.voice_clients:
@@ -461,7 +476,7 @@ class ConnectionState:
             return copied_user
 
     def deref_user(self, user_id: int) -> None:
-        self._users.pop(user_id, None)
+        _ = self._users.pop(user_id, None)
 
     def create_user(self, data: UserPayload) -> User:
         return User(state=self, data=data)
@@ -522,13 +537,13 @@ class ConnectionState:
         self._guilds[guild.id] = guild
 
     def _remove_guild(self, guild: Guild) -> None:
-        self._guilds.pop(guild.id, None)
+        _ = self._guilds.pop(guild.id, None)
 
         for emoji in guild.emojis:
             self._remove_emoji(emoji)
 
         for sticker in guild.stickers:
-            self._stickers.pop(sticker.id, None)
+            _ = self._stickers.pop(sticker.id, None)
 
         del guild
 
@@ -545,7 +560,7 @@ class ConnectionState:
         return self._emojis.get(emoji_id)  # type: ignore
 
     def _remove_emoji(self, emoji: GuildEmoji | AppEmoji) -> None:
-        self._emojis.pop(emoji.id, None)
+        _ = self._emojis.pop(emoji.id, None)
 
     def get_sticker(self, sticker_id: int | None) -> GuildSticker | None:
         # the keys of self._stickers are ints
@@ -555,10 +570,25 @@ class ConnectionState:
     def polls(self) -> list[Poll]:
         return list(self._polls.values())
 
-    def store_raw_poll(self, poll: PollPayload, raw):
+    def store_raw_poll(
+        self, poll: PollPayload, raw: RawMessageUpdateEvent
+    ) -> Poll | None:
         channel = self.get_channel(raw.channel_id) or PartialMessageable(
             state=self, id=raw.channel_id
         )
+        if not isinstance(
+            channel,
+            (
+                TextChannel,
+                VoiceChannel,
+                StageChannel,
+                ForumChannel,
+                Thread,
+                PartialMessageable,
+            ),
+        ):
+            _log.warning("Received poll for an invalid channel")
+            return None
         message = channel.get_partial_message(raw.message_id)
         p = Poll.from_dict(poll, message)
         self._polls[message.id] = p
@@ -567,7 +597,7 @@ class ConnectionState:
     def store_poll(self, poll: Poll, message_id: int):
         self._polls[message_id] = poll
 
-    def get_poll(self, message_id):
+    def get_poll(self, message_id: Snowflake):
         return self._polls.get(message_id)
 
     @property
@@ -608,11 +638,11 @@ class ConnectionState:
         return channel
 
     def _remove_private_channel(self, channel: PrivateChannel) -> None:
-        self._private_channels.pop(channel.id, None)
+        _ = self._private_channels.pop(channel.id, None)
         if isinstance(channel, DMChannel):
             recipient = channel.recipient
             if recipient is not None:
-                self._private_channels_by_user.pop(recipient.id, None)
+                _ = self._private_channels_by_user.pop(recipient.id, None)
 
     def _get_message(self, msg_id: int | None) -> Message | None:
         return (
@@ -639,7 +669,9 @@ class ConnectionState:
     ) -> tuple[Channel | Thread, Guild | None]:
         channel_id = int(data["channel_id"])
         try:
-            guild = self._get_guild(int(guild_id or data["guild_id"]))
+            guild = self._get_guild(
+                int(guild_id or data["guild_id"])
+            )  # pyright: ignore[reportTypedDictNotRequiredAccess]
         except KeyError:
             channel = DMChannel._from_message(self, channel_id)
             guild = None
@@ -899,7 +931,7 @@ class ConnectionState:
                 # self._messages won't be None here
                 self._messages.remove(msg)  # type: ignore
 
-    def parse_message_update(self, data) -> None:
+    def parse_message_update(self, data: MessagePayload) -> None:
         old_message = self._get_message(int(data["id"]))
         channel, _ = self._get_guild_channel(data)
         message = Message(channel=channel, data=data, state=self)
@@ -914,8 +946,9 @@ class ConnectionState:
         if old_message is not None:
             self.dispatch("message_edit", old_message, message)
         else:
-            if poll_data := data.get("poll"):
-                self.store_raw_poll(poll_data, raw)
+            poll_data: Poll = data.get("poll")
+            if poll_data:
+                _ = self.store_raw_poll(poll_data, raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
             self._view_store.update_from_message(raw.message_id, data["components"])
