@@ -33,7 +33,6 @@ from typing import TYPE_CHECKING, Any, Generic, Literal, overload
 
 from typing_extensions import Self, TypeVar
 
-from ..channel import _threaded_guild_channel_factory
 from ..components import SelectDefaultValue, SelectMenu, SelectOption
 from ..emoji import AppEmoji, GuildEmoji
 from ..enums import ChannelType, ComponentType, SelectDefaultValueType
@@ -690,68 +689,22 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         select_type = self.underlying.type
         if select_type is ComponentType.string_select:
             return self._selected_values  # type: ignore # ST is str
-        resolved = []
-        selected_values = list(self._selected_values)
-        state = self._interaction._state
-        guild = self._interaction.guild
 
-        if guild is None:
+        resolved = self._interaction._resolved
+        getter = {
+            ComponentType.user_select: resolved.get_user,
+            ComponentType.role_select: lambda i: resolved.roles.get(i),
+            ComponentType.mentionable_select: resolved.get_mentionable,
+            ComponentType.channel_select: lambda i: resolved.channels.get(i),
+        }.get(select_type)
+        if getter is None:
             return []
 
-        resolved_data = self._interaction.data.get("resolved", {})
-        if select_type is ComponentType.channel_select:
-            for channel_id, _data in resolved_data.get("channels", {}).items():
-                if channel_id not in selected_values:
-                    continue
-                if (
-                    int(channel_id) in guild._channels
-                    or int(channel_id) in guild._threads
-                ):
-                    result = guild.get_channel_or_thread(int(channel_id))
-                    _data["_invoke_flag"] = True
-                    (
-                        result._update(_data)
-                        if isinstance(result, Thread)
-                        else result._update(guild, _data)
-                    )
-                else:
-                    # NOTE:
-                    # This is a fallback in case the channel/thread is not found in the
-                    # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
-                    # permissions will be incorrect due to a lack of permission_overwrite data.
-                    # For threads, if this fallback occurs, info like thread owner id, message count,
-                    # flags, and more will be missing due to a lack of data sent by Discord.
-                    obj_type = _threaded_guild_channel_factory(_data["type"])[0]
-                    if obj_type is None:
-                        # should not be None, but assert anyways
-                        continue
-                    result = obj_type(state=state, data=_data, guild=guild)
-                resolved.append(result)
-        elif select_type in (
-            ComponentType.user_select,
-            ComponentType.mentionable_select,
-        ):
-            cache_flag = state.member_cache_flags.interaction
-            resolved_user_data = resolved_data.get("users", {})
-            resolved_member_data = resolved_data.get("members", {})
-            for _id in selected_values:
-                if (_data := resolved_user_data.get(_id)) is not None:
-                    if (_member_data := resolved_member_data.get(_id)) is not None:
-                        member = dict(_member_data)
-                        member["user"] = _data
-                        _data = member
-                        result = guild._get_and_update_member(
-                            _data, int(_id), cache_flag
-                        )
-                    else:
-                        result = User(state=state, data=_data)
-                    resolved.append(result)
-        if select_type in (ComponentType.role_select, ComponentType.mentionable_select):
-            for role_id, _data in resolved_data.get("roles", {}).items():
-                if role_id not in selected_values:
-                    continue
-                resolved.append(Role(guild=guild, state=state, data=_data))
-        return resolved
+        values = []
+        for value in self._selected_values:
+            if (obj := getter(int(value))) is not None:
+                values.append(obj)
+        return values  # type: ignore
 
     @property
     def width(self) -> int:

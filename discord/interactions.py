@@ -28,16 +28,23 @@ from __future__ import annotations
 import asyncio
 import datetime
 from collections.abc import Coroutine
-from typing import TYPE_CHECKING, Any, Union, overload
+from typing import TYPE_CHECKING, Any, overload
 
 from typing_extensions import deprecated
 
 from . import utils
-from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
+from .channel import (
+    ChannelType,
+    PartialChannel,
+    PartialMessageable,
+    _threaded_channel_factory,
+    _threaded_guild_channel_factory,
+)
 from .enums import (
     InteractionContextType,
     InteractionResponseType,
     InteractionType,
+    SlashCommandOptionType,
     try_enum,
 )
 from .errors import ClientException, InteractionResponded, InvalidArgument
@@ -49,6 +56,8 @@ from .message import Attachment, Message
 from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
+from .role import Role
+from .threads import Thread
 from .user import User
 from .utils import warn_deprecated
 from .webhook.async_ import (
@@ -86,28 +95,77 @@ if TYPE_CHECKING:
     from .mentions import AllowedMentions
     from .poll import Poll
     from .state import ConnectionState
-    from .threads import Thread
+    from .types.interactions import (
+        ApplicationCommandInteractionDataResolved as ApplicationCommandInteractionDataResolvedPayload,
+    )
+    from .types.interactions import (
+        ApplicationCommandResolvedPartialChannel as ApplicationCommandResolvedPartialChannelPayload,
+    )
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionCallback as InteractionCallbackPayload
     from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
+    from .types.member import Member as MemberPayload
+    from .types.member import MemberWithUser as MemberWithUserPayload
+    from .types.user import User as UserPayload
     from .ui.modal import BaseModal
     from .ui.view import BaseView
 
-    InteractionChannel = Union[
-        VoiceChannel,
-        StageChannel,
-        TextChannel,
-        ForumChannel,
-        CategoryChannel,
-        Thread,
-        DMChannel,
-        GroupChannel,
-        PartialMessageable,
-    ]
+    InteractionChannel = (
+        VoiceChannel
+        | StageChannel
+        | TextChannel
+        | ForumChannel
+        | CategoryChannel
+        | Thread
+        | DMChannel
+        | GroupChannel
+        | PartialMessageable
+    )
 
 MISSING: Any = utils.MISSING
+
+
+def _parse_member(
+    state: ConnectionState,
+    guild: Guild | Object,
+    data: MemberPayload | MemberWithUserPayload,
+    user_data: UserPayload,
+) -> Member:
+    member_data: MemberWithUserPayload = {**data, "user": user_data}  # type: ignore[typeddict-item]
+    if isinstance(guild, Guild):
+        return guild._get_and_update_member(
+            member_data, int(user_data["id"]), state.member_cache_flags.interaction
+        )
+    return Member(state=state, data=member_data, guild=guild)  # type: ignore[arg-type] # Object guild
+
+
+def _parse_channel(
+    state: ConnectionState,
+    guild: Guild | None,
+    data: ApplicationCommandResolvedPartialChannelPayload,
+    *,
+    partial: bool,
+) -> InteractionChannel:
+    if guild is not None:
+        channel = guild.get_channel_or_thread(int(data["id"]))
+        if channel is not None:
+            update_data = {**data, "_invoke_flag": True}
+            if isinstance(channel, Thread):
+                channel._update(update_data)  # type: ignore
+            else:
+                channel._update(guild, update_data)  # type: ignore
+            return channel
+
+        if not partial:
+            # NOTE: for channels, permissions will be incomplete due to missing
+            # overwrites; for threads, info like owner id and message count will be missing.
+            factory, _ = _threaded_guild_channel_factory(data["type"])
+            if factory is not None:
+                return factory(state=state, data=data, guild=guild)  # type: ignore
+
+    return PartialChannel(state=state, data=data)
 
 
 class Interaction:
@@ -219,6 +277,8 @@ class Interaction:
         "_cs_response",
         "_cs_followup",
         "_cs_channel",
+        "_resolved_data",
+        "_cs_resolved",
     )
 
     def __init__(self, *, data: InteractionPayload, state: ConnectionState):
@@ -233,7 +293,7 @@ class Interaction:
         self._raw_data: InteractionPayload = data
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
-        self.data: InteractionData | None = data.get("data")
+        self.data: InteractionData = data.get("data", {})  # type: ignore # narrowed
         self.token: str = data["token"]
         self.version: int = data["version"]
         self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
@@ -267,7 +327,7 @@ class Interaction:
         self.attachment_size_limit: int = data.get("attachment_size_limit")
 
         self.message: Message | None = None
-        self.channel = None
+        self.channel: InteractionChannel | None = None
 
         self.user: User | Member | None = None
         self._permissions: int = 0
@@ -284,40 +344,31 @@ class Interaction:
                 or self._state._get_guild(self.guild_id)
                 or Object(id=self.guild_id)
             )
-            try:
-                member = data["member"]  # type: ignore
-            except KeyError:
-                pass
-            else:
+            if (member := data.get("member")) is not None:
                 self._permissions = int(member.get("permissions", 0))
-                if not isinstance(guild, Object):
-                    cache_flag = self._state.member_cache_flags.interaction
-                    self.user = guild._get_and_update_member(
-                        member, int(member["user"]["id"]), cache_flag
-                    )
-                else:
-                    self.user = Member(state=self._state, data=member, guild=guild)
-        else:
-            try:
-                self.user = User(state=self._state, data=data["user"])
-            except KeyError:
-                pass
+                self.user = _parse_member(self._state, guild, member, member["user"])
+        elif (user := data.get("user")) is not None:
+            self.user = User(state=self._state, data=user)
 
         channel = data.get("channel")
-        data_ch_type: int | None = channel.get("type") if channel else None
-        factory: Any | None = None
-
-        if data_ch_type is not None:
-            factory, ch_type = _threaded_channel_factory(data_ch_type)
+        if channel is not None:
+            factory, ch_type = _threaded_channel_factory(channel["type"])
             if ch_type in (ChannelType.group, ChannelType.private):
-                self.channel = factory(me=self.user, data=channel, state=self._state)
+                if factory is not None:
+                    self.channel = factory(
+                        me=self.user,
+                        data=channel,
+                        state=self._state,  # type: ignore[arg-type]
+                    )
+            else:
+                # cached guild channels are refreshed; uncached ones are built from
+                # the partial data in guilds, and are a PartialChannel otherwise
+                self.channel = _parse_channel(
+                    self._state, self.guild, channel, partial=False
+                )
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
-            if self.channel is None and factory is not None:
-                self.channel = factory(
-                    state=self._state, data=channel, guild=self.guild
-                )
 
         if self.channel is None and self.channel_id is not None:
             ch_type = (
@@ -331,10 +382,17 @@ class Interaction:
 
         if message_data := data.get("message"):
             self.message = Message(
-                state=self._state, channel=self.channel, data=message_data
+                state=self._state,
+                channel=self.channel,  # type: ignore[arg-type] # always messageable here
+                data=message_data,
             )
 
         self._message_data = message_data
+
+        # stored separately since ``data`` gets replaced when invoking subcommands
+        self._resolved_data: ApplicationCommandInteractionDataResolvedPayload | None = (
+            self.data.get("resolved") if self.data is not None else None
+        )
 
     @property
     def client(self) -> Client:
@@ -396,6 +454,11 @@ class Interaction:
         In a non-guild context where this doesn't apply, an empty permissions object is returned.
         """
         return Permissions(self._permissions)
+
+    @utils.cached_slot_property("_cs_resolved")
+    def _resolved(self) -> InteractionResolvedData:
+        """The parsed resolved data of this interaction. Each mapping is parsed on first access."""
+        return InteractionResolvedData(data=self._resolved_data or {}, parent=self)
 
     @utils.cached_slot_property("_cs_app_permissions")
     def app_permissions(self) -> Permissions:
@@ -1941,3 +2004,184 @@ class InteractionCallback:
         This might be useful for determining if the message was forced to be ephemeral.
         """
         return self._response_message_ephemeral
+
+
+class InteractionResolvedData:
+    """Represents the parsed ``resolved`` data of an interaction.
+
+    All mappings are keyed by the object's ID and are only parsed when first accessed.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    users: dict[:class:`int`, :class:`User`]
+        The resolved users.
+    members: dict[:class:`int`, :class:`Member`]
+        The resolved members. Only populated in guilds.
+    roles: dict[:class:`int`, :class:`Role`]
+        The resolved roles. Only populated in guilds.
+    channels: dict[:class:`int`, :class:`abc.GuildChannel` | :class:`Thread` | :class:`PartialChannel`]
+        The resolved channels. Channels not found in the cache are :class:`PartialChannel` objects.
+    attachments: dict[:class:`int`, :class:`Attachment`]
+        The resolved attachments.
+    messages: dict[:class:`int`, :class:`Message`]
+        The resolved messages.
+    """
+
+    __slots__ = (
+        "_cs_attachments",
+        "_cs_channels",
+        "_cs_members",
+        "_cs_messages",
+        "_cs_roles",
+        "_cs_users",
+        "_data",
+        "_parent",
+        "_state",
+    )
+
+    def __init__(
+        self,
+        *,
+        parent: Interaction,
+        data: ApplicationCommandInteractionDataResolvedPayload,
+    ) -> None:
+        self._parent = parent
+        self._state = parent._state
+        self._data = data
+
+    def __repr__(self) -> str:
+        counts = " ".join(
+            f"{key}={len(value)}" for key, value in self._data.items()  # type: ignore
+        )
+        return f"<InteractionResolvedData {counts}>"
+
+    @utils.cached_slot_property("_cs_users")
+    def users(self) -> dict[int, User]:
+        return {
+            int(uid): self._state.create_user(u)
+            for uid, u in self._data.get("users", {}).items()
+        }
+
+    @utils.cached_slot_property("_cs_members")
+    def members(self) -> dict[int, Member]:
+        guild = self._parent.guild
+        if guild is None:
+            return {}
+
+        users = self._data.get("users", {})
+        return {
+            int(mid): _parse_member(self._state, guild, member_data, user_data)
+            for mid, member_data in self._data.get("members", {}).items()
+            # the user of a resolved member is always resolved as well
+            if (user_data := users.get(mid)) is not None
+        }
+
+    @utils.cached_slot_property("_cs_roles")
+    def roles(self) -> dict[int, Role]:
+        guild = self._parent.guild
+        if guild is None:
+            return {}
+
+        return {
+            int(rid): guild.get_role(int(rid))
+            or Role(guild=guild, data=role_data, state=self._state)
+            for rid, role_data in self._data.get("roles", {}).items()
+        }
+
+    @utils.cached_slot_property("_cs_channels")
+    def channels(self) -> dict[int, InteractionChannel]:
+        guild = self._parent.guild
+        return {
+            int(cid): _parse_channel(self._state, guild, channel_data, partial=True)
+            for cid, channel_data in self._data.get("channels", {}).items()
+        }
+
+    @utils.cached_slot_property("_cs_attachments")
+    def attachments(self) -> dict[int, Attachment]:
+        return {
+            int(aid): Attachment(data=a, state=self._state)
+            for aid, a in self._data.get("attachments", {}).items()
+        }
+
+    @utils.cached_slot_property("_cs_messages")
+    def messages(self) -> dict[int, Message]:
+        return {
+            int(mid): Message(
+                data=message_data,
+                state=self._state,
+                channel=self._get_message_channel(int(message_data["channel_id"])),  # type: ignore
+            )
+            for mid, message_data in self._data.get("messages", {}).items()
+        }
+
+    def _get_message_channel(self, channel_id: int) -> InteractionChannel:
+        if (channel := self.channels.get(channel_id)) is not None:
+            return channel
+        if self._parent.channel_id == channel_id and self._parent.channel is not None:
+            return self._parent.channel
+        if (channel := self._state.get_channel(channel_id)) is not None:
+            return channel  # type: ignore
+        return PartialMessageable(state=self._state, id=channel_id)
+
+    def get_user(self, user_id: int | str, /) -> Member | User | None:
+        """Returns the resolved member with the given ID, falling back to the user.
+
+        Parameters
+        ----------
+        user_id: :class:`int` | :class:`str`
+            The ID of the user.
+
+        Returns
+        -------
+        :class:`Member` | :class:`User` | :data:`None`
+            The resolved member or user, if found.
+        """
+        user_id = int(user_id)
+        return self.members.get(user_id) or self.users.get(user_id)
+
+    def get_mentionable(self, object_id: int | str, /) -> Member | User | Role | None:
+        """Returns the resolved member, user or role with the given ID.
+
+        Parameters
+        ----------
+        object_id: :class:`int` | :class:`str`
+            The ID of the user or role.
+
+        Returns
+        -------
+        :class:`Member` | :class:`User` | :class:`Role` | :data:`None`
+            The resolved object, if found.
+        """
+        return self.get_user(object_id) or self.roles.get(int(object_id))
+
+    def get(
+        self, object_id: int | str, option_type: SlashCommandOptionType, /
+    ) -> Member | User | Role | InteractionChannel | Attachment | None:
+        """Returns the resolved object for an option value of the given type.
+
+        Parameters
+        ----------
+        object_id: :class:`int` | :class:`str`
+            The option value (a snowflake).
+        option_type: :class:`SlashCommandOptionType`
+            The type of the option.
+
+        Returns
+        -------
+        :class:`Member` | :class:`User` | :class:`Role` | :class:`abc.GuildChannel` | :class:`Thread` | :class:`PartialChannel` | :class:`Attachment` | :data:`None`
+            The resolved object, or ``None`` if it wasn't found or the type isn't resolvable.
+        """
+        object_id = int(object_id)
+        if option_type is SlashCommandOptionType.user:
+            return self.get_user(object_id)
+        if option_type is SlashCommandOptionType.mentionable:
+            return self.get_mentionable(object_id)
+        if option_type is SlashCommandOptionType.role:
+            return self.roles.get(object_id)
+        if option_type is SlashCommandOptionType.channel:
+            return self.channels.get(object_id)
+        if option_type is SlashCommandOptionType.attachment:
+            return self.attachments.get(object_id)
+        return None
