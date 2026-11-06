@@ -58,7 +58,7 @@ class SharedClientTheme:
         The direction of the theme's colors, in degrees. Must be between ``0`` and ``360``.
     base_mix: :class:`int`
         The intensity of the theme's colors. Must be between ``0`` and ``100``.
-    base_theme: Optional[:class:`SharedClientThemeBaseType`]
+    base_theme: :class:`SharedClientThemeBaseType` | :obj:`None`
         The mode of the theme. Defaults to :attr:`SharedClientThemeBaseType.unset`,
         which Discord treats as :attr:`SharedClientThemeBaseType.dark`.
     """

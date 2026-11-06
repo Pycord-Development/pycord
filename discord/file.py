@@ -58,11 +58,11 @@ class File:
 
             To pass binary data, consider usage of ``io.BytesIO``.
 
-    filename: Optional[:class:`str`]
+    filename: :class:`str` | :obj:`None`
         The filename to display when uploading to Discord.
         If this is not given then it defaults to ``fp.name`` or if ``fp`` is
         a string then the ``filename`` will default to the string given.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description of a file, used by Discord to display alternative text on images.
     spoiler: :class:`bool`
         Whether the attachment is a spoiler.
@@ -173,17 +173,17 @@ class VoiceMessage(File):
 
             To pass binary data, consider usage of ``io.BytesIO``.
 
-    filename: Optional[:class:`str`]
+    filename: :class:`str` | :obj:`None`
         The filename to display when uploading to Discord.
         If this is not given then it defaults to ``fp.name`` or if ``fp`` is
         a string then the ``filename`` will default to the string given.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description of a file, used by Discord to display alternative text on images.
     spoiler: :class:`bool`
         Whether the attachment is a spoiler.
-    waveform: Optional[:class:`str`]
+    waveform: :class:`str` | :obj:`None`
         The base64 encoded bytearray representing a sampled waveform.
-    duration_secs: Optional[:class:`float`]
+    duration_secs: :class:`float` | :obj:`None`
         The duration of the voice message.
     """
 

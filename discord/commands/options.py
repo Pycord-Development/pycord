@@ -34,7 +34,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Literal,
-    Optional,
     TypeVar,
     Union,
     get_args,
@@ -162,27 +161,27 @@ class Option:
     name: :class:`str`
         The name of this option visible in the UI.
         Inherits from the variable name if not provided as a parameter.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description of this option.
         Must be 100 characters or fewer. If :attr:`input_type` is a :class:`enum.Enum` and :attr:`description` is not specified, :attr:`input_type`'s docstring will be used.
-    choices: Optional[List[:class:`Any` | :class:`OptionChoice`]]
+    choices: List[:class:`Any` | :class:`OptionChoice`] | :obj:`None`
         The list of available choices for this option.
         Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair).
         If provided, the input from the user must match one of the choices in the list.
-    required: Optional[:class:`bool`]
+    required: :class:`bool` | :obj:`None`
         Whether this option is required.
-    default: Optional[:class:`Any`]
+    default: :class:`Any` | :obj:`None`
         The default value for this option. If provided, ``required`` will be considered ``False``.
-    min_value: Optional[:class:`int`]
+    min_value: :class:`int` | :obj:`None`
         The minimum value that can be entered.
         Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
-    max_value: Optional[:class:`int`]
+    max_value: :class:`int` | :obj:`None`
         The maximum value that can be entered.
         Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`.
-    min_length: Optional[:class:`int`]
+    min_length: :class:`int` | :obj:`None`
         The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
-    max_length: Optional[:class:`int`]
+    max_length: :class:`int` | :obj:`None`
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
     channel_types: list[:class:`discord.ChannelType`] | None
@@ -323,17 +322,17 @@ class Option:
 
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
-            minmax_typehint = Optional[int]
+            minmax_typehint = int | None
         elif self.input_type == SlashCommandOptionType.number:
             minmax_types = (int, float, type(None))
-            minmax_typehint = Optional[int | float]
+            minmax_typehint = int | float | None
         else:
             minmax_types = (type(None),)
             minmax_typehint = type(None)
 
         if self.input_type == SlashCommandOptionType.string:
             minmax_length_types = (int, type(None))
-            minmax_length_typehint = Optional[int]
+            minmax_length_typehint = int | None
         else:
             minmax_length_types = (type(None),)
             minmax_length_typehint = type(None)
@@ -470,7 +469,7 @@ class Option:
 
         Returns
         -------
-        Optional[AutocompleteFunction]
+        :class:`AutocompleteFunction` | :obj:`None`
 
         .. versionchanged:: 2.7
 
@@ -507,7 +506,7 @@ class OptionChoice:
     ----------
     name: :class:`str`
         The name of the choice. Shown in the UI when selecting an option.
-    value: Optional[:class:`str` | :class:`int` | :class:`float`]
+    value: :class:`str` | :class:`int` | :class:`float` | :obj:`None`
         The value of the choice. If not provided, will use the value of ``name``.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this choice. The values of this should be ``"locale": "name"``.

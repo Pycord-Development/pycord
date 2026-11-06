@@ -144,24 +144,24 @@ class ScheduledEvent(Hashable):
         The guild where the scheduled event is happening.
     name: :class:`str`
         The name of the scheduled event.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description of the scheduled event.
     start_time: :class:`datetime.datetime`
         The time when the event will start
-    end_time: Optional[:class:`datetime.datetime`]
+    end_time: :class:`datetime.datetime` | :obj:`None`
         The time when the event is supposed to end.
     status: :class:`ScheduledEventStatus`
         The status of the scheduled event.
     location: :class:`ScheduledEventLocation`
         The location of the event.
         See :class:`ScheduledEventLocation` for more information.
-    subscriber_count: Optional[:class:`int`]
+    subscriber_count: :class:`int` | :obj:`None`
         The number of users that have marked themselves as interested in the event.
-    creator_id: Optional[:class:`int`]
+    creator_id: :class:`int` | :obj:`None`
         The ID of the user who created the event.
         It may be ``None`` because events created before October 25th, 2021 haven't
         had their creators tracked.
-    creator: Optional[:class:`User`]
+    creator: :class:`User` | :obj:`None`
         The resolved user object of who created the event.
     privacy_level: :class:`ScheduledEventPrivacyLevel`
         The privacy level of the event. Currently, the only possible value
@@ -321,11 +321,11 @@ class ScheduledEvent(Hashable):
             The privacy level of the event. Currently, the only possible value
             is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
             so there is no need to change this parameter.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason to show in the audit log.
-        image: Optional[:class:`bytes`]
+        image: :class:`bytes` | :obj:`None`
             The cover image of the scheduled event.
-        cover: Optional[:class:`bytes`]
+        cover: :class:`bytes` | :obj:`None`
             The cover image of the scheduled event.
 
             .. deprecated:: 2.7
@@ -333,7 +333,7 @@ class ScheduledEvent(Hashable):
 
         Returns
         -------
-        Optional[:class:`.ScheduledEvent`]
+        :class:`.ScheduledEvent` | :obj:`None`
             The newly updated scheduled event object. This is only returned when certain
             fields are updated.
 
@@ -435,12 +435,12 @@ class ScheduledEvent(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason to show in the audit log.
 
         Returns
         -------
-        Optional[:class:`.ScheduledEvent`]
+        :class:`.ScheduledEvent` | :obj:`None`
             The newly updated scheduled event object.
 
         Raises
@@ -463,12 +463,12 @@ class ScheduledEvent(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason to show in the audit log.
 
         Returns
         -------
-        Optional[:class:`.ScheduledEvent`]
+        :class:`.ScheduledEvent` | :obj:`None`
             The newly updated scheduled event object.
 
         Raises
@@ -491,12 +491,12 @@ class ScheduledEvent(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason to show in the audit log.
 
         Returns
         -------
-        Optional[:class:`.ScheduledEvent`]
+        :class:`.ScheduledEvent` | :obj:`None`
             The newly updated scheduled event object.
 
         Raises
@@ -528,17 +528,17 @@ class ScheduledEvent(Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The maximum number of results to return.
-        as_member: Optional[:class:`bool`]
+        as_member: :class:`bool` | :obj:`None`
             Whether to fetch :class:`Member` objects instead of user objects.
             There may still be :class:`User` objects if the user is outside
             the guild.
-        before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieves users before this date or object. If a datetime is provided,
             it is recommended to use a UTC aware datetime. If the datetime is naive,
             it is assumed to be local time.
-        after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieves users after this date or object. If a datetime is provided,
             it is recommended to use a UTC aware datetime. If the datetime is naive,
             it is assumed to be local time.
