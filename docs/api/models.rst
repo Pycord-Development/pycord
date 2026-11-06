@@ -275,6 +275,11 @@ Scheduled Event
 .. autoclass:: ScheduledEventLocation()
     :members:
 
+.. attributetable:: ScheduledEventException
+
+.. autoclass:: ScheduledEventException()
+    :members:
+
 Welcome Screen
 ~~~~~~~~~~~~~~
 
