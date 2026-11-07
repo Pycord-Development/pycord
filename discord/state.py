@@ -42,10 +42,6 @@ from typing import (
     overload,
 )
 
-from . import (
-    Snowflake,
-    utils,
-)
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
@@ -73,6 +69,7 @@ from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
+from .types.snowflake import Snowflake
 from .ui.modal import BaseModal, ModalStore
 from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
@@ -234,9 +231,13 @@ class ConnectionState:
         if self.max_messages is not None and self.max_messages <= 0:
             self.max_messages = 1000
 
-        self.dispatch: Callable[[str, Any], Any] = (
-            dispatch  # pyright: ignore[reportExplicitAny] These callbacks are awful
-        )
+        self.dispatch: Callable[
+            [
+                str,
+                Any,
+            ],  # pyright: ignore[reportExplicitAny] They take whatever they want
+            None,
+        ] = dispatch
         self.handlers: dict[str, Callable] = handlers
         self.hooks: dict[str, Callable] = hooks
         self.shard_count: int | None = None
@@ -440,7 +441,7 @@ class ConnectionState:
         self._voice_clients[guild_id] = voice
 
     def _remove_voice_client(self, guild_id: int) -> None:
-        _ = self._voice_clients.pop(guild_id, None)
+        self._voice_clients.pop(guild_id, None)
 
     def _update_references(self, ws: DiscordWebSocket) -> None:
         for vc in self.voice_clients:
@@ -466,7 +467,7 @@ class ConnectionState:
             return copied_user
 
     def deref_user(self, user_id: int) -> None:
-        _ = self._users.pop(user_id, None)
+        self._users.pop(user_id, None)
 
     def create_user(self, data: UserPayload) -> User:
         return User(state=self, data=data)
@@ -527,13 +528,13 @@ class ConnectionState:
         self._guilds[guild.id] = guild
 
     def _remove_guild(self, guild: Guild) -> None:
-        _ = self._guilds.pop(guild.id, None)
+        self._guilds.pop(guild.id, None)
 
         for emoji in guild.emojis:
             self._remove_emoji(emoji)
 
         for sticker in guild.stickers:
-            _ = self._stickers.pop(sticker.id, None)
+            self._stickers.pop(sticker.id, None)
 
         del guild
 
@@ -550,7 +551,7 @@ class ConnectionState:
         return self._emojis.get(emoji_id)  # type: ignore
 
     def _remove_emoji(self, emoji: GuildEmoji | AppEmoji) -> None:
-        _ = self._emojis.pop(emoji.id, None)
+        self._emojis.pop(emoji.id, None)
 
     def get_sticker(self, sticker_id: int | None) -> GuildSticker | None:
         # the keys of self._stickers are ints
@@ -628,11 +629,11 @@ class ConnectionState:
         return channel
 
     def _remove_private_channel(self, channel: PrivateChannel) -> None:
-        _ = self._private_channels.pop(channel.id, None)
+        self._private_channels.pop(channel.id, None)
         if isinstance(channel, DMChannel):
             recipient = channel.recipient
             if recipient is not None:
-                _ = self._private_channels_by_user.pop(recipient.id, None)
+                self._private_channels_by_user.pop(recipient.id, None)
 
     def _get_message(self, msg_id: int | None) -> Message | None:
         return (
@@ -938,7 +939,7 @@ class ConnectionState:
         else:
             poll_data: Poll = data.get("poll")
             if poll_data:
-                _ = self.store_raw_poll(poll_data, raw)
+                self.store_raw_poll(poll_data, raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
             self._view_store.update_from_message(raw.message_id, data["components"])
