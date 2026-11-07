@@ -42,18 +42,8 @@ from typing import (
     overload,
 )
 
-import discord.abc
-from discord.types.raw_models import MessageUpdateEvent
-
 from . import (
-    CategoryChannel,
-    ForumChannel,
-    PartialMessageable,
     Snowflake,
-    StageChannel,
-    TextChannel,
-    Thread,
-    VoiceChannel,
     utils,
 )
 from .activity import BaseActivity
@@ -88,7 +78,7 @@ from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
 
 if TYPE_CHECKING:
-    from .abc import PrivateChannel
+    from .abc import GuildChannel, PrivateChannel
     from .client import Client
     from .gateway import DiscordWebSocket
     from .guild import GuildChannel, VocalGuildChannel
