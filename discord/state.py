@@ -38,9 +38,10 @@ from typing import (
     Any,
     Literal,
     TypeVar,
-    Unpack,
     overload,
 )
+
+from typing_extensions import Unpack
 
 from . import utils
 from .activity import BaseActivity
