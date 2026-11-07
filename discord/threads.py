@@ -246,7 +246,7 @@ class Thread(Messageable, Hashable):
         self.invitable = data.get("invitable", True)
         self.created_at = parse_time(data.get("create_timestamp", None))
 
-    def _update(self, data):
+    def _update(self, data: ThreadPayload):
         try:
             self.name = data["name"]
         except KeyError:
