@@ -39,9 +39,11 @@ from typing import (
     Literal,
     TypeVar,
     Union,
+    Unpack,
     overload,
 )
 
+from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
@@ -69,7 +71,6 @@ from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
-from .types.snowflake import Snowflake
 from .ui.modal import BaseModal, ModalStore
 from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
@@ -82,13 +83,28 @@ if TYPE_CHECKING:
     from .http import HTTPClient
     from .message import MessageableChannel
     from .types.activity import Activity as ActivityPayload
+    from .types.activity import PartialPresenceUpdate as PartialPresenceUpdatePayload
+    from .types.automod import AutoModRule as AutoModRulePayload
+    from .types.channel import Channel as ChannelPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
     from .types.guild import Guild as GuildPayload
+    from .types.interactions import Interaction as InteractionPayload
+    from .types.invite import GatewayInvite as GatewayInvitePayload
     from .types.member import MemberUpdateEvent
     from .types.message import Message as MessagePayload
+    from .types.monetization import Entitlement as EntitlementPayload
+    from .types.monetization import Subscription as SubscriptionPayload
     from .types.poll import Poll as PollPayload
+    from .types.raw_models import (
+        AutoModActionExecutionEvent as AutoModActionExecutionEventPayload,
+    )
+    from .types.raw_models import BulkMessageDeleteEvent as BulkMessageDeletePayload
+    from .types.raw_models import MessageDeleteEvent as MessageDeletePayload
+    from .types.raw_models import MessagePollVoteEvent as MessagePollVoteEventPayload
+    from .types.raw_models import ThreadDeleteEvent as ThreadDeletePayload
     from .types.sticker import GuildSticker as GuildStickerPayload
+    from .types.threads import Thread as ThreadPayload
     from .types.user import User as UserPayload
     from .voice import VoiceProtocol
 
@@ -231,13 +247,7 @@ class ConnectionState:
         if self.max_messages is not None and self.max_messages <= 0:
             self.max_messages = 1000
 
-        self.dispatch: Callable[
-            [
-                str,
-                Any,
-            ],  # pyright: ignore[reportExplicitAny] They take whatever they want
-            None,
-        ] = dispatch
+        self.dispatch: Callable[[str, Unpack[tuple[Any, ...]]], None] = dispatch
         self.handlers: dict[str, Callable] = handlers
         self.hooks: dict[str, Callable] = hooks
         self.shard_count: int | None = None
@@ -274,6 +284,8 @@ class ConnectionState:
         if intents is None:
             intents = Intents.default()
 
+        elif not isinstance(intents, Intents):
+            raise TypeError(f"intents parameter must be Intent not {type(intents)!r}")
         if not intents.guilds:
             _log.warning(
                 "Guilds intent seems to be disabled. This may cause state related"
@@ -548,14 +560,18 @@ class ConnectionState:
 
     def get_emoji(self, emoji_id: int | None) -> GuildEmoji | AppEmoji | None:
         # the keys of self._emojis are ints
-        return self._emojis.get(emoji_id)  # type: ignore
+        if not emoji_id:
+            return None
+        return self._emojis.get(emoji_id)
 
     def _remove_emoji(self, emoji: GuildEmoji | AppEmoji) -> None:
         self._emojis.pop(emoji.id, None)
 
     def get_sticker(self, sticker_id: int | None) -> GuildSticker | None:
         # the keys of self._stickers are ints
-        return self._stickers.get(sticker_id)  # type: ignore
+        if not sticker_id:
+            return None
+        return self._stickers.get(sticker_id)
 
     @property
     def polls(self) -> list[Poll]:
@@ -588,7 +604,9 @@ class ConnectionState:
     def store_poll(self, poll: Poll, message_id: int):
         self._polls[message_id] = poll
 
-    def get_poll(self, message_id: Snowflake):
+    def get_poll(self, message_id: int) -> Poll | None:
+        if not message_id:
+            return None
         return self._polls.get(message_id)
 
     @property
@@ -596,18 +614,22 @@ class ConnectionState:
         return list(self._private_channels.values())
 
     def _get_private_channel(self, channel_id: int | None) -> PrivateChannel | None:
+        if not channel_id:
+            return None
         try:
             # the keys of self._private_channels are ints
-            value = self._private_channels[channel_id]  # type: ignore
+            value = self._private_channels[channel_id]
         except KeyError:
             return None
         else:
-            self._private_channels[channel_id] = self._private_channels.pop(channel_id)  # type: ignore
+            self._private_channels[channel_id] = self._private_channels.pop(channel_id)
             return value
 
     def _get_private_channel_by_user(self, user_id: int | None) -> DMChannel | None:
+        if not user_id:
+            return None
         # the keys of self._private_channels are ints
-        return self._private_channels_by_user.get(user_id)  # type: ignore
+        return self._private_channels_by_user.get(user_id)
 
     def _add_private_channel(self, channel: PrivateChannel) -> None:
         channel_id = channel.id
@@ -659,15 +681,12 @@ class ConnectionState:
         self, data: MessagePayload, guild_id: int | None = None
     ) -> tuple[Channel | Thread, Guild | None]:
         channel_id = int(data["channel_id"])
-        try:
-            guild = self._get_guild(
-                int(guild_id or data["guild_id"])
-            )  # pyright: ignore[reportTypedDictNotRequiredAccess]
-        except KeyError:
+        if key := (guild_id or data.get("guild_id")):
+            guild = self._get_guild(int(key))
+            channel = guild and guild._resolve_channel(channel_id)
+        else:
             channel = DMChannel._from_message(self, channel_id)
             guild = None
-        else:
-            channel = guild and guild._resolve_channel(channel_id)
 
         return channel or PartialMessageable(state=self, id=channel_id), guild
 
@@ -840,51 +859,54 @@ class ConnectionState:
         # unsure what the implementation would be like
         pass
 
-    def parse_auto_moderation_rule_create(self, data) -> None:
+    def parse_auto_moderation_rule_create(self, data: AutoModRulePayload) -> None:
         rule = AutoModRule(state=self, data=data)
         self.dispatch("auto_moderation_rule_create", rule)
 
-    def parse_auto_moderation_rule_update(self, data) -> None:
+    def parse_auto_moderation_rule_update(self, data: AutoModRulePayload) -> None:
         # somehow get a 'before' object?
         rule = AutoModRule(state=self, data=data)
         self.dispatch("auto_moderation_rule_update", rule)
 
-    def parse_auto_moderation_rule_delete(self, data) -> None:
+    def parse_auto_moderation_rule_delete(self, data: AutoModRulePayload) -> None:
         rule = AutoModRule(state=self, data=data)
         self.dispatch("auto_moderation_rule_delete", rule)
 
-    def parse_auto_moderation_action_execution(self, data) -> None:
+    def parse_auto_moderation_action_execution(
+        self, data: AutoModActionExecutionEventPayload
+    ) -> None:
         event = AutoModActionExecutionEvent(self, data)
         self.dispatch("auto_moderation_action_execution", event)
 
-    def parse_entitlement_create(self, data) -> None:
+    def parse_entitlement_create(self, data: EntitlementPayload) -> None:
         event = Entitlement(data=data, state=self)
         self.dispatch("entitlement_create", event)
 
-    def parse_entitlement_update(self, data) -> None:
+    def parse_entitlement_update(self, data: EntitlementPayload) -> None:
         event = Entitlement(data=data, state=self)
         self.dispatch("entitlement_update", event)
 
-    def parse_entitlement_delete(self, data) -> None:
+    def parse_entitlement_delete(self, data: EntitlementPayload) -> None:
         event = Entitlement(data=data, state=self)
         self.dispatch("entitlement_delete", event)
 
-    def parse_subscription_create(self, data) -> None:
+    def parse_subscription_create(self, data: SubscriptionPayload) -> None:
         event = Subscription(data=data, state=self)
         self.dispatch("subscription_create", event)
 
-    def parse_subscription_update(self, data) -> None:
+    def parse_subscription_update(self, data: SubscriptionPayload) -> None:
         event = Subscription(data=data, state=self)
         self.dispatch("subscription_update", event)
 
-    def parse_subscription_delete(self, data) -> None:
+    def parse_subscription_delete(self, data: SubscriptionPayload) -> None:
         event = Subscription(data=data, state=self)
         self.dispatch("subscription_delete", event)
 
-    def parse_message_create(self, data) -> None:
+    def parse_message_create(self, data: MessagePayload) -> None:
         channel, _ = self._get_guild_channel(data)
-        # channel would be the correct type here
-        message = Message(channel=channel, data=data, state=self)  # type: ignore
+        if not isinstance(channel, MessageableChannel):
+            return
+        message = Message(channel=channel, data=data, state=self)
         self.dispatch("message", message)
         if self._messages is not None:
             self._messages.append(message)
@@ -897,7 +919,7 @@ class ConnectionState:
         ):
             channel.last_message_id = message.id  # type: ignore
 
-    def parse_message_delete(self, data) -> None:
+    def parse_message_delete(self, data: MessageDeletePayload) -> None:
         raw = RawMessageDeleteEvent(data)
         found = self._get_message(raw.message_id)
         raw.cached_message = found
@@ -906,7 +928,7 @@ class ConnectionState:
             self.dispatch("message_delete", found)
             self._messages.remove(found)
 
-    def parse_message_delete_bulk(self, data) -> None:
+    def parse_message_delete_bulk(self, data: BulkMessageDeletePayload) -> None:
         raw = RawBulkMessageDeleteEvent(data)
         if self._messages:
             found_messages = [
@@ -925,6 +947,8 @@ class ConnectionState:
     def parse_message_update(self, data: MessagePayload) -> None:
         old_message = self._get_message(int(data["id"]))
         channel, _ = self._get_guild_channel(data)
+        if not isinstance(channel, MessageableChannel):
+            return None
         message = Message(channel=channel, data=data, state=self)
         if self._messages is not None:
             if old_message is not None:
@@ -937,7 +961,7 @@ class ConnectionState:
         if old_message is not None:
             self.dispatch("message_edit", old_message, message)
         else:
-            poll_data: Poll = data.get("poll")
+            poll_data: PollPayload = data.get("poll")
             if poll_data:
                 self.store_raw_poll(poll_data, raw)
 
@@ -947,6 +971,8 @@ class ConnectionState:
     def parse_message_reaction_add(self, data) -> None:
         emoji = data["emoji"]
         emoji_id = utils._get_as_snowflake(emoji, "id")
+        if not emoji["name"]:
+            return
         emoji = PartialEmoji.with_state(
             self, id=emoji_id, animated=emoji.get("animated", False), name=emoji["name"]
         )
@@ -1030,7 +1056,7 @@ class ConnectionState:
                 if reaction:
                     self.dispatch("reaction_clear_emoji", reaction)
 
-    def parse_message_poll_vote_add(self, data) -> None:
+    def parse_message_poll_vote_add(self, data: MessagePollVoteEventPayload) -> None:
         raw = RawMessagePollVoteEvent(data, True)
         guild = self._get_guild(raw.guild_id)
         if guild:
@@ -1049,6 +1075,8 @@ class ConnectionState:
                 if answer.id in counts:
                     counts[answer.id].count += 1
                 else:
+                    if not answer.id:
+                        return
                     counts[answer.id] = PollAnswerCount(
                         {
                             "id": answer.id,
@@ -1061,7 +1089,7 @@ class ConnectionState:
             if answer is not None:
                 self.dispatch("poll_vote_add", poll, user, answer)
 
-    def parse_message_poll_vote_remove(self, data) -> None:
+    def parse_message_poll_vote_remove(self, data: MessagePollVoteEventPayload) -> None:
         raw = RawMessagePollVoteEvent(data, False)
         guild = self._get_guild(raw.guild_id)
         if guild:
@@ -1076,18 +1104,19 @@ class ConnectionState:
         if poll and poll.results:
             answer = poll.get_answer(raw.answer_id)
             counts = poll.results._answer_counts
-            if answer is not None:
-                if answer.id in counts:
-                    counts[answer.id].count -= 1
+            if answer is not None and answer.id in counts:
+                counts[answer.id].count -= 1
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
             if answer is not None:
                 self.dispatch("poll_vote_remove", poll, user, answer)
 
-    def parse_interaction_create(self, data) -> None:
+    def parse_interaction_create(self, data: InteractionPayload) -> None:
         interaction = Interaction(data=data, state=self)
         if data["type"] == 3:  # interaction component
-            custom_id = interaction.data["custom_id"]  # type: ignore
+            if interaction.data is None or "custom_id" not in interaction.data:
+                return
+            custom_id = interaction.data["custom_id"]
             component_type = interaction.data["component_type"]  # type: ignore
             self._view_store.dispatch(component_type, custom_id, interaction)
         if interaction.type == InteractionType.modal_submit:
@@ -1101,7 +1130,7 @@ class ConnectionState:
 
         self.dispatch("interaction", interaction)
 
-    def parse_presence_update(self, data) -> None:
+    def parse_presence_update(self, data: PartialPresenceUpdatePayload) -> None:
         guild_id = utils._get_as_snowflake(data, "guild_id")
         # guild_id won't be None here
         guild = self._get_guild(guild_id)
@@ -1129,7 +1158,7 @@ class ConnectionState:
 
         self.dispatch("presence_update", old_member, member)
 
-    def parse_user_update(self, data) -> None:
+    def parse_user_update(self, data: UserPayload) -> None:
         # self.user is *always* cached when this is called
         user: ClientUser = self.user  # type: ignore
         user._update(data)
@@ -1137,15 +1166,15 @@ class ConnectionState:
         if ref:
             ref._update(data)
 
-    def parse_invite_create(self, data) -> None:
+    def parse_invite_create(self, data: GatewayInvitePayload) -> None:
         invite = Invite.from_gateway(state=self, data=data)
         self.dispatch("invite_create", invite)
 
-    def parse_invite_delete(self, data) -> None:
+    def parse_invite_delete(self, data: GatewayInvitePayload) -> None:
         invite = Invite.from_gateway(state=self, data=data)
         self.dispatch("invite_delete", invite)
 
-    def parse_channel_delete(self, data) -> None:
+    def parse_channel_delete(self, data: ChannelPayload) -> None:
         guild = self._get_guild(utils._get_as_snowflake(data, "guild_id"))
         channel_id = int(data["id"])
         if guild is not None:
@@ -1154,14 +1183,16 @@ class ConnectionState:
                 guild._remove_channel(channel)
                 self.dispatch("guild_channel_delete", channel)
 
-    def parse_channel_update(self, data) -> None:
+    def parse_channel_update(self, data: ChannelPayload) -> None:
         channel_type = try_enum(ChannelType, data.get("type"))
         channel_id = int(data["id"])
         if channel_type is ChannelType.group:
             channel = self._get_private_channel(channel_id)
             old_channel = copy.copy(channel)
             # the channel is a GroupChannel
-            channel._update_group(data)  # type: ignore
+            if not isinstance(channel, GroupChannel) or data["type"] != 3:
+                return
+            channel._update_group(data)
             self.dispatch("private_channel_update", old_channel, channel)
             return
 
@@ -1184,7 +1215,7 @@ class ConnectionState:
                 guild_id,
             )
 
-    def parse_channel_create(self, data) -> None:
+    def parse_channel_create(self, data: ChannelPayload) -> None:
         factory, ch_type = _channel_factory(data["type"])
         if factory is None:
             _log.debug(
@@ -1198,14 +1229,15 @@ class ConnectionState:
         if guild is not None:
             # the factory can't be a DMChannel or GroupChannel here
             channel = factory(guild=guild, state=self, data=data)  # type: ignore
-            guild._add_channel(channel)  # type: ignore
+            if not isinstance(channel, GuildChannel):
+                return
+            guild._add_channel(channel)
             self.dispatch("guild_channel_create", channel)
         else:
             _log.debug(
                 "CHANNEL_CREATE referencing an unknown guild ID: %s. Discarding.",
                 guild_id,
             )
-            return
 
     def parse_channel_pins_update(self, data) -> None:
         channel_id = int(data["channel_id"])
@@ -1238,7 +1270,7 @@ class ConnectionState:
         else:
             self.dispatch("guild_channel_pins_update", channel, last_pin)
 
-    def parse_thread_create(self, data) -> None:
+    def parse_thread_create(self, data: ThreadPayload) -> None:
         guild_id = int(data["guild_id"])
         guild: Guild | None = self._get_guild(guild_id)
         if guild is None:
@@ -1252,7 +1284,10 @@ class ConnectionState:
         if not cached_thread:
             thread = Thread(guild=guild, state=guild._state, data=data)
             guild._add_thread(thread)
-            if data.get("newly_created"):
+            if (
+                data.get("newly_created")
+                and "create_timestamp" in data["thread_metadata"]
+            ):
                 thread._add_member(
                     ThreadMember(
                         thread,
@@ -1270,7 +1305,7 @@ class ConnectionState:
         else:
             self.dispatch("thread_join", cached_thread)
 
-    def parse_thread_update(self, data) -> None:
+    def parse_thread_update(self, data: ThreadPayload) -> None:
         guild_id = int(data["guild_id"])
         guild = self._get_guild(guild_id)
         raw = RawThreadUpdateEvent(data)
@@ -1296,7 +1331,7 @@ class ConnectionState:
             raw.thread = thread
         self.dispatch("raw_thread_update", raw)
 
-    def parse_thread_delete(self, data) -> None:
+    def parse_thread_delete(self, data: ThreadDeletePayload) -> None:
         guild_id = int(data["guild_id"])
         guild = self._get_guild(guild_id)
 
