@@ -1390,7 +1390,9 @@ class GuildChannel:
 
         if issubclass(obj_type, Role):
             data = await self._state.http.get_channel_role_permissions(
-                self.id, obj.id, implicit=implicit,
+                self.id,
+                obj.id,
+                implicit=implicit,
             )
         elif issubclass(obj_type, Member):
             data = await self._state.http.get_channel_member_permissions(

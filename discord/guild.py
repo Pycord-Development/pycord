@@ -4828,7 +4828,9 @@ class Guild(Hashable):
         return self._sounds.get(sound_id)
 
     async def fetch_permissions_for(
-        self, obj: Member | Role | Object, /,
+        self,
+        obj: Member | Role | Object,
+        /,
     ) -> Permissions:
         """Fetches the member or role's permissions in this guild from Discord.
 
@@ -4863,11 +4865,13 @@ class Guild(Hashable):
 
         if issubclass(obj_type, Role):
             data = await self._state.http.get_guild_role_permissions(
-                self.id, obj.id,
+                self.id,
+                obj.id,
             )
         elif issubclass(obj_type, Member):
             data = await self._state.http.get_guild_member_permissions(
-                self.id, obj.id,
+                self.id,
+                obj.id,
             )
         else:
             raise InvalidArgument(
