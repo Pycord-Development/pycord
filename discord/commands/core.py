@@ -1812,7 +1812,7 @@ class UserCommand(ContextMenuCommand):
         return self
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        data: ApplicationCommandInteractionDataPayload | None = ctx.interaction.data  # type: ignore # narrowed
+        data: ApplicationCommandInteractionDataPayload = ctx.interaction.data  # type: ignore # narrowed
         target_id = int(data.get("target_id", 0)) if data is not None else 0
         target = ctx.interaction._resolved.get_user(target_id)
         callback: Callable[..., Coroutine[Any, Any, Any]] = self.callback
