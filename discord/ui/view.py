@@ -61,9 +61,8 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..enums import ChannelType, SeparatorSpacingSize
+from ..enums import ChannelType, ComponentLimits
 from ..errors import Forbidden, NotFound
-from ..utils import find
 from .core import ItemInterface
 from .item import Item, ItemCallbackType, ModalItem, ViewItem
 
@@ -77,7 +76,6 @@ __all__ = (
 
 
 if TYPE_CHECKING:
-    from ..components import MediaGalleryItem
     from ..interactions import Interaction, InteractionMessage
     from ..message import Message
     from ..state import ConnectionState
@@ -597,8 +595,10 @@ class View(BaseView):
                 if hasattr(member, "__discord_ui_model_type__"):
                     children.append(member)
 
-        if len(children) > 40:
-            raise TypeError("View cannot have more than 40 children")
+        if len(children) > ComponentLimits.VIEW_CHILDREN_MAX:
+            raise TypeError(
+                f"View cannot have more than {ComponentLimits.VIEW_CHILDREN_MAX} children"
+            )
 
         cls.__view_children_items__ = children
 
@@ -931,7 +931,7 @@ class DesignerView(BaseView):
 
         if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
-                f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
+                "cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)
