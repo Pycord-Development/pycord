@@ -111,6 +111,7 @@ if TYPE_CHECKING:
     from .types.raw_models import MemberRemoveEvent as MemberRemoveEventPayload
     from .types.raw_models import MessageDeleteEvent as MessageDeletePayload
     from .types.raw_models import MessagePollVoteEvent as MessagePollVoteEventPayload
+    from .types.raw_models import ReactionActionEvent as ReactionActionEventPayload
     from .types.raw_models import ThreadDeleteEvent as ThreadDeletePayload
     from .types.raw_models import (
         ThreadMembersUpdateEvent as ThreadMembersUpdateEventPayload,
@@ -210,6 +211,8 @@ class ChannelInfoRequest:
                     # since stage channels can have that, but not status
                     if existing is not None and "voice_start_time" in channel.data:
                         try:
+                            if not isinstance(existing, (StageChannel, VoiceChannel)):
+                                return
                             existing._update_status(
                                 status=channel.status,
                                 voice_start_time=channel.voice_start_time,
@@ -256,7 +259,7 @@ class ConnectionState:
     def __init__(
         self,
         *,
-        dispatch: Callable,
+        dispatch: Callable[[str, Unpack[tuple[Any, ...]]], None],
         handlers: dict[str, Callable],
         hooks: dict[str, Callable],
         http: HTTPClient,
@@ -273,7 +276,7 @@ class ConnectionState:
         self.handlers: dict[str, Callable] = handlers
         self.hooks: dict[str, Callable] = hooks
         self.shard_count: int | None = None
-        self._ready_task: asyncio.Task | None = None
+        self._ready_task: asyncio.Task[None] | None = None
         self.application_id: int | None = utils._get_as_snowflake(
             options, "application_id"
         )
@@ -300,7 +303,7 @@ class ConnectionState:
             activity = activity.to_dict()
 
         status = options.get("status", None)
-        if status:
+        if status and isinstance(status, str):
             status = "invisible" if status is Status.offline else str(status)
         intents: Intents | None = options.get("intents", None)
         if intents is None:
@@ -367,9 +370,11 @@ class ConnectionState:
         self._request_channel_info: bool = self.cache_channel_info
         self._channel_info_requests: dict[int | str, ChannelInfoRequest] = {}
 
-        self.parsers: dict[str, Callable[..., Any]] = (
+        self.parsers: dict[
+            str, Callable[..., Any]
+        ] = (  # pyright: ignore[reportExplicitAny]
             {}
-        )  # pyright: ignore[reportExplicitAny]
+        )
         for attr, func in inspect.getmembers(self):
             if attr.startswith("parse_"):
                 self.parsers[attr[6:].upper()] = func
@@ -531,8 +536,8 @@ class ConnectionState:
     ) -> AppEmoji:
         # the id will be present here
         emoji = AppEmoji(application_id=application_id, state=self, data=data)
-        if self.cache_app_emojis:
-            emoji_id = int(data["id"])  # type: ignore
+        if self.cache_app_emojis and isinstance(data["id"], int):
+            emoji_id = int(data["id"])
             self._emojis[emoji_id] = emoji
         return emoji
 
@@ -563,7 +568,9 @@ class ConnectionState:
 
     def _get_guild(self, guild_id: int | None) -> Guild | None:
         # the keys of self._guilds are ints
-        return self._guilds.get(guild_id)  # type: ignore
+        if guild_id is None:
+            return None
+        return self._guilds.get(guild_id)
 
     def _add_guild(self, guild: Guild) -> None:
         self._guilds[guild.id] = guild
@@ -940,13 +947,16 @@ class ConnectionState:
         if self._messages is not None:
             self._messages.append(message)
         # we ensure that the channel is either a TextChannel, VoiceChannel, StageChannel, or Thread
-        if channel and channel.__class__ in (
-            TextChannel,
-            VoiceChannel,
-            StageChannel,
-            Thread,
+        if channel and isinstance(
+            channel,
+            (
+                TextChannel,
+                VoiceChannel,
+                StageChannel,
+                Thread,
+            ),
         ):
-            channel.last_message_id = message.id  # type: ignore
+            channel.last_message_id = message.id
 
     def parse_message_delete(self, data: MessageDeletePayload) -> None:
         raw = RawMessageDeleteEvent(data)
@@ -971,7 +981,9 @@ class ConnectionState:
             self.dispatch("bulk_message_delete", found_messages)
             for msg in found_messages:
                 # self._messages won't be None here
-                self._messages.remove(msg)  # type: ignore
+                if self._messages is None:
+                    return
+                self._messages.remove(msg)
 
     def parse_message_update(self, data: MessagePayload) -> None:
         old_message = self._get_message(int(data["id"]))
@@ -997,7 +1009,7 @@ class ConnectionState:
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
             self._view_store.update_from_message(raw.message_id, data["components"])
 
-    def parse_message_reaction_add(self, data) -> None:
+    def parse_message_reaction_add(self, data: ReactionActionEventPayload) -> None:
         emoji = data["emoji"]
         emoji_id = utils._get_as_snowflake(emoji, "id")
         if not emoji["name"]:
@@ -2235,7 +2247,7 @@ class ConnectionState:
         if guild is not None:
             channel = guild.get_channel(channel_id)
             if channel is not None:
-                if not isinstance(channel, VoiceChannel):
+                if not isinstance(channel, VoiceChannel, StageChannel):
                     _log.debug(
                         "VOICE_CHANNEL_START_TIME_UPDATE referencing a non-voice channel ID: %s. Discarding.",
                         channel_id,
