@@ -72,6 +72,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fixed a race condition where `Bot.latency` could be reported incorrectly and grow
   indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
+- Fixed the voice receiver's UDP keep-alive firing every 5000 seconds instead of every 5.
+  ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
 
 ### Deprecated
 
