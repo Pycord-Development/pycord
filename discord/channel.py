@@ -3587,12 +3587,12 @@ class PartialChannel(PartialMessageable):
 
     @property
     def flags(self) -> ChannelFlags:
-        """:class:`ChannelFlags`: The channel's flags."""
+        """The channel's flags."""
         return ChannelFlags._from_value(self._flags)
 
     @property
     def guild(self) -> Guild | None:
-        """:class:`Guild` | :obj:`None`: The guild the channel belongs to, if cached."""
+        """The guild the channel belongs to, if cached."""
         return self._state._get_guild(self.guild_id)
 
     @property
@@ -3604,12 +3604,12 @@ class PartialChannel(PartialMessageable):
 
     @property
     def mention(self) -> str:
-        """:class:`str`: The string that allows you to mention the channel."""
+        """The string that allows you to mention the channel."""
         return f"<#{self.id}>"
 
     @property
     def jump_url(self) -> str:
-        """:class:`str`: Returns a URL that allows the client to jump to the channel."""
+        """Returns a URL that allows the client to jump to the channel."""
         return f"https://discord.com/channels/{self.guild_id or '@me'}/{self.id}"
 
     def __repr__(self) -> str:
