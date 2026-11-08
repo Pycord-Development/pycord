@@ -64,7 +64,7 @@ from .mentions import AllowedMentions
 from .message import Message
 from .monetization import Entitlement, Subscription
 from .object import Object
-from .partial_emoji import PartialEmoji, PartialEmojiPayload
+from .partial_emoji import PartialEmoji
 from .poll import Poll, PollAnswerCount
 from .raw_models import *
 from .raw_models import AuditLogAction, ChannelInfo
@@ -92,6 +92,7 @@ if TYPE_CHECKING:
     from .types.channel import DMChannel as DMChannelPayload
     from .types.channel import StageInstance as StageInstancePayload
     from .types.emoji import Emoji as EmojiPayload
+    from .types.emoji import PartialEmoji as PartialEmojiPayload
     from .types.guild import Guild as GuildPayload
     from .types.interactions import Interaction as InteractionPayload
     from .types.invite import GatewayInvite as GatewayInvitePayload
