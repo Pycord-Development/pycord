@@ -44,7 +44,7 @@ from typing import (
 
 from typing_extensions import override
 
-from . import abc, utils, Object
+from . import abc, utils
 from .asset import Asset
 from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
@@ -85,6 +85,7 @@ from .iterators import (
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
+from .object import Object
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .raw_models import ChannelInfo
