@@ -41,7 +41,7 @@ from typing import (
     overload,
 )
 
-from typing_extensions import Unpack
+from typing_extensions import Unpack, override
 
 from discord.types.raw_models import AuditLogEntryEvent
 
@@ -90,6 +90,9 @@ if TYPE_CHECKING:
     from .types.channel import Channel as ChannelPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.channel import StageInstance as StageInstancePayload
+    from .types.channel import (
+        VoiceChannelEffectSendEvent as VoiceChannelEffectSendEventPayload,
+    )
     from .types.emoji import Emoji as EmojiPayload
     from .types.emoji import PartialEmoji as PartialEmojiPayload
     from .types.guild import Guild as GuildPayload
@@ -2321,7 +2324,7 @@ class ConnectionState:
 
     def _upgrade_partial_emoji(
         self, emoji: PartialEmoji
-    ) -> GuildEmoji | AppEmoji | PartialEmoji | str:
+    ) -> GuildEmoji | AppEmoji | PartialEmoji | str | None:
         emoji_id = emoji.id
         if not emoji_id:
             return emoji.name
@@ -2351,7 +2354,9 @@ class ConnectionState:
     ) -> Message:
         return Message(state=self, channel=channel, data=data)
 
-    def parse_voice_channel_effect_send(self, data) -> None:
+    def parse_voice_channel_effect_send(
+        self, data: VoiceChannelEffectSendEventPayload
+    ) -> None:
         if sound_id := int(data.get("sound_id", 0)):
             sound = self._get_sound(sound_id)
             if sound is None:
@@ -2434,7 +2439,9 @@ class AutoShardedConnectionState(ConnectionState):
 
     def _update_message_references(self) -> None:
         # self._messages won't be None when this is called
-        for msg in self._messages:  # type: ignore
+        if self._messages is None:
+            return
+        for msg in self._messages:
             if not msg.guild:
                 continue
 
@@ -2447,6 +2454,7 @@ class AutoShardedConnectionState(ConnectionState):
                 # channel will either be a TextChannel, Thread or Object
                 msg._rebind_cached_references(new_guild, channel)  # type: ignore
 
+    @override
     async def chunker(
         self,
         guild_id: int,
@@ -2462,6 +2470,7 @@ class AutoShardedConnectionState(ConnectionState):
             guild_id, query=query, limit=limit, presences=presences, nonce=nonce
         )
 
+    @override
     async def _delay_ready(self) -> None:
         await self.shards_launched.wait()
         processed = []
@@ -2561,6 +2570,7 @@ class AutoShardedConnectionState(ConnectionState):
         self.call_handlers("ready")
         self.dispatch("ready")
 
+    @override
     def parse_ready(self, data) -> None:
         if not hasattr(self, "_ready_state"):
             self._ready_state = asyncio.Queue()
