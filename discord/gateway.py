@@ -41,6 +41,7 @@ import aiohttp
 from . import utils
 from .activity import BaseActivity
 from .errors import ConnectionClosed, InvalidArgument
+from .types.channel import RequestChannelInfoField
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -204,8 +205,6 @@ class KeepAliveHandler(threading.Thread):
 
             except Exception:
                 self.stop()
-            else:
-                self._last_send = time.perf_counter()
 
     def get_payload(self) -> dict[str, Any]:
         return {"op": self.ws.HEARTBEAT, "d": self.ws.sequence}
@@ -283,6 +282,7 @@ class DiscordWebSocket:
     HEARTBEAT_ACK = 11
     GUILD_SYNC = 12
     REQUEST_SOUNDBOARD_SOUNDS = 31
+    REQUEST_CHANNEL_INFO = 43
 
     if TYPE_CHECKING:
         token: str | None
@@ -518,7 +518,7 @@ class DiscordWebSocket:
             if op == self.HEARTBEAT:
                 if self._keep_alive:
                     beat = self._keep_alive.get_payload()
-                    await self.send_as_json(beat)
+                    await self.send_heartbeat(beat)
                 return
 
             if op == self.HELLO:
@@ -527,7 +527,7 @@ class DiscordWebSocket:
                     ws=self, interval=interval, shard_id=self.shard_id
                 )
                 # send a heartbeat immediately
-                await self.send_as_json(self._keep_alive.get_payload())
+                await self.send_heartbeat(self._keep_alive.get_payload())
                 self._keep_alive.start()
                 return
 
@@ -684,6 +684,8 @@ class DiscordWebSocket:
 
     async def send_heartbeat(self, data: Any) -> None:
         # This bypasses the rate limit handling code since it has a higher priority
+        if self._keep_alive:
+            self._keep_alive._last_send = time.perf_counter()
         try:
             await self.socket.send_str(utils._to_json(data))
         except RuntimeError as exc:
@@ -774,6 +776,21 @@ class DiscordWebSocket:
         }
 
         _log.debug("Requesting soundboard sounds for guilds %s.", guild_ids)
+        await self.send_as_json(payload)
+
+    async def request_channel_info(
+        self, guild_id: int, fields: list[RequestChannelInfoField]
+    ):
+        payload = {
+            "op": self.REQUEST_CHANNEL_INFO,
+            "d": {"guild_id": guild_id, "fields": fields},
+        }
+
+        _log.debug(
+            "Requesting channel info for guild %s with fields %s.",
+            guild_id,
+            ", ".join(fields),
+        )
         await self.send_as_json(payload)
 
     async def close(self, code: int = 4000) -> None:
