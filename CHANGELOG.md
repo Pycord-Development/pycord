@@ -33,6 +33,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `GuildChannel.fetch_permissions_for()`.
   ([#3426](https://github.com/Pycord-Development/pycord/pull/3426))
   ([#3432](https://github.com/Pycord-Development/pycord/pull/3432))
+- Added `Guild.fetch_permissions_for()`.
+  ([#3432](https://github.com/Pycord-Development/pycord/pull/3432))
 
 ### Changed
 

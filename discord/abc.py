@@ -1348,7 +1348,7 @@ class GuildChannel:
         ]
 
     async def fetch_permissions_for(
-        self, obj: Member | Role | Object, /, implicit: bool = True
+        self, obj: Member | Role | Object, /, *, implicit: bool = True
     ) -> Permissions:
         """Fetches the member or role's permissions in this channel from Discord.
 
@@ -1390,11 +1390,11 @@ class GuildChannel:
 
         if issubclass(obj_type, Role):
             data = await self._state.http.get_channel_role_permissions(
-                self.id, obj.id, implicit
+                self.id, obj.id, implicit=implicit,
             )
         elif issubclass(obj_type, Member):
             data = await self._state.http.get_channel_member_permissions(
-                self.id, obj.id, implicit
+                self.id, obj.id, implicit=implicit
             )
         else:
             raise InvalidArgument(
