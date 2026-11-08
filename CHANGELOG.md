@@ -12,6 +12,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added the ability to fetch and cache voice channel status and start time on demand,
+  and at startup. ([#3210](https://github.com/Pycord-Development/pycord/pull/3210))
+- Added `voice_start_time` to `VoiceChannel` and `StageChannel`, as well as the
+  corresponding `on_voice_channel_start_time_update` event.
+  ([#3210](https://github.com/Pycord-Development/pycord/pull/3210))
 - Added support for sending and receiving client themes.
   ([#3209](https://github.com/Pycord-Development/pycord/pull/3209))
 - Added `Member.vr_status` property.
@@ -24,6 +29,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
   regions for the guild.
   ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
+- Added `Member.fetch_permissions()`, `Role.fetch_permissions()`, and
+  `GuildChannel.fetch_permissions_for()`.
+  ([#3426](https://github.com/Pycord-Development/pycord/pull/3426))
 
 ### Changed
 
@@ -62,6 +70,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fix the return type of the `MediaChannel.edit()` overload.
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fixed a race condition where `Bot.latency` could be reported incorrectly and grow
+  indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
 
 ### Deprecated
 
