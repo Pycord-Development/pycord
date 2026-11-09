@@ -28,7 +28,7 @@ from __future__ import annotations
 import datetime
 import io
 import os
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING, TypeAlias, TypeVar
 
 from typing_extensions import deprecated, override
 
@@ -73,8 +73,8 @@ if TYPE_CHECKING:
     from .types.snowflake import Snowflake
     from .user import User
 
-    InviteGuildType = Guild | "PartialInviteGuild" | Object
-    InviteChannelType = GuildChannel | "PartialInviteChannel" | Object
+    InviteGuildType: TypeAlias = "Guild | PartialInviteGuild | Object"
+    InviteChannelType: TypeAlias = "GuildChannel | PartialInviteChannel | Object"
 
 
 class PartialInviteChannel:

@@ -105,7 +105,7 @@ if TYPE_CHECKING:
         | PartialMessageable
     )
     MessageableChannel: TypeAlias = PartialMessageableChannel | GroupChannel
-    SnowflakeTime = "Snowflake" | datetime
+    SnowflakeTime: TypeAlias = "Snowflake | datetime"
 
     from .voice import VoiceClient, VoiceProtocol
 
