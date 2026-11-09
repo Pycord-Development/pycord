@@ -4834,7 +4834,7 @@ class Guild(Hashable):
     ) -> Permissions:
         """Fetches the member or role's permissions in this guild from Discord.
 
-        For members, this includes all their roles' permissions, as well as ``@everyone``.
+        For members, this includes all their roles' permissions, as well as ``@everyone``'s permissions.
 
         For roles, this includes the role's and ``@everyone``'s permissions.
 
