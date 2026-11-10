@@ -48,7 +48,7 @@ from .primary_guild import PrimaryGuild
 from .role import RoleColours
 from .types.collectibles import AvatarDecoration
 from .user import BaseUser, User, _UserTag
-from .utils import MISSING
+from .utils import MISSING, utcnow
 
 __all__ = (
     "VoiceState",
@@ -562,6 +562,14 @@ class Member(discord.abc.Messageable, _UserTag):
         return try_enum(Status, self._client_status.get("desktop", "offline"))
 
     @property
+    def vr_status(self) -> Status:
+        """The member's status set for an active virtual reality application session, if applicable.
+
+        .. versionadded:: 2.9
+        """
+        return try_enum(Status, self._client_status.get("vr", "offline"))
+
+    @property
     def web_status(self) -> Status:
         """The member's status on the web client, if applicable."""
         return try_enum(Status, self._client_status.get("web", "offline"))
@@ -663,9 +671,8 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_avatar(self) -> Asset:
         """Returns the member's display avatar.
 
-        For regular members this is just their avatar, but
-        if they have a guild specific avatar then that
-        is returned instead.
+        Returns the user's guild avatar.
+        If the user does not have a guild avatar, their global avatar is returned instead.
 
         .. versionadded:: 2.0
         """
@@ -688,9 +695,8 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_avatar_decoration(self) -> Asset | None:
         """Returns the member's displayed avatar decoration.
 
-        For regular members this is just their avatar decoration, but
-        if they have a guild specific avatar decoration then that
-        is returned instead.
+        Returns the user's guild avatar decoration.
+        If the user does not have a guild avatar decoration, their global avatar decoration is returned instead.
 
         .. versionadded:: 2.8
         """
@@ -713,9 +719,8 @@ class Member(discord.abc.Messageable, _UserTag):
     def display_banner(self) -> Asset | None:
         """Returns the member's display banner.
 
-        For regular members this is just their banner, but
-        if they have a guild specific banner then that
-        is returned instead.
+        Returns the user's guild banner.
+        If the user does not have a guild banner, their global banner is returned instead.
 
         .. versionadded:: 2.7
         """
@@ -824,8 +829,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         return (
             self.communication_disabled_until is not None
-            and self.communication_disabled_until
-            > datetime.datetime.now(datetime.timezone.utc)
+            and self.communication_disabled_until > utcnow()
         )
 
     async def ban(
@@ -1022,8 +1026,9 @@ class Member(discord.abc.Messageable, _UserTag):
             else:
                 if not suppress:
                     voice_state_payload["request_to_speak_timestamp"] = (
-                        datetime.datetime.utcnow().isoformat()
+                        utcnow().isoformat()
                     )
+
                 await http.edit_voice_state(guild_id, self.id, voice_state_payload)
 
         if voice_channel is not MISSING:
@@ -1124,9 +1129,7 @@ class Member(discord.abc.Messageable, _UserTag):
         HTTPException
             An error occurred doing the request.
         """
-        await self.timeout(
-            datetime.datetime.now(datetime.timezone.utc) + duration, reason=reason
-        )
+        await self.timeout(utcnow() + duration, reason=reason)
 
     async def remove_timeout(self, *, reason: str | None = None) -> None:
         """|coro|
@@ -1175,7 +1178,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         payload = {
             "channel_id": self.voice.channel.id,
-            "request_to_speak_timestamp": datetime.datetime.utcnow().isoformat(),
+            "request_to_speak_timestamp": utcnow().isoformat(),
         }
 
         if self._state.self_id != self.id:

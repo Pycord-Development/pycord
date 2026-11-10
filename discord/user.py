@@ -50,7 +50,6 @@ if TYPE_CHECKING:
     from .types.user import PartialUser as PartialUserPayload
     from .types.user import User as UserPayload
 
-
 __all__ = (
     "User",
     "ClientUser",
@@ -179,6 +178,7 @@ class BaseUser(_UserTag):
         self._public_flags = user._public_flags
         self.primary_guild = user.primary_guild
         self._collectibles = user._collectibles
+        self.system = user.system
 
         return self
 
@@ -251,7 +251,8 @@ class BaseUser(_UserTag):
     def display_avatar(self) -> Asset:
         """Returns the user's display avatar.
 
-        For regular users this is just their default avatar or uploaded avatar.
+        Returns the user's uploaded avatar.
+        If the user has not uploaded any avatar, their default avatar is returned instead.
 
         .. versionadded:: 2.0
         """

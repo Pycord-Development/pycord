@@ -41,7 +41,6 @@ __all__ = (
     "Poll",
 )
 
-
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .emoji import AppEmoji, GuildEmoji
@@ -146,7 +145,7 @@ class PollAnswer:
 
     @property
     def count(self) -> int | None:
-        """This answer's vote count, if recieved from Discord."""
+        """This answer's vote count, if received from Discord."""
         if not (self._poll and self.id):
             return None
         if self._poll.results is None:
@@ -163,7 +162,7 @@ class PollAnswer:
             "poll_media": self.media.to_dict(),
         }
         if self.id is not None:
-            dict_["answer_id"] = (self.id,)
+            dict_["answer_id"] = self.id
         return dict_
 
     @classmethod
@@ -189,7 +188,7 @@ class PollAnswer:
         self, *, limit: int | None = None, after: Snowflake | None = None
     ) -> VoteIterator:
         """Returns an :class:`AsyncIterator` representing the users that have voted with this answer.
-        Only works if this poll was recieved from Discord.
+        Only works if this poll was received from Discord.
 
         The ``after`` parameter must represent a member
         and meet the :class:`abc.Snowflake` abc.
@@ -216,7 +215,7 @@ class PollAnswer:
         HTTPException
             Getting the voters for the answer failed.
         RuntimeError
-            This poll wasn't recieved from a message.
+            This poll wasn't received from a message.
 
         Examples
         --------
@@ -336,7 +335,7 @@ class Poll:
     layout_type: :class:`PollLayoutType`
         The poll's layout type. Only one exists at the moment.
     results: Optional[:class:`PollResults`]
-        The results of this poll recieved from Discord. If ``None``, this should be considered "unknown" rather than "no" results.
+        The results of this poll received from Discord. If ``None``, this should be considered "unknown" rather than "no" results.
     """
 
     def __init__(
@@ -355,9 +354,9 @@ class Poll:
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
-        self.results = None
-        self._expiry = None
-        self._message = None
+        self.results: PollResults | None = None
+        self._expiry: str | None = None
+        self._message: Message | PartialMessage | None = None
 
     @cached_property
     def expiry(self) -> datetime.datetime | None:
@@ -372,8 +371,8 @@ class Poll:
             "allow_multiselect": self.allow_multiselect,
             "layout_type": self.layout_type.value,
         }
-        if self.results:
-            dict_["results"] = [r.to_dict() for r in self.results]
+        if self.results is not None:
+            dict_["results"] = self.results.to_dict()
         if self._expiry:
             dict_["expiry"] = self._expiry
         return dict_
@@ -521,10 +520,10 @@ class Poll:
         HTTPException
             Ending this poll failed.
         RuntimeError
-            This poll wasn't recieved from a message.
+            This poll wasn't received from a message.
         """
 
         if not self._message:
-            raise RuntimeError("You can only end a poll recieved from a message.")
+            raise RuntimeError("You can only end a poll received from a message.")
 
         return await self._message.end_poll()

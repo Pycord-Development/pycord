@@ -135,13 +135,13 @@ class AudioReader:
                 self.packet_router.stop()
         except Exception as exc:
             self.error = exc
-            _log.exception("An error ocurred while stopping packet router.")
+            _log.exception("An error occurred while stopping packet router.")
 
         try:
             self.event_router.stop()
         except Exception as exc:
             self.error = exc
-            _log.exception("An error ocurred while stopping event router.")
+            _log.exception("An error occurred while stopping event router.")
 
         self.speaking_timer.stop()
         self.keep_alive.stop()
@@ -151,7 +151,7 @@ class AudioReader:
                 self.after(self.error)
             except Exception:
                 _log.exception(
-                    "An error ocurred while calling the after callback on audio reader"
+                    "An error occurred while calling the after callback on audio reader"
                 )
 
         """for sink in self.sink.root.walk_children(with_self=True):
@@ -172,8 +172,8 @@ class AudioReader:
         return len(data) == 74 and data[1] == 0x02
 
     def callback(self, packet_data: bytes) -> None:
-
         packet = rtp_packet = rtcp_packet = None
+        pending_exc: BaseException | None = None
 
         try:
             if not is_rtcp(packet_data):
@@ -181,7 +181,6 @@ class AudioReader:
                 packet.decrypted_data = self.decryptor.decrypt_rtp(packet)  # type: ignore
             else:
                 packet = rtcp_packet = decode(packet_data)
-
                 if not isinstance(packet, ReceiverReportPacket):
                     _log.info(
                         "Received unexpected rtcp packet type=%s, %s",
@@ -196,21 +195,26 @@ class AudioReader:
                 _log.debug("Received an IP Discovery Packet, ignoring...")
                 return
             _log.exception(
-                "An exception ocurred while decoding voice packets", exc_info=exc
+                "An exception occurred while decoding voice packets", exc_info=exc
             )
-        finally:
-            if self.error:
-                _log.debug("Callback errored out, stopping: %s", self.error)
-                self.stop()
-                return
-            if not packet:
-                _log.debug("No packet found after callback")
-                return
+        except BaseException as exc:
+            pending_exc = exc
+
+        if self.error:
+            _log.debug("Callback errored out, stopping: %s", self.error)
+            self.stop()
+            return
+
+        if not packet:
+            _log.debug("No packet found after callback")
+            return
+
+        if pending_exc is not None:
+            raise pending_exc
 
         if rtcp_packet:
             self.packet_router.feed_rtcp(rtcp_packet)  # type: ignore
         elif rtp_packet:
-
             if not rtp_packet.decrypted_data:
                 _log.debug(
                     "No decrypted data for RTP packet, this should be safe to ignore."
@@ -237,7 +241,7 @@ class AudioReader:
                 self.packet_router.feed_rtp(rtp_packet)  # type: ignore
             except Exception as exc:
                 _log.exception(
-                    "An error ocurred while processing RTP packet %s", rtp_packet
+                    "An error occurred while processing RTP packet %s", rtp_packet
                 )
                 self.error = exc
                 self.stop()
@@ -323,7 +327,7 @@ class PacketDecryptor:
         offset = 0
 
         while offset < len(data):
-            # offset will allow us to read the compund packets
+            # offset will allow us to read the compound packets
             current_data = data[offset:]
             if len(current_data) < 8:
                 break

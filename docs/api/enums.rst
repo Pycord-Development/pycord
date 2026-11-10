@@ -29,7 +29,7 @@ of :class:`enum.Enum`.
         A string.
     .. attribute:: integer
 
-        An integer between -2⁵³ and 2⁵³.
+        An integer where :math:`-2^{53} < x < 2^{53}`.
 
         .. note::
 
@@ -52,7 +52,7 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating-point number between -2⁵³ and 2⁵³.
+        A floating-point number where :math:`-2^{53} < x < 2^{53}`.
 
         .. note::
 
@@ -615,60 +615,37 @@ of :class:`enum.Enum`.
 
     Specifies the region a voice server belongs to.
 
-    .. attribute:: amsterdam
+    .. deprecated:: 2.9
 
-        The Amsterdam region.
+        The list of voice regions is dynamic, so this enum is deprecated.
+        Use :meth:`Guild.fetch_voice_regions` to retrieve available regions
+        as a list of :class:`VoiceServerRegion` objects. This enum will be removed in version 3.0.
+
     .. attribute:: brazil
 
         The Brazil region.
-    .. attribute:: dubai
-
-        The Dubai region.
-
-        .. versionadded:: 1.3
-
-    .. attribute:: eu_central
-
-        The EU Central region.
-    .. attribute:: eu_west
-
-        The EU West region.
-    .. attribute:: europe
-
-        The Europe region.
-
-        .. versionadded:: 1.3
-
-    .. attribute:: frankfurt
-
-        The Frankfurt region.
     .. attribute:: hongkong
 
         The Hong Kong region.
     .. attribute:: india
 
         The India region.
-
-        .. versionadded:: 1.2
-
     .. attribute:: japan
 
         The Japan region.
-    .. attribute:: london
+    .. attribute:: rotterdam
 
-        The London region.
-    .. attribute:: russia
+        The Rotterdam region.
 
-        The Russia region.
     .. attribute:: singapore
 
         The Singapore region.
-    .. attribute:: southafrica
-
-        The South Africa region.
     .. attribute:: south_korea
 
         The South Korea region.
+    .. attribute:: southafrica
+
+        The South Africa region.
     .. attribute:: sydney
 
         The Sydney region.
@@ -684,15 +661,6 @@ of :class:`enum.Enum`.
     .. attribute:: us_west
 
         The US West region.
-    .. attribute:: vip_amsterdam
-
-        The Amsterdam region for VIP guilds.
-    .. attribute:: vip_us_east
-
-        The US East region for VIP guilds.
-    .. attribute:: vip_us_west
-
-        The US West region for VIP guilds.
 
 .. class:: VerificationLevel
 
@@ -2529,6 +2497,33 @@ of :class:`enum.Enum`.
         Represents the default layout.
 
 
+.. class:: SharedClientThemeBaseType
+
+    The base theme mode of a :class:`SharedClientTheme`.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: unset
+
+        No explicit base theme. Treated as :attr:`dark` by Discord.
+
+    .. attribute:: dark
+
+        The dark base theme.
+
+    .. attribute:: light
+
+        The light base theme.
+
+    .. attribute:: darker
+
+        The darker base theme.
+
+    .. attribute:: midnight
+
+        The midnight base theme.
+
+
 .. class:: IntegrationType
 
     The integration type for an application.
@@ -2681,3 +2676,24 @@ of :class:`enum.Enum`.
 
     .. attribute:: disabled_by_discord
         The application webhook is disabled by Discord.
+
+.. class:: TeamRole
+    Represents a app team role.
+
+    .. versionadded:: 2.8
+
+    .. attribute:: owner
+
+        Represents the team owner role.
+
+    .. attribute:: admin
+
+        Represents the team admin role.
+
+    .. attribute:: developer
+
+        Represents the team developer role.
+
+    .. attribute:: read_only
+
+        Represents the team read only role.

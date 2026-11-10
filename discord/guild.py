@@ -28,17 +28,17 @@ from __future__ import annotations
 import copy
 import datetime
 import unicodedata
+from collections.abc import Sequence
+from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    List,
     NamedTuple,
     Optional,
-    Sequence,
-    Tuple,
     TypeVar,
     Union,
+    cast,
     overload,
 )
 
@@ -61,6 +61,7 @@ from .enums import (
     NotificationLevel,
     NSFWLevel,
     OnboardingMode,
+    RoleType,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     SortOrder,
@@ -97,7 +98,7 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts", "VoiceServerRegion")
 
 MISSING = utils.MISSING
 
@@ -118,11 +119,9 @@ if TYPE_CHECKING:
     from .template import Template
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
-    from .types.guild import (
-        GuildFeature,
-        MFALevel,
-    )
+    from .types.guild import GuildFeature, MFALevel
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
+    from .types.invite import IncompleteInvite
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import VoiceState as GuildVoiceState
@@ -133,7 +132,7 @@ if TYPE_CHECKING:
     GuildChannel = Union[
         VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
     ]
-    ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+    ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
 
 T = TypeVar("T")
 
@@ -149,6 +148,36 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+@dataclass(frozen=True, slots=True)
+class VoiceServerRegion:
+    """Represents a voice region a guild can use for voice channels.
+
+    This is returned by :meth:`Guild.fetch_voice_regions`.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`str`
+        The region ID, e.g. ``"us-west"``. Use this as the
+        :attr:`VoiceChannel.rtc_region` of a voice channel.
+    name: :class:`str`
+        The region's display name, e.g. ``"US West"``.
+    optimal: :class:`bool`
+        Whether the region is optimal for the guild's members.
+    deprecated: :class:`bool`
+        Whether the region is deprecated.
+    custom: :class:`bool`
+        Whether the region is a custom region.
+    """
+
+    id: str
+    name: str
+    optimal: bool
+    deprecated: bool
+    custom: bool
 
 
 class GuildRoleCounts(dict[int, int]):
@@ -1250,7 +1279,7 @@ class Guild(Hashable):
         .. versionadded:: 1.6
         """
         for role in self._roles.values():
-            if role.is_premium_subscriber():
+            if role.type is RoleType.BOOSTER:
                 return role
         return None
 
@@ -1606,7 +1635,7 @@ class Guild(Hashable):
         position: int = MISSING,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         slowmode_delay: int = MISSING,
@@ -1633,9 +1662,13 @@ class Guild(Hashable):
             The channel's preferred audio bitrate in bits per second.
         user_limit: :class:`int`
             The channel's limit for number of members that can be in a voice channel.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A region ID string is now accepted.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -1717,7 +1750,7 @@ class Guild(Hashable):
         reason: str | None = None,
         bitrate: int = MISSING,
         user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
+        rtc_region: VoiceRegion | str | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
@@ -1756,9 +1789,13 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is now accepted.
 
             .. versionadded:: 2.7
 
@@ -2706,8 +2743,10 @@ class Guild(Hashable):
         The inactive members are denoted if they have not logged on in
         ``days`` number of days and have no roles.
 
-        You must have the :attr:`~Permissions.kick_members` permission
-        to use this.
+        You must have the :attr:`~Permissions.kick_members` and
+        :attr:`~Permissions.manage_guild` permissions to use this. If the guild has the
+        ``PRUNE_REQUIRES_ADMIN`` guild feature, you must have the
+        :attr:`~Permissions.administrator` permission instead.
 
         To check how many members you would prune without actually pruning,
         see the :meth:`estimate_pruned_members` function.
@@ -2819,6 +2858,11 @@ class Guild(Hashable):
         Similar to :meth:`prune_members` except instead of actually
         pruning members, it returns how many members it would prune
         from the guild had it been called.
+
+        You must have the :attr:`~Permissions.kick_members` and
+        :attr:`~Permissions.manage_guild` permissions to use this. If the guild has the
+        ``PRUNE_REQUIRES_ADMIN`` guild feature, you must have the
+        :attr:`~Permissions.administrator` permission instead.
 
         Parameters
         ----------
@@ -3083,7 +3127,7 @@ class Guild(Hashable):
             raise TypeError('"name" parameter must be 2 to 30 characters long.')
 
         if description and not (2 <= len(description) <= 100):
-            raise TypeError('"description" parameter must be 2 to 200 characters long.')
+            raise TypeError('"description" parameter must be 2 to 100 characters long.')
 
         payload = {"name": name, "description": description or ""}
 
@@ -3225,7 +3269,7 @@ class Guild(Hashable):
             The emoji name. Must be at least 2 characters.
         image: :class:`bytes`
             The :term:`py:bytes-like object` representing the image data to use.
-            Only JPG, PNG and GIF images are supported.
+            Only JPEG, PNG, GIF, WebP and AVIF images are supported.
         roles: List[:class:`Role`]
             A :class:`list` of :class:`Role`\s that can use this emoji. Leave empty to make it available to everyone.
         reason: Optional[:class:`str`]
@@ -3326,7 +3370,7 @@ class Guild(Hashable):
         data = await self._state.http.get_role(self.id, role_id)
         return Role(guild=self, state=self._state, data=data)
 
-    async def _fetch_role(self, role_id: int) -> Role:
+    async def _fetch_role(self, role_id: int) -> Role | None:
         """|coro|
 
         Retrieves a :class:`Role` that the guild has.
@@ -3788,7 +3832,45 @@ class Guild(Hashable):
         payload["max_uses"] = 0
         payload["max_age"] = 0
         payload["uses"] = payload.get("uses", 0)
-        return Invite(state=self._state, data=payload, guild=self, channel=channel)
+
+        return Invite(
+            state=self._state,
+            data=cast("IncompleteInvite", payload),
+            guild=self,
+            channel=channel,
+        )
+
+    async def fetch_voice_regions(self) -> list[VoiceServerRegion]:
+        """|coro|
+
+        Retrieves the voice regions that the guild has access to.
+
+        The list of voice regions is dynamic, so this method is the
+        recommended way to get the currently available regions.
+
+        .. versionadded:: 2.9
+
+        Returns
+        -------
+        List[:class:`VoiceServerRegion`]
+            The list of voice regions the guild has access to.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the voice regions failed.
+        """
+        regions = await self._state.http.get_guild_voice_regions(self.id)
+        return [
+            VoiceServerRegion(
+                id=region.get("id", ""),
+                name=region.get("name", ""),
+                optimal=region.get("optimal", False),
+                deprecated=region.get("deprecated", False),
+                custom=region.get("custom", False),
+            )
+            for region in regions
+        ]
 
     # TODO: use MISSING when async iterators get refactored
     def audit_logs(

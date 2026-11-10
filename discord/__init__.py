@@ -68,6 +68,7 @@ from .reaction import *
 from .role import *
 from .scheduled_events import *
 from .shard import *
+from .shared_client_theme import *
 from .soundboard import *
 from .stage_instance import *
 from .sticker import *
@@ -86,8 +87,6 @@ if TYPE_CHECKING:
 
     from discord.voice import VoiceClient as VoiceClientC
     from discord.voice import VoiceProtocol as VoiceProtocolC
-
-    from .client import Client
 
     C = TypeVar("C", bound=Client)
 

@@ -28,13 +28,12 @@ from __future__ import annotations
 import asyncio
 import copy
 import time
+from collections.abc import Callable, Iterable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Iterable,
     Protocol,
-    Sequence,
+    TypeAlias,
     TypeVar,
     Union,
     overload,
@@ -88,6 +87,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
     from .poll import Poll
+    from .shared_client_theme import SharedClientTheme
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -97,10 +97,15 @@ if TYPE_CHECKING:
     from .ui.view import BaseView
     from .user import ClientUser
 
-    PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
-    ]
-    MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
+    PartialMessageableChannel: TypeAlias = (
+        TextChannel
+        | VoiceChannel
+        | StageChannel
+        | Thread
+        | DMChannel
+        | PartialMessageable
+    )
+    MessageableChannel: TypeAlias = PartialMessageableChannel | GroupChannel
     SnowflakeTime = Union["Snowflake", datetime]
 
     from .voice import VoiceClient, VoiceProtocol
@@ -347,6 +352,10 @@ class GuildChannel:
         ): ...
 
     def __str__(self) -> str:
+        flags = getattr(self, "flags", None)
+        if flags is not None and getattr(flags, "obfuscated", False):
+            return f"Obfuscated Channel ({self.id})"
+
         return self.name
 
     @property
@@ -1382,6 +1391,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1404,6 +1414,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1426,6 +1437,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1448,6 +1460,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     async def send(
@@ -1471,6 +1484,7 @@ class Messageable:
         suppress=None,
         suppress_embeds=None,
         silent=None,
+        shared_client_theme=None,
     ):
         """|coro|
 
@@ -1562,6 +1576,10 @@ class Messageable:
             The poll to send.
 
             .. versionadded:: 2.6
+        shared_client_theme: :class:`SharedClientTheme`
+            The shared client theme to send.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -1585,6 +1603,9 @@ class Messageable:
         channel = await self._get_channel()
         state = self._state
         content = str(content) if content is not None else None
+
+        if shared_client_theme is not None:
+            shared_client_theme = shared_client_theme.to_dict()
 
         if embed is not None and embeds is not None:
             raise InvalidArgument(
@@ -1700,6 +1721,7 @@ class Messageable:
                     components=components,
                     flags=flags.value,
                     poll=poll,
+                    shared_client_theme=shared_client_theme,
                 )
             finally:
                 for f in files:
@@ -1719,6 +1741,7 @@ class Messageable:
                 components=components,
                 flags=flags.value,
                 poll=poll,
+                shared_client_theme=shared_client_theme,
             )
 
         ret = state.create_message(channel=channel, data=data)
@@ -1726,7 +1749,7 @@ class Messageable:
             if view.is_dispatchable():
                 state.store_view(view, ret.id)
             view.message = ret
-            view.refresh(ret.components)
+            view._refresh(ret.components)
 
         if delete_after is not None:
             await ret.delete(delay=delete_after)

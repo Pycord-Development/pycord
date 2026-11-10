@@ -89,6 +89,11 @@ Messages
 .. autoclass:: Message()
     :members:
 
+.. attributetable:: MessagePin
+
+.. autoclass:: MessagePin()
+    :members:
+
 .. attributetable:: MessageSnapshot
 
 .. autoclass:: MessageSnapshot()
@@ -163,6 +168,9 @@ Guild
         The :class:`User` that was banned.
 
         :type: :class:`User`
+
+.. autoclass:: VoiceServerRegion()
+    :members:
 
 .. attributetable:: Member
 

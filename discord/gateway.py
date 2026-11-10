@@ -169,13 +169,13 @@ class KeepAliveHandler(threading.Thread):
 
                 try:
                     f.result()
-                except Exception:
+                except BaseException:
                     _log.exception(
                         "An error occurred while stopping the gateway. Ignoring."
                     )
                 finally:
                     self.stop()
-                    return
+                return
 
             data = self.get_payload()
             _log.debug(self.msg, self.shard_id, data["d"])
@@ -368,6 +368,7 @@ class DiscordWebSocket:
         ws.session_id = session
         ws.sequence = sequence
         ws._max_heartbeat_timeout = client._connection.heartbeat_timeout
+        ws.capabilities = client._connection.capabilities.value
 
         if client._enable_debug_events:
             ws.send = ws.debug_send
@@ -432,6 +433,9 @@ class DiscordWebSocket:
                 },
                 "compress": True,
                 "large_threshold": 250,
+                "capabilities": (
+                    self.capabilities if hasattr(self, "capabilities") else 0
+                ),
             },
         }
 

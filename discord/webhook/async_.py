@@ -1940,7 +1940,7 @@ class Webhook(BaseWebhook):
             if self.parent and not view.parent:
                 view.parent = self.parent
             if msg:
-                view.refresh(msg.components)
+                view._refresh(msg.components)
             if view.is_dispatchable():
                 self._state.store_view(view, message_id)
 
@@ -2115,8 +2115,8 @@ class Webhook(BaseWebhook):
                 raise InvalidArgument(
                     "Dispatchable Webhook views require an associated state with the webhook"
                 )
-
-            self._state.prevent_view_updates_for(message_id)
+            if not isinstance(self._state, _WebhookState):
+                self._state.prevent_view_updates_for(message_id)
             if self.type is not WebhookType.application:
                 with_components = True
 
@@ -2164,7 +2164,7 @@ class Webhook(BaseWebhook):
         message = self._create_message(data)
         if view and not view.is_finished():
             view.message = message
-            view.refresh(message.components)
+            view._refresh(message.components)
             if view.is_dispatchable():
                 self._state.store_view(view, message_id)
         return message

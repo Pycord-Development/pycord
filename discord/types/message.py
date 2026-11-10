@@ -33,6 +33,7 @@ from .embed import Embed
 from .emoji import PartialEmoji
 from .member import Member, UserWithMember
 from .poll import Poll
+from .shared_client_theme import SharedClientTheme
 from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
 from .threads import Thread
@@ -84,7 +85,7 @@ class Attachment(TypedDict):
     ephemeral: NotRequired[bool]
 
 
-MessageActivityType = Literal[1, 2, 3, 5]
+MessageActivityType = Literal[1, 2, 3, 5, 6]
 
 
 class MessageActivity(TypedDict):
@@ -174,6 +175,7 @@ class Message(TypedDict):
     poll: Poll
     call: MessageCall
     message_snapshots: NotRequired[list[MessageSnapshot]]
+    shared_client_theme: NotRequired[SharedClientTheme]
 
 
 class MessagePin(TypedDict):

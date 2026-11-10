@@ -27,7 +27,8 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-from typing import TYPE_CHECKING, Any, Coroutine, Union, overload
+from collections.abc import Coroutine
+from typing import TYPE_CHECKING, Any, Union, overload
 
 from typing_extensions import deprecated
 
@@ -621,8 +622,9 @@ class Interaction:
             previous_allowed_mentions=previous_mentions,
             suppress_embeds=suppress_embeds,
         )
-        if view and self.message:
-            self._state.prevent_view_updates_for(self.message.id)
+        _target = self.message or self._original_response
+        if view and _target:
+            self._state.prevent_view_updates_for(_target.id)
         adapter = async_context.get()
         http = self._state.http
         data = await adapter.edit_original_interaction_response(
@@ -641,7 +643,7 @@ class Interaction:
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view:
             if not view.is_finished():
-                view.refresh(message.components)
+                view._refresh(message.components)
                 if view.is_dispatchable():
                     self._state.store_view(view, message.id)
 
@@ -1308,7 +1310,7 @@ class InteractionResponse:
             raise InteractionResponded(self._parent)
 
         parent = self._parent
-        msg = parent.message
+        msg = parent.message or parent._original_response
         state = parent._state
         message_id = msg.id if msg else None
         if parent.type not in (InteractionType.component, InteractionType.modal_submit):

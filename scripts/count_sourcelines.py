@@ -44,4 +44,4 @@ for py_dir, _, py_files in os.walk(cur_path):
 for line_number_count, filename in loc_list:
     print("%05d lines in %s" % (line_number_count, filename))
 
-print("\nTotal: {} lines ({})".format(sum([x[0] for x in loc_list]), cur_path))
+print(f"\nTotal: {sum([x[0] for x in loc_list])} lines ({cur_path})")

@@ -104,7 +104,7 @@ def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
     """
     if value := data.get(key):
         with suppress(ValueError):
-            # value error means it's not an number string (None or "")
+            # value error means it's not a number string (None or "")
             return int(value)  # pyright: ignore[reportUnknownArgumentType]
     return None
 
@@ -213,41 +213,49 @@ class RoleTags:
         return RoleType.UNKNOWN
 
     @deprecated(
-        "RoleTags.is_bot_managed is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_bot_managed is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.APPLICATION instead."
     )
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.APPLICATION`` instead.
         """
         return self.bot_id is not None
 
     @deprecated(
-        "RoleTags.is_premium_subscriber is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_premium_subscriber is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.BOOSTER instead."
     )
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.BOOSTER`` instead.
         """
         return self._premium_subscriber is True
 
     @deprecated(
-        "RoleTags.is_integration is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_integration is deprecated since version 2.8,"
+        + " consider using RoleTags.type in"
+        + " (RoleType.INTEGRATION, RoleType.PREMIUM_SUBSCRIPTION_TIER,"
+        + " RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER) instead."
     )
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type in (RoleType.INTEGRATION,
+            RoleType.PREMIUM_SUBSCRIPTION_TIER,
+            RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER)`` instead.
         """
         return self.integration_id is not None
 
     @deprecated(
-        "RoleTags.is_available_for_purchase is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_available_for_purchase is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.PREMIUM_SUBSCRIPTION_TIER instead."
     )
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
@@ -257,20 +265,21 @@ class RoleTags:
         is not linked to a guild subscription.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.PREMIUM_SUBSCRIPTION_TIER`` instead.
 
         .. versionadded:: 2.7
         """
         return self._available_for_purchase is True
 
     @deprecated(
-        "RoleTags.is_guild_connections_role is deprecated since version 2.8, consider using RoleTags.type instead."
+        "RoleTags.is_guild_connections_role is deprecated since version 2.8,"
+        + " consider using RoleTags.type == RoleType.CONNECTION instead."
     )
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
         .. deprecated:: 2.8
-            Use :attr:`RoleTags.type` instead.
+            Use ``RoleTags.type == RoleType.CONNECTION`` instead.
 
         .. versionadded:: 2.7
         """
@@ -299,8 +308,18 @@ class RoleColours:
     secondary: Optional[:class:`Colour`]
         The secondary colour of the role.
     tertiary: Optional[:class:`Colour`]
-        The tertiary colour of the role. At the moment, only `16761760` is allowed.
+        The tertiary colour of the role. At the moment, only :attr:`HOLOGRAPHIC_TERTIARY` is allowed.
+    HOLOGRAPHIC_PRIMARY: :class:`Colour`
+            The primary colour used for holographic roles.
+    HOLOGRAPHIC_SECONDARY: :class:`Colour`
+        The secondary colour used for holographic roles.
+    HOLOGRAPHIC_TERTIARY: :class:`Colour`
+        The tertiary colour used for holographic roles.
     """
+
+    HOLOGRAPHIC_PRIMARY = Colour(11127295)
+    HOLOGRAPHIC_SECONDARY = Colour(16759788)
+    HOLOGRAPHIC_TERTIARY = Colour(16761760)
 
     def __init__(
         self,
@@ -353,20 +372,26 @@ class RoleColours:
     def holographic(cls) -> RoleColours:
         """Returns a :class:`RoleColours` that makes the role look holographic.
 
-        Currently holographic roles are only supported with colours 11127295, 16759788, and 16761760.
+        Currently holographic roles are only supported with colours defined in
+        :attr:`HOLOGRAPHIC_PRIMARY`, :attr:`HOLOGRAPHIC_SECONDARY`, and :attr:`HOLOGRAPHIC_TERTIARY`.
         """
-        return cls(Colour(11127295), Colour(16759788), Colour(16761760))
+        return cls(
+            cls.HOLOGRAPHIC_PRIMARY,
+            cls.HOLOGRAPHIC_SECONDARY,
+            cls.HOLOGRAPHIC_TERTIARY,
+        )
 
     @property
     def is_holographic(self) -> bool:
         """Whether the role is holographic.
 
-        Currently roles are holographic when colours are set to 11127295, 16759788, and 16761760.
+        Currently roles are holographic when colours are set to
+        :attr:`HOLOGRAPHIC_PRIMARY`, :attr:`HOLOGRAPHIC_SECONDARY`, and :attr:`HOLOGRAPHIC_TERTIARY`.
         """
         return (
-            self.primary.value == 11127295
-            and self.secondary.value == 16759788
-            and self.tertiary.value == 16761760
+            self.primary == self.HOLOGRAPHIC_PRIMARY
+            and self.secondary == self.HOLOGRAPHIC_SECONDARY
+            and self.tertiary == self.HOLOGRAPHIC_TERTIARY
         )
 
     def __repr__(self) -> str:
@@ -563,7 +588,7 @@ class Role(Hashable):
 
         .. versionadded:: 1.6
         """
-        return self.tags is not None and self.tags.is_bot_managed()
+        return self.type is RoleType.APPLICATION
 
     @deprecated(
         "Role.is_premium_subscriber is deprecated since version 2.8, consider using Role.type instead."
@@ -576,7 +601,7 @@ class Role(Hashable):
 
         .. versionadded:: 1.6
         """
-        return self.tags is not None and self.tags.is_premium_subscriber()
+        return self.type is RoleType.BOOSTER
 
     @deprecated(
         "Role.is_integration is deprecated since version 2.8, consider using Role.type instead."
@@ -590,7 +615,11 @@ class Role(Hashable):
 
         .. versionadded:: 1.6
         """
-        return self.tags is not None and self.tags.is_integration()
+        return self.type in (
+            RoleType.INTEGRATION,
+            RoleType.PREMIUM_SUBSCRIPTION_TIER,
+            RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER,
+        )
 
     def is_assignable(self) -> bool:
         """Whether the role is able to be assigned or removed by the bot. This checks whether all of the following conditions are true:
@@ -630,7 +659,7 @@ class Role(Hashable):
 
         .. versionadded:: 2.7
         """
-        return self.tags is not None and self.tags.is_available_for_purchase()
+        return self.type is RoleType.PREMIUM_SUBSCRIPTION_TIER
 
     @deprecated(
         "Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead."
@@ -643,7 +672,7 @@ class Role(Hashable):
 
         .. versionadded:: 2.7
         """
-        return self.tags is not None and self.tags.is_guild_connections_role()
+        return self.type is RoleType.CONNECTION
 
     @property
     def permissions(self) -> Permissions:

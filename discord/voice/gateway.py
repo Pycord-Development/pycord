@@ -312,7 +312,7 @@ class VoiceWebSocket(DiscordWebSocket):
                 _log.debug("Processed MLS commit for transition %s", transt_id)
             except Exception as exc:
                 _log.debug(
-                    "An exception ocurred while processing a MLS commit, this should be safe to ignore: %s",
+                    "An exception occurred while processing a MLS commit, this should be safe to ignore: %s",
                     exc,
                 )
                 await state.recover_dave_from_invalid_commit(transt_id)
@@ -333,7 +333,7 @@ class VoiceWebSocket(DiscordWebSocket):
                 _log.debug("Processed MLS welcome for transition %s", transt_id)
             except Exception as exc:
                 _log.debug(
-                    "An exception ocurred while processing a MLS welcome, this should be safe to ignore: %s",
+                    "An exception occurred while processing a MLS welcome, this should be safe to ignore: %s",
                     exc,
                 )
                 await state.recover_dave_from_invalid_commit(transt_id)

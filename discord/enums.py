@@ -27,8 +27,22 @@ from __future__ import annotations
 
 import types
 from collections import namedtuple
+from collections.abc import Callable
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
+
+from .utils import warn_deprecated
+
+if TYPE_CHECKING:
+    from typing_extensions import deprecated
+else:
+
+    def deprecated(message: str) -> Callable[[T], T]:
+        def decorator(value: T) -> T:
+            return value
+
+        return decorator
+
 
 __all__ = (
     "Enum",
@@ -45,6 +59,7 @@ __all__ = (
     "ActivityType",
     "NotificationLevel",
     "TeamMembershipState",
+    "TeamRole",
     "WebhookType",
     "ExpireBehaviour",
     "ExpireBehavior",
@@ -87,6 +102,7 @@ __all__ = (
     "SelectDefaultValueType",
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
+    "SharedClientThemeBaseType",
 )
 
 
@@ -95,21 +111,17 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value <= other.value
+        cls.__le__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value <= other.value
         )
-        cls.__ge__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value >= other.value
+        cls.__ge__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value >= other.value
         )
-        cls.__lt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value < other.value
+        cls.__lt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value < other.value
         )
-        cls.__gt__ = (
-            lambda self, other: isinstance(other, self.__class__)
-            and self.value > other.value
+        cls.__gt__ = lambda self, other: (
+            isinstance(other, self.__class__) and self.value > other.value
         )
     return cls
 
@@ -285,32 +297,64 @@ class MessageType(Enum):
     poll_result = 46
 
 
-class VoiceRegion(Enum):
-    """Voice region"""
+class _VoiceRegionMeta(Enum.__class__):
+    def _warn(self, label: str) -> None:
+        warn_deprecated(
+            label,
+            instead="the region ID string or Guild.fetch_voice_regions()",
+            since="2.9",
+            removed="3.0",
+            stacklevel=4,
+        )
 
-    us_west = "us-west"
-    us_east = "us-east"
-    us_south = "us-south"
-    us_central = "us-central"
-    eu_west = "eu-west"
-    eu_central = "eu-central"
-    singapore = "singapore"
-    london = "london"
-    sydney = "sydney"
-    amsterdam = "amsterdam"
-    frankfurt = "frankfurt"
+    def __getattribute__(cls, name: str) -> Any:
+        members = super().__getattribute__("_enum_member_map_")
+        if name in members:
+            cls._warn(f"VoiceRegion.{name}")
+        return super().__getattribute__(name)
+
+    def __getitem__(cls, name: str) -> Any:
+        member = super().__getitem__(name)
+        cls._warn(f"VoiceRegion[{name!r}]")
+        return member
+
+    def __call__(cls, *args: Any, **kwargs: Any) -> Any:
+        cls._warn(f"VoiceRegion({', '.join(map(repr, args))})")
+        return super().__call__(*args, **kwargs)
+
+    def __getattr__(cls, name: str) -> Any:
+        if name.startswith("_"):
+            raise AttributeError(name)
+        cls._warn(f"VoiceRegion.{name}")
+        return create_unknown_value(cls, name.replace("_", "-"))
+
+
+@deprecated(
+    "VoiceRegion is deprecated since version 2.9 and will be removed in version 3.0. "
+    "Use Guild.fetch_voice_regions() to retrieve available regions as a list of VoiceServerRegion objects."
+)
+class VoiceRegion(Enum, metaclass=_VoiceRegionMeta):
+    """Specifies the region a voice server belongs to.
+
+    .. deprecated:: 2.9
+        The list of voice regions is dynamic, so this enum is deprecated.
+        Use :meth:`Guild.fetch_voice_regions` to retrieve available regions
+        as a list of :class:`VoiceServerRegion` objects. This enum will be removed in version 3.0.
+    """
+
     brazil = "brazil"
     hongkong = "hongkong"
-    russia = "russia"
-    japan = "japan"
-    southafrica = "southafrica"
-    south_korea = "south-korea"
     india = "india"
-    europe = "europe"
-    dubai = "dubai"
-    vip_us_east = "vip-us-east"
-    vip_us_west = "vip-us-west"
-    vip_amsterdam = "vip-amsterdam"
+    japan = "japan"
+    rotterdam = "rotterdam"
+    singapore = "singapore"
+    south_korea = "south-korea"
+    southafrica = "southafrica"
+    sydney = "sydney"
+    us_central = "us-central"
+    us_east = "us-east"
+    us_south = "us-south"
+    us_west = "us-west"
 
     def __str__(self):
         return self.value
@@ -405,6 +449,7 @@ class AuditLogAction(Enum):
     overwrite_create = 13
     overwrite_update = 14
     overwrite_delete = 15
+    channel_position_update = 16
     kick = 20
     member_prune = 21
     ban = 22
@@ -417,6 +462,7 @@ class AuditLogAction(Enum):
     role_create = 30
     role_update = 31
     role_delete = 32
+    role_position_update = 33
     invite_create = 40
     invite_update = 41
     invite_delete = 42
@@ -472,6 +518,7 @@ class AuditLogAction(Enum):
             AuditLogAction.overwrite_create: AuditLogActionCategory.create,
             AuditLogAction.overwrite_update: AuditLogActionCategory.update,
             AuditLogAction.overwrite_delete: AuditLogActionCategory.delete,
+            AuditLogAction.channel_position_update: AuditLogActionCategory.update,
             AuditLogAction.kick: None,
             AuditLogAction.member_prune: None,
             AuditLogAction.ban: None,
@@ -484,6 +531,7 @@ class AuditLogAction(Enum):
             AuditLogAction.role_create: AuditLogActionCategory.create,
             AuditLogAction.role_update: AuditLogActionCategory.update,
             AuditLogAction.role_delete: AuditLogActionCategory.delete,
+            AuditLogAction.role_position_update: AuditLogActionCategory.update,
             AuditLogAction.invite_create: AuditLogActionCategory.create,
             AuditLogAction.invite_update: AuditLogActionCategory.update,
             AuditLogAction.invite_delete: AuditLogActionCategory.delete,
@@ -627,6 +675,15 @@ class TeamMembershipState(Enum):
 
     invited = 1
     accepted = 2
+
+
+class TeamRole(Enum):
+    """Role of a team member."""
+
+    owner = "owner"
+    admin = "admin"
+    developer = "developer"
+    read_only = "read_only"
 
 
 class WebhookType(Enum):
@@ -830,11 +887,10 @@ class SlashCommandOptionType(Enum):
             else:
                 raise TypeError("Invalid usage of typing.Union")
 
-        py_3_10_union_type = hasattr(types, "UnionType") and isinstance(
-            datatype, types.UnionType
-        )
-
-        if py_3_10_union_type or getattr(datatype, "__origin__", None) is Union:
+        if (
+            isinstance(datatype, types.UnionType)
+            or getattr(datatype, "__origin__", None) is Union
+        ):
             # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
             # Type checking fails for this case, so ignore it.
             return cls.from_datatype(datatype.__args__)  # type: ignore
@@ -1105,8 +1161,8 @@ class SubscriptionStatus(Enum):
     """The status of a subscription."""
 
     active = 0
-    ending = 1
-    inactive = 2
+    inactive = 1
+    ending = 2
 
 
 class ThreadArchiveDuration(IntEnum):
@@ -1139,7 +1195,7 @@ class SelectDefaultValueType(Enum):
 class RoleType(IntEnum):
     """Represents the type of role.
 
-    This is NOT provided by Discord but is rather computed based on :attr:`Role.tags`.
+    This is NOT provided by Discord but is rather computed from :attr:`Role.tags`.
 
     .. versionadded:: 2.8
 
@@ -1156,7 +1212,8 @@ class RoleType(IntEnum):
 
         .. note::
             This is not possible to determine at times because role tags seem to be missing altogether, notably when
-            a role is fetched. In such cases :attr:`Role.type` and :attr:`Role.tags` will both be :data:`None`.
+            a guild product role is fetched.
+            In such cases :attr:`Role.type` will be :attr:`RoleType.NORMAL` and :attr:`Role.tags` will be :data:`None`.
     PREMIUM_SUBSCRIPTION_BASE: :class:`int`
         The role is a base subscription role.
 
@@ -1199,6 +1256,14 @@ class InviteTargetUsersJobStatusCode(Enum):
     processing = 1
     completed = 2
     failed = 3
+
+
+class SharedClientThemeBaseType(Enum):
+    unset = 0
+    dark = 1
+    light = 2
+    darker = 3
+    midnight = 4
 
 
 T = TypeVar("T")

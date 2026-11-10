@@ -26,14 +26,11 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Iterable,
-    Mapping,
     NamedTuple,
-    Sequence,
     TypeVar,
     overload,
 )
@@ -147,27 +144,27 @@ class ForumTag(Hashable):
         moderated: :class:`bool`
             Whether this tag can only be added or removed by a moderator with
             the :attr:`~Permissions.manage_threads` permission.
-        emoji: :class:`PartialEmoji`
-            The emoji that is used to represent this tag.
+        emoji: Optional[:class:`PartialEmoji`]
+            The emoji that is used to represent this tag. Defaults to ``None``.
             Note that if the emoji is a custom emoji, it will *not* have name information.
     """
 
     __slots__ = ("name", "id", "moderated", "emoji")
 
     def __init__(
-        self, *, name: str, emoji: EmojiInputType, moderated: bool = False
+        self, *, name: str, emoji: EmojiInputType | None = None, moderated: bool = False
     ) -> None:
         self.name: str = name
         self.id: int = 0
         self.moderated: bool = moderated
-        self.emoji: PartialEmoji
+        self.emoji: PartialEmoji | None = None
         if isinstance(emoji, _EmojiTag):
             self.emoji = emoji._to_partial()
         elif isinstance(emoji, str):
             self.emoji = PartialEmoji.from_str(emoji)
-        else:
+        elif emoji is not None:
             raise TypeError(
-                "emoji must be a GuildEmoji, PartialEmoji, or str and not"
+                "emoji must be a GuildEmoji, PartialEmoji, str, or None and not"
                 f" {emoji.__class__!r}"
             )
 
@@ -189,14 +186,22 @@ class ForumTag(Hashable):
 
         emoji_name = data["emoji_name"] or ""
         emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
-        self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
+        self.emoji = None
+        if emoji_name or emoji_id:
+            self.emoji = PartialEmoji.with_state(
+                state=state, name=emoji_name, id=emoji_id
+            )
         return self
 
     def to_dict(self) -> dict[str, Any]:
         payload: dict[str, Any] = {
             "name": self.name,
             "moderated": self.moderated,
-        } | self.emoji._to_forum_reaction_payload()
+            "emoji_id": None,
+            "emoji_name": None,
+        }
+        if self.emoji is not None:
+            payload.update(self.emoji._to_forum_reaction_payload())
 
         if self.id:
             payload["id"] = self.id
@@ -666,7 +671,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`bool`]
+        limit: Optional[:class:`int`]
             The number of threads to retrieve.
             If ``None``, retrieves every archived thread in the channel. Note, however,
             that this would make it a slow operation.
@@ -1499,7 +1504,10 @@ class MediaChannel(ForumChannel):
         require_tag: bool = ...,
         hide_media_download_options: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> ForumChannel | None: ...
+    ) -> MediaChannel | None: ...
+
+    @overload
+    async def edit(self) -> MediaChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -2083,10 +2091,10 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         bitrate: int = ...,
         user_limit: int = ...,
         position: int = ...,
-        sync_permissions: int = ...,
+        sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
-        rtc_region: VoiceRegion | None = ...,
+        rtc_region: VoiceRegion | str | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
         nsfw: bool = ...,
@@ -2130,9 +2138,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The new region for the voice channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The new region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A region ID string is now accepted.
 
             .. versionadded:: 1.7
         video_quality_mode: :class:`VideoQualityMode`
@@ -2686,7 +2698,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         topic: str,
         privacy_level: StagePrivacyLevel = MISSING,
         reason: str | None = None,
-        send_notification: bool | None = False,
+        send_notification: bool = False,
     ) -> StageInstance:
         """|coro|
 
@@ -2770,11 +2782,14 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         name: str = ...,
         topic: str | None = ...,
         position: int = ...,
-        sync_permissions: int = ...,
+        sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
-        rtc_region: VoiceRegion | None = ...,
+        rtc_region: VoiceRegion | str | None = ...,
         video_quality_mode: VideoQualityMode = ...,
+        bitrate: int = ...,
+        user_limit: int = ...,
+        slowmode_delay: int = ...,
         reason: str | None = ...,
     ) -> StageChannel | None: ...
 
@@ -2811,9 +2826,13 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The reason for editing this channel. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[:class:`VoiceRegion`]
-            The new region for the stage channel's voice communication.
+        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+            The new region ID for the stage channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
+
+            .. versionchanged:: 2.9
+
+                A :class:`VoiceRegion` member is now accepted.
         video_quality_mode: :class:`VideoQualityMode`
             The camera video quality for the stage channel's participants.
 
@@ -2823,7 +2842,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The channel's preferred audio bitrate in bits per second.
 
         user_limit: :class:`int`
-            The channel's limit for number of members that can be in a voice channel.
+            The channel's limit for number of members that can be in a stage channel.
 
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
@@ -3529,7 +3548,7 @@ class VoiceChannelEffectSendEvent:
 
     Attributes
     ----------
-    animation_type: :class:`int`
+    animation_type: :class:`VoiceChannelEffectAnimationType`
         The type of animation that is being sent.
     animation_id: :class:`int`
         The ID of the animation that is being sent.

@@ -42,24 +42,26 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
+from collections.abc import (
+    AsyncIterator,
+    Awaitable,
+    Callable,
+    Coroutine,
+    Iterable,
+    Iterator,
+    Mapping,
+    Sequence,
+)
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Coroutine,
     ForwardRef,
     Generic,
-    Iterable,
-    Iterator,
     Literal,
-    Mapping,
     Protocol,
-    Sequence,
     TypeVar,
     Union,
     overload,
@@ -69,19 +71,19 @@ from typing_extensions import deprecated as ext_deprecated
 
 if TYPE_CHECKING:
     from discord import (
-        Client,
-        VoiceChannel,
-        TextChannel,
-        ForumChannel,
-        StageChannel,
-        CategoryChannel,
-        Thread,
-        Member,
-        User,
-        Guild,
-        Role,
-        GuildEmoji,
         AppEmoji,
+        CategoryChannel,
+        Client,
+        ForumChannel,
+        Guild,
+        GuildEmoji,
+        Member,
+        Role,
+        StageChannel,
+        TextChannel,
+        Thread,
+        User,
+        VoiceChannel,
     )
 
 from .errors import HTTPException, InvalidArgument, InvalidData
@@ -94,32 +96,32 @@ else:
     HAS_MSGSPEC = True
 
 __all__ = (
-    "parse_time",
-    "warn_deprecated",
+    "MISSING",
+    "as_chunks",
+    "basic_autocomplete",
     "deprecated",
-    "oauth_url",
-    "snowflake_time",
-    "time_snowflake",
-    "find",
-    "get",
-    "get_or_fetch",
-    "sleep_until",
-    "utcnow",
-    "resolve_invite",
-    "resolve_template",
-    "remove_markdown",
     "escape_markdown",
     "escape_mentions",
-    "raw_mentions",
-    "raw_channel_mentions",
-    "raw_role_mentions",
-    "as_chunks",
+    "filter_params",
+    "find",
     "format_dt",
     "generate_snowflake",
-    "basic_autocomplete",
-    "filter_params",
-    "MISSING",
+    "get",
+    "get_or_fetch",
+    "oauth_url",
+    "parse_time",
+    "raw_channel_mentions",
+    "raw_mentions",
+    "raw_role_mentions",
+    "remove_markdown",
+    "resolve_invite",
+    "resolve_template",
+    "sleep_until",
+    "snowflake_time",
+    "time_snowflake",
     "users_to_csv",
+    "utcnow",
+    "warn_deprecated",
 )
 
 _log = logging.getLogger(__name__)
@@ -156,7 +158,7 @@ class _MissingSentinel:
 MISSING: Any = _MissingSentinel()
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
@@ -203,17 +205,6 @@ class CachedSlotProperty(Generic[T, T_co]):
             value = self.function(instance)
             setattr(instance, self.name, value)
             return value
-
-
-class classproperty(Generic[T_co]):
-    def __init__(self, fget: Callable[[Any], T_co]) -> None:
-        self.fget = fget
-
-    def __get__(self, instance: Any | None, owner: type[Any]) -> T_co:
-        return self.fget(owner)
-
-    def __set__(self, instance, value) -> None:
-        raise AttributeError("cannot set attribute")
 
 
 def cached_slot_property(
@@ -568,25 +559,15 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
         Keyword arguments that denote attributes to search with.
     """
 
-    # global -> local
-    _all = all
-    attrget = attrgetter
-
-    # Special case the single element call
-    if len(attrs) == 1:
-        k, v = attrs.popitem()
-        pred = attrget(k.replace("__", "."))
-        for elem in iterable:
-            if pred(elem) == v:
-                return elem
-        return None
-
     converted = [
-        (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
+        (attrgetter(attr.replace("__", ".")), value) for attr, value in attrs.items()
     ]
 
     for elem in iterable:
-        if _all(pred(elem) == value for pred, value in converted):
+        for pred, value in converted:
+            if pred(elem) != value:
+                break
+        else:
             return elem
     return None
 
@@ -1255,31 +1236,23 @@ def raw_role_mentions(text: str) -> list[int]:
 
 
 def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
-    ret = []
-    n = 0
-    for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iter(iterator)
+    while chunk := list(itertools.islice(it, max_size)):
+        yield chunk
+
+
+async def _atake(it: AsyncIterator[T], n: int) -> AsyncIterator[T]:
+    for _ in range(n):
+        try:
+            yield await it.__anext__()
+        except StopAsyncIteration:
+            return
 
 
 async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
-    ret = []
-    n = 0
-    async for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iterator.__aiter__()
+    while chunk := [x async for x in _atake(it, max_size)]:
+        yield chunk
 
 
 @overload
@@ -1319,20 +1292,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     return _chunk(iterator, max_size)
 
 
-PY_310 = sys.version_info >= (3, 10)
-
-
-def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    params = []
-    literal_cls = type(Literal[0])
-    for p in parameters:
-        if isinstance(p, literal_cls):
-            params.extend(p.__args__)
-        else:
-            params.append(p)
-    return tuple(params)
-
-
 def normalise_optional_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
     none_cls = type(None)
     return tuple(p for p in parameters if p is not none_cls) + (none_cls,)
@@ -1363,7 +1322,7 @@ def evaluate_annotation(
         is_literal = False
         args = tp.__args__
         if not hasattr(tp, "__origin__"):
-            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
+            if tp.__class__ is types.UnionType:  # type: ignore
                 converted = Union[args]  # type: ignore
                 return evaluate_annotation(converted, globals, locals, cache)
 
@@ -1375,8 +1334,6 @@ def evaluate_annotation(
             except ValueError:
                 pass
         if tp.__origin__ is Literal:
-            if not PY_310:
-                args = flatten_literal_params(tp.__args__)
             implicit_str = False
             is_literal = True
 
@@ -1665,3 +1622,24 @@ def warn_if_voice_dependencies_missing() -> None:
         deps,
         "is" if len(missing) == 1 else "are",
     )
+
+
+def _get_event_loop() -> asyncio.AbstractEventLoop:
+    """Get the current event loop, creating one if necessary.
+
+    If no event loop is running and none is set, a new event loop
+    is created and set as the current event loop.
+
+    Returns
+    -------
+    asyncio.AbstractEventLoop
+        The current event loop.
+    """
+    if sys.version_info >= (3, 14):
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        return loop
+    return asyncio.get_event_loop()

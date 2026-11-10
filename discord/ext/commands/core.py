@@ -30,11 +30,10 @@ import datetime
 import functools
 import inspect
 import types
+from collections.abc import Callable, Generator
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Generator,
     Generic,
     Literal,
     TypeVar,
@@ -67,7 +66,7 @@ from .cooldowns import (
 from .errors import *
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec, TypeGuard
+    from typing import Concatenate, ParamSpec, TypeGuard
 
     from discord.message import Message
 
@@ -378,9 +377,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError(
-                "Cooldown must be a an instance of CooldownMapping or None."
-            )
+            raise TypeError("Cooldown must be an instance of CooldownMapping or None.")
         self._buckets: CooldownMapping = buckets
 
         try:
@@ -397,7 +394,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         # bandaid for the fact that sometimes parent can be the bot instance
         parent = kwargs.get("parent")
-        self.parent: GroupMixin | None = parent if isinstance(parent, _BaseCommand) else None  # type: ignore
+        self.parent: GroupMixin | None = (
+            parent if isinstance(parent, _BaseCommand) else None
+        )  # type: ignore
 
         self._before_invoke: Hook | None = None
         try:
@@ -1204,7 +1203,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                 # since we have no checks, then we just return True.
                 return True
 
-            return await discord.utils.async_all(predicate(ctx) for predicate in predicates)  # type: ignore
+            return await discord.utils.async_all(
+                predicate(ctx) for predicate in predicates
+            )  # type: ignore
         finally:
             ctx.command = original
 

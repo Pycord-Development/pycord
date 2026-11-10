@@ -141,7 +141,7 @@ class SocketReader(threading.Thread):
             self._do_run()
         except Exception:
             _log.exception(
-                "An error ocurred while running the socket reader %s",
+                "An error occurred while running the socket reader %s",
                 self.name,
             )
         finally:
@@ -346,7 +346,7 @@ class VoiceConnectionState:
                 await self.disconnect()
             return
 
-        self.session_id = data["session_id"]
+        self.session_id = data.session_id
 
         if self.state in (
             ConnectionFlowState.set_guild_voice_state,
