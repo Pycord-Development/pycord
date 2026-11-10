@@ -24,10 +24,11 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from docutils.parsers.rst.directives.parts import Contents
 
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
+
+from docutils.parsers.rst.directives.parts import Contents
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -40,7 +41,7 @@ from .enums import (
     SeparatorSpacingSize,
     try_enum,
 )
-from .flags import AttachmentFlags, UnfurledMediaItemFlags, ContentScanningMetadataFlags
+from .flags import AttachmentFlags, ContentScanningMetadataFlags, UnfurledMediaItemFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, find, get_slots
 
@@ -918,13 +919,13 @@ class UnfurledMediaItem(AssetMixin):
     This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`.
 
     .. note::
-    
+
         All attributes except for :attr:`UnfurledMediaItem.url` will not be present unless this object was received from Discord.
 
     .. versionadded:: 2.7
 
     Parameters
-    -----------
+    ----------
     url: :class:`str`
         The URL of this media item. This will either be an arbitrary URL or an ``attachment://`` URL to work with local files.
 
@@ -983,7 +984,7 @@ class UnfurledMediaItem(AssetMixin):
     @property
     def url(self) -> str:
         """The URL of this media item. When created by the user, this will either be an arbitrary URL or an ``attachment://`` URL to work with local files.
-        
+
         When received from Discord, this will be the :attr:`UnfurledMediaItem.proxy_url`, or the set URL if it has been set by you.
         """
         return self._url or self.proxy_url  # type: ignore
@@ -1005,8 +1006,16 @@ class UnfurledMediaItem(AssetMixin):
         r.placeholder_version = data.get("placeholder_version")
         r.content_type = data.get("content_type")
         r.flags = UnfurledMediaItemFlags._from_value(data.get("flags", 0))
-        r.content_scan_metadata = ContentScanningMetadataFlags._from_value(data["content_scan_metadata"]["flags"]) if "content_scan_metadata" in data else None
-        r.attachment_id = int(data["attachment_id"]) if "attachment_id" in data else None
+        r.content_scan_metadata = (
+            ContentScanningMetadataFlags._from_value(
+                data["content_scan_metadata"]["flags"]
+            )
+            if "content_scan_metadata" in data
+            else None
+        )
+        r.attachment_id = (
+            int(data["attachment_id"]) if "attachment_id" in data else None
+        )
         r._state = state
         return r
 
