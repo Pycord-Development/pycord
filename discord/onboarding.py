@@ -63,7 +63,7 @@ class PromptOption:
         The channels assigned to the user when they select this option.
     roles: List[:class:`Snowflake`]
         The roles assigned to the user when they select this option.
-    emoji: Union[:class:`GuildEmoji`, :class:`PartialEmoji`]
+    emoji: :class:`GuildEmoji` | :class:`PartialEmoji`
         The emoji displayed with the option.
     title: :class:`str`
         The option's title.

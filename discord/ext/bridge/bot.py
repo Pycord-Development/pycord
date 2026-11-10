@@ -69,7 +69,7 @@ class BotBase(ABC):
 
         Yields
         ------
-        Union[:class:`.BridgeCommand`, :class:`.BridgeCommandGroup`]
+        :class:`.BridgeCommand` | :class:`.BridgeCommandGroup`
             A bridge command or bridge group of the bot.
         """
         for cmd in self._bridge_commands:

@@ -73,7 +73,7 @@ class Container(ViewItem[V]):
     ----------
     *items: :class:`ViewItem`
         The initial items in this container.
-    colour: Union[:class:`Colour`, :class:`int`]
+    colour: :class:`Colour` | :class:`int`
         The accent colour of the container. Aliased to ``color`` as well.
     spoiler: Optional[:class:`bool`]
         Whether this container has the spoiler overlay.
@@ -180,7 +180,7 @@ class Container(ViewItem[V]):
 
         Parameters
         ----------
-        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+        item: :class:`ViewItem` | :class:`int` | :class:`str`
             The item, ``id``, or item ``custom_id`` to remove from the container.
         """
 
@@ -203,7 +203,7 @@ class Container(ViewItem[V]):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The id or custom_id of the item to get.
 
         Returns
@@ -233,7 +233,7 @@ class Container(ViewItem[V]):
 
         Parameters
         ----------
-        *items: Union[:class:`Button`, :class:`Select`]
+        *items: :class:`Button` | :class:`Select`
             The items this action row contains.
         id: Optional[:class:`int`]
             The action row's ID.

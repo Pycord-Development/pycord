@@ -112,7 +112,7 @@ class PartialSoundboardSound(Hashable):
 
     @property
     def file(self) -> Asset:
-        """:class:`Asset`: Returns the sound's file."""
+        """Returns the sound's file."""
         return Asset._from_soundboard_sound(self._state, sound_id=self.id)
 
     def __repr__(self) -> str:
@@ -174,7 +174,7 @@ class SoundboardSound(PartialSoundboardSound):
 
     @cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """:class:`Guild` | :class:`None` The guild the sound belongs to. Could be :class:`None` if the sound is a default sound."""
+        """The guild the sound belongs to. Could be :class:`None` if the sound is a default sound."""
         return self._state._get_guild(self.guild_id) if self.guild_id else None
 
     @override
@@ -185,7 +185,7 @@ class SoundboardSound(PartialSoundboardSound):
 
     @property
     def is_default_sound(self) -> bool:
-        """:class:`bool`: Whether the sound is a default sound."""
+        """Whether the sound is a default sound."""
         return self.guild_id is None
 
     def edit(
@@ -206,7 +206,7 @@ class SoundboardSound(PartialSoundboardSound):
             The new name of the sound.
         volume: Optional[:class:`float`]
             The new volume of the sound.
-        emoji: Optional[Union[:class:`PartialEmoji`, :class:`str`]]
+        emoji: Optional[:class:`PartialEmoji` | :class:`str`]
             The new emoji of the sound.
         reason: Optional[:class:`str`]
             The reason for editing the sound. Shows up in the audit log.

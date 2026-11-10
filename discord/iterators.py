@@ -75,7 +75,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 OT = TypeVar("OT")
-_Func = Callable[[T], Union[OT, Awaitable[OT]]]
+_Func = Callable[[T], OT | Awaitable[OT]]
 
 OLDEST_OBJECT = Object(id=0)
 
@@ -321,11 +321,11 @@ class HistoryIterator(_AsyncIterator["Message"]):
         Messageable class to retrieve message history from.
     limit: :class:`int`
         Maximum number of messages to retrieve
-    before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+    before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
         Message before which all messages must be.
-    after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+    after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
         Message after which all messages must be.
-    around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+    around: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
         Message around which all messages must be. Limit max 101. Note that if
         limit is an even number, this will return at most limit+1 messages.
     oldest_first: Optional[:class:`bool`]
@@ -585,9 +585,9 @@ class GuildIterator(_AsyncIterator["Guild"]):
         The client to retrieve the guilds from.
     limit: :class:`int`
         Maximum number of guilds to retrieve.
-    before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+    before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
         Object before which all guilds must be.
-    after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+    after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
         Object after which all guilds must be.
     with_counts: :class:`bool`
         Whether to include member count information in guilds. This fills the
