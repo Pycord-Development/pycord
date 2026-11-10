@@ -314,7 +314,9 @@ class Interaction:
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
-            if (self.channel is None or getattr(self.channel, "obfuscated", False)) and factory is not None:
+            if (
+                self.channel is None or getattr(self.channel, "obfuscated", False)
+            ) and factory is not None:
                 self.channel = factory(
                     state=self._state, data=channel, guild=self.guild
                 )
