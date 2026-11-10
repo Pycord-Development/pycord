@@ -39,7 +39,7 @@ from .enums import (
     SeparatorSpacingSize,
     try_enum,
 )
-from .flags import AttachmentFlags, ContentScanningMetadataFlags, UnfurledMediaItemFlags
+from .flags import ContentScanningMetadataFlags, UnfurledMediaItemFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, find, get_slots
 
