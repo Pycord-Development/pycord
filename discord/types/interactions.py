@@ -27,8 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Union
 
-from ..permissions import Permissions
-from .channel import ChannelType
+from . import channel
 from .components import Component, ComponentType
 from .embed import Embed
 from .member import Member
@@ -40,7 +39,6 @@ from .user import User
 
 if TYPE_CHECKING:
     from .message import AllowedMentions, Message
-    from ..interactions import InteractionChannel
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -76,7 +74,7 @@ class ApplicationCommandOption(TypedDict):
     required: bool
     options: NotRequired[list[ApplicationCommandOption]]
     choices: NotRequired[list[ApplicationCommandOptionChoice]]
-    channel_types: NotRequired[list[ChannelType]]
+    channel_types: NotRequired[list[channel.ChannelType]]
     min_value: NotRequired[int | float]
     max_value: NotRequired[int | float]
     min_length: NotRequired[int]
@@ -173,22 +171,14 @@ ApplicationCommandInteractionDataOption = Union[
 
 class ApplicationCommandResolvedPartialChannel(TypedDict):
     id: Snowflake
-    type: ChannelType
+    type: channel.ChannelType
     permissions: str
     name: str
 
 
-class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
-    users: dict[Snowflake, User]
-    members: dict[Snowflake, Member]
-    roles: dict[Snowflake, Role]
-    channels: dict[Snowflake, ApplicationCommandResolvedPartialChannel]
-    attachments: dict[Snowflake, Attachment]
-
-
 class ApplicationCommandInteractionData(TypedDict):
     options: NotRequired[list[ApplicationCommandInteractionDataOption]]
-    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    resolved: NotRequired[InteractionDataResolved]
     target_id: NotRequired[Snowflake]
     type: NotRequired[ApplicationCommandType]
     id: Snowflake
@@ -202,6 +192,17 @@ class ComponentInteractionData(TypedDict):
 
 
 InteractionData = Union[ApplicationCommandInteractionData, ComponentInteractionData]
+InteractionChannel = (
+    channel.VoiceChannel
+    | channel.StageChannel
+    | channel.TextChannel
+    | channel.ForumChannel
+    | channel.CategoryChannel
+    | channel.ThreadChannel
+    | channel.DMChannel
+    | channel.GroupDMChannel
+    | channel.PartialChannel
+)
 
 
 class Interaction(TypedDict):
@@ -214,7 +215,7 @@ class Interaction(TypedDict):
     message: NotRequired[Message]
     locale: NotRequired[str]
     guild_locale: NotRequired[str]
-    app_permissions: NotRequired[Permissions]
+    app_permissions: NotRequired[int]
     attachment_size_limit: NotRequired[int]
     id: Snowflake
     application_id: Snowflake
@@ -294,3 +295,11 @@ class InteractionCallbackResource(TypedDict):
     # This is not fully typed as activities are out of scope
     activity_instance: NotRequired[dict]
     message: NotRequired[Message]
+
+
+class InteractionDataResolved(TypedDict, total=False):
+    users: dict[Snowflake, User]
+    members: dict[Snowflake, Member]
+    roles: dict[Snowflake, Role]
+    channels: dict[Snowflake, ApplicationCommandResolvedPartialChannel]
+    attachments: dict[Snowflake, Attachment]
