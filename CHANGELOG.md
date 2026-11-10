@@ -32,6 +32,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Member.fetch_permissions()`, `Role.fetch_permissions()`, and
   `GuildChannel.fetch_permissions_for()`.
   ([#3426](https://github.com/Pycord-Development/pycord/pull/3426))
+- Added `UnfurledMediaItemFlags`, `ContentScanningMetadataFlags`, and new flags to `AttachmentFlags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Added `UnfurledMediaItem.placeholder`, `UnfurledMediaItem.placeholder_version`, and `UnfurledMediaItem.content_scan_metadata`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 
 ### Changed
 
@@ -72,6 +76,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fixed a race condition where `Bot.latency` could be reported incorrectly and grow
   indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
+- Fix the type of `UnfurledMediaItem.attachment_id` possibly being `str`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Fix the type of `UnfurledMediaItem.fags` being `AttachmentFlags`, it is now `UnfurledMediaItemFlags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 
 ### Deprecated
 
