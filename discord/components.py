@@ -28,8 +28,6 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
 
-from docutils.parsers.rst.directives.parts import Contents
-
 from .asset import AssetMixin
 from .colour import Colour
 from .enums import (
