@@ -99,7 +99,7 @@ class Thread(Messageable, Hashable):
         The parent :class:`TextChannel` ID this thread belongs to.
     owner_id: :class:`int`
         The user's ID that created this thread.
-    last_message_id: Optional[:class:`int`]
+    last_message_id: :class:`int` | :obj:`None`
         The last message ID of the message sent to this thread. It may
         *not* point to an existing or valid message.
     slowmode_delay: :class:`int`
@@ -111,7 +111,7 @@ class Thread(Messageable, Hashable):
         An approximate number of messages in this thread. This caps at 50.
     member_count: :class:`int`
         An approximate number of members in this thread. This caps at 50.
-    me: Optional[:class:`ThreadMember`]
+    me: :class:`ThreadMember` | :obj:`None`
         A thread member representing yourself, if you've joined the thread.
         This could not be available.
     archived: :class:`bool`
@@ -126,7 +126,7 @@ class Thread(Messageable, Hashable):
         Usually a value of 60, 1440, 4320 and 10080.
     archive_timestamp: :class:`datetime.datetime`
         An aware timestamp of when the thread's archived status was last updated in UTC.
-    created_at: Optional[:class:`datetime.datetime`]
+    created_at: :class:`datetime.datetime` | :obj:`None`
         An aware timestamp of when the thread was created.
         Only available for threads created after 2022-01-09.
     flags: :class:`ChannelFlags`
@@ -333,7 +333,7 @@ class Thread(Messageable, Hashable):
 
         Returns
         -------
-        Optional[:class:`Message`]
+        :class:`Message` | :obj:`None`
             The last message in this channel or ``None`` if not found.
         """
         return (
@@ -348,7 +348,7 @@ class Thread(Messageable, Hashable):
 
         Returns
         -------
-        Optional[:class:`CategoryChannel`]
+        :class:`CategoryChannel` | :obj:`None`
             The parent channel's category.
 
         Raises
@@ -368,7 +368,7 @@ class Thread(Messageable, Hashable):
 
         Returns
         -------
-        Optional[:class:`int`]
+        :class:`int` | :obj:`None`
             The parent channel's category ID.
 
         Raises
@@ -393,7 +393,7 @@ class Thread(Messageable, Hashable):
 
         Returns
         -------
-        Optional[:class:`Message`]
+        :class:`Message` | :obj:`None`
             The message that started this thread or ``None`` if not found in the cache.
         """
         return self._state._get_message(self.id)
@@ -486,7 +486,7 @@ class Thread(Messageable, Hashable):
         ----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Raises
@@ -543,25 +543,25 @@ class Thread(Messageable, Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of messages to search through. This is not the number
             of messages that will be deleted, though it can be.
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``before`` in :meth:`history`.
-        after: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``after`` in :meth:`history`.
-        around: Optional[:class:`abc.Snowflake` | :class:`datetime.datetime`]
+        around: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``around`` in :meth:`history`.
-        oldest_first: Optional[:class:`bool`]
+        oldest_first: :class:`bool` | :obj:`None`
             Same as ``oldest_first`` in :meth:`history`.
         bulk: :class:`bool`
             If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
             a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
             fall back to single delete if messages are older than two weeks.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Returns
@@ -643,7 +643,7 @@ class Thread(Messageable, Hashable):
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this thread, in seconds.
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this thread. Shows up on the audit log.
         pinned: :class:`bool`
             Whether to pin the thread or not. This only works if the thread is part of a forum or media channel.

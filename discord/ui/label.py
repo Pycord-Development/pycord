@@ -75,9 +75,9 @@ class Label(ModalItem[M]):
         The initial item attached to this label.
     label: :class:`str`
         The label text. Must be 45 characters or fewer.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description for this label. Must be 100 characters or fewer.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The label's ID.
 
     Attributes
@@ -179,7 +179,7 @@ class Label(ModalItem[M]):
 
         Returns
         -------
-        Optional[:class:`ModalItem`]
+        :class:`ModalItem` | :obj:`None`
             The item if its ``id`` or ``custom_id`` matches.
         """
         if not id:
@@ -210,23 +210,23 @@ class Label(ModalItem[M]):
         ----------
         style: :class:`~discord.InputTextStyle`
             The style of the input text field.
-        custom_id: Optional[:class:`str`]
+        custom_id: :class:`str` | :obj:`None`
             The ID of the input text field that gets received during an interaction.
-        placeholder: Optional[:class:`str`]
+        placeholder: :class:`str` | :obj:`None`
             The placeholder text that is shown if nothing is selected, if any.
             Must be 100 characters or fewer.
-        min_length: Optional[:class:`int`]
+        min_length: :class:`int` | :obj:`None`
             The minimum number of characters that must be entered.
             Defaults to 0 and must be less than 4000.
-        max_length: Optional[:class:`int`]
+        max_length: :class:`int` | :obj:`None`
             The maximum number of characters that can be entered.
             Must be between 1 and 4000.
-        required: Optional[:class:`bool`]
+        required: :class:`bool` | :obj:`None`
             Whether the input text field is required or not. Defaults to ``True``.
-        value: Optional[:class:`str`]
+        value: :class:`str` | :obj:`None`
             Pre-fills the input text field with this value.
             Must be 4000 characters or fewer.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The button's ID.
         """
 
@@ -316,7 +316,7 @@ class Label(ModalItem[M]):
         custom_id: :class:`str`
             The custom ID of the select menu that gets received during an interaction.
             If not given then one is generated for you.
-        placeholder: Optional[:class:`str`]
+        placeholder: :class:`str` | :obj:`None`
             The placeholder text that is shown if nothing is selected, if any.
         min_values: :class:`int`
             The minimum number of items that must be chosen for this select menu.
@@ -332,9 +332,9 @@ class Label(ModalItem[M]):
             Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
         required: :class:`bool`
             Whether the select is required or not. Defaults to ``True``.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The select menu's ID.
-        default_values: Optional[Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`]]
+        default_values: Sequence[:class:`discord.SelectDefaultValue` | :class:`discord.abc.Snowflake`] | :obj:`None`
             The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
@@ -372,17 +372,17 @@ class Label(ModalItem[M]):
 
         Parameters
         ----------
-        custom_id: Optional[:class:`str`]
+        custom_id: :class:`str` | :obj:`None`
             The ID of the input text field that gets received during an interaction.
-        min_values: Optional[:class:`int`]
+        min_values: :class:`int` | :obj:`None`
             The minimum number of files that must be uploaded.
             Defaults to 0 and must be between 0 and 10, inclusive.
-        max_values: Optional[:class:`int`]
+        max_values: :class:`int` | :obj:`None`
             The maximum number of files that can be uploaded.
             Must be between 1 and 10, inclusive.
         required: :class:`bool`
             Whether the file upload field is required or not. Defaults to ``True``.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The file upload field's ID.
         """
 
@@ -411,13 +411,13 @@ class Label(ModalItem[M]):
 
         Parameters
         ----------
-        custom_id: Optional[:class:`str`]
+        custom_id: :class:`str` | :obj:`None`
             The ID of the radio group that gets received during an interaction.
         options: List[:class:`discord.RadioGroupOption`]
             A list of options that can be selected from this group.
-        required: Optional[:class:`bool`]
+        required: :class:`bool` | :obj:`None`
             Whether an option selection is required or not. Defaults to ``True``.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The radio group's ID.
         """
 
@@ -447,19 +447,19 @@ class Label(ModalItem[M]):
 
         Parameters
         ----------
-        custom_id: Optional[:class:`str`]
+        custom_id: :class:`str` | :obj:`None`
             The ID of the checkbox group that gets received during an interaction.
         options: List[:class:`discord.CheckboxGroupOption`]
             A list of options that can be selected in this group.
-        min_values: Optional[:class:`int`]
+        min_values: :class:`int` | :obj:`None`
             The minimum number of options that must be selected.
             Defaults to 0 and must be between 0 and 10, inclusive.
-        max_values: Optional[:class:`int`]
+        max_values: :class:`int` | :obj:`None`
             The maximum number of options that can be selected.
             Must be between 1 and 10, inclusive.
-        required: Optional[:class:`bool`]
+        required: :class:`bool` | :obj:`None`
             Whether an option selection is required or not. Defaults to ``True``.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The checkbox group's ID.
         """
 
@@ -488,11 +488,11 @@ class Label(ModalItem[M]):
 
         Parameters
         ----------
-        custom_id: Optional[:class:`str`]
+        custom_id: :class:`str` | :obj:`None`
             The ID of the checkbox that gets received during an interaction.
-        default: Optional[:class:`bool`]
+        default: :class:`bool` | :obj:`None`
             Whether this checkbox is selected by default or not.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The checkbox's ID.
         """
 

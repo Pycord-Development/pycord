@@ -187,9 +187,9 @@ class BridgeExtContext(BridgeContext, Context):
 
         Parameters
         ----------
-        delay: Optional[:class:`float`]
+        delay: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait before deleting the message.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the message. Shows up on the audit log.
         """
         if self._original_response_message:
