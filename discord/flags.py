@@ -1922,7 +1922,7 @@ class RoleFlags(BaseFlags):
     def in_prompt(self):
         """:class:`bool`: Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`."""
         return 1 << 0
-    
+
 
 class UnfurledMediaItemFlags(BaseFlags):
     r"""Wraps up the Unfurled Media Item flags.
@@ -1975,7 +1975,6 @@ class UnfurledMediaItemFlags(BaseFlags):
     def is_animated(self):
         """:class:`bool`: Returns ``True`` if the media is an animated image."""
         return 1 << 0
-
 
 
 class ContentScanningMetadataFlags(BaseFlags):
