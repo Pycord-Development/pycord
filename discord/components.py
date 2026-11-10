@@ -986,7 +986,7 @@ class UnfurledMediaItem(AssetMixin):
         
         When received from Discord, this will be the :attr:`UnfurledMediaItem.proxy_url`, or the set URL if it has been set by you.
         """
-        return self._url or self.proxy_url  # type: ignore
+        return self._url or self.proxy_url  # type: ignore # proxy_url can also be none but if _url is none then it wont be
 
     @url.setter
     def url(self, value: str) -> None:
