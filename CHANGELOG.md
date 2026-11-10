@@ -36,6 +36,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3152](https://github.com/Pycord-Development/pycord/pull/3152))
 - Added `Embed.components` and `DesignerView.from_embed`.
   ([#3443](https://github.com/Pycord-Development/pycord/pull/3443))
+- Added `UnfurledMediaItemFlags`, `ContentScanningMetadataFlags`, and new flags to `AttachmentFlags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Added `UnfurledMediaItem.placeholder`, `UnfurledMediaItem.placeholder_version`, and `UnfurledMediaItem.content_scan_metadata`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 
 ### Changed
 
@@ -81,6 +85,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
 - Fixed an issue where stopped views would not be cleaned up.
   ([#3360](https://github.com/Pycord-Development/pycord/pull/3360))
+- Fix the type of `UnfurledMediaItem.attachment_id` possibly being `str`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Fix the type of `UnfurledMediaItem.fags` being `AttachmentFlags`, it is now `UnfurledMediaItemFlags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 
 ### Deprecated
 
