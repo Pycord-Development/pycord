@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+from docutils.parsers.rst.directives.parts import Contents
 
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
@@ -39,7 +40,7 @@ from .enums import (
     SeparatorSpacingSize,
     try_enum,
 )
-from .flags import AttachmentFlags
+from .flags import AttachmentFlags, UnfurledMediaItemFlags, ContentScanningMetadataFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, find, get_slots
 
@@ -934,7 +935,8 @@ class UnfurledMediaItem(AssetMixin):
         self.height: int | None = None
         self.width: int | None = None
         self.content_type: str | None = None
-        self.flags: AttachmentFlags | None = None
+        self.flags: UnfurledMediaItemFlags | None = None
+        self.content_scan_metadata: ContentScanningMetadataFlags | None = None
         self.attachment_id: int | None = None
 
     def __repr__(self) -> str:
@@ -963,8 +965,9 @@ class UnfurledMediaItem(AssetMixin):
         r.height = data.get("height")
         r.width = data.get("width")
         r.content_type = data.get("content_type")
-        r.flags = AttachmentFlags._from_value(data.get("flags", 0))
-        r.attachment_id = data.get("attachment_id")
+        r.flags = UnfurledMediaItemFlags._from_value(data.get("flags", 0))
+        r.content_scan_metadata = ContentScanningMetadataFlags._from_value(data["content_scan_metadata"]["flags"]) if "content_scan_metadata" in data else None
+        r.attachment_id = int(data["attachment_id"]) if "attachment_id" in data else None
         r._state = state
         return r
 

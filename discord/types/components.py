@@ -112,6 +112,10 @@ class SectionComponent(BaseComponent):
     accessory: NotRequired[AllowedSectionAccessories]
 
 
+class ContentScanMetatdata(TypedDict):
+    flags: int
+
+
 class UnfurledMediaItem(TypedDict):
     url: str
     proxy_url: str
@@ -119,6 +123,7 @@ class UnfurledMediaItem(TypedDict):
     width: NotRequired[int | None]
     content_type: NotRequired[str]
     flags: NotRequired[int]
+    content_scan_metadata: NotRequired[ContentScanMetatdata]
     attachment_id: NotRequired[Snowflake]
 
 
