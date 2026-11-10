@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from lib2to3.pytree import Base
 
 from collections.abc import Callable, Iterator
 from typing import Any, ClassVar, TypeVar, overload
@@ -1696,27 +1695,42 @@ class AttachmentFlags(BaseFlags):
 
     @flag_value
     def is_spoiler(self):
-        """:class:`bool`: Returns ``True`` if the attachment is spoilered."""
+        """:class:`bool`: Returns ``True`` if the attachment is spoilered.
+
+        .. versionadded:: 2.9
+        """
         return 1 << 3
 
     @flag_value
     def contains_explicit_content(self):
-        """:class:`bool`: Returns ``True`` if the attachment has been flagged as explicit by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the attachment has been flagged as explicit by Discord's content scanning.
+
+        .. versionadded:: 2.9
+        """
         return 1 << 4
 
     @flag_value
     def is_animated(self):
-        """:class:`bool`: Returns ``True`` if the attachment is an animated image."""
+        """:class:`bool`: Returns ``True`` if the attachment is an animated image.
+
+        .. versionadded:: 2.9
+        """
         return 1 << 5
 
     @flag_value
     def contains_gore_content(self):
-        """:class:`bool`: Returns ``True`` if the attachment has been flagged as gore by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the attachment has been flagged as gore by Discord's content scanning.
+
+        .. versionadded:: 2.9
+        """
         return 1 << 6
 
     @flag_value
     def contains_self_harm_content(self):
-        """:class:`bool`: Returns ``True`` if the attachment has been flagged as self-harm by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the attachment has been flagged as self-harm by Discord's content scanning.
+
+        .. versionadded:: 2.9
+        """
         return 1 << 7
 
 
@@ -1945,7 +1959,7 @@ class UnfurledMediaItemFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-    .. versionadded:: 2.6
+    .. versionadded:: 2.9
 
     Attributes
     -----------
@@ -1999,7 +2013,7 @@ class ContentScanningMetadataFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-    .. versionadded:: 2.6
+    .. versionadded:: 2.9
 
     Attributes
     -----------

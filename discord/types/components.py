@@ -121,6 +121,8 @@ class UnfurledMediaItem(TypedDict):
     proxy_url: str
     height: NotRequired[int | None]
     width: NotRequired[int | None]
+    placeholder: NotRequired[str]
+    placeholder_version: NotRequired[int]
     content_type: NotRequired[str]
     flags: NotRequired[int]
     content_scan_metadata: NotRequired[ContentScanMetatdata]

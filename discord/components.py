@@ -917,12 +917,43 @@ class UnfurledMediaItem(AssetMixin):
 
     This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`.
 
+    .. note::
+    
+        All attributes except for :attr:`UnfurledMediaItem.url` will not be present unless this object was received from Discord.
+
     .. versionadded:: 2.7
+
+    Parameters
+    -----------
+    url: :class:`str`
+        The URL of this media item. This will either be an arbitrary URL or an ``attachment://`` URL to work with local files.
 
     Attributes
     ----------
-    url: :class:`str`
-        The URL of this media item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
+    proxy_url: :class:`str` | :obj:`None`
+        The proxied URL of the media item.
+    height: :class:`int` | :obj:`None`
+        The height of the media item, if an image or video.
+    width: :class:`int` | :obj:`None`
+        The width of the media item, if an image or video.
+    placeholder: :class:`str` | :obj:`None`
+        The thumbhash placeholder for the media item, if an image or video.
+
+        .. versionadded:: 2.9
+    placeholder_version: :class:`int` | :obj:`None`
+        The version of the thumbhash placeholder for the media item, if an image or video.
+
+        .. versionadded:: 2.9
+    content_type: :class:`str` | :obj:`None`
+        The media type of the content.
+    flags: :class:`UnfurledMediaItemFlags` | :obj:`None`
+        The flags for this media item.
+    content_scan_metadata: :class:`ContentScanningMetadataFlags` | :obj:`None`
+        The results of Discord's content scanning on this media item, if it has been scanned.
+
+        .. versionadded:: 2.9
+    attachment_id: :class:`int` | :obj:`None`
+        The ID of the uploaded attachment.
     """
 
     def __init__(self, url: str):
@@ -934,6 +965,8 @@ class UnfurledMediaItem(AssetMixin):
         self.proxy_url: str | None = None
         self.height: int | None = None
         self.width: int | None = None
+        self.placeholder: str | None = None
+        self.placeholder_version: int | None = None
         self.content_type: str | None = None
         self.flags: UnfurledMediaItemFlags | None = None
         self.content_scan_metadata: ContentScanningMetadataFlags | None = None
@@ -949,7 +982,11 @@ class UnfurledMediaItem(AssetMixin):
 
     @property
     def url(self) -> str:
-        return self._url
+        """The URL of this media item. When created by the user, this will either be an arbitrary URL or an ``attachment://`` URL to work with local files.
+        
+        When received from Discord, this will be the :attr:`UnfurledMediaItem.proxy_url`, or the set URL if it has been set by you.
+        """
+        return self._url or self.proxy_url  # type: ignore
 
     @url.setter
     def url(self, value: str) -> None:
@@ -964,6 +1001,8 @@ class UnfurledMediaItem(AssetMixin):
         r.proxy_url = data.get("proxy_url")
         r.height = data.get("height")
         r.width = data.get("width")
+        r.placeholder = data.get("placeholder")
+        r.placeholder_version = data.get("placeholder_version")
         r.content_type = data.get("content_type")
         r.flags = UnfurledMediaItemFlags._from_value(data.get("flags", 0))
         r.content_scan_metadata = ContentScanningMetadataFlags._from_value(data["content_scan_metadata"]["flags"]) if "content_scan_metadata" in data else None
