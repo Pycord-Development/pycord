@@ -1360,6 +1360,8 @@ class GuildChannel:
 
         Requires :attr:`~discord.Permissions.view_channel`, as well as :attr:`~discord.Permissions.connect` for voice/stage channels.
 
+        .. versionadded:: 2.9
+
         Parameters
         ----------
         obj: :class:`~discord.Member` | :class:`~discord.Role` | :class:`~discord.Object`

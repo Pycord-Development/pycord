@@ -937,6 +937,8 @@ class Role(Hashable):
     async def fetch_permissions(self) -> Permissions:
         """Fetches the role's permissions from Discord, combining this role's and ``@everyone``'s permissions.
 
+        .. versionadded:: 2.9
+
         Returns
         -------
         :class:`Permissions`

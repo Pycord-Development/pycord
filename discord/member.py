@@ -1324,6 +1324,8 @@ class Member(discord.abc.Messageable, _UserTag):
 
         This can be useful if you do not have a populated role cache for whatever reason.
 
+        .. versionadded:: 2.9
+
         Returns
         -------
         :class:`Permissions`

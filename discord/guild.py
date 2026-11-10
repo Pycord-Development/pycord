@@ -4840,6 +4840,8 @@ class Guild(Hashable):
 
         This can be useful if you do not have a populated cache for whatever reason.
 
+        .. versionadded:: 2.9
+
         Parameters
         ----------
         obj: :class:`~discord.Member` | :class:`~discord.Role` | :class:`~discord.Object`
