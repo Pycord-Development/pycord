@@ -211,6 +211,16 @@ Flags
 .. autoclass:: RoleFlags()
     :members:
 
+.. attributetable:: UnfurledMediaItemFlags
+
+.. autoclass:: UnfurledMediaItemFlags()
+    :members:
+
+.. attributetable:: ContentScanningMetadataFlags
+
+.. autoclass:: ContentScanningMetadataFlags()
+    :members:
+    
 Colour
 ------
 
