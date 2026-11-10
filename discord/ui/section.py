@@ -61,11 +61,11 @@ class Section(ViewItem[V]):
         The initial items contained in this section, up to 3.
         Currently only supports :class:`~discord.ui.TextDisplay`.
         Sections must have at least 1 item before being sent.
-    accessory: Optional[:class:`ViewItem`]
+    accessory: :class:`ViewItem` | :obj:`None`
         The section's accessory. This is displayed in the top right of the section.
         Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
         Sections must have an accessory attached before being sent.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The section's ID.
 
     Attributes
@@ -198,7 +198,7 @@ class Section(ViewItem[V]):
 
         Returns
         -------
-        Optional[:class:`ViewItem`]
+        :class:`ViewItem` | :obj:`None`
             The item with the matching ``id`` if it exists.
         """
         if not id:
@@ -216,7 +216,7 @@ class Section(ViewItem[V]):
         ----------
         content: :class:`str`
             The content of the text display.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The text display's ID.
 
         Raises
@@ -270,11 +270,11 @@ class Section(ViewItem[V]):
         ----------
         url: :class:`str`
             The url of the thumbnail.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The thumbnail's description, up to 1024 characters.
-        spoiler: Optional[:class:`bool`]
+        spoiler: :class:`bool` | :obj:`None`
             Whether the thumbnail has the spoiler overlay. Defaults to ``False``.
-        id: Optional[:class:`int`]
+        id: :class:`int` | :obj:`None`
             The thumbnail's ID.
         """
 
@@ -310,7 +310,7 @@ class Section(ViewItem[V]):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
@@ -327,7 +327,7 @@ class Section(ViewItem[V]):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():

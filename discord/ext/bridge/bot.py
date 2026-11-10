@@ -123,7 +123,7 @@ class BotBase(ABC):
 
         Parameters
         ----------
-        kwargs: Optional[Dict[:class:`str`, Any]]
+        kwargs: Dict[:class:`str`, Any] | :obj:`None`
             Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
         """
 

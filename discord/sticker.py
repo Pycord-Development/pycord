@@ -428,7 +428,7 @@ class GuildSticker(Sticker):
         Whether this sticker is available for use.
     guild_id: :class:`int`
         The ID of the guild that this sticker is from.
-    user: Optional[:class:`User`]
+    user: :class:`User` | :obj:`None`
         The user that created this sticker. This can only be retrieved using :meth:`Guild.fetch_sticker` and
         having the :attr:`~Permissions.manage_emojis_and_stickers` permission.
     emoji: :class:`str`
@@ -477,7 +477,7 @@ class GuildSticker(Sticker):
         ----------
         name: :class:`str`
             The sticker's new name. Must be at least 2 characters.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The sticker's new description. Can be ``None``.
         emoji: :class:`str`
             The name of a unicode emoji that represents the sticker's expression.
@@ -529,7 +529,7 @@ class GuildSticker(Sticker):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this sticker. Shows up on the audit log.
 
         Raises

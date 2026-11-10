@@ -173,7 +173,7 @@ class GuildEmoji(BaseEmoji):
         The guild ID the emoji belongs to.
     available: :class:`bool`
         Whether the emoji is available for use.
-    user: Optional[:class:`User`]
+    user: :class:`User` | :obj:`None`
         The user that created the emoji. This can only be retrieved using :meth:`Guild.fetch_emoji` and
         having the :attr:`~Permissions.manage_emojis` permission.
     """
@@ -233,7 +233,7 @@ class GuildEmoji(BaseEmoji):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this emoji. Shows up on the audit log.
 
         Raises
@@ -269,9 +269,9 @@ class GuildEmoji(BaseEmoji):
         -----------
         name: :class:`str`
             The new emoji name.
-        roles: Optional[List[:class:`~discord.abc.Snowflake`]]
+        roles: List[:class:`~discord.abc.Snowflake`] | :obj:`None`
             A list of roles that can use this emoji. An empty list can be passed to make it available to everyone.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this emoji. Shows up on the audit log.
 
         Raises
@@ -345,11 +345,11 @@ class AppEmoji(BaseEmoji):
         Whether an emoji is animated or not.
     managed: :class:`bool`
         If this emoji is managed by a Twitch integration.
-    application_id: Optional[:class:`int`]
+    application_id: :class:`int` | :obj:`None`
         The application ID the emoji belongs to, if available.
     available: :class:`bool`
         Whether the emoji is available for use.
-    user: Optional[:class:`User`]
+    user: :class:`User` | :obj:`None`
         The user that created the emoji.
     """
 

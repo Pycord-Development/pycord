@@ -67,7 +67,7 @@ class PromptOption:
         The emoji displayed with the option.
     title: :class:`str`
         The option's title.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The option's description.
     """
 
@@ -283,17 +283,17 @@ class Onboarding:
         Parameters
         ----------
 
-        prompts: Optional[List[:class:`OnboardingPrompt`]]
+        prompts: List[:class:`OnboardingPrompt`] | :obj:`None`
             The new list of prompts for this flow.
-        default_channels: Optional[List[:class:`Snowflake`]]
+        default_channels: List[:class:`Snowflake`] | :obj:`None`
             The new default channels that users are opted into.
-        enabled: Optional[:class:`bool`]
+        enabled: :class:`bool` | :obj:`None`
             Whether onboarding should be enabled. Setting this to ``True`` requires
             the guild to have ``COMMUNITY`` in :attr:`~Guild.features` and at
             least 7 ``default_channels``.
-        mode: Optional[:class:`OnboardingMode`]
+        mode: :class:`OnboardingMode` | :obj:`None`
             The new onboarding mode.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this onboarding flow. Shows up on the audit log.
 
         Returns
@@ -360,7 +360,7 @@ class Onboarding:
             Whether the user is required to answer this prompt.
         in_onboarding: :class:`bool`
             Whether this prompt is displayed in the initial onboarding flow.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for adding this prompt. Shows up on the audit log.
 
         Returns
@@ -399,7 +399,7 @@ class Onboarding:
         ----------
         prompt: :class:`OnboardingPrompt`
             The onboarding prompt to append.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for appending this prompt. Shows up on the audit log.
 
         Returns
@@ -456,7 +456,7 @@ class Onboarding:
         ----------
         id: :class:`int`
             The ID of the prompt to delete.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this prompt. Shows up on the audit log.
 
         Returns

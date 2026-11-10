@@ -242,7 +242,7 @@ class CogMeta(type):
                 async def bar(self, ctx):
                     pass # hidden -> False
 
-    guild_ids: Optional[List[:class:`int`]]
+    guild_ids: List[:class:`int`] | :obj:`None`
         A shortcut to :attr:`.command_attrs`, what ``guild_ids`` should all application commands have
         in the cog. You can override this by setting ``guild_ids`` per command.
 
@@ -703,7 +703,7 @@ class CogMixin:
 
         Returns
         -------
-        Optional[:class:`Cog`]
+        :class:`Cog` | :obj:`None`
             The cog that was requested. If not found, returns ``None``.
         """
         return self.__cogs.get(name)
@@ -723,7 +723,7 @@ class CogMixin:
 
         Returns
         -------
-        Optional[:class:`.Cog`]
+        :class:`Cog` | :obj:`None`
              The cog that was removed. ``None`` if not found.
         """
 
@@ -871,20 +871,20 @@ class CogMixin:
             The extension or folder name to load. It must be dot separated
             like regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
-        package: Optional[:class:`str`]
+        package: :class:`str` | :obj:`None`
             The package name to resolve relative imports with.
             This is required when loading an extension using a relative
             path, e.g ``.foo.test``.
             Defaults to ``None``.
 
             .. versionadded:: 1.7
-        recursive: Optional[:class:`bool`]
+        recursive: :class:`bool` | :obj:`None`
             If subdirectories under the given head directory should be
             recursively loaded.
             Defaults to ``False``.
 
             .. versionadded:: 2.0
-        store: Optional[:class:`bool`]
+        store: :class:`bool` | :obj:`None`
             If exceptions should be stored or raised. If set to ``True``,
             all exceptions encountered will be stored in a returned dictionary
             as a load status. If set to ``False``, if any exceptions are
@@ -897,7 +897,7 @@ class CogMixin:
 
         Returns
         -------
-        Optional[Dict[:class:`str`, :exc:`errors.ExtensionError` | :class:`bool`] | List[:class:`str`]]
+        Dict[:class:`str`, :exc:`errors.ExtensionError` | :class:`bool`] | List[:class:`str`] | :obj:`None`
             If the store parameter is set to ``True``, a dictionary will be returned that
             contains keys to represent the loaded extension names. The values bound to
             each key can either be an exception that occurred when loading that extension
@@ -994,20 +994,20 @@ class CogMixin:
            The extension or folder names to load. It must be dot separated
            like regular Python imports if accessing a submodule. e.g.
            ``foo.test`` if you want to import ``foo/test.py``.
-        package: Optional[:class:`str`]
+        package: :class:`str` | :obj:`None`
             The package name to resolve relative imports with.
             This is required when loading an extension using a relative
             path, e.g ``.foo.test``.
             Defaults to ``None``.
 
             .. versionadded:: 1.7
-        recursive: Optional[:class:`bool`]
+        recursive: :class:`bool` | :obj:`None`
             If subdirectories under the given head directory should be
             recursively loaded.
             Defaults to ``False``.
 
             .. versionadded:: 2.0
-        store: Optional[:class:`bool`]
+        store: :class:`bool` | :obj:`None`
             If exceptions should be stored or raised. If set to ``True``,
             all exceptions encountered will be stored in a returned dictionary
             as a load status. If set to ``False``, if any exceptions are
@@ -1020,7 +1020,7 @@ class CogMixin:
 
         Returns
         -------
-        Optional[Dict[:class:`str`, :exc:`errors.ExtensionError` | :class:`bool`] | List[:class:`str`]]
+        Dict[:class:`str`, :exc:`errors.ExtensionError` | :class:`bool`] | List[:class:`str`] | :obj:`None`
             If the store parameter is set to ``True``, a dictionary will be returned that
             contains keys to represent the loaded extension names. The values bound to
             each key can either be an exception that occurred when loading that extension
@@ -1073,7 +1073,7 @@ class CogMixin:
             The extension name to unload. It must be dot separated like
             regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
-        package: Optional[:class:`str`]
+        package: :class:`str` | :obj:`None`
             The package name to resolve relative imports with.
             This is required when unloading an extension using a relative path, e.g ``.foo.test``.
             Defaults to ``None``.
@@ -1111,7 +1111,7 @@ class CogMixin:
             The extension name to reload. It must be dot separated like
             regular Python imports if accessing a submodule. e.g.
             ``foo.test`` if you want to import ``foo/test.py``.
-        package: Optional[:class:`str`]
+        package: :class:`str` | :obj:`None`
             The package name to resolve relative imports with.
             This is required when reloading an extension using a relative path, e.g ``.foo.test``.
             Defaults to ``None``.
