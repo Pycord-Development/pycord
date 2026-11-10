@@ -112,7 +112,7 @@ class SectionComponent(BaseComponent):
     accessory: NotRequired[AllowedSectionAccessories]
 
 
-class ContentScanMetatdata(TypedDict):
+class ContentScanMetadata(TypedDict):
     flags: int
 
 
@@ -125,7 +125,7 @@ class UnfurledMediaItem(TypedDict):
     placeholder_version: NotRequired[int]
     content_type: NotRequired[str]
     flags: NotRequired[int]
-    content_scan_metadata: NotRequired[ContentScanMetatdata]
+    content_scan_metadata: NotRequired[ContentScanMetadata]
     attachment_id: NotRequired[Snowflake]
 
 
