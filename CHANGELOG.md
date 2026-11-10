@@ -79,7 +79,7 @@ These changes are available on the `master` branch, but have not yet been releas
   indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
 - Fix the type of `UnfurledMediaItem.attachment_id` possibly being `str`.
   ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
-- Fix the type of `UnfurledMediaItem.fags` being `AttachmentFlags`, it is now
+- Fix the type of `UnfurledMediaItem.flags` being `AttachmentFlags`, it is now
   `UnfurledMediaItemFlags`.
   ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 
