@@ -220,7 +220,7 @@ Flags
 
 .. autoclass:: ContentScanningMetadataFlags()
     :members:
-    
+
 Colour
 ------
 
