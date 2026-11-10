@@ -32,6 +32,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Member.fetch_permissions()`, `Role.fetch_permissions()`, and
   `GuildChannel.fetch_permissions_for()`.
   ([#3426](https://github.com/Pycord-Development/pycord/pull/3426))
+- Added support for spoiler channels.
+  ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
 
 ### Changed
 
