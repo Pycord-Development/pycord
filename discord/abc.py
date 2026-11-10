@@ -1347,7 +1347,9 @@ class GuildChannel:
             for invite in data
         ]
 
-    async def fetch_permissions_for(self, obj: Member | Role, /) -> Permissions:
+    async def fetch_permissions_for(
+        self, obj: Member | Role | Object, /, *, implicit: bool = True
+    ) -> Permissions:
         """Fetches the member or role's permissions in this channel from Discord.
 
         For members, this includes their roles and member specific overwrites, as well as ``@everyone``.
@@ -1358,11 +1360,17 @@ class GuildChannel:
 
         Requires :attr:`~discord.Permissions.view_channel`, as well as :attr:`~discord.Permissions.connect` for voice/stage channels.
 
+        .. versionadded:: 2.9
+
         Parameters
         ----------
-        obj: Union[:class:`~discord.Member`, :class:`~discord.Role`]
-            The object to resolve permissions for. This could be either
-            a member or a role.
+        obj: :class:`~discord.Member` | :class:`~discord.Role` | :class:`~discord.Object`
+            The object to resolve permissions for. This can be either
+            a :class:`.Member` or a :class:`.Role`, or a :class:`.Object` with matching type.
+        implicit: bool
+            whether to apply `implicit permission masking <https://docs.discord.com/developers/topics/permissions#implicit-permissions>`_
+            for missing :attr:`~Permissions.view_channel` or voice/stage :attr:`~Permissions.connect`.
+            Defaults to ``True``.
 
         Returns
         -------
@@ -1378,14 +1386,24 @@ class GuildChannel:
         """
         from .member import Member
 
-        if isinstance(obj, Role):
-            data = await self._state.http.get_channel_role_permissions(self.id, obj.id)
-        elif isinstance(obj, Member):
+        obj_type: type[Member | Role] = (
+            obj.type if isinstance(obj, Object) else type(obj)
+        )
+
+        if issubclass(obj_type, Role):
+            data = await self._state.http.get_channel_role_permissions(
+                self.id,
+                obj.id,
+                implicit=implicit,
+            )
+        elif issubclass(obj_type, Member):
             data = await self._state.http.get_channel_member_permissions(
-                self.id, obj.id
+                self.id, obj.id, implicit=implicit
             )
         else:
-            raise InvalidArgument("obj must be a Member or Role")
+            raise InvalidArgument(
+                "obj must be a Member or Role, or Object with matching type"
+            )
         return Permissions(int(data["permissions"]))
 
 

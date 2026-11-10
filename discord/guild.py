@@ -85,6 +85,7 @@ from .iterators import (
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
+from .object import Object
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .raw_models import ChannelInfo
@@ -4825,3 +4826,57 @@ class Guild(Hashable):
             The sound or ``None`` if not found.
         """
         return self._sounds.get(sound_id)
+
+    async def fetch_permissions_for(
+        self,
+        obj: Member | Role | Object,
+        /,
+    ) -> Permissions:
+        """Fetches the member or role's permissions in this guild from Discord.
+
+        For members, this includes all their roles' permissions, as well as ``@everyone``'s permissions.
+
+        For roles, this includes the role's and ``@everyone``'s permissions.
+
+        This can be useful if you do not have a populated cache for whatever reason.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        obj: :class:`~discord.Member` | :class:`~discord.Role` | :class:`~discord.Object`
+            The object to resolve permissions for. This can be either
+            a :class:`.Member` or a :class:`.Role`, or a :class:`.Object` with matching type.
+
+        Returns
+        -------
+        :class:`~discord.Permissions`
+            The permissions for the member or role.
+
+        Raises
+        ------
+        ~discord.Forbidden
+            You do not have proper permissions to get the information.
+        ~discord.HTTPException
+            An error occurred while fetching the information.
+        """
+
+        obj_type: type[Member | Role] = (
+            obj.type if isinstance(obj, Object) else type(obj)
+        )
+
+        if issubclass(obj_type, Role):
+            data = await self._state.http.get_guild_role_permissions(
+                self.id,
+                obj.id,
+            )
+        elif issubclass(obj_type, Member):
+            data = await self._state.http.get_guild_member_permissions(
+                self.id,
+                obj.id,
+            )
+        else:
+            raise InvalidArgument(
+                "obj must be a Member or Role, or Object with matching type"
+            )
+        return Permissions(int(data["permissions"]))
