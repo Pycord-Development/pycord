@@ -33,7 +33,12 @@ from typing import TYPE_CHECKING, Any, Union, overload
 from typing_extensions import deprecated
 
 from . import utils
-from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
+from .channel import (
+    ChannelType,
+    PartialMessageable,
+    _channel_factory,
+    _threaded_channel_factory,
+)
 from .enums import (
     InteractionContextType,
     InteractionResponseType,
@@ -49,6 +54,7 @@ from .message import Attachment, Message
 from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
+from .role import Role
 from .user import User
 from .utils import warn_deprecated
 from .webhook.async_ import (
@@ -90,6 +96,9 @@ if TYPE_CHECKING:
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionCallback as InteractionCallbackPayload
     from .types.interactions import InteractionCallbackResponse, InteractionData
+    from .types.interactions import (
+        InteractionDataResolved as ResolvedInteractionDataPayload,
+    )
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import BaseModal
@@ -176,7 +185,7 @@ class Interaction:
         The modal that this interaction belongs to.
 
         .. versionadded:: 2.7
-    attachment_size_limit: :class:`int`
+    attachment_size_limit: Optional[:class:`int`]
         The attachment size limit.
 
         .. versionadded:: 2.7
@@ -223,7 +232,7 @@ class Interaction:
 
     def __init__(self, *, data: InteractionPayload, state: ConnectionState):
         self._state: ConnectionState = state
-        self._session: ClientSession = state.http._HTTPClient__session
+        self._session: ClientSession = state.http._HTTPClient__session  # type: ignore
         self._original_response: InteractionMessage | None = None
         self.callback: InteractionCallback | None = None
         self._cs_channel: InteractionChannel | None = MISSING
@@ -264,7 +273,7 @@ class Interaction:
         self.command: ApplicationCommand | None = None
         self.view: BaseView | None = None
         self.modal: BaseModal | None = None
-        self.attachment_size_limit: int = data.get("attachment_size_limit")
+        self.attachment_size_limit: int | None = data.get("attachment_size_limit")
 
         self.message: Message | None = None
         self.channel = None
@@ -293,13 +302,15 @@ class Interaction:
                 if not isinstance(guild, Object):
                     cache_flag = self._state.member_cache_flags.interaction
                     self.user = guild._get_and_update_member(
-                        member, int(member["user"]["id"]), cache_flag
+                        member,
+                        member["user"]["id"],  # type: ignore
+                        cache_flag,
                     )
                 else:
                     self.user = Member(state=self._state, data=member, guild=guild)
         else:
             try:
-                self.user = User(state=self._state, data=data["user"])
+                self.user = User(state=self._state, data=data["user"])  # type: ignore
             except KeyError:
                 pass
 
@@ -308,8 +319,8 @@ class Interaction:
         factory: Any | None = None
 
         if data_ch_type is not None:
-            factory, ch_type = _threaded_channel_factory(data_ch_type)
-            if ch_type in (ChannelType.group, ChannelType.private):
+            factory, ch_type = _channel_factory(data_ch_type)
+            if factory and ch_type in (ChannelType.group, ChannelType.private):
                 self.channel = factory(me=self.user, data=channel, state=self._state)
 
         if self.channel is None and self.guild:
@@ -331,7 +342,9 @@ class Interaction:
 
         if message_data := data.get("message"):
             self.message = Message(
-                state=self._state, channel=self.channel, data=message_data
+                state=self._state,
+                channel=self.channel,  # type: ignore
+                data=message_data,
             )
 
         self._message_data = message_data
@@ -1941,3 +1954,15 @@ class InteractionCallback:
         This might be useful for determining if the message was forced to be ephemeral.
         """
         return self._response_message_ephemeral
+
+
+class _ResolvedInteractionData:
+    """Represents the resolved data of an interaction."""
+
+    def __init__(self, data: ResolvedInteractionDataPayload, state: ConnectionState):
+        self._state = state
+        self.users: dict[int, User] = {}
+        self.members: dict[int, Member] = {}
+        self.roles: dict[int, Role] = {}
+        self.channels: dict[int, InteractionChannel] = {}
+        self.attachments: dict[int, Attachment] = {}

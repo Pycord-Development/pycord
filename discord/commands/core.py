@@ -271,9 +271,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         arguments in.
         """
         if self.cog is not None:
-            return await self.callback(
-                self.cog, ctx, *args, **kwargs
-            )  # pyright: ignore[reportCallIssue]
+            return await self.callback(self.cog, ctx, *args, **kwargs)  # pyright: ignore[reportCallIssue]
         return await self.callback(ctx, *args, **kwargs)
 
     @property
@@ -873,7 +871,70 @@ class SlashCommand(ApplicationCommand):
 
         return as_dict
 
+    async def _invoke_callback(
+        self, ctx: ApplicationContext, options: dict[Option, Any]
+    ) -> None:
+        kwargs: dict[str, Any] = {
+            option._param_name: value
+            for option, value in options.items()
+            if option._param_name
+        }
+
+        if self.cog is not None:
+            await self.callback(self.cog, ctx, **kwargs)
+        elif self.parent is not None and self.attached_to_group is True:
+            await self.callback(self.parent, ctx, **kwargs)  # type: ignore
+        else:
+            await self.callback(ctx, **kwargs)  # type: ignore
+
+    def get_option(self, name: str) -> Option | None:
+        """Retrieves an option from the command by its name.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the option to retrieve. This can be either the
+            option's name or its parameter name.
+
+        Returns
+        -------
+        Optional[:class:`Option`]
+            The option with the given name, or ``None`` if no such option exists.
+        """
+        return find(lambda o: o.name == name or o._param_name == name, self.options)
+
     async def _invoke(self, ctx: ApplicationContext) -> None:
+        data = ctx.interaction.data
+        if not data:
+            raise ClientException("No data found in the interaction.")
+
+        options = data.get("options", [])
+        if not options:
+            return await self._invoke_callback(ctx, {})
+
+        for do in options:
+            option = self.get_option(do["name"]) or Option.from_dict(do)
+            option_type = option._api_type
+            if option_type in (
+                SlashCommandOptionType.sub_command,
+                SlashCommandOptionType.sub_command_group,
+            ):
+                continue
+
+            value = do.get("value")
+            if value is None:
+                continue
+
+            # Checks if input_type is user, role or channel
+            if option_type in (
+                SlashCommandOptionType.user,
+                SlashCommandOptionType.role,
+                SlashCommandOptionType.channel,
+                SlashCommandOptionType.attachment,
+                SlashCommandOptionType.mentionable,
+            ):
+                resolved = data.get("resolved", {})
+
         # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
@@ -993,9 +1054,9 @@ class SlashCommand(ApplicationCommand):
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update(
-                    {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
-                )
+                values.update({
+                    i["name"]: i["value"] for i in ctx.interaction.data["options"]
+                })
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")

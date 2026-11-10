@@ -11,7 +11,10 @@ from typing import (
     TYPE_CHECKING,
     Annotated,
     Any,
+    Concatenate,
     Literal,
+    ParamSpec,
+    Self,
     TypeVar,
     Union,
     get_args,
@@ -29,9 +32,8 @@ from ..channel import (
     Thread,
     VoiceChannel,
 )
-from ..enums import ChannelType
+from ..enums import ChannelType, SlashCommandOptionType
 from ..enums import Enum as DiscordEnum
-from ..enums import SlashCommandOptionType
 from ..member import Member
 from ..message import Attachment
 from ..role import Role
@@ -47,71 +49,106 @@ from .context import AutocompleteContext
 
 if TYPE_CHECKING:
     from ..cog import Cog
+    from ..types.interactions import (
+        ApplicationCommandOption as _ApplicationCommandInteractionDataOption,
+    )
+    from ..types.interactions import (
+        _ApplicationCommandInteractionDataOptionBoolean,
+        _ApplicationCommandInteractionDataOptionInteger,
+        _ApplicationCommandInteractionDataOptionNumber,
+        _ApplicationCommandInteractionDataOptionSnowflake,
+        _ApplicationCommandInteractionDataOptionString,
+        _ApplicationCommandInteractionDataOptionSubcommand,
+    )
 
+    _OptionData = (
+        _ApplicationCommandInteractionDataOption
+        | _ApplicationCommandInteractionDataOptionString
+        | _ApplicationCommandInteractionDataOptionInteger
+        | _ApplicationCommandInteractionDataOptionSubcommand
+        | _ApplicationCommandInteractionDataOptionBoolean
+        | _ApplicationCommandInteractionDataOptionSnowflake
+        | _ApplicationCommandInteractionDataOptionNumber
+    )
 
 PY_310 = sys.version_info >= (3, 10)  # for UnionType
 PY_311 = sys.version_info >= (3, 11)  # for StrEnum
 
-PY_314 = sys.version_info >= (3, 14)
 StrEnum = None
 if PY_311:
     from enum import StrEnum  # type: ignore
 
-    StrEnum = StrEnum
-
 if TYPE_CHECKING:
-    from discord.ext.commands import Converter
-
     AutocompleteReturnType = (
         Iterable["OptionChoice"] | Iterable[str] | Iterable[int] | Iterable[float]
     )
 
-    T = TypeVar("T", bound=AutocompleteReturnType)
-    MaybeAwaitable = T | Awaitable[T]
+    AutocompleteParamSpec = ParamSpec("AutocompleteParamSpec")
+    _AutocompleteReturnT = TypeVar("_AutocompleteReturnT", bound=AutocompleteReturnType)
+    AutocompleteReturn = _AutocompleteReturnT | Awaitable[_AutocompleteReturnT]
+
+    # (ctx) -> AutocompleteReturnT
+    AutocompleteOnlyCtx = Callable[
+        [AutocompleteContext],  # ctx: AutocompleteContext
+        _AutocompleteReturnT,
+    ]
+    # (self, ctx) -> AutocompleteReturnT
+    AutocompleteSelfAndCtx = Callable[
+        [Cog, AutocompleteContext],  # self: Cog, ctx: AutocompleteContext
+        AutocompleteReturn[_AutocompleteReturnT],
+    ]
+
+    # (self, ctx, extra: Any, args: Any) -> AutocompleteReturnT ->
+    # functools.partial(^, extra=..., args=...) -> Callable[[Cog, AutocompleteContext], AutocompleteReturnT]
+    AutocompleteSelfAndCtxAndArgs = Callable[
+        Concatenate[
+            Cog, AutocompleteContext, AutocompleteParamSpec
+        ],  # self: Cog, ctx: AutocompleteContext, extra and args are passed via functools.partial
+        AutocompleteReturn[_AutocompleteReturnT],
+    ]
+
     AutocompleteFunction = (
-        Callable[[AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]]
-        | Callable[[Cog, AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]]
-        | Callable[
-            [AutocompleteContext, Any],
-            MaybeAwaitable[AutocompleteReturnType],
-        ]
-        | Callable[
-            [Cog, AutocompleteContext, Any],
-            MaybeAwaitable[AutocompleteReturnType],
-        ]
+        AutocompleteSelfAndCtxAndArgs[AutocompleteParamSpec, _AutocompleteReturnT]
+        | AutocompleteSelfAndCtx[_AutocompleteReturnT]
+        | AutocompleteOnlyCtx[_AutocompleteReturnT]
     )
+
+
+if TYPE_CHECKING:
+    from discord.ext.commands import Converter
 
     ValidChannelType = (
         TextChannel | VoiceChannel | CategoryChannel | ForumChannel | StageChannel
     )
 
     ValidOptionType = (
-        type[str]
-        | type[bool]
-        | type[int]
-        | type[float]
-        | type[GuildChannel]
-        | type[ValidChannelType]
-        | type[Thread]
-        | type[Member]
-        | type[User]
-        | type[Attachment]
-        | type[Role]
+        type[
+            str
+            | bool
+            | int
+            | float
+            | GuildChannel
+            | ValidChannelType
+            | Thread
+            | Member
+            | User
+            | Attachment
+            | Role
+            | Literal
+            | Converter[Any]
+            | Enum
+            | DiscordEnum
+        ]
         | SlashCommandOptionType
-        | type[Literal]  # pyright: ignore[reportMissingTypeArgument]
         | Converter[Any]
-        | type[Converter[Any]]
-        | type[Enum]
-        | type[DiscordEnum]
     )
 
     ValidChoicesType = (
-        Iterable["OptionChoice"]
+        type[Enum | DiscordEnum]
+        | Iterable["OptionChoice"]
         | Iterable[str]
         | Iterable[int]
         | Iterable[float]
-        | type[Enum]
-        | type[DiscordEnum]
     )
 
 CLS_TO_CHANNEL_TYPE: dict[type[GuildChannel | DMChannel | Thread], ChannelType] = {
@@ -155,9 +192,7 @@ class OptionChoice:
         self.value: str | int | float = value if value is not None else name
         self.name_localizations: dict[str, str] = name_localizations
 
-        if not isinstance(
-            self.value, (str, int, float)
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if not isinstance(self.value, (str, int, float)):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(
                 f"Option choice value must be of type str, int, or float, not {type(self.value)}."
             )
@@ -224,18 +259,92 @@ class Option:
 
         self.choices: list[OptionChoice] = self._handle_choices(choices)
 
+    def to_dict(self) -> dict[str, Any]:
+        if not self._api_type:
+            raise ValueError("Option type has not been set.")
+
+        base: dict[str, Any] = {
+            "type": self._api_type.value,
+            "name": self._param_name,
+            "description": self.description,
+            "required": self.required,
+        }
+        if self.choices:
+            base["choices"] = [choice.to_dict() for choice in self.choices]
+        if self.name_localizations:
+            base["name_localizations"] = self.name_localizations
+        if self.description_localizations:
+            base["description_localizations"] = self.description_localizations
+        if self.channel_types:
+            base["channel_types"] = [ct.value for ct in self.channel_types]
+        if self.min_value is not None:
+            base["min_value"] = self.min_value
+        if self.max_value is not None:
+            base["max_value"] = self.max_value
+        if self.min_length is not None:
+            base["min_length"] = self.min_length
+        if self.max_length is not None:
+            base["max_length"] = self.max_length
+        if self.autocomplete is not None:
+            base["autocomplete"] = True
+
+        return base
+
+    @classmethod
+    def from_dict(cls, data: _OptionData) -> Self:
+        option = cls.__new__(cls)
+
+        option.name = data["name"]
+        option._param_name = data["name"]
+        option.description = data.get("description")
+        api_type = SlashCommandOptionType(data["type"])
+        option._param_type = api_type.from_datatype(api_type) or str
+        option._api_type = api_type
+        option.required = data.get("required", False)
+        option.default = None
+        option.name_localizations = data.get("name_localizations", {}) or {}
+        option.description_localizations = (
+            data.get("description_localizations", {}) or {}
+        )
+        option.channel_types = [ChannelType(ct) for ct in data.get("channel_types", [])]
+        option.min_value = data.get("min_value")
+        option.max_value = data.get("max_value")
+        option.min_length = data.get("min_length")
+        option.max_length = data.get("max_length")
+        option._autocomplete = None
+        option.choices = [
+            OptionChoice(
+                name=choice["name"],
+                value=choice["value"],
+                name_localizations=choice.get("name_localizations", {}) or {},
+            )
+            for choice in data.get("choices", [])
+        ]
+
+        return option
+
     @property
     def autocomplete(self) -> AutocompleteFunction | None:
         """
-        The autocomplete handler for the option. Accepts a callable (sync or async)
-        that takes a single required argument of :class:`AutocompleteContext` or two arguments
-        of :class:`discord.Cog` (being the command's cog) and :class:`AutocompleteContext`.
-        The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
-        Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
+        The autocomplete handler for the option. Accepts a callable (sync or async) with
+        the following signatures:
+
+        - ``(ctx: :class:`AutocompleteContext`)``
+        - ``(self, ctx: :class:`AutocompleteContext`)``
+        - ``(self, ctx: :class:`AutocompleteContext`, extra: Any, args: Any)``
+            - You must use ``functools.partial`` to pass the extra and args parameters, e.g. ``partial(func, extra=..., args=...)``
+
+        All callables must return one of the following return types, or an awaitable that resolves to one of the valid return types:
+
+        - Iterable[:class:`OptionChoice`]
+        - Iterable[:class:`str`]
+        - Iterable[:class:`int`]
+        - Iterable[:class:`float`]
 
         Returns
         -------
         Optional[AutocompleteFunction]
+            Your autocomplete handler, or ``None`` if no autocomplete handler is set.
 
         .. versionchanged:: 2.7
 
@@ -280,8 +389,10 @@ class Option:
         self.max_length = other.max_length
         self.autocomplete = other.autocomplete
 
-    def _validate_minmax_value(self) -> None:
-        if self._api_type not in (
+    def _validate_length_types(
+        self, value: bool = False, length: int | None = None
+    ) -> None:
+        if value and self._api_type not in (
             SlashCommandOptionType.integer,
             SlashCommandOptionType.number,
         ):
@@ -289,14 +400,16 @@ class Option:
                 f"max_value is only applicable for int and float parameter types, not {self._param_type}."
             )
 
-    def _validate_minmax_length(self, max_length: int | None = None) -> None:
-        if self._api_type is not SlashCommandOptionType.string:
-            raise ValueError(
-                f"min_length and max_length are only applicable for string option types, not {self._api_type}."
-            )
+        if length is not None:
+            if self._api_type is not SlashCommandOptionType.string:
+                raise ValueError(
+                    f"min_length and max_length are only applicable for string option types, not {self._api_type}."
+                )
 
-        if max_length is not None and (max_length < 1 or max_length > 6000):
-            raise ValueError("max_length must be between 1 and 6000.")
+            if length < 1 or length > 6000:
+                raise ValueError(
+                    "min_length and max_length must be between 1 and 6000."
+                )
 
     def _handle_type(self, param_type: ValidOptionType | None = None) -> None:
         param_type = param_type or self._param_type
@@ -332,16 +445,12 @@ class Option:
                 self._parse_choices_from_enum(param_type)
             elif issubclass(param_type, Converter):  # type: ignore
                 self.converter = param_type()  # type: ignore
-        elif isinstance(
-            param_type, Converter
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        elif isinstance(param_type, Converter):  # pyright: ignore[reportUnnecessaryIsInstance]
             self.converter = param_type
         elif origin is Annotated:
             self._handle_type(args[0])
             return
-        elif (
-            get_origin(param_type) is Union
-        ):  # pyright: ignore[reportUnnecessaryComparison]
+        elif get_origin(param_type) is Union:  # pyright: ignore[reportUnnecessaryComparison]
             union_args = get_args(param_type)
             non_none_args = normalise_optional_params(union_args)[:-1]
             if len(non_none_args) == 1:
@@ -359,9 +468,7 @@ class Option:
             ):
                 self._api_type = SlashCommandOptionType.user
                 return
-        elif (
-            get_origin(param_type) is Literal
-        ):  # pyright: ignore[reportUnnecessaryComparison]
+        elif get_origin(param_type) is Literal:  # pyright: ignore[reportUnnecessaryComparison]
             literal_args = get_args(param_type)
             if all(isinstance(arg, str) for arg in literal_args):
                 self._api_type = SlashCommandOptionType.string
@@ -379,10 +486,10 @@ class Option:
             return
 
         if self.min_length is not None or self.max_length is not None:
-            self._validate_minmax_length(self.max_length)
+            self._validate_length_types(length=self.max_length)
 
         if self.min_value is not None or self.max_value is not None:
-            self._validate_minmax_value()
+            self._validate_length_types(value=True)
 
     def _handle_choices(self, choices: ValidChoicesType | None) -> list[OptionChoice]:
         if not choices:
@@ -390,20 +497,14 @@ class Option:
 
         final_choices: list[OptionChoice] = []
 
-        if isinstance(choices, type) and (
-            issubclass(choices, (Enum, DiscordEnum))
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if isinstance(choices, type) and (issubclass(choices, (Enum, DiscordEnum))):  # pyright: ignore[reportUnnecessaryIsInstance]
             return self._parse_choices_from_enum(choices)
 
-        if isinstance(
-            choices, Iterable
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if isinstance(choices, Iterable):  # pyright: ignore[reportUnnecessaryIsInstance]
             for choice in choices:
                 if isinstance(choice, OptionChoice):
                     final_choices.append(choice)
-                elif isinstance(
-                    choice, (str, int, float)
-                ):  # pyright: ignore[reportUnnecessaryIsInstance]
+                elif isinstance(choice, (str, int, float)):  # pyright: ignore[reportUnnecessaryIsInstance]
                     final_choices.append(OptionChoice(name=str(choice), value=choice))
                 else:
                     raise TypeError(
@@ -460,40 +561,9 @@ class Option:
                 type(first_member_type)
             )
 
-        return self._handle_choices(
-            [OptionChoice(name=member.name, value=member.value) for member in enum_cls]
-        )
-
-    def to_dict(self) -> dict[str, Any]:
-        if not self._api_type:
-            raise ValueError("Option type has not been set.")
-
-        base: dict[str, Any] = {
-            "type": self._api_type.value,
-            "name": self._param_name,
-            "description": self.description,
-            "required": self.required,
-        }
-        if self.choices:
-            base["choices"] = [choice.to_dict() for choice in self.choices]
-        if self.name_localizations:
-            base["name_localizations"] = self.name_localizations
-        if self.description_localizations:
-            base["description_localizations"] = self.description_localizations
-        if self.channel_types:
-            base["channel_types"] = [ct.value for ct in self.channel_types]
-        if self.min_value is not None:
-            base["min_value"] = self.min_value
-        if self.max_value is not None:
-            base["max_value"] = self.max_value
-        if self.min_length is not None:
-            base["min_length"] = self.min_length
-        if self.max_length is not None:
-            base["max_length"] = self.max_length
-        if self.autocomplete is not None:
-            base["autocomplete"] = True
-
-        return base
+        return self._handle_choices([
+            OptionChoice(name=member.name, value=member.value) for member in enum_cls
+        ])
 
 
 ValidThreadType = Literal[
@@ -517,21 +587,26 @@ class ThreadOption(Option):
         The thread type to expect for this options input.
     """
 
-    def __init__(self, thread_type: ValidThreadType) -> types.NoneType:
-        warn_deprecated(
-            name="ThreadOption",
-            instead="Option with the appropriate channel_types instead.",
-            since="2.9",
-        )
+    def __init__(self, *thread_types: ValidThreadType) -> None:
         type_map = {
             "public": ChannelType.public_thread,
             "private": ChannelType.private_thread,
             "news": ChannelType.news_thread,
         }
-        super().__init__(
-            Thread,
-            channel_types=[type_map.get(thread_type, thread_type)],  # type: ignore
+        channel_types = [
+            type_map.get(thread_type, thread_type)  # type: ignore
+            for thread_type in thread_types
+        ]
+
+        friendly_channel_types = ", ".join(
+            f"discord.ChannelType.{t.name}" for t in channel_types
         )
+        warn_deprecated(
+            name="ThreadOption",
+            instead=f"Option with the appropriate channel_types instead (channel_types=[{friendly_channel_types}]).",
+            since="2.9",
+        )
+        super().__init__(Thread, channel_types=channel_types)
 
 
 def _get_parameters(
@@ -587,9 +662,7 @@ def _get_options(  # pyright: ignore[reportUnusedFunction]
                 if option.name is None:
                     option.name = param_name
                 if option._param_name is None:  # pyright: ignore[reportPrivateUsage]
-                    option._param_name = (
-                        param_name  # pyright: ignore[reportPrivateUsage]
-                    )
+                    option._param_name = param_name  # pyright: ignore[reportPrivateUsage]
             else:
                 if annotation is None:
                     annotation = str
@@ -645,30 +718,18 @@ def _validate_existing_options(
         option._handle_type(param.annotation)
         option._param_name = name
 
-    for o in options:
-        _validate_names(o)
-        _validate_descriptions(o)
-        try:
-            p_name, p_obj = next(params)
-        except StopIteration:  # not enough params for all the options
-            raise ClientException("Too many arguments passed to the options kwarg.")
-        p_obj = p_obj.annotation
-
-        if not any(check(o, p_obj) for check in check_annotations):
-            raise TypeError(
-                f"Parameter {p_name} does not match input type of {o.name}."
+    for name, param in parameters:
+        if name not in options:
+            options[name] = Option(
+                param.annotation if param.annotation is not param.empty else str,
+                name=name,
+                description=inspect.cleandoc(param.__doc__) if param.__doc__ else None,
             )
-        o._parameter_name = p_name
-
-    left_out_params = OrderedDict()
-    for k, v in params:
-        left_out_params[k] = v
-    options.extend(self._parse_options(left_out_params, check_params=False))
 
     return options
 
 
-CallableT = TypeVar("CallableT", bound=Callable[..., Any])
+CallableT = TypeVar("CallableT", bound=Callable[...,])
 
 
 def option(
@@ -813,9 +874,7 @@ def options(**options: Option) -> Callable[[CallableT], CallableT]:
     """
 
     def inner(func: CallableT) -> CallableT:
-        if not all(
-            isinstance(opt, Option) for opt in options.values()
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
+        if not all(isinstance(opt, Option) for opt in options.values()):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(
                 "All values passed to @options must be instances of Option."
             )
