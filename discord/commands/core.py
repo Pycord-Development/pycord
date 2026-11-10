@@ -30,9 +30,7 @@ import datetime
 import functools
 import inspect
 import re
-import types
 from collections.abc import Callable, Coroutine, Generator
-from collections import OrderedDict
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -271,7 +269,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         arguments in.
         """
         if self.cog is not None:
-            return await self.callback(self.cog, ctx, *args, **kwargs)  # pyright: ignore[reportCallIssue]
+            return await self.callback(
+                self.cog, ctx, *args, **kwargs
+            )  # pyright: ignore[reportCallIssue]
         return await self.callback(ctx, *args, **kwargs)
 
     @property
@@ -1054,9 +1054,9 @@ class SlashCommand(ApplicationCommand):
         for op in ctx.interaction.data.get("options", []):
             if op.get("focused", False):
                 option = find(lambda o: o.name == op["name"], self.options)
-                values.update({
-                    i["name"]: i["value"] for i in ctx.interaction.data["options"]
-                })
+                values.update(
+                    {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
+                )
                 ctx.command = self
                 ctx.focused = option
                 ctx.value = op.get("value")
