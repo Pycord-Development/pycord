@@ -53,7 +53,7 @@ class MediaGallery(ViewItem[V]):
     ----------
     *items: :class:`~discord.MediaGalleryItem`
         The initial items contained in this gallery, up to 10.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The gallery's ID.
     """
 
@@ -130,9 +130,9 @@ class MediaGallery(ViewItem[V]):
         ----------
         url: :class:`str`
             The URL of the media item. This can either be an arbitrary URL or an ``attachment://`` URL.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The media item's description, up to 1024 characters.
-        spoiler: Optional[:class:`bool`]
+        spoiler: :class:`bool` | :obj:`None`
             Whether the media item has the spoiler overlay.
 
         Raises

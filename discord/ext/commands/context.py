@@ -27,14 +27,14 @@ from __future__ import annotations
 
 import inspect
 import re
-from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 import discord.abc
 import discord.utils
 from discord.message import Message
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from discord.abc import MessageableChannel
     from discord.guild import Guild
@@ -54,7 +54,7 @@ MISSING: Any = discord.utils.MISSING
 
 
 T = TypeVar("T")
-BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+BotT = TypeVar("BotT", bound="Bot | AutoShardedBot")
 CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
@@ -86,16 +86,16 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         A dictionary of transformed arguments that were passed into the command.
         Similar to :attr:`args`\, if this is accessed in the
         :func:`.on_command_error` event then this dict could be incomplete.
-    current_parameter: Optional[:class:`inspect.Parameter`]
+    current_parameter: :class:`inspect.Parameter` | :obj:`None`
         The parameter that is currently being inspected and converted.
         This is only of use for within converters.
 
         .. versionadded:: 2.0
-    prefix: Optional[:class:`str`]
+    prefix: :class:`str` | :obj:`None`
         The prefix that was used to invoke the command.
-    command: Optional[:class:`Command`]
+    command: :class:`Command` | :obj:`None`
         The command that is being invoked currently.
-    invoked_with: Optional[:class:`str`]
+    invoked_with: :class:`str` | :obj:`None`
         The command name that triggered this invocation. Useful for finding out
         which alias called the command.
     invoked_parents: List[:class:`str`]
@@ -106,10 +106,10 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
         .. versionadded:: 1.7
 
-    invoked_subcommand: Optional[:class:`Command`]
+    invoked_subcommand: :class:`Command` | :obj:`None`
         The subcommand that was invoked.
         If no valid subcommand was invoked then this is equal to ``None``.
-    subcommand_passed: Optional[:class:`str`]
+    subcommand_passed: :class:`str` | :obj:`None`
         The string that was attempted to call a subcommand. This does not have
         to point to a valid registered subcommand and could just point to a
         nonsense string. If nothing was passed to attempt a call to a
@@ -299,19 +299,20 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
     @property
     def author(self) -> User | Member:
-        """Union[:class:`~discord.User`, :class:`.Member`]:
-        Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
-        """
+        """Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`"""
         return self.message.author
 
     @property
     def me(self) -> Member | ClientUser:
-        """Union[:class:`.Member`, :class:`.ClientUser`]:
-        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
+        """Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
         """
         # bot.user will never be None at this point.
-        return self.guild.me if self.guild is not None and self.guild.me is not None else self.bot.user  # type: ignore
+        return (
+            self.guild.me
+            if self.guild is not None and self.guild.me is not None
+            else self.bot.user
+        )  # type: ignore
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
@@ -337,11 +338,11 @@ class Context(discord.abc.Messageable, Generic[BotT]):
 
             Due to the way this function works, instead of returning
             something similar to :meth:`~.commands.HelpCommand.command_not_found`
-            this returns :class:`None` on bad input or no help command.
+            this returns :obj:`None` on bad input or no help command.
 
         Parameters
         ----------
-        entity: Optional[Union[:class:`Command`, :class:`Cog`, :class:`str`]]
+        entity: :class:`Command` | :class:`Cog` | :class:`str` | :obj:`None`
             The entity to show help for.
 
         Returns

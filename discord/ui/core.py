@@ -27,7 +27,6 @@ from __future__ import annotations
 import asyncio
 import time
 from collections.abc import Callable
-from itertools import groupby
 from typing import TYPE_CHECKING, Any
 
 from ..utils import find, get
@@ -51,18 +50,18 @@ class ItemInterface:
     ----------
     *items: :class:`Item`
         The initial items contained in this structure.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
 
     Attributes
     ----------
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this structure.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this interface should be stored for callback listening. Setting it to ``False`` will ignore callbacks and prevent item values from being refreshed. Defaults to ``True``.
     """
 
@@ -123,12 +122,12 @@ class ItemInterface:
 
         Parameters
         ----------
-        custom_id: Union[:class:`str`, :class:`int`]
+        custom_id: :class:`str` | :class:`int`
             The id of the item to get
 
         Returns
         -------
-        Optional[:class:`Item`]
+        :class:`Item` | :obj:`None`
             The item with the matching ``custom_id`` or ``id`` if it exists.
         """
         if not custom_id:

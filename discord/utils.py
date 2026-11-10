@@ -71,19 +71,19 @@ from typing_extensions import deprecated as ext_deprecated
 
 if TYPE_CHECKING:
     from discord import (
-        Client,
-        VoiceChannel,
-        TextChannel,
-        ForumChannel,
-        StageChannel,
-        CategoryChannel,
-        Thread,
-        Member,
-        User,
-        Guild,
-        Role,
-        GuildEmoji,
         AppEmoji,
+        CategoryChannel,
+        Client,
+        ForumChannel,
+        Guild,
+        GuildEmoji,
+        Member,
+        Role,
+        StageChannel,
+        TextChannel,
+        Thread,
+        User,
+        VoiceChannel,
     )
 
 from .errors import HTTPException, InvalidArgument, InvalidData
@@ -96,32 +96,32 @@ else:
     HAS_MSGSPEC = True
 
 __all__ = (
-    "parse_time",
-    "warn_deprecated",
+    "MISSING",
+    "as_chunks",
+    "basic_autocomplete",
     "deprecated",
-    "oauth_url",
-    "snowflake_time",
-    "time_snowflake",
-    "find",
-    "get",
-    "get_or_fetch",
-    "sleep_until",
-    "utcnow",
-    "resolve_invite",
-    "resolve_template",
-    "remove_markdown",
     "escape_markdown",
     "escape_mentions",
-    "raw_mentions",
-    "raw_channel_mentions",
-    "raw_role_mentions",
-    "as_chunks",
+    "filter_params",
+    "find",
     "format_dt",
     "generate_snowflake",
-    "basic_autocomplete",
-    "filter_params",
-    "MISSING",
+    "get",
+    "get_or_fetch",
+    "oauth_url",
+    "parse_time",
+    "raw_channel_mentions",
+    "raw_mentions",
+    "raw_role_mentions",
+    "remove_markdown",
+    "resolve_invite",
+    "resolve_template",
+    "sleep_until",
+    "snowflake_time",
+    "time_snowflake",
     "users_to_csv",
+    "utcnow",
+    "warn_deprecated",
 )
 
 _log = logging.getLogger(__name__)
@@ -158,7 +158,7 @@ class _MissingSentinel:
 MISSING: Any = _MissingSentinel()
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing import ParamSpec
 
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
@@ -178,7 +178,7 @@ else:
 
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
-_Iter = Union[Iterator[T], AsyncIterator[T]]
+_Iter = Iterator[T] | AsyncIterator[T]
 
 
 class CachedSlotProperty(Generic[T, T_co]):
@@ -205,17 +205,6 @@ class CachedSlotProperty(Generic[T, T_co]):
             value = self.function(instance)
             setattr(instance, self.name, value)
             return value
-
-
-class classproperty(Generic[T_co]):
-    def __init__(self, fget: Callable[[Any], T_co]) -> None:
-        self.fget = fget
-
-    def __get__(self, instance: Any | None, owner: type[Any]) -> T_co:
-        return self.fget(owner)
-
-    def __set__(self, instance, value) -> None:
-        raise AttributeError("cannot set attribute")
 
 
 def cached_slot_property(
@@ -283,12 +272,12 @@ def parse_time(timestamp: str | None) -> datetime.datetime | None:
 
     Parameters
     ----------
-    timestamp: Optional[:class:`str`]
+    timestamp: :class:`str` | :obj:`None`
         The timestamp to convert.
 
     Returns
     -------
-    Optional[:class:`datetime.datetime`]
+    :class:`datetime.datetime` | :obj:`None`
         The converted datetime object.
     """
     if timestamp:
@@ -320,15 +309,15 @@ def warn_deprecated(
     ----------
     name: str
         The name of the deprecated function.
-    instead: Optional[:class:`str`]
+    instead: :class:`str` | :obj:`None`
         A recommended alternative to the function.
-    since: Optional[:class:`str`]
+    since: :class:`str` | :obj:`None`
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str`]
+    removed: :class:`str` | :obj:`None`
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
-    reference: Optional[:class:`str`]
+    reference: :class:`str` | :obj:`None`
         A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
         issue/PR.
     stacklevel: :class:`int`
@@ -368,15 +357,15 @@ def deprecated(
 
     Parameters
     ----------
-    instead: Optional[:class:`str`]
+    instead: :class:`str` | :obj:`None`
         A recommended alternative to the function.
-    since: Optional[:class:`str`]
+    since: :class:`str` | :obj:`None`
         The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
         the patch version is optional.
-    removed: Optional[:class:`str`]
+    removed: :class:`str` | :obj:`None`
         The version in which the function is planned to be removed. This should be in the format
         ``major.minor(.patch)``, where the patch version is optional.
-    reference: Optional[:class:`str`]
+    reference: :class:`str` | :obj:`None`
         A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
         issue/PR.
     stacklevel: :class:`int`
@@ -419,7 +408,7 @@ def oauth_url(
 
     Parameters
     ----------
-    client_id: Union[:class:`int`, :class:`str`]
+    client_id: :class:`int` | :class:`str`
         The client ID for your bot.
     permissions: :class:`~discord.Permissions`
         The permissions you're requesting. If not given then you won't be requesting any
@@ -570,25 +559,15 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
         Keyword arguments that denote attributes to search with.
     """
 
-    # global -> local
-    _all = all
-    attrget = attrgetter
-
-    # Special case the single element call
-    if len(attrs) == 1:
-        k, v = attrs.popitem()
-        pred = attrget(k.replace("__", "."))
-        for elem in iterable:
-            if pred(elem) == v:
-                return elem
-        return None
-
     converted = [
-        (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
+        (attrgetter(attr.replace("__", ".")), value) for attr, value in attrs.items()
     ]
 
     for elem in iterable:
-        if _all(pred(elem) == value for pred, value in converted):
+        for pred, value in converted:
+            if pred(elem) != value:
+                break
+        else:
             return elem
     return None
 
@@ -656,17 +635,17 @@ async def get_or_fetch(
     object_type: Type[:class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | :class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | :class:`~discord.CategoryChannel` | :class:`~discord.Thread` | :class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role` | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | :class:`~discord.AppEmoji`]
         Type of object to fetch or get.
 
-    object_id: :class:`int` | :data:`None`
+    object_id: :class:`int` | :obj:`None`
         ID of object to get.
 
-    default: Any | :data:`None`
+    default: Any | :obj:`None`
         The value to return instead of raising if fetching fails.
 
     Returns
     -------
-    :class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | :class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | :class:`~discord.CategoryChannel` | :class:`~discord.Thread` | :class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role` | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | :class:`~discord.AppEmoji` | :data:`None`
+    :class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | :class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | :class:`~discord.CategoryChannel` | :class:`~discord.Thread` | :class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role` | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | :class:`~discord.AppEmoji` | :obj:`None`
         The object if found, or `default` if provided when not found.
-        Returns :data:`None` only if `object_id` is :data:`None` and no `default` is given.
+        Returns :obj:`None` only if `object_id` is :obj:`None` and no `default` is given.
 
     Raises
     ------
@@ -1022,7 +1001,7 @@ def resolve_invite(invite: Invite | str) -> str:
 
     Parameters
     ----------
-    invite: Union[:class:`~discord.Invite`, :class:`str`]
+    invite: :class:`~discord.Invite` | :class:`str`
         The invite.
 
     Returns
@@ -1049,7 +1028,7 @@ def resolve_template(code: Template | str) -> str:
 
     Parameters
     ----------
-    code: Union[:class:`~discord.Template`, :class:`str`]
+    code: :class:`~discord.Template` | :class:`str`
         The code.
 
     Returns
@@ -1257,31 +1236,23 @@ def raw_role_mentions(text: str) -> list[int]:
 
 
 def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
-    ret = []
-    n = 0
-    for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iter(iterator)
+    while chunk := list(itertools.islice(it, max_size)):
+        yield chunk
+
+
+async def _atake(it: AsyncIterator[T], n: int) -> AsyncIterator[T]:
+    for _ in range(n):
+        try:
+            yield await it.__anext__()
+        except StopAsyncIteration:
+            return
 
 
 async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
-    ret = []
-    n = 0
-    async for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
+    it = iterator.__aiter__()
+    while chunk := [x async for x in _atake(it, max_size)]:
+        yield chunk
 
 
 @overload
@@ -1303,14 +1274,14 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
 
     Parameters
     ----------
-    iterator: Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
+    iterator: :class:`collections.abc.Iterator` | :class:`collections.abc.AsyncIterator`
         The iterator to chunk, can be sync or async.
     max_size: :class:`int`
         The maximum chunk size.
 
     Returns
     -------
-    Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
+    :class:`collections.abc.Iterator` | :class:`collections.abc.AsyncIterator`
         A new iterator which yields chunks of a given size.
     """
     if max_size <= 0:
@@ -1319,20 +1290,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     if isinstance(iterator, AsyncIterator):
         return _achunk(iterator, max_size)
     return _chunk(iterator, max_size)
-
-
-PY_310 = sys.version_info >= (3, 10)
-
-
-def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    params = []
-    literal_cls = type(Literal[0])
-    for p in parameters:
-        if isinstance(p, literal_cls):
-            params.extend(p.__args__)
-        else:
-            params.append(p)
-    return tuple(params)
 
 
 def normalise_optional_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
@@ -1365,7 +1322,7 @@ def evaluate_annotation(
         is_literal = False
         args = tp.__args__
         if not hasattr(tp, "__origin__"):
-            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
+            if tp.__class__ is types.UnionType:  # type: ignore
                 converted = Union[args]  # type: ignore
                 return evaluate_annotation(converted, globals, locals, cache)
 
@@ -1377,8 +1334,6 @@ def evaluate_annotation(
             except ValueError:
                 pass
         if tp.__origin__ is Literal:
-            if not PY_310:
-                args = flatten_literal_params(tp.__args__)
             implicit_str = False
             is_literal = True
 
@@ -1457,7 +1412,7 @@ def format_dt(
 
     Parameters
     ----------
-    dt: Union[:class:`datetime.datetime`, :class:`datetime.time`]
+    dt: :class:`datetime.datetime` | :class:`datetime.time`
         The datetime to format.
     style: :class:`str`
         The style to format the datetime with.
@@ -1494,11 +1449,11 @@ def generate_snowflake(dt: datetime.datetime | None = None) -> int:
     return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3FFFFF
 
 
-V = Union[Iterable[OptionChoice], Iterable[str], Iterable[int], Iterable[float]]
+V = Iterable[OptionChoice] | Iterable[str] | Iterable[int] | Iterable[float]
 AV = Awaitable[V]
-Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
+Values = V | Callable[[AutocompleteContext], V | AV] | AV
 AutocompleteFunc = Callable[[AutocompleteContext], AV]
-FilterFunc = Callable[[AutocompleteContext, Any], Union[bool, Awaitable[bool]]]
+FilterFunc = Callable[[AutocompleteContext, Any], bool | Awaitable[bool]]
 
 
 def basic_autocomplete(
@@ -1512,10 +1467,10 @@ def basic_autocomplete(
 
     Parameters
     ----------
-    values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    values: Iterable[:class:`.OptionChoice`] | Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`] | Callable[[:class:`.AutocompleteContext`], Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`] | Awaitable[Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]] | Awaitable[Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
-    filter: Optional[Callable[[:class:`.AutocompleteContext`, Any], Union[:class:`bool`, Awaitable[:class:`bool`]]]]
+    filter: Callable[[:class:`.AutocompleteContext`, Any], :class:`bool` | Awaitable[:class:`bool`]] | :obj:`None`
         An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments:
         the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.
 
@@ -1523,7 +1478,7 @@ def basic_autocomplete(
 
     Returns
     -------
-    Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
+    Callable[[:class:`.AutocompleteContext`], Awaitable[Iterable[:class:`.OptionChoice`] | Iterable[:class:`str`] | Iterable[:class:`int`] | Iterable[:class:`float`]]]
         A wrapped callback for the autocomplete.
 
     Examples
@@ -1592,7 +1547,7 @@ def filter_params(params, **kwargs):
     ----------
     params: Dict[str, Any]
         The initial parameters to filter.
-    **kwargs: Dict[str, Optional[str]]
+    **kwargs: Dict[:class:`str`, :class:`str` | :obj:`None`]
         Key to value pairs where the key's contents would be moved to the
         value, or if the value is None, remove key's contents (see code example).
 
