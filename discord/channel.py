@@ -146,7 +146,7 @@ class ForumTag(Hashable):
         moderated: :class:`bool`
             Whether this tag can only be added or removed by a moderator with
             the :attr:`~Permissions.manage_threads` permission.
-        emoji: Optional[:class:`PartialEmoji`]
+        emoji: :class:`PartialEmoji` | :obj:`None`
             The emoji that is used to represent this tag. Defaults to ``None``.
             Note that if the emoji is a custom emoji, it will *not* have name information.
     """
@@ -346,7 +346,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
         Returns
         -------
-        Optional[:class:`Message`]
+        :class:`Message` | :obj:`None`
             The last message in this channel or ``None`` if not found.
         """
         return (
@@ -395,7 +395,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         ----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Raises
@@ -451,25 +451,25 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of messages to search through. This is not the number
             of messages that will be deleted, though it can be.
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``before`` in :meth:`history`.
-        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``after`` in :meth:`history`.
-        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        around: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``around`` in :meth:`history`.
-        oldest_first: Optional[:class:`bool`]
+        oldest_first: :class:`bool` | :obj:`None`
             Same as ``oldest_first`` in :meth:`history`.
         bulk: :class:`bool`
             If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
             a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
             fall back to single delete if messages are older than two weeks.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Returns
@@ -546,10 +546,10 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         ----------
         name: :class:`str`
             The webhook's name.
-        avatar: Optional[:class:`bytes`]
+        avatar: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the webhook's default avatar.
             This operates similarly to :meth:`~ClientUser.edit`.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this webhook. Shows up in the audit logs.
 
         Returns
@@ -594,7 +594,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         ----------
         destination: :class:`TextChannel`
             The channel you would like to follow from.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for following the channel. Shows up on the destination guild's audit log.
 
             .. versionadded:: 1.4
@@ -662,7 +662,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
         Returns
         -------
-        Optional[:class:`Thread`]
+        :class:`Thread` | :obj:`None`
             The returned thread or ``None`` if not found.
         """
         return self.guild.get_thread(thread_id)
@@ -684,11 +684,11 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of threads to retrieve.
             If ``None``, retrieves every archived thread in the channel. Note, however,
             that this would make it a slow operation.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve archived channels before the given date or ID.
         private: :class:`bool`
             Whether to retrieve private archived threads.
@@ -747,14 +747,14 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         The guild the channel belongs to.
     id: :class:`int`
         The channel ID.
-    category_id: Optional[:class:`int`]
+    category_id: :class:`int` | :obj:`None`
         The category channel ID this channel belongs to, if applicable.
-    topic: Optional[:class:`str`]
+    topic: :class:`str` | :obj:`None`
         The channel's topic. ``None`` if it doesn't exist.
-    position: Optional[:class:`int`]
+    position: :class:`int` | :obj:`None`
         The position in the channel list. This is a number that starts at 0. e.g. the
         top channel is position 0. Can be ``None`` if the channel was received in an interaction.
-    last_message_id: Optional[:class:`int`]
+    last_message_id: :class:`int` | :obj:`None`
         The last message ID of the message sent to this channel. It may
         *not* point to an existing or valid message.
     slowmode_delay: :class:`int`
@@ -776,7 +776,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
-    default_thread_slowmode_delay: Optional[:class:`int`]
+    default_thread_slowmode_delay: :class:`int` | :obj:`None`
         The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
@@ -881,7 +881,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The new category for this channel. Can be ``None`` to remove the
             category.
         slowmode_delay: :class:`int`
@@ -891,9 +891,9 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             Change the type of this text channel. Currently, only conversion between
             :attr:`ChannelType.text` and :attr:`ChannelType.news` is supported. This
             is only available to guilds that contain ``NEWS`` in :attr:`Guild.features`.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
@@ -912,7 +912,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
 
         Returns
         -------
-        Optional[:class:`.TextChannel`]
+        :class:`.TextChannel` | :obj:`None`
             The newly edited text channel. If the edit was only positional
             then ``None`` is returned instead.
 
@@ -967,21 +967,21 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         ----------
         name: :class:`str`
             The name of the thread.
-        message: Optional[:class:`abc.Snowflake`]
+        message: :class:`abc.Snowflake` | :obj:`None`
             A snowflake representing the message to create the thread with.
             If ``None`` is passed then a private thread is created.
             Defaults to ``None``.
         auto_archive_duration: :class:`int`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
-        type: Optional[:class:`ChannelType`]
+        type: :class:`ChannelType` | :obj:`None`
             The type of thread to create. If a ``message`` is passed then this parameter
             is ignored, as a thread created with a message is always a public thread.
             By default, this creates a private thread if this is ``None``.
-        slowmode_delay: Optional[:class:`int`]
+        slowmode_delay: :class:`int` | :obj:`None`
             Specifies the slowmode rate limit for users in this thread, in seconds.
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
-        invitable: Optional[:class:`bool`]
+        invitable: :class:`bool` | :obj:`None`
             Whether non-moderators can add other non-moderators to this thread.
             Only available for private threads, where it defaults to True.
         reason: :class:`str`
@@ -1057,18 +1057,18 @@ class ForumChannel(_TextChannel):
         The guild the channel belongs to.
     id: :class:`int`
         The channel ID.
-    category_id: Optional[:class:`int`]
+    category_id: :class:`int` | :obj:`None`
         The category channel ID this channel belongs to, if applicable.
-    topic: Optional[:class:`str`]
+    topic: :class:`str` | :obj:`None`
         The channel's topic. ``None`` if it doesn't exist.
 
         .. note::
 
             :attr:`guidelines` exists as an alternative to this attribute.
-    position: Optional[:class:`int`]
+    position: :class:`int` | :obj:`None`
         The position in the channel list. This is a number that starts at 0. e.g. the
         top channel is position 0. Can be ``None`` if the channel was received in an interaction.
-    last_message_id: Optional[:class:`int`]
+    last_message_id: :class:`int` | :obj:`None`
         The last message ID of the message sent to this channel. It may
         *not* point to an existing or valid message.
     slowmode_delay: :class:`int`
@@ -1094,15 +1094,15 @@ class ForumChannel(_TextChannel):
         The set of tags that can be used in a forum channel.
 
         .. versionadded:: 2.3
-    default_sort_order: Optional[:class:`SortOrder`]
+    default_sort_order: :class:`SortOrder` | :obj:`None`
         The default sort order type used to order posts in this channel.
 
         .. versionadded:: 2.3
-    default_thread_slowmode_delay: Optional[:class:`int`]
+    default_thread_slowmode_delay: :class:`int` | :obj:`None`
         The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
-    default_reaction_emoji: Optional[:class:`str` | :class:`discord.GuildEmoji`]
+    default_reaction_emoji: :class:`str` | :class:`discord.GuildEmoji` | :obj:`None`
         The default forum reaction emoji.
 
         .. versionadded:: 2.5
@@ -1233,15 +1233,15 @@ class ForumChannel(_TextChannel):
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The new category for this channel. Can be ``None`` to remove the
             category.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
             A value of `0` disables slowmode. The maximum value possible is `21600`.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
@@ -1251,11 +1251,11 @@ class ForumChannel(_TextChannel):
             The new default slowmode delay in seconds for threads created in this channel.
 
             .. versionadded:: 2.3
-        default_sort_order: Optional[:class:`SortOrder`]
+        default_sort_order: :class:`SortOrder` | :obj:`None`
             The default sort order type to use to order posts in this channel.
 
             .. versionadded:: 2.3
-        default_reaction_emoji: Optional[:class:`discord.GuildEmoji` | :class:`int` | :class:`str`]
+        default_reaction_emoji: :class:`discord.GuildEmoji` | :class:`int` | :class:`str` | :obj:`None`
             The default reaction emoji.
             Can be a unicode emoji or a custom emoji in the forms:
             :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
@@ -1279,7 +1279,7 @@ class ForumChannel(_TextChannel):
 
         Returns
         -------
-        Optional[:class:`.ForumChannel`]
+        :class:`.ForumChannel` | :obj:`None`
             The newly edited forum channel. If the edit was only positional
             then ``None`` is returned instead.
 
@@ -1359,11 +1359,11 @@ class ForumChannel(_TextChannel):
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
-        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
+        stickers: Sequence[:class:`~discord.GuildSticker` | :class:`~discord.StickerItem`]
             A list of stickers to upload. Must be a maximum of 3.
         delete_message_after: :class:`int`
             The time to wait before deleting the thread.
-        nonce: Union[:class:`str`, :class:`int`]
+        nonce: :class:`str` | :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
         allowed_mentions: :class:`~discord.AllowedMentions`
@@ -1536,18 +1536,18 @@ class MediaChannel(ForumChannel):
         The guild the channel belongs to.
     id: :class:`int`
         The channel ID.
-    category_id: Optional[:class:`int`]
+    category_id: :class:`int` | :obj:`None`
         The category channel ID this channel belongs to, if applicable.
-    topic: Optional[:class:`str`]
+    topic: :class:`str` | :obj:`None`
         The channel's topic. ``None`` if it doesn't exist.
 
         .. note::
 
             :attr:`guidelines` exists as an alternative to this attribute.
-    position: Optional[:class:`int`]
+    position: :class:`int` | :obj:`None`
         The position in the channel list. This is a number that starts at 0. e.g. the
         top channel is position 0. Can be ``None`` if the channel was received in an interaction.
-    last_message_id: Optional[:class:`int`]
+    last_message_id: :class:`int` | :obj:`None`
         The last message ID of the message sent to this channel. It may
         *not* point to an existing or valid message.
     slowmode_delay: :class:`int`
@@ -1570,13 +1570,13 @@ class MediaChannel(ForumChannel):
     available_tags: List[:class:`ForumTag`]
         The set of tags that can be used in a forum channel.
 
-    default_sort_order: Optional[:class:`SortOrder`]
+    default_sort_order: :class:`SortOrder` | :obj:`None`
         The default sort order type used to order posts in this channel.
 
-    default_thread_slowmode_delay: Optional[:class:`int`]
+    default_thread_slowmode_delay: :class:`int` | :obj:`None`
         The initial slowmode delay to set on newly created threads in this channel.
 
-    default_reaction_emoji: Optional[:class:`str` | :class:`discord.GuildEmoji`]
+    default_reaction_emoji: :class:`str` | :class:`discord.GuildEmoji` | :obj:`None`
         The default forum reaction emoji.
     """
 
@@ -1658,15 +1658,15 @@ class MediaChannel(ForumChannel):
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The new category for this channel. Can be ``None`` to remove the
             category.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
             A value of `0` disables slowmode. The maximum value possible is `21600`.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
@@ -1674,10 +1674,10 @@ class MediaChannel(ForumChannel):
         default_thread_slowmode_delay: :class:`int`
             The new default slowmode delay in seconds for threads created in this channel.
 
-        default_sort_order: Optional[:class:`SortOrder`]
+        default_sort_order: :class:`SortOrder` | :obj:`None`
             The default sort order type to use to order posts in this channel.
 
-        default_reaction_emoji: Optional[:class:`discord.GuildEmoji` | :class:`int` | :class:`str`]
+        default_reaction_emoji: :class:`discord.GuildEmoji` | :class:`int` | :class:`str` | :obj:`None`
             The default reaction emoji.
             Can be a unicode emoji or a custom emoji in the forms:
             :class:`GuildEmoji`, snowflake ID, string representation (e.g., '<a:emoji_name:emoji_id>').
@@ -1701,7 +1701,7 @@ class MediaChannel(ForumChannel):
 
         Returns
         -------
-        Optional[:class:`.MediaChannel`]
+        :class:`.MediaChannel` | :obj:`None`
             The newly edited media channel. If the edit was only positional
             then ``None`` is returned instead.
 
@@ -1902,16 +1902,16 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         The guild the channel belongs to.
     id: :class:`int`
         The channel ID.
-    category_id: Optional[:class:`int`]
+    category_id: :class:`int` | :obj:`None`
         The category channel ID this channel belongs to, if applicable.
-    position: Optional[:class:`int`]
+    position: :class:`int` | :obj:`None`
         The position in the channel list. This is a number that starts at 0. e.g. the
         top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     bitrate: :class:`int`
         The channel's preferred audio bitrate in bits per second.
     user_limit: :class:`int`
         The channel's limit for number of members that can be in a voice channel.
-    rtc_region: Optional[:class:`VoiceRegion`]
+    rtc_region: :class:`VoiceRegion` | :obj:`None`
         The region for the voice channel's voice communication.
         A value of ``None`` indicates automatic voice region detection.
 
@@ -1920,7 +1920,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         The camera video quality for the voice channel's participants.
 
         .. versionadded:: 2.0
-    last_message_id: Optional[:class:`int`]
+    last_message_id: :class:`int` | :obj:`None`
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
 
         .. versionadded:: 2.0
@@ -1931,7 +1931,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         :attr:`~Permissions.manage_messages` bypass slowmode.
 
         .. versionadded:: 2.5
-    status: Optional[:class:`str`]
+    status: :class:`str` | :obj:`None`
         The channel's status, if set.
 
         .. versionadded:: 2.5
@@ -2006,7 +2006,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Returns
         -------
-        Optional[:class:`Message`]
+        :class:`Message` | :obj:`None`
             The last message in this channel or ``None`` if not found.
         """
         return (
@@ -2060,7 +2060,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         ----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Raises
@@ -2116,25 +2116,25 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of messages to search through. This is not the number
             of messages that will be deleted, though it can be.
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``before`` in :meth:`history`.
-        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``after`` in :meth:`history`.
-        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        around: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``around`` in :meth:`history`.
-        oldest_first: Optional[:class:`bool`]
+        oldest_first: :class:`bool` | :obj:`None`
             Same as ``oldest_first`` in :meth:`history`.
         bulk: :class:`bool`
             If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
             a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
             fall back to single delete if messages are older than two weeks.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Returns
@@ -2211,10 +2211,10 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         ----------
         name: :class:`str`
             The webhook's name.
-        avatar: Optional[:class:`bytes`]
+        avatar: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the webhook's default avatar.
             This operates similarly to :meth:`~ClientUser.edit`.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this webhook. Shows up in the audit logs.
 
         Returns
@@ -2323,14 +2323,14 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The new category for this channel. Can be ``None`` to remove the
             category.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+        rtc_region: :class:`str` | :class:`VoiceRegion` | :obj:`None`
             The new region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 
@@ -2366,7 +2366,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Returns
         -------
-        Optional[:class:`.VoiceChannel`]
+        :class:`.VoiceChannel` | :obj:`None`
             The newly edited voice channel. If the edit was only positional
             then ``None`` is returned instead.
 
@@ -2407,7 +2407,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Parameters
         ----------
-        activity: Union[:class:`discord.EmbeddedActivity`, :class:`int`]
+        activity: :class:`discord.EmbeddedActivity` | :class:`int`
             The activity to create an invite for which can be an application id as well.
         max_age: :class:`int`
             How long the invite should last in seconds. If it's 0 then the invite
@@ -2422,7 +2422,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             Indicates if a unique invite URL should be created. Defaults to True.
             If this is set to ``False`` then it will return a previously created
             invite.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this invite. Shows up on the audit log.
 
         Returns
@@ -2462,9 +2462,9 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Parameters
         ----------
-        status: Union[:class:`str`, None]
+        status: :class:`str` | None
             The new status.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for setting the status. Shows up on the audit log.
 
         Raises
@@ -2527,18 +2527,18 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         The guild the channel belongs to.
     id: :class:`int`
         The channel ID.
-    topic: Optional[:class:`str`]
+    topic: :class:`str` | :obj:`None`
         The channel's topic. ``None`` if it isn't set.
-    category_id: Optional[:class:`int`]
+    category_id: :class:`int` | :obj:`None`
         The category channel ID this channel belongs to, if applicable.
-    position: Optional[:class:`int`]
+    position: :class:`int` | :obj:`None`
         The position in the channel list. This is a number that starts at 0. e.g. the
         top channel is position 0. Can be ``None`` if the channel was received in an interaction.
     bitrate: :class:`int`
         The channel's preferred audio bitrate in bits per second.
     user_limit: :class:`int`
         The channel's limit for number of members that can be in a stage channel.
-    rtc_region: Optional[:class:`VoiceRegion`]
+    rtc_region: :class:`VoiceRegion` | :obj:`None`
         The region for the stage channel's voice communication.
         A value of ``None`` indicates automatic voice region detection.
     video_quality_mode: :class:`VideoQualityMode`
@@ -2549,7 +2549,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
-    last_message_id: Optional[:class:`int`]
+    last_message_id: :class:`int` | :obj:`None`
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
         .. versionadded:: 2.5
 
@@ -2650,7 +2650,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Returns
         -------
-        Optional[:class:`Message`]
+        :class:`Message` | :obj:`None`
             The last message in this channel or ``None`` if not found.
         """
         return (
@@ -2704,7 +2704,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         ----------
         messages: Iterable[:class:`abc.Snowflake`]
             An iterable of messages denoting which ones to bulk delete.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Raises
@@ -2760,25 +2760,25 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of messages to search through. This is not the number
             of messages that will be deleted, though it can be.
         check: Callable[[:class:`Message`], :class:`bool`]
             The function used to check if a message should be deleted.
             It must take a :class:`Message` as its sole parameter.
-        before: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``before`` in :meth:`history`.
-        after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``after`` in :meth:`history`.
-        around: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
+        around: :class:`abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Same as ``around`` in :meth:`history`.
-        oldest_first: Optional[:class:`bool`]
+        oldest_first: :class:`bool` | :obj:`None`
             Same as ``oldest_first`` in :meth:`history`.
         bulk: :class:`bool`
             If ``True``, use bulk delete. Setting this to ``False`` is useful for mass-deleting
             a bot's own messages without :attr:`Permissions.manage_messages`. When ``True``, will
             fall back to single delete if messages are older than two weeks.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the messages. Shows up on the audit log.
 
         Returns
@@ -2855,10 +2855,10 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         ----------
         name: :class:`str`
             The webhook's name.
-        avatar: Optional[:class:`bytes`]
+        avatar: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the webhook's default avatar.
             This operates similarly to :meth:`~ClientUser.edit`.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this webhook. Shows up in the audit logs.
 
         Returns
@@ -3043,14 +3043,14 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The new category for this channel. Can be ``None`` to remove the
             category.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this channel. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
-        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+        rtc_region: :class:`str` | :class:`VoiceRegion` | :obj:`None`
             The new region ID for the stage channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 
@@ -3074,7 +3074,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         Returns
         -------
-        Optional[:class:`.StageChannel`]
+        :class:`.StageChannel` | :obj:`None`
             The newly edited stage channel. If the edit was only positional
             then ``None`` is returned instead.
 
@@ -3125,7 +3125,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         The guild the category belongs to.
     id: :class:`int`
         The category channel ID.
-    position: Optional[:class:`int`]
+    position: :class:`int` | :obj:`None`
         The position in the category list. This is a number that starts at 0. e.g. the
         top category is position 0. Can be ``None`` if the channel was received in an interaction.
 
@@ -3216,14 +3216,14 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             The new category's name.
         position: :class:`int`
             The new category's position.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this category. Shows up on the audit log.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to channel permissions. Useful for creating secret channels.
 
         Returns
         -------
-        Optional[:class:`.CategoryChannel`]
+        :class:`.CategoryChannel` | :obj:`None`
             The newly edited category channel. If the edit was only positional
             then ``None`` is returned instead.
 
@@ -3405,7 +3405,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
 
     Attributes
     ----------
-    recipient: Optional[:class:`User`]
+    recipient: :class:`User` | :obj:`None`
         The user you are participating with in the direct message channel.
         If this channel is received through the gateway, the recipient information
         may not be always available.
@@ -3549,13 +3549,13 @@ class GroupChannel(discord.abc.Messageable, Hashable):
         The user presenting yourself.
     id: :class:`int`
         The group channel ID.
-    owner: Optional[:class:`User`]
+    owner: :class:`User` | :obj:`None`
         The user that owns the group channel.
     owner_id: :class:`int`
         The owner ID that owns the group channel.
 
         .. versionadded:: 2.0
-    name: Optional[:class:`str`]
+    name: :class:`str` | :obj:`None`
         The group channel's name if provided.
     """
 
@@ -3712,7 +3712,7 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
     ----------
     id: :class:`int`
         The channel ID associated with this partial messageable.
-    type: Optional[:class:`ChannelType`]
+    type: :class:`ChannelType` | :obj:`None`
         The channel type associated with this partial messageable, if given.
     """
 
@@ -3776,7 +3776,7 @@ class VoiceChannelEffectSendEvent:
         The type of animation that is being sent.
     animation_id: :class:`int`
         The ID of the animation that is being sent.
-    sound: Optional[:class:`SoundboardSound`]
+    sound: :class:`SoundboardSound` | :obj:`None`
         The sound that is being sent, could be ``None`` if the effect is not a sound effect.
     guild: :class:`Guild`
         The guild in which the sound is being sent.

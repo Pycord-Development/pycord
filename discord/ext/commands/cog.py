@@ -56,7 +56,7 @@ class Cog(Cog):
 
         Yields
         ------
-        Union[:class:`.Command`, :class:`.Group`]
+        :class:`.Command` | :class:`.Group`
             A command or group from the cog.
         """
         from .core import GroupMixin
@@ -76,7 +76,7 @@ class Cog(Cog):
         r"""
         Returns
         --------
-        List[Union[:class:`~discord.ApplicationCommand`, :class:`.Command`]]
+        List[:class:`~discord.ApplicationCommand` | :class:`.Command`]
             A :class:`list` of commands that are defined inside this cog.
 
             .. note::

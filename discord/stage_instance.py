@@ -74,7 +74,7 @@ class StageInstance(Hashable):
         The privacy level of the stage instance.
     discoverable_disabled: :class:`bool`
         Whether discoverability for the stage instance is disabled.
-    scheduled_event: Optional[:class:`.ScheduledEvent`]
+    scheduled_event: :class:`.ScheduledEvent` | :obj:`None`
         The scheduled event linked with the stage instance, if any.
     """
 
