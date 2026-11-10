@@ -40,6 +40,7 @@ from discord import (
     SlashCommandOptionType,
 )
 
+from ...commands.core import _enter_subcommand
 from ...utils import MISSING, find, get, warn_deprecated
 from ..commands import (
     BadArgument,
@@ -139,10 +140,10 @@ class BridgeSlashGroup(SlashCommandGroup):
             ctx.command = self.__command
             return await ctx.command.invoke(ctx)
         option = options[0]
-        resolved = ctx.interaction.data.get("resolved", None)
         command = find(lambda x: x.name == option["name"], self.subcommands)
-        option["resolved"] = resolved
-        ctx.interaction.data = option
+        if command is None:
+            return
+        _enter_subcommand(ctx, option)
         await command.invoke(ctx)
 
 

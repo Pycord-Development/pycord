@@ -28,10 +28,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from ..permissions import Permissions
-from .channel import ChannelType
+from .channel import ChannelType, ThreadMetadata
 from .components import Component, ComponentType
 from .embed import Embed
-from .member import Member
+from .member import Member, MemberWithUser
 from .message import Attachment
 from .monetization import Entitlement
 from .role import Role
@@ -40,7 +40,6 @@ from .user import User
 
 if TYPE_CHECKING:
     from .message import AllowedMentions, Message
-    from ..interactions import InteractionChannel
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -176,6 +175,17 @@ class ApplicationCommandResolvedPartialChannel(TypedDict):
     type: ChannelType
     permissions: str
     name: str
+    app_permissions: str
+    last_message_id: NotRequired[Snowflake]
+    last_pin_timestamp: NotRequired[str]
+    nsfw: NotRequired[bool]
+    parent_id: NotRequired[Snowflake]
+    guild_id: NotRequired[Snowflake]
+    flags: NotRequired[int]
+    rate_limit_per_user: NotRequired[int]
+    topic: NotRequired[str]
+    position: NotRequired[int]
+    thread_metadata: NotRequired[ThreadMetadata]
 
 
 class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
@@ -184,6 +194,7 @@ class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
     roles: dict[Snowflake, Role]
     channels: dict[Snowflake, ApplicationCommandResolvedPartialChannel]
     attachments: dict[Snowflake, Attachment]
+    messages: dict[Snowflake, Message]
 
 
 class ApplicationCommandInteractionData(TypedDict):
@@ -208,8 +219,8 @@ class Interaction(TypedDict):
     data: NotRequired[InteractionData]
     guild_id: NotRequired[Snowflake]
     channel_id: NotRequired[Snowflake]
-    channel: NotRequired[InteractionChannel]
-    member: NotRequired[Member]
+    channel: NotRequired[ApplicationCommandResolvedPartialChannel]
+    member: NotRequired[MemberWithUser]
     user: NotRequired[User]
     message: NotRequired[Message]
     locale: NotRequired[str]

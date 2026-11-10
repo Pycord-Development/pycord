@@ -47,7 +47,6 @@ from typing import (
 
 from typing_extensions import Self
 
-from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
 from ..enums import IntegrationType, InteractionContextType, SlashCommandOptionType
 from ..errors import (
@@ -58,12 +57,16 @@ from ..errors import (
     InvalidArgument,
     ValidationError,
 )
-from ..message import Attachment, Message
 from ..object import Object
-from ..role import Role
-from ..threads import Thread
-from ..user import User
-from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_deprecated
+from ..utils import (
+    MISSING,
+    async_all,
+    find,
+    get,
+    maybe_coroutine,
+    utcnow,
+    warn_deprecated,
+)
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -91,6 +94,12 @@ if TYPE_CHECKING:
     from ..bot import C
     from ..cog import Cog
     from ..ext.commands.cooldowns import Cooldown, CooldownMapping, MaxConcurrency
+    from ..types.interactions import (
+        ApplicationCommandInteractionData as ApplicationCommandInteractionDataPayload,
+    )
+    from ..types.interactions import (
+        ApplicationCommandInteractionDataOption as ApplicationCommandInteractionDataOptionPayload,
+    )
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -100,6 +109,22 @@ if TYPE_CHECKING:
     P = ParamSpec("P")
 else:
     P = TypeVar("P")
+
+
+def _enter_subcommand(
+    ctx: ApplicationContext | AutocompleteContext,
+    option: ApplicationCommandInteractionDataOptionPayload,
+) -> None:
+    # Replaces the interaction data with the subcommand (group)'s data, so the
+    # subcommand sees its own name and options. Everything else (id, resolved, ...)
+    # is kept from the parent.
+    data: ApplicationCommandInteractionDataPayload | None = ctx.interaction.data  # type: ignore # narrowed
+    if data is None:
+        return
+    new_data = data.copy()
+    new_data["name"] = option["name"]
+    new_data["options"] = option.get("options", [])
+    ctx.interaction.data = new_data
 
 
 def wrap_callback(coro):
@@ -990,15 +1015,17 @@ class SlashCommand(ApplicationCommand):
         return as_dict
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        # TODO: Parse the args better
-        kwargs = {}
-        for arg in ctx.interaction.data.get("options", []):
-            op = find(lambda x: x.name == arg["name"], self.options)
-            if op is None:
+        kwargs: dict[Any, Any] = {}
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
+        for option in options:
+            op = get(self.options, name=option["name"])
+            if op is None or "value" not in option:
                 continue
-            arg = arg["value"]
+            value: Any = option["value"]
 
-            # Checks if input_type is user, role or channel
+            # Checks if input_type is user, role, channel, attachment or mentionable
             if op.input_type in (
                 SlashCommandOptionType.user,
                 SlashCommandOptionType.role,
@@ -1006,64 +1033,9 @@ class SlashCommand(ApplicationCommand):
                 SlashCommandOptionType.attachment,
                 SlashCommandOptionType.mentionable,
             ):
-                resolved = ctx.interaction.data.get("resolved", {})
-                if (
-                    op.input_type
-                    in (SlashCommandOptionType.user, SlashCommandOptionType.mentionable)
-                    and (_data := resolved.get("members", {}).get(arg)) is not None
-                ):
-                    # The option type is a user, we resolved a member from the snowflake and assigned it to _data
-                    if (_user_data := resolved.get("users", {}).get(arg)) is not None:
-                        # We resolved the user from the user id
-                        _data["user"] = _user_data
-                    cache_flag = ctx.interaction._state.member_cache_flags.interaction
-                    arg = ctx.guild._get_and_update_member(_data, int(arg), cache_flag)
-                elif op.input_type is SlashCommandOptionType.mentionable:
-                    if (_data := resolved.get("users", {}).get(arg)) is not None:
-                        arg = User(state=ctx.interaction._state, data=_data)
-                    elif (_data := resolved.get("roles", {}).get(arg)) is not None:
-                        arg = Role(
-                            state=ctx.interaction._state, data=_data, guild=ctx.guild
-                        )
-                    else:
-                        arg = Object(id=int(arg))
-                elif (
-                    _data := resolved.get(f"{op.input_type.name}s", {}).get(arg)
-                ) is not None:
-                    if op.input_type is SlashCommandOptionType.channel and (
-                        int(arg) in ctx.guild._channels
-                        or int(arg) in ctx.guild._threads
-                    ):
-                        arg = ctx.guild.get_channel_or_thread(int(arg))
-                        _data["_invoke_flag"] = True
-                        (
-                            arg._update(_data)
-                            if isinstance(arg, Thread)
-                            else arg._update(ctx.guild, _data)
-                        )
-                    else:
-                        obj_type = None
-                        kw = {}
-                        if op.input_type is SlashCommandOptionType.user:
-                            obj_type = User
-                        elif op.input_type is SlashCommandOptionType.role:
-                            obj_type = Role
-                            kw["guild"] = ctx.guild
-                        elif op.input_type is SlashCommandOptionType.channel:
-                            # NOTE:
-                            # This is a fallback in case the channel/thread is not found in the
-                            # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
-                            # permissions will be incorrect due to a lack of permission_overwrite data.
-                            # For threads, if this fallback occurs, info like thread owner id, message count,
-                            # flags, and more will be missing due to a lack of data sent by Discord.
-                            obj_type = _threaded_guild_channel_factory(_data["type"])[0]
-                            kw["guild"] = ctx.guild
-                        elif op.input_type is SlashCommandOptionType.attachment:
-                            obj_type = Attachment
-                        arg = obj_type(state=ctx.interaction._state, data=_data, **kw)
-                else:
-                    # We couldn't resolve the object, so we just return an empty object
-                    arg = Object(id=int(arg))
+                value = ctx.interaction._resolved.get(value, op.input_type) or Object(
+                    id=int(value)
+                )
 
             elif (
                 op.input_type == SlashCommandOptionType.string
@@ -1073,9 +1045,9 @@ class SlashCommand(ApplicationCommand):
 
                 if isinstance(converter, Converter):
                     if isinstance(converter, type):
-                        arg = await converter().convert(ctx, arg)
-                    else:
-                        arg = await converter.convert(ctx, arg)
+                        converter = converter()
+                    # ApplicationContext is duck-typed as a commands.Context here
+                    value = await converter.convert(ctx, value)  # type: ignore
 
             elif op._raw_type in (
                 SlashCommandOptionType.integer,
@@ -1085,58 +1057,67 @@ class SlashCommand(ApplicationCommand):
             ):
                 pass
 
-            elif issubclass(op._raw_type, Enum):
-                if isinstance(arg, str) and arg.isdigit():
+            elif isinstance(op._raw_type, type) and issubclass(op._raw_type, Enum):
+                enum_type: type[Enum] = op._raw_type
+                if isinstance(value, str) and value.isdigit():
                     try:
-                        arg = op._raw_type(int(arg))
+                        value = enum_type(int(value))
                     except ValueError:
-                        arg = op._raw_type(arg)
-                elif choice := find(lambda c: c.value == arg, op.choices):
-                    arg = getattr(op._raw_type, choice.name)
+                        value = enum_type(value)
+                elif choice := get(op.choices, value=value):
+                    value = enum_type[choice.name]
 
-            kwargs[op._parameter_name] = arg
+            kwargs[op._parameter_name] = value
 
         for o in self.options:
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
 
+        callback: Callable[..., Coroutine[Any, Any, Any]] = self.callback
         if self.cog is not None:
-            await self.callback(self.cog, ctx, **kwargs)
+            await callback(self.cog, ctx, **kwargs)
         elif self.parent is not None and self.attached_to_group is True:
-            await self.callback(self.parent, ctx, **kwargs)
+            await callback(self.parent, ctx, **kwargs)
         else:
-            await self.callback(ctx, **kwargs)
+            await callback(ctx, **kwargs)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = {i.name: i.default for i in self.options}
 
-        for op in ctx.interaction.data.get("options", []):
-            if op.get("focused", False):
-                option = find(lambda o: o.name == op["name"], self.options)
-                values.update(
-                    {i["name"]: i["value"] for i in ctx.interaction.data["options"]}
-                )
-                ctx.command = self
-                ctx.focused = option
-                ctx.value = op.get("value")
-                ctx.options = values
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
+        for op in options:
+            if not op.get("focused", False):
+                continue
+            option = get(self.options, name=op["name"])
+            if option is None or option.autocomplete is None:
+                return
 
-                if option._autocomplete_is_instance_method:
-                    instance = getattr(option.autocomplete, "__self__", ctx.cog)
-                    result = option.autocomplete(instance, ctx)
-                else:
-                    result = option.autocomplete(ctx)
+            values.update({i["name"]: i.get("value") for i in options})
+            ctx.command = self
+            ctx.focused = option
+            # the focused value is always the (partial) user input as a string
+            ctx.value = str(op.get("value", ""))
+            ctx.options = values
 
-                if inspect.isawaitable(result):
-                    result = await result
+            autocomplete: Callable[..., Any] = option.autocomplete
+            if option._autocomplete_is_instance_method:
+                instance = getattr(autocomplete, "__self__", ctx.cog)
+                result = autocomplete(instance, ctx)
+            else:
+                result = autocomplete(ctx)
 
-                choices = [
-                    o if isinstance(o, OptionChoice) else OptionChoice(o)
-                    for o in result
-                ][:25]
-                return await ctx.interaction.response.send_autocomplete_result(
-                    choices=choices
-                )
+            if inspect.isawaitable(result):
+                result = await result
+
+            choices = [
+                o if isinstance(o, OptionChoice) else OptionChoice(str(o), o)
+                for o in result
+            ][:25]
+            return await ctx.interaction.response.send_autocomplete_result(
+                choices=choices
+            )
 
     def copy(self):
         """Creates a copy of this command.
@@ -1527,17 +1508,29 @@ class SlashCommandGroup(ApplicationCommand):
         return inner
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        option = ctx.interaction.data["options"][0]
-        resolved = ctx.interaction.data.get("resolved", None)
-        command = find(lambda x: x.name == option["name"], self.subcommands)
-        option["resolved"] = resolved
-        ctx.interaction.data = option
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
+        if not options:
+            return
+        option = options[0]
+        command = get(self.subcommands, name=option["name"])
+        if command is None:
+            return
+        _enter_subcommand(ctx, option)
         await command.invoke(ctx)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext) -> None:
-        option = ctx.interaction.data["options"][0]
-        command = find(lambda x: x.name == option["name"], self.subcommands)
-        ctx.interaction.data = option
+        options: list[ApplicationCommandInteractionDataOptionPayload] = (
+            ctx.interaction.data.get("options", [])
+        )
+        if not options:
+            return
+        option = options[0]
+        command = get(self.subcommands, name=option["name"])
+        if command is None:
+            return
+        _enter_subcommand(ctx, option)
         await command.invoke_autocomplete_callback(ctx)
 
     async def call_before_hooks(self, ctx: ApplicationContext) -> None:
@@ -1819,28 +1812,14 @@ class UserCommand(ContextMenuCommand):
         return self
 
     async def _invoke(self, ctx: ApplicationContext) -> None:
-        if "members" not in ctx.interaction.data["resolved"]:
-            _data = ctx.interaction.data["resolved"]["users"]
-            for i, v in _data.items():
-                v["id"] = int(i)
-                user = v
-            target = User(state=ctx.interaction._state, data=user)
-        else:
-            _data = ctx.interaction.data["resolved"]["members"]
-            for i, v in _data.items():
-                v["id"] = int(i)
-                member = v
-            _data = ctx.interaction.data["resolved"]["users"]
-            for i, v in _data.items():
-                v["id"] = int(i)
-                user = v
-            member["user"] = user
-            cache_flag = ctx.interaction._state.member_cache_flags.interaction
-            target = ctx.guild._get_and_update_member(member, user["id"], cache_flag)
+        data: ApplicationCommandInteractionDataPayload = ctx.interaction.data  # type: ignore # narrowed
+        target_id = int(data.get("target_id", 0)) if data is not None else 0
+        target = ctx.interaction._resolved.get_user(target_id)
+        callback: Callable[..., Coroutine[Any, Any, Any]] = self.callback
         if self.cog is not None:
-            await self.callback(self.cog, ctx, target)
+            await callback(self.cog, ctx, target)
         else:
-            await self.callback(ctx, target)
+            await callback(ctx, target)
 
     def copy(self):
         """Creates a copy of this command.
@@ -1933,24 +1912,16 @@ class MessageCommand(ContextMenuCommand):
         self.__original_kwargs__ = kwargs.copy()
         return self
 
-    async def _invoke(self, ctx: ApplicationContext):
-        _data = ctx.interaction.data["resolved"]["messages"]
-        for i, v in _data.items():
-            v["id"] = int(i)
-            message = v
-        channel = ctx.interaction.channel
-        if channel.id != int(message["channel_id"]):
-            # we got weird stuff going on, make up a channel
-            channel = PartialMessageable(
-                state=ctx.interaction._state, id=int(message["channel_id"])
-            )
+    async def _invoke(self, ctx: ApplicationContext) -> None:
+        data: ApplicationCommandInteractionDataPayload | None = ctx.interaction.data  # type: ignore # narrowed
+        target_id = int(data.get("target_id", 0)) if data is not None else 0
+        target = ctx.interaction._resolved.messages[target_id]
 
-        target = Message(state=ctx.interaction._state, channel=channel, data=message)
-
+        callback: Callable[..., Coroutine[Any, Any, Any]] = self.callback
         if self.cog is not None:
-            await self.callback(self.cog, ctx, target)
+            await callback(self.cog, ctx, target)
         else:
-            await self.callback(ctx, target)
+            await callback(ctx, target)
 
     def copy(self):
         """Creates a copy of this command.

@@ -78,6 +78,7 @@ __all__ = (
     "CategoryChannel",
     "GroupChannel",
     "PartialMessageable",
+    "PartialChannel",
     "ForumChannel",
     "MediaChannel",
     "ForumTag",
@@ -104,6 +105,9 @@ if TYPE_CHECKING:
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.interactions import (
+        ApplicationCommandResolvedPartialChannel as PartialChannelPayload,
+    )
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .ui.view import BaseView
@@ -3556,6 +3560,90 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
 
     def __repr__(self) -> str:
         return f"<PartialMessageable id={self.id} type={self.type!r}>"
+
+
+class PartialChannel(PartialMessageable):
+    """Represents a partial channel received through resolved interaction data
+    when the full channel isn't available in the cache.
+
+    This is a :class:`PartialMessageable`, so messages can still be sent to it.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The channel's ID.
+    type: :class:`ChannelType`
+        The channel's type.
+    name: :class:`str` | :obj:`None`
+        The channel's name. ``None`` for some DM channels.
+    guild_id: :class:`int` | :obj:`None`
+        The ID of the guild the channel belongs to, if any.
+    parent_id: :class:`int` | :obj:`None`
+        The ID of the parent category or channel, if any.
+    permissions: :class:`Permissions`
+        The computed permissions of the invoking user in this channel.
+    topic: :class:`str` | :obj:`None`
+        The channel's topic, if any.
+    position: :class:`int` | :obj:`None`
+        The channel's position, if any.
+    nsfw: :class:`bool`
+        Whether the channel is marked as NSFW.
+    slowmode_delay: :class:`int`
+        The channel's slowmode delay in seconds.
+    last_message_id: :class:`int` | :obj:`None`
+        The ID of the last message sent in this channel, if any.
+    """
+
+    def __init__(self, *, state: ConnectionState, data: PartialChannelPayload):
+        super().__init__(
+            state=state,
+            id=int(data["id"]),
+            type=try_enum(ChannelType, data["type"]),
+        )
+        self.name: str | None = data.get("name")
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
+        self.parent_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.permissions: Permissions = Permissions(int(data.get("permissions", 0)))
+        self.topic: str | None = data.get("topic")
+        self.position: int | None = data.get("position")
+        self.nsfw: bool = data.get("nsfw", False)
+        self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
+        self.last_message_id: int | None = utils._get_as_snowflake(
+            data, "last_message_id"
+        )
+        self._flags: int = data.get("flags", 0)
+
+    @property
+    def flags(self) -> ChannelFlags:
+        """The channel's flags."""
+        return ChannelFlags._from_value(self._flags)
+
+    @property
+    def guild(self) -> Guild | None:
+        """The guild the channel belongs to, if cached."""
+        return self._state._get_guild(self.guild_id)
+
+    @property
+    def parent(self) -> GuildChannelType | None:
+        """:class:`VoiceChannel` | :class:`StageChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`CategoryChannel`: The parent channel or category, if cached."""
+        if self.parent_id is None:
+            return None
+        return self._state.get_channel(self.parent_id)  # type: ignore
+
+    @property
+    def mention(self) -> str:
+        """The string that allows you to mention the channel."""
+        return f"<#{self.id}>"
+
+    @property
+    def jump_url(self) -> str:
+        """Returns a URL that allows the client to jump to the channel."""
+        return f"https://discord.com/channels/{self.guild_id or '@me'}/{self.id}"
+
+    def __repr__(self) -> str:
+        return f"<PartialChannel id={self.id} name={self.name!r} type={self.type!r}>"
 
 
 class VoiceChannelEffectAnimation(NamedTuple):

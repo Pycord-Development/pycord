@@ -177,13 +177,11 @@ class FileUpload(ModalItem):
         return self.underlying.to_dict()
 
     def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
-        values = data.get("values", [])
+        attachments = interaction._resolved.attachments
         self._attachments = [
-            Attachment(
-                state=interaction._state,
-                data=interaction.data["resolved"]["attachments"][attachment_id],
-            )
-            for attachment_id in values
+            attachment
+            for attachment_id in data.get("values", [])
+            if (attachment := attachments.get(int(attachment_id))) is not None
         ]
 
     @classmethod
