@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from docutils.parsers.rst.directives.parts import Contents
 
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
