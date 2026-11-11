@@ -226,6 +226,12 @@ Flags
 .. autoclass:: EmbedFlags()
     :members:
 
+.. attributetable:: EmbedMediaFlags
+
+.. autoclass:: EmbedMediaFlags()
+    :members:
+
+
 Colour
 ------
 

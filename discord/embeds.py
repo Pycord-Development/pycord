@@ -652,13 +652,6 @@ class Embed:
     def image(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the image contents.
 
-        Attributes you can access are:
-
-        - ``url``
-        - ``proxy_url``
-        - ``width``
-        - ``height``
-
         If the image is not set then `None` is returned.
         """
         img = getattr(self, "_image", None)
@@ -673,26 +666,28 @@ class Embed:
         elif isinstance(value, str):
             self.set_image(url=value)
         elif isinstance(value, EmbedMedia):
-            self.set_image(url=value.url)
+            self.set_image(url=value.url, description=value.description)
         else:
             raise TypeError(
                 "Expected discord.EmbedMedia, or None but received"
                 f" {value.__class__.__name__} instead."
             )
 
-    def set_image(self: E, *, url: Any | None) -> E:
+    def set_image(self: E, *, url: Any | None, description: Any | None = None) -> E:
         """Sets the image for the embed content.
 
         This function returns the class instance to allow for fluent-style
         chaining.
 
-        .. versionchanged:: 1.4
-            Passing `None` removes the image.
+        .. versionchanged:: 2.9
+            Added the ``description`` parameter.
 
         Parameters
         ----------
         url: :class:`str`
             The source URL for the image. Only HTTP(S) is supported.
+        description: :class:`str`
+            The description for this image.
         """
 
         if url is None:
@@ -703,6 +698,7 @@ class Embed:
         else:
             self._image = {
                 "url": str(url),
+                "description": str(description)
             }
 
         return self
@@ -726,13 +722,6 @@ class Embed:
     def thumbnail(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the thumbnail contents.
 
-        Attributes you can access are:
-
-        - ``url``
-        - ``proxy_url``
-        - ``width``
-        - ``height``
-
         If the thumbnail is not set then `None` is returned.
         """
         thumb = getattr(self, "_thumbnail", None)
@@ -747,26 +736,28 @@ class Embed:
         elif isinstance(value, str):
             self.set_thumbnail(url=value)
         elif isinstance(value, EmbedMedia):
-            self.set_thumbnail(url=value.url)
+            self.set_thumbnail(url=value.url, description=value.description)
         else:
             raise TypeError(
                 "Expected discord.EmbedMedia, or None but received"
                 f" {value.__class__.__name__} instead."
             )
 
-    def set_thumbnail(self: E, *, url: Any | None) -> E:
+    def set_thumbnail(self: E, *, url: Any | None, description: Any | None = None) -> E:
         """Sets the thumbnail for the embed content.
 
         This function returns the class instance to allow for fluent-style
         chaining.
 
-        .. versionchanged:: 1.4
-            Passing `None` removes the thumbnail.
+        .. versionchanged:: 2.9
+            Added the ``description`` parameter.
 
         Parameters
         ----------
         url: :class:`str`
             The source URL for the thumbnail. Only HTTP(S) is supported.
+        description: :class:`str`
+            The description for this image.
         """
 
         if url is None:
@@ -777,6 +768,7 @@ class Embed:
         else:
             self._thumbnail = {
                 "url": str(url),
+                "description": str(description),
             }
 
         return self
