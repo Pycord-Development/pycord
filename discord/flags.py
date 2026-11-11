@@ -36,6 +36,7 @@ __all__ = (
     "ChannelFlags",
     "ContentScanningMetadataFlags",
     "EmbedFlags",
+    "EmbedMediaFlags",
     "GatewayCapabilities",
     "Intents",
     "MemberCacheFlags",
@@ -2154,3 +2155,56 @@ class EmbedFlags(BaseFlags):
             and can be added later in a :func:`on_message_edit`.
         """
         return 1 << 7
+
+
+class EmbedMediaFlags(BaseFlags):
+    r"""Wraps up the Embed Media flags.
+
+    .. versionadded:: 2.9
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two EmbedMediaFlags are equal.
+        .. describe:: x != y
+
+            Checks if two EmbedMediaFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def is_animated(self):
+        """:class:`bool`: Returns ``True`` if the media is animated.
+        """
+        return 1 << 5

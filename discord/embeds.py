@@ -31,7 +31,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from . import utils
 from .colour import Colour
-from .flags import EmbedFlags
+from .flags import EmbedFlags, EmbedMediaFlags
 
 __all__ = (
     "Embed",
@@ -164,24 +164,44 @@ class EmbedMedia:  # Thumbnail, Image, Video
     ----------
     url: :class:`str`
         The source URL of the media.
-    proxy_url: :class:`str`
+    proxy_url: :class:`str` | :obj:`None`
         The proxied URL of the media.
-    height: :class:`int`
+    height: :class:`int` | :obj:`None`
         The height of the media.
-    width: :class:`int`
+    width: :class:`int` | :obj:`None`
         The width of the media.
+    content_type: :class:`str` | :obj:`None`
+        The content type of the media.
+    placeholder: :class:`str` | :obj:`None`
+        The thumbnsail placeholder of the media.
+    placeholder_version: :class:`int` | :obj:`None`
+        THe version of the placeholder.
+    description: :class:`str` | :obj:`None`
+        The description (alt text) of the media.
+    flags: :class:`EmbedMediaFlags` | :obj:`None`
+        The flags of this media.
     """
 
     url: str
     proxy_url: str | None
     height: int | None
     width: int | None
+    content_type: str | None
+    placeholder: str | None
+    placeholder_version: int | None
+    description: str | None
+    flags: EmbedMediaFlags | None
 
-    def __init__(self, url: str):
+    def __init__(self, url: str, *, description: str | None = None):
         self.url = url
         self.proxy_url = None
         self.height = None
         self.width = None
+        self.content_type = None
+        self.placeholder = None
+        self.placeholder_version = None
+        self.description = description
+        self.flags = None
 
     @classmethod
     def from_dict(cls, data: dict[str, str | int]) -> EmbedMedia:
@@ -192,6 +212,11 @@ class EmbedMedia:  # Thumbnail, Image, Video
         )
         self.height = int(height) if (height := data.get("height")) else None
         self.width = int(width) if (width := data.get("width")) else None
+        self.content_type = str(content_type) if (content_type := data.get("content_type")) else None
+        self.placeholder = str(placeholder) if (placeholder := data.get("placeholder")) else None
+        self.placeholder_version = int(placeholder_version) if (placeholder_version := data.get("placeholder_version")) else None
+        self.description = str(description) if (description := data.get("description")) else None
+        self.flags = EmbedMediaFlags._from_value(int(flags)) if (flags := data.get("flags")) else None
         return self
 
     def __repr__(self) -> str:
