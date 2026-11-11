@@ -710,10 +710,7 @@ class Embed:
             except AttributeError:
                 pass
         else:
-            self._image = {
-                "url": str(url),
-                "description": str(description)
-            }
+            self._image = {"url": str(url), "description": str(description)}
 
         return self
 
