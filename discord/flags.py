@@ -1875,6 +1875,8 @@ class MemberFlags(BaseFlags):
 class RoleFlags(BaseFlags):
     r"""Wraps up the Discord Role flags.
 
+    .. versionadded:: 2.6
+
     .. container:: operations
 
         .. describe:: x == y
@@ -1907,8 +1909,6 @@ class RoleFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-    .. versionadded:: 2.6
-
     Attributes
     -----------
     value: :class:`int`
@@ -1926,6 +1926,8 @@ class RoleFlags(BaseFlags):
 
 class UnfurledMediaItemFlags(BaseFlags):
     r"""Wraps up the Unfurled Media Item flags.
+
+    .. versionadded:: 2.9
 
     .. container:: operations
 
@@ -1959,8 +1961,6 @@ class UnfurledMediaItemFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-    .. versionadded:: 2.9
-
     Attributes
     ----------
     value: :class:`int`
@@ -1978,6 +1978,8 @@ class UnfurledMediaItemFlags(BaseFlags):
 
 class ContentScanningMetadataFlags(BaseFlags):
     r"""Wraps up the Discord Content Scanning Metadata flags.
+
+    .. versionadded:: 2.9
 
     .. container:: operations
 
@@ -2011,8 +2013,6 @@ class ContentScanningMetadataFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-    .. versionadded:: 2.9
-
     Attributes
     -----------
     value: :class:`int`
@@ -2040,6 +2040,8 @@ class ContentScanningMetadataFlags(BaseFlags):
 
 class EmbedFlags(BaseFlags):
     r"""Wraps up the Embed flags.
+
+    .. versionadded:: 2.9
 
     .. container:: operations
 
@@ -2072,8 +2074,6 @@ class EmbedFlags(BaseFlags):
             Returns an iterator of ``(name, value)`` pairs. This allows it
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
-
-    .. versionadded:: 2.9
 
     Attributes
     -----------

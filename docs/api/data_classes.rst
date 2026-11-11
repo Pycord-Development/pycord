@@ -221,6 +221,11 @@ Flags
 .. autoclass:: ContentScanningMetadataFlags()
     :members:
 
+.. attributetable:: EmbedFlags
+
+.. autoclass:: EmbedFlags()
+    :members:
+
 Colour
 ------
 
