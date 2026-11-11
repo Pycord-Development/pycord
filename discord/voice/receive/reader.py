@@ -559,7 +559,7 @@ class SpeakingTimer(threading.Thread, Generic[Unpack[Ts]]):
 
 
 class UDPKeepAlive(threading.Thread):
-    delay: int = 5000
+    delay: float = 5.0
 
     def __init__(self, client: VoiceClient) -> None:
         super().__init__(
