@@ -333,6 +333,8 @@ class Embed:
     flags: :class:`EmbedFlags` | :obj:`None`
         This embed's flags. This is not intended to be set by the user, and is 
         only available if received from Discord.
+
+        .. versionadded:: 2.9
     """
 
     __slots__ = (
