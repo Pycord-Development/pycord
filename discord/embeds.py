@@ -31,6 +31,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from . import utils
 from .colour import Colour
+from .components import _component_factory, Component
 
 __all__ = (
     "Embed",
@@ -330,6 +331,11 @@ class Embed:
     colour: :class:`Colour` | :class:`int`
         The colour code of the embed. Aliased to ``color`` as well.
         This can be set during initialisation.
+    components: list[:class:`Component`] | :obj:`None`
+        The components for this embed. Only present for embeds of type ``components``.
+        This is not intended to be set by the user, and is only available when received from Discord.
+
+        .. versionadded:: 2.9
     """
 
     __slots__ = (
@@ -346,6 +352,7 @@ class Embed:
         "_author",
         "_fields",
         "description",
+        "components",
     )
 
     def __init__(
@@ -388,6 +395,7 @@ class Embed:
         self.footer = footer
         self.image = image
         self.thumbnail = thumbnail
+        self.components: list[Component] | None = None
 
     @classmethod
     def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
@@ -440,6 +448,9 @@ class Embed:
             self._timestamp = utils.parse_time(data["timestamp"])
         except KeyError:
             pass
+
+        if (components := data["components"]) is not None:
+            self.components = [_component_factory(item) for item in components]
 
         for attr in (
             "thumbnail",
@@ -1076,5 +1087,8 @@ class Embed:
 
         if self.title:
             result["title"] = self.title
+
+        if self.components:
+            result["components"] = [c.to_dict() for c in self.components]
 
         return result  # type: ignore
