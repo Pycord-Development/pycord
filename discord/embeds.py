@@ -332,7 +332,7 @@ class Embed:
         The colour code of the embed. Aliased to ``color`` as well.
         This can be set during initialisation.
     flags: :class:`EmbedFlags` | :obj:`None`
-        This embed's flags. This is not intended to be set by the user, and is 
+        This embed's flags. This is not intended to be set by the user, and is
         only available if received from Discord.
 
         .. versionadded:: 2.9
