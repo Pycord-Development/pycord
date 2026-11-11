@@ -29,9 +29,10 @@ import datetime
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from . import utils, EmbedFlags
+from . import utils
 from .colour import Colour
 from .components import Component, _component_factory
+from .flags import EmbedFlags
 
 __all__ = (
     "Embed",
