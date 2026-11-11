@@ -212,11 +212,25 @@ class EmbedMedia:  # Thumbnail, Image, Video
         )
         self.height = int(height) if (height := data.get("height")) else None
         self.width = int(width) if (width := data.get("width")) else None
-        self.content_type = str(content_type) if (content_type := data.get("content_type")) else None
-        self.placeholder = str(placeholder) if (placeholder := data.get("placeholder")) else None
-        self.placeholder_version = int(placeholder_version) if (placeholder_version := data.get("placeholder_version")) else None
-        self.description = str(description) if (description := data.get("description")) else None
-        self.flags = EmbedMediaFlags._from_value(int(flags)) if (flags := data.get("flags")) else None
+        self.content_type = (
+            str(content_type) if (content_type := data.get("content_type")) else None
+        )
+        self.placeholder = (
+            str(placeholder) if (placeholder := data.get("placeholder")) else None
+        )
+        self.placeholder_version = (
+            int(placeholder_version)
+            if (placeholder_version := data.get("placeholder_version"))
+            else None
+        )
+        self.description = (
+            str(description) if (description := data.get("description")) else None
+        )
+        self.flags = (
+            EmbedMediaFlags._from_value(int(flags))
+            if (flags := data.get("flags"))
+            else None
+        )
         return self
 
     def __repr__(self) -> str:
