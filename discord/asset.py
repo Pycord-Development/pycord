@@ -89,7 +89,7 @@ class AssetMixin:
 
         Parameters
         ----------
-        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+        fp: :class:`io.BufferedIOBase` | :class:`os.PathLike`
             The file-like object to save this attachment to or the filename
             to use. If a filename is passed then a file is created with that
             filename and used instead.

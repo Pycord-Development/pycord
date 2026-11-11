@@ -180,7 +180,7 @@ class BaseModal(ItemInterface):
 
         Parameters
         ----------
-        item: Union[:class:`ModalItem`]
+        item: :class:`ModalItem`
             The item to add to the modal
         """
 
@@ -270,18 +270,18 @@ class Modal(BaseModal):
 
     Parameters
     ----------
-    children: Union[:class:`InputText`]
+    children: :class:`InputText`
         The initial items that are displayed in the modal. Only supports :class:`discord.ui.InputText`; for newer modal features, see :class:`DesignerModal`.
     title: :class:`str`
         The title of the modal.
         Must be 45 characters or fewer.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the modal that gets received during an interaction.
         Must be 100 characters or fewer.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 
@@ -354,7 +354,7 @@ class Modal(BaseModal):
 
         Parameters
         ----------
-        item: Union[class:`InputText`]
+        item: :class:`InputText`
             The item to remove from the modal.
         """
 
@@ -387,18 +387,18 @@ class DesignerModal(BaseModal):
 
     Parameters
     ----------
-    children: Union[:class:`ModalItem`]
+    children: :class:`ModalItem`
         The initial items that are displayed in the modal..
     title: :class:`str`
         The title of the modal.
         Must be 45 characters or fewer.
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the modal that gets received during an interaction.
         Must be 100 characters or fewer.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 
@@ -437,7 +437,7 @@ class DesignerModal(BaseModal):
 
         Parameters
         ----------
-        item: Union[:class:`ModalItem`]
+        item: :class:`ModalItem`
             The item to add to the modal
         """
 

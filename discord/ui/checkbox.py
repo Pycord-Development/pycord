@@ -45,11 +45,11 @@ class Checkbox(ModalItem):
 
     Parameters
     ----------
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the checkbox that gets received during an interaction.
     default: :class:`bool`
-        Whether this checkbox is selected by default or not. Defaults to ``False``.
-    id: Optional[:class:`int`]
+        Whether this checkbox is selected by default or not.
+    id: :class:`int`
         The checkbox's ID.
     """
 

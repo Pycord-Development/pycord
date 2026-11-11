@@ -53,10 +53,10 @@ class ApplicationRoleConnectionMetadata:
         The name for this metadata field. Maximum 100 characters.
     description: :class:`str`
         The description for this metadata field. Maximum 200 characters.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`] | :obj:`None`
         The name localizations for this metadata field. The values of this should be ``"locale": "name"``.
         See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
-    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    description_localizations: Dict[:class:`str`, :class:`str`] | :obj:`None`
         The description localizations for this metadata field. The values of this should be ``"locale": "name"``.
         See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     """
