@@ -2205,6 +2205,5 @@ class EmbedMediaFlags(BaseFlags):
 
     @flag_value
     def is_animated(self):
-        """:class:`bool`: Returns ``True`` if the media is animated.
-        """
+        """:class:`bool`: Returns ``True`` if the media is animated."""
         return 1 << 5
