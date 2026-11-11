@@ -609,8 +609,6 @@ class Embed:
     def footer(self) -> EmbedFooter | None:
         """Returns an :class:`EmbedFooter` denoting the footer contents.
 
-        See :meth:`set_footer` for possible values you can access.
-
         If the footer is not set then :obj:`None` is returned.
         """
         foot = getattr(self, "_footer", None)
@@ -826,8 +824,6 @@ class Embed:
     def provider(self) -> EmbedProvider | None:
         """Returns an :class:`EmbedProvider` denoting the provider contents.
 
-        The only attributes that might be accessed are ``name`` and ``url``.
-
         If the provider is not set then :obj:`None` is returned.
         """
         prov = getattr(self, "_provider", None)
@@ -838,8 +834,6 @@ class Embed:
     @property
     def author(self) -> EmbedAuthor | None:
         """Returns an :class:`EmbedAuthor` denoting the author contents.
-
-        See :meth:`set_author` for possible values you can access.
 
         If the author is not set then :obj:`None` is returned.
         """
@@ -913,8 +907,6 @@ class Embed:
     @property
     def fields(self) -> list[EmbedField]:
         """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
-
-        See :meth:`add_field` for possible values you can access.
 
         If the attribute has no value then :obj:`None` is returned.
         """
