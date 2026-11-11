@@ -69,7 +69,7 @@ class BotBase(ABC):
 
         Yields
         ------
-        Union[:class:`.BridgeCommand`, :class:`.BridgeCommandGroup`]
+        :class:`.BridgeCommand` | :class:`.BridgeCommandGroup`
             A bridge command or bridge group of the bot.
         """
         for cmd in self._bridge_commands:
@@ -123,7 +123,7 @@ class BotBase(ABC):
 
         Parameters
         ----------
-        kwargs: Optional[Dict[:class:`str`, Any]]
+        kwargs: Dict[:class:`str`, Any] | :obj:`None`
             Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)
         """
 

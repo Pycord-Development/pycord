@@ -68,6 +68,7 @@ class RadioGroup(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
@@ -166,7 +167,7 @@ class RadioGroup(ModalItem):
         value: :class:`str`
             The value of the option. This is not displayed to users.
             If not given, defaults to the label. Can only be up to 100 characters.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             An additional description of the option, if any.
             Can only be up to 100 characters.
         default: :class:`bool`

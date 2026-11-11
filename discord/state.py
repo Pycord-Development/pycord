@@ -31,14 +31,14 @@ import inspect
 import itertools
 import logging
 import os
-from collections import OrderedDict, deque
+from collections import deque
 from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Deque,
+    Literal,
     TypeVar,
-    Union,
+    overload,
 )
 
 from . import utils
@@ -62,6 +62,7 @@ from .object import Object
 from .partial_emoji import PartialEmoji
 from .poll import Poll, PollAnswerCount
 from .raw_models import *
+from .raw_models import ChannelInfo
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .soundboard import PartialSoundboardSound, SoundboardSound
@@ -92,7 +93,7 @@ if TYPE_CHECKING:
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
-    Channel = Union[GuildChannel, VocalGuildChannel, PrivateChannel, PartialMessageable]
+    Channel = GuildChannel | VocalGuildChannel | PrivateChannel | PartialMessageable
 
 
 class ChunkRequest:
@@ -141,6 +142,60 @@ class ChunkRequest:
         for future in self.waiters:
             if not future.done():
                 future.set_result(self.buffer)
+
+
+class ChannelInfoRequest:
+    def __init__(
+        self,
+        guild_id: int,
+        loop: asyncio.AbstractEventLoop,
+        resolver: Callable[[int], Any],
+        *,
+        cache: bool = True,
+    ) -> None:
+        self.guild_id: int = guild_id
+        self.resolver: Callable[[int], Any] = resolver
+        self.loop: asyncio.AbstractEventLoop = loop
+        self.cache: bool = cache
+        self.channel_info: list[ChannelInfo] = []
+        self.waiters: list[asyncio.Future[list[ChannelInfo]]] = []
+
+    def parse_response(self, channel_info: list[ChannelInfo]) -> None:
+        self.channel_info = channel_info
+        if self.cache:
+            guild = self.resolver(self.guild_id)
+            if guild is not None:
+                for channel in channel_info:
+                    existing = guild.get_channel(channel.id)
+                    # check voice_start_time
+                    # since stage channels can have that, but not status
+                    if existing is not None and "voice_start_time" in channel.data:
+                        try:
+                            existing._update_status(
+                                status=channel.status,
+                                voice_start_time=channel.voice_start_time,
+                            )
+                        except AttributeError:
+                            # Failsafe, discord sends *all* channels, not just voice
+                            # so if this runs on say, a text channel, we just ignore it
+                            pass
+
+        for future in self.waiters:
+            if not future.done():
+                future.set_result(self.channel_info)
+
+    async def wait(self) -> list[ChannelInfo]:
+        future = self.loop.create_future()
+        self.waiters.append(future)
+        try:
+            return await future
+        finally:
+            self.waiters.remove(future)
+
+    def get_future(self) -> asyncio.Future[list[ChannelInfo]]:
+        future = self.loop.create_future()
+        self.waiters.append(future)
+        return future
 
 
 _log = logging.getLogger(__name__)
@@ -269,6 +324,10 @@ class ConnectionState:
             True,  # TODO(Paillat-dev): Don't cache default sounds by default
         )
 
+        self.cache_channel_info: bool = options.get("cache_channel_info", False)
+        self._request_channel_info: bool = self.cache_channel_info
+        self._channel_info_requests: dict[int | str, ChannelInfoRequest] = {}
+
         self.parsers = parsers = {}
         for attr, func in inspect.getmembers(self):
             if attr.startswith("parse_"):
@@ -302,13 +361,13 @@ class ConnectionState:
         self._sounds: dict[int, SoundboardSound] = {}
 
         # LRU of max size 128
-        self._private_channels: OrderedDict[int, PrivateChannel] = OrderedDict()
+        self._private_channels: dict[int, PrivateChannel] = {}
         # extra dict to look up private channels by user id
         self._private_channels_by_user: dict[int, DMChannel] = {}
         if self.max_messages is not None:
-            self._messages: Deque[Message] | None = deque(maxlen=self.max_messages)
+            self._messages: deque[Message] | None = deque(maxlen=self.max_messages)
         else:
-            self._messages: Deque[Message] | None = None
+            self._messages: deque[Message] | None = None
 
     def process_chunk_requests(
         self, guild_id: int, nonce: str | None, members: list[Member], complete: bool
@@ -323,6 +382,18 @@ class ConnectionState:
 
         for key in removed:
             del self._chunk_requests[key]
+
+    def process_info_requests(
+        self, guild_id: int, channel_info: list[ChannelInfo]
+    ) -> None:
+        removed = []
+        for key, request in self._channel_info_requests.items():
+            if request.guild_id == guild_id:
+                request.parse_response(channel_info)
+                removed.append(key)
+
+        for key in removed:
+            del self._channel_info_requests[key]
 
     def call_handlers(self, key: str, *args: Any, **kwargs: Any) -> None:
         try:
@@ -509,7 +580,7 @@ class ConnectionState:
         except KeyError:
             return None
         else:
-            self._private_channels.move_to_end(channel_id)  # type: ignore
+            self._private_channels[channel_id] = self._private_channels.pop(channel_id)  # type: ignore
             return value
 
     def _get_private_channel_by_user(self, user_id: int | None) -> DMChannel | None:
@@ -521,7 +592,8 @@ class ConnectionState:
         self._private_channels[channel_id] = channel
 
         if len(self._private_channels) > 128:
-            _, to_remove = self._private_channels.popitem(last=False)
+            oldest_key = next(iter(self._private_channels))
+            to_remove = self._private_channels.pop(oldest_key)
             if isinstance(to_remove, DMChannel) and to_remove.recipient:
                 self._private_channels_by_user.pop(to_remove.recipient.id, None)
 
@@ -648,23 +720,47 @@ class ConnectionState:
                 except asyncio.TimeoutError:
                     break
                 else:
-                    if self._guild_needs_chunking(guild):
-                        future = await self.chunk_guild(guild, wait=False)
-                        states.append((guild, future))
+                    if (
+                        needs_chunk := self._guild_needs_chunking(guild)
+                    ) or self._request_channel_info:
+                        chunk_future = None
+                        info_future = None
+                        if needs_chunk and self._request_channel_info:
+                            chunk_future = await self.chunk_guild(guild, wait=False)
+                            info_future = await self.request_guild_channel_info(
+                                guild, wait=False
+                            )
+                        elif needs_chunk:
+                            chunk_future = await self.chunk_guild(guild, wait=False)
+                        else:
+                            info_future = await self.request_guild_channel_info(
+                                guild, wait=False
+                            )
+                        states.append((guild, chunk_future, info_future))
                     elif guild.unavailable is False:
                         self.dispatch("guild_available", guild)
                     else:
                         self.dispatch("guild_join", guild)
 
-            for guild, future in states:
-                try:
-                    await asyncio.wait_for(future, timeout=5.0)
-                except asyncio.TimeoutError:
-                    _log.warning(
-                        "Shard ID %s timed out waiting for chunks for guild_id %s.",
-                        guild.shard_id,
-                        guild.id,
-                    )
+            for guild, chunk_future, info_future in states:
+                if chunk_future:
+                    try:
+                        await asyncio.wait_for(chunk_future, timeout=5.0)
+                    except asyncio.TimeoutError:
+                        _log.warning(
+                            "Shard ID %s timed out waiting for chunks for guild_id %s.",
+                            guild.shard_id,
+                            guild.id,
+                        )
+                if info_future:
+                    try:
+                        await asyncio.wait_for(info_future, timeout=5.0)
+                    except asyncio.TimeoutError:
+                        _log.warning(
+                            "Shard ID %s timed out waiting for channel info for guild_id %s.",
+                            guild.shard_id,
+                            guild.id,
+                        )
 
                 if guild.unavailable is False:
                     self.dispatch("guild_available", guild)
@@ -1457,6 +1553,37 @@ class ConnectionState:
             return await request.wait()
         return request.get_future()
 
+    @overload
+    async def request_guild_channel_info(
+        self, guild: Guild, *, wait: Literal[True], cache: bool | None = None
+    ) -> list[ChannelInfo]: ...
+
+    @overload
+    async def request_guild_channel_info(
+        self, guild: Guild, *, wait: Literal[False], cache: bool | None = None
+    ) -> asyncio.Future[list[ChannelInfo]]: ...
+
+    async def request_guild_channel_info(
+        self, guild: Guild, *, wait: bool = True, cache: bool | None = None
+    ) -> asyncio.Future[list[ChannelInfo]] | list[ChannelInfo]:
+        cache = cache if cache is not None else self.cache_channel_info
+        request = self._channel_info_requests.get(guild.id)
+        if request is None:
+            self._channel_info_requests[guild.id] = request = ChannelInfoRequest(
+                guild.id,
+                self.loop,
+                self._get_guild,
+                cache=cache,
+            )
+            ws = self._get_websocket(guild.id)
+            await ws.request_channel_info(
+                guild.id, fields=["status", "voice_start_time"]
+            )
+
+        if wait:
+            return await request.wait()
+        return request.get_future()
+
     async def _chunk_and_dispatch(self, guild, unavailable):
         try:
             await asyncio.wait_for(self.chunk_guild(guild), timeout=60.0)
@@ -1484,6 +1611,10 @@ class ConnectionState:
         else:
             # If we're waiting for the event, put the rest on hold
             return
+
+        # cache the vc info
+        if self.cache_channel_info:
+            asyncio.create_task(self.request_guild_channel_info(guild))
 
         # check if it requires chunking
         if self._guild_needs_chunking(guild):
@@ -1526,7 +1657,7 @@ class ConnectionState:
 
         # do a cleanup of the messages cache
         if self._messages is not None:
-            self._messages: Deque[Message] | None = deque(
+            self._messages: deque[Message] | None = deque(
                 (msg for msg in self._messages if msg.guild != guild),
                 maxlen=self.max_messages,
             )
@@ -1648,6 +1779,16 @@ class ConnectionState:
         complete = data.get("chunk_index", 0) + 1 == data.get("chunk_count")
         self.process_chunk_requests(guild_id, data.get("nonce"), members, complete)
 
+    def parse_channel_info(self, data) -> None:
+        guild_id = int(data["guild_id"])
+        channel_info = [ChannelInfo(c) for c in data["channels"]]
+        _log.debug(
+            "Processed channel info for %s channels in guild ID %s.",
+            len(channel_info),
+            guild_id,
+        )
+        self.process_info_requests(guild_id, channel_info)
+
     def parse_guild_scheduled_event_create(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
         if guild is None:
@@ -1763,7 +1904,7 @@ class ConnectionState:
         if member is not None:
             event = guild.get_scheduled_event(data["guild_scheduled_event_id"])
             if event:
-                event.subscriber_count += 1
+                event.subscriber_count -= 1
                 guild._add_scheduled_event(event)
                 self.dispatch("scheduled_event_user_remove", event, member)
 
@@ -1960,7 +2101,7 @@ class ConnectionState:
             channel = guild.get_channel(channel_id)
             if channel is not None:
                 old_status = channel.status
-                channel.status = data.get("status", None)
+                channel._update_status(status=data.get("status"))
                 self.dispatch(
                     "voice_channel_status_update", channel, old_status, channel.status
                 )
@@ -1972,6 +2113,33 @@ class ConnectionState:
         else:
             _log.debug(
                 "VOICE_CHANNEL_STATUS_UPDATE referencing unknown guild ID: %s. Discarding.",
+                data["guild_id"],
+            )
+
+    def parse_voice_channel_start_time_update(self, data) -> None:
+        raw = RawVoiceChannelStartTimeUpdateEvent(data)
+        self.dispatch("raw_voice_channel_start_time_update", raw)
+        guild = self._get_guild(int(data["guild_id"]))
+        channel_id = int(data["id"])
+        if guild is not None:
+            channel = guild.get_channel(channel_id)
+            if channel is not None:
+                old_voice_start_time = channel.voice_start_time
+                channel._update_status(voice_start_time=data.get("voice_start_time"))
+                self.dispatch(
+                    "voice_channel_start_time_update",
+                    channel,
+                    old_voice_start_time,
+                    channel.voice_start_time,
+                )
+            else:
+                _log.debug(
+                    "VOICE_CHANNEL_START_TIME_UPDATE referencing an unknown channel ID: %s. Discarding.",
+                    channel_id,
+                )
+        else:
+            _log.debug(
+                "VOICE_CHANNEL_START_TIME_UPDATE referencing unknown guild ID: %s. Discarding.",
                 data["guild_id"],
             )
 
@@ -2191,10 +2359,12 @@ class AutoShardedConnectionState(ConnectionState):
             except asyncio.TimeoutError:
                 break
             else:
-                if self._guild_needs_chunking(guild):
+                needs_chunk = self._guild_needs_chunking(guild)
+                guild_futures = []
+                if needs_chunk or self._request_channel_info:
                     _log.debug(
                         (
-                            "Guild ID %d requires chunking, will be done in the"
+                            "Guild ID %d requires gateway requests, will be done in the"
                             " background."
                         ),
                         guild.id,
@@ -2206,39 +2376,47 @@ class AutoShardedConnectionState(ConnectionState):
                             )
                         except asyncio.TimeoutError:
                             fmt = (
-                                "Shard ID %s failed to wait for chunks from a"
+                                "Shard ID %s failed to wait for gateway requests from a"
                                 " sub-bucket with length %d"
                             )
                             _log.warning(fmt, guild.shard_id, len(current_bucket))
                         finally:
                             current_bucket = []
 
-                    # Chunk the guild in the background while we wait for GUILD_CREATE streaming
-                    future = asyncio.ensure_future(self.chunk_guild(guild))
-                    current_bucket.append(future)
-                else:
-                    future = self.loop.create_future()
-                    future.set_result([])
+                    # Run gateway requests in the background while we wait for GUILD_CREATE streaming
+                    if needs_chunk:
+                        guild_futures.append(
+                            asyncio.ensure_future(self.chunk_guild(guild))
+                        )
+                    if self._request_channel_info:
+                        guild_futures.append(
+                            asyncio.ensure_future(
+                                self.request_guild_channel_info(guild)
+                            )
+                        )
+                    current_bucket.extend(guild_futures)
 
-                processed.append((guild, future))
+                processed.append((guild, guild_futures))
 
         guilds = sorted(processed, key=lambda g: g[0].shard_id)
         for shard_id, info in itertools.groupby(guilds, key=lambda g: g[0].shard_id):
-            children, futures = zip(*info)
-            # 110 reqs/minute w/ 1 req/guild plus some buffer
-            timeout = 61 * (len(children) / 110)
-            try:
-                await utils.sane_wait_for(futures, timeout=timeout)
-            except asyncio.TimeoutError:
-                _log.warning(
-                    (
-                        "Shard ID %s failed to wait for chunks (timeout=%.2f) for %d"
-                        " guilds"
-                    ),
-                    shard_id,
-                    timeout,
-                    len(guilds),
-                )
+            children, future_lists = zip(*info)
+            futures = [future for fs in future_lists for future in fs]
+            if futures:
+                # 110 reqs/minute w/ 1 req per future plus some buffer
+                timeout = 61 * (len(futures) / 110)
+                try:
+                    await utils.sane_wait_for(futures, timeout=timeout)
+                except asyncio.TimeoutError:
+                    _log.warning(
+                        (
+                            "Shard ID %s failed to wait for gateway requests"
+                            " (timeout=%.2f) for %d guilds"
+                        ),
+                        shard_id,
+                        timeout,
+                        len(children),
+                    )
             for guild in children:
                 if guild.unavailable is False:
                     self.dispatch("guild_available", guild)

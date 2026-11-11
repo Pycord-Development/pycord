@@ -56,9 +56,9 @@ if has_nacl:
     import nacl.utils
 
 if TYPE_CHECKING:
-    from typing import TypeVar
+    from typing import ParamSpec, TypeVar
 
-    from typing_extensions import ParamSpec, TypeVarTuple
+    from typing_extensions import TypeVarTuple
 
     from discord import abc
     from discord.client import Client
@@ -93,7 +93,7 @@ class VoiceClient(VoiceProtocol["Client"]):
 
     Attributes
     ----------
-    channel: Union[:class:`VoiceChannel`, :class:`StageChannel`]
+    channel: :class:`VoiceChannel` | :class:`StageChannel`
         The channel we are connected to.
 
     Warning
@@ -391,9 +391,9 @@ class VoiceClient(VoiceProtocol["Client"]):
 
         Parameters
         ----------
-        channel: Optional[:class:`abc.Snowflake`]
+        channel: :class:`abc.Snowflake` | :obj:`None`
             The channel to move to. If this is ``None``, it is an equivalent of calling :meth:`.disconnect`.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The maximum time in seconds to wait for the channel move to be completed, defaults to 30.
             If it is ``None``, then there is no timeout.
 
@@ -529,7 +529,7 @@ class VoiceClient(VoiceProtocol["Client"]):
         ----------
         source: :class:`AudioSource`
             The audio source we're reading from.
-        after: Callable[[Optional[:class:`Exception`]], Any]
+        after: Callable[[:class:`Exception` | :obj:`None`], Any]
             The finalizer that is called after the stream is exhausted.
             This function must have a single parameter, ``error``, that
             denotes an optional exception that was raised during playing.

@@ -28,9 +28,9 @@ from __future__ import annotations
 import datetime
 import io
 import os
-from typing import TYPE_CHECKING, TypeVar, Union
+from typing import TYPE_CHECKING, TypeAlias, TypeVar
 
-from typing_extensions import override
+from typing_extensions import deprecated, override
 
 from .appinfo import PartialAppInfo
 from .asset import Asset
@@ -62,19 +62,19 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.channel import PartialChannel as InviteChannelPayload
     from .types.invite import GatewayInvite as GatewayInvitePayload
+    from .types.invite import IncompleteInvite as IncompleteInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
-    from .types.invite import VanityInvite as VanityInvitePayload
     from .types.role import Role as RolePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.snowflake import Snowflake
     from .user import User
 
-    InviteGuildType = Union[Guild, "PartialInviteGuild", Object]
-    InviteChannelType = Union[GuildChannel, "PartialInviteChannel", Object]
+    InviteGuildType: TypeAlias = "Guild | PartialInviteGuild | Object"
+    InviteChannelType: TypeAlias = "GuildChannel | PartialInviteChannel | Object"
 
 
 class PartialInviteChannel:
@@ -171,7 +171,7 @@ class PartialInviteGuild:
         The partial guild's verification level.
     features: List[:class:`str`]
         A list of features the guild has. See :attr:`Guild.features` for more information.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The partial guild's description.
     """
 
@@ -251,11 +251,11 @@ class InviteTargetUsersJobStatus:
         The total number of users to process.
     processed_users: :class:`int`
         The number of users that have been processed so far.
-    created_at: Optional[:class:`datetime.datetime`]
+    created_at: :class:`datetime.datetime` | :obj:`None`
         When the job was created. ``None`` if the creation time is not available.
-    completed_at: Optional[:class:`datetime.datetime`]
+    completed_at: :class:`datetime.datetime` | :obj:`None`
         When the job was completed. ``None`` if the job is still processing.
-    error_message: Optional[:class:`str`]
+    error_message: :class:`str` | :obj:`None`
         The error message if the job failed. ``None`` if no error occurred.
     status: :class:`InviteTargetUsersJobStatusCode`
         The current status of the job.
@@ -344,7 +344,7 @@ class InviteTargetUsers:
 
         Parameters
         ----------
-        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+        fp: :class:`io.BufferedIOBase` | :class:`os.PathLike`
             The file-like object to save this file to or the filename
             to use. If a filename is passed then a file is created with that
             filename and used instead.
@@ -458,7 +458,7 @@ class Invite(Hashable):
         A value of ``0`` indicates that it doesn't expire.
     code: :class:`str`
         The URL fragment used for the invite.
-    guild: Optional[Union[:class:`Guild`, :class:`Object`, :class:`PartialInviteGuild`]]
+    guild: :class:`Guild` | :class:`Object` | :class:`PartialInviteGuild` | :obj:`None`
         The guild the invite is for. Can be ``None`` if it's from a group direct message.
     revoked: :class:`bool`
         Indicates if the invite has been revoked.
@@ -472,38 +472,38 @@ class Invite(Hashable):
     max_uses: :class:`int`
         How many times the invite can be used.
         A value of ``0`` indicates that it has unlimited uses.
-    inviter: Optional[:class:`User`]
+    inviter: :class:`User` | :obj:`None`
         The user who created the invite.
-    approximate_member_count: Optional[:class:`int`]
+    approximate_member_count: :class:`int` | :obj:`None`
         The approximate number of members in the guild.
-    approximate_presence_count: Optional[:class:`int`]
+    approximate_presence_count: :class:`int` | :obj:`None`
         The approximate number of members currently active in the guild.
         This includes idle, dnd, online, and invisible members. Offline members are excluded.
-    expires_at: Optional[:class:`datetime.datetime`]
+    expires_at: :class:`datetime.datetime` | :obj:`None`
         The expiration date of the invite. If the value is ``None`` when received through
         `Client.fetch_invite` with `with_expiration` enabled, the invite will never expire.
 
         .. versionadded:: 2.0
 
-    channel: Union[:class:`abc.GuildChannel`, :class:`Object`, :class:`PartialInviteChannel`]
+    channel: :class:`abc.GuildChannel` | :class:`Object` | :class:`PartialInviteChannel`
         The channel the invite is for.
     target_type: :class:`InviteTarget`
         The type of target for the voice channel invite.
 
         .. versionadded:: 2.0
 
-    target_user: Optional[:class:`User`]
+    target_user: :class:`User` | :obj:`None`
         The user whose stream to display for this invite, if any.
 
         .. versionadded:: 2.0
 
-    target_application: Optional[:class:`PartialAppInfo`]
+    target_application: :class:`PartialAppInfo` | :obj:`None`
         The embedded application the invite targets, if any.
 
         .. versionadded:: 2.0
-    scheduled_event: Optional[:class:`ScheduledEvent`]
+    scheduled_event: :class:`ScheduledEvent` | :obj:`None`
         The scheduled event linked with the invite.
-    roles: List[Union[:class:`Role`, :class:`Object`]]
+    roles: List[:class:`Role` | :class:`Object`]
         The roles that will be assigned to a user that joins via this invite.
 
         When using `Client.fetch_invite`, these may be partial role objects and have nullish attributes.
@@ -512,25 +512,25 @@ class Invite(Hashable):
     """
 
     __slots__ = (
-        "max_age",
-        "code",
-        "guild",
-        "revoked",
-        "created_at",
-        "uses",
-        "temporary",
-        "max_uses",
-        "inviter",
-        "channel",
-        "target_user",
-        "target_type",
         "_state",
         "approximate_member_count",
         "approximate_presence_count",
+        "channel",
+        "code",
+        "created_at",
+        "expires_at",
+        "guild",
+        "inviter",
+        "max_age",
+        "max_uses",
+        "revoked",
+        "roles",
         "scheduled_event",
         "target_application",
-        "expires_at",
-        "roles",
+        "target_type",
+        "target_user",
+        "temporary",
+        "uses",
     )
 
     BASE = "https://discord.gg"
@@ -539,7 +539,7 @@ class Invite(Hashable):
         self,
         *,
         state: ConnectionState,
-        data: InvitePayload | VanityInvitePayload,
+        data: InvitePayload | IncompleteInvitePayload,
         guild: PartialInviteGuild | Guild | None = None,
         channel: PartialInviteChannel | GuildChannel | None = None,
     ):
@@ -705,7 +705,10 @@ class Invite(Hashable):
         return hash(self.code)
 
     @property
-    def id(self) -> str:
+    @deprecated(
+        "Invite.id is deprecated in favour of Invite.code since version 2.9, and will be removed in version 3.0"
+    )
+    def id(self) -> str:  # type: ignore[override]
         """Returns the proper code portion of the invite."""
         return self.code
 
@@ -783,7 +786,7 @@ class Invite(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this invite. Shows up on the audit log.
 
         Raises
@@ -795,7 +798,6 @@ class Invite(Hashable):
         HTTPException
             Revoking the invite failed.
         """
-
         await self._state.http.delete_invite(self.code, reason=reason)
 
     def set_scheduled_event(self, event: ScheduledEvent) -> None:

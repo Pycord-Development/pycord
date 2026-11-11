@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -242,22 +242,22 @@ class _AuditLogChange_Overwrites(TypedDict):
     old_value: list[PermissionOverwrite]
 
 
-AuditLogChange = Union[
-    _AuditLogChange_Str,
-    _AuditLogChange_AssetHash,
-    _AuditLogChange_Snowflake,
-    _AuditLogChange_Int,
-    _AuditLogChange_Bool,
-    _AuditLogChange_ListRole,
-    _AuditLogChange_MFALevel,
-    _AuditLogChange_VerificationLevel,
-    _AuditLogChange_ExplicitContentFilter,
-    _AuditLogChange_DefaultMessageNotificationLevel,
-    _AuditLogChange_ChannelType,
-    _AuditLogChange_IntegrationExpireBehaviour,
-    _AuditLogChange_VideoQualityMode,
-    _AuditLogChange_Overwrites,
-]
+AuditLogChange = (
+    _AuditLogChange_Str
+    | _AuditLogChange_AssetHash
+    | _AuditLogChange_Snowflake
+    | _AuditLogChange_Int
+    | _AuditLogChange_Bool
+    | _AuditLogChange_ListRole
+    | _AuditLogChange_MFALevel
+    | _AuditLogChange_VerificationLevel
+    | _AuditLogChange_ExplicitContentFilter
+    | _AuditLogChange_DefaultMessageNotificationLevel
+    | _AuditLogChange_ChannelType
+    | _AuditLogChange_IntegrationExpireBehaviour
+    | _AuditLogChange_VideoQualityMode
+    | _AuditLogChange_Overwrites
+)
 
 
 class AuditEntryInfo(TypedDict):

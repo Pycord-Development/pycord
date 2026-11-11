@@ -20,7 +20,7 @@ jobs:
         with:
           fetch-tags: true
       - name: "Install Python"
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.14"
           cache: "pip"
@@ -41,7 +41,7 @@ jobs:
         working-directory: ./docs
       - name: "Crowdin"
         id: crowdin
-        uses: crowdin/github-action@0d5670f539973aea2f01abce61a8989934df0025 # v3.0.2
+        uses: crowdin/github-action@d651c77756acbe11a31d77a6fb79d8a239e1e05a # v3.6.0
         with:
           upload_sources: false
           upload_translations: false

@@ -39,6 +39,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Literal,
+    TypedDict,
     TypeVar,
 )
 
@@ -58,12 +59,12 @@ from .enums import IntegrationType, InteractionContextType, InteractionType, Tea
 from .errors import CheckFailure, DiscordException
 from .interactions import Interaction
 from .shard import AutoShardedClient
-from .types import interactions
+from .types.interactions import ApplicationCommand as ApplicationCommandPayload
 from .user import User
 from .utils import MISSING, async_all, find, get
 
 if TYPE_CHECKING:
-    from typing_extensions import Never
+    from typing_extensions import Never, NotRequired
 
     from .cog import Cog
     from .commands import Option
@@ -99,8 +100,8 @@ class ApplicationCommandMixin(ABC):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._pending_application_commands = []
-        self._application_commands = {}
+        self._pending_application_commands: list[ApplicationCommand] = []
+        self._application_commands: dict[str, ApplicationCommand] = {}
 
     @property
     def all_commands(self):
@@ -171,7 +172,7 @@ class ApplicationCommandMixin(ABC):
 
         Returns
         -------
-        Optional[:class:`.ApplicationCommand`]
+        :class:`.ApplicationCommand` | :obj:`None`
             The command that was removed. If the command has not been added,
             ``None`` is returned instead.
         """
@@ -216,7 +217,7 @@ class ApplicationCommandMixin(ABC):
 
         Returns
         -------
-        Optional[:class:`.ApplicationCommand`]
+        :class:`.ApplicationCommand` | :obj:`None`
             The command that was requested. If not found, returns ``None``.
         """
         commands = self._application_commands.values()
@@ -245,8 +246,8 @@ class ApplicationCommandMixin(ABC):
     async def get_desynced_commands(
         self,
         guild_id: int | None = None,
-        prefetched: list[interactions.ApplicationCommand] | None = None,
-    ) -> list[dict[str, Any]]:
+        prefetched: list[ApplicationCommandPayload] | None = None,
+    ) -> list[_CommandSyncAction]:
         """|coro|
 
         Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return
@@ -260,9 +261,9 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        guild_id: Optional[:class:`int`]
+        guild_id: :class:`int` | :obj:`None`
             The guild id to get the desynced commands for, else global commands if unspecified.
-        prefetched: Optional[List[:class:`.ApplicationCommand`]]
+        prefetched: List[:class:`.ApplicationCommand`] | :obj:`None`
             If you already fetched the commands, you can pass them here to be used. Not recommended for typical usage.
 
         Returns
@@ -350,7 +351,7 @@ class ApplicationCommandMixin(ABC):
                         return True
             return False
 
-        return_value = []
+        return_value: list[_CommandSyncAction] = []
         cmds = self.pending_application_commands.copy()
 
         if guild_id is None:
@@ -362,7 +363,7 @@ class ApplicationCommandMixin(ABC):
                 if cmd.guild_ids is not None and guild_id in cmd.guild_ids
             ]
 
-        registered_commands: list[interactions.ApplicationCommand] = []
+        registered_commands: list[ApplicationCommandPayload] = []
         if prefetched is not None:
             registered_commands = prefetched
         elif self._bot.user:
@@ -403,7 +404,7 @@ class ApplicationCommandMixin(ABC):
                 # We have this command registered but not in our list
                 return_value.append(
                     {
-                        "command": registered_commands_dict[cmd]["name"],
+                        "command": registered_commands_dict[cmd],
                         "id": int(value_["id"]),
                         "action": "delete",
                     }
@@ -450,7 +451,7 @@ class ApplicationCommandMixin(ABC):
         method: Literal["individual", "bulk", "auto"] = "bulk",
         force: bool = False,
         delete_existing: bool = True,
-    ) -> list[interactions.ApplicationCommand]:
+    ) -> list[ApplicationCommandPayload]:
         """|coro|
 
         Register a list of commands.
@@ -459,9 +460,9 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        commands: Optional[List[:class:`~.ApplicationCommand`]]
+        commands: List[:class:`~.ApplicationCommand`] | :obj:`None`
             A list of commands to register. If this is not set (``None``), then all commands will be registered.
-        guild_id: Optional[int]
+        guild_id: :class:`int` | :obj:`None`
             If this is set, the commands will be registered as a guild command for the respective guild. If it is not
             set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute.
         method: Literal['individual', 'bulk', 'auto']
@@ -546,10 +547,10 @@ class ApplicationCommandMixin(ABC):
                     _log.debug(f"Deleting command {cmd_name} for guild {guild_id}")  # type: ignore
             return _register(method, *args, **kwargs)
 
-        pending_actions = []
+        pending_actions: list[_CommandSyncAction] = []
 
         if not force:
-            prefetched_commands: list[interactions.ApplicationCommand] = []
+            prefetched_commands: list[ApplicationCommandPayload] = []
             if self._bot.user:
                 if guild_id is None:
                     prefetched_commands = await self._bot.http.get_global_commands(
@@ -568,9 +569,7 @@ class ApplicationCommandMixin(ABC):
                     pending_actions.append(
                         {
                             "action": "delete" if delete_existing else None,
-                            "command": collections.namedtuple("Command", ["name"])(
-                                name=cmd["command"]
-                            ),
+                            "command": cmd["command"],
                             "id": cmd["id"],
                         }
                     )
@@ -613,7 +612,14 @@ class ApplicationCommandMixin(ABC):
                 method == "auto" and len(filtered_deleted) == len(pending)
             ):
                 # Either the method is bulk or all the commands need to be modified, so we can just do a bulk upsert
-                data = [cmd["command"].to_dict() for cmd in filtered_deleted]
+                data = [
+                    (
+                        cmd["command"]
+                        if isinstance(cmd["command"], dict)
+                        else cmd["command"].to_dict()
+                    )
+                    for cmd in filtered_deleted
+                ]
                 # If there's nothing to update, don't bother
                 if len(filtered_no_action) == 0:
                     _log.debug("Skipping bulk command update: Commands are up to date")
@@ -621,7 +627,14 @@ class ApplicationCommandMixin(ABC):
                 else:
                     _log.debug(
                         "Bulk updating commands %s for guild %s",
-                        {c["command"].name: c["action"] for c in pending_actions},
+                        {
+                            (
+                                c["command"]["name"]
+                                if isinstance(c["command"], dict)
+                                else c["command"].name
+                            ): c["action"]
+                            for c in pending_actions
+                        },
                         guild_id,
                     )
                     registered = await register("bulk", data, _log=False)
@@ -633,7 +646,7 @@ class ApplicationCommandMixin(ABC):
                         await register(
                             "delete",
                             cmd["id"],
-                            cmd_name=cmd["command"].name,
+                            cmd_name=cmd["command"]["name"],
                             guild_id=guild_id,
                         )
                         continue
@@ -681,10 +694,11 @@ class ApplicationCommandMixin(ABC):
                 type=i.get("type"),
             )
             if not cmd:
-                raise ValueError(
+                _log.warning(
                     f"Registered command {i['name']}, type {i.get('type')} not found in"
-                    " pending commands"
+                    " pending commands. It's interactions will be ignored."
                 )
+                continue
             cmd.id = i["id"]
             self._application_commands[cmd.id] = cmd
 
@@ -728,7 +742,7 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        commands: Optional[List[:class:`~.ApplicationCommand`]]
+        commands: List[:class:`~.ApplicationCommand`] | :obj:`None`
             A list of commands to register. If this is not set (None), then all commands will be registered.
         method: Literal['individual', 'bulk', 'auto']
             The method to use when registering the commands. If this is set to "individual", then each command will be
@@ -737,12 +751,12 @@ class ApplicationCommandMixin(ABC):
         force: :class:`bool`
             Registers the commands regardless of the state of the command on Discord. This uses one less API call, but
             can result in hitting rate limits more often. Defaults to False.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of guild ids to register the commands for. If this is not set, the commands'
             :attr:`~.ApplicationCommand.guild_ids` attribute will be used.
         register_guild_commands: :class:`bool`
             Whether to register guild commands. Defaults to True.
-        check_guilds: Optional[List[:class:`int`]]
+        check_guilds: List[:class:`int`] | :obj:`None`
             A list of guilds ids to check for commands to unregister, since the bot would otherwise have to check all
             guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids`
             attribute, instead it adds the guild ids to a list of guilds to sync commands for. If
@@ -765,7 +779,7 @@ class ApplicationCommandMixin(ABC):
             global_commands, method=method, force=force, delete_existing=delete_existing
         )
 
-        registered_guild_commands: dict[int, list[interactions.ApplicationCommand]] = {}
+        registered_guild_commands: dict[int, list[ApplicationCommandPayload]] = {}
 
         if register_guild_commands:
             cmd_guild_ids: list[int] = []
@@ -840,7 +854,7 @@ class ApplicationCommandMixin(ABC):
         ----------
         interaction: :class:`discord.Interaction`
             The interaction to process
-        auto_sync: Optional[:class:`bool`]
+        auto_sync: :class:`bool` | :obj:`None`
             Whether to automatically sync and unregister the command if it is not found in the internal cache. This will
             invoke the :meth:`~.Bot.sync_commands` method on the context of the command, either globally or per-guild,
             based on the type of the command, respectively. Defaults to :attr:`.Bot.auto_sync_commands`.
@@ -1155,9 +1169,9 @@ class ApplicationCommandMixin(ABC):
         ----------
         name: :class:`str`
             The name of the group to create.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The description of the group to create.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
         kwargs:
@@ -1186,11 +1200,11 @@ class ApplicationCommandMixin(ABC):
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The description of the group to create.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
 
@@ -1311,6 +1325,14 @@ class ApplicationCommandMixin(ABC):
     @property
     @abstractmethod
     def _bot(self) -> Bot | AutoShardedBot: ...
+
+
+class _CommandSyncAction(TypedDict):
+    """Used internally for passing metadata about the commands status for syncing with Discord."""
+
+    id: NotRequired[int]
+    action: Literal["upsert", "edit", "delete", None]
+    command: ApplicationCommand | ApplicationCommandPayload
 
 
 class BotBase(ApplicationCommandMixin, CogMixin, ABC):
@@ -1589,7 +1611,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         Parameters
         ----------
-        user: Union[:class:`.abc.User`, :class:`.member.Member`]
+        user: :class:`.abc.User` | :class:`.member.Member`
             The user to check for.
 
         Returns
@@ -1630,11 +1652,11 @@ class Bot(BotBase, Client):
     ----------
     description: :class:`str`
         The content prefixed into the default help message.
-    owner_id: Optional[:class:`int`]
+    owner_id: :class:`int` | :obj:`None`
         The user ID that owns the bot. If this is not set and is then queried via
         :meth:`.is_owner` then it is fetched automatically using
         :meth:`~.Bot.application_info`, returning the application owner.
-    owner_ids: Optional[Collection[:class:`int`]]
+    owner_ids: Collection[:class:`int`] | :obj:`None`
         The user IDs that owns the bot. This is similar to :attr:`owner_id`.
         If this is not set and the application is team based, then it is
         fetched automatically using :meth:`~.Bot.application_info`,
@@ -1643,7 +1665,7 @@ class Bot(BotBase, Client):
         for the collection. You cannot set both ``owner_id`` and ``owner_ids``.
 
         .. versionadded:: 1.3
-    debug_guilds: Optional[List[:class:`int`]]
+    debug_guilds: List[:class:`int`] | :obj:`None`
         Guild IDs of guilds to use for testing commands.
         The bot will not create any global commands if debug guild IDs are passed.
 

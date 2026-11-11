@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Union, overload
+from typing import TYPE_CHECKING, Any, overload
 
 from .asset import Asset
 from .colour import Colour
@@ -151,17 +151,17 @@ class Activity(BaseActivity):
 
     Attributes
     ----------
-    application_id: Optional[:class:`int`]
+    application_id: :class:`int` | :obj:`None`
         The application ID of the game.
-    name: Optional[:class:`str`]
+    name: :class:`str` | :obj:`None`
         The name of the activity.
-    url: Optional[:class:`str`]
+    url: :class:`str` | :obj:`None`
         A stream URL that the activity could be doing.
     type: :class:`ActivityType`
         The type of activity currently being done.
-    state: Optional[:class:`str`]
+    state: :class:`str` | :obj:`None`
         The user's current party status or text used for a custom status.
-    details: Optional[:class:`str`]
+    details: :class:`str` | :obj:`None`
         The detail of the user's current activity.
     timestamps: Dict[:class:`str`, :class:`int`]
         A dictionary of timestamps. It contains the following optional keys:
@@ -180,12 +180,12 @@ class Activity(BaseActivity):
         - ``small_image``: A string representing the ID for the small image asset.
         - ``small_text``: A string representing the text when hovering over the small image asset.
 
-    party: Dict[:class:`str`, Union[:class:`str`, List[:class:`int`]]]
+    party: Dict[:class:`str`, :class:`str` | List[:class:`int`]]
         A dictionary representing the activity party. It contains the following optional keys:
 
         - ``id``: A string representing the party ID.
         - ``size``: A list of up to two integer elements denoting (current_size, maximum_size).
-    buttons: Union[List[Dict[:class:`str`, :class:`str`]], List[:class:`str`]]
+    buttons: List[Dict[:class:`str`, :class:`str`]] | List[:class:`str`]
         A list of dictionaries representing custom buttons shown in a rich presence.
         Each dictionary contains the following keys:
 
@@ -199,7 +199,7 @@ class Activity(BaseActivity):
 
         .. versionadded:: 2.0
 
-    emoji: Optional[:class:`PartialEmoji`]
+    emoji: :class:`PartialEmoji` | :obj:`None`
         The emoji that belongs to this activity.
     """
 
@@ -464,16 +464,16 @@ class Streaming(BaseActivity):
 
     Attributes
     ----------
-    platform: Optional[:class:`str`]
+    platform: :class:`str` | :obj:`None`
         Where the user is streaming from (ie. YouTube, Twitch).
 
         .. versionadded:: 1.3
 
-    name: Optional[:class:`str`]
+    name: :class:`str` | :obj:`None`
         The stream's name.
-    details: Optional[:class:`str`]
+    details: :class:`str` | :obj:`None`
         An alias for :attr:`name`
-    game: Optional[:class:`str`]
+    game: :class:`str` | :obj:`None`
         The game being streamed.
 
         .. versionadded:: 1.3
@@ -759,11 +759,11 @@ class CustomActivity(BaseActivity):
 
     Attributes
     ----------
-    name: Optional[:class:`str`]
+    name: :class:`str` | :obj:`None`
         The custom activity's name.
-    emoji: Optional[:class:`PartialEmoji`]
+    emoji: :class:`PartialEmoji` | :obj:`None`
         The emoji to pass to the activity, if any.
-    state: Optional[:class:`str`]
+    state: :class:`str` | :obj:`None`
         The text used for the custom activity.
     """
 
@@ -839,7 +839,7 @@ class CustomActivity(BaseActivity):
         return f"<CustomActivity name={self.name!r} emoji={self.emoji!r}>"
 
 
-ActivityTypes = Union[Activity, Game, CustomActivity, Streaming, Spotify]
+ActivityTypes = Activity | Game | CustomActivity | Streaming | Spotify
 
 
 @overload

@@ -724,6 +724,10 @@ class Intents(BaseFlags):
         - :func:`on_guild_channel_create`
         - :func:`on_guild_channel_delete`
         - :func:`on_guild_channel_pins_update`
+        - :func:`on_voice_channel_start_time_update`
+        - :func:`on_voice_channel_status_update`
+        - :func:`on_raw_voice_channel_start_time_update`
+        - :func:`on_raw_voice_channel_status_update`
 
         This also corresponds to the following attributes and classes in terms of cache:
 
@@ -1619,7 +1623,7 @@ class ChannelFlags(BaseFlags):
         return 1 << 15
 
     @flag_value
-    def obfuscated(self):
+    def channel_obfuscated(self):
         """:class:`bool`: Returns ``True`` if the channel is obfuscated by the gateway."""
 
         return 1 << 17
