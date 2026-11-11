@@ -29,7 +29,6 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-
 from .components import Component
 
 
