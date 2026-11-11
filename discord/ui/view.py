@@ -274,7 +274,7 @@ class BaseView(ItemInterface):
 
         Parameters
         ----------
-        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+        item: :class:`ViewItem` | :class:`int` | :class:`str`
             The item, item ``id``, or item ``custom_id`` to remove from the view.
 
         Returns
@@ -496,7 +496,7 @@ class BaseView(ItemInterface):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
@@ -514,7 +514,7 @@ class BaseView(ItemInterface):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
@@ -563,25 +563,25 @@ class View(BaseView):
     ----------
     *items: :class:`ViewItem`
         The initial items attached to this view.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
     children: List[:class:`ViewItem`]
         The list of children attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view when the timeout is reached. Defaults to ``False``.
-    message: Optional[:class:`.Message`]
+    message: :class:`.Message` | :obj:`None`
         The message that this view is attached to.
         If ``None`` then the view has not been sent with a message.
-    parent: Optional[:class:`.Interaction`]
+    parent: :class:`.Interaction` | :obj:`None`
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
     """
@@ -661,7 +661,7 @@ class View(BaseView):
         ----------
         message: :class:`.Message`
             The message with components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
@@ -689,7 +689,7 @@ class View(BaseView):
         ----------
         data: List[:class:`.Component`]
             The list of components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
@@ -740,7 +740,7 @@ class View(BaseView):
 
         Parameters
         ----------
-        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+        item: :class:`ViewItem` | :class:`int` | :class:`str`
             The item, item ``id``, or item ``custom_id`` to remove from the view.
         """
 
@@ -802,25 +802,25 @@ class DesignerView(BaseView):
     ----------
     *items: :class:`ViewItem`
         The initial items attached to this view.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
     children: List[:class:`ViewItem`]
         The list of items attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view's items when the timeout is reached. Defaults to ``False``.
-    message: Optional[:class:`.Message`]
+    message: :class:`.Message` | :obj:`None`
         The message that this view is attached to.
         If ``None`` then the view has not been sent with a message.
-    parent: Optional[:class:`.Interaction`]
+    parent: :class:`.Interaction` | :obj:`None`
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
     """
@@ -869,7 +869,7 @@ class DesignerView(BaseView):
         ----------
         message: :class:`.Message`
             The message with components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
@@ -897,7 +897,7 @@ class DesignerView(BaseView):
         ----------
         data: List[:class:`.Component`]
             The list of components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
