@@ -35,9 +35,7 @@ from typing import (
     Any,
     ClassVar,
     NamedTuple,
-    Optional,
     TypeVar,
-    Union,
     cast,
     overload,
 )
@@ -129,11 +127,11 @@ if TYPE_CHECKING:
     from .voice import VoiceClient
     from .webhook import Webhook
 
-    VocalGuildChannel = Union[VoiceChannel, StageChannel]
-    GuildChannel = Union[
-        VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel
-    ]
-    ByCategoryItem = tuple[Optional[CategoryChannel], list[GuildChannel]]
+    VocalGuildChannel = VoiceChannel | StageChannel
+    GuildChannel = (
+        VoiceChannel | StageChannel | TextChannel | ForumChannel | CategoryChannel
+    )
+    ByCategoryItem = tuple[CategoryChannel | None, list[GuildChannel]]
 
 T = TypeVar("T")
 
@@ -200,7 +198,7 @@ class GuildRoleCounts(dict[int, int]):
 
         Parameters
         ----------
-        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+        key: :class:`int` | :class:`~discord.abc.Snowflake`
             The role ID or a Snowflake object (e.g., a :class:`Role`).
 
         Returns
@@ -223,14 +221,14 @@ class GuildRoleCounts(dict[int, int]):
 
         Parameters
         ----------
-        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+        key: :class:`int` | :class:`~discord.abc.Snowflake`
             The role ID or a Snowflake object (e.g., a :class:`Role`).
         default: Any
             The value to return if the role ID is not found.
 
         Returns
         -------
-        Optional[:class:`int`]
+        :class:`int` | :obj:`None`
             The member count for the role, or ``default`` if the role is not present.
         """
         if isinstance(key, abc.Snowflake):
@@ -243,7 +241,7 @@ class GuildRoleCounts(dict[int, int]):
 
         Parameters
         ----------
-        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+        key: :class:`int` | :class:`~discord.abc.Snowflake`
             The role ID or a Snowflake object (e.g., a :class:`Role`).
 
         Returns
@@ -291,7 +289,7 @@ class Guild(Hashable):
         .. versionadded:: 2.0
     afk_timeout: :class:`int`
         The timeout to get sent to the AFK channel.
-    afk_channel: Optional[:class:`VoiceChannel`]
+    afk_channel: :class:`VoiceChannel` | :obj:`None`
         The channel that denotes the AFK channel. ``None`` if it doesn't exist.
     id: :class:`int`
         The guild's ID.
@@ -303,19 +301,19 @@ class Guild(Hashable):
         all be ``None``. It is best to not do anything with the guild if it is unavailable.
 
         Check the :func:`on_guild_unavailable` and :func:`on_guild_available` events.
-    max_presences: Optional[:class:`int`]
+    max_presences: :class:`int` | :obj:`None`
         The maximum amount of presences for the guild.
-    max_members: Optional[:class:`int`]
+    max_members: :class:`int` | :obj:`None`
         The maximum amount of members for the guild.
 
         .. note::
 
             This attribute is only available via :meth:`.Client.fetch_guild`.
-    max_video_channel_users: Optional[:class:`int`]
+    max_video_channel_users: :class:`int` | :obj:`None`
         The maximum amount of users in a video channel.
 
         .. versionadded:: 1.4
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The guild's description.
     mfa_level: :class:`int`
         Indicates the guild's two-factor authorisation level. If this value is 0 then
@@ -340,7 +338,7 @@ class Guild(Hashable):
         Indicates if the guild has premium progress bar enabled.
 
         .. versionadded:: 2.0
-    preferred_locale: Optional[:class:`str`]
+    preferred_locale: :class:`str` | :obj:`None`
         The preferred locale for the guild. Used when filtering Server Discovery
         results to a specific language.
     nsfw_level: :class:`NSFWLevel`
@@ -348,13 +346,13 @@ class Guild(Hashable):
 
         .. versionadded:: 2.0
 
-    approximate_member_count: Optional[:class:`int`]
+    approximate_member_count: :class:`int` | :obj:`None`
         The approximate number of members in the guild. This is ``None`` unless the guild is obtained
         using :meth:`Client.fetch_guild` with ``with_counts=True``.
 
         .. versionadded:: 2.0
 
-    approximate_presence_count: Optional[:class:`int`]
+    approximate_presence_count: :class:`int` | :obj:`None`
         The approximate number of members currently active in the guild.
         This includes idle, dnd, online, and invisible members. Offline members are excluded.
         This is ``None`` unless the guild is obtained using :meth:`Client.fetch_guild`
@@ -362,7 +360,7 @@ class Guild(Hashable):
 
         .. versionadded:: 2.0
 
-    incidents_data: Optional[:class:`IncidentsData`]
+    incidents_data: :class:`IncidentsData` | :obj:`None`
         The incidents data for the guild.
 
         .. versionadded:: 2.7
@@ -773,9 +771,9 @@ class Guild(Hashable):
             Only MP3 sound files that are less than 5.2 seconds long are supported.
         volume: :class:`float`
             The volume of the sound. Defaults to 1.0.
-        emoji: Optional[Union[:class:`PartialEmoji`, :class:`GuildEmoji`, :class:`str`]]
+        emoji: :class:`PartialEmoji` | :class:`GuildEmoji` | :class:`str` | :obj:`None`
             The emoji of the sound.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this sound. Shows up on the audit log.
 
         Returns
@@ -969,7 +967,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        List[Tuple[Optional[:class:`CategoryChannel`], List[:class:`abc.GuildChannel`]]]:
+        List[Tuple[:class:`CategoryChannel` | :obj:`None`, List[:class:`abc.GuildChannel`]]]:
             The categories and their associated channels.
         """
         grouped: dict[int | None, list[GuildChannel]] = {}
@@ -1012,7 +1010,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[Union[:class:`Thread`, :class:`.abc.GuildChannel`]]
+        :class:`Thread` | :class:`.abc.GuildChannel` | :obj:`None`
             The returned channel or thread or ``None`` if not found.
         """
         return self._channels.get(channel_id) or self._threads.get(channel_id)
@@ -1031,7 +1029,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`.abc.GuildChannel`]
+        :class:`.abc.GuildChannel` | :obj:`None`
             The returned channel or ``None`` if not found.
         """
         return self._channels.get(channel_id)
@@ -1048,7 +1046,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Thread`]
+        :class:`Thread` | :obj:`None`
             The returned thread or ``None`` if not found.
         """
         return self._threads.get(thread_id)
@@ -1152,7 +1150,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Member`]
+        :class:`Member` | :obj:`None`
             The member or ``None`` if not found.
         """
         return self._members.get(user_id)
@@ -1172,15 +1170,15 @@ class Guild(Hashable):
         object_type: Type[:class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji`]
             Type of object to fetch or get.
 
-        object_id: :class:`int` | :data:`None`
-            ID of the object to get. If :data:`None`, returns `default` if provided, otherwise :data:`None`.
+        object_id: :class:`int` | :obj:`None`
+            ID of the object to get. If :obj:`None`, returns `default` if provided, otherwise :obj:`None`.
 
-        default: Any | :data:`None`
-            The value to return instead of raising if fetching fails or if `object_id` is :data:`None`.
+        default: Any | :obj:`None`
+            The value to return instead of raising if fetching fails or if `object_id` is :obj:`None`.
 
         Returns
         -------
-        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :data:`None`
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :obj:`None`
             The object if found, or `default` if provided when not found.
 
         Raises
@@ -1224,7 +1222,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Role`]
+        :class:`Role` | :obj:`None`
             The role or ``None`` if not found.
         """
         return self._roles.get(role_id)
@@ -1318,7 +1316,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`StageInstance`]
+        :class:`StageInstance` | :obj:`None`
             The stage instance or ``None`` if not found.
         """
         return self._stage_instances.get(stage_instance_id)
@@ -1427,7 +1425,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Member`]
+        :class:`Member` | :obj:`None`
             The member in this guild with the associated name. If not found
             then ``None`` is returned.
         """
@@ -1530,9 +1528,9 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
             overwrites are provided.
@@ -1546,10 +1544,10 @@ class Guild(Hashable):
             A value of `0` disables slowmode. The maximum value possible is `21600`.
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this channel. Shows up on the audit log.
 
-        default_thread_slowmode_delay: Optional[:class:`int`]
+        default_thread_slowmode_delay: :class:`int` | :obj:`None`
             The initial slowmode delay to set on newly created threads in this channel.
 
             .. versionadded:: 2.7
@@ -1650,9 +1648,9 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
             overwrites are provided.
@@ -1663,7 +1661,7 @@ class Guild(Hashable):
             The channel's preferred audio bitrate in bits per second.
         user_limit: :class:`int`
             The channel's limit for number of members that can be in a voice channel.
-        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+        rtc_region: :class:`str` | :class:`VoiceRegion` | :obj:`None`
             The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 
@@ -1676,7 +1674,7 @@ class Guild(Hashable):
             The camera video quality for the voice channel's participants.
 
             .. versionadded:: 2.0
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this channel. Shows up on the audit log.
 
         slowmode_delay: :class:`int`
@@ -1768,16 +1766,16 @@ class Guild(Hashable):
             The channel's name.
         topic: :class:`str`
             The new channel's topic.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
             overwrites are provided.
         position: :class:`int`
             The position in the channel list. This is a number that starts
             at 0. e.g. the top channel is position 0.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this channel. Shows up on the audit log.
 
         bitrate: :class:`int`
@@ -1790,7 +1788,7 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-        rtc_region: Optional[Union[:class:`str`, :class:`VoiceRegion`]]
+        rtc_region: :class:`str` | :class:`VoiceRegion` | :obj:`None`
             The region ID for the voice channel's voice communication.
             A value of ``None`` indicates automatic voice region detection.
 
@@ -1908,9 +1906,9 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The channel's name.
-        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+        overwrites: Dict[:class:`Role` | :class:`Member` | :class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
             The overwrites to apply to the channel. Useful for creating secret channels.
-        category: Optional[:class:`CategoryChannel`]
+        category: :class:`CategoryChannel` | :obj:`None`
             The category to place the newly created channel under.
             The permissions will be automatically synced to category if no
             overwrites are provided.
@@ -1924,9 +1922,9 @@ class Guild(Hashable):
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this channel. Shows up on the audit log.
-        default_reaction_emoji: Optional[:class:`GuildEmoji` | :class:`int` | :class:`str`]
+        default_reaction_emoji: :class:`GuildEmoji` | :class:`int` | :class:`str` | :obj:`None`
             The default reaction emoji.
             Can be a unicode emoji or a custom emoji in the forms:
             :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
@@ -1938,12 +1936,12 @@ class Guild(Hashable):
 
             .. versionadded:: 2.7
 
-        default_sort_order: Optional[:class:`SortOrder`]
+        default_sort_order: :class:`SortOrder` | :obj:`None`
             The default sort order type used to order posts in this channel.
 
             .. versionadded:: 2.7
 
-        default_thread_slowmode_delay: Optional[:class:`int`]
+        default_thread_slowmode_delay: :class:`int` | :obj:`None`
             The initial slowmode delay to set on newly created threads in this channel.
 
             .. versionadded:: 2.7
@@ -2167,7 +2165,7 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The new name of the guild.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The new description of the guild. Could be ``None`` for no description.
             This is only available to guilds that contain ``PUBLIC`` in :attr:`Guild.features`.
         icon: :class:`bytes`
@@ -2191,7 +2189,7 @@ class Guild(Hashable):
         community: :class:`bool`
             Whether the guild should be a Community guild. If set to ``True``\, both ``rules_channel``
             and ``public_updates_channel`` parameters are required.
-        afk_channel: Optional[:class:`VoiceChannel`]
+        afk_channel: :class:`VoiceChannel` | :obj:`None`
             The new channel that is the AFK channel. Could be ``None`` for no AFK channel.
         afk_timeout: :class:`int`
             The number of seconds until someone is moved to the AFK channel.
@@ -2201,18 +2199,18 @@ class Guild(Hashable):
             The new default notification level for the guild.
         explicit_content_filter: :class:`ContentFilter`
             The new explicit content filter for the guild.
-        system_channel: Optional[:class:`TextChannel`]
+        system_channel: :class:`TextChannel` | :obj:`None`
             The new channel that is used for the system channel. Could be ``None`` for no system channel.
         system_channel_flags: :class:`SystemChannelFlags`
             The new system channel settings to use with the new system channel.
         preferred_locale: :class:`str`
             The new preferred locale for the guild. Used as the primary language in the guild.
             If set, this must be an ISO 639 code, e.g. ``en-US`` or ``ja`` or ``zh-CN``.
-        rules_channel: Optional[:class:`TextChannel`]
+        rules_channel: :class:`TextChannel` | :obj:`None`
             The new channel that is used for rules. This is only available to
             guilds that contain ``PUBLIC`` in :attr:`Guild.features`. Could be ``None`` for no rules
             channel.
-        public_updates_channel: Optional[:class:`TextChannel`]
+        public_updates_channel: :class:`TextChannel` | :obj:`None`
             The new channel that is used for public updates from Discord. This is only available to
             guilds that contain ``PUBLIC`` in :attr:`Guild.features`. Could be ``None`` for no
             public updates channel.
@@ -2226,7 +2224,7 @@ class Guild(Hashable):
             Whether activity alerts for the guild should be disabled.
         enable_activity_feed: class:`bool`
             Whether the guild's user activity feed should be enabled.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this guild. Shows up on the audit log.
 
         Raises
@@ -2491,10 +2489,10 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of members to retrieve. Defaults to 1000.
             Pass ``None`` to fetch all members. Note that this is potentially slow.
-        after: Optional[Union[:class:`.abc.Snowflake`, :class:`datetime.datetime`]]
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve members after this date or object.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -2635,7 +2633,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Union[:class:`.abc.GuildChannel`, :class:`.Thread`]
+        :class:`.abc.GuildChannel` | :class:`.Thread`
             The channel from the ID.
 
         Raises
@@ -2694,11 +2692,11 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of bans to retrieve. Defaults to 1000.
-        before: Optional[:class:`.abc.Snowflake`]
+        before: :class:`.abc.Snowflake` | :obj:`None`
             Retrieve bans before the given user.
-        after: Optional[:class:`.abc.Snowflake`]
+        after: :class:`.abc.Snowflake` | :obj:`None`
             Retrieve bans after the given user.
 
         Yields
@@ -2761,7 +2759,7 @@ class Guild(Hashable):
         -----------
         days: :class:`int`
             The number of days before counting as inactive.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
         compute_prune_count: :class:`bool`
             Whether to compute the prune count. This defaults to ``True``
@@ -2783,7 +2781,7 @@ class Guild(Hashable):
 
         Returns
         ---------
-        Optional[:class:`int`]
+        :class:`int` | :obj:`None`
             The number of members pruned. If ``compute_prune_count`` is ``False``
             then this returns ``None``.
         """
@@ -3101,7 +3099,7 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The sticker name. Must be 2 to 30 characters.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The sticker's description. If used, must be 2 to 100 characters.
         emoji: :class:`str`
             The name of a unicode emoji that represents the sticker's expression.
@@ -3162,7 +3160,7 @@ class Guild(Hashable):
         ----------
         sticker: :class:`abc.Snowflake`
             The sticker you are deleting.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this sticker. Shows up on the audit log.
 
         Raises
@@ -3186,7 +3184,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Emoji`]
+        :class:`Emoji` | :obj:`None`
             The returned Emoji or ``None`` if not found.
         """
         emoji = self._state.get_emoji(emoji_id)
@@ -3273,7 +3271,7 @@ class Guild(Hashable):
             Only JPEG, PNG, GIF, WebP and AVIF images are supported.
         roles: List[:class:`Role`]
             A :class:`list` of :class:`Role`\s that can use this emoji. Leave empty to make it available to everyone.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this emoji. Shows up on the audit log.
 
         Raises
@@ -3310,7 +3308,7 @@ class Guild(Hashable):
         ----------
         emoji: :class:`abc.Snowflake`
             The emoji you are deleting.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this emoji. Shows up on the audit log.
 
         Raises
@@ -3389,7 +3387,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Role`]
+        :class:`Role` | :obj:`None`
             The role in the guild with the specified ID.
             Returns ``None`` if not found.
 
@@ -3469,7 +3467,7 @@ class Guild(Hashable):
             The role name. Defaults to 'new role'.
         permissions: :class:`Permissions`
             The permissions to have. Defaults to no permissions.
-        colour: Union[:class:`Colour`, :class:`int`]
+        colour: :class:`Colour` | :class:`int`
             The colour for the role. Defaults to :meth:`Colour.default`.
             This is aliased to ``color`` as well.
         hoist: :class:`bool`
@@ -3478,13 +3476,13 @@ class Guild(Hashable):
         mentionable: :class:`bool`
             Indicates if the role should be mentionable by others.
             Defaults to ``False``.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this role. Shows up on the audit log.
-        icon: Optional[:class:`bytes`]
+        icon: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
             If this argument is passed, ``unicode_emoji`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
-        unicode_emoji: Optional[:class:`str`]
+        unicode_emoji: :class:`str` | :obj:`None`
             The role's unicode emoji. If this argument is passed, ``icon`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
@@ -3588,7 +3586,7 @@ class Guild(Hashable):
         positions: Dict[:class:`Role`, :class:`int`]
             A :class:`dict` of :class:`Role` to :class:`int` to change the positions
             of each given role.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing the role positions. Shows up on the audit log.
 
         Returns
@@ -3639,7 +3637,7 @@ class Guild(Hashable):
         ----------
         user: :class:`abc.Snowflake`
             The user to kick from their guild.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason the user got kicked.
 
         Raises
@@ -3671,11 +3669,11 @@ class Guild(Hashable):
         ----------
         user: :class:`abc.Snowflake`
             The user to ban from their guild.
-        delete_message_seconds: Optional[:class:`int`]
+        delete_message_seconds: :class:`int` | :obj:`None`
             The number of seconds worth of messages to delete from
             the user in the guild. The minimum is 0 and the maximum
             is 604800 (i.e. 7 days). The default is 0.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason the user got banned.
 
         Raises
@@ -3724,11 +3722,11 @@ class Guild(Hashable):
         ----------
         \*users: :class:`abc.Snowflake`
             An argument list of users to ban from the guild, up to 200.
-        delete_message_seconds: Optional[:class:`int`]
+        delete_message_seconds: :class:`int` | :obj:`None`
             The number of seconds worth of messages to delete from
             the user in the guild. The minimum is 0 and the maximum
             is 604800 (i.e. 7 days). The default is 0.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason the users were banned.
 
         Returns
@@ -3782,7 +3780,7 @@ class Guild(Hashable):
         ----------
         user: :class:`abc.Snowflake`
             The user to unban.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
 
         Raises
@@ -3806,7 +3804,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Invite`]
+        :class:`Invite` | :obj:`None`
             The special vanity invite. If ``None`` then the guild does not
             have a vanity invite set.
 
@@ -3892,13 +3890,13 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of entries to retrieve. If ``None`` retrieve all entries.
-        before: Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]
+        before: :class:`abc.Snowflake` | :class:`datetime.datetime`
             Retrieve entries before this date or entry.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        after: Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]
+        after: :class:`abc.Snowflake` | :class:`datetime.datetime`
             Retrieve entries after this date or entry.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -3991,7 +3989,7 @@ class Guild(Hashable):
         ----------
         enabled: :class:`bool`
             Whether to enable the widget for the guild.
-        channel: Optional[:class:`~discord.abc.Snowflake`]
+        channel: :class:`~discord.abc.Snowflake` | :obj:`None`
             The new widget channel. ``None`` removes the widget channel.
 
         Raises
@@ -4075,16 +4073,16 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        query: Optional[:class:`str`]
+        query: :class:`str` | :obj:`None`
             The string that the username's start with.
-        user_ids: Optional[List[:class:`int`]]
+        user_ids: List[:class:`int`] | :obj:`None`
             List of user IDs to search for. If the user ID is not in the guild then it won't be returned.
 
             .. versionadded:: 1.4
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The maximum number of members to send back. If no query is passed, passing ``None`` returns all members.
             If a ``query`` or ``user_ids`` is passed, must be between 1 and 100. Defaults to 5.
-        presences: Optional[:class:`bool`]
+        presences: :class:`bool` | :obj:`None`
             Whether to request for presences to be provided. This defaults
             to ``False``.
 
@@ -4155,7 +4153,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+        channel: :class:`VoiceChannel` | :class:`StageChannel` | :obj:`None`
             Channel the client wants to join. Use ``None`` to disconnect.
         self_mute: :class:`bool`
             Indicates if the client should be self-muted.
@@ -4218,13 +4216,13 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The new description of welcome screen.
-        welcome_channels: Optional[List[:class:`WelcomeScreenChannel`]]
+        welcome_channels: List[:class:`WelcomeScreenChannel`] | :obj:`None`
             The welcome channels. The order of the channels would be same as the passed list order.
-        enabled: Optional[:class:`bool`]
+        enabled: :class:`bool` | :obj:`None`
             Whether the welcome screen should be displayed.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason that shows up on audit log.
 
         Returns
@@ -4274,7 +4272,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        with_user_count: Optional[:class:`bool`]
+        with_user_count: :class:`bool` | :obj:`None`
             If the scheduled event should be fetched with the number of
             users that are interested in the events.
             Defaults to ``True``.
@@ -4326,14 +4324,14 @@ class Guild(Hashable):
         ----------
         event_id: :class:`int`
             The event's ID to fetch with.
-        with_user_count: Optional[:class:`bool`]
+        with_user_count: :class:`bool` | :obj:`None`
             If the scheduled vent should be fetched with the number of
             users that are interested in the event.
             Defaults to ``True``.
 
         Returns
         -------
-        Optional[:class:`ScheduledEvent`]
+        :class:`ScheduledEvent` | :obj:`None`
             The scheduled event from the event ID.
 
         Raises
@@ -4373,7 +4371,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`ScheduledEvent`]
+        :class:`ScheduledEvent` | :obj:`None`
             The scheduled event or ``None`` if not found.
         """
         return self._scheduled_events.get(event_id)
@@ -4397,11 +4395,11 @@ class Guild(Hashable):
         ----------
         name: :class:`str`
             The name of the scheduled event.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The description of the scheduled event.
         start_time: :class:`datetime.datetime`
             A datetime object of when the scheduled event is supposed to start.
-        end_time: Optional[:class:`datetime.datetime`]
+        end_time: :class:`datetime.datetime` | :obj:`None`
             A datetime object of when the scheduled event is supposed to end.
         location: :class:`ScheduledEventLocation`
             The location of where the event is happening.
@@ -4409,14 +4407,14 @@ class Guild(Hashable):
             The privacy level of the event. Currently, the only possible value
             is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
             so there is no need to change this parameter.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason to show in the audit log.
-        image: Optional[:class:`bytes`]
+        image: :class:`bytes` | :obj:`None`
             The cover image of the scheduled event
 
         Returns
         -------
-        Optional[:class:`ScheduledEvent`]
+        :class:`ScheduledEvent` | :obj:`None`
             The created scheduled event.
 
         Raises
@@ -4541,7 +4539,7 @@ class Guild(Hashable):
             A list of roles that are exempt from the rule.
         exempt_channels: List[:class:`.abc.Snowflake`]
             A list of channels that are exempt from the rule.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating the rule. Shows up in the audit log.
 
         Returns
@@ -4615,17 +4613,17 @@ class Guild(Hashable):
         Parameters
         ----------
 
-        prompts: Optional[List[:class:`OnboardingPrompt`]]
+        prompts: List[:class:`OnboardingPrompt`] | :obj:`None`
             The new list of prompts for this flow.
-        default_channels: Optional[List[:class:`Snowflake`]]
+        default_channels: List[:class:`Snowflake`] | :obj:`None`
             The new default channels that users are opted into.
-        enabled: Optional[:class:`bool`]
+        enabled: :class:`bool` | :obj:`None`
             Whether onboarding should be enabled. Setting this to ``True`` requires
             the guild to have ``COMMUNITY`` in :attr:`~Guild.features` and at
             least 7 ``default_channels``.
-        mode: Optional[:class:`OnboardingMode`]
+        mode: :class:`OnboardingMode` | :obj:`None`
             The new onboarding mode.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason that shows up on Audit log.
 
         Returns
@@ -4673,13 +4671,13 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        invites_disabled_until: Optional[:class:`datetime.datetime`]
+        invites_disabled_until: :class:`datetime.datetime` | :obj:`None`
             The ISO8601 timestamp indicating when invites will be enabled again,
             or ``None`` to enable invites immediately.
-        dms_disabled_until: Optional[:class:`datetime.datetime`]
+        dms_disabled_until: :class:`datetime.datetime` | :obj:`None`
             The ISO8601 timestamp indicating when DMs will be enabled again,
             or ``None`` to enable DMs immediately.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for this action, used for the audit log.
 
         Returns
@@ -4717,7 +4715,7 @@ class Guild(Hashable):
         ----------
         id: :class:`int`
             The ID of the auto moderation rule.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the rule. Shows up in the audit log.
 
         Raises
@@ -4781,7 +4779,7 @@ class Guild(Hashable):
             Retrieve guilds after this date or object.
             If a datetime is provided, it is recommended to use a UTC-aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of entitlements to retrieve.
             If ``None``, retrieves every entitlement, which may be slow.
             Defaults to ``100``.
@@ -4821,7 +4819,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`SoundboardSound`]
+        :class:`SoundboardSound` | :obj:`None`
             The sound or ``None`` if not found.
         """
         return self._sounds.get(sound_id)

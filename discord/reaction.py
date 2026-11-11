@@ -70,7 +70,7 @@ class Reaction:
 
     Attributes
     ----------
-    emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]
+    emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`PartialEmoji` | :class:`str`
         The reaction emoji. May be a custom emoji, or a unicode emoji.
     count: :class:`int`
         The combined total of normal and super reactions for this emoji.
@@ -223,18 +223,18 @@ class Reaction:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The maximum number of results to return.
             If not provided, returns all the users who
             reacted to the message.
-        after: Optional[:class:`abc.Snowflake`]
+        after: :class:`abc.Snowflake` | :obj:`None`
             For pagination, reactions are sorted by member.
-        type: Optional[:class:`ReactionType`]
+        type: :class:`ReactionType` | :obj:`None`
             The type of reaction to get users for. Defaults to `normal`.
 
         Yields
         ------
-        Union[:class:`User`, :class:`Member`]
+        :class:`User` | :class:`Member`
             The member (if retrievable) or the user that has reacted
             to this message. The case where it can be a :class:`Member` is
             in a guild message context. Sometimes it can be a :class:`User`
