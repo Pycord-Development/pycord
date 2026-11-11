@@ -582,12 +582,6 @@ class IntegrationTypesConfig:
         The configuration for the guild installation context. Omit to leave unchanged; pass ``None`` to clear.
     user: :class:`AppInstallParams` | :obj:`None`
         The configuration for the user installation context. Omit to leave unchanged; pass ``None`` to clear.
-
-    .. note::
-
-        When built from an API response, a context that Discord did not return is left
-        omitted (falsy ``MISSING``) rather than ``None``, so serializing the object does
-        not add a context that was never configured.
     """
 
     __slots__ = ("guild", "user")
@@ -602,29 +596,17 @@ class IntegrationTypesConfig:
         self.user: AppInstallParams | None = user
 
     @staticmethod
-    def _get_ctx(
-        raw: dict[int | str, dict[str, object] | None] | None, key: int
-    ) -> dict[str, object] | None:
-        """Return the raw context for ``key``, or ``MISSING`` if the key is absent."""
-        if raw is None:
-            return utils.MISSING
-        if key in raw:
-            return raw[key]
-        skey = str(key)
-        if skey in raw:
-            return raw[skey]
-        return utils.MISSING
-
-    @staticmethod
-    def _decode_ctx(value: dict[str, Any] | None) -> AppInstallParams | None:
-        if value is utils.MISSING:
-            return utils.MISSING
-        if value is None:
-            return None
-        params = value.get("oauth2_install_params")
-        if not params:
-            return None
-        return AppInstallParams(params)
+    def _decode_ctx(
+        data: dict[int | str, dict[str, Any] | None], key: int
+    ) -> AppInstallParams | None:
+        # Discord may key the contexts by int or by str. A key that is absent stays
+        # MISSING so that it is not serialized back; a key that is present but empty
+        # decodes to None, which is an explicit "no install params".
+        ctx = data.get(key, data.get(str(key), utils.MISSING))
+        if ctx is utils.MISSING:
+            return ctx
+        params = (ctx or {}).get("oauth2_install_params")
+        return AppInstallParams(params) if params else None
 
     @classmethod
     def from_payload(
@@ -632,9 +614,7 @@ class IntegrationTypesConfig:
     ) -> IntegrationTypesConfig | None:
         if data is None:
             return None
-        guild_ctx = cls._decode_ctx(cls._get_ctx(data, 0))
-        user_ctx = cls._decode_ctx(cls._get_ctx(data, 1))
-        return cls(guild=guild_ctx, user=user_ctx)
+        return cls(guild=cls._decode_ctx(data, 0), user=cls._decode_ctx(data, 1))
 
     def _encode_install_params(
         self, value: AppInstallParams | None
