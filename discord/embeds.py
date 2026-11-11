@@ -599,7 +599,7 @@ class Embed:
 
         See :meth:`set_footer` for possible values you can access.
 
-        If the footer is not set then `None` is returned.
+        If the footer is not set then :obj:`None` is returned.
         """
         foot = getattr(self, "_footer", None)
         if not foot:
@@ -666,7 +666,7 @@ class Embed:
     def image(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the image contents.
 
-        If the image is not set then `None` is returned.
+        If the image is not set then :obj:`None` is returned.
         """
         img = getattr(self, "_image", None)
         if not img:
@@ -736,7 +736,7 @@ class Embed:
     def thumbnail(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the thumbnail contents.
 
-        If the thumbnail is not set then `None` is returned.
+        If the thumbnail is not set then :obj:`None` is returned.
         """
         thumb = getattr(self, "_thumbnail", None)
         if not thumb:
@@ -806,13 +806,7 @@ class Embed:
     def video(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the video contents.
 
-        Attributes include:
-
-        - ``url`` for the video URL.
-        - ``height`` for the video height.
-        - ``width`` for the video width.
-
-        If the video is not set then `None` is returned.
+        If the video is not set then :obj:`None` is returned.
         """
         vid = getattr(self, "_video", None)
         if not vid:
@@ -825,7 +819,7 @@ class Embed:
 
         The only attributes that might be accessed are ``name`` and ``url``.
 
-        If the provider is not set then `None` is returned.
+        If the provider is not set then :obj:`None` is returned.
         """
         prov = getattr(self, "_provider", None)
         if not prov:
@@ -838,7 +832,7 @@ class Embed:
 
         See :meth:`set_author` for possible values you can access.
 
-        If the author is not set then `None` is returned.
+        If the author is not set then :obj:`None` is returned.
         """
         auth = getattr(self, "_author", None)
         if not auth:
@@ -913,7 +907,7 @@ class Embed:
 
         See :meth:`add_field` for possible values you can access.
 
-        If the attribute has no value then ``None`` is returned.
+        If the attribute has no value then :obj:`None` is returned.
         """
         return self._fields
 
