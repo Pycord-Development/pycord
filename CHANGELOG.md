@@ -44,6 +44,9 @@ These changes are available on the `master` branch, but have not yet been releas
   region ID `str`. ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Fixed
+- Fixed `IntegrationTypesConfig` always serializing both the guild and user
+  contexts after being built from an API payload, even when only one was returned.
+  ([#3437](https://github.com/Pycord-Development/pycord/issues/3437))
 
 - Fixed `Thumbnail` components ignoring the `spoiler` parameter when used as a `Section`
   accessory. ([#3403](https://github.com/Pycord-Development/pycord/pull/3403))

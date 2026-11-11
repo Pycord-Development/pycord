@@ -582,6 +582,12 @@ class IntegrationTypesConfig:
         The configuration for the guild installation context. Omit to leave unchanged; pass ``None`` to clear.
     user: :class:`AppInstallParams` | :obj:`None`
         The configuration for the user installation context. Omit to leave unchanged; pass ``None`` to clear.
+
+    .. note::
+
+        When built from an API response, a context that Discord did not return is left
+        omitted (falsy ``MISSING``) rather than ``None``, so serializing the object does
+        not add a context that was never configured.
     """
 
     __slots__ = ("guild", "user")
@@ -599,15 +605,20 @@ class IntegrationTypesConfig:
     def _get_ctx(
         raw: dict[int | str, dict[str, object] | None] | None, key: int
     ) -> dict[str, object] | None:
+        """Return the raw context for ``key``, or ``MISSING`` if the key is absent."""
         if raw is None:
-            return None
+            return utils.MISSING
         if key in raw:
             return raw[key]
         skey = str(key)
-        return raw.get(skey)
+        if skey in raw:
+            return raw[skey]
+        return utils.MISSING
 
     @staticmethod
     def _decode_ctx(value: dict[str, Any] | None) -> AppInstallParams | None:
+        if value is utils.MISSING:
+            return utils.MISSING
         if value is None:
             return None
         params = value.get("oauth2_install_params")
