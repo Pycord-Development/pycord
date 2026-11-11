@@ -1706,6 +1706,11 @@ class AttachmentFlags(BaseFlags):
     def contains_explicit_content(self):
         """:class:`bool`: Returns ``True`` if the attachment has been flagged as explicit by Discord's content scanning.
 
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+
         .. versionadded:: 2.9
         """
         return 1 << 4
@@ -1722,6 +1727,11 @@ class AttachmentFlags(BaseFlags):
     def contains_gore_content(self):
         """:class:`bool`: Returns ``True`` if the attachment has been flagged as gore by Discord's content scanning.
 
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+
         .. versionadded:: 2.9
         """
         return 1 << 6
@@ -1729,6 +1739,11 @@ class AttachmentFlags(BaseFlags):
     @flag_value
     def contains_self_harm_content(self):
         """:class:`bool`: Returns ``True`` if the attachment has been flagged as self-harm by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
 
         .. versionadded:: 2.9
         """
@@ -2024,17 +2039,35 @@ class ContentScanningMetadataFlags(BaseFlags):
 
     @flag_value
     def contains_explicit_content(self):
-        """:class:`bool`: Returns ``True`` if the media has been flagged as explicit by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the media has been flagged as explicit by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
         return 1 << 0
 
     @flag_value
     def contains_gore_content(self):
-        """:class:`bool`: Returns ``True`` if the media has been flagged as gore by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the media has been flagged as gore by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
         return 1 << 1
 
     @flag_value
     def contains_self_harm_content(self):
-        """:class:`bool`: Returns ``True`` if the media has been flagged as self-harm by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the media has been flagged as self-harm by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
         return 1 << 2
 
 
@@ -2086,7 +2119,13 @@ class EmbedFlags(BaseFlags):
 
     @flag_value
     def contains_explicit_content(self):
-        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as explicit by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as explicit by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
         return 1 << 4
 
     @flag_value
@@ -2096,10 +2135,22 @@ class EmbedFlags(BaseFlags):
 
     @flag_value
     def contains_gore_content(self):
-        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as gore by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as gore by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
         return 1 << 6
 
     @flag_value
     def contains_self_harm_content(self):
-        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as self-harm by Discord's content scanning."""
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as self-harm by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
         return 1 << 7
