@@ -29,7 +29,7 @@ import datetime
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from . import utils
+from . import utils, EmbedFlags
 from .colour import Colour
 from .components import Component, _component_factory
 
@@ -336,6 +336,9 @@ class Embed:
         This is not intended to be set by the user, and is only available when received from Discord.
 
         .. versionadded:: 2.9
+    flags: :class:`EmbedFlags` | :obj:`None`
+        This embed's flags. This is not intended to be set by the user, and is
+        only available if received from Discord.
     """
 
     __slots__ = (
@@ -352,6 +355,7 @@ class Embed:
         "_author",
         "_fields",
         "description",
+        "flags",
         "components",
     )
 
@@ -395,6 +399,7 @@ class Embed:
         self.footer = footer
         self.image = image
         self.thumbnail = thumbnail
+        self.flags: EmbedFlags | None = None
         self.components: list[Component] | None = None
 
     @classmethod
@@ -448,6 +453,8 @@ class Embed:
             self._timestamp = utils.parse_time(data["timestamp"])
         except KeyError:
             pass
+
+        self.flags = EmbedFlags._from_value(data["flags"]) if "flags" in data else None
 
         self.components = None
         if (components := data.get("components")) is not None:
@@ -1088,6 +1095,9 @@ class Embed:
 
         if self.title:
             result["title"] = self.title
+
+        if self.flags:
+            result["flags"] = self.flags.value
 
         if self.components:
             result["components"] = [c.to_dict() for c in self.components]
