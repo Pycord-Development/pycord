@@ -179,7 +179,7 @@ class AudioReader(Generic[Unpack[Ts]]):
         self.speaking_timer.stop()
         self.keep_alive.stop()
 
-        if self.after and self.args:
+        if self.after is not None and self.args is not None:
             try:
                 r = self.after(self.sink, *self.args)
                 if isinstance(r, Coroutine):
