@@ -1962,7 +1962,7 @@ class UnfurledMediaItemFlags(BaseFlags):
     .. versionadded:: 2.9
 
     Attributes
-    -----------
+    ----------
     value: :class:`int`
         The raw value. You should query flags via the properties
         rather than using this raw value.
