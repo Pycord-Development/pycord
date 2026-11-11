@@ -29,7 +29,7 @@ import datetime
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from . import utils
+from . import utils, EmbedFlags
 from .colour import Colour
 
 __all__ = (
@@ -330,6 +330,9 @@ class Embed:
     colour: :class:`Colour` | :class:`int`
         The colour code of the embed. Aliased to ``color`` as well.
         This can be set during initialisation.
+    flags: :class:`EmbedFlags` | :obj:`None`
+        This embed's flags. This is not intended to be set by the user, and is 
+        only available if received from Discord.
     """
 
     __slots__ = (
@@ -346,6 +349,7 @@ class Embed:
         "_author",
         "_fields",
         "description",
+        "flags",
     )
 
     def __init__(
@@ -388,6 +392,7 @@ class Embed:
         self.footer = footer
         self.image = image
         self.thumbnail = thumbnail
+        self.flags: EmbedFlags | None = None
 
     @classmethod
     def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
@@ -440,6 +445,8 @@ class Embed:
             self._timestamp = utils.parse_time(data["timestamp"])
         except KeyError:
             pass
+
+        self.flags = EmbedFlags._from_value(data["flags"]) if "flags" in data else None
 
         for attr in (
             "thumbnail",
@@ -1076,5 +1083,8 @@ class Embed:
 
         if self.title:
             result["title"] = self.title
+
+        if self.flags:
+            result["flags"] = self.flags.value
 
         return result  # type: ignore

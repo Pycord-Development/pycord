@@ -35,6 +35,7 @@ __all__ = (
     "AttachmentFlags",
     "ChannelFlags",
     "ContentScanningMetadataFlags",
+    "EmbedFlags",
     "GatewayCapabilities",
     "Intents",
     "MemberCacheFlags",
@@ -1911,9 +1912,8 @@ class RoleFlags(BaseFlags):
     Attributes
     -----------
     value: :class:`int`
-        The raw value. This value is a bit array field of a 53-bit integer
-        representing the currently available flags. You should query
-        flags via the properties rather than using this raw value.
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
     """
 
     __slots__ = ()
@@ -1964,9 +1964,8 @@ class UnfurledMediaItemFlags(BaseFlags):
     Attributes
     -----------
     value: :class:`int`
-        The raw value. This value is a bit array field of a 53-bit integer
-        representing the currently available flags. You should query
-        flags via the properties rather than using this raw value.
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
     """
 
     __slots__ = ()
@@ -2017,9 +2016,8 @@ class ContentScanningMetadataFlags(BaseFlags):
     Attributes
     -----------
     value: :class:`int`
-        The raw value. This value is a bit array field of a 53-bit integer
-        representing the currently available flags. You should query
-        flags via the properties rather than using this raw value.
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
     """
 
     __slots__ = ()
@@ -2038,3 +2036,70 @@ class ContentScanningMetadataFlags(BaseFlags):
     def contains_self_harm_content(self):
         """:class:`bool`: Returns ``True`` if the media has been flagged as self-harm by Discord's content scanning."""
         return 1 << 2
+
+
+class EmbedFlags(BaseFlags):
+    r"""Wraps up the Embed flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two EmbedFlags are equal.
+        .. describe:: x != y
+
+            Checks if two EmbedFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def contains_explicit_content(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as explicit by Discord's content scanning."""
+        return 1 << 4
+
+    @flag_value
+    def is_content_inventory_entry(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as explicit by Discord's content scanning."""
+        return 1 << 5
+
+    @flag_value
+    def contains_gore_content(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as gore by Discord's content scanning."""
+        return 1 << 6
+
+    @flag_value
+    def contains_self_harm_content(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as self-harm by Discord's content scanning."""
+        return 1 << 7
