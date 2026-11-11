@@ -31,7 +31,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from . import utils
 from .colour import Colour
-from .components import _component_factory, Component
+from .components import Component, _component_factory
 
 __all__ = (
     "Embed",
