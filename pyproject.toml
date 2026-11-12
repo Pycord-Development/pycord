@@ -156,5 +156,4 @@ pythonVersion = "3.10"
 typeCheckingMode = "all"
 # reportAny = false # Occurs too often in pycord internals to leave it off, false positives are very rare
 reportPrivateUsage = false
-reportImplicitStringConcatenation = "none"
 reportUnusedCallResult = false
