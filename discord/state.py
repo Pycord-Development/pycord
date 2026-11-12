@@ -302,9 +302,8 @@ class ConnectionState:
                 raise TypeError("activity parameter must derive from BaseActivity.")
 
             activity = activity.to_dict()
-
         status = options.get("status", None)
-        if status and isinstance(status, str):
+        if status and isinstance(status, Status):
             status = "invisible" if status is Status.offline else str(status)
         intents: Intents | None = options.get("intents", None)
         if intents is None:
@@ -614,15 +613,12 @@ class ConnectionState:
         channel = self.get_channel(raw.channel_id) or PartialMessageable(
             state=self, id=raw.channel_id
         )
-        if not isinstance(
+        if isinstance(
             channel,
             (
-                TextChannel,
-                VoiceChannel,
-                StageChannel,
-                ForumChannel,
-                Thread,
-                PartialMessageable,
+                CategoryChannel,
+                DMChannel,
+                GroupChannel,
             ),
         ):
             _log.warning("Received poll for an invalid channel")
