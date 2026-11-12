@@ -38,6 +38,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Added support for Discord DAVE (Audio & Video E2EE) for voice-receive related features
+  and refactored the voice-reception system.
+  ([#3159](https://github.com/Pycord-Development/pycord/pull/3159))
 - Simplify and optimize the `utils.get()` function.
   ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
 - Changed `Label.set_radio_group()` and `Label.set_file_upload()` to no longer accept a

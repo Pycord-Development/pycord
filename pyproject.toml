@@ -55,6 +55,9 @@ packages = [
     "discord.ext.bridge",
     "discord.bin",
     "discord.voice",
+    "discord.voice.utils",
+    "discord.voice.receive",
+    "discord.voice.packets"
 ]
 
 [tool.setuptools.dynamic]

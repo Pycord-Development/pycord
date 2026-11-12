@@ -34,6 +34,7 @@ from typing import TYPE_CHECKING, Any
 
 from discord.opus import PacketDecoder
 
+from ...sinks.errors import RecordingException
 from ..utils.multidataevent import MultiDataEvent
 
 if TYPE_CHECKING:
@@ -67,11 +68,18 @@ class PacketRouter(threading.Thread):
     def feed_rtp(self, packet: RTPPacket) -> None:
         if packet.ssrc in self._dropped_ssrcs:
             _log.debug("Ignoring packet from dropped ssrc %s", packet.ssrc)
+            return
 
         with self._lock:
             decoder = self.get_decoder(packet.ssrc)
-            if decoder is not None:
+            if decoder is None:
+                return
+
+            if self.sink.is_opus():
                 decoder.push_packet(packet)
+            else:
+                data = decoder.process_packet(packet)
+                self.sink.write(data, data.source)
 
     def feed_rtcp(self, packet: RTCPPacket) -> None:
         guild = self.sink.client.guild if self.sink.client else None
@@ -121,7 +129,11 @@ class PacketRouter(threading.Thread):
             _log.exception("Error in %s loop", self)
             self.reader.error = exc
         finally:
-            self.reader.client.stop_recording()
+            self._drain_all_decoders()
+            try:
+                self.reader.client.stop_recording()
+            except RecordingException:
+                pass
             self.waiter.clear()
 
     def _do_run(self) -> None:
@@ -133,6 +145,19 @@ class PacketRouter(threading.Thread):
                     data = decoder.pop_data()
                     if data is not None:
                         self.sink.write(data, data.source)
+
+    def _drain_all_decoders(self) -> None:
+        with self._lock:
+            for decoder in list(self.decoders.values()):
+                try:
+                    for packet in decoder._buffer.flush():
+                        data = decoder.process_packet(packet)
+                        self.sink.write(data, data.source)
+                except Exception:
+                    _log.exception(
+                        "Error draining decoder for ssrc=%s at end-of-recording",
+                        decoder.ssrc,
+                    )
 
 
 class SinkEventRouter(threading.Thread):

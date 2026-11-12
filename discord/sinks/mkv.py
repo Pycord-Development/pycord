@@ -55,7 +55,7 @@ class MKVSink(Sink):
         MKVSinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.recording:
             raise MKVSinkError(
                 "Audio may only be formatted after recording is finished."
             )

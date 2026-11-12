@@ -57,7 +57,7 @@ class M4ASink(Sink):
         M4ASinkError
             Formatting the audio failed.
         """
-        if self.vc.recording:
+        if self.recording:
             raise M4ASinkError(
                 "Audio may only be formatted after recording is finished."
             )
