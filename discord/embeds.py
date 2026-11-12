@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
 from typing_extensions import Self, override
@@ -44,10 +43,15 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from discord.types.embed import Embed as EmbedData
     from discord.types.embed import Embed as EmbedPayload
+    from discord.types.embed import EmbedAuthor as EmbedAuthorPayload
     from discord.types.embed import EmbedField as EmbedFieldPayload
+    from discord.types.embed import EmbedFooter as EmbedFooterPayload
+    from discord.types.embed import EmbedImage as EmbedImagePayload
+    from discord.types.embed import EmbedProvider as EmbedProviderPayload
+    from discord.types.embed import EmbedThumbnail as EmbedThumbnailPayload
     from discord.types.embed import EmbedType
+    from discord.types.embed import EmbedVideo as EmbedVideoPayload
 
 
 class EmbedAuthor:
@@ -79,7 +83,7 @@ class EmbedAuthor:
         self.proxy_icon_url: str | None = None
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, str | None]) -> EmbedAuthor:
+    def from_dict(cls, data: EmbedAuthorPayload) -> EmbedAuthor:
         self = cls.__new__(cls)
         name = data.get("name")
         if not name:
@@ -90,8 +94,8 @@ class EmbedAuthor:
         self.proxy_icon_url = data.get("proxy_icon_url")
         return self
 
-    def to_dict(self) -> dict[str, str]:
-        d = {"name": str(self.name)}
+    def to_dict(self) -> EmbedAuthorPayload:
+        d: EmbedAuthorPayload = {"name": str(self.name)}
         if self.url:
             d["url"] = str(self.url)
         if self.icon_url:
@@ -132,7 +136,7 @@ class EmbedFooter:
         self.proxy_icon_url: str | None = None
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, str | None]) -> EmbedFooter:
+    def from_dict(cls, data: EmbedFooterPayload) -> EmbedFooter:
         self = cls.__new__(cls)
         text = data.get("text")
         if not text:
@@ -142,8 +146,8 @@ class EmbedFooter:
         self.proxy_icon_url = data.get("proxy_icon_url")
         return self
 
-    def to_dict(self) -> dict[str, str]:
-        d = {"text": str(self.text)}
+    def to_dict(self) -> EmbedFooterPayload:
+        d: EmbedFooterPayload = {"text": str(self.text)}
         if self.icon_url:
             d["icon_url"] = str(self.icon_url)
         return d
@@ -187,7 +191,7 @@ class EmbedMedia:  # Thumbnail, Image, Video
         self.width = None
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, str | int]) -> EmbedMedia:
+    def from_dict(cls, data: EmbedImagePayload | EmbedVideoPayload) -> EmbedMedia:
         self = cls.__new__(cls)
         self.url = str(data.get("url"))
         self.proxy_url = (
@@ -220,7 +224,7 @@ class EmbedProvider:
         self.url: str | None
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, str | None]) -> EmbedProvider:
+    def from_dict(cls, data: EmbedProviderPayload) -> EmbedProvider:
         self = cls.__new__(cls)
         self.name = data.get("name")
         self.url = data.get("url")
@@ -397,17 +401,17 @@ class Embed:
         self.image = image
         self.thumbnail = thumbnail
 
-        self._footer: Mapping[str, str] | None = None
-        self._image: Mapping[str, str] | None = None
-        self._thumbnail: Mapping[str, str] | None = None
-        self._video: Mapping[str, str] | None = None
-        self._provider: Mapping[str, str] | None = None
-        self._author: Mapping[str, str] | None = None
+        self._footer: EmbedFooterPayload | None = None
+        self._image: EmbedImagePayload | None = None
+        self._thumbnail: EmbedThumbnailPayload | None = None
+        self._video: EmbedVideoPayload | None = None
+        self._provider: EmbedProviderPayload | None = None
+        self._author: EmbedAuthorPayload | None = None
         self._colour: Colour | None = None
         self._timestamp: datetime.datetime | None = None
 
     @classmethod
-    def from_dict(cls: type[Self], data: EmbedPayload) -> Self:
+    def from_dict(cls, data: EmbedPayload) -> Self:
         """Converts a :class:`dict` to a :class:`Embed` provided it is in the
         format that Discord expects it to be in.
 
@@ -529,7 +533,9 @@ class Embed:
         return getattr(self, "_colour", None)
 
     @colour.setter
-    def colour(self, value: int | Colour | None) -> None:  # type: ignore  # pyright: ignore[reportPropertyTypeMismatch]
+    def colour(
+        self, value: int | Colour | None  # pyright: ignore[reportPropertyTypeMismatch]
+    ) -> None:
         self._colour = Colour.resolve_value(value)
 
     color: property = colour
@@ -547,7 +553,7 @@ class Embed:
         elif value is None:
             self._timestamp = value
         else:
-            raise TypeError(  # pyright: ignore[reportUnreachable] # Can be reached with bad user input
+            raise TypeError(
                 "Expected datetime.datetime or None. Received"
                 + f" {value.__class__.__name__} instead"
             )
@@ -565,7 +571,7 @@ class Embed:
         return EmbedFooter.from_dict(self._footer)
 
     @footer.setter
-    def footer(self, value: EmbedFooter | None):
+    def footer(self, value: EmbedFooter | None) -> None:
         if value is None:
             self.remove_footer()
         elif isinstance(
@@ -573,7 +579,7 @@ class Embed:
         ):  # pyright: ignore[reportUnnecessaryIsInstance]
             self._footer = value.to_dict()
         else:
-            raise TypeError(  # pyright: ignore[reportUnreachable] Reachable via bad user input
+            raise TypeError(
                 "Expected EmbedFooter or None. Received"
                 + f" {value.__class__.__name__} instead"
             )
@@ -597,10 +603,11 @@ class Embed:
         icon_url: :class:`str`
             The URL of the footer icon. Only HTTP(S) is supported.
         """
+        new_footer: EmbedFooterPayload
         if self._footer is not None:
-            new_footer = dict(self._footer)
+            new_footer = self._footer.copy()
         else:
-            new_footer = {}
+            new_footer = {"text": ""}
         if text:
             new_footer["text"] = str(text)
 
@@ -653,10 +660,10 @@ class Embed:
             self.set_image(url=value)
         elif isinstance(
             value, EmbedMedia
-        ):  # pyright: ignore[reportUnnecessaryIsInstance] Reachable via bad user input
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             self.set_image(url=value.url)
         else:
-            raise TypeError(  # pyright: ignore[reportUnreachable] Reachable via bad user input
+            raise TypeError(
                 "Expected discord.EmbedMedia, or None but received"
                 + f" {value.__class__.__name__} instead."
             )
@@ -734,7 +741,7 @@ class Embed:
         ):  # pyright: ignore[reportUnnecessaryIsInstance] Bad user input can go here
             self.set_thumbnail(url=value.url)
         else:
-            raise TypeError(  # pyright: ignore[reportUnreachable] Reachable via bad user input
+            raise TypeError(
                 "Expected discord.EmbedMedia, or None but received"
                 + f" {value.__class__.__name__} instead."
             )
@@ -830,7 +837,7 @@ class Embed:
         ):  # pyright: ignore[reportUnnecessaryIsInstance]
             self._author = value.to_dict()
         else:
-            raise TypeError(  # pyright: ignore[reportUnreachable] Reachable via bad user input
+            raise TypeError(
                 "Expected discord.EmbedAuthor, or None but received"
                 + f" {value.__class__.__name__} instead."
             )
@@ -857,7 +864,7 @@ class Embed:
         icon_url: :class:`str`
             The URL of the author icon. Only HTTP(S) is supported.
         """
-        new_author = {
+        new_author: EmbedAuthorPayload = {
             "name": str(name),
         }
 
@@ -925,9 +932,7 @@ class Embed:
         if not isinstance(
             field, EmbedField
         ):  # pyright: ignore[reportUnnecessaryIsInstance]
-            raise TypeError(
-                "Expected an EmbedField object."
-            )  # pyright: ignore[reportUnreachable]
+            raise TypeError("Expected an EmbedField object.")
 
         self._fields.append(field)
 
@@ -1046,7 +1051,7 @@ class Embed:
         field.inline = inline
         return self
 
-    def to_dict(self) -> EmbedData:
+    def to_dict(self) -> EmbedPayload:
         """Converts this embed object into a dict.
 
         Returns
