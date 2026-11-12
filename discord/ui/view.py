@@ -61,8 +61,9 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
+from ..embeds import Embed
 from ..enums import ChannelType, SeparatorSpacingSize
-from ..errors import Forbidden, NotFound
+from ..errors import Forbidden, InvalidArgument, NotFound
 from ..utils import find
 from .core import ItemInterface
 from .item import Item, ItemCallbackType, ModalItem, ViewItem
@@ -881,6 +882,36 @@ class DesignerView(BaseView):
         """
         view = DesignerView(timeout=timeout)
         for component in message.components:
+            view.add_item(_component_to_item(component))
+        return view
+
+    @classmethod
+    def from_embed(
+        cls,
+        embed: Embed,
+        /,
+        *,
+        timeout: float | None = 180.0,
+    ) -> DesignerView:
+        """Converts a component embed's components into a :class:`DesignerView`.
+
+        Parameters
+        ----------
+        embed: :class:`.Embed`
+            The component embed to convert into a view.
+        timeout: :class:`float` | :obj:`None`
+            The timeout of the converted view.
+
+        Returns
+        -------
+        :class:`DesignerView`
+            The converted view. This always returns a :class:`DesignerView` and not
+            one of its subclasses.
+        """
+        if embed.components is None:
+            raise InvalidArgument("embed does not have components")
+        view = DesignerView(timeout=timeout)
+        for component in embed.components:
             view.add_item(_component_to_item(component))
         return view
 

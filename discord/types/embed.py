@@ -29,6 +29,8 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
+from .components import Component
+
 
 class EmbedFooter(TypedDict):
     icon_url: NotRequired[str]
@@ -84,6 +86,7 @@ EmbedType = Literal[
     "link",
     "auto_moderation_message",
     "poll_result",
+    "components",
 ]
 
 
@@ -101,3 +104,4 @@ class Embed(TypedDict, total=False):
     provider: EmbedProvider
     author: EmbedAuthor
     fields: list[EmbedField]
+    components: list[Component]
