@@ -156,13 +156,13 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
         return cls(name=value, id=None, animated=False)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> PartialEmojiPayload:
         o: dict[str, Any] = {"name": self.name}
         if self.id:
             o["id"] = self.id
         if self.animated:
             o["animated"] = self.animated
-        return o
+        return o  # type: ignore
 
     def _to_partial(self) -> PartialEmoji:
         return self

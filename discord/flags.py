@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+from typing_extensions import Self
 
 from collections.abc import Callable, Iterator
 from typing import Any, ClassVar, TypeVar, overload
@@ -112,7 +113,7 @@ class BaseFlags:
             setattr(self, key, value)
 
     @classmethod
-    def _from_value(cls, value):
+    def _from_value(cls, value: int) -> Self:
         self = cls.__new__(cls)
         self.value = value
         return self

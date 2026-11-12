@@ -43,7 +43,6 @@ SelectDefaultValueType = Literal["channel", "role", "user"]
 
 
 class BaseComponent(TypedDict):
-    type: ComponentType
     id: NotRequired[int]
 
 
@@ -53,26 +52,64 @@ class ActionRow(BaseComponent):
 
 
 class ButtonComponent(BaseComponent):
-    custom_id: NotRequired[str]
-    url: NotRequired[str]
-    disabled: NotRequired[bool]
-    emoji: NotRequired[PartialEmoji]
-    label: NotRequired[str]
     type: Literal[2]
     style: ButtonStyle
-    sku_id: Snowflake
+    label: NotRequired[str]
+    emoji: NotRequired[PartialEmoji]
+    custom_id: NotRequired[str]
+    sku_id: NotRequired[Snowflake]
+    url: NotRequired[str]
+    disabled: NotRequired[bool]
+
+
+class BaseSelectMenu(BaseComponent):
+    custom_id: str
+    placeholder: NotRequired[str]
+    min_values: NotRequired[int]
+    max_values: NotRequired[int]
+    disabled: NotRequired[bool]
+    required: NotRequired[bool]
+
+
+class StringSelectMenu(BaseSelectMenu):
+    type: Literal[3]
+    options: list[SelectOption]
 
 
 class InputText(BaseComponent):
+    type: Literal[4]
+    custom_id: str
+    style: InputTextStyle
     min_length: NotRequired[int]
     max_length: NotRequired[int]
     required: NotRequired[bool]
-    placeholder: NotRequired[str]
     value: NotRequired[str]
-    type: Literal[4]
-    style: InputTextStyle
-    custom_id: str
-    label: NotRequired[str]
+    placeholder: NotRequired[str]
+    label: NotRequired[str]  # deprecated
+
+
+class UserSelectMenu(BaseSelectMenu):
+    type: Literal[5]
+    default_values: NotRequired[list[SelectDefaultValue]]
+
+
+class RoleSelectMenu(BaseSelectMenu):
+    type: Literal[6]
+    default_values: NotRequired[list[SelectDefaultValue]]
+
+
+class MentionableSelectMenu(BaseSelectMenu):
+    type: Literal[7]
+    default_values: NotRequired[list[SelectDefaultValue]]
+
+
+class ChannelSelectMenu(BaseSelectMenu):
+    type: Literal[8]
+    channel_types: NotRequired[list[ChannelType]]
+    default_values: NotRequired[list[SelectDefaultValue]]
+
+
+SelectMenu = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu
 
 
 class SelectOption(TypedDict):
@@ -88,17 +125,10 @@ class SelectDefaultValue(TypedDict):
     type: SelectDefaultValueType
 
 
-class SelectMenu(BaseComponent):
-    placeholder: NotRequired[str]
-    min_values: NotRequired[int]
-    max_values: NotRequired[int]
-    disabled: NotRequired[bool]
-    channel_types: NotRequired[list[ChannelType]]
-    options: NotRequired[list[SelectOption]]
-    type: Literal[3, 5, 6, 7, 8]
-    custom_id: str
-    required: NotRequired[bool]
-    default_values: NotRequired[list[SelectDefaultValue]]
+class SectionComponent(BaseComponent):
+    type: Literal[9]
+    components: list[AllowedSectionComponents]
+    accessory: AllowedSectionAccessories
 
 
 class TextDisplayComponent(BaseComponent):
@@ -106,15 +136,9 @@ class TextDisplayComponent(BaseComponent):
     content: str
 
 
-class SectionComponent(BaseComponent):
-    type: Literal[9]
-    components: list[AllowedSectionComponents]
-    accessory: NotRequired[AllowedSectionAccessories]
-
-
 class UnfurledMediaItem(TypedDict):
     url: str
-    proxy_url: str
+    proxy_url: NotRequired[str]
     height: NotRequired[int | None]
     width: NotRequired[int | None]
     content_type: NotRequired[str]
@@ -122,16 +146,16 @@ class UnfurledMediaItem(TypedDict):
     attachment_id: NotRequired[Snowflake]
 
 
-class ThumbnailComponent(BaseComponent):
-    type: Literal[11]
+class MediaGalleryItem(TypedDict):
     media: UnfurledMediaItem
-    description: NotRequired[str]
+    description: NotRequired[str | None]
     spoiler: NotRequired[bool]
 
 
-class MediaGalleryItem(TypedDict):
+class ThumbnailComponent(BaseComponent):
+    type: Literal[11]
     media: UnfurledMediaItem
-    description: NotRequired[str]
+    description: NotRequired[str | None]
     spoiler: NotRequired[bool]
 
 
@@ -156,9 +180,9 @@ class SeparatorComponent(BaseComponent):
 
 class ContainerComponent(BaseComponent):
     type: Literal[17]
-    accent_color: NotRequired[int]
-    spoiler: NotRequired[bool]
     components: list[AllowedContainerComponents]
+    accent_color: NotRequired[int | None]
+    spoiler: NotRequired[bool]
 
 
 class LabelComponent(BaseComponent):
@@ -174,6 +198,7 @@ class FileUploadComponent(BaseComponent):
     max_values: NotRequired[int]
     min_values: NotRequired[int]
     required: NotRequired[bool]
+    file_types: NotRequired[list[str]]
 
 
 class RadioGroupOption(TypedDict):
@@ -186,8 +211,8 @@ class RadioGroupOption(TypedDict):
 class RadioGroupComponent(BaseComponent):
     type: Literal[21]
     custom_id: str
-    required: NotRequired[bool]
     options: list[RadioGroupOption]
+    required: NotRequired[bool]
 
 
 class CheckboxGroupOption(TypedDict):
@@ -200,10 +225,10 @@ class CheckboxGroupOption(TypedDict):
 class CheckboxGroupComponent(BaseComponent):
     type: Literal[22]
     custom_id: str
-    required: NotRequired[bool]
     options: list[CheckboxGroupOption]
-    max_values: NotRequired[int]
     min_values: NotRequired[int]
+    max_values: NotRequired[int]
+    required: NotRequired[bool]
 
 
 class CheckboxComponent(BaseComponent):
@@ -215,7 +240,11 @@ class CheckboxComponent(BaseComponent):
 Component = (
     ActionRow
     | ButtonComponent
-    | SelectMenu
+    | StringSelectMenu
+    | UserSelectMenu
+    | RoleSelectMenu
+    | MentionableSelectMenu
+    | ChannelSelectMenu
     | InputText
     | TextDisplayComponent
     | SectionComponent
@@ -231,7 +260,7 @@ Component = (
     | CheckboxComponent
 )
 
-AllowedActionRowComponents = ButtonComponent | InputText | SelectMenu
+AllowedActionRowComponents = ButtonComponent | InputText | StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu
 
 AllowedSectionAccessories = ThumbnailComponent | ButtonComponent
 
@@ -247,7 +276,11 @@ AllowedContainerComponents = (
 )
 
 AllowedLabelComponents = (
-    SelectMenu
+    StringSelectMenu
+    | UserSelectMenu
+    | RoleSelectMenu
+    | MentionableSelectMenu
+    | ChannelSelectMenu
     | InputText
     | FileUploadComponent
     | RadioGroupComponent
