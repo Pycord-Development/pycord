@@ -31,18 +31,22 @@ from typing import Any, ClassVar, TypeVar, overload
 from .enums import UserFlags
 
 __all__ = (
-    "SystemChannelFlags",
-    "MessageFlags",
+    "ApplicationFlags",
     "AttachmentFlags",
-    "PublicUserFlags",
+    "ChannelFlags",
+    "ContentScanningMetadataFlags",
+    "EmbedFlags",
+    "EmbedMediaFlags",
     "GatewayCapabilities",
     "Intents",
     "MemberCacheFlags",
-    "ApplicationFlags",
-    "ChannelFlags",
-    "SKUFlags",
-    "RoleFlags",
     "MemberFlags",
+    "MessageFlags",
+    "PublicUserFlags",
+    "RoleFlags",
+    "SKUFlags",
+    "SystemChannelFlags",
+    "UnfurledMediaItemFlags",
 )
 
 FV = TypeVar("FV", bound="flag_value")
@@ -1691,6 +1695,61 @@ class AttachmentFlags(BaseFlags):
         """:class:`bool`: Returns ``True`` if the attachment has been remixed."""
         return 1 << 2
 
+    @flag_value
+    def is_spoiler(self):
+        """:class:`bool`: Returns ``True`` if the attachment is spoilered.
+
+        .. versionadded:: 2.9
+        """
+        return 1 << 3
+
+    @flag_value
+    def contains_explicit_content(self):
+        """:class:`bool`: Returns ``True`` if the attachment has been flagged as explicit by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+
+        .. versionadded:: 2.9
+        """
+        return 1 << 4
+
+    @flag_value
+    def is_animated(self):
+        """:class:`bool`: Returns ``True`` if the attachment is an animated image.
+
+        .. versionadded:: 2.9
+        """
+        return 1 << 5
+
+    @flag_value
+    def contains_gore_content(self):
+        """:class:`bool`: Returns ``True`` if the attachment has been flagged as gore by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+
+        .. versionadded:: 2.9
+        """
+        return 1 << 6
+
+    @flag_value
+    def contains_self_harm_content(self):
+        """:class:`bool`: Returns ``True`` if the attachment has been flagged as self-harm by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+
+        .. versionadded:: 2.9
+        """
+        return 1 << 7
+
 
 @fill_with_flags()
 class SKUFlags(BaseFlags):
@@ -1832,6 +1891,8 @@ class MemberFlags(BaseFlags):
 class RoleFlags(BaseFlags):
     r"""Wraps up the Discord Role flags.
 
+    .. versionadded:: 2.6
+
     .. container:: operations
 
         .. describe:: x == y
@@ -1864,14 +1925,11 @@ class RoleFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
-    .. versionadded:: 2.6
-
     Attributes
     -----------
     value: :class:`int`
-        The raw value. This value is a bit array field of a 53-bit integer
-        representing the currently available flags. You should query
-        flags via the properties rather than using this raw value.
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
     """
 
     __slots__ = ()
@@ -1880,3 +1938,272 @@ class RoleFlags(BaseFlags):
     def in_prompt(self):
         """:class:`bool`: Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`."""
         return 1 << 0
+
+
+class UnfurledMediaItemFlags(BaseFlags):
+    r"""Wraps up the Unfurled Media Item flags.
+
+    .. versionadded:: 2.9
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two UnfurledMediaItemFlags are equal.
+        .. describe:: x != y
+
+            Checks if two UnfurledMediaItemFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    Attributes
+    ----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def is_animated(self):
+        """:class:`bool`: Returns ``True`` if the media is an animated image."""
+        return 1 << 0
+
+
+class ContentScanningMetadataFlags(BaseFlags):
+    r"""Wraps up the Discord Content Scanning Metadata flags.
+
+    .. versionadded:: 2.9
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two ContentScanningMetadataFlags are equal.
+        .. describe:: x != y
+
+            Checks if two ContentScanningMetadataFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def contains_explicit_content(self):
+        """:class:`bool`: Returns ``True`` if the media has been flagged as explicit by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
+        return 1 << 0
+
+    @flag_value
+    def contains_gore_content(self):
+        """:class:`bool`: Returns ``True`` if the media has been flagged as gore by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
+        return 1 << 1
+
+    @flag_value
+    def contains_self_harm_content(self):
+        """:class:`bool`: Returns ``True`` if the media has been flagged as self-harm by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
+        return 1 << 2
+
+
+class EmbedFlags(BaseFlags):
+    r"""Wraps up the Embed flags.
+
+    .. versionadded:: 2.9
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two EmbedFlags are equal.
+        .. describe:: x != y
+
+            Checks if two EmbedFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def contains_explicit_content(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as explicit by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
+        return 1 << 4
+
+    @flag_value
+    def is_content_inventory_entry(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as explicit by Discord's content scanning."""
+        return 1 << 5
+
+    @flag_value
+    def contains_gore_content(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as gore by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
+        return 1 << 6
+
+    @flag_value
+    def contains_self_harm_content(self):
+        """:class:`bool`: Returns ``True`` if the embed's media has been flagged as self-harm by Discord's content scanning.
+
+        .. warning::
+
+            Content scanning can run after the message was sent, so this flag may not be present on the initial message
+            and can be added later in a :func:`on_message_edit`.
+        """
+        return 1 << 7
+
+
+class EmbedMediaFlags(BaseFlags):
+    r"""Wraps up the Embed Media flags.
+
+    .. versionadded:: 2.9
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two EmbedMediaFlags are equal.
+        .. describe:: x != y
+
+            Checks if two EmbedMediaFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def is_animated(self):
+        """:class:`bool`: Returns ``True`` if the media is animated."""
+        return 1 << 5

@@ -35,6 +35,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `ChannelFlags.channel_obfuscated` and `GuildChannel.obfuscated`
   ([#3134](https://github.com/Pycord-Development/pycord/pull/3134))
   ([#3152](https://github.com/Pycord-Development/pycord/pull/3152))
+- Added `UnfurledMediaItemFlags`, `ContentScanningMetadataFlags`, `EmbedFlags`,
+  `EmbedMediaFlags`, and new flags to `AttachmentFlags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Added `UnfurledMediaItem.placeholder`, `UnfurledMediaItem.placeholder_version`,
+  `UnfurledMediaItem.content_scan_metadata`, and `Embed.flags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Added `content_type`, `placeholder`, `placeholder_version`, `description`, and `flags`
+  to `EmbedMedia`. ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 
 ### Changed
 
@@ -77,6 +85,11 @@ These changes are available on the `master` branch, but have not yet been releas
   indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
 - Fixed a bug where audio reception would drop after prolonged silence in a voice
   channel. ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
+- Fixed the type of `UnfurledMediaItem.attachment_id` possibly being `str`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Fixed the type of `UnfurledMediaItem.flags` being `AttachmentFlags`, it is now
+  `UnfurledMediaItemFlags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 
 ### Deprecated
 

@@ -31,6 +31,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from . import utils
 from .colour import Colour
+from .flags import EmbedFlags, EmbedMediaFlags
 
 __all__ = (
     "Embed",
@@ -163,24 +164,44 @@ class EmbedMedia:  # Thumbnail, Image, Video
     ----------
     url: :class:`str`
         The source URL of the media.
-    proxy_url: :class:`str`
+    proxy_url: :class:`str` | :obj:`None`
         The proxied URL of the media.
-    height: :class:`int`
+    height: :class:`int` | :obj:`None`
         The height of the media.
-    width: :class:`int`
+    width: :class:`int` | :obj:`None`
         The width of the media.
+    content_type: :class:`str` | :obj:`None`
+        The content type of the media.
+    placeholder: :class:`str` | :obj:`None`
+        The thumbnsail placeholder of the media.
+    placeholder_version: :class:`int` | :obj:`None`
+        THe version of the placeholder.
+    description: :class:`str` | :obj:`None`
+        The description (alt text) of the media.
+    flags: :class:`EmbedMediaFlags` | :obj:`None`
+        The flags of this media.
     """
 
     url: str
     proxy_url: str | None
     height: int | None
     width: int | None
+    content_type: str | None
+    placeholder: str | None
+    placeholder_version: int | None
+    description: str | None
+    flags: EmbedMediaFlags | None
 
-    def __init__(self, url: str):
+    def __init__(self, url: str, *, description: str | None = None):
         self.url = url
         self.proxy_url = None
         self.height = None
         self.width = None
+        self.content_type = None
+        self.placeholder = None
+        self.placeholder_version = None
+        self.description = description
+        self.flags = None
 
     @classmethod
     def from_dict(cls, data: dict[str, str | int]) -> EmbedMedia:
@@ -191,6 +212,25 @@ class EmbedMedia:  # Thumbnail, Image, Video
         )
         self.height = int(height) if (height := data.get("height")) else None
         self.width = int(width) if (width := data.get("width")) else None
+        self.content_type = (
+            str(content_type) if (content_type := data.get("content_type")) else None
+        )
+        self.placeholder = (
+            str(placeholder) if (placeholder := data.get("placeholder")) else None
+        )
+        self.placeholder_version = (
+            int(placeholder_version)
+            if (placeholder_version := data.get("placeholder_version"))
+            else None
+        )
+        self.description = (
+            str(description) if (description := data.get("description")) else None
+        )
+        self.flags = (
+            EmbedMediaFlags._from_value(int(flags))
+            if (flags := data.get("flags"))
+            else None
+        )
         return self
 
     def __repr__(self) -> str:
@@ -330,6 +370,11 @@ class Embed:
     colour: :class:`Colour` | :class:`int`
         The colour code of the embed. Aliased to ``color`` as well.
         This can be set during initialisation.
+    flags: :class:`EmbedFlags` | :obj:`None`
+        This embed's flags. This is not intended to be set by the user, and is
+        only available if received from Discord.
+
+        .. versionadded:: 2.9
     """
 
     __slots__ = (
@@ -346,6 +391,7 @@ class Embed:
         "_author",
         "_fields",
         "description",
+        "flags",
     )
 
     def __init__(
@@ -388,6 +434,7 @@ class Embed:
         self.footer = footer
         self.image = image
         self.thumbnail = thumbnail
+        self.flags: EmbedFlags | None = None
 
     @classmethod
     def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
@@ -440,6 +487,8 @@ class Embed:
             self._timestamp = utils.parse_time(data["timestamp"])
         except KeyError:
             pass
+
+        self.flags = EmbedFlags._from_value(data["flags"]) if "flags" in data else None
 
         for attr in (
             "thumbnail",
@@ -548,9 +597,7 @@ class Embed:
     def footer(self) -> EmbedFooter | None:
         """Returns an :class:`EmbedFooter` denoting the footer contents.
 
-        See :meth:`set_footer` for possible values you can access.
-
-        If the footer is not set then `None` is returned.
+        If the footer is not set then :obj:`None` is returned.
         """
         foot = getattr(self, "_footer", None)
         if not foot:
@@ -617,14 +664,7 @@ class Embed:
     def image(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the image contents.
 
-        Attributes you can access are:
-
-        - ``url``
-        - ``proxy_url``
-        - ``width``
-        - ``height``
-
-        If the image is not set then `None` is returned.
+        If the image is not set then :obj:`None` is returned.
         """
         img = getattr(self, "_image", None)
         if not img:
@@ -638,26 +678,28 @@ class Embed:
         elif isinstance(value, str):
             self.set_image(url=value)
         elif isinstance(value, EmbedMedia):
-            self.set_image(url=value.url)
+            self.set_image(url=value.url, description=value.description)
         else:
             raise TypeError(
                 "Expected discord.EmbedMedia, or None but received"
                 f" {value.__class__.__name__} instead."
             )
 
-    def set_image(self: E, *, url: Any | None) -> E:
+    def set_image(self: E, *, url: Any | None, description: Any | None = None) -> E:
         """Sets the image for the embed content.
 
         This function returns the class instance to allow for fluent-style
         chaining.
 
-        .. versionchanged:: 1.4
-            Passing `None` removes the image.
+        .. versionchanged:: 2.9
+            Added the ``description`` parameter.
 
         Parameters
         ----------
         url: :class:`str`
             The source URL for the image. Only HTTP(S) is supported.
+        description: :class:`str`
+            The description for this image.
         """
 
         if url is None:
@@ -666,9 +708,7 @@ class Embed:
             except AttributeError:
                 pass
         else:
-            self._image = {
-                "url": str(url),
-            }
+            self._image = {"url": str(url), "description": str(description)}
 
         return self
 
@@ -691,14 +731,7 @@ class Embed:
     def thumbnail(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the thumbnail contents.
 
-        Attributes you can access are:
-
-        - ``url``
-        - ``proxy_url``
-        - ``width``
-        - ``height``
-
-        If the thumbnail is not set then `None` is returned.
+        If the thumbnail is not set then :obj:`None` is returned.
         """
         thumb = getattr(self, "_thumbnail", None)
         if not thumb:
@@ -712,26 +745,28 @@ class Embed:
         elif isinstance(value, str):
             self.set_thumbnail(url=value)
         elif isinstance(value, EmbedMedia):
-            self.set_thumbnail(url=value.url)
+            self.set_thumbnail(url=value.url, description=value.description)
         else:
             raise TypeError(
                 "Expected discord.EmbedMedia, or None but received"
                 f" {value.__class__.__name__} instead."
             )
 
-    def set_thumbnail(self: E, *, url: Any | None) -> E:
+    def set_thumbnail(self: E, *, url: Any | None, description: Any | None = None) -> E:
         """Sets the thumbnail for the embed content.
 
         This function returns the class instance to allow for fluent-style
         chaining.
 
-        .. versionchanged:: 1.4
-            Passing `None` removes the thumbnail.
+        .. versionchanged:: 2.9
+            Added the ``description`` parameter.
 
         Parameters
         ----------
         url: :class:`str`
             The source URL for the thumbnail. Only HTTP(S) is supported.
+        description: :class:`str`
+            The description for this image.
         """
 
         if url is None:
@@ -742,6 +777,7 @@ class Embed:
         else:
             self._thumbnail = {
                 "url": str(url),
+                "description": str(description),
             }
 
         return self
@@ -765,13 +801,7 @@ class Embed:
     def video(self) -> EmbedMedia | None:
         """Returns an :class:`EmbedMedia` denoting the video contents.
 
-        Attributes include:
-
-        - ``url`` for the video URL.
-        - ``height`` for the video height.
-        - ``width`` for the video width.
-
-        If the video is not set then `None` is returned.
+        If the video is not set then :obj:`None` is returned.
         """
         vid = getattr(self, "_video", None)
         if not vid:
@@ -782,9 +812,7 @@ class Embed:
     def provider(self) -> EmbedProvider | None:
         """Returns an :class:`EmbedProvider` denoting the provider contents.
 
-        The only attributes that might be accessed are ``name`` and ``url``.
-
-        If the provider is not set then `None` is returned.
+        If the provider is not set then :obj:`None` is returned.
         """
         prov = getattr(self, "_provider", None)
         if not prov:
@@ -795,9 +823,7 @@ class Embed:
     def author(self) -> EmbedAuthor | None:
         """Returns an :class:`EmbedAuthor` denoting the author contents.
 
-        See :meth:`set_author` for possible values you can access.
-
-        If the author is not set then `None` is returned.
+        If the author is not set then :obj:`None` is returned.
         """
         auth = getattr(self, "_author", None)
         if not auth:
@@ -870,9 +896,7 @@ class Embed:
     def fields(self) -> list[EmbedField]:
         """Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents.
 
-        See :meth:`add_field` for possible values you can access.
-
-        If the attribute has no value then ``None`` is returned.
+        If the attribute has no value then :obj:`None` is returned.
         """
         return self._fields
 
@@ -1076,5 +1100,8 @@ class Embed:
 
         if self.title:
             result["title"] = self.title
+
+        if self.flags:
+            result["flags"] = self.flags.value
 
         return result  # type: ignore
