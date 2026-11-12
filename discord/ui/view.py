@@ -63,7 +63,7 @@ from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..embeds import Embed
 from ..enums import ChannelType, SeparatorSpacingSize
-from ..errors import Forbidden, NotFound, InvalidArgument
+from ..errors import Forbidden, InvalidArgument, NotFound
 from ..utils import find
 from .core import ItemInterface
 from .item import Item, ItemCallbackType, ModalItem, ViewItem
@@ -887,7 +887,11 @@ class DesignerView(BaseView):
 
     @classmethod
     def from_embed(
-        cls, embed: Embed, /, *, timeout: float | None = 180.0,
+        cls,
+        embed: Embed,
+        /,
+        *,
+        timeout: float | None = 180.0,
     ) -> DesignerView:
         """Converts a component embed's components into a :class:`DesignerView`.
 
