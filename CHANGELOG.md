@@ -77,6 +77,8 @@ These changes are available on the `master` branch, but have not yet been releas
   indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
 - Fixed a bug where audio reception would drop after prolonged silence in a voice
   channel. ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
+- Fixed an issue where stopped views would not be cleaned up.
+  ([#3360](https://github.com/Pycord-Development/pycord/pull/3360))
 
 ### Deprecated
 
