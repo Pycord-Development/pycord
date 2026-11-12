@@ -991,7 +991,9 @@ class UnfurledMediaItem(AssetMixin):
         return self._url
 
     @url.setter
-    def url(self, value: str) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
+    def url(
+        self, value: str
+    ) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
         self._url = value
         self._static_url = (
             value if value and value.startswith("attachment://") else None
@@ -1921,11 +1923,13 @@ def _component_factory(
 ) -> Button: ...
 @overload
 def _component_factory(
-    data: StringSelectMenuPayload
-    | UserSelectMenuPayload
-    | RoleSelectMenuPayload
-    | MentionableSelectMenuPayload
-    | ChannelSelectMenuPayload,
+    data: (
+        StringSelectMenuPayload
+        | UserSelectMenuPayload
+        | RoleSelectMenuPayload
+        | MentionableSelectMenuPayload
+        | ChannelSelectMenuPayload
+    ),
     state: ConnectionState | None = None,
 ) -> SelectMenu: ...
 @overload
