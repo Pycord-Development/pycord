@@ -28,6 +28,8 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator
 from typing import Any, ClassVar, TypeVar, overload
 
+from typing_extensions import Self
+
 from .enums import UserFlags
 
 __all__ = (
@@ -112,7 +114,7 @@ class BaseFlags:
             setattr(self, key, value)
 
     @classmethod
-    def _from_value(cls, value):
+    def _from_value(cls, value: int) -> Self:
         self = cls.__new__(cls)
         self.value = value
         return self

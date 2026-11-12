@@ -25,8 +25,22 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from abc import ABC
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Generic,
+    Literal,
+    Protocol,
+    TypeVar,
+    cast,
+    overload,
+    runtime_checkable,
+)
+
+from typing_extensions import Self
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -46,8 +60,10 @@ from .utils import MISSING, find, get_slots
 if TYPE_CHECKING:
     from . import abc
     from .emoji import AppEmoji, GuildEmoji
+    from .state import ConnectionState
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
+    from .types.components import ChannelSelectMenu as ChannelSelectMenuPayload
     from .types.components import CheckboxComponent as CheckboxComponentPayload
     from .types.components import (
         CheckboxGroupComponent as CheckboxGroupComponentPayload,
@@ -61,47 +77,57 @@ if TYPE_CHECKING:
     from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
+    from .types.components import MentionableSelectMenu as MentionableSelectMenuPayload
     from .types.components import RadioGroupComponent as RadioGroupComponentPayload
     from .types.components import RadioGroupOption as RadioGroupOptionPayload
+    from .types.components import RoleSelectMenu as RoleSelectMenuPayload
     from .types.components import SectionComponent as SectionComponentPayload
     from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
     from .types.components import SeparatorComponent as SeparatorComponentPayload
+    from .types.components import StringSelectMenu as StringSelectMenuPayload
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
+    from .types.components import UserSelectMenu as UserSelectMenuPayload
 
 __all__ = (
-    "Component",
     "ActionRow",
     "Button",
-    "SelectMenu",
-    "SelectOption",
-    "InputText",
-    "Section",
-    "TextDisplay",
-    "Thumbnail",
-    "MediaGallery",
-    "MediaGalleryItem",
-    "UnfurledMediaItem",
-    "FileComponent",
-    "Separator",
-    "Container",
-    "Label",
-    "SelectDefaultValue",
-    "FileUpload",
-    "RadioGroup",
-    "RadioGroupOption",
+    "Checkbox",
     "CheckboxGroup",
     "CheckboxGroupOption",
-    "Checkbox",
+    "Component",
+    "Container",
+    "FileComponent",
+    "FileUpload",
+    "InputText",
+    "Label",
+    "MediaGallery",
+    "MediaGalleryItem",
+    "RadioGroup",
+    "RadioGroupOption",
+    "Section",
+    "SelectDefaultValue",
+    "SelectMenu",
+    "SelectOption",
+    "Separator",
+    "TextDisplay",
+    "Thumbnail",
+    "UnfurledMediaItem",
 )
 
-C = TypeVar("C", bound="Component")
+T = TypeVar("T", bound="ComponentType")
 
 
-class Component:
+@runtime_checkable
+class _HasSubComponents(Protocol):
+    def walk_components(self) -> Iterator[Component[Any]]: ...
+    def get_component(self, id: str | int) -> Component[Any] | None: ...
+
+
+class Component(ABC, Generic[T]):
     """Represents a Discord Bot UI Kit Component.
 
     The components supported by Discord in messages are as follows:
@@ -130,10 +156,11 @@ class Component:
         The ID `0` is treated as if no ID was provided.
     """
 
-    __slots__: tuple[str, ...] = ("type", "id")
+    __slots__: tuple[str, ...] = ("id", "type")
 
     __repr_info__: ClassVar[tuple[str, ...]]
-    type: ComponentType
+    id: int | None
+    type: T
     versions: tuple[int, ...]
 
     def __repr__(self) -> str:
@@ -141,8 +168,8 @@ class Component:
         return f"<{self.__class__.__name__} {attrs}>"
 
     @classmethod
-    def _raw_construct(cls: type[C], **kwargs) -> C:
-        self: C = cls.__new__(cls)
+    def _raw_construct(cls, **kwargs: Any) -> Self:
+        self: Self = cls.__new__(cls)
         for slot in get_slots(cls):
             try:
                 value = kwargs[slot]
@@ -152,15 +179,15 @@ class Component:
                 setattr(self, slot, value)
         return self
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> ComponentPayload:
         raise NotImplementedError
 
     def is_v2(self) -> bool:
         """Whether this component was introduced in Components V2."""
-        return self.versions and 1 not in self.versions
+        return bool(self.versions) and 1 not in self.versions
 
 
-class ActionRow(Component):
+class ActionRow(Component[Literal[ComponentType.action_row]], _HasSubComponents):
     """Represents a Discord Bot UI Kit Action Row.
 
     This is a component that holds up to 5 children components in a row.
@@ -182,10 +209,10 @@ class ActionRow(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (1, 2)
 
-    def __init__(self, data: ComponentPayload):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
-        self.children: list[Component] = [
+    def __init__(self, data: ActionRowPayload):
+        self.type = ComponentType.action_row
+        self.id: int | None = data.get("id")
+        self.children: list[Button | InputText | SelectMenu] = [
             _component_factory(d) for d in data.get("components", [])
         ]
 
@@ -198,20 +225,22 @@ class ActionRow(Component):
         return t
 
     def to_dict(self) -> ActionRowPayload:
-        return {
-            "type": int(self.type),
-            "id": self.id,
+        payload: ActionRowPayload = {
+            "type": self.type.value,
             "components": [child.to_dict() for child in self.children],
-        }  # type: ignore
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+        return payload
 
-    def walk_components(self) -> Iterator[Component]:
+    def walk_components(self) -> Iterator[Button | InputText | SelectMenu]:
         yield from self.children
 
     @property
-    def components(self) -> list[Component]:
+    def components(self) -> list[Button | InputText | SelectMenu]:
         return self.children
 
-    def get_component(self, id: str | int) -> Component | None:
+    def get_component(self, id: str | int) -> Button | InputText | SelectMenu | None:
         """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -231,98 +260,15 @@ class ActionRow(Component):
         return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     @classmethod
-    def with_components(cls, *components, id=None):
+    def with_components(
+        cls, *components: Button | InputText | SelectMenu, id: int | None = None
+    ):
         return cls._raw_construct(
             type=ComponentType.action_row, id=id, children=[c for c in components]
         )
 
 
-class InputText(Component):
-    """Represents an Input Text field from the Discord Bot UI Kit.
-    This inherits from :class:`Component`.
-
-    Attributes
-    ----------
-    style: :class:`.InputTextStyle`
-        The style of the input text field.
-    custom_id: :class:`str` | :obj:`None`
-        The custom ID of the input text field that gets received during an interaction.
-    label: :class:`str`
-        The label for the input text field.
-    placeholder: :class:`str` | :obj:`None`
-        The placeholder text that is shown if nothing is selected, if any.
-    min_length: :class:`int` | :obj:`None`
-        The minimum number of characters that must be entered
-        Defaults to 0
-    max_length: :class:`int` | :obj:`None`
-        The maximum number of characters that can be entered
-    required: :class:`bool` | :obj:`None`
-        Whether the input text field is required or not. Defaults to `True`.
-    value: :class:`str` | :obj:`None`
-        The value that has been entered in the input text field.
-    id: :class:`int` | :obj:`None`
-        The input text's ID.
-    """
-
-    __slots__: tuple[str, ...] = (
-        "type",
-        "style",
-        "custom_id",
-        "label",
-        "placeholder",
-        "min_length",
-        "max_length",
-        "required",
-        "value",
-        "id",
-    )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (1, 2)
-
-    def __init__(self, data: InputTextComponentPayload):
-        self.type = ComponentType.input_text
-        self.id: int | None = data.get("id")
-        self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
-        self.custom_id = data["custom_id"]
-        self.label: str | None = data.get("label", None)
-        self.placeholder: str | None = data.get("placeholder", None)
-        self.min_length: int | None = data.get("min_length", None)
-        self.max_length: int | None = data.get("max_length", None)
-        self.required: bool = data.get("required", True)
-        self.value: str | None = data.get("value", None)
-
-    def to_dict(self) -> InputTextComponentPayload:
-        payload = {
-            "type": 4,
-            "id": self.id,
-            "style": self.style.value,
-        }
-        if self.custom_id:
-            payload["custom_id"] = self.custom_id
-
-        if self.placeholder:
-            payload["placeholder"] = self.placeholder
-
-        if self.min_length:
-            payload["min_length"] = self.min_length
-
-        if self.max_length:
-            payload["max_length"] = self.max_length
-
-        if not self.required:
-            payload["required"] = self.required
-
-        if self.value:
-            payload["value"] = self.value
-
-        if self.label:
-            payload["label"] = self.label
-
-        return payload  # type: ignore
-
-
-class Button(Component):
+class Button(Component[Literal[ComponentType.button]]):
     """Represents a button from the Discord Bot UI Kit.
 
     This inherits from :class:`Component`.
@@ -353,57 +299,66 @@ class Button(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "style",
         "custom_id",
-        "url",
         "disabled",
-        "label",
         "emoji",
+        "label",
         "sku_id",
+        "style",
+        "url",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ButtonComponentPayload):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
+        self.type = ComponentType.button
+        self.id: int | None = data.get("id")
         self.style: ButtonStyle = try_enum(ButtonStyle, data["style"])
-        self.custom_id: str | None = data.get("custom_id")
-        self.url: str | None = data.get("url")
-        self.disabled: bool = data.get("disabled", False)
         self.label: str | None = data.get("label")
         self.emoji: PartialEmoji | None
         if e := data.get("emoji"):
             self.emoji = PartialEmoji.from_dict(e)
         else:
             self.emoji = None
-        self.sku_id: str | None = data.get("sku_id")
+        self.custom_id: str | None = data.get("custom_id")
+        self.sku_id: int | None = (
+            int(sku_id) if (sku_id := data.get("sku_id")) else None
+        )
+        self.url: str | None = data.get("url")
+        self.disabled: bool = data.get("disabled", False)
 
     def to_dict(self) -> ButtonComponentPayload:
-        payload = {
-            "type": 2,
-            "id": self.id,
-            "style": int(self.style),
-            "label": self.label,
+        payload: ButtonComponentPayload = {
+            "type": self.type.value,
+            "style": self.style.value,
             "disabled": self.disabled,
         }
+        if self.id is not None:
+            payload["id"] = self.id
         if self.custom_id:
             payload["custom_id"] = self.custom_id
-
+        if self.label:
+            payload["label"] = self.label
         if self.url:
             payload["url"] = self.url
-
         if self.emoji:
             payload["emoji"] = self.emoji.to_dict()
-
         if self.sku_id:
             payload["sku_id"] = self.sku_id
+        return payload
 
-        return payload  # type: ignore
+
+SelectMenuTypes = Literal[
+    ComponentType.string_select,
+    ComponentType.role_select,
+    ComponentType.user_select,
+    ComponentType.channel_select,
+    ComponentType.mentionable_select,
+]
 
 
-class SelectMenu(Component):
+class SelectMenu(Component[SelectMenuTypes]):
     """Represents a select menu from the Discord Bot UI Kit.
 
     A select menu is functionally the same as a dropdown, however
@@ -428,7 +383,7 @@ class SelectMenu(Component):
     ----------
     type: :class:`ComponentType`
         The select menu's type.
-    custom_id: :class:`str` | :obj:`None`
+    custom_id: :class:`str`
         The ID of the select menu that gets received during an interaction.
     placeholder: :class:`str` | :obj:`None`
         The placeholder text that is shown if nothing is selected, if any.
@@ -448,65 +403,143 @@ class SelectMenu(Component):
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not. Not usable in modals. Defaults to ``False``.
-    required: :class:`bool` | :obj:`None`
+    required: :class:`bool`
         Whether the select is required or not. Only useable in modals. Defaults to ``True``.
     """
 
     __slots__: tuple[str, ...] = (
-        "custom_id",
-        "placeholder",
-        "min_values",
-        "max_values",
-        "options",
         "channel_types",
-        "disabled",
-        "required",
+        "custom_id",
         "default_values",
+        "disabled",
+        "max_values",
+        "min_values",
+        "options",
+        "placeholder",
+        "required",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: SelectMenuPayload):
-        self.type = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
+        self.type = cast(SelectMenuTypes, try_enum(ComponentType, data["type"]))
+        self.id: int | None = data.get("id")
         self.custom_id: str = data["custom_id"]
         self.placeholder: str | None = data.get("placeholder")
         self.min_values: int = data.get("min_values", 1)
         self.max_values: int = data.get("max_values", 1)
         self.disabled: bool = data.get("disabled", False)
+        self.required: bool | None = data.get("required", True)
         self.options: list[SelectOption] = [
             SelectOption.from_dict(option) for option in data.get("options", [])
         ]
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
-        self.required: bool | None = data.get("required")
         self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(
             data.get("default_values")
         )
 
     def to_dict(self) -> SelectMenuPayload:
-        payload: SelectMenuPayload = {
+        payload: Any = {
             "type": self.type.value,
-            "id": self.id,
             "custom_id": self.custom_id,
             "min_values": self.min_values,
             "max_values": self.max_values,
             "disabled": self.disabled,
         }
-
-        if self.type is ComponentType.string_select:
-            payload["options"] = [op.to_dict() for op in self.options]
-        if self.type is ComponentType.channel_select and self.channel_types:
-            payload["channel_types"] = [ct.value for ct in self.channel_types]
+        if self.id is not None:
+            payload["id"] = self.id
         if self.placeholder:
             payload["placeholder"] = self.placeholder
         if self.required is not None:
             payload["required"] = self.required
+        if self.type is ComponentType.string_select:
+            payload["options"] = [op.to_dict() for op in self.options]
+        if self.type is ComponentType.channel_select and self.channel_types:
+            payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.type is not ComponentType.string_select:
             payload["default_values"] = [dv.to_dict() for dv in self.default_values]
 
+        return cast("SelectMenuPayload", payload)
+
+
+class InputText(Component[Literal[ComponentType.input_text]]):
+    """Represents an Input Text field from the Discord Bot UI Kit.
+    This inherits from :class:`Component`.
+
+    Attributes
+    ----------
+    style: :class:`.InputTextStyle`
+        The style of the input text field.
+    custom_id: :class:`str`
+        The custom ID of the input text field that gets received during an interaction.
+    label: :class:`str`
+        The label for the input text field.
+    placeholder: :class:`str` | :obj:`None`
+        The placeholder text that is shown if nothing is selected, if any.
+    min_length: :class:`int` | :obj:`None`
+        The minimum number of characters that must be entered
+        Defaults to 0
+    max_length: :class:`int` | :obj:`None`
+        The maximum number of characters that can be entered
+    required: :class:`bool`
+        Whether the input text field is required or not. Defaults to `True`.
+    value: :class:`str` | :obj:`None`
+        The value that has been entered in the input text field.
+    id: :class:`int` | :obj:`None`
+        The input text's ID.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "custom_id",
+        "id",
+        "label",
+        "max_length",
+        "min_length",
+        "placeholder",
+        "required",
+        "style",
+        "type",
+        "value",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2)
+
+    def __init__(self, data: InputTextComponentPayload):
+        self.type = ComponentType.input_text
+        self.id: int | None = data.get("id")
+        self.custom_id = data["custom_id"]
+        self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
+        self.min_length: int | None = data.get("min_length", None)
+        self.max_length: int | None = data.get("max_length", None)
+        self.required: bool | None = data.get("required", True)
+        self.value: str | None = data.get("value", None)
+        self.placeholder: str | None = data.get("placeholder", None)
+        self.label: str | None = data.get("label", None)
+
+    def to_dict(self) -> InputTextComponentPayload:
+        payload: InputTextComponentPayload = {
+            "type": self.type.value,
+            "style": self.style.value,
+            "custom_id": self.custom_id,
+        }
+        if self.id:
+            payload["id"] = self.id
+        if self.min_length:
+            payload["min_length"] = self.min_length
+        if self.max_length:
+            payload["max_length"] = self.max_length
+        if self.required is not None:
+            payload["required"] = self.required
+        if self.value:
+            payload["value"] = self.value
+        if self.placeholder:
+            payload["placeholder"] = self.placeholder
+        if self.label:
+            payload["label"] = self.label
         return payload
 
 
@@ -588,7 +621,7 @@ class SelectDefaultValue:
         if object is not MISSING:
             if any(p is not MISSING for p in (id, type)):
                 raise TypeError("you cannot pass id or type when passing object")
-            self._handle_model(object, inst=self)
+            _ = self._handle_model(object, inst=self)
         elif id is not MISSING and type is not MISSING:
             self.id = id
             self.type = type
@@ -709,11 +742,11 @@ class SelectOption:
     """
 
     __slots__: tuple[str, ...] = (
-        "label",
-        "value",
-        "description",
         "_emoji",
         "default",
+        "description",
+        "label",
+        "value",
     )
 
     def __init__(
@@ -737,6 +770,7 @@ class SelectOption:
         self.label = label
         self.value = label if value is MISSING else value
         self.description = description
+        self._emoji = None
         self.emoji = emoji
         self.default = default
 
@@ -758,20 +792,21 @@ class SelectOption:
         """The emoji of the option, if available."""
         return self._emoji
 
-    @emoji.setter
-    def emoji(self, value) -> None:
-        if value is not None:
-            if isinstance(value, str):
-                value = PartialEmoji.from_str(value)
-            elif isinstance(value, _EmojiTag):
-                value = value._to_partial()
-            else:
-                raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not"
-                    f" {value.__class__}"
-                )
+    @staticmethod
+    def _coerce_emoji(value: object) -> PartialEmoji:
+        if isinstance(value, PartialEmoji):
+            return value
+        if isinstance(value, str):
+            return PartialEmoji.from_str(value)
+        if isinstance(value, _EmojiTag):
+            return value._to_partial()
+        raise TypeError(
+            f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not {type(value).__name__}"
+        )
 
-        self._emoji = value
+    @emoji.setter
+    def emoji(self, value: str | GuildEmoji | AppEmoji | PartialEmoji | None) -> None:
+        self._emoji = None if value is None else self._coerce_emoji(value)
 
     @classmethod
     def from_dict(cls, data: SelectOptionPayload) -> SelectOption:
@@ -796,7 +831,7 @@ class SelectOption:
         }
 
         if self.emoji:
-            payload["emoji"] = self.emoji.to_dict()  # type: ignore
+            payload["emoji"] = self._coerce_emoji(self.emoji).to_dict()
 
         if self.description:
             payload["description"] = self.description
@@ -804,7 +839,7 @@ class SelectOption:
         return payload
 
 
-class Section(Component):
+class Section(Component[Literal[ComponentType.section]], _HasSubComponents):
     """Represents a Section from Components V2.
 
     This is a component that groups other components together with an additional component to the right as the accessory.
@@ -821,41 +856,41 @@ class Section(Component):
     ----------
     components: List[:class:`Component`]
         The components contained in this section. Currently supports :class:`TextDisplay`.
-    accessory: :class:`Component` | :obj:`None`
+    accessory: :class:`Component`
         The accessory attached to this Section. Currently supports :class:`Button` and :class:`Thumbnail`.
     """
 
-    __slots__: tuple[str, ...] = ("components", "accessory")
+    __slots__: tuple[str, ...] = ("accessory", "components")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: SectionComponentPayload, state=None):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
-        self.components: list[Component] = [
+    def __init__(
+        self, data: SectionComponentPayload, state: ConnectionState | None = None
+    ):
+        self.type = ComponentType.section
+        self.id: int | None = data.get("id")
+        self.components = [
             _component_factory(d, state=state) for d in data.get("components", [])
         ]
-        self.accessory: Component | None = None
-        if _accessory := data.get("accessory"):
-            self.accessory = _component_factory(_accessory, state=state)
+        self.accessory = _component_factory(data["accessory"], state=state)
 
     def to_dict(self) -> SectionComponentPayload:
-        payload = {
-            "type": int(self.type),
-            "id": self.id,
+        payload: SectionComponentPayload = {
+            "type": self.type.value,
             "components": [c.to_dict() for c in self.components],
+            "accessory": self.accessory.to_dict(),
         }
-        if self.accessory:
-            payload["accessory"] = self.accessory.to_dict()
+        if self.id is not None:
+            payload["id"] = self.id
         return payload
 
-    def walk_components(self) -> Iterator[Component]:
+    def walk_components(self) -> Iterator[TextDisplay | Button | Thumbnail]:
         yield from self.components
         if self.accessory:
             yield self.accessory
 
-    def get_component(self, id: str | int) -> Component | None:
+    def get_component(self, id: str | int) -> TextDisplay | Button | Thumbnail | None:
         """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -878,7 +913,7 @@ class Section(Component):
         return component
 
 
-class TextDisplay(Component):
+class TextDisplay(Component[Literal[ComponentType.text_display]]):
     """Represents a Text Display from Components V2.
 
     This is a component that displays text.
@@ -903,12 +938,18 @@ class TextDisplay(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: TextDisplayComponentPayload):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
+        self.type = ComponentType.text_display
+        self.id: int | None = data.get("id")
         self.content: str = data.get("content")
 
     def to_dict(self) -> TextDisplayComponentPayload:
-        return {"type": int(self.type), "id": self.id, "content": self.content}
+        payload: TextDisplayComponentPayload = {
+            "type": self.type.value,
+            "content": self.content,
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+        return payload
 
 
 class UnfurledMediaItem(AssetMixin):
@@ -950,29 +991,33 @@ class UnfurledMediaItem(AssetMixin):
         return self._url
 
     @url.setter
-    def url(self, value: str) -> None:
+    def url(
+        self, value: str
+    ) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
         self._url = value
         self._static_url = (
             value if value and value.startswith("attachment://") else None
         )
 
     @classmethod
-    def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
+    def from_dict(
+        cls, data: UnfurledMediaItemPayload, state: ConnectionState | None = None
+    ) -> UnfurledMediaItem:
         r = cls(data.get("url"))
         r.proxy_url = data.get("proxy_url")
         r.height = data.get("height")
         r.width = data.get("width")
         r.content_type = data.get("content_type")
         r.flags = AttachmentFlags._from_value(data.get("flags", 0))
-        r.attachment_id = data.get("attachment_id")
+        r.attachment_id = int(aid) if (aid := data.get("attachment_id")) else None
         r._state = state
         return r
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> UnfurledMediaItemPayload:
         return {"url": self._static_url or self.url}
 
 
-class Thumbnail(Component):
+class Thumbnail(Component[Literal[ComponentType.thumbnail]]):
     """Represents a Thumbnail from Components V2.
 
     This is a component that displays media, such as images and videos.
@@ -996,17 +1041,19 @@ class Thumbnail(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "media",
         "description",
+        "media",
         "spoiler",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ThumbnailComponentPayload, state=None):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
+    def __init__(
+        self, data: ThumbnailComponentPayload, state: ConnectionState | None = None
+    ):
+        self.type = ComponentType.thumbnail
+        self.id: int | None = data.get("id")
         self.media: UnfurledMediaItem = (
             umi := data.get("media")
         ) and UnfurledMediaItem.from_dict(umi, state=state)
@@ -1019,7 +1066,12 @@ class Thumbnail(Component):
         return self.media.url
 
     def to_dict(self) -> ThumbnailComponentPayload:
-        payload = {"type": int(self.type), "id": self.id, "media": self.media.to_dict()}
+        payload: ThumbnailComponentPayload = {
+            "type": self.type.value,
+            "media": self.media.to_dict(),
+        }
+        if self.id is not None:
+            payload["id"] = self.id
         if self.description:
             payload["description"] = self.description
         if self.spoiler is not None:
@@ -1034,21 +1086,32 @@ class MediaGalleryItem:
 
     .. versionadded:: 2.7
 
-    Attributes
+    Parameters
     ----------
     url: :class:`str`
         The URL of this gallery item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
-    description: :class:`str` | :obj:`None`
+    description: :class:`str`
         The gallery item's description, up to 1024 characters.
-    spoiler: :class:`bool` | :obj:`None`
+    spoiler: :class:`bool`
+        Whether the gallery item is a spoiler.
+
+    Attributes
+    ----------
+    media: :class:`UnfurledMediaItem`
+        The media for this gallery item.
+    description: :class:`str`
+        The gallery item's description.
+    spoiler: :class:`bool`
         Whether the gallery item is a spoiler.
     """
 
-    def __init__(self, url, *, description=None, spoiler=False):
+    def __init__(
+        self, url: str, *, description: str | None = None, spoiler: bool = False
+    ):
         self._state = None
         self.media: UnfurledMediaItem = UnfurledMediaItem(url)
         self.description: str | None = description
-        self.spoiler: bool = spoiler
+        self.spoiler: bool | None = spoiler
 
     @property
     def url(self) -> str:
@@ -1058,7 +1121,9 @@ class MediaGalleryItem:
         return False
 
     @classmethod
-    def from_dict(cls, data: MediaGalleryItemPayload, state=None) -> MediaGalleryItem:
+    def from_dict(
+        cls, data: MediaGalleryItemPayload, state: ConnectionState | None = None
+    ) -> MediaGalleryItem:
         media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(
             umi, state=state
         )
@@ -1074,8 +1139,8 @@ class MediaGalleryItem:
         r.media = media
         return r
 
-    def to_dict(self) -> dict[str, Any]:
-        payload = {"media": self.media.to_dict()}
+    def to_dict(self) -> MediaGalleryItemPayload:
+        payload: MediaGalleryItemPayload = {"media": self.media.to_dict()}
         if self.description:
             payload["description"] = self.description
         if self.spoiler is not None:
@@ -1083,7 +1148,7 @@ class MediaGalleryItem:
         return payload
 
 
-class MediaGallery(Component):
+class MediaGallery(Component[Literal[ComponentType.media_gallery]]):
     """Represents a Media Gallery from Components V2.
 
     This is a component that displays up to 10 different :class:`MediaGalleryItem` objects.
@@ -1107,22 +1172,26 @@ class MediaGallery(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: MediaGalleryComponentPayload, state=None):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
+    def __init__(
+        self, data: MediaGalleryComponentPayload, state: ConnectionState | None = None
+    ):
+        self.type = ComponentType.media_gallery
+        self.id: int | None = data.get("id")
         self.items: list[MediaGalleryItem] = [
             MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])
         ]
 
     def to_dict(self) -> MediaGalleryComponentPayload:
-        return {
-            "type": int(self.type),
-            "id": self.id,
+        payload: MediaGalleryComponentPayload = {
+            "type": self.type.value,
             "items": [i.to_dict() for i in self.items],
         }
+        if self.id is not None:
+            payload["id"] = self.id
+        return payload
 
 
-class FileComponent(Component):
+class FileComponent(Component[Literal[ComponentType.file]]):
     """Represents a File from Components V2.
 
     This component displays a downloadable file in a message.
@@ -1149,17 +1218,19 @@ class FileComponent(Component):
 
     __slots__: tuple[str, ...] = (
         "file",
-        "spoiler",
         "name",
         "size",
+        "spoiler",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: FileComponentPayload, state=None):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
+    def __init__(
+        self, data: FileComponentPayload, state: ConnectionState | None = None
+    ):
+        self.type = ComponentType.file
+        self.id: int | None = data.get("id")
         self.name: str | None = data.get("name")
         self.size: int | None = data.get("size")
         self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(
@@ -1168,13 +1239,18 @@ class FileComponent(Component):
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> FileComponentPayload:
-        payload = {"type": int(self.type), "id": self.id, "file": self.file.to_dict()}
+        payload: FileComponentPayload = {
+            "type": self.type.value,
+            "file": self.file.to_dict(),
+        }
+        if self.id is not None:
+            payload["id"] = self.id
         if self.spoiler is not None:
             payload["spoiler"] = self.spoiler
         return payload
 
 
-class Separator(Component):
+class Separator(Component[Literal[ComponentType.separator]]):
     """Represents a Separator from Components V2.
 
     This is a component that visually separates components.
@@ -1191,7 +1267,7 @@ class Separator(Component):
     ----------
     divider: :class:`bool`
         Whether the separator will show a horizontal line in addition to vertical spacing.
-    spacing: :class:`SeparatorSpacingSize` | :obj:`None`
+    spacing: :class:`SeparatorSpacingSize`
         The separator's spacing size.
     """
 
@@ -1204,23 +1280,35 @@ class Separator(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: SeparatorComponentPayload):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
-        self.divider: bool = data.get("divider")
+        self.type = ComponentType.separator
+        self.id: int | None = data.get("id")
+        self.divider: bool = data.get("divider", True)
         self.spacing: SeparatorSpacingSize = try_enum(
             SeparatorSpacingSize, data.get("spacing", 1)
         )
 
     def to_dict(self) -> SeparatorComponentPayload:
-        return {
-            "type": int(self.type),
-            "id": self.id,
+        payload: SeparatorComponentPayload = {
+            "type": self.type.value,
             "divider": self.divider,
-            "spacing": int(self.spacing),
+            "spacing": self.spacing.value,
         }
+        if self.id is not None:
+            payload["id"] = self.id
+        return payload
 
 
-class Container(Component):
+ContainerTypes = Literal[
+    ComponentType.action_row,
+    ComponentType.text_display,
+    ComponentType.section,
+    ComponentType.media_gallery,
+    ComponentType.separator,
+    ComponentType.file,
+]
+
+
+class Container(Component[Literal[ComponentType.container]], _HasSubComponents):
     """Represents a Container from Components V2.
 
     This is a component that contains different :class:`Component` objects.
@@ -1253,44 +1341,52 @@ class Container(Component):
 
     __slots__: tuple[str, ...] = (
         "accent_color",
-        "spoiler",
         "components",
+        "spoiler",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ContainerComponentPayload, state=None):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
-        self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
-            c
-        )  # at this point, not adding alternative spelling
+    def __init__(
+        self, data: ContainerComponentPayload, state: ConnectionState | None = None
+    ):
+        self.type = ComponentType.container
+        self.id: int | None = data.get("id")
+        self.accent_color: Colour | None = (
+            Colour(c) if (c := data.get("accent_color")) else None
+        )
         self.spoiler: bool | None = data.get("spoiler")
-        self.components: list[Component] = [
+        self.components = [
             _component_factory(d, state=state) for d in data.get("components", [])
         ]
 
+    @property
+    def accent_colour(self) -> Colour | None:
+        """Alias for :attr:`accent_color`."""
+        return self.accent_color
+
     def to_dict(self) -> ContainerComponentPayload:
-        payload = {
-            "type": int(self.type),
-            "id": self.id,
+        payload: ComponentPayload = {
+            "type": self.type.value,
             "components": [c.to_dict() for c in self.components],
         }
+        if self.id is not None:
+            payload["id"] = self.id
         if self.accent_color:
             payload["accent_color"] = self.accent_color.value
         if self.spoiler is not None:
             payload["spoiler"] = self.spoiler
         return payload
 
-    def walk_components(self) -> Iterator[Component]:
+    def walk_components(self) -> Iterator[Component[Any]]:
         for c in self.components:
-            if hasattr(c, "walk_components"):
+            if isinstance(c, _HasSubComponents):
                 yield from c.walk_components()
             else:
                 yield c
 
-    def get_component(self, id: str | int) -> Component | None:
+    def get_component(self, id: str | int) -> Component[Any] | None:
         """Get a component from this container. Roughly equivalent to `utils.get(container.components, ...)`.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested components.
@@ -1311,13 +1407,12 @@ class Container(Component):
         for i in self.components:
             if getattr(i, attr, None) == id:
                 return i
-            elif hasattr(i, "get_component"):
-                if component := i.get_component(id):
-                    return component
+            if isinstance(i, _HasSubComponents) and (component := i.get_component(id)):
+                return component
         return None
 
 
-class Label(Component):
+class Label(Component[Literal[ComponentType.label]]):
     """Represents a Label used in modals as the top-level component.
 
     This is a component that allows you to add additional text to another component.
@@ -1340,33 +1435,39 @@ class Label(Component):
         The description associated with this label's ``component``, up to 100 characters.
     """
 
-    __slots__: tuple[str, ...] = ("component", "label", "description")
+    __slots__: tuple[str, ...] = ("component", "description", "label")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: LabelComponentPayload):
-        self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data["id"]
-        self.component: Component = _component_factory(data["component"])
+        self.type = ComponentType.label
+        self.id: int | None = data.get("id")
+        self.component = _component_factory(data["component"])
         self.label: str = data["label"]
         self.description: str | None = data.get("description")
 
     def to_dict(self) -> LabelComponentPayload:
-        payload = {
-            "type": int(self.type),
-            "id": self.id,
+        payload: LabelComponentPayload = {
+            "type": self.type.value,
             "component": self.component.to_dict(),
             "label": self.label,
-            "description": self.description,
         }
+        if self.id is not None:
+            payload["id"] = self.id
+        if self.description:
+            payload["description"] = self.description
         return payload
 
-    def walk_components(self) -> Iterator[Component]:
+    def walk_components(
+        self,
+    ) -> Iterator[
+        SelectMenu | InputText | FileUpload | RadioGroup | Checkbox | CheckboxGroup
+    ]:
         yield from [self.component]
 
 
-class FileUpload(Component):
+class FileUpload(Component[Literal[ComponentType.file_upload]]):
     """Represents an File Upload component from the Discord Bot UI Kit.
 
     This inherits from :class:`Component`.
@@ -1385,19 +1486,22 @@ class FileUpload(Component):
         The minimum number of files that must be uploaded.
     max_values: :class:`int` | :obj:`None`
         The maximum number of files that can be uploaded.
-    required: :class:`bool` | :obj:`None`
+    required: :class:`bool`
         Whether the file upload field is required or not. Defaults to `True`.
     id: :class:`int` | :obj:`None`
         The file upload's ID.
+    file_types: list[:class:`str`] | :obj:`None`
+        The file types that can be uploaded to this FileUpload. Only filters by file extension.
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
-        "min_values",
-        "max_values",
-        "required",
+        "file_types",
         "id",
+        "max_values",
+        "min_values",
+        "required",
+        "type",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1409,29 +1513,28 @@ class FileUpload(Component):
         self.custom_id = data["custom_id"]
         self.min_values: int | None = data.get("min_values", None)
         self.max_values: int | None = data.get("max_values", None)
-        self.required: bool = data.get("required", True)
+        self.required: bool | None = data.get("required", True)
+        self.file_types: list[str] | None = data.get("file_types")
 
     def to_dict(self) -> FileUploadComponentPayload:
-        payload = {
-            "type": 19,
+        payload: FileUploadComponentPayload = {
+            "type": self.type.value,
             "custom_id": self.custom_id,
         }
         if self.id is not None:
             payload["id"] = self.id
-
         if self.min_values is not None:
             payload["min_values"] = self.min_values
-
         if self.max_values is not None:
             payload["max_values"] = self.max_values
-
-        if not self.required:
+        if self.required is not None:
             payload["required"] = self.required
+        if self.file_types is not None:
+            payload["file_types"] = self.file_types
+        return payload
 
-        return payload  # type: ignore
 
-
-class RadioGroup(Component):
+class RadioGroup(Component[Literal[ComponentType.radio_group]]):
     """Represents an Radio Group component from the Discord Bot UI Kit.
 
     This inherits from :class:`Component`.
@@ -1444,22 +1547,22 @@ class RadioGroup(Component):
 
     Attributes
     ----------
-    custom_id: :class:`str` | :obj:`None`
+    custom_id: :class:`str`
         The custom ID of the radio group that gets received during an interaction.
     options: List[:class:`RadioGroupOption`]
         A list of options that can be selected in this group, between 2 and 10.
-    required: :class:`bool` | :obj:`None`
+    required: :class:`bool`
         Whether the radio group requires a selection or not. Defaults to ``True``.
     id: :class:`int` | :obj:`None`
         The radio group's ID.
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
+        "id",
         "options",
         "required",
-        "id",
+        "type",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1472,20 +1575,18 @@ class RadioGroup(Component):
         self.options: list[RadioGroupOption] = [
             RadioGroupOption.from_dict(option) for option in data.get("options", [])
         ]
-        self.required: bool = data.get("required", True)
+        self.required: bool | None = data.get("required", True)
 
     def to_dict(self) -> RadioGroupComponentPayload:
-        payload = {
-            "type": 21,
+        payload: RadioGroupComponentPayload = {
+            "type": self.type.value,
             "custom_id": self.custom_id,
             "options": [opt.to_dict() for opt in self.options],
         }
         if self.id is not None:
             payload["id"] = self.id
-
-        if not self.required:
+        if self.required is not None:
             payload["required"] = self.required
-
         return payload
 
 
@@ -1513,10 +1614,10 @@ class RadioGroupOption:
     """
 
     __slots__: tuple[str, ...] = (
+        "default",
+        "description",
         "label",
         "value",
-        "description",
-        "default",
     )
 
     def __init__(
@@ -1575,7 +1676,7 @@ class RadioGroupOption:
         return payload
 
 
-class CheckboxGroup(Component):
+class CheckboxGroup(Component[Literal[ComponentType.checkbox_group]]):
     """Represents an Checkbox Group component from the Discord Bot UI Kit.
 
     This inherits from :class:`Component`.
@@ -1598,20 +1699,20 @@ class CheckboxGroup(Component):
     max_values: :class:`int` | :obj:`None`
         The maximum number of options that can be selected.
         Must be between 1 and 10.
-    required: :class:`bool` | :obj:`None`
+    required: :class:`bool`
         Whether the checkbox group requires a selection or not. Defaults to ``True``.
     id: :class:`int` | :obj:`None`
         The checkbox group's ID.
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
-        "options",
-        "min_values",
-        "max_values",
-        "required",
         "id",
+        "max_values",
+        "min_values",
+        "options",
+        "required",
+        "type",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1626,10 +1727,10 @@ class CheckboxGroup(Component):
         ]
         self.min_values: int | None = data.get("min_values", None)
         self.max_values: int | None = data.get("max_values", None)
-        self.required: bool = data.get("required", True)
+        self.required: bool | None = data.get("required", True)
 
     def to_dict(self) -> CheckboxGroupComponentPayload:
-        payload = {
+        payload: CheckboxGroupComponentPayload = {
             "type": 22,
             "custom_id": self.custom_id,
             "options": [opt.to_dict() for opt in self.options],
@@ -1643,7 +1744,7 @@ class CheckboxGroup(Component):
         if self.max_values is not None:
             payload["max_values"] = self.max_values
 
-        if not self.required:
+        if self.required is not None:
             payload["required"] = self.required
 
         return payload
@@ -1673,10 +1774,10 @@ class CheckboxGroupOption:
     """
 
     __slots__: tuple[str, ...] = (
+        "default",
+        "description",
         "label",
         "value",
-        "description",
-        "default",
     )
 
     def __init__(
@@ -1735,7 +1836,7 @@ class CheckboxGroupOption:
         return payload
 
 
-class Checkbox(Component):
+class Checkbox(Component[Literal[ComponentType.checkbox]]):
     """Represents an Checkbox component from the Discord Bot UI Kit.
 
     This inherits from :class:`Component`.
@@ -1757,10 +1858,10 @@ class Checkbox(Component):
     """
 
     __slots__: tuple[str, ...] = (
-        "type",
         "custom_id",
         "default",
         "id",
+        "type",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1770,11 +1871,11 @@ class Checkbox(Component):
         self.type = ComponentType.checkbox
         self.id: int | None = data.get("id")
         self.custom_id = data.get("custom_id")
-        self.default: bool = data.get("default", False)
+        self.default: bool | None = data.get("default", False)
 
     def to_dict(self) -> CheckboxComponentPayload:
-        payload = {
-            "type": 23,
+        payload: CheckboxComponentPayload = {
+            "type": self.type.value,
             "custom_id": self.custom_id,
         }
         if self.id is not None:
@@ -1812,13 +1913,86 @@ COMPONENT_MAPPINGS = {
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
 
 
-def _component_factory(data: ComponentPayload, state=None) -> Component:
+@overload
+def _component_factory(
+    data: ActionRowPayload, state: ConnectionState | None = None
+) -> ActionRow: ...
+@overload
+def _component_factory(
+    data: ButtonComponentPayload, state: ConnectionState | None = None
+) -> Button: ...
+@overload
+def _component_factory(
+    data: (
+        StringSelectMenuPayload
+        | UserSelectMenuPayload
+        | RoleSelectMenuPayload
+        | MentionableSelectMenuPayload
+        | ChannelSelectMenuPayload
+    ),
+    state: ConnectionState | None = None,
+) -> SelectMenu: ...
+@overload
+def _component_factory(
+    data: InputTextComponentPayload, state: ConnectionState | None = None
+) -> InputText: ...
+@overload
+def _component_factory(
+    data: SectionComponentPayload, state: ConnectionState | None = None
+) -> Section: ...
+@overload
+def _component_factory(
+    data: TextDisplayComponentPayload, state: ConnectionState | None = None
+) -> TextDisplay: ...
+@overload
+def _component_factory(
+    data: ThumbnailComponentPayload, state: ConnectionState | None = None
+) -> Thumbnail: ...
+@overload
+def _component_factory(
+    data: MediaGalleryComponentPayload, state: ConnectionState | None = None
+) -> MediaGallery: ...
+@overload
+def _component_factory(
+    data: FileComponentPayload, state: ConnectionState | None = None
+) -> FileComponent: ...
+@overload
+def _component_factory(
+    data: SeparatorComponentPayload, state: ConnectionState | None = None
+) -> Separator: ...
+@overload
+def _component_factory(
+    data: ContainerComponentPayload, state: ConnectionState | None = None
+) -> Container: ...
+@overload
+def _component_factory(
+    data: LabelComponentPayload, state: ConnectionState | None = None
+) -> Label: ...
+@overload
+def _component_factory(
+    data: FileUploadComponentPayload, state: ConnectionState | None = None
+) -> FileUpload: ...
+@overload
+def _component_factory(
+    data: RadioGroupComponentPayload, state: ConnectionState | None = None
+) -> RadioGroup: ...
+@overload
+def _component_factory(
+    data: CheckboxGroupComponentPayload, state: ConnectionState | None = None
+) -> CheckboxGroup: ...
+@overload
+def _component_factory(
+    data: CheckboxComponentPayload, state: ConnectionState | None = None
+) -> Checkbox: ...
+def _component_factory(
+    data: ComponentPayload, state: ConnectionState | None = None
+) -> Component[Any]:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
         if issubclass(cls, STATE_COMPONENTS):
-            return cls(data, state=state)
+            return cls(cast(Any, data), state=state)
         else:
-            return cls(data)
+            return cls(cast(Any, data))
     else:
         as_enum = try_enum(ComponentType, component_type)
-        return Component._raw_construct(type=as_enum)
+        return Component[Any]._raw_construct(type=as_enum)
