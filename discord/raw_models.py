@@ -761,6 +761,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         "extra",
         "changes",
         "data",
+        "guild",
     )
 
     def __init__(self, data: AuditLogEntryEvent) -> None:

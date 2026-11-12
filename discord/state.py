@@ -44,8 +44,6 @@ from typing import (
 
 from typing_extensions import Unpack, override
 
-from discord.types.raw_models import AuditLogEntryEvent
-
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
@@ -79,7 +77,7 @@ from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
 
 if TYPE_CHECKING:
-    from .abc import GuildChannel, PrivateChannel
+    from .abc import PrivateChannel
     from .client import Client
     from .gateway import DiscordWebSocket
     from .guild import GuildChannel, VocalGuildChannel
@@ -104,6 +102,9 @@ if TYPE_CHECKING:
     from .types.monetization import Entitlement as EntitlementPayload
     from .types.monetization import Subscription as SubscriptionPayload
     from .types.poll import Poll as PollPayload
+    from .types.raw_models import (
+        AuditLogEntryEvent,
+    )
     from .types.raw_models import (
         AutoModActionExecutionEvent as AutoModActionExecutionEventPayload,
     )
@@ -313,8 +314,7 @@ class ConnectionState:
             raise TypeError(f"intents parameter must be Intent not {type(intents)!r}")
         if not intents.guilds:
             _log.warning(
-                "Guilds intent seems to be disabled. This may cause state related"
-                + " issues."
+                "Guilds intent seems to be disabled. This may cause state related issues."
             )
 
         self._chunk_guilds: bool = options.get(
@@ -332,8 +332,7 @@ class ConnectionState:
             cache_flags = MemberCacheFlags.from_intents(intents)
         elif not isinstance(cache_flags, MemberCacheFlags):
             raise TypeError(
-                "member_cache_flags parameter must be MemberCacheFlags not"
-                + f" {type(cache_flags)!r}"
+                f"member_cache_flags parameter must be MemberCacheFlags not {type(cache_flags)!r}"
             )
 
         else:
@@ -370,11 +369,7 @@ class ConnectionState:
         self._request_channel_info: bool = self.cache_channel_info
         self._channel_info_requests: dict[int | str, ChannelInfoRequest] = {}
 
-        self.parsers: dict[
-            str, Callable[..., Any]
-        ] = (  # pyright: ignore[reportExplicitAny]
-            {}
-        )
+        self.parsers: dict[str, Callable[[dict[Any, Any]], None]] = {}
         for attr, func in inspect.getmembers(self):
             if attr.startswith("parse_"):
                 self.parsers[attr[6:].upper()] = func
@@ -536,7 +531,7 @@ class ConnectionState:
     ) -> AppEmoji:
         # the id will be present here
         emoji = AppEmoji(application_id=application_id, state=self, data=data)
-        if self.cache_app_emojis and isinstance(data["id"], int):
+        if self.cache_app_emojis and data["id"] is not None:
             emoji_id = int(data["id"])
             self._emojis[emoji_id] = emoji
         return emoji
@@ -1002,7 +997,7 @@ class ConnectionState:
         if old_message is not None:
             self.dispatch("message_edit", old_message, message)
         else:
-            poll_data: PollPayload = data.get("poll")
+            poll_data: PollPayload | None = data.get("poll")
             if poll_data:
                 self.store_raw_poll(poll_data, raw)
 
@@ -1269,7 +1264,7 @@ class ConnectionState:
         guild = self._get_guild(guild_id)
         if guild is not None:
             # the factory can't be a DMChannel or GroupChannel here
-            channel = factory(guild=guild, state=self, data=data)  # type: ignore
+            channel = factory(guild=guild, state=self, data=data)
             if not isinstance(channel, GuildChannel):
                 return
             guild._add_channel(channel)
@@ -1373,8 +1368,6 @@ class ConnectionState:
         self.dispatch("raw_thread_update", raw)
 
     def parse_thread_delete(self, data: ThreadDeletePayload) -> None:
-        if "guild_id" not in data:
-            return
         guild_id = int(data["guild_id"])
         guild = self._get_guild(guild_id)
 
@@ -1392,7 +1385,7 @@ class ConnectionState:
         self.dispatch("raw_thread_delete", raw)
 
         if thread is not None:
-            guild._remove_thread(thread)  # type: ignore
+            guild._remove_thread(thread)
             self.dispatch("thread_delete", thread)
 
             if (msg := thread.starting_message) is not None:
@@ -1644,7 +1637,7 @@ class ConnectionState:
         return guild.id not in self._guilds
 
     async def chunk_guild(
-        self, guild: GuildPayload, *, wait: bool = True, cache: bool | None = None
+        self, guild: Guild, *, wait: bool = True, cache: bool | None = None
     ):
         # Note: This method makes an API call without timeout, and should be used in
         #       conjunction with `asyncio.wait_for(..., timeout=...)`.
@@ -1935,10 +1928,9 @@ class ConnectionState:
             return
 
         creator = None
-        if data.get("creator"):
-            creator_id = data.get("creator_id")
-            if isinstance(creator_id, int):
-                creator = guild.get_member(creator_id)
+        creator_id = data.get("creator_id")
+        if isinstance(creator_id, int):
+            creator = guild.get_member(creator_id)
 
         scheduled_event = ScheduledEvent(
             state=self, guild=guild, creator=creator, data=data
@@ -2247,7 +2239,7 @@ class ConnectionState:
         if guild is not None:
             channel = guild.get_channel(channel_id)
             if channel is not None:
-                if not isinstance(channel, VoiceChannel, StageChannel):
+                if not isinstance(channel, (VoiceChannel, StageChannel)):
                     _log.debug(
                         "VOICE_CHANNEL_START_TIME_UPDATE referencing a non-voice channel ID: %s. Discarding.",
                         channel_id,
