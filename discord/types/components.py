@@ -109,7 +109,13 @@ class ChannelSelectMenu(BaseSelectMenu):
     default_values: NotRequired[list[SelectDefaultValue]]
 
 
-SelectMenu = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu
+SelectMenu = (
+    StringSelectMenu
+    | UserSelectMenu
+    | RoleSelectMenu
+    | MentionableSelectMenu
+    | ChannelSelectMenu
+)
 
 
 class SelectOption(TypedDict):
@@ -260,7 +266,15 @@ Component = (
     | CheckboxComponent
 )
 
-AllowedActionRowComponents = ButtonComponent | InputText | StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu
+AllowedActionRowComponents = (
+    ButtonComponent
+    | InputText
+    | StringSelectMenu
+    | UserSelectMenu
+    | RoleSelectMenu
+    | MentionableSelectMenu
+    | ChannelSelectMenu
+)
 
 AllowedSectionAccessories = ThumbnailComponent | ButtonComponent
 
