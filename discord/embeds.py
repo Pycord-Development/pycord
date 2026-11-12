@@ -279,7 +279,7 @@ class EmbedField:
 
         return self
 
-    def to_dict(self) -> dict[str, str | bool | None]:
+    def to_dict(self) -> EmbedFieldPayload:
         """Converts this EmbedField object into a dict.
 
         Returns
@@ -290,7 +290,7 @@ class EmbedField:
         return {
             "name": self.name,
             "value": self.value,
-            "inline": self.inline,
+            "inline": self.inline if self.inline is not None else False,
         }
 
     @override
@@ -1059,21 +1059,7 @@ class Embed:
         Dict[:class:`str`, :class:`str` | :class:`int` | :class:`bool`]
             A dictionary of :class:`str` embed keys bound to the respective value.
         """
-
-        # add in the raw data into the dict
-        result = {
-            key[1:]: getattr(self, key)
-            for key in self.__slots__
-            if key != "_fields" and key[0] == "_" and hasattr(self, key)
-        }
-
-        # add in the fields
-        result["fields"] = [field.to_dict() for field in self._fields]
-
-        # deal with basic convenience wrappers
-
-        if self._colour is not None:
-            result["color"] = self._colour.value
+        result: EmbedPayload = {}
 
         if self._timestamp is not None:
             if self._timestamp.tzinfo:
@@ -1085,7 +1071,25 @@ class Embed:
                     tzinfo=datetime.timezone.utc
                 ).isoformat()
 
-        # add in the non-raw attribute ones
+        # add in the raw attributes
+        if self._colour is not None:
+            result["color"] = self._colour.value
+        if self._footer is not None:
+            result["footer"] = self._footer
+        if self._image is not None:
+            result["image"] = self._image
+        if self._thumbnail is not None:
+            result["thumbnail"] = self._thumbnail
+        if self._video is not None:
+            result["video"] = self._video
+        if self._provider is not None:
+            result["provider"] = self._provider
+        if self._author is not None:
+            result["author"] = self._author
+
+        result["fields"] = [field.to_dict() for field in self._fields]
+
+        # add in the non-raw attributes
         if self.type:
             result["type"] = self.type
 
@@ -1098,4 +1102,4 @@ class Embed:
         if self.title:
             result["title"] = self.title
 
-        return result  # type: ignore  # pyright: ignore[reportReturnType] It must be EmbedData
+        return result
