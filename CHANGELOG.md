@@ -41,6 +41,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `OverflowMenu`, `OverflowMenuGroup`, and `MenuActionItem`, as well as their `ui`
   counterparts and related methods.
   ([#3489](https://github.com/Pycord-Development/pycord/pull/3489))
+  ([#3152](https://github.com/Pycord-Development/pycord/pull/3152))
 
 ### Changed
 
