@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired, Required, TypedDict
 
 
 class EmbedFooter(TypedDict):
@@ -42,25 +42,28 @@ class EmbedField(TypedDict):
     value: str
 
 
-class EmbedThumbnail(TypedDict, total=False):
-    url: str
-    proxy_url: str
-    height: int
-    width: int
-
-
 class EmbedVideo(TypedDict, total=False):
     url: str
     proxy_url: str
     height: int
     width: int
+    content_type: str
+    placeholder: str
+    placeholder_version: int
+    description: str
+    flags: int
 
 
 class EmbedImage(TypedDict, total=False):
-    url: str
+    url: Required[str]
     proxy_url: str
     height: int
     width: int
+    content_type: str
+    placeholder: str
+    placeholder_version: int
+    description: str
+    flags: int
 
 
 class EmbedProvider(TypedDict, total=False):
@@ -69,7 +72,7 @@ class EmbedProvider(TypedDict, total=False):
 
 
 class EmbedAuthor(TypedDict, total=False):
-    name: str
+    name: Required[str]
     url: str
     icon_url: str
     proxy_icon_url: str
@@ -96,8 +99,9 @@ class Embed(TypedDict, total=False):
     color: int
     footer: EmbedFooter
     image: EmbedImage
-    thumbnail: EmbedThumbnail
+    thumbnail: EmbedImage
     video: EmbedVideo
     provider: EmbedProvider
     author: EmbedAuthor
     fields: list[EmbedField]
+    flags: int
