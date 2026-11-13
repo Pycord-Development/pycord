@@ -45,6 +45,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
 - Changed `rtc_region` parameters of channel creation and edit methods to accept a
   region ID `str`. ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
+- Refactored backend logic for `Bot.sync_commands()` to only sync when needed and be
+  easily extensible. ([#2990](https://github.com/Pycord-Development/pycord/pull/2990))
 
 ### Fixed
 
