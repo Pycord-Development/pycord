@@ -49,7 +49,6 @@ if TYPE_CHECKING:
     from discord.types.embed import EmbedFooter as EmbedFooterPayload
     from discord.types.embed import EmbedImage as EmbedImagePayload
     from discord.types.embed import EmbedProvider as EmbedProviderPayload
-    from discord.types.embed import EmbedThumbnail as EmbedThumbnailPayload
     from discord.types.embed import EmbedType
     from discord.types.embed import EmbedVideo as EmbedVideoPayload
 
@@ -403,7 +402,7 @@ class Embed:
 
         self._footer: EmbedFooterPayload | None = None
         self._image: EmbedImagePayload | None = None
-        self._thumbnail: EmbedThumbnailPayload | None = None
+        self._thumbnail: EmbedImagePayload | None = None
         self._video: EmbedVideoPayload | None = None
         self._provider: EmbedProviderPayload | None = None
         self._author: EmbedAuthorPayload | None = None
