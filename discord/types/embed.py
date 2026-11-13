@@ -108,3 +108,4 @@ class Embed(TypedDict, total=False):
     author: EmbedAuthor
     fields: list[EmbedField]
     components: list[Component]
+    flags: int
