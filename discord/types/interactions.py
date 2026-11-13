@@ -39,8 +39,8 @@ from .snowflake import Snowflake
 from .user import User
 
 if TYPE_CHECKING:
-    from .message import AllowedMentions, Message
     from ..interactions import InteractionChannel
+    from .message import AllowedMentions, Message
 
 from typing_extensions import NotRequired, TypedDict
 
