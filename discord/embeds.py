@@ -250,10 +250,10 @@ class EmbedField:
         Whether the field should be displayed inline.
     """
 
-    def __init__(self, name: str, value: str, inline: bool | None = False):
+    def __init__(self, name: str, value: str, inline: bool = False):
         self.name: str = name
         self.value: str = value
-        self.inline: bool | None = inline
+        self.inline: bool = inline
 
     @classmethod
     def from_dict(cls, data: EmbedFieldPayload) -> EmbedField:
@@ -290,7 +290,7 @@ class EmbedField:
         return {
             "name": self.name,
             "value": self.value,
-            "inline": self.inline if self.inline is not None else False,
+            "inline": self.inline,
         }
 
     @override
