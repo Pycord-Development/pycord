@@ -104,3 +104,4 @@ class Embed(TypedDict, total=False):
     provider: EmbedProvider
     author: EmbedAuthor
     fields: list[EmbedField]
+    flags: int
