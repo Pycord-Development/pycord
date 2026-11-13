@@ -64,7 +64,7 @@ from .object import Object
 from .partial_emoji import PartialEmoji
 from .poll import Poll, PollAnswerCount
 from .raw_models import *
-from .raw_models import AuditLogAction, ChannelInfo
+from .raw_models import ChannelInfo
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .soundboard import PartialSoundboardSound, SoundboardSound
