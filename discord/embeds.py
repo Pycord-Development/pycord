@@ -382,6 +382,15 @@ class Embed:
         image: str | EmbedMedia | None = None,
         thumbnail: str | EmbedMedia | None = None,
     ) -> None:
+        self._footer: EmbedFooterPayload | None = None
+        self._image: EmbedImagePayload | None = None
+        self._thumbnail: EmbedImagePayload | None = None
+        self._video: EmbedVideoPayload | None = None
+        self._provider: EmbedProviderPayload | None = None
+        self._author: EmbedAuthorPayload | None = None
+        self._colour: Colour | None = None
+        self._timestamp: datetime.datetime | None = None
+
         self.colour = colour if colour is not None else color
         self.title: str | None = title
         self.type: EmbedType = type
@@ -408,15 +417,6 @@ class Embed:
         self.thumbnail = thumbnail
         self.components: list[Component] | None = None
 
-        self._footer: EmbedFooterPayload | None = None
-        self._image: EmbedImagePayload | None = None
-        self._thumbnail: EmbedImagePayload | None = None
-        self._video: EmbedVideoPayload | None = None
-        self._provider: EmbedProviderPayload | None = None
-        self._author: EmbedAuthorPayload | None = None
-        self._colour: Colour | None = None
-        self._timestamp: datetime.datetime | None = None
-
     @classmethod
     def from_dict(cls, data: EmbedPayload) -> Self:
         """Converts a :class:`dict` to a :class:`Embed` provided it is in the
@@ -440,6 +440,15 @@ class Embed:
         """
         # we are bypassing __init__ here since it doesn't apply here
         self: Self = cls.__new__(cls)
+
+        self._footer = None
+        self._image = None
+        self._thumbnail = None
+        self._video = None
+        self._provider = None
+        self._author = None
+        self._colour = None
+        self._timestamp = None
 
         # fill in the basic fields
 
@@ -614,11 +623,7 @@ class Embed:
         icon_url: :class:`str`
             The URL of the footer icon. Only HTTP(S) is supported.
         """
-        new_footer: EmbedFooterPayload
-        if self._footer is not None:
-            new_footer = self._footer.copy()
-        else:
-            new_footer = {"text": ""}
+        new_footer: EmbedFooterPayload = {"text": ""}
         if text:
             new_footer["text"] = str(text)
 
@@ -636,10 +641,7 @@ class Embed:
 
         .. versionadded:: 2.0
         """
-        try:
-            del self._footer
-        except AttributeError:
-            pass
+        self._footer = None
 
         return self
 
@@ -695,10 +697,7 @@ class Embed:
         """
 
         if url is None:
-            try:
-                del self._image
-            except AttributeError:
-                pass
+            self._image = None
         else:
             self._image = {
                 "url": str(url),
@@ -714,10 +713,7 @@ class Embed:
 
         .. versionadded:: 2.0
         """
-        try:
-            del self._image
-        except AttributeError:
-            pass
+        self._image = None
 
         return self
 
@@ -773,10 +769,7 @@ class Embed:
         """
 
         if url is None:
-            try:
-                del self._thumbnail
-            except AttributeError:
-                pass
+            self._thumbnail = None
         else:
             self._thumbnail = {
                 "url": str(url),
@@ -792,10 +785,7 @@ class Embed:
 
         .. versionadded:: 2.0
         """
-        try:
-            del self._thumbnail
-        except AttributeError:
-            pass
+        self._thumbnail = None
 
         return self
 
@@ -896,10 +886,7 @@ class Embed:
 
         .. versionadded:: 1.4
         """
-        try:
-            del self._author
-        except AttributeError:
-            pass
+        self._author = None
 
         return self
 
