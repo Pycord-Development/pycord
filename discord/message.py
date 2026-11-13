@@ -1252,7 +1252,12 @@ class Message(Hashable):
             else:
                 setattr(self, key, transform(value))
 
-    def _add_reaction(self, data, emoji, user_id) -> Reaction:
+    def _add_reaction(
+        self,
+        data: ReactionPayload,
+        emoji: PartialEmoji | GuildEmoji | AppEmoji | str | None,
+        user_id: int,
+    ) -> Reaction:
         reaction = utils.find(lambda r: r.emoji == emoji, self.reactions)
         is_me = data["me"] = user_id == self._state.self_id
 

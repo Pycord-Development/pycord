@@ -26,6 +26,8 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
+from typing_extensions import NotRequired
+
 from .member import Member
 from .snowflake import Snowflake
 from .user import User
@@ -50,7 +52,7 @@ class ScheduledEvent(TypedDict):
     entity_type: ScheduledEventLocationType
     entity_id: Snowflake
     entity_metadata: ScheduledEventEntityMetadata
-    creator: User
+    creator: NotRequired[User]
     user_count: int | None
 
 

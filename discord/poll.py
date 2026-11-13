@@ -129,8 +129,8 @@ class PollAnswer:
     def __init__(
         self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
     ):
-        self.media = PollMedia(text, emoji)
-        self.id = None
+        self.media: PollMedia = PollMedia(text, emoji)
+        self.id: int | None = None
         self._poll = None
 
     @property
@@ -433,7 +433,7 @@ class Poll:
             return None
         return self.results.total_votes()
 
-    def get_answer(self, id) -> PollAnswer | None:
+    def get_answer(self, id: int) -> PollAnswer | None:
         """
         Get a poll answer by ID.
 
