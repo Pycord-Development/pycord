@@ -35,7 +35,6 @@ from typing import (
     Any,
     ClassVar,
     TypeVar,
-    Union,
     overload,
 )
 from urllib.parse import parse_qs, urlparse
@@ -97,7 +96,7 @@ if TYPE_CHECKING:
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
-    EmojiInputType = Union[GuildEmoji, AppEmoji, PartialEmoji, str]
+    EmojiInputType = GuildEmoji | AppEmoji | PartialEmoji | str
 
 __all__ = (
     "Attachment",
@@ -163,13 +162,13 @@ class Attachment(Hashable):
         The attachment ID.
     size: :class:`int`
         The attachment size in bytes.
-    height: Optional[:class:`int`]
+    height: :class:`int` | :obj:`None`
         The attachment's height, in pixels. Only applicable to images and videos.
-    width: Optional[:class:`int`]
+    width: :class:`int` | :obj:`None`
         The attachment's width, in pixels. Only applicable to images and videos.
     filename: :class:`str`
         The attachment's filename.
-    title: Optional[:class:`str`]
+    title: :class:`str` | :obj:`None`
         The attachment's title. This is equal to the original :attr:`filename` (without an extension)
         if special characters were filtered from it.
 
@@ -181,24 +180,24 @@ class Attachment(Hashable):
         The proxy URL. This is a cached version of the :attr:`~Attachment.url` in the
         case of images. When the message is deleted, this URL might be valid for a few
         minutes or not valid at all.
-    content_type: Optional[:class:`str`]
+    content_type: :class:`str` | :obj:`None`
         The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_.
     ephemeral: :class:`bool`
         Whether the attachment is ephemeral or not.
 
         .. versionadded:: 1.7
 
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The attachment's description.
 
         .. versionadded:: 2.0
 
-    duration_secs: Optional[:class:`float`]
+    duration_secs: :class:`float` | :obj:`None`
         The duration of the audio file (currently for voice messages).
 
         .. versionadded:: 2.5
 
-    waveform: Optional[:class:`str`]
+    waveform: :class:`str` | :obj:`None`
         The base64 encoded bytearray representing a sampled waveform (currently for voice messages).
 
         .. versionadded:: 2.5
@@ -301,7 +300,7 @@ class Attachment(Hashable):
 
         Parameters
         ----------
-        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+        fp: :class:`io.BufferedIOBase` | :class:`os.PathLike`
             The file-like object to save this attachment to or the filename
             to use. If a filename is passed then a file is created with that
             filename and used instead.
@@ -315,7 +314,7 @@ class Attachment(Hashable):
             after the message is deleted. Note that this can still fail to download
             deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
-        chunksize: Optional[:class:`int`]
+        chunksize: :class:`int` | :obj:`None`
             The maximum size of each chunk to process. Must be a positive integer.
 
         Returns
@@ -546,16 +545,16 @@ class MessageReference:
 
     Attributes
     ----------
-    type: Optional[:class:`~discord.MessageReferenceType`]
+    type: :class:`~discord.MessageReferenceType` | :obj:`None`
         The type of message reference. If this is not provided, assume the default behavior (i.e., reply).
 
         .. versionadded:: 2.7
 
-    message_id: Optional[:class:`int`]
+    message_id: :class:`int` | :obj:`None`
         The id of the message referenced.
     channel_id: :class:`int`
         The channel id of the message referenced.
-    guild_id: Optional[:class:`int`]
+    guild_id: :class:`int` | :obj:`None`
         The guild id of the message referenced.
     fail_if_not_exists: :class:`bool`
         Whether replying to the referenced message should raise :class:`HTTPException`
@@ -563,7 +562,7 @@ class MessageReference:
 
         .. versionadded:: 1.7
 
-    resolved: Optional[Union[:class:`Message`, :class:`DeletedReferencedMessage`]]
+    resolved: :class:`Message` | :class:`DeletedReferencedMessage` | :obj:`None`
         The message that this reference resolved to. If this is ``None``
         then the original message was not fetched either due to the Discord API
         not attempting to resolve it or it not being available at the time of creation.
@@ -641,7 +640,7 @@ class MessageReference:
 
             .. versionadded:: 1.7
 
-        type: Optional[:class:`~discord.MessageReferenceType`]
+        type: :class:`~discord.MessageReferenceType` | :obj:`None`
             The type of reference to create. Defaults to :attr:`MessageReferenceType.default` (reply).
 
             .. versionadded:: 2.7
@@ -735,11 +734,11 @@ class ForwardedMessage:
     type: :class:`MessageType`
         The type of the original message. In most cases this should not be checked, but it is helpful
         in cases where it might be a system message for :attr:`system_content`.
-    original_message: Optional[Union[:class:`Message`, :class:`PartialMessage`]]
+    original_message: :class:`Message` | :class:`PartialMessage` | :obj:`None`
         The original message that was forwarded, if available.
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+    channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`GroupChannel` | :class:`PartialMessageable`
         The :class:`TextChannel` or :class:`Thread` that the original message was sent from.
-    guild: Optional[Union[:class:`Guild`, :class:`Object`]]
+    guild: :class:`Guild` | :class:`Object` | :obj:`None`
         The guild that the original message belonged to, if applicable.
     content: :class:`str`
         The contents of the original message.
@@ -933,20 +932,20 @@ class Message(Hashable):
     type: :class:`MessageType`
         The type of message. In most cases this should not be checked, but it is helpful
         in cases where it might be a system message for :attr:`system_content`.
-    author: Union[:class:`Member`, :class:`abc.User`]
+    author: :class:`Member` | :class:`abc.User`
         A :class:`Member` that sent the message. If :attr:`channel` is a
         private channel or the user has the left the guild, then it is a :class:`User` instead.
     content: :class:`str`
         The actual contents of the message.
-    nonce: Optional[Union[:class:`str`, :class:`int`]]
+    nonce: :class:`str` | :class:`int` | :obj:`None`
         The value used by the discord guild and the client to verify that the message is successfully sent.
         This is not stored long term within Discord's servers and is only used ephemerally.
     embeds: List[:class:`Embed`]
         A list of embeds the message has.
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+    channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`GroupChannel` | :class:`PartialMessageable`
         The :class:`TextChannel` or :class:`Thread` that the message was sent from.
         Could be a :class:`DMChannel` or :class:`GroupChannel` if it's a private message.
-    reference: Optional[:class:`~discord.MessageReference`]
+    reference: :class:`~discord.MessageReference` | :obj:`None`
         The message that this message references. This is only applicable to messages of
         type :attr:`MessageType.pins_add`, crossposted messages created by a
         followed channel integration, or message replies.
@@ -979,7 +978,7 @@ class Message(Hashable):
         then the list is always empty.
     id: :class:`int`
         The message ID.
-    webhook_id: Optional[:class:`int`]
+    webhook_id: :class:`int` | :obj:`None`
         If this message was sent by a webhook, then this is the webhook ID's that sent this
         message.
     attachments: List[:class:`Attachment`]
@@ -993,7 +992,7 @@ class Message(Hashable):
 
     reactions : List[:class:`Reaction`]
         Reactions to a message. Reactions can be either custom emoji or standard unicode emoji.
-    activity: Optional[:class:`dict`]
+    activity: :class:`dict` | :obj:`None`
         The activity associated with this message. Sent with Rich-Presence related messages that for
         example, request joining, spectating, or listening to or with another member.
 
@@ -1001,7 +1000,7 @@ class Message(Hashable):
 
         - ``type``: An integer denoting the type of message activity being requested.
         - ``party_id``: The party ID associated with the party.
-    application: Optional[:class:`dict`]
+    application: :class:`dict` | :obj:`None`
         The rich presence enabled application associated with this message.
 
         It is a dictionary with the following keys:
@@ -1019,35 +1018,35 @@ class Message(Hashable):
         A list of components in the message.
 
         .. versionadded:: 2.0
-    guild: Optional[:class:`Guild`]
+    guild: :class:`Guild` | :obj:`None`
         The guild that the message belongs to, if applicable.
-    interaction: Optional[:class:`MessageInteraction`]
+    interaction: :class:`MessageInteraction` | :obj:`None`
         The interaction associated with the message, if applicable.
 
         .. deprecated:: 2.6
 
             Use :attr:`interaction_metadata` instead.
-    interaction_metadata: Optional[:class:`InteractionMetadata`]
+    interaction_metadata: :class:`InteractionMetadata` | :obj:`None`
         The interaction metadata associated with the message, if applicable.
 
         .. versionadded:: 2.6
-    thread: Optional[:class:`Thread`]
+    thread: :class:`Thread` | :obj:`None`
         The thread created from this message, if applicable.
 
         .. versionadded:: 2.0
-    poll: Optional[:class:`Poll`]
+    poll: :class:`Poll` | :obj:`None`
         The poll associated with this message, if applicable.
 
         .. versionadded:: 2.6
-    shared_client_theme: Optional[:class:`SharedClientTheme`]
+    shared_client_theme: :class:`SharedClientTheme` | :obj:`None`
         The shared client theme transmitted via this message, if applicable.
 
         .. versionadded:: 2.9
-    call: Optional[:class:`MessageCall`]
+    call: :class:`MessageCall` | :obj:`None`
         The call information associated with this message, if applicable.
 
         .. versionadded:: 2.6
-    snapshots: Optional[List[:class:`MessageSnapshot`]]
+    snapshots: List[:class:`MessageSnapshot`] | :obj:`None`
         The snapshots attached to this message, if applicable.
 
         .. versionadded:: 2.7
@@ -1721,10 +1720,10 @@ class Message(Hashable):
 
         Parameters
         ----------
-        delay: Optional[:class:`float`]
+        delay: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait in the background
             before deleting the message. If the deletion fails then it is silently ignored.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the message. Shows up on the audit log.
 
         Raises
@@ -1786,10 +1785,10 @@ class Message(Hashable):
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The new content to replace the message with.
             Could be ``None`` to remove the content.
-        embed: Optional[:class:`Embed`]
+        embed: :class:`Embed` | :obj:`None`
             The new embed to replace the original with.
             Could be ``None`` to remove the embed.
         embeds: List[:class:`Embed`]
@@ -1818,11 +1817,11 @@ class Message(Hashable):
             Using this parameter requires :attr:`~.Permissions.manage_messages`.
 
             .. versionadded:: 2.8
-        delete_after: Optional[:class:`float`]
+        delete_after: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
-        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+        allowed_mentions: :class:`~discord.AllowedMentions` | :obj:`None`
             Controls the mentions being processed in this message. If this is
             passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
             The merging behaviour only overrides attributes that have been explicitly passed
@@ -1831,7 +1830,7 @@ class Message(Hashable):
             are used instead.
 
             .. versionadded:: 1.4
-        view: Optional[:class:`~discord.ui.BaseView`]
+        view: :class:`~discord.ui.BaseView` | :obj:`None`
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
 
@@ -1974,7 +1973,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for pinning the message. Shows up on the audit log.
 
             .. versionadded:: 1.4
@@ -2003,7 +2002,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for unpinning the message. Shows up on the audit log.
 
             .. versionadded:: 1.4
@@ -2034,7 +2033,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`Reaction` | :class:`PartialEmoji` | :class:`str`
             The emoji to react with.
 
         Raises
@@ -2069,7 +2068,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`Reaction` | :class:`PartialEmoji` | :class:`str`
             The emoji to remove.
         member: :class:`abc.Snowflake`
             The member for which to remove the reaction.
@@ -2108,7 +2107,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: :class:`GuildEmoji` | :class:`AppEmoji` | :class:`Reaction` | :class:`PartialEmoji` | :class:`str`
             The emoji to clear.
 
         Raises
@@ -2164,10 +2163,10 @@ class Message(Hashable):
         ----------
         name: :class:`str`
             The name of the thread.
-        auto_archive_duration:  Optional[:class:`int`]
+        auto_archive_duration:  :class:`int` | :obj:`None`
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
-        slowmode_delay: Optional[:class:`int`]
+        slowmode_delay: :class:`int` | :obj:`None`
             Specifies the slowmode rate limit for user in this thread, in seconds.
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
 
@@ -2242,7 +2241,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+        channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`GroupChannel` | :class:`PartialMessageable`
             The channel to forward this to.
 
         Returns
@@ -2308,7 +2307,7 @@ class Message(Hashable):
 
             .. versionadded:: 1.7
 
-        type: Optional[:class:`~discord.MessageReferenceType`]
+        type: :class:`~discord.MessageReferenceType` | :obj:`None`
             The type of message reference. Defaults to a reply.
 
             .. versionadded:: 2.7
@@ -2344,12 +2343,12 @@ class Message(Hashable):
 
         Parameters
         ----------
-        id: Union[:class:`str`, :class:`int`]
+        id: :class:`str` | :class:`int`
             The id or custom_id the item to get
 
         Returns
         -------
-        Optional[:class:`Component`]
+        :class:`Component` | :obj:`None`
             The component with the matching ``custom_id`` or ``id`` if it exists.
         """
         if not id:
@@ -2398,7 +2397,7 @@ class PartialMessage(Hashable):
 
     Attributes
     ----------
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`, :class:`PartialMessageable`]
+    channel: :class:`TextChannel` | :class:`Thread` | :class:`DMChannel` | :class:`VoiceChannel` | :class:`StageChannel` | :class:`PartialMessageable`
         The channel associated with this partial message.
     id: :class:`int`
         The message ID.
@@ -2499,13 +2498,13 @@ class PartialMessage(Hashable):
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The new content to replace the message with.
             Could be ``None`` to remove the content.
-        embed: Optional[:class:`~discord.Embed`]
+        embed: :class:`~discord.Embed` | :obj:`None`
             The new embed to replace the original with.
             Could be ``None`` to remove the embed.
-        embeds: Optional[List[:class:`~discord.Embed`]]
+        embeds: List[:class:`~discord.Embed`] | :obj:`None`
             A list of embeds to upload. Must be a maximum of 10.
 
             .. versionadded:: 2.0
@@ -2514,18 +2513,18 @@ class PartialMessage(Hashable):
             all the embeds if set to ``True``. If set to ``False``
             this brings the embeds back if they were suppressed.
             Using this parameter requires :attr:`~.Permissions.manage_messages`.
-        delete_after: Optional[:class:`float`]
+        delete_after: :class:`float` | :obj:`None`
             If provided, the number of seconds to wait in the background
             before deleting the message we just edited. If the deletion fails,
             then it is silently ignored.
-        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+        allowed_mentions: :class:`~discord.AllowedMentions` | :obj:`None`
             Controls the mentions being processed in this message. If this is
             passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
             The merging behaviour only overrides attributes that have been explicitly passed
             to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
             If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
             are used instead.
-        view: Optional[:class:`~discord.ui.BaseView`]
+        view: :class:`~discord.ui.BaseView` | :obj:`None`
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
 
@@ -2533,7 +2532,7 @@ class PartialMessage(Hashable):
 
         Returns
         -------
-        Optional[:class:`Message`]
+        :class:`Message` | :obj:`None`
             The message that was edited.
 
         Raises

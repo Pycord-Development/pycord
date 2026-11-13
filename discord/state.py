@@ -38,7 +38,6 @@ from typing import (
     Any,
     Literal,
     TypeVar,
-    Union,
     overload,
 )
 
@@ -134,7 +133,7 @@ if TYPE_CHECKING:
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
-    Channel = Union[GuildChannel, VocalGuildChannel, PrivateChannel, PartialMessageable]
+    Channel = GuildChannel | VocalGuildChannel | PrivateChannel | PartialMessageable
 
 
 class ChunkRequest:
