@@ -150,3 +150,10 @@ extras = []
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
 "3.10" = ["3.10"]
+
+[tool.basedpyright]
+pythonVersion = "3.10"
+typeCheckingMode = "all"
+# reportAny = false # Occurs too often in pycord internals to leave it off, false positives are very rare
+reportPrivateUsage = false
+reportUnusedCallResult = false

@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -80,4 +80,4 @@ class BotIntegration(BaseIntegration):
     application: IntegrationApplication
 
 
-Integration = Union[BaseIntegration, StreamIntegration, BotIntegration]
+Integration = BaseIntegration | StreamIntegration | BotIntegration

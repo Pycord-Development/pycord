@@ -466,7 +466,7 @@ class AutoModRule(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this rule. Shows up in the audit log.
 
         Raises
@@ -512,12 +512,12 @@ class AutoModRule(Hashable):
             The roles that will be exempt from this rule.
         exempt_channels: List[:class:`abc.Snowflake`]
             The channels that will be exempt from this rule.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this rule. Shows up in the audit log.
 
         Returns
         -------
-        Optional[:class:`.AutoModRule`]
+        :class:`.AutoModRule` | :obj:`None`
             The newly updated rule, if applicable. This is only returned
             when fields are updated.
 

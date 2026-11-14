@@ -51,19 +51,19 @@ class CheckboxGroup(ModalItem):
 
     Parameters
     ----------
-    custom_id: Optional[:class:`str`]
+    custom_id: :class:`str` | :obj:`None`
         The ID of the checkbox group that gets received during an interaction.
     options: List[:class:`discord.CheckboxGroupOption`]
         A list of options that can be selected in this group.
-    min_values: Optional[:class:`int`]
+    min_values: :class:`int` | :obj:`None`
         The minimum number of options that must be selected.
         Defaults to 0 and must be between 0 and 10, inclusive.
-    max_values: Optional[:class:`int`]
+    max_values: :class:`int` | :obj:`None`
         The maximum number of options that can be selected.
         Must be between 1 and 10, inclusive.
     required: :class:`bool`
         Whether an option selection is required or not. Defaults to ``True``.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The checkbox group's ID.
     """
 
@@ -228,7 +228,7 @@ class CheckboxGroup(ModalItem):
         value: :class:`str`
             The value of the option. This is not displayed to users.
             If not given, defaults to the label. Can only be up to 100 characters.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             An additional description of the option, if any.
             Can only be up to 100 characters.
         default: :class:`bool`

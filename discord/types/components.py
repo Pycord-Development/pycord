@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -212,45 +212,45 @@ class CheckboxComponent(BaseComponent):
     default: NotRequired[bool]
 
 
-Component = Union[
-    ActionRow,
-    ButtonComponent,
-    SelectMenu,
-    InputText,
-    TextDisplayComponent,
-    SectionComponent,
-    ThumbnailComponent,
-    MediaGalleryComponent,
-    FileComponent,
-    SeparatorComponent,
-    ContainerComponent,
-    LabelComponent,
-    FileUploadComponent,
-    RadioGroupComponent,
-    CheckboxGroupComponent,
-    CheckboxComponent,
-]
+Component = (
+    ActionRow
+    | ButtonComponent
+    | SelectMenu
+    | InputText
+    | TextDisplayComponent
+    | SectionComponent
+    | ThumbnailComponent
+    | MediaGalleryComponent
+    | FileComponent
+    | SeparatorComponent
+    | ContainerComponent
+    | LabelComponent
+    | FileUploadComponent
+    | RadioGroupComponent
+    | CheckboxGroupComponent
+    | CheckboxComponent
+)
 
-AllowedActionRowComponents = Union[ButtonComponent, InputText, SelectMenu]
+AllowedActionRowComponents = ButtonComponent | InputText | SelectMenu
 
-AllowedSectionAccessories = Union[ThumbnailComponent, ButtonComponent]
+AllowedSectionAccessories = ThumbnailComponent | ButtonComponent
 
-AllowedSectionComponents = Union[TextDisplayComponent]
+AllowedSectionComponents = TextDisplayComponent
 
-AllowedContainerComponents = Union[
-    ActionRow,
-    TextDisplayComponent,
-    MediaGalleryComponent,
-    FileComponent,
-    SeparatorComponent,
-    SectionComponent,
-]
+AllowedContainerComponents = (
+    ActionRow
+    | TextDisplayComponent
+    | MediaGalleryComponent
+    | FileComponent
+    | SeparatorComponent
+    | SectionComponent
+)
 
-AllowedLabelComponents = Union[
-    SelectMenu,
-    InputText,
-    FileUploadComponent,
-    RadioGroupComponent,
-    CheckboxComponent,
-    CheckboxGroupComponent,
-]
+AllowedLabelComponents = (
+    SelectMenu
+    | InputText
+    | FileUploadComponent
+    | RadioGroupComponent
+    | CheckboxComponent
+    | CheckboxGroupComponent
+)

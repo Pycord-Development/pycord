@@ -40,13 +40,13 @@ class IncidentsData:
 
     Attributes
     ----------
-    invites_disabled_until: Optional[datetime.datetime]
+    invites_disabled_until: :class:`datetime.datetime` | :obj:`None`
         When invites will be enabled again as a :class:`datetime.datetime`, or ``None``.
-    dms_disabled_until: Optional[datetime.datetime]
+    dms_disabled_until: :class:`datetime.datetime` | :obj:`None`
         When direct messages will be enabled again as a :class:`datetime.datetime`, or ``None``.
-    dm_spam_detected_at: Optional[datetime.datetime]
+    dm_spam_detected_at: :class:`datetime.datetime` | :obj:`None`
         When DM spam was detected, or ``None``.
-    raid_detected_at: Optional[datetime.datetime]
+    raid_detected_at: :class:`datetime.datetime` | :obj:`None`
         When a raid was detected, or ``None``.
     """
 

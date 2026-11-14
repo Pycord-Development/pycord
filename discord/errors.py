@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from aiohttp import ClientResponse, ClientWebSocketResponse
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     try:
         from requests import Response
 
-        _ResponseType = Union[ClientResponse, Response]
+        _ResponseType = ClientResponse | Response
     except ModuleNotFoundError:
         _ResponseType = ClientResponse
 
@@ -216,7 +216,7 @@ class ConnectionClosed(ClientException):
         The close code of the websocket.
     reason: :class:`str`
         The reason provided for the closure.
-    shard_id: Optional[:class:`int`]
+    shard_id: :class:`int` | :obj:`None`
         The shard ID that got closed if applicable.
     """
 
@@ -249,7 +249,7 @@ class PrivilegedIntentsRequired(ClientException):
 
     Attributes
     ----------
-    shard_id: Optional[:class:`int`]
+    shard_id: :class:`int` | :obj:`None`
         The shard ID that got closed if applicable.
     """
 

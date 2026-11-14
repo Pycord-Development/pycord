@@ -75,7 +75,7 @@ def _parse_tag_bool(data: RoleTagPayload, key: str) -> bool | None:
 
     Returns
     -------
-    :class:`bool` | :class:`None`
+    :class:`bool` | :obj:`None`
         The parsed boolean value or None if the key is not present.
     """
     # if it is False, False is not None -> False
@@ -99,7 +99,7 @@ def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
 
     Returns
     -------
-    :class:`int` | :class:`None`
+    :class:`int` | :obj:`None`
         The parsed integer value or None if the key is not present or the value is not an integer string.
     """
     if value := data.get(key):
@@ -127,11 +127,11 @@ class RoleTags:
 
     Attributes
     ----------
-    bot_id: Optional[:class:`int`]
+    bot_id: :class:`int` | :obj:`None`
         The bot's user ID that manages this role.
-    integration_id: Optional[:class:`int`]
+    integration_id: :class:`int` | :obj:`None`
         The integration ID that manages the role.
-    subscription_listing_id: Optional[:class:`int`]
+    subscription_listing_id: :class:`int` | :obj:`None`
         The subscription SKU and listing ID of the role.
 
         .. versionadded:: 2.7
@@ -172,7 +172,7 @@ class RoleTags:
 
     @cached_slot_property("_type")
     def type(self) -> RoleType:
-        """:class:`RoleType`: The type of the role.
+        """The type of the role.
 
         Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
         In order to make your life easier, pycord provides a :attr:`RoleTags.type` attribute that attempts to determine the role type based on the role tags. Its value is not provided by Discord but is rather computed based on the role tags.
@@ -305,9 +305,9 @@ class RoleColours:
     ----------
     primary: :class:`Colour`
         The primary colour of the role.
-    secondary: Optional[:class:`Colour`]
+    secondary: :class:`Colour` | :obj:`None`
         The secondary colour of the role.
-    tertiary: Optional[:class:`Colour`]
+    tertiary: :class:`Colour` | :obj:`None`
         The tertiary colour of the role. At the moment, only :attr:`HOLOGRAPHIC_TERTIARY` is allowed.
     HOLOGRAPHIC_PRIMARY: :class:`Colour`
             The primary colour used for holographic roles.
@@ -335,9 +335,9 @@ class RoleColours:
         ----------
         primary: :class:`Colour`
             The primary colour of the role.
-        secondary: Optional[:class:`Colour`]
+        secondary: :class:`Colour` | :obj:`None`
             The secondary colour of the role.
-        tertiary: Optional[:class:`Colour`]
+        tertiary: :class:`Colour` | :obj:`None`
             The tertiary colour of the role.
         """
         self.primary: Colour = primary
@@ -468,10 +468,10 @@ class Role(Hashable):
         is ``True``.
     mentionable: :class:`bool`
         Indicates if the role can be mentioned by users.
-    tags: Optional[:class:`RoleTags`]
+    tags: :class:`RoleTags` | :obj:`None`
         The role tags associated with this role. Tags indicate whether the role is a special role,
         such as but not limited to a bot role or the booster role.
-    unicode_emoji: Optional[:class:`str`]
+    unicode_emoji: :class:`str` | :obj:`None`
         The role's unicode emoji.
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
@@ -822,7 +822,7 @@ class Role(Hashable):
             The new role name to change to.
         permissions: :class:`Permissions`
             The new permissions to change to.
-        colour: Union[:class:`Colour`, :class:`int`]
+        colour: :class:`Colour` | :class:`int`
             The new colour to change to. (aliased to color as well)
         hoist: :class:`bool`
             Indicates if the role should be shown separately in the member list.
@@ -831,14 +831,14 @@ class Role(Hashable):
         position: :class:`int`
             The new role's position. This must be below your top role's
             position, or it will fail.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing this role. Shows up on the audit log.
-        icon: Optional[:class:`bytes`]
+        icon: :class:`bytes` | :obj:`None`
             A :term:`py:bytes-like object` representing the icon. Only PNG/JPEG/WebP is supported.
             If this argument is passed, ``unicode_emoji`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
             Could be ``None`` to denote removal of the icon.
-        unicode_emoji: Optional[:class:`str`]
+        unicode_emoji: :class:`str` | :obj:`None`
             The role's unicode emoji. If this argument is passed, ``icon`` is set to None.
             Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
@@ -921,7 +921,7 @@ class Role(Hashable):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this role. Shows up on the audit log.
 
         Raises

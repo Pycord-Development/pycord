@@ -129,7 +129,7 @@ class Item(Generic[T]):
 
         Returns
         -------
-        Optional[:class:`int`]
+        :class:`int` | :obj:`None`
             The ID of this item, or ``None`` if the user didn't set one.
         """
         return self.underlying and self.underlying.id
@@ -191,7 +191,7 @@ class ViewItem(Item[V]):
 
         Returns
         -------
-        Optional[:class:`BaseView`]
+        :class:`BaseView` | :obj:`None`
             The parent view of this item, or ``None`` if the item is not attached to any view.
         """
         if self._view:
@@ -260,7 +260,7 @@ class ModalItem(Item[M]):
 
         Returns
         -------
-        Optional[:class:`BaseModal`]
+        :class:`BaseModal` | :obj:`None`
             The parent modal of this item, or ``None`` if the item is not attached to any modal.
         """
         return self._modal

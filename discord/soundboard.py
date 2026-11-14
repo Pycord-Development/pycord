@@ -60,7 +60,7 @@ class PartialSoundboardSound(Hashable):
         The sound's ID.
     volume: :class:`float`
         The sound's volume.
-    emoji: :class:`PartialEmoji` | :class:`None`
+    emoji: :class:`PartialEmoji` | :obj:`None`
         The sound's emoji. Could be ``None`` if the sound has no emoji.
     """
 
@@ -112,7 +112,7 @@ class PartialSoundboardSound(Hashable):
 
     @property
     def file(self) -> Asset:
-        """:class:`Asset`: Returns the sound's file."""
+        """Returns the sound's file."""
         return Asset._from_soundboard_sound(self._state, sound_id=self.id)
 
     def __repr__(self) -> str:
@@ -130,16 +130,16 @@ class SoundboardSound(PartialSoundboardSound):
         The sound's ID.
     volume: :class:`float`
         The sound's volume.
-    emoji: :class:`PartialEmoji` | :class:`None`
+    emoji: :class:`PartialEmoji` | :obj:`None`
         The sound's emoji. Could be ``None`` if the sound has no emoji.
     name: :class:`str`
         The sound's name.
     available: :class:`bool`
         Whether the sound is available. Could be ``False`` if the sound is not available.
         This is the case, for example, when the guild loses the boost level required to use the sound.
-    guild_id: :class:`int` | :class:`None`
-        The ID of the guild to which the sound belongs. Could be :class:`None` if the sound is a default sound.
-    user: :class:`User` | :class:`None`
+    guild_id: :class:`int` | :obj:`None`
+        The ID of the guild to which the sound belongs. Could be :obj:`None` if the sound is a default sound.
+    user: :class:`User` | :obj:`None`
         The sound's owner. Could be ``None`` if the sound is a default sound.
     """
 
@@ -174,7 +174,7 @@ class SoundboardSound(PartialSoundboardSound):
 
     @cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """:class:`Guild` | :class:`None` The guild the sound belongs to. Could be :class:`None` if the sound is a default sound."""
+        """The guild the sound belongs to. Could be :obj:`None` if the sound is a default sound."""
         return self._state._get_guild(self.guild_id) if self.guild_id else None
 
     @override
@@ -185,7 +185,7 @@ class SoundboardSound(PartialSoundboardSound):
 
     @property
     def is_default_sound(self) -> bool:
-        """:class:`bool`: Whether the sound is a default sound."""
+        """Whether the sound is a default sound."""
         return self.guild_id is None
 
     def edit(
@@ -202,13 +202,13 @@ class SoundboardSound(PartialSoundboardSound):
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The new name of the sound.
-        volume: Optional[:class:`float`]
+        volume: :class:`float` | :obj:`None`
             The new volume of the sound.
-        emoji: Optional[Union[:class:`PartialEmoji`, :class:`str`]]
+        emoji: :class:`PartialEmoji` | :class:`str` | :obj:`None`
             The new emoji of the sound.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for editing the sound. Shows up in the audit log.
 
         Returns
@@ -253,7 +253,7 @@ class SoundboardSound(PartialSoundboardSound):
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting the sound. Shows up in the audit log.
 
         Raises
