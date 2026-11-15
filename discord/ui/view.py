@@ -893,7 +893,7 @@ class DesignerView(BaseView):
         *,
         timeout: float | None = 180.0,
     ) -> DesignerView:
-        """Converts a component embed's components into a :class:`DesignerView`.
+        """Converts an embed's components into a :class:`DesignerView`.
 
         Parameters
         ----------
