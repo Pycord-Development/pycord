@@ -449,7 +449,8 @@ class Embed:
         except KeyError:
             pass
 
-        if (components := data["components"]) is not None:
+        self.components = None
+        if (components := data.get("components")) is not None:
             self.components = [_component_factory(item) for item in components]
 
         for attr in (
