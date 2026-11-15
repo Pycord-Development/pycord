@@ -50,45 +50,46 @@ class ApplicationIntegrationTypeConfiguration(TypedDict, total=False):
 class BaseAppInfo(TypedDict):
     id: Snowflake
     name: str
+    icon: str | None
     description: str
-    verify_key: str
 
-    icon: NotRequired[str | None]
-    cover_image: NotRequired[str]
+    rpc_origins: NotRequired[list[str]]
+    bot_public: bool
+    bot_require_code_grant: bool
+    bot: NotRequired[PartialUser]
+    terms_of_service_url: NotRequired[str]
+    privacy_policy_url: NotRequired[str]
+    owner: NotRequired[PartialUser]
+    verify_key: str
+    team: Team | None
     guild_id: NotRequired[Snowflake]
     guild: NotRequired[Guild]
-    bot: NotRequired[PartialUser]
-    owner: NotRequired[PartialUser]
-    team: NotRequired[Team | None]
-    rpc_origins: NotRequired[list[str]]
-    bot_public: NotRequired[bool]
-    bot_require_code_grant: NotRequired[bool]
-    terms_of_service_url: NotRequired[str | None]
-    privacy_policy_url: NotRequired[str | None]
+    cover_image: NotRequired[str]
     tags: NotRequired[list[str]]
     install_params: NotRequired[AppInstallParams]
-    custom_install_url: NotRequired[str]
     integration_types_config: NotRequired[
         dict[
             ApplicationIntegrationType,
             ApplicationIntegrationTypeConfiguration | None,
         ]
     ]
+    custom_install_url: NotRequired[str]
 
 
-class AppInfo(BaseAppInfo, total=False):
-    primary_sku_id: Snowflake
-    slug: str
-    flags: int
-    approximate_guild_count: int
-    approximate_user_install_count: int
-    approximate_user_authorization_count: int
-    redirect_uris: list[str]
-    interactions_endpoint_url: str | None
-    role_connections_verification_url: str | None
-    event_webhooks_url: str | None
-    event_webhooks_status: ApplicationEventWebhookStatus
-    event_webhooks_types: list[str]
+class AppInfo(BaseAppInfo):
+    primary_sku_id: NotRequired[Snowflake]
+    slug: NotRequired[str]
+    flags: NotRequired[int]
+    flags_new: NotRequired[str]
+    approximate_guild_count: NotRequired[int]
+    approximate_user_install_count: NotRequired[int]
+    approximate_user_authorization_count: NotRequired[int]
+    redirect_uris: NotRequired[list[str]]
+    interactions_endpoint_url: NotRequired[str | None]
+    role_connections_verification_url: NotRequired[str | None]
+    event_webhooks_url: NotRequired[str | None]
+    event_webhooks_status: NotRequired[ApplicationEventWebhookStatus]
+    event_webhooks_types: NotRequired[list[str]]
 
 
 class PartialAppInfo(BaseAppInfo, total=False):
