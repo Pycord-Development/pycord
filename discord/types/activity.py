@@ -43,34 +43,37 @@ class PartialPresenceUpdate(TypedDict):
     client_status: ClientStatus
 
 
-class ClientStatus(TypedDict, total=False):
-    desktop: str
-    mobile: str
-    web: str
-    vr: str
+class ClientStatus(TypedDict):
+    desktop: NotRequired[str]
+    mobile: NotRequired[str]
+    web: NotRequired[str]
+    vr: NotRequired[str]
 
 
-class ActivityTimestamps(TypedDict, total=False):
-    start: int
-    end: int
+class ActivityTimestamps(TypedDict):
+    start: NotRequired[int]
+    end: NotRequired[int]
 
 
-class ActivityParty(TypedDict, total=False):
-    id: str
-    size: list[int]
+class ActivityParty(TypedDict):
+    id: NotRequired[str]
+    size: NotRequired[list[int]]
 
 
-class ActivityAssets(TypedDict, total=False):
-    large_image: str
-    large_text: str
-    small_image: str
-    small_text: str
+class ActivityAssets(TypedDict):
+    large_image: NotRequired[str]
+    large_text: NotRequired[str]
+    large_url: NotRequired[str]
+    small_image: NotRequired[str]
+    small_text: NotRequired[str]
+    small_url: NotRequired[str]
+    invite_cover_image: NotRequired[str]
 
 
-class ActivitySecrets(TypedDict, total=False):
-    join: str
-    spectate: str
-    match: str
+class ActivitySecrets(TypedDict):
+    join: NotRequired[str]
+    spectate: NotRequired[str]
+    match: NotRequired[str]
 
 
 class ActivityEmoji(TypedDict):
@@ -84,29 +87,31 @@ class ActivityButton(TypedDict):
     url: str
 
 
-ActivityType = Literal[0, 1, 2, 4, 5]
+ActivityType = Literal[0, 1, 2, 3, 4, 5]
 
 
 class SendableActivity(TypedDict):
-    url: NotRequired[str | None]
     name: str
     type: ActivityType
+    url: NotRequired[str | None]
 
 
 class _BaseActivity(SendableActivity):
     created_at: int
 
 
-class Activity(_BaseActivity, total=False):
-    state: str | None
-    details: str | None
-    timestamps: ActivityTimestamps
-    assets: ActivityAssets
-    party: ActivityParty
-    application_id: Snowflake
-    flags: int
-    emoji: ActivityEmoji | None
-    secrets: ActivitySecrets
-    session_id: str | None
-    instance: bool
-    buttons: list[str]
+class Activity(_BaseActivity):
+    timestamps: NotRequired[ActivityTimestamps]
+    application_id: NotRequired[Snowflake]
+    status_display_type: NotRequired[int | None]
+    details: NotRequired[str | None]
+    details_url: NotRequired[str | None]
+    state: NotRequired[str | None]
+    state_url: NotRequired[str | None]
+    emoji: NotRequired[ActivityEmoji | None]
+    party: NotRequired[ActivityParty]
+    assets: NotRequired[ActivityAssets]
+    secrets: NotRequired[ActivitySecrets]
+    instance: NotRequired[bool]
+    flags: NotRequired[int]
+    buttons: NotRequired[list[str]]
