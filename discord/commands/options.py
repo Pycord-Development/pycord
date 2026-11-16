@@ -196,7 +196,7 @@ class Option:
         The description localizations for this option. The values of this should be ``"locale": "description"``.
         See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
     file_types: list[:class:`str`]
-        The file types to filter by. Only checks the file extension. 
+        The file types to filter by. Only checks the file extension.
         Only applies to Options with an :attr:`input_type` of :class:`discord.SlashCommandOptionType.attachment`.
         If this argument is used, :attr:`input_type` will be ignored.
         See `Discord's documentation <https://docs.discord.com/developers/reference#file-type-filtering>`__ for more information.
