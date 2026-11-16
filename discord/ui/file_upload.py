@@ -58,6 +58,9 @@ class FileUpload(ModalItem):
         Whether the file upload field is required or not. Defaults to ``True``.
     id: :class:`int` | :obj:`None`
         The file upload field's ID.
+    file_types: list[:class:`str`]
+        The types accepted in this file upload. This only filters by file extension.
+        See `Discord's documentation <https://docs.discord.com/developers/reference#file-type-filtering>`__ for more information.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -66,6 +69,7 @@ class FileUpload(ModalItem):
         "max_values",
         "custom_id",
         "id",
+        "file_types",
     )
 
     def __init__(
@@ -76,6 +80,7 @@ class FileUpload(ModalItem):
         max_values: int | None = None,
         required: bool = True,
         id: int | None = None,
+        file_types: list[str] | None = None
     ):
         super().__init__()
         if min_values and (min_values < 0 or min_values > 10):
@@ -86,6 +91,8 @@ class FileUpload(ModalItem):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+        if file_types and len(file_types) > 10:
+            raise ValueError("file_types must be less than 10 items")
 
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
@@ -98,6 +105,7 @@ class FileUpload(ModalItem):
             max_values=max_values,
             required=required,
             id=id,
+            file_types=file_types,
         )
 
     def _generate_underlying(
@@ -107,6 +115,7 @@ class FileUpload(ModalItem):
         max_values: int | None = None,
         required: bool | None = None,
         id: int | None = None,
+        file_types: list[str] | None = None,
     ) -> FileUploadComponent:
         super()._generate_underlying(FileUploadComponent)
         return FileUploadComponent._raw_construct(
@@ -116,6 +125,7 @@ class FileUpload(ModalItem):
             max_values=max_values if max_values is not None else self.max_values,
             required=required if required is not None else self.required,
             id=id or self.id,
+            file_types=file_types,
         )
 
     @property
@@ -167,6 +177,20 @@ class FileUpload(ModalItem):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
         self.underlying.required = bool(value)
+
+    @property
+    def file_types(self) -> list[str] | None:
+        """
+        The file types to filter by. Only checks the file extension. 
+        See `Discord's documentation <https://docs.discord.com/developers/reference#file-type-filtering>`__ for more information.
+        """
+        return self.underlying.file_types
+
+    @file_types.setter
+    def file_types(self, value: list[str] | None) -> None:
+        if value and len(value) > 10:
+            raise ValueError("file_types must be less than 10 items")
+        self.underlying.file_types = value
 
     @property
     def values(self) -> list[Attachment] | None:
