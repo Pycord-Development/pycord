@@ -31,7 +31,6 @@ import functools
 import inspect
 import re
 import types
-from collections import OrderedDict
 from collections.abc import Callable, Coroutine, Generator
 from enum import Enum
 from typing import (
@@ -84,9 +83,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing import Concatenate
+    from typing import Concatenate, ParamSpec
 
-    from typing_extensions import Never, ParamSpec
+    from typing_extensions import Never
 
     from .. import Permissions
     from ..bot import C
@@ -479,7 +478,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             ctx.bot.dispatch("application_command_error", ctx, error)
 
     def _get_signature_parameters(self):
-        return OrderedDict(inspect.signature(self.callback).parameters)
+        return dict(inspect.signature(self.callback).parameters)
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.
@@ -673,13 +672,13 @@ class SlashCommand(ApplicationCommand):
         The name of the command.
     callback: :ref:`coroutine <coroutine>`
         The coroutine that is executed when the command is called.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description for the command.
-    guild_ids: Optional[List[:class:`int`]]
+    guild_ids: List[:class:`int`] | :obj:`None`
         The ids of the guilds where this command will be registered.
     options: List[:class:`Option`]
         The parameters for this command.
-    parent: Optional[:class:`SlashCommandGroup`]
+    parent: :class:`SlashCommandGroup` | :obj:`None`
         The parent group that this command belongs to. ``None`` if there
         isn't one.
     mention: :class:`str`
@@ -694,7 +693,7 @@ class SlashCommand(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
+    cog: :class:`Cog` | :obj:`None`
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -703,7 +702,7 @@ class SlashCommand(ApplicationCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+    cooldown: :class:`~discord.ext.commands.Cooldown` | :obj:`None`
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
@@ -915,7 +914,7 @@ class SlashCommand(ApplicationCommand):
                 )
             o._parameter_name = p_name
 
-        left_out_params = OrderedDict()
+        left_out_params = {}
         for k, v in params:
             left_out_params[k] = v
         options.extend(self._parse_options(left_out_params, check_params=False))
@@ -1187,11 +1186,11 @@ class SlashCommandGroup(ApplicationCommand):
     -----------
     name: :class:`str`
         The name of the command.
-    description: Optional[:class:`str`]
+    description: :class:`str` | :obj:`None`
         The description for the command.
-    guild_ids: Optional[List[:class:`int`]]
+    guild_ids: List[:class:`int`] | :obj:`None`
         The ids of the guilds where this command will be registered.
-    parent: Optional[:class:`SlashCommandGroup`]
+    parent: :class:`SlashCommandGroup` | :obj:`None`
         The parent group that this group belongs to. ``None`` if there
         isn't one.
     guild_only: :class:`bool`
@@ -1401,7 +1400,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         Parameters
         ----------
-        command: Union[:class:`.SlashCommand`, :class:`.SlashCommandGroup`]
+        command: :class:`.SlashCommand` | :class:`.SlashCommandGroup`
             The command to add.
         """
         if command.cog is None and self.cog is not None:
@@ -1443,9 +1442,9 @@ class SlashCommandGroup(ApplicationCommand):
         ----------
         name: :class:`str`
             The name of the group to create.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The description of the group to create.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
         guild_only: :class:`bool`
@@ -1497,11 +1496,11 @@ class SlashCommandGroup(ApplicationCommand):
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed.
-        description: Optional[:class:`str`]
+        description: :class:`str` | :obj:`None`
             The description of the group to create.
-        guild_ids: Optional[List[:class:`int`]]
+        guild_ids: List[:class:`int`] | :obj:`None`
             A list of the IDs of each guild this group should be added to, making it a guild command.
             This will be a global command if ``None`` is passed.
 
@@ -1638,7 +1637,7 @@ class ContextMenuCommand(ApplicationCommand):
         The name of the command.
     callback: :ref:`coroutine <coroutine>`
         The coroutine that is executed when the command is called.
-    guild_ids: Optional[List[:class:`int`]]
+    guild_ids: List[:class:`int`] | :obj:`None`
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
@@ -1650,7 +1649,7 @@ class ContextMenuCommand(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
+    cog: :class:`Cog` | :obj:`None`
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1659,7 +1658,7 @@ class ContextMenuCommand(ApplicationCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+    cooldown: :class:`~discord.ext.commands.Cooldown` | :obj:`None`
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
@@ -1778,7 +1777,7 @@ class UserCommand(ContextMenuCommand):
         The name of the command.
     callback: :ref:`coroutine <coroutine>`
         The coroutine that is executed when the command is called.
-    guild_ids: Optional[List[:class:`int`]]
+    guild_ids: List[:class:`int`] | :obj:`None`
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
@@ -1790,7 +1789,7 @@ class UserCommand(ContextMenuCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
+    cog: :class:`Cog` | :obj:`None`
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1799,7 +1798,7 @@ class UserCommand(ContextMenuCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+    cooldown: :class:`~discord.ext.commands.Cooldown` | :obj:`None`
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
@@ -1893,7 +1892,7 @@ class MessageCommand(ContextMenuCommand):
         The name of the command.
     callback: :ref:`coroutine <coroutine>`
         The coroutine that is executed when the command is called.
-    guild_ids: Optional[List[:class:`int`]]
+    guild_ids: List[:class:`int`] | :obj:`None`
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
@@ -1905,7 +1904,7 @@ class MessageCommand(ContextMenuCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
+    cog: :class:`Cog` | :obj:`None`
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1914,7 +1913,7 @@ class MessageCommand(ContextMenuCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+    cooldown: :class:`~discord.ext.commands.Cooldown` | :obj:`None`
         The cooldown applied when the command is invoked. ``None`` if the command
         doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]

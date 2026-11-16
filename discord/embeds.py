@@ -31,6 +31,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 from . import utils
 from .colour import Colour
+from .components import Component, _component_factory
 
 __all__ = (
     "Embed",
@@ -273,7 +274,7 @@ class EmbedField:
 
         Returns
         -------
-        Dict[:class:`str`, Union[:class:`str`, :class:`bool`]]
+        Dict[:class:`str`, :class:`str` | :class:`bool`]
             A dictionary of :class:`str` embed field keys bound to the respective value.
         """
         return {
@@ -327,9 +328,14 @@ class Embed:
         The timestamp of the embed content. This is an aware datetime.
         If a naive datetime is passed, it is converted to an aware
         datetime with the local timezone.
-    colour: Union[:class:`Colour`, :class:`int`]
+    colour: :class:`Colour` | :class:`int`
         The colour code of the embed. Aliased to ``color`` as well.
         This can be set during initialisation.
+    components: list[:class:`Component`] | :obj:`None`
+        The components for this embed. Only present for embeds of type ``components``.
+        This is not intended to be set by the user, and is only available when received from Discord.
+
+        .. versionadded:: 2.9
     """
 
     __slots__ = (
@@ -346,6 +352,7 @@ class Embed:
         "_author",
         "_fields",
         "description",
+        "components",
     )
 
     def __init__(
@@ -388,6 +395,7 @@ class Embed:
         self.footer = footer
         self.image = image
         self.thumbnail = thumbnail
+        self.components: list[Component] | None = None
 
     @classmethod
     def from_dict(cls: type[E], data: Mapping[str, Any]) -> E:
@@ -440,6 +448,10 @@ class Embed:
             self._timestamp = utils.parse_time(data["timestamp"])
         except KeyError:
             pass
+
+        self.components = None
+        if (components := data.get("components")) is not None:
+            self.components = [_component_factory(item) for item in components]
 
         for attr in (
             "thumbnail",
@@ -1025,7 +1037,7 @@ class Embed:
 
         Returns
         -------
-        Dict[:class:`str`, Union[:class:`str`, :class:`int`, :class:`bool`]]
+        Dict[:class:`str`, :class:`str` | :class:`int` | :class:`bool`]
             A dictionary of :class:`str` embed keys bound to the respective value.
         """
 
@@ -1076,5 +1088,8 @@ class Embed:
 
         if self.title:
             result["title"] = self.title
+
+        if self.components:
+            result["components"] = [c.to_dict() for c in self.components]
 
         return result  # type: ignore

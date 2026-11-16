@@ -12,27 +12,85 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added the ability to fetch and cache voice channel status and start time on demand,
+  and at startup. ([#3210](https://github.com/Pycord-Development/pycord/pull/3210))
+- Added `voice_start_time` to `VoiceChannel` and `StageChannel`, as well as the
+  corresponding `on_voice_channel_start_time_update` event.
+  ([#3210](https://github.com/Pycord-Development/pycord/pull/3210))
+- Added support for sending and receiving client themes.
+  ([#3209](https://github.com/Pycord-Development/pycord/pull/3209))
 - Added `Member.vr_status` property.
   ([#3328](https://github.com/Pycord-Development/pycord/pull/3328))
 - Added `SlashCommandGroup.add_command`.
   ([#3346](https://github.com/Pycord-Development/pycord/pull/3346))
+- Added `AuditLogAction.channel_position_update` and
+  `AuditLogAction.role_position_update`.
+  ([#3415](https://github.com/Pycord-Development/pycord/pull/3415))
+- Added `Guild.fetch_voice_regions()` method to retrieve the currently available voice
+  regions for the guild.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
+- Added `Member.fetch_permissions()`, `Role.fetch_permissions()`, and
+  `GuildChannel.fetch_permissions_for()`.
+  ([#3426](https://github.com/Pycord-Development/pycord/pull/3426))
+- Added `ChannelFlags.channel_obfuscated` and `GuildChannel.obfuscated`
+  ([#3134](https://github.com/Pycord-Development/pycord/pull/3134))
+  ([#3152](https://github.com/Pycord-Development/pycord/pull/3152))
+- Added `Embed.components` and `DesignerView.from_embed`.
+  ([#3443](https://github.com/Pycord-Development/pycord/pull/3443))
 
 ### Changed
 
+- Simplify and optimize the `utils.get()` function.
+  ([#3283](https://github.com/Pycord-Development/pycord/pull/3283))
+- Changed `Label.set_radio_group()` and `Label.set_file_upload()` to no longer accept a
+  nullable `required` value.
+  ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
+- Changed `rtc_region` parameters of channel creation and edit methods to accept a
+  region ID `str`. ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
+
 ### Fixed
 
-- Fixed `TypeError` when accessing `ApplicationCommand.guild_only` or
+- Fixed `Thumbnail` components ignoring the `spoiler` parameter when used as a `Section`
+  accessory. ([#3403](https://github.com/Pycord-Development/pycord/pull/3403))
+- Fixed `AttributeError` when using `Modal.remove_item()`.
+  ([#3357](https://github.com/Pycord-Development/pycord/pull/3357))
+- Fix `TypeError` when accessing `ApplicationCommand.guild_only` or
   `SlashCommandGroup.guild_only` when `contexts` is `None`.
   ([#3320](https://github.com/Pycord-Development/pycord/pull/3320))
-- Fixed `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
+- Fix `TypeError` in `Label.set_radio_group()` and `Label.set_checkbox_group()` when
+  providing the `option` keyword argument.
+  ([#3337](https://github.com/Pycord-Development/pycord/pull/3337))
+- Fix `SyntaxWarning` about `return` in a `finally` block raised on Python 3.14+
   ([#3332](https://github.com/Pycord-Development/pycord/pull/3334))
-- Fixed `AttributeError` when fetching a message from a `PartialMessageable` object that
-  has a thread. ([#3309](https://github.com/Pycord-Development/pycord/pull/3309))
+- Fix `AttributeError` when setting `delete_existing=False` in
+  `Bot.register_commands()`.
+  ([#3325](https://github.com/Pycord-Development/pycord/pull/3325))
 - Fix `ScheduledEvent.subscriber_count` being incremented instead of decremented when a
   user leaves the event.
   ([#3387](https://github.com/Pycord-Development/pycord/pull/3387))
+- Fix the type of `send_notification` in the `StageChannel.create_instance()`.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the type of `sync_permissions` in the overload of `VoiceChannel.edit()` and
+  `StageChannel.edit()`.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fix the return type of the `MediaChannel.edit()` overload.
+  ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
+- Fixed a race condition where `Bot.latency` could be reported incorrectly and grow
+  indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
+- Fixed the `input_type` of options typed as `Member | User` to be
+  `SlashCommandOptionType.user` instead of `SlashCommandOptionType.mentionable`.
+  ([#3425](https://github.com/Pycord-Development/pycord/pull/3425))
+- Fixed a bug where audio reception would drop after prolonged silence in a voice
+  channel. ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
+- Fixed `AttributeError` when fetching a message from a `PartialMessageable` object that
+  has a thread. ([#3309](https://github.com/Pycord-Development/pycord/pull/3309))
 
 ### Deprecated
+
+- Deprecated `Invite.id` in favour of `Invite.code`.
+  ([#3313](https://github.com/Pycord-Development/pycord/pull/3313))
+- Deprecated the `VoiceRegion` enum in favor of `Guild.fetch_voice_regions()`.
+  ([#3347](https://github.com/Pycord-Development/pycord/pull/3347))
 
 ### Removed
 

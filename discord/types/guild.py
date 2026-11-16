@@ -69,9 +69,12 @@ GuildFeature = Literal[
     "CHANNEL_BANNER",
     "COMMERCE",
     "COMMUNITY",
+    "CREATOR_STORE_PAGE",
     "DEVELOPER_SUPPORT_SERVER",
     "DISCOVERABLE",
     "FEATURABLE",
+    "GUESTS_ENABLED",
+    "GUILD_TAGS",
     "HAS_DIRECTORY_ENTRY",
     "HUB",
     "INTERNAL_EMPLOYEE_ONLY",
@@ -90,6 +93,7 @@ GuildFeature = Literal[
     "PARTNERED",
     "PREMIUM_TIER_3_OVERRIDE",
     "PREVIEW_ENABLED",
+    "PRUNE_REQUIRES_ADMIN",
     "ROLE_ICONS",
     "ROLE_SUBSCRIPTIONS_ENABLED",
     "RAID_ALERTS_DISABLED",
@@ -210,3 +214,7 @@ class IncidentsData(TypedDict, total=False):
 class ModifyIncidents(TypedDict, total=False):
     invites_disabled_until: str | None
     dms_disabled_until: str | None
+
+
+class GetPermissionsResponseData(TypedDict):
+    permissions: str

@@ -140,6 +140,12 @@ class VoiceChannelStatusUpdateEvent(TypedDict):
     status: NotRequired[str]
 
 
+class VoiceChannelStartTimeUpdateEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    voice_start_time: NotRequired[int]
+
+
 class ThreadMembersUpdateEvent(TypedDict):
     id: Snowflake
     guild_id: Snowflake
@@ -165,3 +171,14 @@ class MessagePollVoteEvent(TypedDict):
     channel_id: Snowflake
     message_id: Snowflake
     answer_id: int
+
+
+class ChannelInfoChannel(TypedDict):
+    id: Snowflake
+    status: NotRequired[str | None]
+    voice_start_time: NotRequired[int | None]
+
+
+class ChannelInfoEvent(TypedDict):
+    guild_id: Snowflake
+    channels: list[ChannelInfoChannel]
