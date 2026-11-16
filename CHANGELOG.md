@@ -77,6 +77,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3273](https://github.com/Pycord-Development/pycord/pull/3273))
 - Fixed a race condition where `Bot.latency` could be reported incorrectly and grow
   indefinitely ([#3414](https://github.com/Pycord-Development/pycord/pull/3414))
+- Fixed the `input_type` of options typed as `Member | User` to be
+  `SlashCommandOptionType.user` instead of `SlashCommandOptionType.mentionable`.
+  ([#3425](https://github.com/Pycord-Development/pycord/pull/3425))
 - Fixed a bug where audio reception would drop after prolonged silence in a voice
   channel. ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
 
