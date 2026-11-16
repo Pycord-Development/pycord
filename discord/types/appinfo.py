@@ -38,16 +38,16 @@ ApplicationIntegrationType = Literal[0, 1]
 ApplicationEventWebhookStatus = Literal[1, 2, 3]
 
 
-class AppInstallParams(TypedDict):
+class ApplicationInstallParams(TypedDict):
     scopes: list[str]
     permissions: str
 
 
-class ApplicationIntegrationTypeConfiguration(TypedDict, total=False):
-    oauth2_install_params: AppInstallParams
+class ApplicationIntegrationTypeConfiguration(TypedDict):
+    oauth2_install_params: ApplicationInstallParams
 
 
-class BaseAppInfo(TypedDict):
+class ApplicationInfo(TypedDict):
     id: Snowflake
     name: str
     icon: str | None
@@ -64,21 +64,9 @@ class BaseAppInfo(TypedDict):
     team: Team | None
     guild_id: NotRequired[Snowflake]
     guild: NotRequired[Guild]
-    cover_image: NotRequired[str]
-    tags: NotRequired[list[str]]
-    install_params: NotRequired[AppInstallParams]
-    integration_types_config: NotRequired[
-        dict[
-            ApplicationIntegrationType,
-            ApplicationIntegrationTypeConfiguration | None,
-        ]
-    ]
-    custom_install_url: NotRequired[str]
-
-
-class AppInfo(BaseAppInfo):
     primary_sku_id: NotRequired[Snowflake]
     slug: NotRequired[str]
+    cover_image: NotRequired[str]
     flags: NotRequired[int]
     flags_new: NotRequired[str]
     approximate_guild_count: NotRequired[int]
@@ -90,7 +78,20 @@ class AppInfo(BaseAppInfo):
     event_webhooks_url: NotRequired[str | None]
     event_webhooks_status: NotRequired[ApplicationEventWebhookStatus]
     event_webhooks_types: NotRequired[list[str]]
+    tags: NotRequired[list[str]]
+    install_params: NotRequired[ApplicationInstallParams]
+    integration_types_config: NotRequired[
+        dict[
+            ApplicationIntegrationType,
+            ApplicationIntegrationTypeConfiguration | None,
+        ]
+    ]
+    custom_install_url: NotRequired[str]
 
 
-class PartialAppInfo(BaseAppInfo, total=False):
-    pass
+class PartialApplicationInfo(TypedDict):
+    """Received from the gateway during the READY event."""
+
+    id: Snowflake
+    flags: int
+    flags_new: str

@@ -3267,17 +3267,17 @@ class HTTPClient:
 
     # Misc
 
-    def application_info(self) -> Response[appinfo.AppInfo]:
+    def application_info(self) -> Response[appinfo.ApplicationInfo]:
         return self.request(Route("GET", "/oauth2/applications/@me"))
 
     def edit_current_application_info(
         self, payload: dict[str, Any]
-    ) -> Response[appinfo.AppInfo]:
+    ) -> Response[appinfo.ApplicationInfo]:
         return self.request(Route("PATCH", "/applications/@me"), json=payload)
 
     def get_application(
         self, application_id: Snowflake, /
-    ) -> Response[appinfo.PartialAppInfo]:
+    ) -> Response[appinfo.PartialApplicationInfo]:
         return self.request(
             Route(
                 "GET",

@@ -36,9 +36,9 @@ from .permissions import Permissions
 if TYPE_CHECKING:
     from .guild import Guild
     from .state import ConnectionState
-    from .types.appinfo import AppInfo as AppInfoPayload
-    from .types.appinfo import AppInstallParams as AppInstallParamsPayload
-    from .types.appinfo import PartialAppInfo as PartialAppInfoPayload
+    from .types.appinfo import ApplicationInfo as AppInfoPayload
+    from .types.appinfo import ApplicationInstallParams as AppInstallParamsPayload
+    from .types.appinfo import PartialApplicationInfo as PartialAppInfoPayload
     from .types.appinfo import Team as TeamPayload
     from .user import User
 

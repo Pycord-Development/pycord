@@ -29,7 +29,7 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from .appinfo import PartialAppInfo
+from .appinfo import PartialApplicationInfo
 from .channel import PartialChannel
 from .guild import InviteGuild, _GuildPreviewUnique
 from .role import Role
@@ -62,7 +62,7 @@ class Invite(IncompleteInvite):
     scheduled_event: NotRequired[ScheduledEvent]
     target_user: NotRequired[PartialUser]
     target_type: NotRequired[InviteTargetType]
-    target_application: NotRequired[PartialAppInfo]
+    target_application: NotRequired[PartialApplicationInfo]
     roles: NotRequired[list[Role]]
 
 
@@ -75,7 +75,7 @@ class GatewayInviteCreate(TypedDict):
     inviter: NotRequired[PartialUser]
     target_type: NotRequired[InviteTargetType]
     target_user: NotRequired[PartialUser]
-    target_application: NotRequired[PartialAppInfo]
+    target_application: NotRequired[PartialApplicationInfo]
     channel_id: Snowflake
     code: str
     created_at: str
