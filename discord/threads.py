@@ -31,9 +31,9 @@ from typing import TYPE_CHECKING
 from .abc import Messageable, _purge_messages_helper
 from .enums import (
     ChannelType,
+    try_enum,
 )
 from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
-from .enums import try_enum
 from .errors import ClientException
 from .flags import ChannelFlags
 from .mixins import Hashable
@@ -55,9 +55,8 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.snowflake import SnowflakeList
     from .types.threads import Thread as ThreadPayload
-    from .types.threads import ThreadArchiveDuration
+    from .types.threads import ThreadArchiveDuration, ThreadMetadata
     from .types.threads import ThreadMember as ThreadMemberPayload
-    from .types.threads import ThreadMetadata
 
 
 class Thread(Messageable, Hashable):
