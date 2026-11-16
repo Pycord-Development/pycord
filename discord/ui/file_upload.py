@@ -80,7 +80,6 @@ class FileUpload(ModalItem):
         max_values: int | None = None,
         required: bool = True,
         id: int | None = None,
-        file_types: list[str] | None = None
     ):
         super().__init__()
         if min_values and (min_values < 0 or min_values > 10):
@@ -177,20 +176,6 @@ class FileUpload(ModalItem):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
         self.underlying.required = bool(value)
-
-    @property
-    def file_types(self) -> list[str] | None:
-        """
-        The file types to filter by. Only checks the file extension. 
-        See `Discord's documentation <https://docs.discord.com/developers/reference#file-type-filtering>`__ for more information.
-        """
-        return self.underlying.file_types
-
-    @file_types.setter
-    def file_types(self, value: list[str] | None) -> None:
-        if value and len(value) > 10:
-            raise ValueError("file_types must be less than 10 items")
-        self.underlying.file_types = value
 
     @property
     def values(self) -> list[Attachment] | None:
