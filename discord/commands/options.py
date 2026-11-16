@@ -194,13 +194,13 @@ class Option:
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
         See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
-    file_types: List[:class:`str`, :class:`FileType`]
-        The file types allowed for this option. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
+    file_types: list[:class:`str` | :class:`FileType`]
+        The file types allowed for this option. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g., ``".pdf"``).
         A maximum of 10 file types can be provided, up to 16 characters each.
         Only applies to Options with an :attr:`input_type` of :class:`Attachment`.
 
         .. warning::
-            This only checks the file extension - you will still need to validate the file contents yourself.
+            This only checks the file extension. You will still need to validate the file contents.
 
         .. versionadded:: 2.9
 

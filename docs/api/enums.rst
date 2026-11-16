@@ -2710,12 +2710,12 @@ of :class:`enum.Enum`.
 
     .. attribute:: image
 
-        Allow image files. This includes ``.png``, ``.gif``, ``.jpg``, ``.jpeg``, ``.jfif``, ``.webp``, and ``.avif``.
+        Allow image files. This includes ``.png``, ``.gif``, ``.jpg``, ``.jpeg``, ``.jfif``, ``.webp``, and ``.avif`` file extensions.
 
     .. attribute:: video
 
-        Allow video files. This includes ``.mp4``, ``.mov``, ``.qt``, and ``.webm``.
+        Allow video files. This includes ``.mp4``, ``.mov``, ``.qt``, and ``.webm`` file extensions.
 
     .. attribute:: audio
 
-        Allow audio files. This includes ``.mp3``, ``.m4a``, ``.wav``, ``.ogg``, ``.opus``, and ``.flac``.
+        Allow audio files. This includes ``.mp3``, ``.m4a``, ``.wav``, ``.ogg``, ``.opus``, and ``.flac`` file extensions.

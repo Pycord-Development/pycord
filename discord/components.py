@@ -1388,12 +1388,8 @@ class FileUpload(Component):
         The maximum number of files that can be uploaded.
     required: Optional[:class:`bool`]
         Whether the file upload field is required or not. Defaults to `True`.
-    file_types: List[:class:`str`, :class:`FileType`]
-        The file types allowed in this upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
-        A maximum of 10 file types can be provided, up to 16 characters each.
-
-        .. warning::
-            This only checks the file extension - you will still need to validate the file contents yourself.
+    file_types: list[:class:`str` | :class:`FileType`]
+            This only checks the file extension. You will still need to validate the file contents.
 
         .. versionadded:: 2.9
     id: Optional[:class:`int`]
@@ -1423,9 +1419,7 @@ class FileUpload(Component):
         self.file_types: list[str | FileType] = []
         for f in data.get("file_types", []):
             (
-                self.file_types.append(f)
-                if f not in FileType.__members__
-                else try_enum(FileType, f)
+                self.file_types.append(f if f not in FileType.__members__ else try_enum(FileType, f))
             )
 
     def to_dict(self) -> FileUploadComponentPayload:

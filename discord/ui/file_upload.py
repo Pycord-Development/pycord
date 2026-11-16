@@ -58,12 +58,12 @@ class FileUpload(ModalItem):
         Whether the file upload field is required or not. Defaults to ``True``.
     id: Optional[:class:`int`]
         The file upload field's ID.
-    file_types: List[:class:`str`, :class:`FileType`]
-        The file types allowed in this file upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
+    file_types: list[:class:`str` | :class:`FileType`]
+        The file types allowed in this file upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g., ``".pdf"``).
         A maximum of 10 file types can be provided, up to 16 characters each.
 
         .. warning::
-            This only checks the file extension - you will still need to validate the file contents yourself.
+            This only checks the file extension. You will still need to validate the file contents.
 
         .. versionadded:: 2.9
     """
@@ -198,11 +198,11 @@ class FileUpload(ModalItem):
 
     @property
     def file_types(self) -> list[str | FileType]:
-        """The file types allowed in this file upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g. ``".pdf"``).
+        """The file types allowed in this file upload. Supports a mix of :class:`FileType` and dot-prefixed extensions (e.g., ``".pdf"``).
         A maximum of 10 file types can be provided, up to 16 characters each.
 
         .. warning::
-            This only checks the file extension - you will still need to validate the file contents yourself.
+            This only checks the file extension. You will still need to validate the file contents.
 
         .. versionadded:: 2.9
         """
