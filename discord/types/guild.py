@@ -29,7 +29,7 @@ from typing import Literal
 
 from typing_extensions import NotRequired, Required, TypedDict
 
-from .activity import PartialPresenceUpdate
+from .activity import PresenceUpdate
 from .channel import GuildChannel
 from .emoji import Emoji
 from .member import Member
@@ -142,7 +142,7 @@ class Guild(_BaseGuildPreview):
     voice_states: NotRequired[list[GuildVoiceState]]
     members: NotRequired[list[Member]]
     channels: NotRequired[list[GuildChannel]]
-    presences: NotRequired[list[PartialPresenceUpdate]]
+    presences: NotRequired[list[PresenceUpdate]]
     threads: NotRequired[list[Thread]]
     max_presences: NotRequired[int | None]
     max_members: NotRequired[int]

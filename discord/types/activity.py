@@ -35,7 +35,9 @@ from .user import PartialUser
 StatusType = Literal["idle", "dnd", "online", "offline"]
 
 
-class PartialPresenceUpdate(TypedDict):
+class PresenceUpdate(TypedDict):
+    """The presence update *can* always be partial in that it contains a user with at least the id"""
+
     user: PartialUser
     guild_id: Snowflake
     status: StatusType
@@ -44,6 +46,8 @@ class PartialPresenceUpdate(TypedDict):
 
 
 class ClientStatus(TypedDict):
+    """Received from the gateway"""
+
     desktop: NotRequired[str]
     mobile: NotRequired[str]
     web: NotRequired[str]
@@ -51,16 +55,22 @@ class ClientStatus(TypedDict):
 
 
 class ActivityTimestamps(TypedDict):
+    """Received from the gateway as part of an :class:`Activity` object"""
+
     start: NotRequired[int]
     end: NotRequired[int]
 
 
 class ActivityParty(TypedDict):
+    """Received from the gateway as part of an :class:`Activity` object"""
+
     id: NotRequired[str]
     size: NotRequired[list[int]]
 
 
 class ActivityAssets(TypedDict):
+    """Received from the gateway as part of an :class:`Activity` object"""
+
     large_image: NotRequired[str]
     large_text: NotRequired[str]
     large_url: NotRequired[str]
@@ -71,18 +81,24 @@ class ActivityAssets(TypedDict):
 
 
 class ActivitySecrets(TypedDict):
+    """Received from the gateway as part of an :class:`Activity` object"""
+
     join: NotRequired[str]
     spectate: NotRequired[str]
     match: NotRequired[str]
 
 
 class ActivityEmoji(TypedDict):
+    """Received from the gateway as part of an :class:`Activity` object"""
+
     id: NotRequired[Snowflake]
     animated: NotRequired[bool]
     name: str
 
 
 class ActivityButton(TypedDict):
+    """Received from the gateway as part of an :class:`Activity` object"""
+
     label: str
     url: str
 
@@ -91,16 +107,18 @@ ActivityType = Literal[0, 1, 2, 3, 4, 5]
 
 
 class SendableActivity(TypedDict):
+    """Partial :class:`Activity` object that can be sent to the gateway, bot users can only set these fields"""
+
     name: str
     type: ActivityType
     url: NotRequired[str | None]
+    state: NotRequired[str | None]
 
 
-class _BaseActivity(SendableActivity):
+class Activity(SendableActivity):
+    """The full :class:`Activity` object received from the gateway"""
+
     created_at: int
-
-
-class Activity(_BaseActivity):
     timestamps: NotRequired[ActivityTimestamps]
     application_id: NotRequired[Snowflake]
     status_display_type: NotRequired[int | None]
@@ -114,4 +132,6 @@ class Activity(_BaseActivity):
     secrets: NotRequired[ActivitySecrets]
     instance: NotRequired[bool]
     flags: NotRequired[int]
-    buttons: NotRequired[list[str]]
+    buttons: NotRequired[
+        list[str]
+    ]  # Technically an :class:`ActivityButton` object. Over the gateway, these are sent as strings
