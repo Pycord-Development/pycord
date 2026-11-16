@@ -882,6 +882,8 @@ class SlashCommandOptionType(Enum):
             datatypes = [cls.from_datatype(op) for op in datatype]
             if all(x == cls.channel for x in datatypes):
                 return cls.channel
+            elif all(x == cls.user for x in datatypes):
+                return cls.user
             elif set(datatypes) <= {cls.role, cls.user}:
                 return cls.mentionable
             else:
