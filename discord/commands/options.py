@@ -59,6 +59,7 @@ from ..commands import ApplicationContext, AutocompleteContext
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
+from ..errors import InvalidArgument
 from ..utils import MISSING, basic_autocomplete
 
 if TYPE_CHECKING:
@@ -194,6 +195,11 @@ class Option:
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
         See `here <https://docs.discord.com/developers/reference#locales>`_ for a list of valid locales.
+    file_types: list[:class:`str`]
+        The file types to filter by. Only checks the file extension. 
+        Only applies to Options with an :attr:`input_type` of :class:`discord.SlashCommandOptionType.attachment`.
+        If this argument is used, :attr:`input_type` will be ignored.
+        See `Discord's documentation <https://docs.discord.com/developers/reference#file-type-filtering>`__ for more information.
 
     Examples
     --------
@@ -253,9 +259,15 @@ class Option:
 
         self.description = description or "No description provided"
         self.channel_types: list[ChannelType] = kwargs.pop("channel_types", [])
+        self.file_types: list[str] = kwargs.pop("file_types", [])
+
+        if self.channel_types and self.file_types:
+            raise InvalidArgument("cannot pass both channel_types and file_types")
 
         if self.channel_types:
             self.input_type = SlashCommandOptionType.channel
+        elif self.file_types:
+            self.input_type = SlashCommandOptionType.attachment
         elif isinstance(input_type, SlashCommandOptionType):
             self.input_type = input_type
         else:
@@ -452,6 +464,8 @@ class Option:
             as_dict["min_length"] = self.min_length
         if self.max_length is not None:
             as_dict["max_length"] = self.max_length
+        if self.file_types:
+            as_dict["file_types"] = self.file_types
 
         return as_dict
 

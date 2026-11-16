@@ -1398,6 +1398,7 @@ class FileUpload(Component):
         "max_values",
         "required",
         "id",
+        "file_types",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -1410,6 +1411,7 @@ class FileUpload(Component):
         self.min_values: int | None = data.get("min_values", None)
         self.max_values: int | None = data.get("max_values", None)
         self.required: bool = data.get("required", True)
+        self.file_types: list[str] | None = data.get("file_types")
 
     def to_dict(self) -> FileUploadComponentPayload:
         payload = {
@@ -1427,6 +1429,9 @@ class FileUpload(Component):
 
         if not self.required:
             payload["required"] = self.required
+
+        if self.file_types:
+            payload["file_types"] = self.file_types
 
         return payload  # type: ignore
 
