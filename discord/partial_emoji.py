@@ -81,13 +81,13 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
     Attributes
     ----------
-    name: Optional[:class:`str`]
+    name: :class:`str` | :obj:`None`
         The custom emoji name, if applicable, or the unicode codepoint
         of the non-custom emoji. This can be ``None`` if the emoji
         got deleted (e.g. removing a reaction with a deleted emoji).
     animated: :class:`bool`
         Whether the emoji is animated or not.
-    id: Optional[:class:`int`]
+    id: :class:`int` | :obj:`None`
         The ID of the custom emoji, if applicable.
     """
 

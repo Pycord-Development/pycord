@@ -135,7 +135,7 @@ jobs:
           git checkout $VERSION_BRANCH
       - name: "Setup Python"
         id: python-setup
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.14"
           cache: "pip"
@@ -216,7 +216,7 @@ jobs:
           python3 -m build --sdist
           python3 -m build --wheel
       - name: "Create GitHub Release"
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         id: gh-release
         with:
           tag_name: "v${{ inputs.version }}"
@@ -233,7 +233,7 @@ jobs:
           target_commitish: ${{ github.ref_name }}
 
       - name: "Publish package distributions to PyPI"
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         env:
           name: "pypi"
           url: "https://pypi.org/p/py-cord"

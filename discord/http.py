@@ -95,6 +95,7 @@ if TYPE_CHECKING:
     )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
+    from .types.voice import VoiceRegion as VoiceRegionPayload
 
     T = TypeVar("T")
     BE = TypeVar("BE", bound=BaseException)
@@ -1053,6 +1054,17 @@ class HTTPClient:
             payload["deaf"] = deafen
 
         return self.request(r, json=payload, reason=reason)
+
+    def get_guild_voice_regions(
+        self,
+        guild_id: Snowflake,
+    ) -> Response[list[VoiceRegionPayload]]:
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/regions", guild_id=guild_id)
+        )
+
+    def get_voice_regions(self) -> Response[list[VoiceRegionPayload]]:
+        return self.request(Route("GET", "/voice/regions"))
 
     def edit_profile(self, payload: dict[str, Any]) -> Response[user.User]:
         return self.request(Route("PATCH", "/users/@me"), json=payload)
@@ -3395,4 +3407,54 @@ class HTTPClient:
                 channel_id=channel_id,
             ),
             json=payload,
+        )
+
+    def get_guild_member_permissions(
+        self, guild_id: int, user_id: int
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/permissions/member/{user_id}",
+                guild_id=guild_id,
+                user_id=user_id,
+            )
+        )
+
+    def get_guild_role_permissions(
+        self, guild_id: int, role_id: int
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/permissions/role/{role_id}",
+                guild_id=guild_id,
+                role_id=role_id,
+            )
+        )
+
+    def get_channel_member_permissions(
+        self, channel_id: int, user_id: int, *, implicit: bool
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/channels/{channel_id}/permissions/member/{user_id}",
+                channel_id=channel_id,
+                user_id=user_id,
+            ),
+            params={"implicit": int(implicit)},
+        )
+
+    def get_channel_role_permissions(
+        self, channel_id: int, role_id: int, *, implicit: bool
+    ) -> Response[guild.GetPermissionsResponseData]:
+        return self.request(
+            Route(
+                "GET",
+                "/channels/{channel_id}/permissions/role/{role_id}",
+                channel_id=channel_id,
+                role_id=role_id,
+            ),
+            params={"implicit": int(implicit)},
         )
