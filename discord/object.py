@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Generic, SupportsInt, overload
 
-from typing_extensions import override, TypeVar
+from typing_extensions import TypeVar, override
 
 from . import utils
 from .mixins import Hashable
