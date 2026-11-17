@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Generic, SupportsInt, overload
+import builtins
+from typing import TYPE_CHECKING, Any, Final, Generic, SupportsInt, Type, cast, overload
 
 from typing_extensions import TypeVar, override
 
@@ -80,15 +81,18 @@ class Object(Hashable, Generic[T]):
         The model this object's ID is based off.
     """
 
+    # Below `builtins.type` is used to disambiguate between it and the `type` parameter, which confuses
+    # some type checkers (notably mypy)
+
     @overload
     def __init__(
         self: Object[Any], id: SupportsIntCast  # pyright: ignore[reportExplicitAny]
     ) -> None: ...
 
     @overload
-    def __init__(self, id: SupportsIntCast, type: type[T] = utils.MISSING) -> None: ...
+    def __init__(self, id: SupportsIntCast, type: builtins.type[T] = utils.MISSING) -> None: ...
 
-    def __init__(self, id: SupportsIntCast, type: type[T] = utils.MISSING) -> None:
+    def __init__(self, id: SupportsIntCast, type: builtins.type[T] = utils.MISSING) -> None:
         try:
             id = int(id)
         except ValueError:
@@ -97,7 +101,7 @@ class Object(Hashable, Generic[T]):
             ) from None
         else:
             self.id: int = id
-        self.type: type[T] = type or self.__class__
+        self.type: Final[builtins.type[T]] = type or cast("builtins.type[T]", self.__class__)
 
     @override
     def __repr__(self) -> str:
