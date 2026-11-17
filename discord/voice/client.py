@@ -127,7 +127,7 @@ class VoiceClient(VoiceProtocol["Client"]):
         self._event_listeners: dict[
             str, list[Callable[..., Coroutine[Any, Any, Any]]]
         ] = {}
-        self._reader: AudioReader[Any] = MISSING
+        self._reader: AudioReader[Unpack[tuple[Any, ...]]] = MISSING
 
     @staticmethod
     def _set_future_result_if_pending(
@@ -699,7 +699,7 @@ class VoiceClient(VoiceProtocol["Client"]):
         self,
         sink: Sink,
         callback: None = None,
-        *args: None,
+        *,
         sync_start: bool = MISSING,
     ) -> None: ...
 
@@ -708,7 +708,7 @@ class VoiceClient(VoiceProtocol["Client"]):
         self,
         sink: Sink,
         callback: AfterCallback[Unpack[Ts]],
-        *args: tuple[Unpack[Ts]],
+        *args: Unpack[Ts],
         sync_start: bool = MISSING,
     ) -> None: ...
 
@@ -716,7 +716,7 @@ class VoiceClient(VoiceProtocol["Client"]):
         self,
         sink: Sink,
         callback: AfterCallback[Unpack[Ts]] | None = None,
-        *args: tuple[Unpack[Ts]] | None,
+        *args: Unpack[Ts],
         sync_start: bool = MISSING,
     ) -> None:
         r"""Start recording the audio from the current connected channel to the provided sink.
@@ -765,9 +765,12 @@ class VoiceClient(VoiceProtocol["Client"]):
                 "'sync_start' parameter is deprecated since 2.7 and will be removed in 3.0"
             )
 
-        self._reader = AudioReader(
-            sink, self, after=callback, args=args, start=True
-        )  # pyright: ignore[reportCallIssue, reportAttributeAccessIssue, reportArgumentType]
+        if callback is None:
+            self._reader = AudioReader(sink, self, start=True)
+        else:
+            self._reader = AudioReader(
+                sink, self, after=callback, args=args, start=True
+            )
 
     start_listening = start_recording
 

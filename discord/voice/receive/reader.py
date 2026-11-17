@@ -31,7 +31,7 @@ import threading
 import time
 from collections.abc import Callable, Coroutine
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Generic, Literal, Protocol, overload
+from typing import TYPE_CHECKING, Any, Generic, Literal, Protocol, cast, overload
 
 import davey
 import nacl.secret
@@ -79,11 +79,22 @@ def is_rtcp(data: bytes) -> bool:
 class AudioReader(Generic[Unpack[Ts]]):
     @overload
     def __init__(
-        self,
+        self: AudioReader[()],
         sink: Sink,
         client: VoiceClient,
         *,
         after: None = None,
+        args: None = None,
+        start: bool = False,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self: AudioReader[()],
+        sink: Sink,
+        client: VoiceClient,
+        *,
+        after: AfterCallback[()],
         args: None = None,
         start: bool = False,
     ) -> None: ...
@@ -117,8 +128,12 @@ class AudioReader(Generic[Unpack[Ts]]):
 
         self.sink: Sink = sink
         self.client: VoiceClient = client
-        self.after: AfterCallback[Unpack[Ts]] | None = after
-        self.args: tuple[Unpack[Ts]] | None = args
+        self._after: tuple[AfterCallback[Unpack[Ts]], tuple[Unpack[Ts]]] | None = None
+        if after is not None:
+            self._after = (
+                after,
+                args if args is not None else cast("tuple[Unpack[Ts]]", ()),
+            )
 
         self.sink.init(client)
 
@@ -182,9 +197,10 @@ class AudioReader(Generic[Unpack[Ts]]):
         self.speaking_timer.stop()
         self.keep_alive.stop()
 
-        if self.after is not None and self.args is not None:
+        if self._after is not None:
+            after, args = self._after
             try:
-                r = self.after(self.sink, *self.args)
+                r = after(self.sink, *args)
                 if isinstance(r, Coroutine):
                     future = asyncio.run_coroutine_threadsafe(
                         r,  # pyright: ignore[reportUnknownArgumentType]
