@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING, Any, Literal, cast, overload
 
 import nacl.secret
 import nacl.utils
-from typing_extensions import Never, Unpack
+from typing_extensions import Unpack
 
 from discord import opus
 from discord.enums import SpeakingState, try_enum
