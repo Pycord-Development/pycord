@@ -49,11 +49,6 @@ from ._types import VoiceProtocol
 from .enums import OpCodes
 from .receive import AudioReader
 from .state import VoiceConnectionState
-from .utils.dependencies import has_nacl
-
-if has_nacl:
-    import nacl.secret
-    import nacl.utils
 
 if TYPE_CHECKING:
     from typing import ParamSpec, TypeVar

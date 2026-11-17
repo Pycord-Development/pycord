@@ -38,7 +38,6 @@ import davey
 from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.errors import ConnectionClosed
-from discord.voice.utils.dependencies import dave_protocol_version
 
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
@@ -282,7 +281,7 @@ class VoiceConnectionState:
 
     @property
     def max_dave_proto_version(self) -> int:
-        return dave_protocol_version
+        return davey.DAVE_PROTOCOL_VERSION
 
     @property
     def state(self) -> ConnectionFlowState:

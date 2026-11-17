@@ -1601,13 +1601,13 @@ voice_dependency_warning_emitted = False
 def get_missing_voice_dependencies() -> tuple[str, ...]:
     missing: list[str] = []
     try:
-        import nacl.secret
-        import nacl.utils
+        import nacl.secret  # pyright: ignore[reportUnusedImport]
+        import nacl.utils  # pyright: ignore[reportUnusedImport]
     except ImportError:
         missing.append("PyNaCl")
 
     try:
-        import davey
+        import davey  # pyright: ignore[reportUnusedImport]
     except ImportError:
         missing.append("davey")
     return tuple(missing)

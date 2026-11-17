@@ -36,16 +36,11 @@ import sys
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, Literal, TypedDict, TypeVar
 
-try:
-    import davey
-
-    HAS_DAVEY = True
-except ImportError:
-    HAS_DAVEY = False
-
 from .errors import DiscordException
 
 if TYPE_CHECKING:
+    import davey
+
     from discord.member import Member
     from discord.sinks.core import Sink
     from discord.user import User
