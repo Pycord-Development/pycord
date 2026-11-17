@@ -46,7 +46,7 @@ from .errors import ClientException
 from .oggparse import OggStream
 from .opus import OPUS_SILENCE
 from .opus import Encoder as OpusEncoder
-from .utils import MISSING
+from .utils import MISSING, log_future_exception
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -928,8 +928,11 @@ class AudioPlayer(threading.Thread):
 
     def _speak(self, speaking: SpeakingState) -> None:
         try:
-            asyncio.run_coroutine_threadsafe(
+            future = asyncio.run_coroutine_threadsafe(
                 self.client.ws.speak(speaking), self.client.client.loop
+            )
+            log_future_exception(
+                future, log=_log, message="Speaking call in player failed"
             )
         except Exception as exc:
             _log.exception("Speaking call in player failed", exc_info=exc)

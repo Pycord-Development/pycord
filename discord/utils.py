@@ -52,6 +52,7 @@ from collections.abc import (
     Mapping,
     Sequence,
 )
+from concurrent.futures import Future
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -68,7 +69,7 @@ from typing import (
     overload,
 )
 
-from typing_extensions import deprecated as ext_deprecated
+from typing_extensions import deprecated as ext_deprecated, LiteralString
 
 if TYPE_CHECKING:
     from discord import (
@@ -1650,3 +1651,20 @@ def _get_event_loop() -> asyncio.AbstractEventLoop:
             asyncio.set_event_loop(loop)
         return loop
     return asyncio.get_event_loop()
+
+
+def log_future_exception(
+    f: Future[Any],  # pyright: ignore[reportExplicitAny]
+    log: logging.Logger,
+    message: LiteralString,
+    *args: object,
+) -> None:
+    def callback(f: Future[object]) -> None:
+        if not f.cancelled() and (exc := f.exception()) is not None:
+            log.exception(
+                message,
+                *args,
+                exc_info=exc,
+            )
+
+    f.add_done_callback(callback)

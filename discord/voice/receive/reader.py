@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import threading
 import time
@@ -36,6 +37,8 @@ import davey
 import nacl.secret
 from nacl.exceptions import CryptoError
 from typing_extensions import TypeVarTuple, Unpack
+
+from discord.utils import log_future_exception
 
 from ..packets.rtp import ReceiverReportPacket, RTCPPacket, decode
 from .router import PacketRouter, SinkEventRouter
@@ -183,9 +186,16 @@ class AudioReader(Generic[Unpack[Ts]]):
             try:
                 r = self.after(self.sink, *self.args)
                 if isinstance(r, Coroutine):
-                    self.client.loop.create_task(
-                        r
-                    )  # pyright: ignore[reportUnknownArgumentType]
+                    future = asyncio.run_coroutine_threadsafe(
+                        r,  # pyright: ignore[reportUnknownArgumentType]
+                        self.client.loop,
+                    )
+                    log_future_exception(
+                        future,
+                        log=_log,
+                        message="An error occurred while calling the after callback on audio reader",
+                    )
+
             except Exception:
                 _log.exception(
                     "An error occurred while calling the after callback on audio reader"

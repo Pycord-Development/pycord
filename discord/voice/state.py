@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import concurrent.futures
 import logging
 import select
 import socket
@@ -38,6 +39,7 @@ import davey
 from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.errors import ConnectionClosed
+from discord.utils import log_future_exception
 
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
@@ -187,14 +189,14 @@ class SocketReader(threading.Thread):
             else:
                 for cb in self._callbacks:
                     try:
-                        task = asyncio.ensure_future(
-                            self.state.loop.create_task(
-                                utils.maybe_coroutine(cb, data)
-                            ),
-                            loop=self.state.loop,
+                        future = asyncio.run_coroutine_threadsafe(
+                            utils.maybe_coroutine(cb, data), self.state.loop
                         )
-                        self.state._dispatch_task_set.add(task)
-                        task.add_done_callback(self.state._dispatch_task_set.discard)
+                        self.state._dispatch_task_set.add(future)
+                        future.add_done_callback(self.state._dispatch_task_set.discard)
+                        log_future_exception(
+                            future, _log, "Error while calling %s in %s", cb, self
+                        )
                     except Exception:
                         _log.exception(
                             "Error while calling %s in %s",
@@ -259,7 +261,9 @@ class VoiceConnectionState:
         self.recording_done_callbacks: list[
             tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]
         ] = []
-        self._dispatch_task_set: set[asyncio.Task[None]] = set()
+        self._dispatch_task_set: set[
+            asyncio.Future[Any] | concurrent.futures.Future[Any]
+        ] = set()
 
         if not self._connection.self_id:
             raise RuntimeError("client self ID is not set")
