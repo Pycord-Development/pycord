@@ -69,7 +69,8 @@ from typing import (
     overload,
 )
 
-from typing_extensions import deprecated as ext_deprecated, LiteralString
+from typing_extensions import LiteralString
+from typing_extensions import deprecated as ext_deprecated
 
 if TYPE_CHECKING:
     from discord import (
