@@ -90,6 +90,8 @@ class AutoModRule(TypedDict):
 
 
 class CreateAutoModRule(TypedDict):
+    """Payload sent when creating an automod rule"""
+
     name: str
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
@@ -101,6 +103,8 @@ class CreateAutoModRule(TypedDict):
 
 
 class EditAutoModRule(TypedDict):
+    """Payload sent when editing an automod rule"""
+
     name: str
     event_type: AutoModEventType
     trigger_metadata: NotRequired[AutoModTriggerMetadata]
