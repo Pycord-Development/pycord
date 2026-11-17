@@ -431,7 +431,8 @@ class VoiceClient(VoiceProtocol["Client"]):
         return encrypt_packet(header, packet)
 
     # encryption methods
-    # nacl is guaranteed to be available here because __init__ raises if missing
+    # nacl is guaranteed to be available: discord.voice raises
+    # MissingVoiceDependenciesError on import if it's missing
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data: Any) -> bytes:
         # deprecated
