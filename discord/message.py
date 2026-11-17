@@ -1214,6 +1214,7 @@ class Message(Hashable):
                 utils._get_as_snowflake(thread_data, "guild_id")
             )
             if guild is not None:
+                # thread_data can be partial so we prefer our canonical cached thread
                 self.thread = guild.get_thread(int(thread_data["id"])) or Thread(
                     guild=guild, state=self._state, data=thread_data
                 )
