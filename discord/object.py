@@ -25,7 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, SupportsInt
+from typing import TYPE_CHECKING, Generic, SupportsInt, overload
+
+from typing_extensions import override, TypeVar
 
 from . import utils
 from .mixins import Hashable
@@ -39,8 +41,10 @@ if TYPE_CHECKING:
 
 __all__ = ("Object",)
 
+T = TypeVar("T", bound="Snowflake", default="Snowflake", covariant=True)
 
-class Object(Hashable):
+
+class Object(Hashable, Generic[T]):
     """Represents a generic Discord object.
 
     The purpose of this class is to allow you to create 'miniature'
@@ -76,7 +80,13 @@ class Object(Hashable):
         The model this object's ID is based off.
     """
 
-    def __init__(self, id: SupportsIntCast, type: type[Snowflake] = utils.MISSING):
+    @overload
+    def __init__(self: Object[Snowflake], id: SupportsIntCast) -> None: ...
+
+    @overload
+    def __init__(self, id: SupportsIntCast, type: type[T] = utils.MISSING) -> None: ...
+
+    def __init__(self, id: SupportsIntCast, type: type[T] = utils.MISSING) -> None:
         try:
             id = int(id)
         except ValueError:
@@ -84,9 +94,10 @@ class Object(Hashable):
                 f"id parameter must be convertible to int not {id.__class__!r}"
             ) from None
         else:
-            self.id = id
-        self.type: type[Snowflake] = type or self.__class__
+            self.id: int = id
+        self.type: type[T] = type or self.__class__
 
+    @override
     def __repr__(self) -> str:
         return f"<Object id={self.id!r}>"
 
