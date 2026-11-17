@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Generic, SupportsInt, overload
+from typing import TYPE_CHECKING, Any, Generic, SupportsInt, overload
 
 from typing_extensions import TypeVar, override
 
@@ -81,7 +81,7 @@ class Object(Hashable, Generic[T]):
     """
 
     @overload
-    def __init__(self: Object[Snowflake], id: SupportsIntCast) -> None: ...
+    def __init__(self: Object[Any], id: SupportsIntCast) -> None: ...  # pyright: ignore[reportExplicitAny]
 
     @overload
     def __init__(self, id: SupportsIntCast, type: type[T] = utils.MISSING) -> None: ...
