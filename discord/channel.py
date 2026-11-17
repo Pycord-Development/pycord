@@ -936,6 +936,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
                     "The channel will become an NSFW channel.",
                     stacklevel=2,
                 )
+            if "nsfw" not in options and options.get("spoiler"):
+                options["nsfw"] = False
             options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
