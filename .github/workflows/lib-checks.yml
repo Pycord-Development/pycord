@@ -90,7 +90,7 @@ jobs:
         with:
           enable-cache: false
       - name: "Check uv.lock is up to date"
-        run: uv lock --check
+        run: uv lock --check --refresh
   codespell:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
