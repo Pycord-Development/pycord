@@ -44,7 +44,7 @@ class ApplicationInstallParams(TypedDict):
 
 
 class ApplicationIntegrationTypeConfiguration(TypedDict):
-    oauth2_install_params: ApplicationInstallParams
+    oauth2_install_params: NotRequired[ApplicationInstallParams]
 
 
 class ApplicationInfo(TypedDict):
@@ -89,9 +89,53 @@ class ApplicationInfo(TypedDict):
     custom_install_url: NotRequired[str]
 
 
-class PartialApplicationInfo(TypedDict):
+class ReadyApplicationInfo(TypedDict):
     """Received from the gateway during the READY event."""
 
     id: Snowflake
     flags: int
     flags_new: str
+
+
+class PartialApplicationInfo(TypedDict):
+    """A partial application info object, where the docs don't specify which fields may be present."""
+
+    id: Snowflake
+    name: NotRequired[str]
+    icon: NotRequired[str | None]
+    description: NotRequired[str]
+
+    rpc_origins: NotRequired[list[str]]
+    bot_public: NotRequired[bool]
+    bot_require_code_grant: NotRequired[bool]
+    bot: NotRequired[PartialUser]
+    terms_of_service_url: NotRequired[str]
+    privacy_policy_url: NotRequired[str]
+    owner: NotRequired[PartialUser]
+    verify_key: str
+    team: Team | None
+    guild_id: NotRequired[Snowflake]
+    guild: NotRequired[Guild]
+    primary_sku_id: NotRequired[Snowflake]
+    slug: NotRequired[str]
+    cover_image: NotRequired[str]
+    flags: NotRequired[int]
+    flags_new: NotRequired[str]
+    approximate_guild_count: NotRequired[int]
+    approximate_user_install_count: NotRequired[int]
+    approximate_user_authorization_count: NotRequired[int]
+    redirect_uris: NotRequired[list[str]]
+    interactions_endpoint_url: NotRequired[str | None]
+    role_connections_verification_url: NotRequired[str | None]
+    event_webhooks_url: NotRequired[str | None]
+    event_webhooks_status: NotRequired[ApplicationEventWebhookStatus]
+    event_webhooks_types: NotRequired[list[str]]
+    tags: NotRequired[list[str]]
+    install_params: NotRequired[ApplicationInstallParams]
+    integration_types_config: NotRequired[
+        dict[
+            ApplicationIntegrationType,
+            ApplicationIntegrationTypeConfiguration | None,
+        ]
+    ]
+    custom_install_url: NotRequired[str]
