@@ -1320,9 +1320,11 @@ class Member(discord.abc.Messageable, _UserTag):
         return self.guild.get_role(role_id) if self._roles.has(role_id) else None
 
     async def fetch_permissions(self) -> Permissions:
-        """Fetches the member's permissions from Discord, combining their roles with ``@everyone``.
+        """Fetches the member's permissions from Discord, combining their roles and ``@everyone``'s permissions.
 
         This can be useful if you do not have a populated role cache for whatever reason.
+
+        .. versionadded:: 2.9
 
         Returns
         -------
@@ -1336,7 +1338,4 @@ class Member(discord.abc.Messageable, _UserTag):
         ~discord.HTTPException
             An error occurred while fetching the information.
         """
-        data = await self._state.http.get_guild_member_permissions(
-            self.guild.id, self.id
-        )
-        return Permissions(int(data["permissions"]))
+        return await self.guild.fetch_permissions_for(self)
