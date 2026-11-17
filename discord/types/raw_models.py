@@ -182,3 +182,14 @@ class ChannelInfoChannel(TypedDict):
 class ChannelInfoEvent(TypedDict):
     guild_id: Snowflake
     channels: list[ChannelInfoChannel]
+
+
+class VoiceChannelEffectSendEvent(TypedDict):
+    channel_id: Snowflake
+    guild_id: Snowflake
+    user_id: Snowflake
+    emoji: NotRequired[PartialEmoji | None]
+    animation_type: NotRequired[int | None]
+    animation_id: NotRequired[int]
+    sound_id: NotRequired[Snowflake | int]
+    sound_volume: NotRequired[float]

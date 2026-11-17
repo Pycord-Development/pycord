@@ -32,7 +32,7 @@ from typing_extensions import override
 from .asset import Asset
 from .emoji import PartialEmoji, _EmojiTag
 from .mixins import Hashable
-from .types.channel import (
+from .types.raw_models import (
     VoiceChannelEffectSendEvent as VoiceChannelEffectSendEventPayload,
 )
 from .types.soundboard import SoundboardSound as SoundboardSoundPayload

@@ -49,7 +49,6 @@ if TYPE_CHECKING:
     from .soundboard import PartialSoundboardSound
     from .state import ConnectionState
     from .threads import Thread
-    from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.member import MemberUpdateEvent
     from .types.raw_models import (
         AuditLogEntryEvent,

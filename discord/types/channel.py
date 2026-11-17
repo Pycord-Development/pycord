@@ -29,14 +29,14 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from ..enums import SortOrder
-from ..flags import ChannelFlags
-from .emoji import PartialEmoji
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
 from .user import User
 
-OverwriteType = Literal[0, 1]
+OverwriteType = Literal[
+    0,  # Role
+    1,  # Member
+]
 
 
 class PermissionOverwrite(TypedDict):
@@ -46,104 +46,162 @@ class PermissionOverwrite(TypedDict):
     deny: str
 
 
-ChannelType = Literal[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16]
+ChannelType = Literal[
+    0,  # GUILD_TEXT
+    1,  # DM
+    2,  # GUILD_VOICE
+    3,  # GROUP_DM
+    4,  # GUILD_CATEGORY
+    5,  # GUILD_ANNOUNCEMENT
+    10,  # ANNOUNCEMENT_THREAD
+    11,  # PUBLIC_THREAD
+    12,  # PRIVATE_THREAD
+    13,  # GUILD_STAGE_VOICE
+    14,  # GUILD_DIRECTORY
+    15,  # GUILD_FORUM
+    16,  # GUILD_MEDIA
+]
 
 
 class _BaseChannel(TypedDict):
     id: Snowflake
-    name: str
+    flags: NotRequired[int]
 
 
 class _BaseGuildChannel(_BaseChannel):
-    guild_id: Snowflake
+    guild_id: NotRequired[Snowflake]
     position: int
     permission_overwrites: list[PermissionOverwrite]
+    name: str
     nsfw: bool
-    parent_id: Snowflake | None
+    parent_id: Snowflake | None  # Always None for categories
 
 
 class PartialChannel(_BaseChannel):
+    """For partially resolved channels in invites and interactions"""
+
     type: ChannelType
+    name: NotRequired[str | None]
 
 
-class _TextChannelOptional(TypedDict, total=False):
-    topic: str
-    last_message_id: Snowflake | None
-    last_pin_timestamp: str
-    rate_limit_per_user: int
-    default_auto_archive_duration: ThreadArchiveDuration
-    default_thread_rate_limit_per_user: int
+class _MessageableChannel(TypedDict):
+    """Every channel that can be used to send messages"""
+
+    last_message_id: NotRequired[Snowflake | None]
+    last_pin_timestamp: NotRequired[str | None]
+    rate_limit_per_user: NotRequired[int]
 
 
-class TextChannel(_BaseGuildChannel, _TextChannelOptional):
+class _ThreadParentChannel(TypedDict):
+    """Every channel that can have threads"""
+
+    topic: NotRequired[str | None]
+    default_auto_archive_duration: NotRequired[ThreadArchiveDuration]
+    default_thread_rate_limit_per_user: NotRequired[int]
+
+
+class TextChannel(_BaseGuildChannel, _MessageableChannel, _ThreadParentChannel):
     type: Literal[0]
 
 
+class NewsChannel(_BaseGuildChannel, _MessageableChannel, _ThreadParentChannel):
+    type: Literal[5]
+
+
+class ThreadChannel(_BaseChannel, _MessageableChannel):
+    """The type for an actual thread itself"""
+
+    member: NotRequired[ThreadMember]
+    owner_id: NotRequired[Snowflake]
+    type: Literal[10, 11, 12]
+    guild_id: Snowflake
+    name: str
+    parent_id: Snowflake
+    nsfw: bool
+    message_count: int
+    member_count: int  # Maximum of 50 counted
+    thread_metadata: ThreadMetadata
+    applied_tags: NotRequired[list[Snowflake]]
+    total_message_sent: int
+
+
 class DefaultReaction(TypedDict):
-    emoji_id: NotRequired[Snowflake | None]
-    emoji_name: NotRequired[str | None]
+    emoji_id: Snowflake | None
+    emoji_name: str | None
 
 
 class ForumTag(TypedDict):
     id: Snowflake
     name: str
     moderated: bool
-    emoji_id: NotRequired[Snowflake | None]
-    emoji_name: NotRequired[str | None]
+    emoji_id: Snowflake | None
+    emoji_name: str | None
 
 
-class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
-    type: Literal[15]
-    available_tags: NotRequired[list[ForumTag] | None]
+SortOrder = Literal[
+    0,  # LATEST_ACTIVITY
+    1,  # CREATION_DATE
+]
+
+ForumLayout = Literal[
+    0,  # NOT_SET
+    1,  # LIST_VIEW
+    2,  # GALLERY_VIEW
+]
+
+
+class _BaseThreadedChannel(_BaseGuildChannel, _ThreadParentChannel):
+    """Type for thread-only channels like :class:`ForumChannel` and :class:`MediaChannel`"""
+
+    last_message_id: NotRequired[Snowflake | None]
+    rate_limit_per_user: NotRequired[int]
+    available_tags: NotRequired[list[ForumTag]]
     default_reaction_emoji: NotRequired[DefaultReaction | None]
     default_sort_order: NotRequired[SortOrder | None]
-    flags: ChannelFlags
 
 
-class NewsChannel(_BaseGuildChannel, _TextChannelOptional):
-    type: Literal[5]
+class MediaChannel(_BaseThreadedChannel):
+    type: Literal[16]
 
 
-VideoQualityMode = Literal[1, 2]
-
-
-class VoiceChannel(_BaseGuildChannel):
-    rtc_region: NotRequired[str | None]
-    video_quality_mode: NotRequired[VideoQualityMode]
-    status: NotRequired[str | None]
-    type: Literal[2]
-    bitrate: int
-    user_limit: int
+class ForumChannel(_BaseThreadedChannel):
+    type: Literal[15]
+    default_forum_layout: NotRequired[ForumLayout]  # Defaults to 0
 
 
 class CategoryChannel(_BaseGuildChannel):
     type: Literal[4]
 
 
-class StageChannel(_BaseGuildChannel):
+VideoQualityMode = Literal[1, 2]
+
+
+class _BaseVoiceChannel(_BaseGuildChannel, _MessageableChannel):
     rtc_region: NotRequired[str | None]
-    topic: NotRequired[str]
-    type: Literal[13]
+    video_quality_mode: NotRequired[VideoQualityMode]
     bitrate: int
     user_limit: int
 
 
-class ThreadChannel(_BaseChannel):
-    member: NotRequired[ThreadMember]
-    owner_id: NotRequired[Snowflake]
-    rate_limit_per_user: NotRequired[int]
-    last_message_id: NotRequired[Snowflake | None]
-    last_pin_timestamp: NotRequired[str]
-    type: Literal[10, 11, 12]
+class VoiceChannel(_BaseVoiceChannel):
+    type: Literal[2]
+
+
+class StageChannel(_BaseVoiceChannel):
+    topic: NotRequired[str | None]
+    type: Literal[13]
+
+
+PrivacyLevel = Literal[2]  # GUILD_ONLY
+
+
+class StageInstance(TypedDict):
+    id: Snowflake
     guild_id: Snowflake
-    parent_id: Snowflake
-    nsfw: bool
-    message_count: int
-    member_count: int
-    thread_metadata: ThreadMetadata
-    applied_tags: NotRequired[list[Snowflake] | None]
-    flags: ChannelFlags
-    total_message_sent: int
+    channel_id: Snowflake
+    topic: str
+    privacy_level: PrivacyLevel
+    guild_scheduled_event_id: Snowflake | None
 
 
 GuildChannel = (
@@ -154,46 +212,32 @@ GuildChannel = (
     | StageChannel
     | ThreadChannel
     | ForumChannel
+    | MediaChannel
 )
 
 
-class DMChannel(TypedDict):
-    id: Snowflake
-    type: Literal[1]
+class _BasePrivateChannel(_BaseChannel):
+    """Base type for private (DM) channels"""
+
     last_message_id: Snowflake | None
     recipients: list[User]
+    last_pin_timestamp: NotRequired[str | None]
 
 
-class GroupDMChannel(_BaseChannel):
+class DMChannel(_BasePrivateChannel):
+    type: Literal[1]
+
+
+class GroupDMChannel(_BasePrivateChannel):
     type: Literal[3]
     icon: str | None
     owner_id: Snowflake
+    name: str | None
+    application_id: NotRequired[Snowflake]
+    managed: NotRequired[bool]
 
 
 Channel = GuildChannel | DMChannel | GroupDMChannel
-
-PrivacyLevel = Literal[1, 2]
-
-
-class StageInstance(TypedDict):
-    id: Snowflake
-    guild_id: Snowflake
-    channel_id: Snowflake
-    topic: str
-    privacy_level: PrivacyLevel
-    discoverable_disabled: bool
-    guild_scheduled_event_id: Snowflake
-
-
-class VoiceChannelEffectSendEvent(TypedDict):
-    channel_id: Snowflake
-    guild_id: Snowflake
-    user_id: Snowflake
-    emoji: NotRequired[PartialEmoji | None]
-    animation_type: NotRequired[int | None]
-    animation_id: NotRequired[int]
-    sound_id: NotRequired[Snowflake | int]
-    sound_volume: NotRequired[float]
 
 
 RequestChannelInfoField = Literal["status", "voice_start_time"]
