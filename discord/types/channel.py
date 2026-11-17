@@ -188,7 +188,7 @@ class VoiceChannel(_BaseVoiceChannel):
 
 
 class StageChannel(_BaseVoiceChannel):
-    topic: NotRequired[str | None]
+    topic: str | None
     type: Literal[13]
 
 
