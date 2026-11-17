@@ -82,8 +82,8 @@ class Object(Hashable, Generic[T]):
 
     @overload
     def __init__(
-        self: Object[Any], id: SupportsIntCast
-    ) -> None: ...  # pyright: ignore[reportExplicitAny]
+        self: Object[Any], id: SupportsIntCast  # pyright: ignore[reportExplicitAny]
+    ) -> None: ...
 
     @overload
     def __init__(self, id: SupportsIntCast, type: type[T] = utils.MISSING) -> None: ...
