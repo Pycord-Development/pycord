@@ -63,7 +63,7 @@ dev = [
     "pre-commit==4.6.2",
     "codespell==2.4.3",
     "bandit==1.9.4",
-    "flake8==7.3.0",
+    "flake8==7.5.0",
     # Formatters are strongly pinned to avoid formatting breaking in production
     "mdformat==1.0",
     "mdformat-gfm~=1.0",
