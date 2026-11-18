@@ -25,14 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
-from discord.types.interactions import MessageComponentInteractionMetadata
+from typing_extensions import NotRequired, TypedDict
 
 from .channel import ChannelType
 from .components import Component
 from .embed import Embed
 from .emoji import PartialEmoji
+from .interactions import MessageComponentInteractionMetadata, MessageInteraction
 from .member import Member, UserWithMember
 from .poll import Poll
 from .shared_client_theme import SharedClientTheme
@@ -40,11 +41,6 @@ from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
 from .threads import Thread
 from .user import User
-
-if TYPE_CHECKING:
-    from .interactions import MessageInteraction
-
-from typing_extensions import NotRequired, TypedDict
 
 
 class ChannelMention(TypedDict):
