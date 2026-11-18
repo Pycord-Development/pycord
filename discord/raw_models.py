@@ -756,6 +756,8 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         which actions have this field filled out.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#guild-audit-log-entry-create>`__.
+    guild: :class:`Guild` | :obj:`None`
+        The guild this action came from, if cached.
     """
 
     __slots__ = (
@@ -768,6 +770,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         "extra",
         "changes",
         "data",
+        "guild",
     )
 
     def __init__(self, data: AuditLogEntryEvent) -> None:
@@ -784,6 +787,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         self.extra = data.get("options")
         self.changes = data.get("changes")
         self.data: AuditLogEntryEvent = data
+        self.guild: Guild | None = None
 
 
 class RawMessagePollVoteEvent(_RawReprMixin):
