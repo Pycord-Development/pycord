@@ -52,8 +52,10 @@ BF = TypeVar("BF", bound="BaseFlags")
 
 class flag_value:
 
-    def __init__(self, func: Callable[..., int]):
-        self.flag: int = func()
+    def __init__(self, func: Callable[[BF], int]):
+        self.flag: int = func(
+            None  # pyright: ignore[reportArgumentType] None must be passed in place of self
+        )
         self.__doc__ = func.__doc__
 
     @overload
