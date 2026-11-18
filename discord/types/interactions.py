@@ -27,22 +27,21 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from discord.types.guild import Guild
-from discord.types.poll import Poll
-
-from ..permissions import Permissions
-from .appinfo import ApplicationIntegrationType
-from .channel import ChannelType, PartialChannel
-from .components import Component, ComponentType
-from .embed import Embed
-from .member import Member, PartialMember
-from .message import Attachment
-from .monetization import Entitlement
-from .role import Role
 from .snowflake import Snowflake
-from .user import User
 
 if TYPE_CHECKING:
+    from .appinfo import ApplicationIntegrationType
+    from .channel import ChannelType, PartialChannel
+    from .components import Component, ComponentType
+    from .embed import Embed
+    from .guild import Guild
+    from .member import Member, PartialMember
+    from .message import Attachment
+    from .monetization import Entitlement
+    from .poll import Poll
+    from .role import Role
+    from .user import User
+    from ..permissions import Permissions
     from .message import AllowedMentions, Message
 
 from typing_extensions import NotRequired, TypedDict
