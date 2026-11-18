@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
-from typing import ClassVar, TypeVar, overload
+from typing import ClassVar, Generic, TypeVar, cast, overload
 
 from typing_extensions import Self, override
 
@@ -50,12 +50,10 @@ __all__ = (
 BF = TypeVar("BF", bound="BaseFlags")
 
 
-class flag_value:
+class flag_value(Generic[BF]):
 
     def __init__(self, func: Callable[[BF], int]):
-        self.flag: int = func(
-            None  # pyright: ignore[reportArgumentType] None must be passed in place of self
-        )
+        self.flag: int = cast("Callable[[None], int]", func)(None)
         self.__doc__ = func.__doc__
 
     @overload
@@ -77,7 +75,7 @@ class flag_value:
         return f"<flag_value flag={self.flag!r}>"
 
 
-class alias_flag_value(flag_value):
+class alias_flag_value(flag_value[BF], Generic[BF]):
     pass
 
 
@@ -135,41 +133,35 @@ class BaseFlags:
     def __iter__(self) -> Iterator[tuple[str, bool]]:
         for (
             name,
-            value,
-        ) in (
-            self.__class__.__dict__.items()
-        ):  # pyright: ignore[reportAny] We are instance checking below
+            value,  # pyright: ignore[reportAny] We are instance checking below
+        ) in self.__class__.__dict__.items():
             if isinstance(value, alias_flag_value):
                 continue
 
             if isinstance(value, flag_value):
                 yield name, self._has_flag(value.flag)
 
-    def __and__(self, other: flag_value) -> Self:
+    def __and__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
             return self.__class__._from_value(self.value & other.value)
-        elif isinstance(
-            other, flag_value
-        ):  # pyright: ignore[reportUnnecessaryIsInstance] Relies on strict typing
+        elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & other.flag)
         else:
             raise TypeError(
                 f"'&' not supported between instances of {type(self)} and {type(other)}"
             )
 
-    def __or__(self, other: flag_value) -> Self:
+    def __or__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
             return self.__class__._from_value(self.value | other.value)
-        elif isinstance(
-            other, flag_value
-        ):  # pyright: ignore[reportUnnecessaryIsInstance] Relies on strict typing
+        elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value | other.flag)
         else:
             raise TypeError(
                 f"'|' not supported between instances of {type(self)} and {type(other)}"
             )
 
-    def __add__(self, other: flag_value) -> Self:
+    def __add__(self, other: object) -> Self:
         try:
             return self | other
         except TypeError:
@@ -177,12 +169,10 @@ class BaseFlags:
                 f"'+' not supported between instances of {type(self)} and {type(other)}"
             )
 
-    def __sub__(self, other: flag_value) -> Self:
+    def __sub__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
             return self.__class__._from_value(self.value & ~other.value)
-        elif isinstance(
-            other, flag_value
-        ):  # pyright: ignore[reportUnnecessaryIsInstance] Relies on strict typing
+        elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & ~other.flag)
         else:
             raise TypeError(
@@ -192,10 +182,10 @@ class BaseFlags:
     def __invert__(self):
         return self.__class__._from_value(~self.value)
 
-    __rand__: Callable[[Self, flag_value], Self] = __and__
-    __ror__: Callable[[Self, flag_value], Self] = __or__
-    __radd__: Callable[[Self, flag_value], Self] = __add__
-    __rsub__: Callable[[Self, flag_value], Self] = __sub__
+    __rand__: Callable[[Self, flag_value[Self]], Self] = __and__
+    __ror__: Callable[[Self, flag_value[Self]], Self] = __or__
+    __radd__: Callable[[Self, flag_value[Self]], Self] = __add__
+    __rsub__: Callable[[Self, flag_value[Self]], Self] = __sub__
 
     def _has_flag(self, o: int) -> bool:
         return (self.value & o) == o
