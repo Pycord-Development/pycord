@@ -16,11 +16,11 @@ jobs:
       pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "docs"
@@ -36,7 +36,7 @@ jobs:
         working-directory: ./docs
       - name: "Crowdin"
         id: crowdin
-        uses: crowdin/github-action@d651c77756acbe11a31d77a6fb79d8a239e1e05a # v3.6.0
+        uses: crowdin/github-action@v3.6.0
         with:
           upload_sources: false
           upload_translations: false
@@ -73,7 +73,7 @@ jobs:
     environment: translations
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Refresh Pull"
         run: |
           git fetch --all
