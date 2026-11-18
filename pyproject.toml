@@ -58,7 +58,6 @@ Funding = "https://patreon.com/pycord"
 [dependency-groups]
 dev = [
     "pylint~=4.1.3",
-    "mypy~=2.4.1",
     "coverage~=7.10",
     "pre-commit==4.7.0",
     "codespell==2.4.3",
@@ -69,6 +68,7 @@ dev = [
     "mdformat-gfm~=1.0",
     "mdformat-gfm-alerts~=2.1",
     "black==26.10.1",
+    "basedpyright>=1.40.2",
     { include-group = "test" },
     { include-group = "tox" },
 ]
@@ -132,15 +132,6 @@ target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
 [tool.isort]
 profile = "black"
 
-[tool.mypy]
-namespace_packages = true
-install_types = true
-strict = true
-show_error_codes = true
-#allow_untyped_decorators = true
-#allow_untyped_calls = true
-ignore_errors = true
-
 [tool.pylint.main]
 extension-pkg-whitelist = [
     "pydantic",
@@ -201,3 +192,4 @@ typeCheckingMode = "all"
 # reportAny = false # Occurs too often in pycord internals to leave it off, false positives are very rare
 reportPrivateUsage = false
 reportUnusedCallResult = false
+include = ["discord", "tests"]
