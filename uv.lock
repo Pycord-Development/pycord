@@ -2455,7 +2455,7 @@ provides-extras = ["speed", "voice"]
 [package.metadata.requires-dev]
 dev = [
     { name = "bandit", marker = "python_full_version >= '3.11'", specifier = "==1.9.4" },
-    { name = "basedpyright", marker = "python_full_version >= '3.11'", specifier = ">=1.40.2,<2" },
+    { name = "basedpyright", marker = "python_full_version >= '3.11'", specifier = "~=1.40.2" },
     { name = "black", marker = "python_full_version >= '3.11'", specifier = "==26.10.1" },
     { name = "codespell", marker = "python_full_version >= '3.11'", specifier = "==2.4.3" },
     { name = "coverage", marker = "python_full_version >= '3.11'", specifier = "~=7.10" },
