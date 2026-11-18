@@ -75,6 +75,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the `input_type` of options typed as `Member | User` to be `SlashCommandOptionType.user`
   instead of `SlashCommandOptionType.mentionable`.
   ([#3425](https://github.com/Pycord-Development/pycord/pull/3425))
+- Fixed `AttributeError` when fetching a message from a `PartialMessageable` object that has a
+  thread. ([#3309](https://github.com/Pycord-Development/pycord/pull/3309))
 - Fixed a bug where audio reception would drop after prolonged silence in a voice channel.
   ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
 
