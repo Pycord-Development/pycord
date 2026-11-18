@@ -145,7 +145,7 @@ jobs:
         run: pylint discord/ --exit-zero
   typecheck:
     needs: [ changes ]
-    if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
+    if: ${{ needs.changes.outputs.lib == 'true' && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout PR Base"
