@@ -38,7 +38,7 @@ dependencies = [
 ]
 
 [tool.uv]
-required-version = ">=0.13.9"
+required-version = ">=0.13.8"
 exclude-newer = "4 days"
 
 [project.optional-dependencies]
