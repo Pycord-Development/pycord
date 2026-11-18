@@ -4,7 +4,10 @@
     "local>Pycord-Development/renovate-config",
     ":semanticPrefixFixDepsChoreOthers",
     ":dependencyDashboard",
-    ":enablePreCommit"
+    ":enablePreCommit",
+    ":library",
+    "group:monorepos",
+    "group:allNonMajor"
   ],
   "assigneesFromCodeOwners": true,
   "github-actions": {
