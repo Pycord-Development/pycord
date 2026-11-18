@@ -94,6 +94,9 @@ or if you do not want to clone the repository:
     # Windows
     py -3 -m pip install git+https://github.com/Pycord-Development/pycord
 
+If you want to contribute to Pycord, the project is managed with `uv <https://docs.astral.sh/uv/>`_. You
+can find more information about this in the `CONTRIBUTING.md <https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md>`_ file.
+
 
 Optional Packages
 ~~~~~~~~~~~~~~~~~
