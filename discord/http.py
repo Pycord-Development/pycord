@@ -1006,7 +1006,7 @@ class HTTPClient:
         guild_id: Snowflake,
         delete_message_seconds: int = None,
         reason: str | None = None,
-    ) -> Response[guild.GuildBulkBan]:
+    ) -> Response[guild.GuildBulkBanResponse]:
         r = Route(
             "POST",
             "/guilds/{guild_id}/bulk-ban",
@@ -1700,7 +1700,7 @@ class HTTPClient:
         roles: list[str],
         *,
         reason: str | None = None,
-    ) -> Response[guild.GuildPrune]:
+    ) -> Response[guild.GuildPruneCount]:
         payload: dict[str, Any] = {
             "days": days,
             "compute_prune_count": "true" if compute_prune_count else "false",
@@ -1719,7 +1719,7 @@ class HTTPClient:
         guild_id: Snowflake,
         days: int,
         roles: list[str],
-    ) -> Response[guild.GuildPrune]:
+    ) -> Response[guild.GuildPruneCount]:
         params: dict[str, Any] = {
             "days": days,
         }
