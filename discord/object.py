@@ -114,7 +114,7 @@ class Object(Hashable, Generic[T]):
         return f"<Object id={self.id!r}>"
 
     @property
-    def created_at(self) -> datetime.datetime:
+    def created_at(self) -> int:
         """Returns the snowflake's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
