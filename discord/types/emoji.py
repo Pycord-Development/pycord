@@ -27,24 +27,50 @@ from __future__ import annotations
 
 from typing import TypedDict
 
+from typing_extensions import NotRequired
+
 from .snowflake import Snowflake, SnowflakeList
 from .user import User
 
 
 class PartialEmoji(TypedDict):
+    """A partial emoji object received e.g. as part of a :class:`discord.types.message.Reaction` object"""
+
     id: Snowflake | None
     name: str | None
 
 
-class Emoji(PartialEmoji, total=False):
-    roles: SnowflakeList
-    user: User
-    require_colons: bool
-    managed: bool
-    animated: bool
-    available: bool
+class Emoji(PartialEmoji):
+    roles: NotRequired[SnowflakeList]
+    user: NotRequired[User]
+    require_colons: NotRequired[bool]
+    managed: NotRequired[bool]
+    animated: NotRequired[bool]
+    available: NotRequired[bool]
 
 
-class EditEmoji(TypedDict):
+class CreateGuildEmoji(TypedDict):
+    """The allowed fields when creating a guild emoji"""
+
+    name: str
+    image: bytes
+
+
+class EditGuildEmoji(TypedDict):
+    """The allowed fields when editing a guild emoji"""
+
     name: str
     roles: SnowflakeList | None
+
+
+class CreateAppEmoji(TypedDict):
+    """The allowed fields when creating an app emoji"""
+
+    name: str
+    image: bytes
+
+
+class EditAppEmoji(TypedDict):
+    """The allowed fields when editing an app emoji"""
+
+    name: str
