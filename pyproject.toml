@@ -89,7 +89,7 @@ docs = [
     "sphinxext-opengraph==0.13.0",
     "sphinx-copybutton==0.5.2",
     "furo==2025.12.19",
-    "sphinx-autodoc-typehints==3.13.6",
+    "sphinx-autodoc-typehints==3.17.6",
     "sphinx-intl==2.4.0",
     "typing_extensions==4.16.0",
     # used by scripts/docs_json_exporter.py to parse the built HTML
