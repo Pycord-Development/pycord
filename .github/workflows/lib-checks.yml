@@ -143,31 +143,36 @@ jobs:
             pylint-${{ runner.os }}-py3.14-
       - name: "Run pylint"
         run: pylint discord/ --exit-zero
-  mypy:
+  typecheck:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout Repository"
+      - name: "Checkout PR Base"
         uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+
       - name: "Setup uv"
         uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "dev"
-      - name: "Setup cache"
-        id: cache-mypy
-        uses: actions/cache@v6.1.0
+
+      - name: "Write baseline"
+        run: |
+          set +e
+          basedpyright --writebaseline
+          exit 0
+      - name: "Checkout PR Head"
+        uses: actions/checkout@v7.0.1
         with:
-          path: .mypy_cache
-          key: mypy-${{ runner.os }}-py3.14-${{ hashFiles('pyproject.toml', 'discord/**/*.py') }}
-          restore-keys: |
-            mypy-${{ runner.os }}-py3.14-
-      - name: "Make mypy cache directory"
-        id: cache-dir-mypy
-        run: mkdir -p -v .mypy_cache
-      - name: "Run mypy"
-        run: mypy --non-interactive discord/
+          clean: 'false'
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: "Sync uv"
+        run: uv sync --no-default-groups --frozen --group dev
+      - name: "Run basedpyright"
+        run: basedpyright
   flake8:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' }}
