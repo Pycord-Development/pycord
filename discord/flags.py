@@ -147,9 +147,7 @@ class BaseFlags:
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & other.flag)
         else:
-            raise TypeError(
-                f"'&' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
 
     def __or__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
@@ -157,17 +155,13 @@ class BaseFlags:
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value | other.flag)
         else:
-            raise TypeError(
-                f"'|' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
 
     def __add__(self, other: object) -> Self:
         try:
             return self | other
         except TypeError:
-            raise TypeError(
-                f"'+' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
 
     def __sub__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
@@ -175,25 +169,23 @@ class BaseFlags:
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & ~other.flag)
         else:
-            raise TypeError(
-                f"'-' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
 
+    # Reflected operators need to call the dunders directly and not via the operator,
+    # otherwise NotImplemented would bounce between two flag types forever.
     def __rand__(self, other: object) -> Self:
-        return self & other
+        return self.__and__(other)
 
     def __ror__(self, other: object) -> Self:
-        return self | other
+        return self.__or__(other)
 
     def __radd__(self, other: object) -> Self:
-        return self + other
+        return self.__or__(other)
 
     def __rsub__(self, other: object) -> Self:
         if isinstance(other, flag_value):
             return self.__class__._from_value(other.flag & ~self.value)
-        raise TypeError(
-            f"'-' not supported between instances of {type(self)} and {type(other)}"
-        )
+        return NotImplemented
 
     def __invert__(self):
         return self.__class__._from_value(~self.value)
@@ -1338,7 +1330,7 @@ class MemberCacheFlags(BaseFlags):
     def __init__(self, **kwargs: bool):
         super().__init__()
         bits = max(self.VALID_FLAGS.values()).bit_length()
-        self.value = (1 << bits) - 1
+        self.value: int = (1 << bits) - 1
         for key, value in kwargs.items():
             if key not in self.VALID_FLAGS:
                 raise TypeError(f"{key!r} is not a valid flag name.")
