@@ -143,6 +143,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# basedpyright
+.basedpyright/
+
 # pytype static type analyzer
 .pytype/
 
@@ -197,3 +200,5 @@ remote-release.yml
 *.wav
 *.ogg
 *.ps1
+
+discord/_version.py
