@@ -14,5 +14,19 @@
   },
   "lockFileMaintenance": {
     "enabled": true
-  }
+  },
+  "packageRules": [
+    {
+      "groupName": "Python Interpreter",
+      "description": "Python interpreter upgrades",
+      "matchDatasources": [
+        "python-version"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "dependencyDashboardApproval": true
+    }
+  ]
 }
