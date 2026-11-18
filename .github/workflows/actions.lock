@@ -9,18 +9,18 @@ workflows:
     '.github/workflows/docs-checks.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/github-script@v9.0.0'
-        - 'astral-sh/setup-uv@v10.0.1'
+        - 'astral-sh/setup-uv@v10.3.3'
     '.github/workflows/docs-json-export.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/upload-artifact@v7.0.2'
-        - 'astral-sh/setup-uv@v10.0.1'
+        - 'astral-sh/setup-uv@v10.3.3'
     '.github/workflows/docs-localization-download.yml':
         - 'actions/checkout@v7.0.1'
-        - 'astral-sh/setup-uv@v10.0.1'
+        - 'astral-sh/setup-uv@v10.3.3'
         - 'crowdin/github-action@v3.6.0'
     '.github/workflows/docs-localization-upload.yml':
         - 'actions/checkout@v7.0.1'
-        - 'astral-sh/setup-uv@v10.0.1'
+        - 'astral-sh/setup-uv@v10.3.3'
         - 'crowdin/github-action@v3.6.0'
     '.github/workflows/enforce-pr-template.yml':
         - 'actions/github-script@v9.0.0'
@@ -28,7 +28,7 @@ workflows:
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
         - 'actions/github-script@v9.0.0'
-        - 'astral-sh/setup-uv@v10.0.1'
+        - 'astral-sh/setup-uv@v10.3.3'
     '.github/workflows/pr-auto-approve.yml': []
     '.github/workflows/pr-checks.yml':
         - 'amannn/action-semantic-pull-request@v6.1.2'
@@ -84,9 +84,9 @@ dependencies:
         commit: 'sha1-2252a14e810aa9b85c2d560bd7070c802206ecf6'
         owner_id: 4038316
         repo_id: 220418983
-    'astral-sh/setup-uv@v10.0.1':
-        ref: 'v10.0.1'
-        commit: 'sha1-20cfd1bf945f4377ade1205e4dbc17946fc9a30d'
+    'astral-sh/setup-uv@v10.3.3':
+        ref: 'v10.3.3'
+        commit: 'sha1-68559e99cc807c1eb7e9238fd43a15bba460eec2'
         owner_id: 115962839
         repo_id: 846733598
     'crowdin/github-action@v3.6.0':
