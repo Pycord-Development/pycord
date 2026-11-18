@@ -154,6 +154,10 @@ def test_member_cache_flags():
     with pytest.raises(ValueError, match="Intents.members"):
         discord.MemberCacheFlags.all()._verify_intents(intents)
 
+    flags = discord.MemberCacheFlags(voice=False)
+    assert flags.voice is False
+    assert flags.joined is True
+
 
 def test_public_user_flags_all():
     flags = discord.PublicUserFlags(staff=True, active_developer=True)

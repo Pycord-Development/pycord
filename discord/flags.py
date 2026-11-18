@@ -179,13 +179,13 @@ class BaseFlags:
                 f"'-' not supported between instances of {type(self)} and {type(other)}"
             )
 
-    def __rand__(self, other: flag_value[Self]) -> Self:
+    def __rand__(self, other: object) -> Self:
         return self & other
 
-    def __ror__(self, other: flag_value[Self]) -> Self:
+    def __ror__(self, other: object) -> Self:
         return self | other
 
-    def __radd__(self, other: flag_value[Self]) -> Self:
+    def __radd__(self, other: object) -> Self:
         return self + other
 
     def __rsub__(self, other: object) -> Self:
@@ -1336,9 +1336,13 @@ class MemberCacheFlags(BaseFlags):
     __slots__: tuple[str, ...] = ()
 
     def __init__(self, **kwargs: bool):
-        super().__init__(**kwargs)
+        super().__init__()
         bits = max(self.VALID_FLAGS.values()).bit_length()
-        self.value: int = (1 << bits) - 1
+        self.value = (1 << bits) - 1
+        for key, value in kwargs.items():
+            if key not in self.VALID_FLAGS:
+                raise TypeError(f"{key!r} is not a valid flag name.")
+            setattr(self, key, value)
 
     @classmethod
     def all(cls: type[MemberCacheFlags]) -> MemberCacheFlags:
