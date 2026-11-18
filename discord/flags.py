@@ -179,13 +179,24 @@ class BaseFlags:
                 f"'-' not supported between instances of {type(self)} and {type(other)}"
             )
 
+    def __rand__(self, other: flag_value[Self]) -> Self:
+        return self & other
+
+    def __ror__(self, other: flag_value[Self]) -> Self:
+        return self | other
+
+    def __radd__(self, other: flag_value[Self]) -> Self:
+        return self + other
+
+    def __rsub__(self, other: object) -> Self:
+        if isinstance(other, flag_value):
+            return self.__class__._from_value(other.flag & ~self.value)
+        raise TypeError(
+            f"'-' not supported between instances of {type(self)} and {type(other)}"
+        )
+
     def __invert__(self):
         return self.__class__._from_value(~self.value)
-
-    __rand__: Callable[[Self, flag_value[Self]], Self] = __and__
-    __ror__: Callable[[Self, flag_value[Self]], Self] = __or__
-    __radd__: Callable[[Self, flag_value[Self]], Self] = __add__
-    __rsub__: Callable[[Self, flag_value[Self]], Self] = __sub__
 
     def _has_flag(self, o: int) -> bool:
         return (self.value & o) == o
