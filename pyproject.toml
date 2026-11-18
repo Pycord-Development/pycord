@@ -102,6 +102,7 @@ release = [
 
 [tool.uv.dependency-groups]
 docs = { requires-python = ">=3.13" }
+dev = { requires-python = ">=3.11" }
 
 [tool.hatch.version]
 source = "vcs"
