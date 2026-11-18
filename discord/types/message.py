@@ -27,6 +27,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from discord.types.interactions import MessageComponentInteractionMetadata
+
 from .channel import ChannelType
 from .components import Component
 from .embed import Embed
@@ -40,7 +42,7 @@ from .threads import Thread
 from .user import User
 
 if TYPE_CHECKING:
-    from .interactions import InteractionMetadata, MessageInteraction
+    from .interactions import MessageInteraction
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -155,7 +157,7 @@ class Message(TypedDict):
     sticker_items: NotRequired[list[StickerItem]]
     referenced_message: NotRequired[Message | None]
     interaction: NotRequired[MessageInteraction]
-    interaction_metadata: NotRequired[InteractionMetadata]
+    interaction_metadata: NotRequired[MessageComponentInteractionMetadata]
     components: NotRequired[list[Component]]
     thread: NotRequired[Thread | None]
     id: Snowflake

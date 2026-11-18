@@ -27,11 +27,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from discord.types.guild import Guild
+from discord.types.poll import Poll
+
 from ..permissions import Permissions
-from .channel import ChannelType
+from .appinfo import ApplicationIntegrationType
+from .channel import ChannelType, PartialChannel
 from .components import Component, ComponentType
 from .embed import Embed
-from .member import Member
+from .member import Member, PartialMember
 from .message import Attachment
 from .monetization import Entitlement
 from .role import Role
@@ -40,11 +44,26 @@ from .user import User
 
 if TYPE_CHECKING:
     from .message import AllowedMentions, Message
-    from ..interactions import InteractionChannel
 
 from typing_extensions import NotRequired, TypedDict
 
-ApplicationCommandType = Literal[1, 2, 3]
+ApplicationCommandType = Literal[
+    1,  # CHAT_INPUT
+    2,  # USER
+    3,  # MESSAGE
+    4,  # PRIMARY_ENTRY_POINT
+]
+
+InteractionContextType = Literal[
+    0,  # GUILD
+    1,  # BOT_DM
+    2,  # PRIVATE_CHANNEL
+]
+
+CommandHandlerType = Literal[
+    1,  # APP_HANDLER
+    2,  # DISCORD_LAUNCH_ACTIVITY
+]
 
 
 class ApplicationCommand(TypedDict):
@@ -59,12 +78,27 @@ class ApplicationCommand(TypedDict):
     options: NotRequired[list[ApplicationCommandOption]]
     default_member_permissions: str | None
     dm_permission: NotRequired[bool]
-    default_permission: NotRequired[bool | None]
+    default_permission: NotRequired[bool | None]  # Soon to be deprecated
     nsfw: NotRequired[bool]
+    integration_types: NotRequired[list[ApplicationIntegrationType]]
+    contexts: NotRequired[list[InteractionContextType]]
     version: Snowflake
+    handler: NotRequired[CommandHandlerType]
 
 
-ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+ApplicationCommandOptionType = Literal[
+    1,  # SUB_COMMAND
+    2,  # SUB_COMMAND_GROUP
+    3,  # STRING
+    4,  # INTEGER
+    5,  # BOOLEAN
+    6,  # USER
+    7,  # CHANNEL
+    8,  # ROLE
+    9,  # MENTIONABLE
+    10,  # NUMBER, "any double between -2^53 and 2^53"
+    11,  # ATTACHMENT
+]
 
 
 class ApplicationCommandOption(TypedDict):
@@ -73,15 +107,16 @@ class ApplicationCommandOption(TypedDict):
     name_localizations: NotRequired[dict[str, str] | None]
     description: str
     description_localizations: NotRequired[dict[str, str] | None]
-    required: bool
-    options: NotRequired[list[ApplicationCommandOption]]
+    required: NotRequired[bool]
     choices: NotRequired[list[ApplicationCommandOptionChoice]]
+    options: NotRequired[list[ApplicationCommandOption]]
     channel_types: NotRequired[list[ChannelType]]
     min_value: NotRequired[int | float]
     max_value: NotRequired[int | float]
     min_length: NotRequired[int]
     max_length: NotRequired[int]
     autocomplete: NotRequired[bool]
+    file_types: NotRequired[list[str]]
 
 
 class ApplicationCommandOptionChoice(TypedDict):
@@ -110,9 +145,6 @@ class PartialGuildApplicationCommandPermissions(BaseGuildApplicationCommandPermi
 class GuildApplicationCommandPermissions(PartialGuildApplicationCommandPermissions):
     application_id: Snowflake
     guild_id: Snowflake
-
-
-InteractionType = Literal[1, 2, 3, 4, 5]
 
 
 class _ApplicationCommandInteractionDataOption(TypedDict):
@@ -178,12 +210,12 @@ class ApplicationCommandResolvedPartialChannel(TypedDict):
     name: str
 
 
-class ApplicationCommandInteractionDataResolved(TypedDict, total=False):
-    users: dict[Snowflake, User]
-    members: dict[Snowflake, Member]
-    roles: dict[Snowflake, Role]
-    channels: dict[Snowflake, ApplicationCommandResolvedPartialChannel]
-    attachments: dict[Snowflake, Attachment]
+class ApplicationCommandInteractionDataResolved(TypedDict):
+    users: NotRequired[dict[Snowflake, User]]
+    members: NotRequired[dict[Snowflake, Member]]
+    roles: NotRequired[dict[Snowflake, Role]]
+    channels: NotRequired[dict[Snowflake, ApplicationCommandResolvedPartialChannel]]
+    attachments: NotRequired[dict[Snowflake, Attachment]]
 
 
 class ApplicationCommandInteractionData(TypedDict):
@@ -195,62 +227,213 @@ class ApplicationCommandInteractionData(TypedDict):
     name: str
 
 
-class ComponentInteractionData(TypedDict):
+class MessageComponentInteractionData(TypedDict):
     values: NotRequired[list[str]]
     custom_id: str
     component_type: ComponentType
 
 
-InteractionData = ApplicationCommandInteractionData | ComponentInteractionData
+class ModalSubmitInteractionData(TypedDict):
+    custom_id: str
+    components: list[list[ComponentInteractionResponse]]
+    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+
+
+class StringSelectInteractionResponse(TypedDict):
+    """In message interaction responses component_type will be returned and in modal interaction responses type will be returned."""
+
+    type: NotRequired[Literal[3]]
+    component_type: NotRequired[Literal[3]]
+    id: int
+    custom_id: str
+    values: list[str]
+
+
+class TextInputInteractionResponse(TypedDict):
+    type: Literal[4]
+    id: int
+    custom_id: str
+    value: str
+
+
+class UserSelectInteractionResponse(TypedDict):
+    """In message interaction responses component_type will be returned and in modal interaction responses type will be returned."""
+
+    type: NotRequired[Literal[5]]
+    component_type: NotRequired[Literal[5]]
+    id: int
+    custom_id: str
+    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    values: list[Snowflake]
+
+
+class RoleSelectInteractionResponse(TypedDict):
+    """In message interaction responses component_type will be returned and in modal interaction responses type will be returned."""
+
+    type: NotRequired[Literal[6]]
+    component_type: NotRequired[Literal[6]]
+    id: int
+    custom_id: str
+    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    values: list[Snowflake]
+
+
+class MentionableSelectInteractionResponse(TypedDict):
+    """In message interaction responses component_type will be returned and in modal interaction responses type will be returned."""
+
+    type: NotRequired[Literal[7]]
+    component_type: NotRequired[Literal[7]]
+    id: int
+    custom_id: str
+    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    values: list[Snowflake]
+
+
+class ChannelSelectInteractionResponse(TypedDict):
+    """In message interaction responses component_type will be returned and in modal interaction responses type will be returned."""
+
+    type: NotRequired[Literal[8]]
+    component_type: NotRequired[Literal[8]]
+    id: int
+    custom_id: str
+    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    values: list[Snowflake]
+
+
+class FileUploadInteractionResponse(TypedDict):
+    type: NotRequired[Literal[19]]
+    id: int
+    custom_id: str
+    values: list[Snowflake]
+
+
+class RadioGroupInteractionResponse(TypedDict):
+    type: Literal[21]
+    id: int
+    custom_id: str
+    value: str | None
+
+
+class CheckBoxGroupInteractionResponse(TypedDict):
+    type: Literal[22]
+    id: int
+    custom_id: str
+    values: list[str]
+
+
+class CheckBoxInteractionResponse(TypedDict):
+    type: Literal[23]
+    id: int
+    custom_id: str
+    value: bool
+
+
+ComponentInteractionResponse = (
+    StringSelectInteractionResponse
+    | TextInputInteractionResponse
+    | UserSelectInteractionResponse
+    | RoleSelectInteractionResponse
+    | MentionableSelectInteractionResponse
+    | ChannelSelectInteractionResponse
+    | FileUploadInteractionResponse
+    | RadioGroupInteractionResponse
+    | CheckBoxGroupInteractionResponse
+    | CheckBoxInteractionResponse
+)
+
+InteractionData = ApplicationCommandInteractionData | MessageComponentInteractionData
+
+InteractionType = Literal[
+    1,  # PING
+    2,  # APPLICATION_COMMAND
+    3,  # MESSAGE_COMPONENT
+    4,  # APPLICATION_COMMAND_AUTOCOMPLETE
+    5,  # MODAL_SUBMIT
+]
 
 
 class Interaction(TypedDict):
-    data: NotRequired[InteractionData]
-    guild_id: NotRequired[Snowflake]
-    channel_id: NotRequired[Snowflake]
-    channel: NotRequired[InteractionChannel]
-    member: NotRequired[Member]
-    user: NotRequired[User]
-    message: NotRequired[Message]
-    locale: NotRequired[str]
-    guild_locale: NotRequired[str]
-    app_permissions: NotRequired[Permissions]
-    attachment_size_limit: NotRequired[int]
     id: Snowflake
     application_id: Snowflake
     type: InteractionType
+    data: NotRequired[InteractionData]
+    guild: NotRequired[Guild]
+    guild_id: NotRequired[Snowflake]
+    channel_id: NotRequired[Snowflake]
+    channel: NotRequired[PartialChannel]
+    member: NotRequired[Member]
+    user: NotRequired[User]
     token: str
     version: int
+    message: NotRequired[Message]
+    app_permissions: NotRequired[Permissions]
+    locale: NotRequired[str]  # Always available except on PING interactions
+    guild_locale: NotRequired[str]
     entitlements: list[Entitlement]
     authorizing_integration_owners: AuthorizingIntegrationOwners
     context: InteractionContextType
+    attachment_size_limit: NotRequired[int]
 
 
-class InteractionMetadata(TypedDict):
+class _BaseInteractionMetadata(TypedDict):
+    """The basic fields all interaction metadata objects share"""
+
     id: Snowflake
     type: InteractionType
-    user_id: Snowflake
+    user: User
     authorizing_integration_owners: AuthorizingIntegrationOwners
     original_response_message_id: NotRequired[Snowflake]
-    interacted_message_id: NotRequired[Snowflake]
-    triggering_interaction_metadata: NotRequired[InteractionMetadata]
 
 
-class InteractionApplicationCommandCallbackData(TypedDict, total=False):
-    tts: bool
-    content: str
-    embeds: list[Embed]
-    allowed_mentions: AllowedMentions
-    flags: int
-    components: list[Component]
+class ApplicationCommandInteractionMetadata(_BaseInteractionMetadata):
+    target_user: NotRequired[User]
+    target_message_id: NotRequired[Snowflake]
 
 
-InteractionResponseType = Literal[1, 4, 5, 6, 7, 8, 9, 10]
+class MessageComponentInteractionMetadata(_BaseInteractionMetadata):
+    interacted_message_id: Snowflake
+
+
+class ModalSubmitInteractionMetadata(_BaseInteractionMetadata):
+    triggering_interaction_metadata: NotRequired[
+        ApplicationCommandInteractionMetadata | MessageComponentInteractionMetadata
+    ]
+
+
+InteractionMetadata: (
+    ApplicationCommandInteractionMetadata
+    | MessageComponentInteractionMetadata
+    | ModalSubmitInteractionMetadata
+)
+
+
+class InteractionApplicationCommandCallbackData(TypedDict):
+    tts: NotRequired[bool]
+    content: NotRequired[str]
+    embeds: NotRequired[list[Embed]]
+    allowed_mentions: NotRequired[AllowedMentions]
+    flags: NotRequired[int]
+    components: NotRequired[list[Component]]
+    attachments: NotRequired[list[Attachment]]  # Partial attachments
+    poll: NotRequired[Poll]
+
+
+InteractionCallbackType = Literal[
+    1,  # PONG
+    4,  # CHANNEL_MESSAGE_WITH_SOURCE
+    5,  # DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
+    6,  # DEFERRED_UPDATE_MESSAGE
+    7,  # UPDATE_MESSAGE
+    8,  # APPLICATION_COMMAND_AUTOCOMPLETE_RESULT
+    9,  # MODAL
+    10,  # PREMIUM_REQUIRED
+    12,  # LAUNCH_ACTIVITY
+]
 
 
 class InteractionResponse(TypedDict):
+    type: InteractionCallbackType
     data: NotRequired[InteractionApplicationCommandCallbackData]
-    type: InteractionResponseType
 
 
 class MessageInteraction(TypedDict):
@@ -258,18 +441,26 @@ class MessageInteraction(TypedDict):
     type: InteractionType
     name: str
     user: User
+    member: NotRequired[PartialMember]
 
 
 class EditApplicationCommand(TypedDict):
+    """The allowed fields for editing an application command."""
+
+    name: NotRequired[str]
+    name_localizations: NotRequired[dict[str, str] | None]
     description: NotRequired[str]
-    options: NotRequired[list[ApplicationCommandOption] | None]
-    type: NotRequired[ApplicationCommandType]
-    name: str
-    default_permission: bool
+    description_localizations: NotRequired[dict[str, str] | None]
+    options: NotRequired[list[ApplicationCommandOption]]
+    default_member_permissions: NotRequired[str | None]
+    dm_permission: NotRequired[bool | None]
+    default_permission: NotRequired[bool | None]  # Soon to be deprecated
+    integration_types: NotRequired[list[ApplicationIntegrationType]]
+    contexts: NotRequired[list[InteractionContextType]]
+    nsfw: NotRequired[bool]
+    handler: NotRequired[CommandHandlerType]
 
 
-InteractionContextType = Literal[0, 1, 2]
-ApplicationIntegrationType = Literal[0, 1]
 _StringApplicationIntegrationType = Literal["0", "1"]
 
 AuthorizingIntegrationOwners = dict[_StringApplicationIntegrationType, Snowflake]
@@ -290,7 +481,7 @@ class InteractionCallback(TypedDict):
 
 
 class InteractionCallbackResource(TypedDict):
-    type: InteractionResponseType
+    type: InteractionCallbackType
     # This is not fully typed as activities are out of scope
-    activity_instance: NotRequired[dict]
+    activity_instance: NotRequired[dict[str, str]]
     message: NotRequired[Message]
