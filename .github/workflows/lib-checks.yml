@@ -148,18 +148,15 @@ jobs:
     if: ${{ needs.changes.outputs.lib == 'true' && github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout Repository"
+      - name: "Checkout PR Base"
         uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
       - name: "Setup uv"
         uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "dev"
-      - name: "Checkout PR Base"
-        uses: actions/checkout@v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.base.sha }}
-          clean: 'false'
       - name: "Write baseline"
         # We silence --writebaseline's output because otherwise it is picked up by GitHub code quality
         run: |
