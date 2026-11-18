@@ -68,7 +68,7 @@ dev = [
     "mdformat==1.0",
     "mdformat-gfm~=1.0",
     "mdformat-gfm-alerts~=2.1",
-    "black==26.10.0",
+    "black==26.10.1",
     { include-group = "test" },
     { include-group = "tox" },
 ]
