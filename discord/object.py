@@ -34,7 +34,7 @@ from . import utils
 from .mixins import Hashable
 
 if TYPE_CHECKING:
-    pass
+    import datetime
 
     from .abc import Snowflake
 
