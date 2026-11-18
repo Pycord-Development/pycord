@@ -22,6 +22,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import pytest
+
 import discord
 
 
@@ -39,12 +41,8 @@ def test_kwargs_set_and_get():
 
 
 def test_invalid_kwarg_raises():
-    try:
-        discord.MessageFlags(not_a_flag=True)
-    except TypeError:
-        pass
-    else:
-        raise AssertionError("expected TypeError for unknown flag name")
+    with pytest.raises(TypeError, match="not_a_flag"):
+        _ = discord.MessageFlags(not_a_flag=True)
 
 
 def test_equality_and_hash():
@@ -88,12 +86,8 @@ def test_reflected_sub():
 
 
 def test_operator_with_other_type_raises():
-    try:
+    with pytest.raises(TypeError):
         _ = discord.MessageFlags() | discord.AttachmentFlags()
-    except TypeError:
-        pass
-    else:
-        raise AssertionError("expected TypeError when combining different flag types")
 
 
 def test_iter_skips_aliases():
@@ -157,14 +151,8 @@ def test_member_cache_flags():
     assert flags.interaction is True
     assert flags.joined is False
 
-    try:
+    with pytest.raises(ValueError, match="Intents.members"):
         discord.MemberCacheFlags.all()._verify_intents(intents)
-    except ValueError:
-        pass
-    else:
-        raise AssertionError(
-            "expected ValueError when joined is set without members intent"
-        )
 
 
 def test_public_user_flags_all():
