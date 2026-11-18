@@ -89,7 +89,7 @@ def test_reflected_sub():
 
 def test_operator_with_other_type_raises():
     try:
-        discord.MessageFlags() | discord.AttachmentFlags()
+        _ = discord.MessageFlags() | discord.AttachmentFlags()
     except TypeError:
         pass
     else:
