@@ -5,7 +5,6 @@
     ":semanticPrefixFixDepsChoreOthers",
     ":dependencyDashboard",
     ":enablePreCommit",
-    ":library",
     "group:monorepos",
     "group:allNonMajor"
   ],
