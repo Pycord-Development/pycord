@@ -25,6 +25,8 @@ DEALINGS IN THE SOFTWARE.
 import copy
 import datetime
 
+import pytest
+
 import discord
 
 TITLE = "Embed test"
@@ -124,14 +126,6 @@ def _unset(obj, attr: str) -> bool:
     return obj is None or getattr(obj, attr, None) is None
 
 
-def _raises(exc: type[BaseException], fn) -> bool:
-    try:
-        fn()
-    except exc:
-        return True
-    return False
-
-
 # --- construction and scalar attributes ------------------------------------------------
 
 
@@ -177,8 +171,11 @@ def test_empty_embed():
     embed = discord.Embed()
     assert not embed
     assert len(embed) == 0
-    for attr in ("title", "description", "url", "colour", "timestamp"):
-        assert getattr(embed, attr) is None, attr
+    assert embed.title is None
+    assert embed.description is None
+    assert embed.url is None
+    assert embed.colour is None
+    assert embed.timestamp is None
     assert list(embed.fields) == []
     assert _unset(embed.author, "name")
     assert _unset(embed.footer, "text")
@@ -196,24 +193,28 @@ def test_scalar_setters():
     assert embed.title is None
 
 
-def test_colour_setter():
-    cases = [
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
         (discord.Colour.blurple(), discord.Colour.blurple().value),
         (0x123456, 0x123456),
         (0, 0),
-    ]
-    for value, expected in cases:
-        embed = discord.Embed()
-        embed.colour = value
-        assert embed.colour.value == expected, value
-        assert embed.color == embed.colour
+    ],
+    ids=["Colour", "int", "zero"],
+)
+def test_colour_setter(value: discord.Colour | int, expected: int):
+    embed = discord.Embed()
+    embed.colour = value
+    assert embed.colour.value == expected
+    assert embed.color == embed.colour
 
 
 def test_colour_setter_none_and_invalid():
     embed = discord.Embed(colour=COLOUR)
     embed.colour = None
     assert embed.colour is None
-    assert _raises(TypeError, lambda: setattr(embed, "colour", "red"))
+    with pytest.raises(TypeError):
+        embed.colour = "red"  # type: ignore[assignment]
 
 
 def test_timestamp_setter():
@@ -227,7 +228,8 @@ def test_timestamp_setter():
     embed.timestamp = None
     assert embed.timestamp is None
 
-    assert _raises(TypeError, lambda: setattr(embed, "timestamp", "2026-01-01"))
+    with pytest.raises(TypeError):
+        embed.timestamp = "2026-01-01"  # type: ignore[assignment]
 
 
 # --- author / footer / media -----------------------------------------------------------
@@ -266,7 +268,12 @@ def test_footer():
     embed.remove_footer()  # idempotent
 
 
-def _check_media(kind: str, url: str):
+@pytest.mark.parametrize(
+    ("kind", "url"),
+    [("image", IMAGE_URL), ("thumbnail", THUMBNAIL_URL)],
+    ids=["image", "thumbnail"],
+)
+def test_media(kind: str, url: str):
     embed = discord.Embed()
     assert getattr(embed, f"set_{kind}")(url=url) is embed
     media = getattr(embed, kind)
@@ -276,14 +283,6 @@ def _check_media(kind: str, url: str):
     assert getattr(embed, f"remove_{kind}")() is embed
     assert _unset(getattr(embed, kind), "url")
     getattr(embed, f"remove_{kind}")()  # idempotent
-
-
-def test_image():
-    _check_media("image", IMAGE_URL)
-
-
-def test_thumbnail():
-    _check_media("thumbnail", THUMBNAIL_URL)
 
 
 def test_rich_embed_has_no_video_or_provider():
@@ -322,7 +321,8 @@ def test_field_operations():
 
 def test_set_field_at_out_of_range():
     embed = discord.Embed().add_field(name="a", value="b")
-    assert _raises(IndexError, lambda: embed.set_field_at(5, name="x", value="y"))
+    with pytest.raises(IndexError):
+        embed.set_field_at(5, name="x", value="y")
 
 
 def test_remove_field_out_of_range_is_silent():
