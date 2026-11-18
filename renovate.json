@@ -5,7 +5,7 @@
     ":semanticPrefixFixDepsChoreOthers",
     ":dependencyDashboard",
     ":enablePreCommit",
-    ":library",
+    "config:js-lib",
     "group:monorepos",
     "group:allNonMajor"
   ],
