@@ -34,12 +34,11 @@ from .user import User
 
 
 class IntegrationApplication(TypedDict):
-    bot: NotRequired[User]
     id: Snowflake
     name: str
     icon: str | None
     description: str
-    summary: str
+    bot: NotRequired[User]
 
 
 class IntegrationAccount(TypedDict):
@@ -47,17 +46,22 @@ class IntegrationAccount(TypedDict):
     name: str
 
 
-IntegrationExpireBehavior = Literal[0, 1]
+IntegrationExpireBehavior = Literal[
+    0,  # Remove role
+    1,  # Kick
+]
 
 
 class PartialIntegration(TypedDict):
+    """Returned as, for example, part of an audit log object"""
+
     id: Snowflake
     name: str
     type: IntegrationType
     account: IntegrationAccount
 
 
-IntegrationType = Literal["twitch", "youtube", "discord"]
+IntegrationType = Literal["twitch", "youtube", "discord", "guild_subscription"]
 
 
 class BaseIntegration(PartialIntegration):
