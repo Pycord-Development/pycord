@@ -17,7 +17,7 @@
   },
   "packageRules": [
     {
-      "groupName": "Python Interpreter",
+      "groupName": null,
       "description": "Python interpreter upgrades",
       "matchDatasources": [
         "python-version"
@@ -27,6 +27,13 @@
         "minor"
       ],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Pre commit group",
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "groupName": null
     }
   ]
 }
