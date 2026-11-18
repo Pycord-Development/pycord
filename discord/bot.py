@@ -696,7 +696,7 @@ class ApplicationCommandMixin(ABC):
             )
             if not cmd:
                 _log.warning(
-                    f"Registered command %s, type %s not found in"
+                    "Registered command %s, type %s not found in"
                     + " pending commands. It's interactions will be ignored.",
                     i["name"],
                     i.get("type"),
