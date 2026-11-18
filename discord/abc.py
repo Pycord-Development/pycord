@@ -762,7 +762,7 @@ class GuildChannel:
         if isinstance(obj, Role):
             base.value |= obj._permissions
 
-            if base.administrator:  # pylint: disable=using-constant-test
+            if base.administrator:
                 return Permissions.all()
 
             # Apply @everyone allow/deny first since it's special
@@ -795,7 +795,7 @@ class GuildChannel:
 
         # Guild-wide Administrator -> True for everything
         # Bypass all channel-specific overrides
-        if base.administrator:  # pylint: disable=using-constant-test
+        if base.administrator:
             return Permissions.all()
 
         # Apply @everyone allow/deny first since it's special
