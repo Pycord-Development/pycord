@@ -161,9 +161,10 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           clean: 'false'
       - name: "Write baseline"
+        # We silence --writebaseline's output because otherwise it is picked up by GitHub code quality
         run: |
           set +e
-          basedpyright --writebaseline
+          basedpyright --writebaseline >/dev/null 2>&1
           exit 0
       - name: "Checkout PR Head"
         uses: actions/checkout@v7.0.1
