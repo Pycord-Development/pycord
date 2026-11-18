@@ -37,6 +37,10 @@ dependencies = [
     "typing_extensions>=4.14.0,<5",
 ]
 
+[tool.uv]
+required-version = ">=0.13.9"
+exclude-newer = "4 days"
+
 [project.optional-dependencies]
 speed = [
     "msgspec~=0.22.0",
@@ -65,17 +69,17 @@ dev = [
     "flake8==7.5.0",
     # Formatters are strongly pinned to avoid formatting breaking in production
     "mdformat==1.0",
-    "mdformat-gfm~=1.0",
-    "mdformat-gfm-alerts~=2.1",
+    "mdformat-gfm==1.0",
+    "mdformat-gfm-alerts==2.1",
     "black==26.10.1",
-    "basedpyright>=1.40.2",
+    "basedpyright>=1.40.2,<2",
     { include-group = "test" },
     { include-group = "tox" },
 ]
 tox = [
-    "tox>=4.27.0",
-    "tox-gh>=1.5.0",
-    "tox-uv>=1.36.0",
+    "tox~=4.27.0",
+    "tox-gh>=1.5.0,<2",
+    "tox-uv>=1.28.0,<2",
 ]
 test = [
     "pytest~=9.2.0",
@@ -89,15 +93,15 @@ docs = [
     "sphinxext-opengraph==0.13.0",
     "sphinx-copybutton==0.5.2",
     "furo==2025.12.19",
-    "sphinx-autodoc-typehints==3.17.6",
+    "sphinx-autodoc-typehints==3.17.5",
     "sphinx-intl==2.4.0",
     "typing_extensions==4.16.0",
     # used by scripts/docs_json_exporter.py to parse the built HTML
     "beautifulsoup4~=4.12",
 ]
 release = [
-    "build>=1.2.1",
-    "twine>=5.1.1",
+    "build>=1.2.1,<2",
+    "twine>=5.1.1,<6",
 ]
 
 [tool.uv.dependency-groups]
