@@ -17,6 +17,13 @@
   },
   "packageRules": [
     {
+      "description": "Wait 4 days before pushing PyPI updates",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "minimumReleaseAge": "4 days"
+    },
+    {
       "groupName": null,
       "description": "Python interpreter upgrades",
       "matchDatasources": [
