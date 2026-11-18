@@ -2407,8 +2407,8 @@ dev = [
     { name = "pytest", marker = "python_full_version >= '3.11'" },
     { name = "pytest-asyncio", marker = "python_full_version >= '3.11'" },
     { name = "tox", version = "4.67.13", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "tox-gh", marker = "python_full_version >= '3.11'" },
-    { name = "tox-uv", marker = "python_full_version >= '3.11'" },
+    { name = "tox-gh", version = "1.9.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "tox-uv", version = "1.37.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 docs = [
     { name = "beautifulsoup4", marker = "python_full_version >= '3.13'" },
@@ -2433,8 +2433,10 @@ test = [
 tox = [
     { name = "tox", version = "4.65.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "tox", version = "4.67.13", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "tox-gh" },
-    { name = "tox-uv" },
+    { name = "tox-gh", version = "1.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "tox-gh", version = "1.9.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "tox-uv", version = "1.36.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "tox-uv", version = "1.37.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 
 [package.group-requires-python]
@@ -2468,8 +2470,8 @@ dev = [
     { name = "pytest", marker = "python_full_version >= '3.11'", specifier = "~=9.2.0" },
     { name = "pytest-asyncio", marker = "python_full_version >= '3.11'", specifier = "~=1.5.0" },
     { name = "tox", marker = "python_full_version >= '3.11'", specifier = "~=4.65" },
-    { name = "tox-gh", marker = "python_full_version >= '3.11'", specifier = ">=1.5.0,<2" },
-    { name = "tox-uv", marker = "python_full_version >= '3.11'", specifier = ">=1.28.0,<2" },
+    { name = "tox-gh", marker = "python_full_version >= '3.11'", specifier = ">=1.8.0,<2" },
+    { name = "tox-uv", marker = "python_full_version >= '3.11'", specifier = ">=1.36.0,<2" },
 ]
 docs = [
     { name = "beautifulsoup4", marker = "python_full_version >= '3.13'", specifier = "~=4.12" },
@@ -2493,8 +2495,8 @@ test = [
 ]
 tox = [
     { name = "tox", specifier = "~=4.65" },
-    { name = "tox-gh", specifier = ">=1.5.0,<2" },
-    { name = "tox-uv", specifier = ">=1.28.0,<2" },
+    { name = "tox-gh", specifier = ">=1.8.0,<2" },
+    { name = "tox-uv", specifier = ">=1.36.0,<2" },
 ]
 
 [[package]]
@@ -3386,31 +3388,106 @@ wheels = [
 
 [[package]]
 name = "tox-gh"
-version = "1.5.0"
+version = "1.8.0"
 source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "tox", version = "4.65.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "tox", version = "4.67.13", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+resolution-markers = [
+    "python_full_version < '3.11'",
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4e/0e/6facd007d6f2d0358c133ab3fdcd49a6692470c345f94c482206e0efbdbd/tox_gh-1.5.0.tar.gz", hash = "sha256:bd4c56d1ebcde4ca2450fed347610a739614a7225945bdc89a67c8395eac9d63", size = 7741, upload-time = "2025-01-16T00:46:12.095Z" }
+dependencies = [
+    { name = "tox", version = "4.65.0", source = { registry = "https://pypi.org/simple" } },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a0/ba/5cac156bf0488be76488008dc9b82d0210845e8e60074af0fd6717955c01/tox_gh-1.8.0.tar.gz", hash = "sha256:19c151525e6ed383b2fd23f8f3a35301ee12f3438c19ac7062f81c30958626ad", size = 11694, upload-time = "2026-07-21T13:10:03.406Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/13/62/db91eff00205846878e0184d4ba5b24e35cf5540e16b77ea8e5644206dff/tox_gh-1.5.0-py3-none-any.whl", hash = "sha256:fd7e8c826f4576a02af4737fd4b738817660b63898c161d6ee8f658c885f7fa1", size = 6844, upload-time = "2025-01-16T00:46:09.499Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/49/2dfeb72781e46d5e3f2bc374999bd695515c9015862a53252e59906aafaf/tox_gh-1.8.0-py3-none-any.whl", hash = "sha256:c29a109dc4c1a51bc472b4989bd7063ac9be07bf0c16a2b0fcbe57f16757e397", size = 10353, upload-time = "2026-07-21T13:10:02.028Z" },
+]
+
+[[package]]
+name = "tox-gh"
+version = "1.9.3"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14'",
+    "python_full_version == '3.13.*'",
+    "python_full_version == '3.12.*'",
+    "python_full_version == '3.11.*'",
+]
+dependencies = [
+    { name = "tox", version = "4.67.13", source = { registry = "https://pypi.org/simple" } },
+    { name = "typing-extensions", marker = "python_full_version < '3.12'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/21/37/2be77636f5e6fa06c491b6dd69ba197a016d861999d3c16c9534dce5a74e/tox_gh-1.9.3.tar.gz", hash = "sha256:d420405ff3102c1b6435af552f608c75e4b340bc66cb4066bc9c55c9f39317b9", size = 12929, upload-time = "2026-11-06T14:52:58.609Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/44/cee06ffe410e511f43a51ef7823239b91583d133d45e2c428ecdd9b34190/tox_gh-1.9.3-py3-none-any.whl", hash = "sha256:61fcafb19a132e5a6cc9f7d220c7378aa90d48c0486fd356a95f019e69107566", size = 10562, upload-time = "2026-11-06T14:52:57.352Z" },
 ]
 
 [[package]]
 name = "tox-uv"
-version = "1.28.0"
+version = "1.36.1"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.11'",
+]
 dependencies = [
-    { name = "packaging" },
-    { name = "tomli", marker = "python_full_version < '3.11'" },
-    { name = "tox", version = "4.65.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "tox", version = "4.67.13", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "tox-uv-bare", version = "1.36.1", source = { registry = "https://pypi.org/simple" } },
     { name = "uv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f9/9a/f4b675ebcbd623854129891e87045f80c1d8e91b2957496f1fe6e463f291/tox_uv-1.28.0.tar.gz", hash = "sha256:a06ff909f73232b2b7965de19090d887b12b44e44eb0843b2c07266d2957ade2", size = 23265, upload-time = "2025-08-14T17:53:07.909Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1f/ac/b32555d190c4440b8d2779d4a19439e5fbd5a3950f7e5a17ead7c7d30cad/tox_uv-1.28.0-py3-none-any.whl", hash = "sha256:3fbe13fa6eb6961df5512e63fc4a5cc0c8d264872674ee09164649f441839053", size = 17225, upload-time = "2025-08-14T17:53:06.299Z" },
+    { url = "https://files.pythonhosted.org/packages/19/ef/06e0f151d1ebb544bcf27bf8a6914bdc7d9434689278c669efb3c73a8ed5/tox_uv-1.36.1-py3-none-any.whl", hash = "sha256:6996cb49d0b6b838ae015b76611770595cb6f658a27e2a9661766148194c18bd", size = 6567, upload-time = "2026-10-01T23:51:58.511Z" },
+]
+
+[[package]]
+name = "tox-uv"
+version = "1.37.7"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14'",
+    "python_full_version == '3.13.*'",
+    "python_full_version == '3.12.*'",
+    "python_full_version == '3.11.*'",
+]
+dependencies = [
+    { name = "tox-uv-bare", version = "1.37.7", source = { registry = "https://pypi.org/simple" } },
+    { name = "uv" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/52/24/ba4c9829ef4183d0b1da35db17009b8dc88389f060007118c4d935e8070f/tox_uv-1.37.7-py3-none-any.whl", hash = "sha256:ab2a06e336d12b40a0de3b157ba52032762204c863343dcc57b6f3b77bec337b", size = 7995, upload-time = "2026-11-07T08:14:26.49Z" },
+]
+
+[[package]]
+name = "tox-uv-bare"
+version = "1.36.1"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.11'",
+]
+dependencies = [
+    { name = "packaging" },
+    { name = "tomli" },
+    { name = "tox", version = "4.65.0", source = { registry = "https://pypi.org/simple" } },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/42/c1/1f5b4ff553013dfd418485cb9359cf305e7f47b946e02a36f4a4c279ac21/tox_uv_bare-1.36.1.tar.gz", hash = "sha256:33a08e4205c63811dd76590590718539fe87dcadda5882f164f747bd5db31a2c", size = 32648, upload-time = "2026-10-01T23:52:01.302Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/04/64/ed9b351f7ce794df36923fcde243e90cef07f103ea0c24ae4557e9736b7e/tox_uv_bare-1.36.1-py3-none-any.whl", hash = "sha256:de41cf5450b8f37837fd68834dfebef59939cd10fde030e498cd9a48db19f1e8", size = 22469, upload-time = "2026-10-01T23:51:59.906Z" },
+]
+
+[[package]]
+name = "tox-uv-bare"
+version = "1.37.7"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14'",
+    "python_full_version == '3.13.*'",
+    "python_full_version == '3.12.*'",
+    "python_full_version == '3.11.*'",
+]
+dependencies = [
+    { name = "packaging" },
+    { name = "tox", version = "4.67.13", source = { registry = "https://pypi.org/simple" } },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/78/9f/cc5a6323ce97973dade2ce6c1e31c943cec5652bf46edda5429785b44c5c/tox_uv_bare-1.37.7.tar.gz", hash = "sha256:2453b801163e8b0e128aa73c6057aa1eb635d0919166b2b7b2e93a62006bbd6e", size = 39291, upload-time = "2026-11-07T08:14:29.197Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fe/a0/ca490d5e13ada234821c690bdd97c0ffa776d30b3d67b5786bcbb8add542/tox_uv_bare-1.37.7-py3-none-any.whl", hash = "sha256:82eb929961a8d193b05332a717c906a6c95ca21689800cbae0fe3b337cb8dfd1", size = 24542, upload-time = "2026-11-07T08:14:27.83Z" },
 ]
 
 [[package]]
