@@ -81,12 +81,13 @@ repos:
   #    hooks:
   #      - id: mypy
 
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
+  - repo: https://github.com/hukkin/mdformat
+    rev: 1.0.0
     hooks:
-      - id: prettier
-        args: [--prose-wrap=always, --print-width=88]
-        exclude: \.(po|pot|yml|yaml)$
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm==1.0.0
+          - mdformat-gfm-alerts==2.1.0
   - repo: https://github.com/DanielNoord/pydocstringformatter
     rev: v1.0.0
     hooks:
