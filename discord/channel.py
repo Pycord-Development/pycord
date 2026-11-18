@@ -1310,6 +1310,8 @@ class ForumChannel(_TextChannel):
                     "The NSFW setting is mutually exclusive with the spoiler setting. The channel will become an NSFW channel.",
                     stacklevel=2,
                 )
+            if "nsfw" not in options and options.get("spoiler"):
+                options["nsfw"] = False
             options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
@@ -1733,6 +1735,8 @@ class MediaChannel(ForumChannel):
                     "The channel will become an NSFW channel.",
                     stacklevel=2,
                 )
+            if "nsfw" not in options and options.get("spoiler"):
+                options["nsfw"] = False
             flags.is_spoiler_channel = options.pop("spoiler", flags.is_spoiler_channel)
             options["flags"] = flags
         payload = await self._edit(options, reason=reason)
@@ -2393,6 +2397,8 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
                     "NSFW setting is mutually exclusive with spoiler setting. Channel will become an NSFW channel.",
                     stacklevel=2,
                 )
+            if "nsfw" not in options and options.get("spoiler"):
+                options["nsfw"] = False
             options.pop("spoiler")
 
         payload = await self._edit(options, reason=reason)
