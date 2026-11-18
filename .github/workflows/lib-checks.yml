@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: "Check changed paths"
         id: filter
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        uses: actions/github-script@v9.0.0
         with:
           script: |
             if (context.eventName !== 'pull_request') {
@@ -84,9 +84,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Install uv"
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: false
       - name: "Check uv.lock is up to date"
@@ -97,9 +97,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "dev"
@@ -113,9 +113,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "dev"
@@ -127,15 +127,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "dev"
       - name: "Setup cache"
         id: cache-pylint
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           path: .pylint.d
           key: pylint-${{ runner.os }}-py3.14-${{ hashFiles('pyproject.toml', 'discord/**/*.py') }}
@@ -149,15 +149,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "dev"
       - name: "Setup cache"
         id: cache-mypy
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           path: .mypy_cache
           key: mypy-${{ runner.os }}-py3.14-${{ hashFiles('pyproject.toml', 'discord/**/*.py') }}
@@ -174,9 +174,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: "3.14"
           groups: "dev"
@@ -194,9 +194,9 @@ jobs:
         python-version: [ "3.10", "3.14" ]
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: ${{ matrix.python-version }}
           groups: "tox"
@@ -213,9 +213,9 @@ jobs:
         python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
       - name: "Setup uv"
-        uses: ./.github/actions/setup-uv
+        uses: $/.github/actions/setup-uv
         with:
           python-version: ${{ matrix.python-version }}
           groups: "tox"
