@@ -27,14 +27,14 @@ from __future__ import annotations
 
 from typing_extensions import NotRequired, TypedDict
 
+from .appinfo import PartialApplicationInfo
 from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
+from .invite import InviteTargetType
 from .member import Member
 from .snowflake import Snowflake
 from .threads import Thread, ThreadMember
-from .user import User
-from .voice import VoiceServerUpdate as VoiceServerUpdateEvent
-from .voice import VoiceState as VoiceStateEvent
+from .user import PartialUser, User
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -193,3 +193,29 @@ class VoiceChannelEffectSendEvent(TypedDict):
     animation_id: NotRequired[int]
     sound_id: NotRequired[Snowflake | int]
     sound_volume: NotRequired[float]
+
+
+class InviteCreateEvent(TypedDict):
+    channel_id: Snowflake
+    code: str
+    created_at: str
+    guild_id: NotRequired[Snowflake]
+    inviter: NotRequired[User]
+    max_age: int
+    max_uses: int
+    target_type: NotRequired[InviteTargetType]
+    target_user: NotRequired[PartialUser]
+    target_application: NotRequired[PartialApplicationInfo]
+    temporary: bool
+    uses: bool
+    expires_at: str | None
+    role_ids: list[Snowflake]
+
+
+class InviteDeleteEvent(TypedDict):
+    channel_id: Snowflake
+    guild_id: NotRequired[Snowflake]
+    code: str
+
+
+GatewayInviteEvent = InviteCreateEvent | InviteDeleteEvent

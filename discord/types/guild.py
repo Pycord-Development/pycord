@@ -139,6 +139,11 @@ class GuildPreview(UnavailableGuild):
     stickers: list[Sticker]
 
 
+class GuildPreviewWithCounts(GuildPreview):
+    approximate_member_count: int
+    approximate_presence_count: int
+
+
 class Guild(UnavailableGuild):
     name: str
     icon: str | None

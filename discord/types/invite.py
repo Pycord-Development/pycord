@@ -31,13 +31,18 @@ from typing_extensions import NotRequired, TypedDict
 
 from .appinfo import PartialApplicationInfo
 from .channel import PartialChannel
-from .guild import InviteGuild, _GuildPreviewUnique
+from .guild import (
+    GuildPreviewWithCounts,
+    InviteGuild,
+)
 from .role import Role
 from .scheduled_events import ScheduledEvent
-from .snowflake import Snowflake
-from .user import PartialUser
+from .user import PartialUser, User
 
-InviteTargetType = Literal[1, 2]
+InviteTargetType = Literal[
+    1,  # STREAM
+    2,  # EMBEDDED_APPLICATION
+]
 
 
 class VanityInvite(TypedDict):
@@ -52,51 +57,44 @@ class IncompleteInvite(TypedDict):
     max_uses: NotRequired[int]
     max_age: NotRequired[int]
     temporary: NotRequired[bool]
-    created_at: NotRequired[str]
-    expires_at: NotRequired[str | None]
+    expires_at: str | None
+
+
+InviteType = Literal[
+    0,  # GUILD
+    1,  # GROUP_DM
+    2,  # FRIEND
+]
 
 
 class Invite(IncompleteInvite):
+    type: InviteType
     guild: NotRequired[InviteGuild]
-    inviter: NotRequired[PartialUser]
+    inviter: NotRequired[User]
     scheduled_event: NotRequired[ScheduledEvent]
     target_user: NotRequired[PartialUser]
     target_type: NotRequired[InviteTargetType]
     target_application: NotRequired[PartialApplicationInfo]
-    roles: NotRequired[list[Role]]
+    flags: NotRequired[int]
+    roles: NotRequired[list[Role]]  # Partial role
 
 
-class InviteWithCounts(Invite, _GuildPreviewUnique):
+class InviteWithCounts(Invite, GuildPreviewWithCounts):
     pass
 
 
-class GatewayInviteCreate(TypedDict):
-    guild_id: NotRequired[Snowflake]
-    inviter: NotRequired[PartialUser]
-    target_type: NotRequired[InviteTargetType]
-    target_user: NotRequired[PartialUser]
-    target_application: NotRequired[PartialApplicationInfo]
-    channel_id: Snowflake
-    code: str
-    created_at: str
-    max_age: int
-    max_uses: int
-    temporary: bool
-    uses: bool
-    role_ids: list[Snowflake]
-
-
-class GatewayInviteDelete(TypedDict):
-    guild_id: NotRequired[Snowflake]
-    channel_id: Snowflake
-    code: str
-
-
-GatewayInvite = GatewayInviteCreate | GatewayInviteDelete
+TargetUsersJobStatus = Literal[
+    0,  # UNSPECIFIED
+    1,  # PROCESSING
+    2,  # COMPLETED
+    3,  # FAILED
+]
 
 
 class InviteTargetUsersJobStatus(TypedDict):
-    status: Literal[0, 1, 2, 3]
+    """The object returned when getting the process of processing invite target users"""
+
+    status: TargetUsersJobStatus
     total_users: int
     processed_users: int
     created_at: NotRequired[str]
