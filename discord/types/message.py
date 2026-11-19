@@ -27,11 +27,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
+from docutils.parsers.rst.directives.misc import Role
 from typing_extensions import NotRequired, TypedDict
+
+from discord.message import PartialMessage
 
 if TYPE_CHECKING:
 
-    from .channel import ChannelType
+    from .appinfo import ApplicationInfo
+    from .channel import ChannelType, PartialChannel
     from .components import Component
     from .embed import Embed
     from .emoji import PartialEmoji
@@ -52,48 +56,60 @@ class ChannelMention(TypedDict):
     name: str
 
 
-class Reaction(TypedDict):
-    count: int
-    me: bool
-    emoji: PartialEmoji
-    burst: bool
-    me_burst: bool
-    burst_colors: list[str]
-    count_details: ReactionCountDetails
-
-
 class ReactionCountDetails(TypedDict):
     normal: int
     burst: int
 
 
+class Reaction(TypedDict):
+    count: int
+    count_details: ReactionCountDetails
+    me: bool
+    burst: bool
+    me_burst: bool
+    emoji: PartialEmoji
+    burst_colors: list[str]
+
+
 class Attachment(TypedDict):
-    height: NotRequired[int | None]
-    width: NotRequired[int | None]
-    content_type: NotRequired[str]
-    description: NotRequired[str]
-    spoiler: NotRequired[bool]
     id: Snowflake
     filename: str
-    size: int
+    title: NotRequired[str]
+    description: NotRequired[str]
+    content_type: NotRequired[str]  # MMIME type i.e. image/png
+    size: int  # Filesize in bytes
     url: str
     proxy_url: str
+    height: NotRequired[int | None]
+    width: NotRequired[int | None]
+    placeholder: NotRequired[str]
+    placeholder_version: NotRequired[int]
+    ephemeral: NotRequired[bool]
     duration_secs: NotRequired[float]
     waveform: NotRequired[str]
     flags: NotRequired[int]
-    title: NotRequired[str]
-    ephemeral: NotRequired[bool]
+    clip_participants: NotRequired[User]
+    clip_created_at: NotRequired[str]
+    application: NotRequired[ApplicationInfo | None]
 
 
-MessageActivityType = Literal[1, 2, 3, 5, 6]
+MessageActivityType = Literal[
+    1,  # JOIN
+    2,  # SPECTATE
+    3,  # LISTEN
+    5,  # JOIN_REQUEST
+    6,  # STREAM_REQUEST
+]
 
 
 class MessageActivity(TypedDict):
     type: MessageActivityType
-    party_id: str
+    party_id: NotRequired[str]
 
 
 class MessageApplication(TypedDict):
+    """Partial application info as part of a message object"""
+
     cover_image: NotRequired[str]
     id: Snowflake
     description: str
@@ -101,28 +117,69 @@ class MessageApplication(TypedDict):
     name: str
 
 
-MessageReferenceType = Literal[0, 1]
+MessageReferenceType = Literal[
+    0,  # DEFAULT
+    1,  # FORWARD
+]
 
 
-class MessageReference(TypedDict, total=False):
-    type: NotRequired[MessageReferenceType]
-    message_id: Snowflake
-    channel_id: Snowflake
-    guild_id: Snowflake
-    fail_if_not_exists: bool
+class MessageReference(TypedDict):
+    type: NotRequired[MessageReferenceType]  # Will become required in the future
+    message_id: NotRequired[Snowflake]
+    channel_id: NotRequired[Snowflake]
+    guild_id: NotRequired[Snowflake]
+    fail_if_not_exists: NotRequired[bool]
 
 
 MessageType = Literal[
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 18, 19, 20, 21, 22, 23, 24
+    0,  # DEFAULT
+    1,  # RECIPIENT_ADD
+    2,  # RECIPIENT_REMOVE
+    3,  # CALL
+    4,  # CHANNEL_NAME_CHANGE
+    5,  # CHANNEL_ICON_CHANGE
+    6,  # CHANNEL_PINNED_MESSAGE
+    7,  # USER_JOIN
+    8,  # GUILD_BOOST
+    9,  # GUILD_BOOST_TIER_1
+    10,  # GUILD_BOOST_TIER_2
+    11,  # GUILD_BOOST_TIER_3
+    12,  # CHANNEL_FOLLOW_ADD
+    14,  # GUILD_DISCOVERY_DISQUALIFIED
+    15,  # GUILD_DISCOVERY_REQUALIFIED
+    16,  # GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING
+    17,  # GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING
+    18,  # THREAD_CREATED
+    19,  # REPLY
+    20,  # CHAT_INPUT_COMMAND
+    21,  # THREAD_STARTER_MESSAGE
+    22,  # GUILD_INVITE_REMINDER
+    23,  # CONTEXT_MENU_COMMAND
+    24,  # AUTO_MODERATION_ACTION
+    25,  # ROLE_SUBSCRIPTION_PURCHASE
+    26,  # INTERACTION_PREMIUM_UPSELL
+    27,  # STAGE_START
+    28,  # STAGE_END
+    29,  # STAGE_SPEAKER
+    31,  # STAGE_TOPIC
+    32,  # GUILD_APPLICATION_PREMIUM_SUBSCRIPTION
+    36,  # GUILD_INCIDENT_ALERT_MODE_ENABLED
+    37,  # GUILD_INCIDENT_ALERT_MODE_DISABLED
+    38,  # GUILD_INCIDENT_REPORT_RAID
+    39,  # GUILD_INCIDENT_REPORT_FALSE_ALARM
+    44,  # PURCHASE_NOTIFICATION
+    46,  # POLL_RESULT
 ]
 
 
 class MessageCall(TypedDict):
     participants: SnowflakeList
-    ended_timestamp: NotRequired[str]
+    ended_timestamp: NotRequired[str | None]
 
 
 class ForwardedMessage(TypedDict):
+    """A subset of fields available in a message, applies to all forwarded messages"""
+
     type: MessageType
     content: str
     embeds: list[Embed]
@@ -140,27 +197,26 @@ class MessageSnapshot(TypedDict):
     message: ForwardedMessage
 
 
+class RoleSubscriptionData(TypedDict):
+    role_subscription_listing_id: Snowflake
+    tier_name: str
+    total_months_subscribed: int
+    is_renewal: bool
+
+
+class MessageResolvedData(TypedDict):
+    users: NotRequired[dict[Snowflake, User]]
+    members: NotRequired[dict[Snowflake, PartialMember]]
+    roles: NotRequired[dict[Snowflake, Role]]
+    channels: NotRequired[dict[Snowflake, PartialChannel]]
+    messages: NotRequired[dict[Snowflake, PartialMessage]]
+    attachments: NotRequired[dict[Snowflake, Attachment]]
+
+
 class Message(TypedDict):
-    guild_id: NotRequired[Snowflake]
-    member: NotRequired[PartialMember]
-    mention_channels: NotRequired[list[ChannelMention]]
-    reactions: NotRequired[list[Reaction]]
-    nonce: NotRequired[int | str]
-    webhook_id: NotRequired[Snowflake]
-    activity: NotRequired[MessageActivity]
-    application: NotRequired[MessageApplication]
-    application_id: NotRequired[Snowflake]
-    message_reference: NotRequired[MessageReference]
-    flags: NotRequired[int]
-    sticker_items: NotRequired[list[StickerItem]]
-    referenced_message: NotRequired[Message | None]
-    interaction: NotRequired[MessageInteraction]
-    interaction_metadata: NotRequired[MessageComponentInteractionMetadata]
-    components: NotRequired[list[Component]]
-    thread: NotRequired[Thread | None]
     id: Snowflake
     channel_id: Snowflake
-    author: User
+    author: User  # May not be valid for certain message types
     content: str
     timestamp: str
     edited_timestamp: str | None
@@ -168,13 +224,31 @@ class Message(TypedDict):
     mention_everyone: bool
     mentions: list[UserWithMember]
     mention_roles: SnowflakeList
+    mention_channels: NotRequired[list[ChannelMention]]
     attachments: list[Attachment]
     embeds: list[Embed]
+    reactions: NotRequired[list[Reaction]]
+    nonce: NotRequired[int | str]
     pinned: bool
+    webhook_id: NotRequired[Snowflake]
     type: MessageType
-    poll: Poll
-    call: MessageCall
+    activity: NotRequired[MessageActivity]
+    application: NotRequired[MessageApplication]
+    application_id: NotRequired[Snowflake]
+    flags: NotRequired[int]
+    message_reference: NotRequired[MessageReference]
     message_snapshots: NotRequired[list[MessageSnapshot]]
+    referenced_message: NotRequired[Message | None]
+    interaction_metadata: NotRequired[MessageComponentInteractionMetadata]
+    interaction: NotRequired[MessageInteraction]
+    thread: NotRequired[Thread | None]
+    components: NotRequired[list[Component]]
+    sticker_items: NotRequired[list[StickerItem]]
+    position: NotRequired[int]
+    role_subscription_data: NotRequired[RoleSubscriptionData]
+    resolved: NotRequired[MessageResolvedData]
+    poll: NotRequired[Poll]
+    call: NotRequired[MessageCall]
     shared_client_theme: NotRequired[SharedClientTheme]
 
 
@@ -184,6 +258,8 @@ class MessagePin(TypedDict):
 
 
 class MessagePinPagination(TypedDict):
+    """Response of a get channel pins request"""
+
     items: list[MessagePin]
     has_more: bool
 
@@ -192,7 +268,9 @@ AllowedMentionType = Literal["roles", "users", "everyone"]
 
 
 class AllowedMentions(TypedDict):
-    parse: list[AllowedMentionType]
-    roles: SnowflakeList
-    users: SnowflakeList
-    replied_user: bool
+    """Allowed fields for the allowed mentions object when sending a message"""
+
+    parse: NotRequired[list[AllowedMentionType]]
+    roles: NotRequired[SnowflakeList]
+    users: NotRequired[SnowflakeList]
+    replied_user: NotRequired[bool]
