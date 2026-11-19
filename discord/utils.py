@@ -52,6 +52,7 @@ from collections.abc import (
     Mapping,
     Sequence,
 )
+from concurrent.futures import Future
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -61,12 +62,14 @@ from typing import (
     ForwardRef,
     Generic,
     Literal,
+    ParamSpec,
     Protocol,
     TypeVar,
     Union,
     overload,
 )
 
+from typing_extensions import LiteralString
 from typing_extensions import deprecated as ext_deprecated
 
 if TYPE_CHECKING:
@@ -179,6 +182,8 @@ else:
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
 _Iter = Iterator[T] | AsyncIterator[T]
+_MC_P = ParamSpec("_MC_P")
+_MC_T = TypeVar("_MC_T")
 
 
 class CachedSlotProperty(Generic[T, T_co]):
@@ -861,7 +866,11 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
     return (reset - now).total_seconds()
 
 
-async def maybe_coroutine(f, *args, **kwargs):
+async def maybe_coroutine(
+    f: Callable[_MC_P, _MC_T | Awaitable[_MC_T]],
+    *args: _MC_P.args,
+    **kwargs: _MC_P.kwargs,
+) -> _MC_T:
     value = f(*args, **kwargs)
     if _isawaitable(value):
         return await value
@@ -1594,13 +1603,13 @@ voice_dependency_warning_emitted = False
 def get_missing_voice_dependencies() -> tuple[str, ...]:
     missing: list[str] = []
     try:
-        import nacl.secret
-        import nacl.utils
+        import nacl.secret  # pyright: ignore[reportUnusedImport]
+        import nacl.utils  # pyright: ignore[reportUnusedImport]
     except ImportError:
         missing.append("PyNaCl")
 
     try:
-        import davey
+        import davey  # pyright: ignore[reportUnusedImport]
     except ImportError:
         missing.append("davey")
     return tuple(missing)
@@ -1643,3 +1652,20 @@ def _get_event_loop() -> asyncio.AbstractEventLoop:
             asyncio.set_event_loop(loop)
         return loop
     return asyncio.get_event_loop()
+
+
+def log_future_exception(
+    f: Future[Any],  # pyright: ignore[reportExplicitAny]
+    log: logging.Logger,
+    message: LiteralString,
+    *args: object,
+) -> None:
+    def callback(f: Future[object]) -> None:
+        if not f.cancelled() and (exc := f.exception()) is not None:
+            log.exception(
+                message,
+                *args,
+                exc_info=exc,
+            )
+
+    f.add_done_callback(callback)

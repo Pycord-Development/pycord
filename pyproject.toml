@@ -48,7 +48,7 @@ speed = [
 ]
 voice = [
     "PyNaCl>=1.6.2,<1.7",
-    "davey>=0.1.4,<1",
+    "davey~=0.1.4",
 ]
 
 [project.urls]
