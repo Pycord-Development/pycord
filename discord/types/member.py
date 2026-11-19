@@ -32,29 +32,25 @@ from .snowflake import Snowflake, SnowflakeList
 from .user import User
 
 
-class Nickname(TypedDict):
-    nick: str
-
-
 class PartialMember(TypedDict):
     roles: SnowflakeList
-    joined_at: str
+    joined_at: str | None
     deaf: bool
     mute: bool
 
 
-class Member(PartialMember, total=False):
-    avatar: str
-    banner: str
-    user: User
-    nick: str
-    premium_since: str
-    pending: bool
-    permissions: str
-    communication_disabled_until: str
+class Member(PartialMember):
+    user: NotRequired[User]
+    nick: NotRequired[str | None]
+    avatar: NotRequired[str | None]
+    banner: NotRequired[str | None]
+    premium_since: NotRequired[str | None]
     flags: int
-    collectibles: Collectibles
-    avatar_decoration_data: AvatarDecoration
+    pending: NotRequired[bool]
+    permissions: NotRequired[str]
+    communication_disabled_until: NotRequired[str | None]
+    avatar_decoration_data: NotRequired[AvatarDecoration | None]
+    collectibles: NotRequired[Collectibles | None]
 
 
 class _OptionalMemberWithUser(PartialMember, total=False):
@@ -76,17 +72,16 @@ class UserWithMember(User, total=False):
 
 class MemberUpdateEvent(TypedDict):
     guild_id: Snowflake
-    user: User
     roles: list[Snowflake]
+    user: User
     nick: NotRequired[str | None]
-    avatar: NotRequired[str | None]
-    banner: NotRequired[str | None]
-    joined_at: NotRequired[str | None]
+    avatar: str | None
+    banner: str | None
+    joined_at: str | None
     premium_since: NotRequired[str | None]
-    deaf: NotRequired[bool | None]
-    mute: NotRequired[bool | None]
-    pending: NotRequired[bool | None]
+    deaf: NotRequired[bool]
+    mute: NotRequired[bool]
+    pending: NotRequired[bool]
     communication_disabled_until: NotRequired[str | None]
-    flags: NotRequired[int | None]
     avatar_decoration_data: NotRequired[AvatarDecoration | None]
-    # collectibles: Collectibles
+    collectibles: NotRequired[Collectibles | None]
