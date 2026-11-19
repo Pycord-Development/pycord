@@ -67,7 +67,7 @@ if TYPE_CHECKING:
     from .types.activity import PresenceUpdate
     from .types.member import Member as MemberPayload
     from .types.member import MemberUpdateEvent as MemberUpdateEventPayload
-    from .types.member import MemberWithUser as MemberWithUserPayload
+    from .types.member import PartialMember as PartialMemberPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
     from .types.voice import VoiceState as GuildVoiceStatePayload
@@ -335,7 +335,7 @@ class Member(discord.abc.Messageable, _UserTag):
         avatar_decoration: Asset | None
 
     def __init__(
-        self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
+        self, *, data: PartialMemberPayload, guild: Guild, state: ConnectionState
     ):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
@@ -418,7 +418,7 @@ class Member(discord.abc.Messageable, _UserTag):
             return state.create_user(data)
         else:
             member_data["user"] = data  # type: ignore
-            return cls(data=member_data, guild=guild, state=state)  # type: ignore
+            return cls(data=member_data, guild=guild, state=state)
 
     @classmethod
     def _copy(cls: type[M], member: M) -> M:

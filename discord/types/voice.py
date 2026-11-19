@@ -29,7 +29,7 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from .member import MemberWithUser
+from .member import Member
 from .snowflake import Snowflake
 
 SupportedModes = Literal[
@@ -41,7 +41,7 @@ SupportedModes = Literal[
 
 
 class VoiceState(TypedDict):
-    member: NotRequired[MemberWithUser]
+    member: NotRequired[Member]
     self_stream: NotRequired[bool]
     user_id: Snowflake
     session_id: str

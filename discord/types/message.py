@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     from .embed import Embed
     from .emoji import PartialEmoji
     from .interactions import MessageComponentInteractionMetadata, MessageInteraction
-    from .member import Member, UserWithMember
+    from .member import PartialMember, UserWithMember
     from .poll import Poll
     from .shared_client_theme import SharedClientTheme
     from .snowflake import Snowflake, SnowflakeList
@@ -142,7 +142,7 @@ class MessageSnapshot(TypedDict):
 
 class Message(TypedDict):
     guild_id: NotRequired[Snowflake]
-    member: NotRequired[Member]
+    member: NotRequired[PartialMember]
     mention_channels: NotRequired[list[ChannelMention]]
     reactions: NotRequired[list[Reaction]]
     nonce: NotRequired[int | str]

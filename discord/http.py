@@ -1093,7 +1093,7 @@ class HTTPClient:
         *,
         reason: str | None = None,
         **fields: Any,
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         r = Route(
             "PATCH",
             "/guilds/{guild_id}/members/{user_id}",
@@ -1656,7 +1656,7 @@ class HTTPClient:
 
     def get_members(
         self, guild_id: Snowflake, limit: int, after: Snowflake | None
-    ) -> Response[list[member.MemberWithUser]]:
+    ) -> Response[list[member.Member]]:
         params: dict[str, Any] = {
             "limit": limit,
         }
@@ -1671,7 +1671,7 @@ class HTTPClient:
         guild_id: Snowflake,
         query: str,
         limit: int,
-    ) -> Response[list[member.MemberWithUser]]:
+    ) -> Response[list[member.Member]]:
         params: dict[str, Any] = {
             "query": query,
             "limit": limit,
@@ -1682,7 +1682,7 @@ class HTTPClient:
 
     def get_member(
         self, guild_id: Snowflake, member_id: Snowflake
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         return self.request(
             Route(
                 "GET",
@@ -2257,7 +2257,7 @@ class HTTPClient:
         role_ids: list[int],
         *,
         reason: str | None = None,
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         return self.edit_member(
             guild_id=guild_id, user_id=user_id, roles=role_ids, reason=reason
         )
@@ -2379,7 +2379,7 @@ class HTTPClient:
         channel_id: Snowflake,
         *,
         reason: str | None = None,
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         return self.edit_member(
             guild_id=guild_id, user_id=user_id, channel_id=channel_id, reason=reason
         )

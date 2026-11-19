@@ -33,18 +33,20 @@ from .user import User
 
 
 class PartialMember(TypedDict):
-    roles: SnowflakeList
-    joined_at: str | None
-    deaf: bool
-    mute: bool
+    """A guild member without ``user``.
 
+    Sent as ``member`` and ``mentions[].member`` in MESSAGE_CREATE / MESSAGE_UPDATE,
+    and in interaction ``resolved.members`` (which also omits ``deaf`` and ``mute``).
+    """
 
-class Member(PartialMember):
-    user: NotRequired[User]
     nick: NotRequired[str | None]
     avatar: NotRequired[str | None]
     banner: NotRequired[str | None]
+    roles: SnowflakeList
+    joined_at: str | None
     premium_since: NotRequired[str | None]
+    deaf: NotRequired[bool]  # Required for a fully resolved member
+    mute: NotRequired[bool]  # Required for a fully resolved member
     flags: int
     pending: NotRequired[bool]
     permissions: NotRequired[str]
@@ -53,21 +55,14 @@ class Member(PartialMember):
     collectibles: NotRequired[Collectibles | None]
 
 
-class _OptionalMemberWithUser(PartialMember, total=False):
-    avatar: str
-    nick: str
-    premium_since: str
-    pending: bool
-    permissions: str
-    avatar_decoration_data: AvatarDecoration
-
-
-class MemberWithUser(_OptionalMemberWithUser):
+class Member(PartialMember):
     user: User
 
 
-class UserWithMember(User, total=False):
-    member: _OptionalMemberWithUser
+class UserWithMember(User):
+    """A user with a partial ``member`` attached, such as in message ``mentions``."""
+
+    member: NotRequired[PartialMember]
 
 
 class MemberUpdateEvent(TypedDict):

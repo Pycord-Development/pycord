@@ -211,7 +211,7 @@ class ApplicationCommandResolvedPartialChannel(TypedDict):
 
 class ApplicationCommandInteractionDataResolved(TypedDict):
     users: NotRequired[dict[Snowflake, User]]
-    members: NotRequired[dict[Snowflake, Member]]
+    members: NotRequired[dict[Snowflake, PartialMember]]
     roles: NotRequired[dict[Snowflake, Role]]
     channels: NotRequired[dict[Snowflake, ApplicationCommandResolvedPartialChannel]]
     attachments: NotRequired[dict[Snowflake, Attachment]]
