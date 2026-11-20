@@ -23,16 +23,13 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TYPE_CHECKING, TypedDict
+from typing import TypedDict
 
 from typing_extensions import NotRequired
 
-from .collectibles import AvatarDecoration
+from .collectibles import AvatarDecoration, Collectibles
 from .snowflake import Snowflake
 from .user import User
-
-if TYPE_CHECKING:
-    from .collectibles import Collectibles
 
 
 class PartialMember(TypedDict):
