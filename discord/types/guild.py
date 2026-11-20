@@ -29,9 +29,9 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from .activity import PresenceUpdate
 from .channel import Thread
 from .emoji import Emoji
+from .raw_models import PresenceUpdateEvent
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .snowflake import Snowflake
@@ -182,7 +182,7 @@ class Guild(UnavailableGuild):
     premium_progress_bar_enabled: NotRequired[bool]
     safety_alerts_channel_id: Snowflake | None
     incidents_data: IncidentsData | None
-    presences: NotRequired[list[PresenceUpdate]]
+    presences: NotRequired[list[PresenceUpdateEvent]]
     threads: NotRequired[list[Thread]]
     guild_scheduled_events: NotRequired[list[ScheduledEvent]]
 

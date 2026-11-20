@@ -30,19 +30,8 @@ from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
 from .snowflake import Snowflake
-from .user import PartialUser
 
 StatusType = Literal["idle", "dnd", "online", "offline"]
-
-
-class PresenceUpdate(TypedDict):
-    """The presence update *can* always be partial in that it contains a user with at least the id"""
-
-    user: PartialUser
-    guild_id: Snowflake
-    status: StatusType
-    activities: list[Activity]
-    client_status: ClientStatus
 
 
 class ClientStatus(TypedDict):

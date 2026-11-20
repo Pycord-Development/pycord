@@ -55,6 +55,12 @@ class ChannelMention(TypedDict):
     name: str
 
 
+ReactionType = Literal[
+    0,  # NORMAL
+    1,  # BURST
+]
+
+
 class ReactionCountDetails(TypedDict):
     normal: int
     burst: int

@@ -64,11 +64,11 @@ if TYPE_CHECKING:
     from .message import Message
     from .role import Role
     from .state import ConnectionState
-    from .types.activity import PresenceUpdate
     from .types.member import Member as MemberPayload
     from .types.member import MemberUpdateEvent as MemberUpdateEventPayload
     from .types.member import PartialMember as PartialMemberPayload
     from .types.member import UserWithMember as UserWithMemberPayload
+    from .types.raw_models import PresenceUpdateEvent
     from .types.user import User as UserPayload
     from .types.voice import VoiceState as GuildVoiceStatePayload
     from .types.voice import VoiceState as VoiceStatePayload
@@ -472,7 +472,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._avatar_decoration = data.get("avatar_decoration_data")
 
     def _presence_update(
-        self, data: PresenceUpdate, user: UserPayload
+        self, data: PresenceUpdateEvent, user: UserPayload
     ) -> tuple[User, User] | None:
         self.activities = tuple(map(create_activity, data["activities"]))
         self._client_status = {

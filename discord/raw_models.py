@@ -31,6 +31,8 @@ from typing import TYPE_CHECKING, Any
 
 from typing_extensions import deprecated
 
+from discord.types.raw_models import ScheduledEventEvent, ScheduledEventUserAddEvent
+
 from . import utils
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import (
@@ -51,25 +53,25 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.member import MemberUpdateEvent
     from .types.raw_models import (
-        AuditLogEntryEvent,
+        AuditLogEntryCreateEvent,
     )
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
         ChannelInfoChannel,
+        GuildMemberRemoveEvent,
         IntegrationDeleteEvent,
-        MemberRemoveEvent,
         MessageDeleteEvent,
         MessagePollVoteEvent,
         MessageUpdateEvent,
-        ReactionActionEvent,
+        ReactionAddEvent,
         ReactionClearEmojiEvent,
         ReactionClearEvent,
-        ScheduledEventSubscription,
+        ReactionRemoveEvent,
         ThreadDeleteEvent,
         ThreadMembersUpdateEvent,
         ThreadUpdateEvent,
-        TypingEvent,
+        TypingStartEvent,
         VoiceChannelStartTimeUpdateEvent,
         VoiceChannelStatusUpdateEvent,
         VoiceServerUpdateEvent,
@@ -273,7 +275,10 @@ class RawReactionActionEvent(_RawReprMixin):
     )
 
     def __init__(
-        self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str
+        self,
+        data: ReactionAddEvent | ReactionRemoveEvent,
+        emoji: PartialEmoji,
+        event_type: str,
     ) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
@@ -286,7 +291,7 @@ class RawReactionActionEvent(_RawReprMixin):
         self.burst_colors: list = self.burst_colours
         self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
-        self.data: ReactionActionEvent = data
+        self.data: ReactionAddEvent | ReactionRemoveEvent = data
 
 
 class RawReactionClearEvent(_RawReprMixin):
@@ -516,7 +521,7 @@ class RawTypingEvent(_RawReprMixin):
 
     __slots__ = ("channel_id", "user_id", "when", "guild_id", "member", "data")
 
-    def __init__(self, data: TypingEvent) -> None:
+    def __init__(self, data: TypingStartEvent) -> None:
         self.channel_id: int = int(data["channel_id"])
         self.user_id: int = int(data["user_id"])
         self.when: datetime.datetime = datetime.datetime.fromtimestamp(
@@ -524,7 +529,7 @@ class RawTypingEvent(_RawReprMixin):
         )
         self.member: Member | None = None
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
-        self.data: TypingEvent = data
+        self.data: TypingStartEvent = data
 
 
 class RawMemberRemoveEvent(_RawReprMixin):
@@ -546,10 +551,10 @@ class RawMemberRemoveEvent(_RawReprMixin):
 
     __slots__ = ("user", "guild_id", "data")
 
-    def __init__(self, data: MemberRemoveEvent, user: User):
+    def __init__(self, data: GuildMemberRemoveEvent, user: User):
         self.user: User = user
         self.guild_id: int = int(data["guild_id"])
-        self.data: MemberRemoveEvent = data
+        self.data: GuildMemberRemoveEvent = data
 
 
 class RawScheduledEventSubscription(_RawReprMixin):
@@ -577,12 +582,12 @@ class RawScheduledEventSubscription(_RawReprMixin):
 
     __slots__ = ("event_id", "guild", "user_id", "event_type", "data")
 
-    def __init__(self, data: ScheduledEventSubscription, event_type: str):
+    def __init__(self, data: ScheduledEventUserAddEvent, event_type: str):
         self.event_id: int = int(data["guild_scheduled_event_id"])  # type: ignore
         self.user_id: int = int(data["user_id"])  # type: ignore
         self.guild: Guild | None = None
         self.event_type: str = event_type
-        self.data: ScheduledEventSubscription = data
+        self.data: ScheduledEventUserAddEvent = data
 
 
 class AutoModActionExecutionEvent:
@@ -762,7 +767,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         "data",
     )
 
-    def __init__(self, data: AuditLogEntryEvent) -> None:
+    def __init__(self, data: AuditLogEntryCreateEvent) -> None:
         self.id = int(data["id"])
         self.user_id = data.get("user_id")
         if self.user_id:
@@ -775,7 +780,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         self.reason = data.get("reason")
         self.extra = data.get("options")
         self.changes = data.get("changes")
-        self.data: AuditLogEntryEvent = data
+        self.data: AuditLogEntryCreateEvent = data
 
 
 class RawMessagePollVoteEvent(_RawReprMixin):
