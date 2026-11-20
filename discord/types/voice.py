@@ -25,12 +25,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .member import Member
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .member import Member
+    from .snowflake import Snowflake
 
 SupportedModes = Literal[
     "xsalsa20_poly1305_lite",

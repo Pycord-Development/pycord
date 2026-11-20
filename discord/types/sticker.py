@@ -25,12 +25,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
-from .user import User
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
+    from .user import User
 
 StickerFormatType = Literal[
     1,  # PNG

@@ -24,13 +24,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-from .member import Member
-from .snowflake import Snowflake
-from .user import User
+if TYPE_CHECKING:
+    from .member import Member
+    from .snowflake import Snowflake
+    from .user import User
 
 ScheduledEventStatus = Literal[
     1,  # SCHEDULED

@@ -24,11 +24,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
 
 
 class Collectibles(TypedDict):

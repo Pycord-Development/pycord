@@ -25,19 +25,20 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .appinfo import PartialApplicationInfo
-from .channel import PartialChannel
-from .guild import (
-    GuildPreviewWithCounts,
-    InviteGuild,
-)
-from .role import Role
-from .scheduled_events import ScheduledEvent
-from .user import PartialUser, User
+if TYPE_CHECKING:
+    from .appinfo import PartialApplicationInfo
+    from .channel import PartialChannel
+    from .guild import (
+        GuildPreviewWithCounts,
+        InviteGuild,
+    )
+    from .role import Role
+    from .scheduled_events import ScheduledEvent
+    from .user import PartialUser, User
 
 InviteTargetType = Literal[
     1,  # STREAM

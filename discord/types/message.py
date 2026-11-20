@@ -25,15 +25,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from docutils.parsers.rst.directives.misc import Role
-from typing_extensions import NotRequired, TypedDict
-
-from discord.message import PartialMessage
+from typing_extensions import NotRequired
 
 if TYPE_CHECKING:
-
     from .appinfo import ApplicationInfo
     from .channel import ChannelType, PartialChannel, Thread
     from .components import Component
@@ -42,6 +38,7 @@ if TYPE_CHECKING:
     from .interactions import MessageComponentInteractionMetadata, MessageInteraction
     from .member import PartialMember, UserWithMember
     from .poll import Poll
+    from .role import Role
     from .shared_client_theme import SharedClientTheme
     from .snowflake import Snowflake
     from .sticker import StickerItem
@@ -214,7 +211,9 @@ class MessageResolvedData(TypedDict):
     members: NotRequired[dict[Snowflake, PartialMember]]
     roles: NotRequired[dict[Snowflake, Role]]
     channels: NotRequired[dict[Snowflake, PartialChannel]]
-    messages: NotRequired[dict[Snowflake, PartialMessage]]
+    messages: NotRequired[
+        dict[Snowflake, Message]
+    ]  # Partial message, not further defined in the docs
     attachments: NotRequired[dict[Snowflake, Attachment]]
 
 

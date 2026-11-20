@@ -25,11 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from .activity import Activity
-from .snowflake import Snowflake
-from .user import User
+from typing_extensions import NotRequired
+
+if TYPE_CHECKING:
+    from .activity import Activity
+    from .snowflake import Snowflake
+    from .user import User
 
 
 class WidgetChannel(TypedDict):

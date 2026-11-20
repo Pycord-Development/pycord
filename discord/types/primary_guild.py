@@ -24,9 +24,10 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
 
 
 class PrimaryGuild(TypedDict):

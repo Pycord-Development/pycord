@@ -25,14 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .guild import Guild
-from .snowflake import Snowflake
-from .team import Team
-from .user import PartialUser
+if TYPE_CHECKING:
+    from .guild import Guild
+    from .snowflake import Snowflake
+    from .team import Team
+    from .user import PartialUser
 
 ApplicationIntegrationType = Literal[0, 1]
 ApplicationEventWebhookStatus = Literal[1, 2, 3]

@@ -25,25 +25,26 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .automod import AutoModRule
-from .channel import ChannelType, PermissionOverwrite, Thread, VideoQualityMode
-from .guild import (
-    DefaultMessageNotificationLevel,
-    ExplicitContentFilterLevel,
-    MFALevel,
-    VerificationLevel,
-)
-from .integration import IntegrationExpireBehavior, PartialIntegration
-from .interactions import ApplicationCommand
-from .role import Role
-from .scheduled_events import ScheduledEvent
-from .snowflake import Snowflake
-from .user import User
-from .webhook import Webhook
+if TYPE_CHECKING:
+    from .automod import AutoModRule
+    from .channel import ChannelType, PermissionOverwrite, Thread, VideoQualityMode
+    from .guild import (
+        DefaultMessageNotificationLevel,
+        ExplicitContentFilterLevel,
+        MFALevel,
+        VerificationLevel,
+    )
+    from .integration import IntegrationExpireBehavior, PartialIntegration
+    from .interactions import ApplicationCommand
+    from .role import Role
+    from .scheduled_events import ScheduledEvent
+    from .snowflake import Snowflake
+    from .user import User
+    from .webhook import Webhook
 
 AuditLogEvent = Literal[
     1,  # GUILD_UPDATE

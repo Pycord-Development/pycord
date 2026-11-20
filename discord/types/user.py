@@ -25,13 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-from .collectibles import AvatarDecoration, Collectibles
-from .primary_guild import PrimaryGuild
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .collectibles import AvatarDecoration, Collectibles
+    from .primary_guild import PrimaryGuild
+    from .snowflake import Snowflake
 
 
 class PartialUser(TypedDict):

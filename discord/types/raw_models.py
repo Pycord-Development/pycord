@@ -25,31 +25,39 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .activity import Activity, ClientStatus, StatusType
-from .appinfo import PartialApplicationInfo
 from .audit_log import AuditLogEntry
-from .automod import AutoModAction, AutoModRule, AutoModTriggerType
-from .channel import Channel, ChannelType, StageInstance, Thread
-from .collectibles import AvatarDecoration, Collectibles
-from .emoji import Emoji, PartialEmoji
+from .automod import AutoModRule
+from .channel import Channel, StageInstance, Thread
 from .guild import Guild, UnavailableGuild
 from .interactions import ApplicationCommandPermissions, Interaction
-from .invite import InviteTargetType
-from .member import Member, PartialMember, UserWithMember
-from .message import Message, ReactionType
-from .monetization import Entitlement, Subscription
-from .role import Role
+from .member import Member
+from .message import Message
+from .monetization import Subscription
 from .scheduled_events import ScheduledEvent
-from .snowflake import Snowflake
 from .soundboard import SoundboardSound
-from .sticker import Sticker
-from .thread import ThreadMember
-from .user import PartialUser, User
+from .user import User
 from .voice import VoiceState
+
+if TYPE_CHECKING:
+    from .activity import Activity, ClientStatus, StatusType
+    from .appinfo import PartialApplicationInfo
+    from .automod import AutoModAction, AutoModTriggerType
+    from .channel import ChannelType
+    from .collectibles import AvatarDecoration, Collectibles
+    from .emoji import Emoji, PartialEmoji
+    from .invite import InviteTargetType
+    from .member import PartialMember, UserWithMember
+    from .message import ReactionType
+    from .monetization import Entitlement
+    from .role import Role
+    from .snowflake import Snowflake
+    from .sticker import Sticker
+    from .thread import ThreadMember
+    from .user import PartialUser
 
 # MISC
 opcodes = Literal[

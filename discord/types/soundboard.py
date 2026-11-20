@@ -24,11 +24,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from discord.types.user import User
+from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
+    from .user import User
 
 
 class SoundboardSound(TypedDict):

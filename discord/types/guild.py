@@ -25,19 +25,20 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .channel import Thread
-from .emoji import Emoji
-from .raw_models import PresenceUpdateEvent
-from .role import Role
-from .scheduled_events import ScheduledEvent
-from .snowflake import Snowflake
-from .sticker import Sticker
-from .user import User
-from .welcome_screen import WelcomeScreen
+if TYPE_CHECKING:
+    from .channel import Thread
+    from .emoji import Emoji
+    from .raw_models import PresenceUpdateEvent
+    from .role import Role
+    from .scheduled_events import ScheduledEvent
+    from .snowflake import Snowflake
+    from .sticker import Sticker
+    from .user import User
+    from .welcome_screen import WelcomeScreen
 
 
 class Ban(TypedDict):

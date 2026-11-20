@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from .snowflake import Snowflake
 
@@ -44,7 +44,7 @@ if TYPE_CHECKING:
     from ..permissions import Permissions
     from .message import AllowedMentions, Message
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
 ApplicationCommandType = Literal[
     1,  # CHAT_INPUT

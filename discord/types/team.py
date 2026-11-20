@@ -25,10 +25,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from .snowflake import Snowflake
-from .user import User
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
+    from .user import User
 
 TeamMembershipState = Literal[
     1,  # INVITED
