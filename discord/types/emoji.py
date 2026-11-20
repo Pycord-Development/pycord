@@ -53,7 +53,7 @@ class CreateGuildEmoji(TypedDict):
     """The allowed fields when creating a guild emoji"""
 
     name: str
-    image: bytes
+    image: str
 
 
 class EditGuildEmoji(TypedDict):
@@ -67,7 +67,7 @@ class CreateAppEmoji(TypedDict):
     """The allowed fields when creating an app emoji"""
 
     name: str
-    image: bytes
+    image: str
 
 
 class EditAppEmoji(TypedDict):
