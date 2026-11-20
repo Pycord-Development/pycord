@@ -3133,7 +3133,7 @@ class HTTPClient:
     def create_test_entitlement(
         self,
         application_id: Snowflake,
-        payload: monetization.CreateTestEntitlementPayload,
+        payload: monetization.CreateTestEntitlement,
     ) -> Response[monetization.Entitlement]:
         r = Route(
             "POST",
