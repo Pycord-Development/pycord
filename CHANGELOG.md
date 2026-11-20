@@ -30,6 +30,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Member.fetch_permissions()`, `Role.fetch_permissions()`,
   `GuildChannel.fetch_permissions_for()` and `Guild.fetch_permissions_for()`.
   ([#3426](https://github.com/Pycord-Development/pycord/pull/3426))
+  ([#3432](https://github.com/Pycord-Development/pycord/pull/3432))
 - Added `ChannelFlags.channel_obfuscated` and `GuildChannel.obfuscated`
   ([#3134](https://github.com/Pycord-Development/pycord/pull/3134))
   ([#3152](https://github.com/Pycord-Development/pycord/pull/3152))
