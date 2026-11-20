@@ -30,7 +30,7 @@ from .snowflake import Snowflake
 
 
 class PrimaryGuild(TypedDict):
-    identity_guild_id: Snowflake
+    identity_guild_id: Snowflake | None
     identity_enabled: bool | None
-    tag: str
-    badge: str
+    tag: str | None
+    badge: str | None
