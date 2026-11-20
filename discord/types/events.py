@@ -36,7 +36,7 @@ from .guild import Guild, UnavailableGuild
 from .interactions import ApplicationCommandPermissions, Interaction
 from .member import Member
 from .message import Message
-from .monetization import Subscription
+from .monetization import Entitlement, Subscription
 from .scheduled_events import ScheduledEvent
 from .soundboard import SoundboardSound
 from .user import User
@@ -52,7 +52,6 @@ if TYPE_CHECKING:
     from .invite import InviteTargetType
     from .member import PartialMember, UserWithMember
     from .message import ReactionType
-    from .monetization import Entitlement
     from .role import Role
     from .snowflake import Snowflake
     from .sticker import Sticker
@@ -176,19 +175,19 @@ class ChannelPinsUpdateEvent(TypedDict):
 # ENTITLEMENT EVENTS
 
 
-EntitlementCreateEvent: Entitlement
+EntitlementCreateEvent = Entitlement
 
-EntitlementUpdateEvent: Entitlement
+EntitlementUpdateEvent = Entitlement
 
-EntitlementDeleteEvent: Entitlement
+EntitlementDeleteEvent = Entitlement
 
 # GUILD EVENTS
 
 GuildCreateEvent = Guild | UnavailableGuild
 
-GuildUpdateEvent: Guild
+GuildUpdateEvent = Guild
 
-GuildDeleteEvent: UnavailableGuild
+GuildDeleteEvent = UnavailableGuild
 
 
 class AuditLogEntryCreateEvent(AuditLogEntry):
@@ -249,7 +248,7 @@ class GuildMembersChunkEvent(TypedDict):
     guild_id: Snowflake
     members: list[Member]
     chunk_index: int
-    chunk_count: NotRequired[list[int]]
+    chunk_count: int
     not_found: NotRequired[list[Snowflake]]
     presences: NotRequired[list[PresenceUpdateEvent]]
     nonce: NotRequired[str]
@@ -262,7 +261,11 @@ class RoleCreateEvent(TypedDict):
 
 RoleUpdateEvent = RoleCreateEvent
 
-RoleDeleteEvent = RoleCreateEvent
+
+class RoleDeleteEvent(TypedDict):
+    guild_id: Snowflake
+    role_id: Snowflake
+
 
 ScheduledEventCreateEvent = ScheduledEvent
 
@@ -337,7 +340,7 @@ class InviteCreateEvent(TypedDict):
     target_user: NotRequired[PartialUser]
     target_application: NotRequired[PartialApplicationInfo]
     temporary: bool
-    uses: bool
+    uses: int
     expires_at: str | None
     role_ids: NotRequired[list[Snowflake]]
 
@@ -385,9 +388,9 @@ class ReactionAddEvent(TypedDict):
     guild_id: NotRequired[Snowflake]
     member: NotRequired[Member]
     emoji: PartialEmoji
-    message_author_id: Snowflake
+    message_author_id: NotRequired[Snowflake]
     burst: bool
-    burst_colors: list[str]
+    burst_colors: NotRequired[list[str]]
     type: int
 
 
@@ -410,7 +413,7 @@ class ReactionClearEvent(TypedDict):
 class ReactionClearEmojiEvent(TypedDict):
     channel_id: Snowflake
     guild_id: NotRequired[Snowflake]
-    message_id: int
+    message_id: Snowflake
     emoji: PartialEmoji
 
 

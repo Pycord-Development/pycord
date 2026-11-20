@@ -29,13 +29,11 @@ from typing import TYPE_CHECKING, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
+from .guild import GuildPreviewWithCounts, InviteGuild
+
 if TYPE_CHECKING:
     from .appinfo import PartialApplicationInfo
     from .channel import PartialChannel
-    from .guild import (
-        GuildPreviewWithCounts,
-        InviteGuild,
-    )
     from .role import Role
     from .scheduled_events import ScheduledEvent
     from .user import PartialUser, User

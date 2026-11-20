@@ -365,12 +365,12 @@ class Interaction(TypedDict):
     token: str
     version: int
     message: NotRequired[Message]
-    app_permissions: NotRequired[Permissions]
+    app_permissions: str
     locale: NotRequired[str]  # Always available except on PING interactions
     guild_locale: NotRequired[str]
     entitlements: list[Entitlement]
     authorizing_integration_owners: AuthorizingIntegrationOwners
-    context: InteractionContextType
+    context: NotRequired[InteractionContextType]
     attachment_size_limit: NotRequired[int]
 
 
@@ -399,7 +399,7 @@ class ModalSubmitInteractionMetadata(_BaseInteractionMetadata):
     ]
 
 
-InteractionMetadata: (
+InteractionMetadata = (
     ApplicationCommandInteractionMetadata
     | MessageComponentInteractionMetadata
     | ModalSubmitInteractionMetadata

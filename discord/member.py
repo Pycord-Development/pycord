@@ -334,9 +334,7 @@ class Member(discord.abc.Messageable, _UserTag):
         collectibles: Collectibles | None
         avatar_decoration: Asset | None
 
-    def __init__(
-        self, *, data: PartialMemberPayload, guild: Guild, state: ConnectionState
-    ):
+    def __init__(self, *, data: MemberPayload, guild: Guild, state: ConnectionState):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
         self.guild: Guild = guild

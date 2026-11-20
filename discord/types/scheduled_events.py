@@ -119,9 +119,9 @@ class ScheduledEvent(TypedDict):
     entity_id: Snowflake | None
     entity_metadata: ScheduledEventEntityMetadata | None
     creator: NotRequired[User]
-    user_count: int
+    user_count: NotRequired[int]
     image: NotRequired[str | None]
-    recurrence_rule: NotRequired[str | None]
+    recurrence_rule: NotRequired[ScheduledEventRecurrenceRule]
 
 
 class ScheduledEventSubscriber(TypedDict):

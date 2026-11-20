@@ -162,6 +162,8 @@ class Guild(UnavailableGuild):
     default_message_notifications: DefaultMessageNotificationLevel
     explicit_content_filter: ExplicitContentFilterLevel
     roles: list[Role]
+    emojis: list[Emoji]
+    features: list[GuildFeature]
     mfa_level: MFALevel
     application_id: Snowflake | None
     system_channel_id: Snowflake | None
@@ -170,6 +172,7 @@ class Guild(UnavailableGuild):
     max_presences: NotRequired[int | None]
     max_members: NotRequired[int]
     vanity_url_code: str | None
+    description: str | None
     banner: str | None
     premium_tier: PremiumTier
     premium_subscription_count: NotRequired[int]
@@ -220,7 +223,7 @@ class RolePositionUpdate(TypedDict):
     """The allowed fields for an entry in the PATCH request to modify guild role positions."""
 
     id: Snowflake
-    position: NotRequired[Snowflake | None]
+    position: NotRequired[int | None]
 
 
 class GuildMFAModify(TypedDict):
@@ -228,10 +231,10 @@ class GuildMFAModify(TypedDict):
 
 
 class GuildBuilkBan(TypedDict):
-    """The allowed fields for the PATCH request to make bulk guild bans"""
+    """The allowed fields for the POST request to make bulk guild bans"""
 
     user_ids: list[Snowflake]  # Max 200
-    deleted_messages_seconds: NotRequired[int]  # Defaults to 0
+    deleted_message_seconds: NotRequired[int]  # Defaults to 0
 
 
 class GuildBulkBanResponse(TypedDict):

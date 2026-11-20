@@ -29,10 +29,11 @@ from typing import TYPE_CHECKING, TypedDict
 
 from typing_extensions import NotRequired
 
+from .user import User
+
 if TYPE_CHECKING:
     from .activity import Activity
     from .snowflake import Snowflake
-    from .user import User
 
 
 class WidgetChannel(TypedDict):
