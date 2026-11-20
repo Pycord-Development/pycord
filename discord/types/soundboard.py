@@ -33,10 +33,29 @@ from .snowflake import Snowflake
 
 class SoundboardSound(TypedDict):
     name: str
-    sound_id: Snowflake | int
+    sound_id: Snowflake
     volume: float
-    emoji_name: str | None
     emoji_id: Snowflake | None
+    emoji_name: str | None
     guild_id: NotRequired[Snowflake]
-    user: NotRequired[User]
     available: bool
+    user: NotRequired[User]
+
+
+class CreateSoundboardSound(TypedDict):
+    """Allowed fields when creating a soundboard sound"""
+
+    name: str
+    sound: str
+    volume: NotRequired[float | None]
+    emoji_id: NotRequired[Snowflake | None]
+    emoji_name: NotRequired[str | None]
+
+
+class ModifySoundboardSound(TypedDict):
+    """Allowed fields when modifying a soundboard sound"""
+
+    name: NotRequired[str]
+    volume: NotRequired[float | None]
+    emoji_id: NotRequired[Snowflake | None]
+    emoji_name: NotRequired[str | None]
