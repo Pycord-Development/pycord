@@ -1103,4 +1103,4 @@ class Embed:
         if self.components:
             result["components"] = [c.to_dict() for c in self.components]
 
-        return result # type: ignore
+        return result  # type: ignore
