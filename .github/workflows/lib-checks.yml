@@ -173,7 +173,7 @@ jobs:
       - name: "Sync uv"
         run: uv sync --no-default-groups --frozen --group dev
       - name: "Run basedpyright"
-        run: basedpyright --baselinefile "$RUNNER_TEMP/basedpyright-baseline.json"
+        run: basedpyright --baselinefile "$RUNNER_TEMP/basedpyright-baseline.json" --baselinemode=auto
   flake8:
     needs: [ changes ]
     if: ${{ needs.changes.outputs.lib == 'true' }}
