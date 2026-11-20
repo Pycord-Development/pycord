@@ -93,6 +93,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 - Fixed the type of `UnfurledMediaItem.flags` being `AttachmentFlags`, it is now
   `UnfurledMediaItemFlags`. ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Fix `ctx.command.qualified_name` returning only the parent `SlashCommandGroup` name instead of the
+  full subcommand path when accessed inside `cog_check`.
+  ([#3363](https://github.com/Pycord-Development/pycord/pull/3363))
 
 ### Deprecated
 
