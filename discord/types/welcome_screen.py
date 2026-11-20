@@ -31,7 +31,7 @@ from .snowflake import Snowflake
 
 
 class WelcomeScreen(TypedDict):
-    description: str
+    description: str | None
     welcome_channels: list[WelcomeScreenChannel]
 
 
