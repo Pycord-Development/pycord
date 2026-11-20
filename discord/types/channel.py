@@ -159,6 +159,7 @@ class _BaseThreadedChannel(_BaseGuildChannel, _ThreadParentChannel):
     available_tags: NotRequired[list[ForumTag]]
     default_reaction_emoji: NotRequired[DefaultReaction | None]
     default_sort_order: NotRequired[SortOrder | None]
+    flags: int
 
 
 class MediaChannel(_BaseThreadedChannel):

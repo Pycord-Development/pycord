@@ -466,7 +466,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.communication_disabled_until = utils.parse_time(
             data.get("communication_disabled_until")
         )
-        self.flags = MemberFlags._from_value(data.get("flags", 0))
+        self.flags = MemberFlags._from_value(data.get("flags") or 0)
         self._avatar_decoration = data.get("avatar_decoration_data")
 
     def _presence_update(
