@@ -34,7 +34,7 @@ from .emoji import PartialEmoji
 from .invite import InviteTargetType
 from .member import Member
 from .snowflake import Snowflake
-from .threads import ThreadMember
+from .thread import ThreadMember
 from .user import PartialUser, User
 
 

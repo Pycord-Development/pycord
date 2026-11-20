@@ -54,9 +54,9 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .types.channel import Thread as ThreadPayload
-    from .types.threads import ThreadArchiveDuration
-    from .types.threads import ThreadMember as ThreadMemberPayload
-    from .types.threads import ThreadMetadata
+    from .types.thread import ThreadArchiveDuration
+    from .types.thread import ThreadMember as ThreadMemberPayload
+    from .types.thread import ThreadMetadata
 
 
 class Thread(Messageable, Hashable):

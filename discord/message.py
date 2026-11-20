@@ -88,7 +88,7 @@ if TYPE_CHECKING:
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
-    from .types.threads import ThreadArchiveDuration
+    from .types.thread import ThreadArchiveDuration
     from .types.user import User as UserPayload
     from .ui.view import BaseView
     from .user import User

@@ -25,13 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from .snowflake import Snowflake
-from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata, ThreadType
-from .user import User
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
+    from .thread import ThreadArchiveDuration, ThreadMember, ThreadMetadata, ThreadType
+    from .user import User
 
 OverwriteType = Literal[
     0,  # Role
