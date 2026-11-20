@@ -32,7 +32,12 @@ from typing_extensions import NotRequired, TypedDict
 from .snowflake import Snowflake
 from .user import User
 
-StickerFormatType = Literal[1, 2, 3]
+StickerFormatType = Literal[
+    1,  # PNG
+    2,  # APNG
+    3,  # LOTTIE
+    4,  # GIF
+]
 
 
 class StickerItem(TypedDict):
@@ -44,15 +49,17 @@ class StickerItem(TypedDict):
 class BaseSticker(TypedDict):
     id: Snowflake
     name: str
-    description: str
+    description: str | None
     tags: str
     format_type: StickerFormatType
 
 
 class StandardSticker(BaseSticker):
+    """Built-in Discord stickers"""
+
     type: Literal[1]
-    sort_value: int
     pack_id: Snowflake
+    sort_value: NotRequired[int]
 
 
 class GuildSticker(BaseSticker):
@@ -70,21 +77,25 @@ class StickerPack(TypedDict):
     stickers: list[StandardSticker]
     name: str
     sku_id: Snowflake
-    cover_sticker_id: Snowflake
+    cover_sticker_id: NotRequired[Snowflake]
     description: str
-    banner_asset_id: Snowflake
+    banner_asset_id: NotRequired[Snowflake]
 
 
 class CreateGuildSticker(TypedDict):
-    description: NotRequired[str]
-    name: str
-    tags: str
+    """Allowed fields when creating a guild sticker"""
 
-
-class EditGuildSticker(TypedDict, total=False):
     name: str
-    tags: str
     description: str
+    tags: str
+
+
+class EditGuildSticker(TypedDict):
+    """Allowed fields when editing a guild sticker"""
+
+    name: NotRequired[str]
+    description: NotRequired[str | None]
+    tags: NotRequired[str]
 
 
 class ListPremiumStickerPacks(TypedDict):
