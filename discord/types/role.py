@@ -39,24 +39,26 @@ class RoleColours(TypedDict):
 
 
 class Role(TypedDict):
-    tags: NotRequired[RoleTags]
     id: Snowflake
     name: str
-    color: int
+    color: int  # Prefer colors field
     colors: RoleColours
     hoist: bool
+    icon: NotRequired[str | None]
+    unicode_emoji: NotRequired[str | None]
     position: int
     permissions: str
     managed: bool
     mentionable: bool
+    tags: NotRequired[RoleTags]
     flags: int
 
 
-class RoleTags(TypedDict, total=False):
+class RoleTags(TypedDict):
     bot_id: NotRequired[Snowflake]
     integration_id: NotRequired[Snowflake]
     subscription_listing_id: NotRequired[Snowflake]
-    # Here a key being present and `None` means `True`, and it being missing means `False`
+    # Here, a key being present and `None` means `True`, and it being missing means `False`
     premium_subscriber: NotRequired[Literal[None]]
     available_for_purchase: NotRequired[Literal[None]]
     guild_connections: NotRequired[Literal[None]]
