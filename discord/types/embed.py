@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, Required, TypedDict
+from typing_extensions import NotRequired, TypedDict
 
 from .components import Component
 
@@ -44,40 +44,40 @@ class EmbedField(TypedDict):
     value: str
 
 
-class EmbedVideo(TypedDict, total=False):
+class EmbedVideo(TypedDict):
+    url: NotRequired[str]
+    proxy_url: NotRequired[str]
+    height: NotRequired[int]
+    width: NotRequired[int]
+    content_type: NotRequired[str]
+    placeholder: NotRequired[str]
+    placeholder_version: NotRequired[int]
+    description: NotRequired[str]
+    flags: NotRequired[int]
+
+
+class EmbedImage(TypedDict):
     url: str
-    proxy_url: str
-    height: int
-    width: int
-    content_type: str
-    placeholder: str
-    placeholder_version: int
-    description: str
-    flags: int
+    proxy_url: NotRequired[str]
+    height: NotRequired[int]
+    width: NotRequired[int]
+    content_type: NotRequired[str]
+    placeholder: NotRequired[str]
+    placeholder_version: NotRequired[int]
+    description: NotRequired[str]
+    flags: NotRequired[int]
 
 
-class EmbedImage(TypedDict, total=False):
-    url: Required[str]
-    proxy_url: str
-    height: int
-    width: int
-    content_type: str
-    placeholder: str
-    placeholder_version: int
-    description: str
-    flags: int
+class EmbedProvider(TypedDict):
+    name: NotRequired[str]
+    url: NotRequired[str]
 
 
-class EmbedProvider(TypedDict, total=False):
+class EmbedAuthor(TypedDict):
     name: str
-    url: str
-
-
-class EmbedAuthor(TypedDict, total=False):
-    name: Required[str]
-    url: str
-    icon_url: str
-    proxy_icon_url: str
+    url: NotRequired[str]
+    icon_url: NotRequired[str]
+    proxy_icon_url: NotRequired[str]
 
 
 EmbedType = Literal[
@@ -93,19 +93,19 @@ EmbedType = Literal[
 ]
 
 
-class Embed(TypedDict, total=False):
-    title: str
-    type: EmbedType
-    description: str
-    url: str
-    timestamp: str
-    color: int
-    footer: EmbedFooter
-    image: EmbedImage
-    thumbnail: EmbedImage
-    video: EmbedVideo
-    provider: EmbedProvider
-    author: EmbedAuthor
-    fields: list[EmbedField]
-    components: list[Component]
-    flags: int
+class Embed(TypedDict):
+    title: NotRequired[str]
+    type: NotRequired[EmbedType]
+    description: NotRequired[str]
+    url: NotRequired[str]
+    timestamp: NotRequired[str]
+    color: NotRequired[int]
+    footer: NotRequired[EmbedFooter]
+    image: NotRequired[EmbedImage]
+    thumbnail: NotRequired[EmbedImage]
+    video: NotRequired[EmbedVideo]
+    provider: NotRequired[EmbedProvider]
+    author: NotRequired[EmbedAuthor]
+    fields: NotRequired[list[EmbedField]]
+    components: NotRequired[list[Component]]
+    flags: NotRequired[int]
