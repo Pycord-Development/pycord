@@ -33,7 +33,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3432](https://github.com/Pycord-Development/pycord/pull/3432))
 - Added `ChannelFlags.channel_obfuscated` and `GuildChannel.obfuscated`
   ([#3134](https://github.com/Pycord-Development/pycord/pull/3134))
-  ([#3152](https://github.com/Pycord-Development/pycord/pull/3152))
+  ([#3352](https://github.com/Pycord-Development/pycord/pull/3352))
 - Added `Embed.components` and `DesignerView.from_embed`.
   ([#3443](https://github.com/Pycord-Development/pycord/pull/3443))
 - Added support for spoiler channels.
@@ -83,6 +83,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3436](https://github.com/Pycord-Development/pycord/pull/3436))
 - Fixed an issue where stopped views would not be cleaned up.
   ([#3360](https://github.com/Pycord-Development/pycord/pull/3360))
+- Fix `ctx.command.qualified_name` returning only the parent `SlashCommandGroup` name instead of the
+  full subcommand path when accessed inside `cog_check`.
+  ([#3363](https://github.com/Pycord-Development/pycord/pull/3363))
 
 ### Deprecated
 
