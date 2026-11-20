@@ -84,7 +84,6 @@ if TYPE_CHECKING:
         shared_client_theme,
         sticker,
         template,
-        threads,
         user,
         webhook,
         welcome_screen,
@@ -1206,10 +1205,10 @@ class HTTPClient:
         message_id: Snowflake,
         *,
         name: str,
-        auto_archive_duration: threads.ThreadArchiveDuration,
+        auto_archive_duration: channel.ThreadChannelArchiveDuration,
         rate_limit_per_user: int,
         reason: str | None = None,
-    ) -> Response[threads.Thread]:
+    ) -> Response[channel.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
@@ -1229,12 +1228,12 @@ class HTTPClient:
         channel_id: Snowflake,
         *,
         name: str,
-        auto_archive_duration: threads.ThreadArchiveDuration,
-        type: threads.ThreadType,
+        auto_archive_duration: channel.ThreadChannelArchiveDuration,
+        type: channel.ThreadChannelType,
         rate_limit_per_user: int,
         invitable: bool,
         reason: str | None = None,
-    ) -> Response[threads.Thread]:
+    ) -> Response[channel.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
@@ -1252,7 +1251,7 @@ class HTTPClient:
         content: str | None,
         *,
         name: str,
-        auto_archive_duration: threads.ThreadArchiveDuration,
+        auto_archive_duration: channel.ThreadChannelArchiveDuration,
         rate_limit_per_user: int,
         invitable: bool = True,
         applied_tags: list[Snowflake] | None = None,
@@ -1265,7 +1264,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-    ) -> Response[threads.Thread]:
+    ) -> Response[channel.Thread]:
         payload: dict[str, Any] = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
@@ -1382,7 +1381,7 @@ class HTTPClient:
 
     def get_public_archived_threads(
         self, channel_id: Snowflake, before: Snowflake | None = None, limit: int = 50
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[channel.ThreadChannelPaginationPayload]:
         route = Route(
             "GET",
             "/channels/{channel_id}/threads/archived/public",
@@ -1397,7 +1396,7 @@ class HTTPClient:
 
     def get_private_archived_threads(
         self, channel_id: Snowflake, before: Snowflake | None = None, limit: int = 50
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[channel.ThreadChannelPaginationPayload]:
         route = Route(
             "GET",
             "/channels/{channel_id}/threads/archived/private",
@@ -1412,7 +1411,7 @@ class HTTPClient:
 
     def get_joined_private_archived_threads(
         self, channel_id: Snowflake, before: Snowflake | None = None, limit: int = 50
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[channel.ThreadChannelPaginationPayload]:
         route = Route(
             "GET",
             "/channels/{channel_id}/users/@me/threads/archived/private",
@@ -1426,13 +1425,13 @@ class HTTPClient:
 
     def get_active_threads(
         self, guild_id: Snowflake
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[channel.ThreadChannelPaginationPayload]:
         route = Route("GET", "/guilds/{guild_id}/threads/active", guild_id=guild_id)
         return self.request(route)
 
     def get_thread_members(
         self, channel_id: Snowflake
-    ) -> Response[list[threads.ThreadMember]]:
+    ) -> Response[list[channel.ThreadChannelMember]]:
         route = Route(
             "GET", "/channels/{channel_id}/thread-members", channel_id=channel_id
         )

@@ -117,13 +117,13 @@ if TYPE_CHECKING:
     from .permissions import Permissions
     from .state import ConnectionState
     from .template import Template
+    from .types.channel import Thread as ThreadPayload
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
     from .types.guild import GuildFeature, MFALevel
     from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.invite import IncompleteInvite
     from .types.member import Member as MemberPayload
-    from .types.threads import Thread as ThreadPayload
     from .types.voice import VoiceState as GuildVoiceState
     from .voice import VoiceClient
     from .webhook import Webhook

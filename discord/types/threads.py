@@ -25,14 +25,19 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from ..flags import ChannelFlags
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .channel import Thread
+    from .snowflake import Snowflake
 
-ThreadType = Literal[10, 11, 12]
+ThreadType = Literal[
+    10,  # ANNOUNCEMENT_THREAD
+    11,  # PUBLIC_THREAD
+    12,  # PRIVATE_THREAD
+]
 ThreadArchiveDuration = Literal[60, 1440, 4320, 10080]
 
 
@@ -50,24 +55,6 @@ class ThreadMetadata(TypedDict):
     auto_archive_duration: ThreadArchiveDuration
     archive_timestamp: str
     locked: bool
-
-
-class Thread(TypedDict):
-    member: NotRequired[ThreadMember]
-    last_message_id: NotRequired[Snowflake | None]
-    last_pin_timestamp: NotRequired[Snowflake | None]
-    id: Snowflake
-    guild_id: Snowflake
-    parent_id: Snowflake
-    owner_id: Snowflake
-    name: str
-    type: ThreadType
-    member_count: int
-    message_count: int
-    rate_limit_per_user: int
-    thread_metadata: ThreadMetadata
-    flags: ChannelFlags
-    total_message_sent: int
 
 
 class ThreadPaginationPayload(TypedDict):

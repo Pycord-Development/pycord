@@ -30,12 +30,12 @@ from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
 from .activity import PresenceUpdate
+from .channel import Thread
 from .emoji import Emoji
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .snowflake import Snowflake
 from .sticker import Sticker
-from .threads import Thread
 from .user import User
 from .welcome_screen import WelcomeScreen
 

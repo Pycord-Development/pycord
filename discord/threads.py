@@ -53,7 +53,7 @@ if TYPE_CHECKING:
     from .permissions import Permissions
     from .role import Role
     from .state import ConnectionState
-    from .types.threads import Thread as ThreadPayload
+    from .types.channel import Thread as ThreadPayload
     from .types.threads import ThreadArchiveDuration
     from .types.threads import ThreadMember as ThreadMemberPayload
     from .types.threads import ThreadMetadata

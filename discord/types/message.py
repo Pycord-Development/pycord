@@ -35,7 +35,7 @@ from discord.message import PartialMessage
 if TYPE_CHECKING:
 
     from .appinfo import ApplicationInfo
-    from .channel import ChannelType, PartialChannel
+    from .channel import ChannelType, PartialChannel, Thread
     from .components import Component
     from .embed import Embed
     from .emoji import PartialEmoji
@@ -45,7 +45,6 @@ if TYPE_CHECKING:
     from .shared_client_theme import SharedClientTheme
     from .snowflake import Snowflake
     from .sticker import StickerItem
-    from .threads import Thread
     from .user import User
 
 

@@ -29,11 +29,12 @@ from typing_extensions import NotRequired, TypedDict
 
 from .appinfo import PartialApplicationInfo
 from .automod import AutoModAction, AutoModTriggerType
+from .channel import Thread
 from .emoji import PartialEmoji
 from .invite import InviteTargetType
 from .member import Member
 from .snowflake import Snowflake
-from .threads import Thread, ThreadMember
+from .threads import ThreadMember
 from .user import PartialUser, User
 
 

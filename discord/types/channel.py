@@ -30,7 +30,7 @@ from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
 from .snowflake import Snowflake
-from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
+from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata, ThreadType
 from .user import User
 
 OverwriteType = Literal[
@@ -108,12 +108,12 @@ class NewsChannel(_BaseGuildChannel, _MessageableChannel, _ThreadParentChannel):
     type: Literal[5]
 
 
-class ThreadChannel(_BaseChannel, _MessageableChannel):
+class Thread(_BaseChannel, _MessageableChannel):
     """The type for an actual thread itself"""
 
     member: NotRequired[ThreadMember]
     owner_id: NotRequired[Snowflake]
-    type: Literal[10, 11, 12]
+    type: ThreadType
     guild_id: Snowflake
     name: str
     parent_id: Snowflake
@@ -210,7 +210,7 @@ GuildChannel = (
     | VoiceChannel
     | CategoryChannel
     | StageChannel
-    | ThreadChannel
+    | Thread
     | ForumChannel
     | MediaChannel
 )

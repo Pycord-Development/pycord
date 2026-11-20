@@ -30,7 +30,7 @@ from typing import Literal
 from typing_extensions import NotRequired, TypedDict
 
 from .automod import AutoModRule
-from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
+from .channel import ChannelType, PermissionOverwrite, Thread, VideoQualityMode
 from .guild import (
     DefaultMessageNotificationLevel,
     ExplicitContentFilterLevel,
@@ -42,7 +42,6 @@ from .interactions import ApplicationCommand
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .snowflake import Snowflake
-from .threads import Thread
 from .user import User
 from .webhook import Webhook
 
