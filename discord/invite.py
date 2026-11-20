@@ -61,13 +61,13 @@ if TYPE_CHECKING:
     from .scheduled_events import ScheduledEvent
     from .state import ConnectionState
     from .types.channel import PartialChannel as InviteChannelPayload
+    from .types.events import GatewayInviteEvent as GatewayInvitePayload
     from .types.invite import IncompleteInvite as IncompleteInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
-    from .types.raw_models import GatewayInviteEvent as GatewayInvitePayload
     from .types.role import Role as RolePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.snowflake import Snowflake

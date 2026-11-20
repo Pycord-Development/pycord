@@ -32,7 +32,7 @@ from typing_extensions import NotRequired
 if TYPE_CHECKING:
     from .channel import Thread
     from .emoji import Emoji
-    from .raw_models import PresenceUpdateEvent
+    from .events import PresenceUpdateEvent
     from .role import Role
     from .scheduled_events import ScheduledEvent
     from .snowflake import Snowflake

@@ -64,11 +64,11 @@ if TYPE_CHECKING:
     from .message import Message
     from .role import Role
     from .state import ConnectionState
+    from .types.events import PresenceUpdateEvent
     from .types.member import Member as MemberPayload
     from .types.member import MemberUpdateEvent as MemberUpdateEventPayload
     from .types.member import PartialMember as PartialMemberPayload
     from .types.member import UserWithMember as UserWithMemberPayload
-    from .types.raw_models import PresenceUpdateEvent
     from .types.user import User as UserPayload
     from .types.voice import VoiceState as GuildVoiceStatePayload
     from .types.voice import VoiceState as VoiceStatePayload

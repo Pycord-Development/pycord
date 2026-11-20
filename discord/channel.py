@@ -103,7 +103,7 @@ if TYPE_CHECKING:
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
-    from .types.raw_models import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.events import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.thread import ThreadArchiveDuration
     from .ui.view import BaseView
     from .user import BaseUser, ClientUser, User

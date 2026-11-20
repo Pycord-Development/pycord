@@ -31,8 +31,6 @@ from typing import TYPE_CHECKING, Any
 
 from typing_extensions import deprecated
 
-from discord.types.raw_models import ScheduledEventEvent, ScheduledEventUserAddEvent
-
 from . import utils
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import (
@@ -51,12 +49,11 @@ if TYPE_CHECKING:
     from .soundboard import PartialSoundboardSound
     from .state import ConnectionState
     from .threads import Thread
-    from .types.member import MemberUpdateEvent
-    from .types.raw_models import (
+    from .types.events import (
         AuditLogEntryCreateEvent,
     )
-    from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
-    from .types.raw_models import (
+    from .types.events import AutoModActionExecutionEvent as AutoModActionExecution
+    from .types.events import (
         BulkMessageDeleteEvent,
         ChannelInfoChannel,
         GuildMemberRemoveEvent,
@@ -68,6 +65,7 @@ if TYPE_CHECKING:
         ReactionClearEmojiEvent,
         ReactionClearEvent,
         ReactionRemoveEvent,
+        ScheduledEventUserAddEvent,
         ThreadDeleteEvent,
         ThreadMembersUpdateEvent,
         ThreadUpdateEvent,
@@ -77,6 +75,7 @@ if TYPE_CHECKING:
         VoiceServerUpdateEvent,
         VoiceStateEvent,
     )
+    from .types.member import MemberUpdateEvent
     from .user import User
 
 
