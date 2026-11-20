@@ -93,7 +93,7 @@ class VoiceHello(TypedDict):
 
 
 class VoiceHeartbeat(TypedDict):
-    """Heartbeat payload to send at the interval specified in :class:`VoiceHello`, starting from voice version 8"""
+    """Heartbeat payload to send at the interval specified in the Voice Hello event, starting from voice version 8"""
 
     t: int
     seq_ack: int

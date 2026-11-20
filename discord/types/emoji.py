@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
 
 class PartialEmoji(TypedDict):
-    """A partial emoji object received e.g. as part of a :class:`discord.types.message.Reaction` object"""
+    """A partial emoji object received e.g. as part of a reaction object"""
 
     id: Snowflake | None
     name: str | None

@@ -152,7 +152,7 @@ ForumLayout = Literal[
 
 
 class _BaseThreadedChannel(_BaseGuildChannel, _ThreadParentChannel):
-    """Type for thread-only channels like :class:`ForumChannel` and :class:`MediaChannel`"""
+    """Type for thread-only channels like forum and media channels"""
 
     last_message_id: NotRequired[Snowflake | None]
     rate_limit_per_user: NotRequired[int]

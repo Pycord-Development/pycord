@@ -45,21 +45,21 @@ class ClientStatus(TypedDict):
 
 
 class ActivityTimestamps(TypedDict):
-    """Received from the gateway as part of an :class:`Activity` object"""
+    """Received from the gateway as part of an activity object"""
 
     start: NotRequired[int]
     end: NotRequired[int]
 
 
 class ActivityParty(TypedDict):
-    """Received from the gateway as part of an :class:`Activity` object"""
+    """Received from the gateway as part of an activity object"""
 
     id: NotRequired[str]
     size: NotRequired[list[int]]
 
 
 class ActivityAssets(TypedDict):
-    """Received from the gateway as part of an :class:`Activity` object"""
+    """Received from the gateway as part of an activity object"""
 
     large_image: NotRequired[str]
     large_text: NotRequired[str]
@@ -71,7 +71,7 @@ class ActivityAssets(TypedDict):
 
 
 class ActivitySecrets(TypedDict):
-    """Received from the gateway as part of an :class:`Activity` object"""
+    """Received from the gateway as part of an activity object"""
 
     join: NotRequired[str]
     spectate: NotRequired[str]
@@ -79,7 +79,7 @@ class ActivitySecrets(TypedDict):
 
 
 class ActivityEmoji(TypedDict):
-    """Received from the gateway as part of an :class:`Activity` object"""
+    """Received from the gateway as part of an activity object"""
 
     id: NotRequired[Snowflake]
     animated: NotRequired[bool]
@@ -87,7 +87,7 @@ class ActivityEmoji(TypedDict):
 
 
 class ActivityButton(TypedDict):
-    """Received from the gateway as part of an :class:`Activity` object"""
+    """Received from the gateway as part of an activity object"""
 
     label: str
     url: str
@@ -97,7 +97,7 @@ ActivityType = Literal[0, 1, 2, 3, 4, 5]
 
 
 class SendableActivity(TypedDict):
-    """Partial :class:`Activity` object that can be sent to the gateway, bot users can only set these fields"""
+    """A partial activity object that can be sent to the gateway, bot users can only set these fields"""
 
     name: str
     type: ActivityType
@@ -106,7 +106,7 @@ class SendableActivity(TypedDict):
 
 
 class Activity(SendableActivity):
-    """The full :class:`Activity` object received from the gateway"""
+    """A full activity object received from the gateway"""
 
     created_at: int
     timestamps: NotRequired[ActivityTimestamps]
@@ -124,4 +124,4 @@ class Activity(SendableActivity):
     flags: NotRequired[int]
     buttons: NotRequired[
         list[str]
-    ]  # Technically an :class:`ActivityButton` object. Over the gateway, these are sent as strings
+    ]  # Technically an activity button object. Over the gateway, these are sent as strings
