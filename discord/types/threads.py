@@ -29,7 +29,6 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from ..flags import ChannelFlags
 from .snowflake import Snowflake
 
 ThreadType = Literal[10, 11, 12]
