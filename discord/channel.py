@@ -37,7 +37,7 @@ from typing import (
     overload,
 )
 
-from typing_extensions import deprecated
+from typing_extensions import deprecated, override
 
 import discord.abc
 
@@ -355,7 +355,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             else None
         )
 
-    async def edit(self, **options) -> _TextChannel:
+    async def edit(self, **options) -> _TextChannel | None:
         """Edits the channel."""
         raise NotImplementedError
 
@@ -847,7 +847,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
     @overload
     async def edit(self) -> TextChannel | None: ...
 
-    async def edit(self, *, reason=None, **options):
+    @override
+    async def edit(self, *, reason=None, **options) -> TextChannel | None:
         """|coro|
 
         Edits the channel.
@@ -933,7 +934,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             if options.get("nsfw") and options.get("spoiler"):
                 warnings.warn(
                     "The NSFW setting is mutually exclusive with the spoiler setting. "
-                    "The channel will become an NSFW channel.",
+                    + "The channel will become an NSFW channel.",
                     stacklevel=2,
                 )
             if "nsfw" not in options and options.get("spoiler"):
@@ -1211,7 +1212,8 @@ class ForumChannel(_TextChannel):
     @overload
     async def edit(self) -> ForumChannel | None: ...
 
-    async def edit(self, *, reason=None, **options):
+    @override
+    async def edit(self, *, reason=None, **options) -> ForumChannel | None:
         """|coro|
 
         Edits the channel.
