@@ -66,7 +66,7 @@ class Thread(TypedDict):
     message_count: int
     rate_limit_per_user: int
     thread_metadata: ThreadMetadata
-    flags: ChannelFlags
+    flags: int
     total_message_sent: int
 
 

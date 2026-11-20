@@ -97,7 +97,7 @@ class ForumChannel(_BaseGuildChannel, _TextChannelOptional):
     available_tags: NotRequired[list[ForumTag] | None]
     default_reaction_emoji: NotRequired[DefaultReaction | None]
     default_sort_order: NotRequired[SortOrder | None]
-    flags: ChannelFlags
+    flags: int
 
 
 class NewsChannel(_BaseGuildChannel, _TextChannelOptional):

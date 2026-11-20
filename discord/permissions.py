@@ -38,7 +38,7 @@ __all__ = (
 
 # A permission alias works like a regular flag but is marked
 # So the PermissionOverwrite knows to work with it
-class permission_alias(alias_flag_value):
+class permission_alias(alias_flag_value["Permissions"]):
     alias: str
 
 
