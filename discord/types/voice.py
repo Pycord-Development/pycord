@@ -41,19 +41,19 @@ SupportedModes = Literal[
 
 
 class VoiceState(TypedDict):
-    member: NotRequired[Member]
-    self_stream: NotRequired[bool]
+    guild_id: NotRequired[Snowflake]
+    channel_id: Snowflake | None
     user_id: Snowflake
+    member: NotRequired[Member]
     session_id: str
     deaf: bool
     mute: bool
     self_deaf: bool
     self_mute: bool
+    self_stream: NotRequired[bool]
     self_video: bool
     suppress: bool
     request_to_speak_timestamp: str | None
-    channel_id: Snowflake | None
-    guild_id: NotRequired[Snowflake]
 
 
 GuildVoiceState = VoiceState
@@ -67,22 +67,38 @@ class VoiceRegion(TypedDict):
     custom: bool
 
 
-class VoiceServerUpdate(TypedDict):
-    token: str
-    guild_id: Snowflake
-    endpoint: str | None
-
-
 class VoiceIdentify(TypedDict):
+    """Fields to send when establishing a voice websocket connection"""
+
     server_id: Snowflake
     user_id: Snowflake
     session_id: str
     token: str
+    max_dave_protocol_version: int
 
 
 class VoiceReady(TypedDict):
+    """Fields received when the voice websocket connection is ready"""
+
     ssrc: int
     ip: str
     port: int
     modes: list[SupportedModes]
+
+
+class VoiceHello(TypedDict):
     heartbeat_interval: int
+    v: int  # Voice gateway version
+
+
+class VoiceHeartbeat(TypedDict):
+    """Heartbeat payload to send at the interval specified in :class:`VoiceHello`, starting from voice version 8"""
+
+    t: int
+    seq_ack: int
+
+
+class VoiceHeartbeatAck(TypedDict):
+    """Heartbeat ACK payload received, starting from voice version 8"""
+
+    t: int

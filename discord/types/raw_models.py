@@ -220,3 +220,9 @@ class InviteDeleteEvent(TypedDict):
 
 
 GatewayInviteEvent = InviteCreateEvent | InviteDeleteEvent
+
+
+class VoiceServerUpdateEvent(TypedDict):
+    token: str
+    guild_id: Snowflake
+    endpoint: str | None
