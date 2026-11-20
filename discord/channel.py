@@ -2005,13 +2005,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         The message might not be valid or point to an existing message.
 
-            .. admonition:: Reliable Fetching
-                :class: helpful
+        .. admonition:: Reliable Fetching
+            :class: helpful
 
-                For a slightly more reliable method of fetching the
-                last message, consider using either :meth:`history`
-                or :meth:`fetch_message` with the :attr:`last_message_id`
-                attribute.
+            For a slightly more reliable method of fetching the
+            last message, consider using either :meth:`history`
+            or :meth:`fetch_message` with the :attr:`last_message_id`
+            attribute.
 
         Returns
         -------
