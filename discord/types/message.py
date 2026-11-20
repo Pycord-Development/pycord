@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from .member import PartialMember, UserWithMember
     from .poll import Poll
     from .shared_client_theme import SharedClientTheme
-    from .snowflake import Snowflake, SnowflakeList
+    from .snowflake import Snowflake
     from .sticker import StickerItem
     from .threads import Thread
     from .user import User
@@ -173,7 +173,7 @@ MessageType = Literal[
 
 
 class MessageCall(TypedDict):
-    participants: SnowflakeList
+    participants: list[Snowflake]
     ended_timestamp: NotRequired[str | None]
 
 
@@ -188,7 +188,7 @@ class ForwardedMessage(TypedDict):
     edited_timestamp: str | None
     flags: NotRequired[int]
     mentions: list[UserWithMember]
-    mention_roles: SnowflakeList
+    mention_roles: list[Snowflake]
     sticker_items: NotRequired[list[StickerItem]]
     components: NotRequired[list[Component]]
 
@@ -223,7 +223,7 @@ class Message(TypedDict):
     tts: bool
     mention_everyone: bool
     mentions: list[UserWithMember]
-    mention_roles: SnowflakeList
+    mention_roles: list[Snowflake]
     mention_channels: NotRequired[list[ChannelMention]]
     attachments: list[Attachment]
     embeds: list[Embed]
@@ -271,6 +271,6 @@ class AllowedMentions(TypedDict):
     """Allowed fields for the allowed mentions object when sending a message"""
 
     parse: NotRequired[list[AllowedMentionType]]
-    roles: NotRequired[SnowflakeList]
-    users: NotRequired[SnowflakeList]
+    roles: NotRequired[list[Snowflake]]
+    users: NotRequired[list[Snowflake]]
     replied_user: NotRequired[bool]

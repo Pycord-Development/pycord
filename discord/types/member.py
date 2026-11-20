@@ -28,7 +28,7 @@ from typing import TypedDict
 from typing_extensions import NotRequired
 
 from .collectibles import AvatarDecoration, Collectibles
-from .snowflake import Snowflake, SnowflakeList
+from .snowflake import Snowflake
 from .user import User
 
 
@@ -42,7 +42,7 @@ class PartialMember(TypedDict):
     nick: NotRequired[str | None]
     avatar: NotRequired[str | None]
     banner: NotRequired[str | None]
-    roles: SnowflakeList
+    roles: list[Snowflake]
     joined_at: str | None
     premium_since: NotRequired[str | None]
     deaf: NotRequired[bool]  # Required for a fully resolved member

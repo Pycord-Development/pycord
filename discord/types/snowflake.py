@@ -24,4 +24,3 @@ DEALINGS IN THE SOFTWARE.
 """
 
 Snowflake = str | int
-SnowflakeList = list[Snowflake]

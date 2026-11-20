@@ -29,7 +29,7 @@ from typing import TypedDict
 
 from typing_extensions import NotRequired
 
-from .snowflake import Snowflake, SnowflakeList
+from .snowflake import Snowflake
 from .user import User
 
 
@@ -41,7 +41,7 @@ class PartialEmoji(TypedDict):
 
 
 class Emoji(PartialEmoji):
-    roles: NotRequired[SnowflakeList]
+    roles: NotRequired[list[Snowflake]]
     user: NotRequired[User]
     require_colons: NotRequired[bool]
     managed: NotRequired[bool]
@@ -60,7 +60,7 @@ class EditGuildEmoji(TypedDict):
     """The allowed fields when editing a guild emoji"""
 
     name: str
-    roles: SnowflakeList | None
+    roles: list[Snowflake] | None
 
 
 class CreateAppEmoji(TypedDict):

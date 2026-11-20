@@ -29,7 +29,7 @@ from typing import Literal, TypedDict
 from typing_extensions import NotRequired
 
 from .emoji import Emoji
-from .snowflake import Snowflake, SnowflakeList
+from .snowflake import Snowflake
 
 PromptType = Literal[
     0,  # MULTIPLE_CHOICE
@@ -44,7 +44,7 @@ OnboardingMode = Literal[
 class Onboarding(TypedDict):
     guild_id: Snowflake
     prompts: list[OnboardingPrompt]
-    default_channel_ids: SnowflakeList
+    default_channel_ids: list[Snowflake]
     enabled: bool
     mode: OnboardingMode
 
@@ -61,8 +61,8 @@ class OnboardingPrompt(TypedDict):
 
 class PromptOption(TypedDict):
     id: Snowflake
-    channel_ids: SnowflakeList
-    role_ids: SnowflakeList
+    channel_ids: list[Snowflake]
+    role_ids: list[Snowflake]
     emoji: NotRequired[Emoji]
     emoji_id: NotRequired[Snowflake]
     emoji_name: NotRequired[str]

@@ -93,7 +93,7 @@ if TYPE_CHECKING:
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
-    from .types.snowflake import Snowflake, SnowflakeList
+    from .types.snowflake import Snowflake
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
     from .types.voice import VoiceRegion as VoiceRegionPayload
 
@@ -757,7 +757,7 @@ class HTTPClient:
     def delete_messages(
         self,
         channel_id: Snowflake,
-        message_ids: SnowflakeList,
+        message_ids: list[Snowflake],
         *,
         reason: str | None = None,
     ) -> Response[None]:
@@ -1255,7 +1255,7 @@ class HTTPClient:
         auto_archive_duration: threads.ThreadArchiveDuration,
         rate_limit_per_user: int,
         invitable: bool = True,
-        applied_tags: SnowflakeList | None = None,
+        applied_tags: list[Snowflake] | None = None,
         reason: str | None = None,
         files: Sequence[File] | None = None,
         embed: embed.Embed | None = None,
@@ -1854,7 +1854,7 @@ class HTTPClient:
         name: str,
         image: bytes,
         *,
-        roles: SnowflakeList | None = None,
+        roles: list[Snowflake] | None = None,
         reason: str | None = None,
     ) -> Response[emoji.Emoji]:
         payload = {
