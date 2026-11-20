@@ -31,8 +31,14 @@ from typing_extensions import NotRequired
 from .emoji import Emoji
 from .snowflake import Snowflake, SnowflakeList
 
-PromptType = Literal[0, 1]
-OnboardingMode = Literal[0, 1]
+PromptType = Literal[
+    0,  # MULTIPLE_CHOICE
+    1,  # DROPDOWN
+]
+OnboardingMode = Literal[
+    0,  # ONBOARDING_DEFAULT
+    1,  # ONBOARDING_ADVANCED
+]
 
 
 class Onboarding(TypedDict):
