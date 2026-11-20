@@ -515,11 +515,10 @@ class ConnectionState:
             return None
         return self._users.get(id)
 
-    def store_emoji(self, guild: Guild, data: EmojiPayload) -> GuildEmoji | None:
+    def store_emoji(self, guild: Guild, data: EmojiPayload) -> GuildEmoji:
         # the id will be present here
         if data["id"] is None:
-            _log.warning("Received emoji without id")
-            return None
+            raise ValueError("Received emoji without id")
         emoji_id = int(data["id"])
         self._emojis[emoji_id] = emoji = GuildEmoji(guild=guild, state=self, data=data)
         return emoji
@@ -2153,8 +2152,6 @@ class ConnectionState:
                             coro, info="Voice Protocol voice state update handler"
                         )
                     )
-            if not isinstance(channel_id, int):
-                return
             member, before, after = guild._update_voice_state(data, channel_id)
             if member is not None:
                 if flags.voice:
@@ -2303,14 +2300,11 @@ class ConnectionState:
 
     def get_reaction_emoji(
         self, data: PartialEmojiPayload
-    ) -> GuildEmoji | AppEmoji | PartialEmoji | str | None:
+    ) -> GuildEmoji | AppEmoji | PartialEmoji | str:
         emoji_id = utils._get_as_snowflake(data, "id")
 
-        if data["name"] is None:
-            return None
-
         if not emoji_id:
-            return data["name"]
+            return data.get("name") or "unknown"
 
         try:
             return self._emojis[emoji_id]
