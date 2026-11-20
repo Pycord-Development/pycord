@@ -27,11 +27,12 @@ from typing import TYPE_CHECKING, TypedDict
 
 from typing_extensions import NotRequired
 
+from .collectibles import AvatarDecoration
 from .snowflake import Snowflake
 from .user import User
 
 if TYPE_CHECKING:
-    from .collectibles import AvatarDecoration, Collectibles
+    from .collectibles import Collectibles
 
 
 class PartialMember(TypedDict):
