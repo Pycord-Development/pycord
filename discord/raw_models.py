@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import datetime
 from collections.abc import ItemsView, KeysView, ValuesView
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from typing_extensions import deprecated
 
@@ -108,13 +108,12 @@ __all__ = (
 
 
 class _RawReprMixin:
-    __slots__: tuple[str, ...]
+    __slots__: tuple[str, ...] = ()
+    __repr_info__: ClassVar[tuple[str, ...]] = ()
 
     def __repr__(self) -> str:
         value = " ".join(
-            f"{attr}={getattr(self, attr)!r}"
-            for attr in self.__slots__
-            if not attr.startswith("_")
+            f"{attr}={getattr(self, attr)!r}" for attr in self.__repr_info__
         )
         return f"<{self.__class__.__name__} {value}>"
 
@@ -139,6 +138,13 @@ class RawMessageDeleteEvent(_RawReprMixin):
     """
 
     __slots__ = ("message_id", "channel_id", "guild_id", "cached_message", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "cached_message",
+        "data",
+    )
 
     def __init__(self, data: MessageDeleteEvent) -> None:
         self.message_id: int = int(data["id"])
@@ -168,6 +174,13 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
     """
 
     __slots__ = ("message_ids", "channel_id", "guild_id", "cached_messages", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "message_ids",
+        "channel_id",
+        "guild_id",
+        "cached_messages",
+        "data",
+    )
 
     def __init__(self, data: BulkMessageDeleteEvent) -> None:
         self.message_ids: set[int] = {int(x) for x in data.get("ids", [])}
@@ -205,7 +218,21 @@ class RawMessageUpdateEvent(_RawReprMixin):
         .. versionadded:: 2.7
     """
 
-    __slots__ = ("message_id", "channel_id", "guild_id", "data", "cached_message")
+    __slots__ = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "data",
+        "cached_message",
+        "new_message",
+    )
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "data",
+        "cached_message",
+    )
 
     def __init__(self, data: MessageUpdateEvent, new_message: Message) -> None:
         self.message_id: int = int(data["id"])
@@ -272,6 +299,20 @@ class RawReactionActionEvent(_RawReprMixin):
         "member",
         "data",
     )
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "message_id",
+        "user_id",
+        "channel_id",
+        "guild_id",
+        "emoji",
+        "burst",
+        "burst_colours",
+        "burst_colors",
+        "type",
+        "event_type",
+        "member",
+        "data",
+    )
 
     def __init__(
         self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str
@@ -308,6 +349,12 @@ class RawReactionClearEvent(_RawReprMixin):
     """
 
     __slots__ = ("message_id", "channel_id", "guild_id", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "data",
+    )
 
     def __init__(self, data: ReactionClearEvent) -> None:
         self.message_id: int = int(data["message_id"])
@@ -356,6 +403,17 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         "burst_colors",
         "type",
     )
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "emoji",
+        "burst",
+        "data",
+        "burst_colours",
+        "burst_colors",
+        "type",
+    )
 
     def __init__(self, data: ReactionClearEmojiEvent, emoji: PartialEmoji) -> None:
         self.emoji: PartialEmoji = emoji
@@ -389,6 +447,12 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     """
 
     __slots__ = ("integration_id", "application_id", "guild_id", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "integration_id",
+        "application_id",
+        "guild_id",
+        "data",
+    )
 
     def __init__(self, data: IntegrationDeleteEvent) -> None:
         self.integration_id: int = int(data["id"])
@@ -421,6 +485,14 @@ class RawThreadUpdateEvent(_RawReprMixin):
     """
 
     __slots__ = ("thread_id", "thread_type", "parent_id", "guild_id", "data", "thread")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "thread_id",
+        "thread_type",
+        "parent_id",
+        "guild_id",
+        "data",
+        "thread",
+    )
 
     def __init__(self, data: ThreadUpdateEvent) -> None:
         self.thread_id: int = int(data["id"])
@@ -456,6 +528,14 @@ class RawThreadDeleteEvent(_RawReprMixin):
     """
 
     __slots__ = ("thread_id", "thread_type", "guild_id", "parent_id", "thread", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "thread_id",
+        "thread_type",
+        "guild_id",
+        "parent_id",
+        "thread",
+        "data",
+    )
 
     def __init__(self, data: ThreadDeleteEvent) -> None:
         self.thread_id: int = int(data["id"])  # type: ignore
@@ -484,6 +564,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
     """
 
     __slots__ = ("id", "guild_id", "status", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = ("id", "guild_id", "status", "data")
 
     def __init__(self, data: VoiceChannelStatusUpdateEvent) -> None:
         self.id: int = int(data["id"])
@@ -516,6 +597,14 @@ class RawTypingEvent(_RawReprMixin):
     """
 
     __slots__ = ("channel_id", "user_id", "when", "guild_id", "member", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "channel_id",
+        "user_id",
+        "when",
+        "guild_id",
+        "member",
+        "data",
+    )
 
     def __init__(self, data: TypingEvent) -> None:
         self.channel_id: int = int(data["channel_id"])
@@ -546,6 +635,7 @@ class RawMemberRemoveEvent(_RawReprMixin):
     """
 
     __slots__ = ("user", "guild_id", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = ("user", "guild_id", "data")
 
     def __init__(self, data: MemberRemoveEvent, user: User):
         self.user: User = user
@@ -577,6 +667,13 @@ class RawScheduledEventSubscription(_RawReprMixin):
     """
 
     __slots__ = ("event_id", "guild", "user_id", "event_type", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "event_id",
+        "guild",
+        "user_id",
+        "event_type",
+        "data",
+    )
 
     def __init__(self, data: ScheduledEventSubscription, event_type: str):
         self.event_id: int = int(data["guild_scheduled_event_id"])  # type: ignore
@@ -713,6 +810,12 @@ class RawThreadMembersUpdateEvent(_RawReprMixin):
     """
 
     __slots__ = ("thread_id", "guild_id", "member_count", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "thread_id",
+        "guild_id",
+        "member_count",
+        "data",
+    )
 
     def __init__(self, data: ThreadMembersUpdateEvent) -> None:
         self.thread_id = int(data["id"])
@@ -749,9 +852,23 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         which actions have this field filled out.
     data: :class:`dict`
         The raw data sent by the `gateway <https://docs.discord.com/developers/events/gateway-events-events#guild-audit-log-entry-create>`__.
+    guild: :class:`Guild` | :obj:`None`
+        The guild this action came from, if cached.
     """
 
     __slots__ = (
+        "id",
+        "user_id",
+        "guild_id",
+        "target_id",
+        "action_type",
+        "reason",
+        "extra",
+        "changes",
+        "data",
+        "guild",
+    )
+    __repr_info__: ClassVar[tuple[str, ...]] = (
         "id",
         "user_id",
         "guild_id",
@@ -777,6 +894,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         self.extra = data.get("options")
         self.changes = data.get("changes")
         self.data: AuditLogEntryEvent = data
+        self.guild: Guild | None = None
 
 
 class RawMessagePollVoteEvent(_RawReprMixin):
@@ -803,6 +921,15 @@ class RawMessagePollVoteEvent(_RawReprMixin):
     """
 
     __slots__ = (
+        "user_id",
+        "message_id",
+        "answer_id",
+        "channel_id",
+        "guild_id",
+        "data",
+        "added",
+    )
+    __repr_info__: ClassVar[tuple[str, ...]] = (
         "user_id",
         "message_id",
         "answer_id",
@@ -934,6 +1061,20 @@ class RawVoiceStateUpdateEvent(_PayloadLike):
         "_state",
         "_raw_data",
     )
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "session_id",
+        "mute",
+        "deaf",
+        "self_mute",
+        "self_deaf",
+        "self_stream",
+        "self_video",
+        "suppress",
+        "requested_to_speak_at",
+        "afk",
+        "guild_id",
+        "channel_id",
+    )
 
     def __init__(self, *, data: VoiceStateEvent, state: ConnectionState) -> None:
         self.session_id: str = data["session_id"]
@@ -984,6 +1125,7 @@ class RawVoiceServerUpdateEvent(_PayloadLike):
         "_raw_data",
         "_state",
     )
+    __repr_info__: ClassVar[tuple[str, ...]] = ("token", "guild_id", "endpoint")
 
     def __init__(self, *, data: VoiceServerUpdateEvent, state: ConnectionState) -> None:
         self._state: ConnectionState = state
@@ -1005,6 +1147,7 @@ class RawSoundboardSoundDeleteEvent(_RawReprMixin):
     """
 
     __slots__ = ("sound_id", "guild_id", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = ("sound_id", "guild_id", "data")
 
     def __init__(self, data: PartialSoundboardSound) -> None:
         self.sound_id: int = int(data["sound_id"])
@@ -1028,6 +1171,13 @@ class RawMemberUpdateEvent(_RawReprMixin):
     """
 
     __slots__ = ("guild_id", "user_id", "data", "cached_member", "member")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "guild_id",
+        "user_id",
+        "data",
+        "cached_member",
+        "member",
+    )
 
     def __init__(self, data: MemberUpdateEvent, member: Member) -> None:
         self.guild_id: int = int(data["guild_id"])
@@ -1055,6 +1205,12 @@ class RawVoiceChannelStartTimeUpdateEvent(_RawReprMixin):
     """
 
     __slots__ = ("id", "guild_id", "voice_start_time", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "id",
+        "guild_id",
+        "voice_start_time",
+        "data",
+    )
 
     def __init__(self, data: VoiceChannelStartTimeUpdateEvent) -> None:
         self.id: int = int(data["id"])
@@ -1087,6 +1243,12 @@ class ChannelInfo(_RawReprMixin):
     """
 
     __slots__ = ("id", "status", "voice_start_time", "data")
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "id",
+        "status",
+        "voice_start_time",
+        "data",
+    )
 
     def __init__(self, data: ChannelInfoChannel):
         self.id: int = int(data["id"])

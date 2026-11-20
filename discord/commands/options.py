@@ -407,7 +407,7 @@ class Option:
         if isinstance(input_type, SlashCommandOptionType):
             return input_type
 
-        if input_type is type(None):
+        if input_type is types.NoneType:
             raise TypeError("Option type cannot be only NoneType")
 
         args = ()
@@ -419,7 +419,7 @@ class Option:
             args = input_type
 
         if args:
-            filtered = tuple(t for t in args if t is not type(None))
+            filtered = tuple(t for t in args if t is not types.NoneType)
             if not filtered:
                 raise TypeError("Option type cannot be only NoneType")
             if len(filtered) == 1:

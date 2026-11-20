@@ -922,11 +922,9 @@ class SlashCommand(ApplicationCommand):
         return options
 
     def _is_typing_union(self, annotation):
-        return getattr(annotation, "__origin__", None) is Union or type(
-            annotation
-        ) is getattr(
-            types, "UnionType", Union
-        )  # type: ignore
+        return getattr(annotation, "__origin__", None) is Union or isinstance(
+            annotation, types.UnionType
+        )
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
@@ -1475,7 +1473,9 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         if self.parent is not None:
-            raise Exception("A subcommand group cannot be added to a subcommand group")
+            raise ClientException(
+                "A subcommand group cannot be added to a subcommand group"
+            )
 
         sub_command_group = SlashCommandGroup(
             name, description, guild_ids, parent=self, **kwargs
@@ -1722,7 +1722,7 @@ class ContextMenuCommand(ApplicationCommand):
         try:
             next(params)
         except StopIteration:
-            cmd = "user" if type(self) == UserCommand else "message"
+            cmd = "user" if isinstance(self, UserCommand) else "message"
             raise ClientException(
                 f'Callback for {self.name} command is missing "{cmd}" parameter.'
             )

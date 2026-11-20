@@ -794,8 +794,8 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
         ret = self.original.read()
         samples = array.array("h")
         samples.frombytes(ret)
-        for i in range(len(samples)):
-            samples[i] = int(floor(min(maxval, max(samples[i] * volume, minval))))
+        for i, sample in enumerate(samples):
+            samples[i] = int(floor(min(maxval, max(sample * volume, minval))))
 
         return samples.tobytes()
 

@@ -402,7 +402,7 @@ class ScheduledEvent(Hashable):
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
 
-        if payload != {}:
+        if payload:
             data = await self._state.http.edit_scheduled_event(
                 self.guild.id, self.id, **payload, reason=reason
             )
