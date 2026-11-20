@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING
 
 # We need __version__ to be imported first
 # isort: off
-from ._version import *
+from ._pycord_version import *
 
 # isort: on
 
@@ -68,6 +68,7 @@ from .reaction import *
 from .role import *
 from .scheduled_events import *
 from .shard import *
+from .shared_client_theme import *
 from .soundboard import *
 from .stage_instance import *
 from .sticker import *

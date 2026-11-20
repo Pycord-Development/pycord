@@ -35,6 +35,7 @@ __all__ = (
     "MessageFlags",
     "AttachmentFlags",
     "PublicUserFlags",
+    "GatewayCapabilities",
     "Intents",
     "MemberCacheFlags",
     "ApplicationFlags",
@@ -589,6 +590,36 @@ class PublicUserFlags(BaseFlags):
 
 
 @fill_with_flags()
+class GatewayCapabilities(BaseFlags):
+    """Wraps Discord gateway capabilities.
+
+    These bits are mostly undocumented and meant for specialized clients. They are
+    sent with the IDENTIFY payload as the ``capabilities`` field.
+
+    Attributes
+    ----------
+    value: :class:`int`
+        The raw capability value. Prefer toggling via the provided attributes.
+    """
+
+    __slots__ = ()
+
+    @classmethod
+    def none(cls) -> GatewayCapabilities:
+        """Creates a :class:`GatewayCapabilities` instance with no bits enabled."""
+
+        self = cls.__new__(cls)
+        self.value = cls.DEFAULT_VALUE
+        return self
+
+    @flag_value
+    def obfuscated_channels(self):
+        """:class:`bool`: Obfuscates channel identifiers in gateway events."""
+
+        return 1 << 15
+
+
+@fill_with_flags()
 class Intents(BaseFlags):
     r"""Wraps up a Discord gateway intent flag.
 
@@ -693,6 +724,10 @@ class Intents(BaseFlags):
         - :func:`on_guild_channel_create`
         - :func:`on_guild_channel_delete`
         - :func:`on_guild_channel_pins_update`
+        - :func:`on_voice_channel_start_time_update`
+        - :func:`on_voice_channel_status_update`
+        - :func:`on_raw_voice_channel_start_time_update`
+        - :func:`on_raw_voice_channel_status_update`
 
         This also corresponds to the following attributes and classes in terms of cache:
 
@@ -1586,6 +1621,12 @@ class ChannelFlags(BaseFlags):
         .. versionadded:: 2.7
         """
         return 1 << 15
+
+    @flag_value
+    def channel_obfuscated(self):
+        """:class:`bool`: Returns ``True`` if the channel is obfuscated by the gateway."""
+
+        return 1 << 17
 
 
 @fill_with_flags()

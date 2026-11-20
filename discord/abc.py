@@ -35,7 +35,6 @@ from typing import (
     Protocol,
     TypeAlias,
     TypeVar,
-    Union,
     overload,
     runtime_checkable,
 )
@@ -87,6 +86,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
     from .poll import Poll
+    from .shared_client_theme import SharedClientTheme
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -105,7 +105,7 @@ if TYPE_CHECKING:
         | PartialMessageable
     )
     MessageableChannel: TypeAlias = PartialMessageableChannel | GroupChannel
-    SnowflakeTime = Union["Snowflake", datetime]
+    SnowflakeTime: TypeAlias = "Snowflake | datetime"
 
     from .voice import VoiceClient, VoiceProtocol
 
@@ -351,6 +351,9 @@ class GuildChannel:
         ): ...
 
     def __str__(self) -> str:
+        if self.obfuscated:
+            return f"Obfuscated Channel ({self.id})"
+
         return self.name
 
     @property
@@ -611,7 +614,7 @@ class GuildChannel:
 
         Parameters
         ----------
-        obj: Union[:class:`~discord.Role`, :class:`~discord.abc.User`]
+        obj: :class:`~discord.Role` | :class:`~discord.abc.User`
             The role or user denoting
             whose overwrite to get.
 
@@ -646,7 +649,7 @@ class GuildChannel:
 
         Returns
         -------
-        Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], :class:`~discord.PermissionOverwrite`]
+        Dict[:class:`~discord.Role` | :class:`~discord.Member`, :class:`~discord.PermissionOverwrite`]
             The channel's permission overwrites.
         """
         ret = {}
@@ -693,6 +696,16 @@ class GuildChannel:
         category = self.guild.get_channel(self.category_id)
         return bool(category and category.overwrites == self.overwrites)
 
+    @property
+    def obfuscated(self) -> bool:
+        """Whether the channel is obfuscated.
+
+        This is an alias for :attr:`~ChannelFlags.channel_obfuscated`.
+
+        .. versionadded:: 2.9
+        """
+        return self.flags.channel_obfuscated
+
     def permissions_for(self, obj: Member | Role, /) -> Permissions:
         """Handles permission resolution for the :class:`~discord.Member`
         or :class:`~discord.Role`.
@@ -717,7 +730,7 @@ class GuildChannel:
 
         Parameters
         ----------
-        obj: Union[:class:`~discord.Member`, :class:`~discord.Role`]
+        obj: :class:`~discord.Member` | :class:`~discord.Role`
             The object to resolve permissions for. This could be either
             a member or a role. If it's a role then member overwrites
             are not computed.
@@ -842,7 +855,7 @@ class GuildChannel:
 
         Parameters
         ----------
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for deleting this channel.
             Shows up on the audit log.
 
@@ -922,15 +935,15 @@ class GuildChannel:
 
         Parameters
         -----------
-        target: Union[:class:`~discord.Member`, :class:`~discord.Role`]
+        target: :class:`~discord.Member` | :class:`~discord.Role`
             The member or role to overwrite permissions for.
-        overwrite: Optional[:class:`~discord.PermissionOverwrite`]
+        overwrite: :class:`~discord.PermissionOverwrite` | :obj:`None`
             The permissions to allow and deny to the target, or ``None`` to
             delete the overwrite.
         \*\*permissions
             A keyword argument list of permissions to set for ease of use.
             Cannot be mixed with ``overwrite``.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for doing this action. Shows up on the audit log.
 
         Raises
@@ -1013,10 +1026,10 @@ class GuildChannel:
 
         Parameters
         ----------
-        name: Optional[:class:`str`]
+        name: :class:`str` | :obj:`None`
             The name of the new channel. If not provided, defaults to this
             channel name.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for cloning this channel. Shows up on the audit log.
 
         Returns
@@ -1117,7 +1130,7 @@ class GuildChannel:
             while a negative number moves it above. Note that this
             number is relative and computed after the ``beginning``,
             ``end``, ``before``, and ``after`` parameters.
-        category: Optional[:class:`~discord.abc.Snowflake`]
+        category: :class:`~discord.abc.Snowflake` | :obj:`None`
             The category to move this channel under.
             If ``None`` is given then it moves it out of the category.
             This parameter is ignored if moving a category channel.
@@ -1239,26 +1252,26 @@ class GuildChannel:
             Indicates if a unique invite URL should be created. Defaults to True.
             If this is set to ``False`` then it will return a previously created
             invite.
-        reason: Optional[:class:`str`]
+        reason: :class:`str` | :obj:`None`
             The reason for creating this invite. Shows up on the audit log.
-        target_type: Optional[:class:`.InviteTarget`]
+        target_type: :class:`.InviteTarget` | :obj:`None`
             The type of target for the voice channel invite, if any.
 
             .. versionadded:: 2.0
 
-        target_user: Optional[:class:`User`]
+        target_user: :class:`User` | :obj:`None`
             The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`.
             The user must be streaming in the channel.
 
             .. versionadded:: 2.0
 
-        target_application_id: Optional[:class:`int`]
+        target_application_id: :class:`int` | :obj:`None`
             The id of the embedded application for the invite, required if `target_type` is
             `TargetType.embedded_application`.
 
             .. versionadded:: 2.0
 
-        target_event: Optional[:class:`.ScheduledEvent`]
+        target_event: :class:`.ScheduledEvent` | :obj:`None`
             The scheduled event object to link to the event.
             Shortcut to :meth:`.Invite.set_scheduled_event`
 
@@ -1267,14 +1280,14 @@ class GuildChannel:
 
             .. versionadded:: 2.0
 
-        roles: Optional[List[Union[:class:`.Role`, :class:`.Object`]]]
+        roles: List[:class:`.Role` | :class:`.Object`] | :obj:`None`
             The roles to give a user when joining through this invite.
 
             You must have the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
 
             .. versionadded:: 2.8
 
-        target_users_file: Optional[:class:`File`]
+        target_users_file: :class:`File` | :obj:`None`
             A CSV file with a single column of user IDs for all the users able to accept this invite.
 
             You can use :func:`utils.users_to_csv` to generate a virtual CSV file from a sequence of user IDs.
@@ -1342,6 +1355,65 @@ class GuildChannel:
             for invite in data
         ]
 
+    async def fetch_permissions_for(
+        self, obj: Member | Role | Object, /, *, implicit: bool = True
+    ) -> Permissions:
+        """Fetches the member or role's permissions in this channel from Discord.
+
+        For members, this includes their roles and member specific overwrites, as well as ``@everyone``.
+
+        For roles, this includes the role's and ``@everyone``'s overwrites.
+
+        This can be useful if you do not have a populated cache for whatever reason.
+
+        Requires :attr:`~discord.Permissions.view_channel`, as well as :attr:`~discord.Permissions.connect` for voice/stage channels.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        obj: :class:`~discord.Member` | :class:`~discord.Role` | :class:`~discord.Object`
+            The object to resolve permissions for. This can be either
+            a :class:`.Member` or a :class:`.Role`, or a :class:`.Object` with matching type.
+        implicit: bool
+            whether to apply `implicit permission masking <https://docs.discord.com/developers/topics/permissions#implicit-permissions>`_
+            for missing :attr:`~Permissions.view_channel` or voice/stage :attr:`~Permissions.connect`.
+            Defaults to ``True``.
+
+        Returns
+        -------
+        :class:`~discord.Permissions`
+            The permissions for the member or role.
+
+        Raises
+        ------
+        ~discord.Forbidden
+            You do not have proper permissions to get the information.
+        ~discord.HTTPException
+            An error occurred while fetching the information.
+        """
+        from .member import Member
+
+        obj_type: type[Member | Role] = (
+            obj.type if isinstance(obj, Object) else type(obj)
+        )
+
+        if issubclass(obj_type, Role):
+            data = await self._state.http.get_channel_role_permissions(
+                self.id,
+                obj.id,
+                implicit=implicit,
+            )
+        elif issubclass(obj_type, Member):
+            data = await self._state.http.get_channel_member_permissions(
+                self.id, obj.id, implicit=implicit
+            )
+        else:
+            raise InvalidArgument(
+                "obj must be a Member or Role, or Object with matching type"
+            )
+        return Permissions(int(data["permissions"]))
+
 
 class Messageable:
     """An ABC that details the common operations on a model that can send messages.
@@ -1386,6 +1458,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1408,6 +1481,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1430,6 +1504,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     @overload
@@ -1452,6 +1527,7 @@ class Messageable:
         suppress: bool = ...,
         suppress_embeds: bool = ...,
         silent: bool = ...,
+        shared_client_theme: SharedClientTheme = ...,
     ) -> Message: ...
 
     async def send(
@@ -1475,6 +1551,7 @@ class Messageable:
         suppress=None,
         suppress_embeds=None,
         silent=None,
+        shared_client_theme=None,
     ):
         """|coro|
 
@@ -1496,7 +1573,7 @@ class Messageable:
 
         Parameters
         ----------
-        content: Optional[:class:`str`]
+        content: :class:`str` | :obj:`None`
             The content of the message to send.
         tts: :class:`bool`
             Indicates if the message should be sent using text-to-speech.
@@ -1506,10 +1583,10 @@ class Messageable:
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
-        nonce: Union[:class:`str`, :class:`int`]
+        nonce: :class:`str` | :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
-        enforce_nonce: Optional[:class:`bool`]
+        enforce_nonce: :class:`bool` | :obj:`None`
             Whether :attr:`nonce` is enforced to be validated.
 
             .. versionadded:: 2.5
@@ -1527,7 +1604,7 @@ class Messageable:
 
             .. versionadded:: 1.4
 
-        reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
+        reference: :class:`~discord.Message` | :class:`~discord.MessageReference` | :class:`~discord.PartialMessage`
             A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using
             :meth:`~discord.Message.to_reference`.
             When replying, you can control whether this mentions the author of the referenced message using the
@@ -1536,7 +1613,7 @@ class Messageable:
 
             .. versionadded:: 1.6
 
-        mention_author: Optional[:class:`bool`]
+        mention_author: :class:`bool` | :obj:`None`
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
 
             .. versionadded:: 1.6
@@ -1546,7 +1623,7 @@ class Messageable:
             A list of embeds to upload. Must be a maximum of 10.
 
             .. versionadded:: 2.0
-        stickers: Sequence[Union[:class:`~discord.GuildSticker`, :class:`~discord.StickerItem`]]
+        stickers: Sequence[:class:`~discord.GuildSticker` | :class:`~discord.StickerItem`]
             A list of stickers to upload. Must be a maximum of 3.
 
             .. versionadded:: 2.0
@@ -1566,6 +1643,10 @@ class Messageable:
             The poll to send.
 
             .. versionadded:: 2.6
+        shared_client_theme: :class:`SharedClientTheme`
+            The shared client theme to send.
+
+            .. versionadded:: 2.9
 
         Returns
         -------
@@ -1589,6 +1670,9 @@ class Messageable:
         channel = await self._get_channel()
         state = self._state
         content = str(content) if content is not None else None
+
+        if shared_client_theme is not None:
+            shared_client_theme = shared_client_theme.to_dict()
 
         if embed is not None and embeds is not None:
             raise InvalidArgument(
@@ -1704,6 +1788,7 @@ class Messageable:
                     components=components,
                     flags=flags.value,
                     poll=poll,
+                    shared_client_theme=shared_client_theme,
                 )
             finally:
                 for f in files:
@@ -1723,6 +1808,7 @@ class Messageable:
                 components=components,
                 flags=flags.value,
                 poll=poll,
+                shared_client_theme=shared_client_theme,
             )
 
         ret = state.create_message(channel=channel, data=data)
@@ -1812,10 +1898,10 @@ class Messageable:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of pinned messages to retrieve.
             If ``None``, retrieves every pinned message in the channel.
-        before: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        before: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages pinned before this datetime.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
@@ -1930,25 +2016,25 @@ class Messageable:
 
         Parameters
         ----------
-        limit: Optional[:class:`int`]
+        limit: :class:`int` | :obj:`None`
             The number of messages to retrieve.
             If ``None``, retrieves every message in the channel. Note, however,
             that this would make it a slow operation.
-        before: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        before: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages before this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        after: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        after: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages after this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        around: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+        around: :class:`~discord.abc.Snowflake` | :class:`datetime.datetime` | :obj:`None`
             Retrieve messages around this date or message.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
             When using this argument, the maximum limit is 101. Note that if the limit is an
             even number, then this will return at most limit + 1 messages.
-        oldest_first: Optional[:class:`bool`]
+        oldest_first: :class:`bool` | :obj:`None`
             If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if
             ``after`` is specified, otherwise ``False``.
 

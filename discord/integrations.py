@@ -173,7 +173,7 @@ class StreamIntegration(Integration):
         Whether the integration is currently enabled.
     syncing: :class:`bool`
         Where the integration is currently syncing.
-    enable_emoticons: Optional[:class:`bool`]
+    enable_emoticons: :class:`bool` | :obj:`None`
         Whether emoticons should be synced for this integration (currently twitch only).
     expire_behaviour: :class:`ExpireBehaviour`
         The behaviour of expiring subscribers. Aliased to ``expire_behavior`` as well.
@@ -302,13 +302,13 @@ class IntegrationApplication:
         The ID for this application.
     name: :class:`str`
         The application's name.
-    icon: Optional[:class:`str`]
+    icon: :class:`str` | :obj:`None`
         The application's icon hash.
     description: :class:`str`
         The application's description. Can be an empty string.
     summary: :class:`str`
         The summary of the application. Can be an empty string.
-    user: Optional[:class:`User`]
+    user: :class:`User` | :obj:`None`
         The bot user on this application.
     """
 

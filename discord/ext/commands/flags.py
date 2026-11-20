@@ -217,7 +217,7 @@ def get_flags(
         # List[str] -> (max_args=-1)
         # Tuple[int, ...] -> (max_args=1)
         # Dict[K, V] -> (max_args=-1, override=True)
-        # Union[str, int] -> (max_args=1)
+        # str | int -> (max_args=1)
         # Optional[str] -> (default=None, max_args=1)
 
         try:

@@ -130,7 +130,7 @@ class TeamMember(BaseUser):
         The team member's global name.
 
         .. versionadded:: 2.5
-    avatar: Optional[:class:`str`]
+    avatar: :class:`str` | :obj:`None`
         The avatar hash the team member has. Could be ``None``.
     bot: :class:`bool`
         Specifies if the user is a bot account.

@@ -169,6 +169,9 @@ Guild
 
         :type: :class:`User`
 
+.. autoclass:: VoiceServerRegion()
+    :members:
+
 .. attributetable:: Member
 
 .. autoclass:: Member()
@@ -721,9 +724,19 @@ Events
 .. autoclass:: RawVoiceChannelStatusUpdateEvent()
     :members:
 
+.. attributetable:: RawVoiceChannelStartTimeUpdateEvent
+
+.. autoclass:: RawVoiceChannelStartTimeUpdateEvent()
+    :members:
+
 .. attributetable:: VoiceChannelEffectSendEvent
 
 .. autoclass:: VoiceChannelEffectSendEvent()
+    :members:
+
+.. attributetable:: ChannelInfo
+
+.. autoclass:: ChannelInfo()
     :members:
 
 

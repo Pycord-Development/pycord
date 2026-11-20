@@ -61,8 +61,9 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
+from ..embeds import Embed
 from ..enums import ChannelType, SeparatorSpacingSize
-from ..errors import Forbidden, NotFound
+from ..errors import Forbidden, InvalidArgument, NotFound
 from ..utils import find
 from .core import ItemInterface
 from .item import Item, ItemCallbackType, ModalItem, ViewItem
@@ -275,7 +276,7 @@ class BaseView(ItemInterface):
 
         Parameters
         ----------
-        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+        item: :class:`ViewItem` | :class:`int` | :class:`str`
             The item, item ``id``, or item ``custom_id`` to remove from the view.
 
         Returns
@@ -497,7 +498,7 @@ class BaseView(ItemInterface):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
@@ -515,7 +516,7 @@ class BaseView(ItemInterface):
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`ViewItem`]]
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
@@ -564,25 +565,25 @@ class View(BaseView):
     ----------
     *items: :class:`ViewItem`
         The initial items attached to this view.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
     children: List[:class:`ViewItem`]
         The list of children attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view when the timeout is reached. Defaults to ``False``.
-    message: Optional[:class:`.Message`]
+    message: :class:`.Message` | :obj:`None`
         The message that this view is attached to.
         If ``None`` then the view has not been sent with a message.
-    parent: Optional[:class:`.Interaction`]
+    parent: :class:`.Interaction` | :obj:`None`
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
     """
@@ -662,7 +663,7 @@ class View(BaseView):
         ----------
         message: :class:`.Message`
             The message with components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
@@ -690,7 +691,7 @@ class View(BaseView):
         ----------
         data: List[:class:`.Component`]
             The list of components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
@@ -741,7 +742,7 @@ class View(BaseView):
 
         Parameters
         ----------
-        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+        item: :class:`ViewItem` | :class:`int` | :class:`str`
             The item, item ``id``, or item ``custom_id`` to remove from the view.
         """
 
@@ -803,25 +804,25 @@ class DesignerView(BaseView):
     ----------
     *items: :class:`ViewItem`
         The initial items attached to this view.
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
-    store: Optional[:class:`bool`]
+    store: :class:`bool` | :obj:`None`
         Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
-    timeout: Optional[:class:`float`]
+    timeout: :class:`float` | :obj:`None`
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
     children: List[:class:`ViewItem`]
         The list of items attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view's items when the timeout is reached. Defaults to ``False``.
-    message: Optional[:class:`.Message`]
+    message: :class:`.Message` | :obj:`None`
         The message that this view is attached to.
         If ``None`` then the view has not been sent with a message.
-    parent: Optional[:class:`.Interaction`]
+    parent: :class:`.Interaction` | :obj:`None`
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
     """
@@ -870,7 +871,7 @@ class DesignerView(BaseView):
         ----------
         message: :class:`.Message`
             The message with components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
@@ -881,6 +882,36 @@ class DesignerView(BaseView):
         """
         view = DesignerView(timeout=timeout)
         for component in message.components:
+            view.add_item(_component_to_item(component))
+        return view
+
+    @classmethod
+    def from_embed(
+        cls,
+        embed: Embed,
+        /,
+        *,
+        timeout: float | None = 180.0,
+    ) -> DesignerView:
+        """Converts an embed's components into a :class:`DesignerView`.
+
+        Parameters
+        ----------
+        embed: :class:`.Embed`
+            The component embed to convert into a view.
+        timeout: :class:`float` | :obj:`None`
+            The timeout of the converted view.
+
+        Returns
+        -------
+        :class:`DesignerView`
+            The converted view. This always returns a :class:`DesignerView` and not
+            one of its subclasses.
+        """
+        if embed.components is None:
+            raise InvalidArgument("embed does not have components")
+        view = DesignerView(timeout=timeout)
+        for component in embed.components:
             view.add_item(_component_to_item(component))
         return view
 
@@ -898,7 +929,7 @@ class DesignerView(BaseView):
         ----------
         data: List[:class:`.Component`]
             The list of components to convert into a view.
-        timeout: Optional[:class:`float`]
+        timeout: :class:`float` | :obj:`None`
             The timeout of the converted view.
 
         Returns
@@ -1002,9 +1033,11 @@ class ViewStore:
             self._synced_message_views[message_id] = view
 
     def remove_view(self, view: BaseView):
-        for item in view.walk_children():
-            if item.is_storable():
-                self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
+        keys_to_remove = [
+            key for key, (stored_view, _) in self._views.items() if stored_view is view
+        ]
+        for key in keys_to_remove:
+            del self._views[key]
 
         for key, value in self._synced_message_views.items():
             if value.id == view.id:

@@ -29,7 +29,7 @@ import asyncio
 import time
 from collections import deque
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Deque, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
 from discord.enums import Enum
@@ -83,7 +83,11 @@ class BucketType(Enum):
             # and that yields the same result as for a guild with only the @everyone role
             # NOTE: PrivateChannel doesn't actually have an id attribute, but we assume we are
             # receiving a DMChannel or GroupChannel which inherit from PrivateChannel and do
-            return (msg.channel if isinstance(msg.channel, PrivateChannel) else msg.author.top_role).id  # type: ignore
+            return (
+                msg.channel
+                if isinstance(msg.channel, PrivateChannel)
+                else msg.author.top_role
+            ).id  # type: ignore
 
     def __call__(self, msg: Message) -> Any:
         return self.get_key(msg)
@@ -114,7 +118,7 @@ class Cooldown:
 
         Parameters
         ----------
-        current: Optional[:class:`float`]
+        current: :class:`float` | :obj:`None`
             The time in seconds since Unix epoch to calculate tokens at.
             If not supplied then :func:`time.time()` is used.
 
@@ -137,7 +141,7 @@ class Cooldown:
 
         Parameters
         ----------
-        current: Optional[:class:`float`]
+        current: :class:`float` | :obj:`None`
             The current time in seconds since Unix epoch.
             If not supplied, then :func:`time.time()` is used.
 
@@ -159,13 +163,13 @@ class Cooldown:
 
         Parameters
         ----------
-        current: Optional[:class:`float`]
+        current: :class:`float` | :obj:`None`
             The time in seconds since Unix epoch to update the rate limit at.
             If not supplied, then :func:`time.time()` is used.
 
         Returns
         -------
-        Optional[:class:`float`]
+        :class:`float` | :obj:`None`
             The retry-after time in seconds if rate limited.
         """
         current = current or time.time()
@@ -311,7 +315,7 @@ class _Semaphore:
     def __init__(self, number: int) -> None:
         self.value: int = number
         self.loop: asyncio.AbstractEventLoop = _get_event_loop()
-        self._waiters: Deque[asyncio.Future] = deque()
+        self._waiters: deque[asyncio.Future] = deque()
 
     def __repr__(self) -> str:
         return f"<_Semaphore value={self.value} waiters={len(self._waiters)}>"

@@ -1,5 +1,3 @@
-from typing import Union
-
 import discord
 from discord import option
 
@@ -41,7 +39,7 @@ async def hello(
 @bot.slash_command(name="channel")
 @option(
     "channel",
-    Union[discord.TextChannel, discord.VoiceChannel],
+    discord.TextChannel | discord.VoiceChannel,
     # You can specify allowed channel types by passing a union of them like this.
     description="Select a channel",
 )

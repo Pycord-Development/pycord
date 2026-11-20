@@ -1,0 +1,85 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>Pycord-Development/renovate-config",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":dependencyDashboard",
+    ":enablePreCommit",
+    "group:monorepos",
+    "group:allNonMajor"
+  ],
+  "assigneesFromCodeOwners": true,
+  "github-actions": {
+    "pinDigests": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Wait 4 days before pushing PyPI updates",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "minimumReleaseAge": "4 days"
+    },
+    {
+      "groupName": null,
+      "description": "Python interpreter upgrades",
+      "matchDatasources": [
+        "python-version"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Pre commit group",
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "groupName": null
+    },
+    {
+      "description": "Group tox and its plugins",
+      "matchDatasources": [
+        "pypi"
+      ],
+      "matchPackageNames": [
+        "tox",
+        "tox-uv",
+        "tox-gh"
+      ],
+      "groupName": "tox",
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "Group mdformat and its plugins",
+      "matchPackageNames": [
+        "hukkin/mdformat", // from pre-commit
+        "mdformat",
+        "mdformat-gfm",
+        "mdformat-gfm-alerts"
+      ],
+      "groupName": "mdformat"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "tox `requires` in pyproject.toml [tool.tox]",
+      "managerFilePatterns": [
+        "/(^|/)pyproject\\.toml$/"
+      ],
+      "matchStrings": [
+        "\\[tool\\.tox\\][^\\[]*?requires\\s*=\\s*\\[[^\\]]*\\]",
+        "\"(?<depName>[A-Za-z0-9][A-Za-z0-9._-]*)(?<currentValue>[^\"]*)\""
+      ],
+      "matchStringsStrategy": "recursive",
+      "datasourceTemplate": "pypi",
+      "versioningTemplate": "pep440"
+    }
+  ]
+}

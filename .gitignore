@@ -143,6 +143,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# basedpyright
+.basedpyright/
+
 # pytype static type analyzer
 .pytype/
 
@@ -159,7 +162,6 @@ cython_debug/
 
 # Custom
 *.json
-!renovate.json
 *.egg-info
 .venv/
 docs/_build
@@ -197,3 +199,5 @@ remote-release.yml
 *.wav
 *.ogg
 *.ps1
+
+discord/_version.py
