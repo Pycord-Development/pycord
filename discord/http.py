@@ -1649,7 +1649,7 @@ class HTTPClient:
 
     def get_all_guild_channels(
         self, guild_id: Snowflake
-    ) -> Response[list[guild.GuildChannel]]:
+    ) -> Response[list[channel.GuildChannel]]:
         return self.request(
             Route("GET", "/guilds/{guild_id}/channels", guild_id=guild_id)
         )

@@ -510,9 +510,9 @@ class PartialAppInfo:
     def __init__(self, *, state: ConnectionState, data: PartialAppInfoPayload):
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
-        self.name: str = data["name"]
+        self.name: str = data.get("name", "")
         self._icon: str | None = data.get("icon")
-        self.description: str = data["description"]
+        self.description: str = data.get("description", "")
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
