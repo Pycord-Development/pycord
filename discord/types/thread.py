@@ -31,6 +31,7 @@ from typing_extensions import NotRequired, TypedDict
 
 if TYPE_CHECKING:
     from .channel import Thread
+    from .member import Member
     from .snowflake import Snowflake
 
 ThreadType = Literal[
@@ -41,23 +42,35 @@ ThreadType = Literal[
 ThreadArchiveDuration = Literal[60, 1440, 4320, 10080]
 
 
+class PartialThreadMember(TypedDict):
+    """Partial thread member information received on the GUILD_CREATE event"""
+
+    id: NotRequired[Snowflake]
+    user_id: NotRequired[Snowflake]
+    join_timestamp: str
+    flags: int
+
+
 class ThreadMember(TypedDict):
     id: Snowflake
     user_id: Snowflake
     join_timestamp: str
     flags: int
+    member: NotRequired[Member]  # Only present when `with_member` is True
 
 
 class ThreadMetadata(TypedDict):
-    invitable: NotRequired[bool]
-    create_timestamp: NotRequired[str]
     archived: bool
     auto_archive_duration: ThreadArchiveDuration
     archive_timestamp: str
     locked: bool
+    invitable: NotRequired[bool]
+    create_timestamp: NotRequired[str | None]
 
 
 class ThreadPaginationPayload(TypedDict):
+    """Fields received when paginating through threads"""
+
     threads: list[Thread]
     members: list[ThreadMember]
     has_more: bool
