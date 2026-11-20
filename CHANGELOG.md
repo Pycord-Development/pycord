@@ -42,9 +42,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 - Added `content_type`, `placeholder`, `placeholder_version`, `description`, and `flags` to
   `EmbedMedia`. ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
-- Added `ChannelFlags.channel_obfuscated` and `GuildChannel.obfuscated`
-  ([#3134](https://github.com/Pycord-Development/pycord/pull/3134))
-  ([#3152](https://github.com/Pycord-Development/pycord/pull/3152))
 - Added `Embed.components` and `DesignerView.from_embed`.
   ([#3443](https://github.com/Pycord-Development/pycord/pull/3443))
 
