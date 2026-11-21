@@ -60,8 +60,8 @@ class CreateGuildEmoji(TypedDict):
 class EditGuildEmoji(TypedDict):
     """The allowed fields when editing a guild emoji"""
 
-    name: str
-    roles: list[Snowflake] | None
+    name: NotRequired[str]
+    roles: NotRequired[list[Snowflake] | None]
 
 
 class CreateAppEmoji(TypedDict):

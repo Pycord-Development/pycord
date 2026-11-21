@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-from .guild import GuildPreviewWithCounts, InviteGuild
+from .guild import GuildPreview, InviteGuild
 
 if TYPE_CHECKING:
     from .appinfo import PartialApplicationInfo
@@ -78,7 +78,7 @@ class Invite(IncompleteInvite):
     roles: NotRequired[list[Role]]  # Partial role
 
 
-class InviteWithCounts(Invite, GuildPreviewWithCounts):
+class InviteWithCounts(Invite, GuildPreview):
     pass
 
 

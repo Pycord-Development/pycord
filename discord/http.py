@@ -505,7 +505,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-        poll: poll.Poll | None = None,
+        poll: poll.CreatePoll | None = None,
         shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
@@ -573,7 +573,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-        poll: poll.Poll | None = None,
+        poll: poll.CreatePoll | None = None,
         shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         form = []
@@ -647,7 +647,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-        poll: poll.Poll | None = None,
+        poll: poll.CreatePoll | None = None,
         shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
@@ -1230,7 +1230,7 @@ class HTTPClient:
         *,
         name: str,
         auto_archive_duration: thread.ThreadArchiveDuration,
-        type: channel.Thread,
+        type: thread.ThreadType,
         rate_limit_per_user: int,
         invitable: bool,
         reason: str | None = None,

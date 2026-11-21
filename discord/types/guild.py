@@ -136,13 +136,10 @@ class GuildPreview(UnavailableGuild):
     discovery_splash: str | None
     emojis: list[Emoji]
     features: list[GuildFeature]
-    description: str | None
-    stickers: list[Sticker]
-
-
-class GuildPreviewWithCounts(GuildPreview):
     approximate_member_count: int
     approximate_presence_count: int
+    description: str | None
+    stickers: list[Sticker]
 
 
 class Guild(UnavailableGuild):
@@ -230,7 +227,7 @@ class GuildMFAModify(TypedDict):
     level: MFALevel
 
 
-class GuildBuilkBan(TypedDict):
+class GuildBulkBan(TypedDict):
     """The allowed fields for the POST request to make bulk guild bans"""
 
     user_ids: list[Snowflake]  # Max 200
@@ -238,7 +235,7 @@ class GuildBuilkBan(TypedDict):
 
 
 class GuildBulkBanResponse(TypedDict):
-    """The response for the PATCH request to make bulk guild bans"""
+    """The response for the POST request to make bulk guild bans"""
 
     banned_users: list[Snowflake]
     failed_users: list[Snowflake]

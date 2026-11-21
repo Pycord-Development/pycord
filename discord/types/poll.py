@@ -62,3 +62,13 @@ class Poll(TypedDict):
     allow_multiselect: bool
     layout_type: PollLayoutType
     results: NotRequired[PollResults]
+
+
+class CreatePoll(TypedDict):
+    """The allowed fields when creating a poll"""
+
+    question: PollMedia
+    answers: list[PollAnswer]
+    duration: NotRequired[int]
+    allow_multiselect: NotRequired[bool]
+    layout_type: NotRequired[PollLayoutType]

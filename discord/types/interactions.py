@@ -234,7 +234,7 @@ class MessageComponentInteractionData(TypedDict):
 
 class ModalSubmitInteractionData(TypedDict):
     custom_id: str
-    components: list[list[ComponentInteractionResponse]]
+    components: list[ComponentInteractionResponse]
     resolved: NotRequired[ApplicationCommandInteractionDataResolved]
 
 
@@ -340,7 +340,11 @@ ComponentInteractionResponse = (
     | CheckBoxInteractionResponse
 )
 
-InteractionData = ApplicationCommandInteractionData | MessageComponentInteractionData
+InteractionData = (
+    ApplicationCommandInteractionData
+    | MessageComponentInteractionData
+    | ModalSubmitInteractionData
+)
 
 InteractionType = Literal[
     1,  # PING

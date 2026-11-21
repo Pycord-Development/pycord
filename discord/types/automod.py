@@ -57,18 +57,20 @@ AutoModKeywordPresetType = Literal[
 
 
 class AutoModTriggerMetadata(TypedDict):
-    keyword_filter: list[str]
-    regex_patterns: list[str]
-    presets: list[AutoModKeywordPresetType]
-    allow_list: list[str]
-    mention_total_limit: int
-    mention_raid_protection_enabled: bool
+    # Which fields are sent depends on the trigger type
+    keyword_filter: NotRequired[list[str]]
+    regex_patterns: NotRequired[list[str]]
+    presets: NotRequired[list[AutoModKeywordPresetType]]
+    allow_list: NotRequired[list[str]]
+    mention_total_limit: NotRequired[int]
+    mention_raid_protection_enabled: NotRequired[bool]
 
 
 class AutoModActionMetadata(TypedDict):
-    channel_id: Snowflake
-    duration_seconds: int
-    custom_message: NotRequired[str]
+    # Which fields are sent depends on the action type
+    channel_id: NotRequired[Snowflake]
+    duration_seconds: NotRequired[int]
+    custom_message: NotRequired[str | None]
 
 
 class AutoModAction(TypedDict):

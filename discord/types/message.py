@@ -35,7 +35,11 @@ if TYPE_CHECKING:
     from .components import Component
     from .embed import Embed
     from .emoji import PartialEmoji
-    from .interactions import MessageComponentInteractionMetadata, MessageInteraction
+    from .interactions import (
+        InteractionMetadata,
+        MessageComponentInteractionMetadata,
+        MessageInteraction,
+    )
     from .member import PartialMember, UserWithMember
     from .poll import Poll
     from .role import Role
@@ -90,7 +94,7 @@ class Attachment(TypedDict):
     duration_secs: NotRequired[float]
     waveform: NotRequired[str]
     flags: NotRequired[int]
-    clip_participants: NotRequired[User]
+    clip_participants: NotRequired[list[User]]
     clip_created_at: NotRequired[str]
     application: NotRequired[ApplicationInfo | None]
 
@@ -243,7 +247,7 @@ class Message(TypedDict):
     message_reference: NotRequired[MessageReference]
     message_snapshots: NotRequired[list[MessageSnapshot]]
     referenced_message: NotRequired[Message | None]
-    interaction_metadata: NotRequired[MessageComponentInteractionMetadata]
+    interaction_metadata: NotRequired[InteractionMetadata]
     interaction: NotRequired[MessageInteraction]
     thread: NotRequired[Thread | None]
     components: NotRequired[list[Component]]

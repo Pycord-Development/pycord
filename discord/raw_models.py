@@ -73,7 +73,7 @@ if TYPE_CHECKING:
         VoiceChannelStartTimeUpdateEvent,
         VoiceChannelStatusUpdateEvent,
         VoiceServerUpdateEvent,
-        VoiceStateEvent,
+        VoiceStateUpdateEvent,
     )
     from .types.member import MemberUpdateEvent
     from .user import User
@@ -938,7 +938,7 @@ class RawVoiceStateUpdateEvent(_PayloadLike):
         "_raw_data",
     )
 
-    def __init__(self, *, data: VoiceStateEvent, state: ConnectionState) -> None:
+    def __init__(self, *, data: VoiceStateUpdateEvent, state: ConnectionState) -> None:
         self.session_id: str = data["session_id"]
         self._state: ConnectionState = state
 
@@ -952,7 +952,7 @@ class RawVoiceStateUpdateEvent(_PayloadLike):
         )
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
-        self._raw_data: VoiceStateEvent = data
+        self._raw_data: VoiceStateUpdateEvent = data
 
     @property
     def guild(self) -> Guild | None:
