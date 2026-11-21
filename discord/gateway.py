@@ -159,10 +159,7 @@ class KeepAliveHandler(threading.Thread):
         while not self._stop_ev.wait(self.interval):
             if self._last_recv + self.heartbeat_timeout < time.perf_counter():
                 _log.warning(
-                    (
-                        "Shard ID %s has stopped responding to the gateway. Closing and"
-                        " restarting."
-                    ),
+                    ("Shard ID %s has stopped responding to the gateway. Closing and" " restarting."),
                     self.shard_id,
                 )
                 coro = self.ws.close(4000)
@@ -171,9 +168,7 @@ class KeepAliveHandler(threading.Thread):
                 try:
                     f.result()
                 except BaseException:
-                    _log.exception(
-                        "An error occurred while stopping the gateway. Ignoring."
-                    )
+                    _log.exception("An error occurred while stopping the gateway. Ignoring.")
                 finally:
                     self.stop()
                 return
@@ -197,10 +192,7 @@ class KeepAliveHandler(threading.Thread):
                             msg = self.block_msg
                         else:
                             stack = "".join(traceback.format_stack(frame))
-                            msg = (
-                                f"{self.block_msg}\nLoop thread traceback (most recent"
-                                f" call last):\n{stack}"
-                            )
+                            msg = f"{self.block_msg}\nLoop thread traceback (most recent" f" call last):\n{stack}"
                         _log.warning(msg, self.shard_id, total)
 
             except Exception:
@@ -414,9 +406,7 @@ class DiscordWebSocket:
         """
 
         future = self.loop.create_future()
-        entry = EventListener(
-            event=event, predicate=predicate, result=result, future=future
-        )
+        entry = EventListener(event=event, predicate=predicate, result=result, future=future)
         self._dispatch_listeners.append(entry)
         return future
 
@@ -433,9 +423,7 @@ class DiscordWebSocket:
                 },
                 "compress": True,
                 "large_threshold": 250,
-                "capabilities": (
-                    self.capabilities if hasattr(self, "capabilities") else 0
-                ),
+                "capabilities": (self.capabilities if hasattr(self, "capabilities") else 0),
             },
         }
 
@@ -454,9 +442,7 @@ class DiscordWebSocket:
         if state._intents is not None:
             payload["d"]["intents"] = state._intents.value
 
-        await self.call_hooks(
-            "before_identify", self.shard_id, initial=self._initial_identify
-        )
+        await self.call_hooks("before_identify", self.shard_id, initial=self._initial_identify)
         await self.send_as_json(payload)
         _log.info("Shard ID %s has sent the IDENTIFY payload.", self.shard_id)
 
@@ -523,9 +509,7 @@ class DiscordWebSocket:
 
             if op == self.HELLO:
                 interval = data["heartbeat_interval"] / 1000.0
-                self._keep_alive = KeepAliveHandler(
-                    ws=self, interval=interval, shard_id=self.shard_id
-                )
+                self._keep_alive = KeepAliveHandler(ws=self, interval=interval, shard_id=self.shard_id)
                 # send a heartbeat immediately
                 await self.send_heartbeat(self._keep_alive.get_payload())
                 self._keep_alive.start()
@@ -662,9 +646,7 @@ class DiscordWebSocket:
                 raise ReconnectWebSocket(self.shard_id) from None
             else:
                 _log.info("Websocket closed with %s, cannot reconnect.", code)
-                raise ConnectionClosed(
-                    self.socket, shard_id=self.shard_id, code=code
-                ) from None
+                raise ConnectionClosed(self.socket, shard_id=self.shard_id, code=code) from None
 
     async def debug_send(self, data: str, /) -> None:
         await self._rate_limiter.block()
@@ -778,9 +760,7 @@ class DiscordWebSocket:
         _log.debug("Requesting soundboard sounds for guilds %s.", guild_ids)
         await self.send_as_json(payload)
 
-    async def request_channel_info(
-        self, guild_id: int, fields: list[RequestChannelInfoField]
-    ):
+    async def request_channel_info(self, guild_id: int, fields: list[RequestChannelInfoField]):
         payload = {
             "op": self.REQUEST_CHANNEL_INFO,
             "d": {"guild_id": guild_id, "fields": fields},

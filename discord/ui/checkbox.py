@@ -68,9 +68,7 @@ class Checkbox(ModalItem):
     ):
         super().__init__()
         if custom_id is not None and not isinstance(custom_id, str):
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         if not isinstance(default, bool):
             raise TypeError(f"default must be bool, not {default.__class__.__name__}")
@@ -132,7 +130,5 @@ class Checkbox(ModalItem):
     def refresh_state(self, data) -> None:
         self._value = data.get("value", None)
 
-    def refresh_from_modal(
-        self, interaction: Interaction, data: CheckboxComponentPayload
-    ) -> None:
+    def refresh_from_modal(self, interaction: Interaction, data: CheckboxComponentPayload) -> None:
         return self.refresh_state(data)

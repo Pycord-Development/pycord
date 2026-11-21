@@ -200,15 +200,11 @@ class ScheduledEvent(Hashable):
         self.name: str = data.get("name")
         self.description: str | None = data.get("description", None)
         self._image: str | None = data.get("image", None)
-        self.start_time: datetime.datetime = utils.parse_time(
-            data.get("scheduled_start_time")
-        )
+        self.start_time: datetime.datetime = utils.parse_time(data.get("scheduled_start_time"))
         if end_time := data.get("scheduled_end_time", None):
             end_time = utils.parse_time(end_time)
         self.end_time: datetime.datetime | None = end_time
-        self.status: ScheduledEventStatus = try_enum(
-            ScheduledEventStatus, data.get("status")
-        )
+        self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
         self.subscriber_count: int | None = data.get("user_count", None)
         self.creator_id: int | None = utils._get_as_snowflake(data, "creator_id")
         self.creator: Member | None = creator
@@ -216,9 +212,7 @@ class ScheduledEvent(Hashable):
         entity_metadata = data.get("entity_metadata")
         channel_id = data.get("channel_id", None)
         if channel_id is None:
-            self.location = ScheduledEventLocation(
-                state=state, value=entity_metadata["location"]
-            )
+            self.location = ScheduledEventLocation(state=state, value=entity_metadata["location"])
         else:
             self.location = ScheduledEventLocation(state=state, value=int(channel_id))
 
@@ -282,9 +276,7 @@ class ScheduledEvent(Hashable):
         name: str = MISSING,
         description: str = MISSING,
         status: int | ScheduledEventStatus = MISSING,
-        location: (
-            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
-        ) = MISSING,
+        location: str | int | VoiceChannel | StageChannel | ScheduledEventLocation = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
         cover: bytes | None = MISSING,
@@ -361,9 +353,7 @@ class ScheduledEvent(Hashable):
         if cover is not MISSING:
             warn_deprecated("cover", "image", "2.7")
             if image is not MISSING:
-                raise InvalidArgument(
-                    "cannot pass both `image` and `cover` to `ScheduledEvent.edit`"
-                )
+                raise InvalidArgument("cannot pass both `image` and `cover` to `ScheduledEvent.edit`")
             else:
                 image = cover
 
@@ -374,9 +364,7 @@ class ScheduledEvent(Hashable):
                 payload["image"] = utils._bytes_to_base64_data(image)
 
         if location is not MISSING:
-            if not isinstance(
-                location, (ScheduledEventLocation, utils._MissingSentinel)
-            ):
+            if not isinstance(location, (ScheduledEventLocation, utils._MissingSentinel)):
                 location = ScheduledEventLocation(state=self._state, value=location)
 
             if location.type is ScheduledEventLocationType.external:
@@ -392,9 +380,7 @@ class ScheduledEvent(Hashable):
         if end_time is MISSING and location.type is ScheduledEventLocationType.external:
             end_time = self.end_time
             if end_time is None:
-                raise ValidationError(
-                    "end_time needs to be passed if location type is external."
-                )
+                raise ValidationError("end_time needs to be passed if location type is external.")
 
         if start_time is not MISSING:
             payload["scheduled_start_time"] = start_time.isoformat()
@@ -403,12 +389,8 @@ class ScheduledEvent(Hashable):
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if payload != {}:
-            data = await self._state.http.edit_scheduled_event(
-                self.guild.id, self.id, **payload, reason=reason
-            )
-            return ScheduledEvent(
-                data=data, guild=self.guild, creator=self.creator, state=self._state
-            )
+            data = await self._state.http.edit_scheduled_event(self.guild.id, self.id, **payload, reason=reason)
+            return ScheduledEvent(data=data, guild=self.guild, creator=self.creator, state=self._state)
 
     async def delete(self) -> None:
         """|coro|

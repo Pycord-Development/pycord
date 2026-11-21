@@ -134,9 +134,7 @@ class VoiceClient(VoiceProtocol):
         self._reader: AudioReader = MISSING
 
     @staticmethod
-    def _set_future_result_if_pending(
-        future: asyncio.Future[Any], result: Exception | None
-    ) -> None:
+    def _set_future_result_if_pending(future: asyncio.Future[Any], result: Exception | None) -> None:
         if not future.done():
             future.set_result(result)
 
@@ -233,9 +231,7 @@ class VoiceClient(VoiceProtocol):
             for uid in uids:
                 member = self.guild.get_member(uid)
                 if not member:
-                    _log.warning(
-                        "Skipping member referencing ID %d on member_connect", uid
-                    )
+                    _log.warning("Skipping member referencing ID %d on member_connect", uid)
                     continue
                 self.dispatch("member_connect", member)
         elif op == OpCodes.client_disconnect:
@@ -252,9 +248,7 @@ class VoiceClient(VoiceProtocol):
 
         # maybe handle video and such things?
 
-    async def _run_event(
-        self, coro, event_name: str, *args: Any, **kwargs: Any
-    ) -> None:
+    async def _run_event(self, coro, event_name: str, *args: Any, **kwargs: Any) -> None:
         try:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
@@ -262,13 +256,9 @@ class VoiceClient(VoiceProtocol):
         except Exception:
             _log.exception("Error calling %s", event_name)
 
-    def _schedule_event(
-        self, coro, event_name: str, *args: Any, **kwargs: Any
-    ) -> asyncio.Task:
+    def _schedule_event(self, coro, event_name: str, *args: Any, **kwargs: Any) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
-        return self.client.loop.create_task(
-            wrapped, name=f"voice-receiver-event-dispatch: {event_name}"
-        )
+        return self.client.loop.create_task(wrapped, name=f"voice-receiver-event-dispatch: {event_name}")
 
     def dispatch(self, event: str, /, *args: Any, **kwargs: Any) -> None:
         _log.debug("Dispatching voice_client event %s", event)
@@ -373,9 +363,7 @@ class VoiceClient(VoiceProtocol):
         await self._connection.disconnect(force=force, wait=True)
         self.cleanup()
 
-    async def move_to(
-        self, channel: abc.Snowflake | None, *, timeout: float | None = 30.0
-    ) -> None:
+    async def move_to(self, channel: abc.Snowflake | None, *, timeout: float | None = 30.0) -> None:
         """|coro|
 
         moves you to a different voice channel.
@@ -450,18 +438,12 @@ class VoiceClient(VoiceProtocol):
 
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext + nonce[:4]
 
-    def _encrypt_aead_xchacha20_poly1305_rtpsize(
-        self, header: bytes, data: Any
-    ) -> bytes:
+    def _encrypt_aead_xchacha20_poly1305_rtpsize(self, header: bytes, data: Any) -> bytes:
         box = nacl.secret.Aead(bytes(self.secret_key))
         nonce = bytearray(24)
         nonce[:4] = struct.pack(">I", self._incr_nonce)
         self.checked_add("_incr_nonce", 1, 4294967295)
-        return (
-            header
-            + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext
-            + nonce[:4]
-        )
+        return header + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext + nonce[:4]
 
     @overload
     def play(
@@ -585,9 +567,7 @@ class VoiceClient(VoiceProtocol):
             def _after(exc: Exception | None) -> None:
                 if callable(after_callback):
                     after_callback(exc)
-                self.loop.call_soon_threadsafe(
-                    self._set_future_result_if_pending, future, exc
-                )
+                self.loop.call_soon_threadsafe(self._set_future_result_if_pending, future, exc)
 
             after = _after
 
@@ -600,9 +580,7 @@ class VoiceClient(VoiceProtocol):
         if self._player:
             self._player.stop()
         if self._player_future:
-            self.loop.call_soon_threadsafe(
-                self._set_future_result_if_pending, self._player_future, None
-            )
+            self.loop.call_soon_threadsafe(self._set_future_result_if_pending, self._player_future, None)
         if self._reader is not MISSING:
             self._reader.stop()
             self._reader = MISSING
@@ -742,13 +720,9 @@ class VoiceClient(VoiceProtocol):
             raise ClientException("Already recording audio")
 
         if len(args) > 0:
-            warnings.warn(
-                "'args' parameter is deprecated since 2.7 and will be removed in 3.0"
-            )
+            warnings.warn("'args' parameter is deprecated since 2.7 and will be removed in 3.0")
         if sync_start is not MISSING:
-            warnings.warn(
-                "'sync_start' parameter is deprecated since 2.7 and will be removed in 3.0"
-            )
+            warnings.warn("'sync_start' parameter is deprecated since 2.7 and will be removed in 3.0")
 
         self._reader = AudioReader(sink, self, after=callback, start=True)
 

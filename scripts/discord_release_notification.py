@@ -30,9 +30,7 @@ import urllib.error
 import urllib.request
 
 
-def build_message(
-    version: str, previous_tag: str, previous_final_tag: str, repo: str
-) -> str:
+def build_message(version: str, previous_tag: str, previous_final_tag: str, repo: str) -> str:
     major_minor = version.split(".")[:2]
     major_minor_str = ".".join(major_minor)
     docs_url = f"https://docs.pycord.dev/en/v{version}/changelog.html"
@@ -46,9 +44,7 @@ def build_message(
     if "rc" in version:
         heading = f"## <:pycord:1063211537008955495> Pycord v{version} Release Candidate ({major_minor_str}) is available!\n\n"
         audience = "@here\n\n"
-        preface = (
-            "This is a pre-release (release candidate) for testing and feedback.\n\n"
-        )
+        preface = "This is a pre-release (release candidate) for testing and feedback.\n\n"
         docs_line = f"You can view the changelog here: <{docs_url}>\n\n"
         links = f"Check out the [GitHub changelog](<{compare_url}>), [GitHub release page](<{release_url}>), and [PyPI release page](<{pypi_url}>).\n\n"
         install = f"You can install this version by running the following command:\n```sh\npip install -U py-cord=={version}\n```\n\n"
@@ -85,12 +81,8 @@ def send_webhook(webhook_url: str, content: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Notify Discord about a release.")
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Print payload instead of sending"
-    )
-    parser.add_argument(
-        "--webhook-url", help="Webhook URL (overrides DISCORD_WEBHOOK_URL)"
-    )
+    parser.add_argument("--dry-run", action="store_true", help="Print payload instead of sending")
+    parser.add_argument("--webhook-url", help="Webhook URL (overrides DISCORD_WEBHOOK_URL)")
     args = parser.parse_args()
 
     version = os.environ.get("VERSION")
@@ -102,9 +94,7 @@ def main() -> None:
     if not all([version, previous_tag, repo]) or (not args.dry_run and not webhook_url):
         sys.exit("Missing required environment variables.")
 
-    message = build_message(
-        version, previous_tag, previous_final_tag or previous_tag, repo
-    )
+    message = build_message(version, previous_tag, previous_final_tag or previous_tag, repo)
 
     if args.dry_run:
         payload = {

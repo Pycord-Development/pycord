@@ -85,29 +85,19 @@ class Object(Hashable, Generic[T]):
     # some type checkers (notably mypy)
 
     @overload
-    def __init__(
-        self: Object[Any], id: SupportsIntCast  # pyright: ignore[reportExplicitAny]
-    ) -> None: ...
+    def __init__(self: Object[Any], id: SupportsIntCast) -> None: ...  # pyright: ignore[reportExplicitAny]
 
     @overload
-    def __init__(
-        self, id: SupportsIntCast, type: builtins.type[T] = utils.MISSING
-    ) -> None: ...
+    def __init__(self, id: SupportsIntCast, type: builtins.type[T] = utils.MISSING) -> None: ...
 
-    def __init__(
-        self, id: SupportsIntCast, type: builtins.type[T] = utils.MISSING
-    ) -> None:
+    def __init__(self, id: SupportsIntCast, type: builtins.type[T] = utils.MISSING) -> None:
         try:
             id = int(id)
         except ValueError:
-            raise TypeError(
-                f"id parameter must be convertible to int not {id.__class__!r}"
-            ) from None
+            raise TypeError(f"id parameter must be convertible to int not {id.__class__!r}") from None
         else:
             self.id: int = id
-        self.type: Final[builtins.type[T]] = type or cast(
-            "builtins.type[T]", self.__class__
-        )
+        self.type: Final[builtins.type[T]] = type or cast("builtins.type[T]", self.__class__)
 
     @override
     def __repr__(self) -> str:

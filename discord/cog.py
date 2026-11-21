@@ -76,18 +76,12 @@ def _is_bridge_command(command: Any) -> TypeGuard[BridgeCommand]:
 
 
 def _name_filter(c: Any) -> str:
-    return (
-        "app"
-        if isinstance(c, ApplicationCommand)
-        else ("bridge" if not _is_bridge_command(c) else "ext")
-    )
+    return "app" if isinstance(c, ApplicationCommand) else ("bridge" if not _is_bridge_command(c) else "ext")
 
 
 def _validate_name_prefix(base_class: type, name: str) -> None:
     if name.startswith(("cog_", "bot_")):
-        raise TypeError(
-            f"Commands or listeners must not start with cog_ or bot_ (in method {base_class}.{name})"
-        )
+        raise TypeError(f"Commands or listeners must not start with cog_ or bot_ (in method {base_class}.{name})")
 
 
 def _process_attributes(
@@ -102,9 +96,7 @@ def _process_attributes(
         if attr_name in listeners:
             del listeners[attr_name]
 
-        if getattr(attr_value, "parent", None) and isinstance(
-            attr_value, ApplicationCommand
-        ):
+        if getattr(attr_value, "parent", None) and isinstance(attr_value, ApplicationCommand):
             # Skip application commands if they are a part of a group
             # Since they are already added when the group is added
             continue
@@ -113,18 +105,14 @@ def _process_attributes(
         if is_static_method:
             attr_value = attr_value.__func__
 
-        if inspect.iscoroutinefunction(attr_value) and getattr(
-            attr_value, "__cog_listener__", False
-        ):
+        if inspect.iscoroutinefunction(attr_value) and getattr(attr_value, "__cog_listener__", False):
             _validate_name_prefix(base, attr_name)
             listeners[attr_name] = attr_value
             continue
 
         if isinstance(attr_value, _BaseCommand) or _is_bridge_command(attr_value):
             if is_static_method:
-                raise TypeError(
-                    f"Command in method {base}.{attr_name!r} must not be staticmethod."
-                )
+                raise TypeError(f"Command in method {base}.{attr_name!r} must not be staticmethod.")
             _validate_name_prefix(base, attr_name)
 
         if isinstance(attr_value, _BaseCommand):
@@ -290,10 +278,7 @@ class CogMeta(type):
         # r.e type ignore, type-checker complains about overriding a ClassVar
         new_cls.__cog_commands__ = list(tuple(c._update_copy(cmd_attrs) if not _is_bridge_command(c) else c for c in new_cls.__cog_commands__))  # type: ignore
 
-        lookup = {
-            f"{_name_filter(cmd)}_{cmd.qualified_name}": cmd
-            for cmd in new_cls.__cog_commands__
-        }
+        lookup = {f"{_name_filter(cmd)}_{cmd.qualified_name}": cmd for cmd in new_cls.__cog_commands__}
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
@@ -349,11 +334,7 @@ class Cog(metaclass=CogMeta):
 
                 This does not include subcommands.
         """
-        return [
-            c
-            for c in self.__cog_commands__
-            if isinstance(c, ApplicationCommand) and c.parent is None
-        ]
+        return [c for c in self.__cog_commands__ if isinstance(c, ApplicationCommand) and c.parent is None]
 
     @property
     def qualified_name(self) -> str:
@@ -389,22 +370,15 @@ class Cog(metaclass=CogMeta):
         List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]
             The listeners defined in this cog.
         """
-        return [
-            (name, getattr(self, method_name))
-            for name, method_name in self.__cog_listeners__
-        ]
+        return [(name, getattr(self, method_name)) for name, method_name in self.__cog_listeners__]
 
     @classmethod
     def _get_overridden_method(cls, method: FuncT) -> FuncT | None:
         """Return None if the method is not overridden. Otherwise, returns the overridden method."""
-        return getattr(
-            getattr(method, "__func__", method), "__cog_special_method__", method
-        )
+        return getattr(getattr(method, "__func__", method), "__cog_special_method__", method)
 
     @classmethod
-    def listener(
-        cls, name: str = MISSING, once: bool = False
-    ) -> Callable[[FuncT], FuncT]:
+    def listener(cls, name: str = MISSING, once: bool = False) -> Callable[[FuncT], FuncT]:
         """A decorator that marks a function as a listener.
 
         This is the cog equivalent of :meth:`.Bot.listen`.
@@ -426,10 +400,7 @@ class Cog(metaclass=CogMeta):
         """
 
         if name is not MISSING and not isinstance(name, str):
-            raise TypeError(
-                "Cog.listener expected str but received"
-                f" {name.__class__.__name__!r} instead."
-            )
+            raise TypeError("Cog.listener expected str but received" f" {name.__class__.__name__!r} instead.")
 
         def decorator(func: FuncT) -> FuncT:
             actual = func
@@ -515,9 +486,7 @@ class Cog(metaclass=CogMeta):
         return True
 
     @_cog_special_method
-    async def cog_command_error(
-        self, ctx: ApplicationContext, error: Exception
-    ) -> None:
+    async def cog_command_error(self, ctx: ApplicationContext, error: Exception) -> None:
         """A special method that is called whenever an error
         is dispatched inside this cog.
 
@@ -772,8 +741,7 @@ class CogMixin:
             remove = [
                 index
                 for index, event in enumerate(event_list)
-                if event.__module__ is not None
-                and _is_submodule(name, event.__module__)
+                if event.__module__ is not None and _is_submodule(name, event.__module__)
             ]
 
             for index in reversed(remove):
@@ -797,9 +765,7 @@ class CogMixin:
                 if _is_submodule(name, module):
                     del sys.modules[module]
 
-    def _load_from_module_spec(
-        self, spec: importlib.machinery.ModuleSpec, key: str
-    ) -> None:
+    def _load_from_module_spec(self, spec: importlib.machinery.ModuleSpec, key: str) -> None:
         # precondition: key not in self.__extensions
         lib = importlib.util.module_from_spec(spec)
         sys.modules[key] = lib
@@ -953,9 +919,7 @@ class CogMixin:
                 parts = list(ext_file.parts[:-1])
                 # Gets the file name without the extension
                 parts.append(ext_file.stem)
-                loaded = self.load_extension(
-                    ".".join(parts), package=package, recursive=recursive, store=store
-                )
+                loaded = self.load_extension(".".join(parts), package=package, recursive=recursive, store=store)
                 final_out.update(loaded) if store else final_out.extend(loaded)
 
         if isinstance(final_out, Exception):
@@ -1045,14 +1009,8 @@ class CogMixin:
         loaded_extensions = {} if store else []
 
         for ext_path in names:
-            loaded = self.load_extension(
-                ext_path, package=package, recursive=recursive, store=store
-            )
-            (
-                loaded_extensions.update(loaded)
-                if store
-                else loaded_extensions.extend(loaded)
-            )
+            loaded = self.load_extension(ext_path, package=package, recursive=recursive, store=store)
+            (loaded_extensions.update(loaded) if store else loaded_extensions.extend(loaded))
 
         return loaded_extensions
 
@@ -1138,11 +1096,7 @@ class CogMixin:
             raise errors.ExtensionNotLoaded(name)
 
         # get the previous module states from sys modules
-        modules = {
-            name: module
-            for name, module in sys.modules.items()
-            if _is_submodule(lib.__name__, name)
-        }
+        modules = {name: module for name, module in sys.modules.items() if _is_submodule(lib.__name__, name)}
 
         try:
             # Unload and then load the module...

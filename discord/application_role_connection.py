@@ -102,9 +102,7 @@ class ApplicationRoleConnectionMetadata:
         return self.name
 
     @classmethod
-    def from_dict(
-        cls, data: ApplicationRoleConnectionMetadataPayload
-    ) -> ApplicationRoleConnectionMetadata:
+    def from_dict(cls, data: ApplicationRoleConnectionMetadataPayload) -> ApplicationRoleConnectionMetadata:
         return cls(
             type=try_enum(ApplicationRoleConnectionMetadataType, data["type"]),
             key=data["key"],

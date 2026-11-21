@@ -21,9 +21,7 @@ class SoundboardCog(discord.Cog):
         self.bot = bot
 
     @discord.Cog.listener()
-    async def on_voice_channel_effect_send(
-        self, event: discord.VoiceChannelEffectSendEvent
-    ):
+    async def on_voice_channel_effect_send(self, event: discord.VoiceChannelEffectSendEvent):
         """Called when someone uses a soundboard effect in a voice channel."""
         if event.sound:
             print(f"{event.user} played sound '{event.sound.name}' in {event.channel}")
@@ -43,21 +41,13 @@ class SoundboardCog(discord.Cog):
 
         # List default sounds
         if default_sounds:
-            default_list = "\n".join(
-                f"{s.emoji} {s.name} (Volume: {s.volume})" for s in default_sounds
-            )
-            embed.add_field(
-                name="Default Sounds", value=default_list or "None", inline=False
-            )
+            default_list = "\n".join(f"{s.emoji} {s.name} (Volume: {s.volume})" for s in default_sounds)
+            embed.add_field(name="Default Sounds", value=default_list or "None", inline=False)
 
         # List guild sounds
         if guild_sounds:
-            guild_list = "\n".join(
-                f"{s.emoji} {s.name} (Volume: {s.volume})" for s in guild_sounds
-            )
-            embed.add_field(
-                name="Guild Sounds", value=guild_list or "None", inline=False
-            )
+            guild_list = "\n".join(f"{s.emoji} {s.name} (Volume: {s.volume})" for s in guild_sounds)
+            embed.add_field(name="Guild Sounds", value=guild_list or "None", inline=False)
 
         await ctx.respond(embed=embed)
 
@@ -80,9 +70,7 @@ class SoundboardCog(discord.Cog):
             sound_bytes = await attachment.read()
             emoji = discord.PartialEmoji.from_str(emoji)
 
-            new_sound = await ctx.guild.create_sound(
-                name=name, sound=sound_bytes, volume=1.0, emoji=emoji
-            )
+            new_sound = await ctx.guild.create_sound(name=name, sound=sound_bytes, volume=1.0, emoji=emoji)
 
             await ctx.respond(f"Added new sound: {new_sound.emoji} {new_sound.name}")
         except Exception as e:
@@ -111,11 +99,7 @@ class SoundboardCog(discord.Cog):
         try:
             await sound.edit(
                 name=new_name or sound.name,
-                emoji=(
-                    discord.PartialEmoji.from_str(new_emoji)
-                    if new_emoji
-                    else sound.emoji
-                ),
+                emoji=(discord.PartialEmoji.from_str(new_emoji) if new_emoji else sound.emoji),
                 volume=new_volume or sound.volume,
             )
             await ctx.respond(f"Updated sound: {sound.emoji} {sound.name}")

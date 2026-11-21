@@ -105,16 +105,12 @@ else:
 
     def __getattr__(name: str) -> object:
         if name == "VoiceClient":
-            warn_deprecated(
-                "discord.VoiceClient", "discord.voice.VoiceClient", "2.7", "3.0"
-            )
+            warn_deprecated("discord.VoiceClient", "discord.voice.VoiceClient", "2.7", "3.0")
             from .voice import VoiceClient
 
             return VoiceClient
         if name == "VoiceProtocol":
-            warn_deprecated(
-                "discord.VoiceProtocol", "discord.voice.VoiceProtocol", "2.7", "3.0"
-            )
+            warn_deprecated("discord.VoiceProtocol", "discord.voice.VoiceProtocol", "2.7", "3.0")
             from .voice import VoiceProtocol
 
             return VoiceProtocol

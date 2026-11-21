@@ -88,9 +88,7 @@ LOTS_OF_COLORS = [
     "yellowgreen",
 ]
 
-BASIC_ALLOWED = [
-    ...
-]  # This would normally be a list of discord user IDs for the purpose of this example
+BASIC_ALLOWED = [...]  # This would normally be a list of discord user IDs for the purpose of this example
 
 
 async def color_searcher(ctx: discord.AutocompleteContext):
@@ -103,9 +101,7 @@ async def color_searcher(ctx: discord.AutocompleteContext):
     This is to demonstrate passing a callback in the discord.utils.basic_autocomplete function.
     """
 
-    return [
-        color for color in LOTS_OF_COLORS if ctx.interaction.user.id in BASIC_ALLOWED
-    ]
+    return [color for color in LOTS_OF_COLORS if ctx.interaction.user.id in BASIC_ALLOWED]
 
 
 async def get_colors(ctx: discord.AutocompleteContext):
@@ -127,9 +123,7 @@ async def get_animals(ctx: discord.AutocompleteContext):
     elif picked_color == "blue":
         return ["blue jay", "blue whale"]
     elif picked_color == "indigo":
-        return [
-            "eastern indigo snake"
-        ]  # Needs to return an iterable even if only one item
+        return ["eastern indigo snake"]  # Needs to return an iterable even if only one item
     elif picked_color == "violet":
         return ["purple emperor butterfly", "orchid dottyback"]
     else:
@@ -155,10 +149,7 @@ async def autocomplete_example(
     from the color option to return an iterable of animals
     """
 
-    await ctx.respond(
-        f"You picked {color} for the color, which allowed you to choose {animal} for"
-        " the animal."
-    )
+    await ctx.respond(f"You picked {color} for the color, which allowed you to choose {animal} for" " the animal.")
 
 
 @bot.slash_command(name="ac_basic_example")
@@ -171,9 +162,7 @@ async def autocomplete_example(
 @option(
     "animal",
     description="Pick an animal from this small list",
-    autocomplete=discord.utils.basic_autocomplete(
-        ["snail", "python", "cricket", "orca"]
-    ),
+    autocomplete=discord.utils.basic_autocomplete(["snail", "python", "cricket", "orca"]),
     # Demonstrates passing a static iterable discord.utils.basic_autocomplete
 )
 async def autocomplete_basic_example(
@@ -202,15 +191,9 @@ FRUITS = ["Apple", "Banana", "Orange"]
 VEGETABLES = ["Carrot", "Lettuce", "Potato"]
 
 
-async def food_autocomplete(
-    ctx: discord.AutocompleteContext, food_type: str
-) -> list[discord.OptionChoice]:
+async def food_autocomplete(ctx: discord.AutocompleteContext, food_type: str) -> list[discord.OptionChoice]:
     items = FRUITS if food_type == "fruit" else VEGETABLES
-    return [
-        discord.OptionChoice(name=item)
-        for item in items
-        if ctx.value.lower() in item.lower()
-    ]
+    return [discord.OptionChoice(name=item) for item in items if ctx.value.lower() in item.lower()]
 
 
 @bot.slash_command(name="fruit")

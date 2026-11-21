@@ -47,17 +47,13 @@ _func = Callable[..., Awaitable[Any]]
 LF = TypeVar("LF", bound=_func)
 FT = TypeVar("FT", bound=_func)
 ET = TypeVar("ET", bound=Callable[[Any, BaseException], Awaitable[Any]])
-_current_loop_ctx: contextvars.ContextVar[int] = contextvars.ContextVar(
-    "_current_loop_ctx", default=None
-)
+_current_loop_ctx: contextvars.ContextVar[int] = contextvars.ContextVar("_current_loop_ctx", default=None)
 
 
 class SleepHandle:
     __slots__ = ("future", "loop", "handle")
 
-    def __init__(
-        self, dt: datetime.datetime, *, loop: asyncio.AbstractEventLoop
-    ) -> None:
+    def __init__(self, dt: datetime.datetime, *, loop: asyncio.AbstractEventLoop) -> None:
         self.loop = loop
         self.future = future = loop.create_future()
         relative_delta = discord.utils.compute_timedelta(dt)
@@ -136,9 +132,7 @@ class Loop(Generic[LF]):
         self._next_iteration = None
 
         if not inspect.iscoroutinefunction(self.coro):
-            raise TypeError(
-                f"Expected coroutine function, not {type(self.coro).__name__!r}."
-            )
+            raise TypeError(f"Expected coroutine function, not {type(self.coro).__name__!r}.")
         if isinstance(overlap, bool):
             if overlap:
                 self._run_with_semaphore = self._run_direct
@@ -318,11 +312,7 @@ class Loop(Generic[LF]):
     @property
     def current_loop(self) -> int:
         """The current iteration of the loop."""
-        return (
-            _current_loop_ctx.get()
-            if _current_loop_ctx.get() is not None
-            else self._current_loop
-        )
+        return _current_loop_ctx.get() if _current_loop_ctx.get() is not None else self._current_loop
 
     @property
     def next_iteration(self) -> datetime.datetime | None:
@@ -411,9 +401,7 @@ class Loop(Generic[LF]):
             self._stop_next_iteration = True
 
     def _can_be_cancelled(self) -> bool:
-        return bool(
-            not self._is_being_cancelled and self._task and not self._task.done()
-        )
+        return bool(not self._is_being_cancelled and self._task and not self._task.done())
 
     def cancel(self) -> None:
         """Cancels the internal task, if it is running."""
@@ -436,9 +424,7 @@ class Loop(Generic[LF]):
             The keyword arguments to use.
         """
 
-        def restart_when_over(
-            fut: Any, *, args: Any = args, kwargs: Any = kwargs
-        ) -> None:
+        def restart_when_over(fut: Any, *, args: Any = args, kwargs: Any = kwargs) -> None:
             self._task.remove_done_callback(restart_when_over)
             self.start(*args, **kwargs)
 
@@ -498,9 +484,7 @@ class Loop(Generic[LF]):
             Whether all exceptions were successfully removed.
         """
         old_length = len(self._valid_exception)
-        self._valid_exception = tuple(
-            x for x in self._valid_exception if x not in exceptions
-        )
+        self._valid_exception = tuple(x for x in self._valid_exception if x not in exceptions)
         return len(self._valid_exception) == old_length - len(exceptions)
 
     def get_task(self) -> asyncio.Task[None] | None:
@@ -531,9 +515,7 @@ class Loop(Generic[LF]):
             f"Unhandled exception in internal background task {self.coro.__name__!r}.",
             file=sys.stderr,
         )
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
 
     def before_loop(self, coro: FT) -> FT:
         """A decorator that registers a coroutine to be called before the loop starts running.
@@ -555,9 +537,7 @@ class Loop(Generic[LF]):
         """
 
         if not inspect.iscoroutinefunction(coro):
-            raise TypeError(
-                f"Expected coroutine function, received {coro.__class__.__name__!r}."
-            )
+            raise TypeError(f"Expected coroutine function, received {coro.__class__.__name__!r}.")
 
         self._before_loop = coro
         return coro
@@ -585,9 +565,7 @@ class Loop(Generic[LF]):
         """
 
         if not inspect.iscoroutinefunction(coro):
-            raise TypeError(
-                f"Expected coroutine function, received {coro.__class__.__name__!r}."
-            )
+            raise TypeError(f"Expected coroutine function, received {coro.__class__.__name__!r}.")
 
         self._after_loop = coro
         return coro
@@ -613,9 +591,7 @@ class Loop(Generic[LF]):
             The function was not a coroutine.
         """
         if not inspect.iscoroutinefunction(coro):
-            raise TypeError(
-                f"Expected coroutine function, received {coro.__class__.__name__!r}."
-            )
+            raise TypeError(f"Expected coroutine function, received {coro.__class__.__name__!r}.")
 
         self._error = coro  # type: ignore
         return coro
@@ -629,8 +605,7 @@ class Loop(Generic[LF]):
             if self._current_loop == 0:
                 # if we're at the last index on the first iteration, we need to sleep until tomorrow
                 return datetime.datetime.combine(
-                    datetime.datetime.now(self._time[0].tzinfo or datetime.timezone.utc)
-                    + datetime.timedelta(days=1),
+                    datetime.datetime.now(self._time[0].tzinfo or datetime.timezone.utc) + datetime.timedelta(days=1),
                     self._time[0],
                 )
 
@@ -638,26 +613,18 @@ class Loop(Generic[LF]):
 
         if self._current_loop == 0:
             self._time_index += 1
-            if (
-                next_time
-                > datetime.datetime.now(
-                    next_time.tzinfo or datetime.timezone.utc
-                ).timetz()
-            ):
+            if next_time > datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc).timetz():
                 return datetime.datetime.combine(
                     datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc),
                     next_time,
                 )
             else:
                 return datetime.datetime.combine(
-                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc)
-                    + datetime.timedelta(days=1),
+                    datetime.datetime.now(next_time.tzinfo or datetime.timezone.utc) + datetime.timedelta(days=1),
                     next_time,
                 )
 
-        next_date = cast(
-            datetime.datetime, self._last_iteration.astimezone(next_time.tzinfo)
-        )
+        next_date = cast(datetime.datetime, self._last_iteration.astimezone(next_time.tzinfo))
         if next_time < next_date.timetz():
             next_date += datetime.timedelta(days=1)
 
@@ -669,11 +636,7 @@ class Loop(Generic[LF]):
         # to calculate the next time index from
 
         # pre-condition: self._time is set
-        time_now = (
-            now
-            if now is not MISSING
-            else datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
-        )
+        time_now = now if now is not MISSING else datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
         for idx, time in enumerate(self._time):
             if time >= time_now.astimezone(time.tzinfo).timetz():
                 self._time_index = idx
@@ -769,9 +732,7 @@ class Loop(Generic[LF]):
             self._time = self._get_time_parameter(time)
             self._sleep = self._seconds = self._minutes = self._hours = MISSING
 
-        if self.is_running() and not (
-            self._before_loop_running or self._after_loop_running
-        ):
+        if self.is_running() and not (self._before_loop_running or self._after_loop_running):
             if self._time is not MISSING:
                 # prepare the next time index starting from after the last iteration
                 self._prepare_time_index(now=self._last_iteration)

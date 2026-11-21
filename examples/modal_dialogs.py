@@ -6,9 +6,7 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(
-    command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents
-)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
 
 
 class MyModal(discord.ui.DesignerModal):
@@ -52,9 +50,7 @@ class MyModal(discord.ui.DesignerModal):
         super().__init__(
             first_input,
             second_input,
-            discord.ui.TextDisplay(
-                "# Personal Questions"
-            ),  # TextDisplay does NOT use Label
+            discord.ui.TextDisplay("# Personal Questions"),  # TextDisplay does NOT use Label
             select,
             file,
             *args,
@@ -66,12 +62,8 @@ class MyModal(discord.ui.DesignerModal):
         embed = discord.Embed(
             title="Your Modal Results",
             fields=[
-                discord.EmbedField(
-                    name="First Input", value=self.children[0].item.value, inline=False
-                ),
-                discord.EmbedField(
-                    name="Second Input", value=self.children[1].item.value, inline=False
-                ),
+                discord.EmbedField(name="First Input", value=self.children[0].item.value, inline=False),
+                discord.EmbedField(name="Second Input", value=self.children[1].item.value, inline=False),
                 discord.EmbedField(
                     name="Favorite Color",
                     value=self.children[3].item.values[0],
@@ -80,9 +72,7 @@ class MyModal(discord.ui.DesignerModal):
             ],
             color=discord.Color.random(),
         )
-        attachment = (
-            self.children[4].item.values[0] if self.children[4].item.values else None
-        )
+        attachment = self.children[4].item.values[0] if self.children[4].item.values else None
         if attachment:
             embed.set_image(url=f"attachment://{attachment.filename}")
         await interaction.followup.send(
@@ -120,9 +110,7 @@ async def modaltest(ctx: commands.Context):
 
     class MyView(discord.ui.View):
         @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
-        async def button_callback(
-            self, button: discord.ui.Button, interaction: discord.Interaction
-        ):
+        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             modal = MyModal(title="Modal Triggered from Button")
             await interaction.response.send_modal(modal)
 
@@ -131,17 +119,11 @@ async def modaltest(ctx: commands.Context):
             min_values=1,
             max_values=1,
             options=[
-                discord.SelectOption(
-                    label="First Modal", description="Shows the first modal"
-                ),
-                discord.SelectOption(
-                    label="Second Modal", description="Shows the second modal"
-                ),
+                discord.SelectOption(label="First Modal", description="Shows the first modal"),
+                discord.SelectOption(label="Second Modal", description="Shows the second modal"),
             ],
         )
-        async def select_callback(
-            self, select: discord.ui.Select, interaction: discord.Interaction
-        ):
+        async def select_callback(self, select: discord.ui.Select, interaction: discord.Interaction):
             modal = MyModal(title="Temporary Title")
             modal.title = select.values[0]
             await interaction.response.send_modal(modal)

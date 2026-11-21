@@ -146,15 +146,7 @@ class ThreadChannel(_BaseChannel):
     total_message_sent: int
 
 
-GuildChannel = (
-    TextChannel
-    | NewsChannel
-    | VoiceChannel
-    | CategoryChannel
-    | StageChannel
-    | ThreadChannel
-    | ForumChannel
-)
+GuildChannel = TextChannel | NewsChannel | VoiceChannel | CategoryChannel | StageChannel | ThreadChannel | ForumChannel
 
 
 class DMChannel(TypedDict):

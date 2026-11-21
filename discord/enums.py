@@ -111,25 +111,15 @@ def _create_value_cls(name, comparable):
     cls.__repr__ = lambda self: f"<{name}.{self.name}: {self.value!r}>"
     cls.__str__ = lambda self: f"{name}.{self.name}"
     if comparable:
-        cls.__le__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value <= other.value
-        )
-        cls.__ge__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value >= other.value
-        )
-        cls.__lt__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value < other.value
-        )
-        cls.__gt__ = lambda self, other: (
-            isinstance(other, self.__class__) and self.value > other.value
-        )
+        cls.__le__ = lambda self, other: (isinstance(other, self.__class__) and self.value <= other.value)
+        cls.__ge__ = lambda self, other: (isinstance(other, self.__class__) and self.value >= other.value)
+        cls.__lt__ = lambda self, other: (isinstance(other, self.__class__) and self.value < other.value)
+        cls.__gt__ = lambda self, other: (isinstance(other, self.__class__) and self.value > other.value)
     return cls
 
 
 def _is_descriptor(obj):
-    return (
-        hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
-    )
+    return hasattr(obj, "__get__") or hasattr(obj, "__set__") or hasattr(obj, "__delete__")
 
 
 class EnumMeta(type):
@@ -181,9 +171,7 @@ class EnumMeta(type):
         return (cls._enum_member_map_[name] for name in cls._enum_member_names_)
 
     def __reversed__(cls):
-        return (
-            cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_)
-        )
+        return (cls._enum_member_map_[name] for name in reversed(cls._enum_member_names_))
 
     def __len__(cls):
         return len(cls._enum_member_names_)
@@ -560,9 +548,7 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
-            AuditLogAction.application_command_permission_update: (
-                AuditLogActionCategory.update
-            ),
+            AuditLogAction.application_command_permission_update: (AuditLogActionCategory.update),
             AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
             AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
@@ -889,10 +875,7 @@ class SlashCommandOptionType(Enum):
             else:
                 raise TypeError("Invalid usage of typing.Union")
 
-        if (
-            isinstance(datatype, types.UnionType)
-            or getattr(datatype, "__origin__", None) is Union
-        ):
+        if isinstance(datatype, types.UnionType) or getattr(datatype, "__origin__", None) is Union:
             # Python 3.10+ "|" operator or typing.Union has been used. The __args__ attribute is a tuple of the types.
             # Type checking fails for this case, so ignore it.
             return cls.from_datatype(datatype.__args__)  # type: ignore
@@ -1236,8 +1219,12 @@ class RoleType(IntEnum):
     NORMAL = 0
     APPLICATION = 1
     BOOSTER = 2
-    GUILD_PRODUCT = 3  # Not possible to determine *at times* because role tags seem to be missing altogether when fetched
-    PREMIUM_SUBSCRIPTION_BASE = 4  # Not possible to determine currently, will be INTEGRATION if it's a base subscription
+    GUILD_PRODUCT = (
+        3  # Not possible to determine *at times* because role tags seem to be missing altogether when fetched
+    )
+    PREMIUM_SUBSCRIPTION_BASE = (
+        4  # Not possible to determine currently, will be INTEGRATION if it's a base subscription
+    )
     PREMIUM_SUBSCRIPTION_TIER = 5
     DRAFT_PREMIUM_SUBSCRIPTION_TIER = 6
     INTEGRATION = 7

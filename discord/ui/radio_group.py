@@ -65,9 +65,7 @@ class RadioGroup(ModalItem):
     ):
         super().__init__()
         if custom_id is not None and not isinstance(custom_id, str):
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
@@ -220,7 +218,5 @@ class RadioGroup(ModalItem):
     def refresh_state(self, data) -> None:
         self._selected_value = data.get("value", None)
 
-    def refresh_from_modal(
-        self, interaction: Interaction, data: RadioGroupComponentPayload
-    ) -> None:
+    def refresh_from_modal(self, interaction: Interaction, data: RadioGroupComponentPayload) -> None:
         return self.refresh_state(data)

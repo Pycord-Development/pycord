@@ -81,9 +81,7 @@ class BaseBuff(Buffer[PacketT]):
 class JitterBuffer(BaseBuff[PacketT]):
     _threshold: int = 10000
 
-    def __init__(
-        self, max_size: int = 10, *, pref_size: int = 1, prefill: int = 1
-    ) -> None:
+    def __init__(self, max_size: int = 10, *, pref_size: int = 1, prefill: int = 1) -> None:
         if max_size < 1:
             raise ValueError(f"max_size must be greater than 1, not {max_size}")
 
@@ -123,11 +121,7 @@ class JitterBuffer(BaseBuff[PacketT]):
         sequential = add_wrapped(self._last_tx_seq, 1) == next_packet.sequence
         positive_seq = self._last_tx_seq >= 0
 
-        if (
-            (sequential and positive_seq)
-            or not positive_seq
-            or len(self._buffer) >= self.max_size
-        ):
+        if (sequential and positive_seq) or not positive_seq or len(self._buffer) >= self.max_size:
             self._has_item.set()
         else:
             self._has_item.clear()
@@ -139,10 +133,7 @@ class JitterBuffer(BaseBuff[PacketT]):
     def push(self, packet: Packet) -> bool:
         seq = packet.sequence
 
-        if (
-            gap_wrapped(self._last_tx_seq, seq) > self._threshold
-            and self._last_tx_seq != -1
-        ):
+        if gap_wrapped(self._last_tx_seq, seq) > self._threshold and self._last_tx_seq != -1:
             _log.debug("Dropping old packet %s", packet)
             return False
 
@@ -186,10 +177,7 @@ class JitterBuffer(BaseBuff[PacketT]):
         if packet is None:
             return None
 
-        if (
-            packet.sequence == add_wrapped(self._last_tx_seq, 1)
-            or self._last_tx_seq < 0
-        ):
+        if packet.sequence == add_wrapped(self._last_tx_seq, 1) or self._last_tx_seq < 0:
             return packet
 
     def gap(self) -> int:

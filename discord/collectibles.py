@@ -111,11 +111,7 @@ class Nameplate:
         return f"<Nameplate sku_id={self.sku_id} palette={self.palette}>"
 
     def __eq__(self, other: object) -> bool:
-        return (
-            isinstance(other, Nameplate)
-            and self.sku_id == other.sku_id
-            and self.palette == other.palette
-        )
+        return isinstance(other, Nameplate) and self.sku_id == other.sku_id and self.palette == other.palette
 
     @cached_property
     def static_asset(self) -> Asset:

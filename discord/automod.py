@@ -290,9 +290,7 @@ class AutoModTriggerMetadata:
             kwargs["regex_patterns"] = regex_patterns
 
         if (presets := data.get("presets")) is not None:
-            kwargs["presets"] = [
-                try_enum(AutoModKeywordPresetType, wordset) for wordset in presets
-            ]
+            kwargs["presets"] = [try_enum(AutoModKeywordPresetType, wordset) for wordset in presets]
 
         if (allow_list := data.get("allow_list")) is not None:
             kwargs["allow_list"] = allow_list
@@ -394,18 +392,10 @@ class AutoModRule(Hashable):
         self.guild_id: int = int(data["guild_id"])
         self.name: str = data["name"]
         self.creator_id: int = int(data["creator_id"])
-        self.event_type: AutoModEventType = try_enum(
-            AutoModEventType, data["event_type"]
-        )
-        self.trigger_type: AutoModTriggerType = try_enum(
-            AutoModTriggerType, data["trigger_type"]
-        )
-        self.trigger_metadata: AutoModTriggerMetadata = (
-            AutoModTriggerMetadata.from_dict(data["trigger_metadata"])
-        )
-        self.actions: list[AutoModAction] = [
-            AutoModAction.from_dict(d) for d in data["actions"]
-        ]
+        self.event_type: AutoModEventType = try_enum(AutoModEventType, data["event_type"])
+        self.trigger_type: AutoModTriggerType = try_enum(AutoModTriggerType, data["trigger_type"])
+        self.trigger_metadata: AutoModTriggerMetadata = AutoModTriggerMetadata.from_dict(data["trigger_metadata"])
+        self.actions: list[AutoModAction] = [AutoModAction.from_dict(d) for d in data["actions"]]
         self.enabled: bool = data["enabled"]
         self.exempt_role_ids: list[int] = [int(r) for r in data["exempt_roles"]]
         self.exempt_channel_ids: list[int] = [int(c) for c in data["exempt_channels"]]
@@ -438,10 +428,7 @@ class AutoModRule(Hashable):
         """
         if self.guild is None:
             return [Object(role_id) for role_id in self.exempt_role_ids]
-        return [
-            self.guild.get_role(role_id) or Object(role_id)
-            for role_id in self.exempt_role_ids
-        ]
+        return [self.guild.get_role(role_id) or Object(role_id) for role_id in self.exempt_role_ids]
 
     @cached_property
     def exempt_channels(
@@ -454,10 +441,7 @@ class AutoModRule(Hashable):
         """
         if self.guild is None:
             return [Object(channel_id) for channel_id in self.exempt_channel_ids]
-        return [
-            self.guild.get_channel(channel_id) or Object(channel_id)
-            for channel_id in self.exempt_channel_ids
-        ]
+        return [self.guild.get_channel(channel_id) or Object(channel_id) for channel_id in self.exempt_channel_ids]
 
     async def delete(self, reason: str | None = None) -> None:
         """|coro|
@@ -476,9 +460,7 @@ class AutoModRule(Hashable):
         HTTPException
             The operation failed.
         """
-        await self._state.http.delete_auto_moderation_rule(
-            self.guild_id, self.id, reason=reason
-        )
+        await self._state.http.delete_auto_moderation_rule(self.guild_id, self.id, reason=reason)
 
     async def edit(
         self,
@@ -554,7 +536,5 @@ class AutoModRule(Hashable):
             payload["exempt_channels"] = [c.id for c in exempt_channels]
 
         if payload:
-            data = await http.edit_auto_moderation_rule(
-                self.guild_id, self.id, payload, reason=reason
-            )
+            data = await http.edit_auto_moderation_rule(self.guild_id, self.id, payload, reason=reason)
             return AutoModRule(state=self._state, data=data)

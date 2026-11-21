@@ -233,45 +233,29 @@ class AppInfo:
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.bot_public: bool = data.get("bot_public", True)
         self.bot_require_code_grant: bool = data.get("bot_require_code_grant", False)
-        self.owner: User | None = (
-            state.create_user(owner)
-            if (owner := data.get("owner")) is not None
-            else None
-        )
+        self.owner: User | None = state.create_user(owner) if (owner := data.get("owner")) is not None else None
 
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
 
         self._summary: str | None = data.get("summary")
         self.verify_key: str = data["verify_key"]
-        self.bot: User | None = (
-            state.create_user(bot) if (bot := data.get("bot")) is not None else None
-        )
+        self.bot: User | None = state.create_user(bot) if (bot := data.get("bot")) is not None else None
 
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
-        self.primary_sku_id: int | None = utils._get_as_snowflake(
-            data, "primary_sku_id"
-        )
+        self.primary_sku_id: int | None = utils._get_as_snowflake(data, "primary_sku_id")
         self.slug: str | None = data.get("slug")
         self._cover_image: str | None = data.get("cover_image")
         self.terms_of_service_url: str | None = data.get("terms_of_service_url")
         self.privacy_policy_url: str | None = data.get("privacy_policy_url")
         self.approximate_guild_count: int | None = data.get("approximate_guild_count")
-        self.approximate_user_install_count: int | None = data.get(
-            "approximate_user_install_count"
-        )
-        self.approximate_user_authorization_count: int | None = data.get(
-            "approximate_user_authorization_count"
-        )
+        self.approximate_user_install_count: int | None = data.get("approximate_user_install_count")
+        self.approximate_user_authorization_count: int | None = data.get("approximate_user_authorization_count")
         self._flags: int = data.get("flags", 0)
         self.redirect_uris: list[str] = data.get("redirect_uris", [])
-        self.interactions_endpoint_url: str | None = data.get(
-            "interactions_endpoint_url"
-        )
-        self.role_connections_verification_url: str | None = data.get(
-            "role_connections_verification_url"
-        )
+        self.interactions_endpoint_url: str | None = data.get("interactions_endpoint_url")
+        self.role_connections_verification_url: str | None = data.get("role_connections_verification_url")
         self.event_webhooks_url: str | None = data.get("event_webhooks_url")
         self.event_webhooks_status: ApplicationEventWebhookStatus | None = (
             try_enum(ApplicationEventWebhookStatus, status)
@@ -281,14 +265,12 @@ class AppInfo:
         self.event_webhooks_types: list[str] | None = data.get("event_webhooks_types")
 
         self.install_params: AppInstallParams | None = (
-            AppInstallParams(install_params)
-            if (install_params := data.get("install_params")) is not None
-            else None
+            AppInstallParams(install_params) if (install_params := data.get("install_params")) is not None else None
         )
         self.tags: list[str] = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
-        self.integration_types_config: IntegrationTypesConfig | None = (
-            IntegrationTypesConfig.from_payload(data.get("integration_types_config"))
+        self.integration_types_config: IntegrationTypesConfig | None = IntegrationTypesConfig.from_payload(
+            data.get("integration_types_config")
         )
 
     def __repr__(self) -> str:
@@ -395,9 +377,7 @@ class AppInfo:
         if interactions_endpoint_url is not utils.MISSING:
             payload["interactions_endpoint_url"] = interactions_endpoint_url
         if role_connections_verification_url is not utils.MISSING:
-            payload["role_connections_verification_url"] = (
-                role_connections_verification_url
-            )
+            payload["role_connections_verification_url"] = role_connections_verification_url
         if install_params is not utils.MISSING:
             if install_params is None:
                 payload["install_params"] = None
@@ -409,9 +389,7 @@ class AppInfo:
             if integration_types_config is None:
                 payload["integration_types_config"] = None
             else:
-                payload["integration_types_config"] = (
-                    integration_types_config._to_payload()
-                )
+                payload["integration_types_config"] = integration_types_config._to_payload()
         if flags is not utils.MISSING:
             payload["flags"] = None if flags is None else flags.value
         if event_webhooks_url is not utils.MISSING:
@@ -560,9 +538,7 @@ class AppInstallParams:
             A dict with ``scopes`` and ``permissions`` (string form) suitable for the API.
         """
         if self.permissions.value > 0 and "bot" not in self.scopes:
-            raise ValueError(
-                "'bot' must be in install_params.scopes if permissions are requested"
-            )
+            raise ValueError("'bot' must be in install_params.scopes if permissions are requested")
         return {
             "scopes": list(self.scopes),
             "permissions": str(self.permissions.value),
@@ -596,9 +572,7 @@ class IntegrationTypesConfig:
         self.user: AppInstallParams | None = user
 
     @staticmethod
-    def _get_ctx(
-        raw: dict[int | str, dict[str, object] | None] | None, key: int
-    ) -> dict[str, object] | None:
+    def _get_ctx(raw: dict[int | str, dict[str, object] | None] | None, key: int) -> dict[str, object] | None:
         if raw is None:
             return None
         if key in raw:
@@ -616,18 +590,14 @@ class IntegrationTypesConfig:
         return AppInstallParams(params)
 
     @classmethod
-    def from_payload(
-        cls, data: dict[int | str, dict[str, Any] | None] | None
-    ) -> IntegrationTypesConfig | None:
+    def from_payload(cls, data: dict[int | str, dict[str, Any] | None] | None) -> IntegrationTypesConfig | None:
         if data is None:
             return None
         guild_ctx = cls._decode_ctx(cls._get_ctx(data, 0))
         user_ctx = cls._decode_ctx(cls._get_ctx(data, 1))
         return cls(guild=guild_ctx, user=user_ctx)
 
-    def _encode_install_params(
-        self, value: AppInstallParams | None
-    ) -> dict[str, dict[str, Any]] | None:
+    def _encode_install_params(self, value: AppInstallParams | None) -> dict[str, dict[str, Any]] | None:
         if value is None:
             return None
         return {"oauth2_install_params": value._to_payload()}

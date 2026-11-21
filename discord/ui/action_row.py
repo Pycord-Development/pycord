@@ -98,9 +98,7 @@ class ActionRow(ViewItem[V]):
         self._underlying = self._generate_underlying(id=id)
 
         for func in self.__row_children_items__:
-            item: ViewItem = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
+            item: ViewItem = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
             item.callback = partial(func, self, item)
             self.add_item(item)
             setattr(self, func.__name__, item)
@@ -425,9 +423,7 @@ class ActionRow(ViewItem[V]):
     def from_component(cls: type[A], component: ActionRowComponent) -> A:
         from .view import _component_to_item, _walk_all_components
 
-        items = [
-            _component_to_item(c) for c in _walk_all_components(component.components)
-        ]
+        items = [_component_to_item(c) for c in _walk_all_components(component.components)]
         return cls(
             *items,
             id=component.id,

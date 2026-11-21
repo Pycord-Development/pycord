@@ -49,9 +49,7 @@ if TYPE_CHECKING:
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import CheckboxComponent as CheckboxComponentPayload
-    from .types.components import (
-        CheckboxGroupComponent as CheckboxGroupComponentPayload,
-    )
+    from .types.components import CheckboxGroupComponent as CheckboxGroupComponentPayload
     from .types.components import CheckboxGroupOption as CheckboxGroupOptionPayload
     from .types.components import Component as ComponentPayload
     from .types.components import ContainerComponent as ContainerComponentPayload
@@ -185,9 +183,7 @@ class ActionRow(Component):
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.children: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
-        ]
+        self.children: list[Component] = [_component_factory(d) for d in data.get("components", [])]
 
     @property
     def width(self):
@@ -232,9 +228,7 @@ class ActionRow(Component):
 
     @classmethod
     def with_components(cls, *components, id=None):
-        return cls._raw_construct(
-            type=ComponentType.action_row, id=id, children=[c for c in components]
-        )
+        return cls._raw_construct(type=ComponentType.action_row, id=id, children=[c for c in components])
 
 
 class InputText(Component):
@@ -475,16 +469,10 @@ class SelectMenu(Component):
         self.min_values: int = data.get("min_values", 1)
         self.max_values: int = data.get("max_values", 1)
         self.disabled: bool = data.get("disabled", False)
-        self.options: list[SelectOption] = [
-            SelectOption.from_dict(option) for option in data.get("options", [])
-        ]
-        self.channel_types: list[ChannelType] = [
-            try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
-        ]
+        self.options: list[SelectOption] = [SelectOption.from_dict(option) for option in data.get("options", [])]
+        self.channel_types: list[ChannelType] = [try_enum(ChannelType, ct) for ct in data.get("channel_types", [])]
         self.required: bool | None = data.get("required")
-        self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(
-            data.get("default_values")
-        )
+        self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(data.get("default_values"))
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -599,15 +587,10 @@ class SelectDefaultValue:
         return f"<SelectDefaultValue id={self.id} type={self.type}>"
 
     @classmethod
-    def _from_data(
-        cls, default_values: list[SelectDefaultValuePayload] | None
-    ) -> list[SelectDefaultValue]:
+    def _from_data(cls, default_values: list[SelectDefaultValuePayload] | None) -> list[SelectDefaultValue]:
         if not default_values:
             return []
-        return [
-            cls(id=int(d["id"]), type=try_enum(SelectDefaultValueType, d["type"]))
-            for d in default_values
-        ]
+        return [cls(id=int(d["id"]), type=try_enum(SelectDefaultValueType, d["type"])) for d in default_values]
 
     @classmethod
     def _handle_model(
@@ -620,9 +603,7 @@ class SelectDefaultValue:
         from discord import Member, Object, Role, User, abc
         from discord.user import _UserTag
 
-        instances_mapping: dict[
-            type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]
-        ] = {
+        instances_mapping: dict[type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]] = {
             Role: (
                 (ComponentType.role_select, ComponentType.mentionable_select),
                 SelectDefaultValueType.role,
@@ -661,9 +642,7 @@ class SelectDefaultValue:
                 break
 
         if sel_types is None or def_type is None:
-            raise TypeError(
-                f"{obj_type.__name__} is not a valid instance for a select default value"
-            )
+            raise TypeError(f"{obj_type.__name__} is not a valid instance for a select default value")
 
         # we can't actually check select types when not in a select context
         if select_type is not None and select_type not in sel_types:
@@ -767,8 +746,7 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not"
-                    f" {value.__class__}"
+                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not" f" {value.__class__}"
                 )
 
         self._emoji = value
@@ -833,9 +811,7 @@ class Section(Component):
     def __init__(self, data: SectionComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.components: list[Component] = [
-            _component_factory(d, state=state) for d in data.get("components", [])
-        ]
+        self.components: list[Component] = [_component_factory(d, state=state) for d in data.get("components", [])]
         self.accessory: Component | None = None
         if _accessory := data.get("accessory"):
             self.accessory = _component_factory(_accessory, state=state)
@@ -927,9 +903,7 @@ class UnfurledMediaItem(AssetMixin):
     def __init__(self, url: str):
         self._state = None
         self._url: str = url
-        self._static_url: str | None = (
-            url if url and url.startswith("attachment://") else None
-        )
+        self._static_url: str | None = url if url and url.startswith("attachment://") else None
         self.proxy_url: str | None = None
         self.height: int | None = None
         self.width: int | None = None
@@ -938,9 +912,7 @@ class UnfurledMediaItem(AssetMixin):
         self.attachment_id: int | None = None
 
     def __repr__(self) -> str:
-        return (
-            f"<UnfurledMediaItem url={self.url!r} attachment_id={self.attachment_id}>"
-        )
+        return f"<UnfurledMediaItem url={self.url!r} attachment_id={self.attachment_id}>"
 
     def __str__(self) -> str:
         return self.url or self.__repr__()
@@ -952,9 +924,7 @@ class UnfurledMediaItem(AssetMixin):
     @url.setter
     def url(self, value: str) -> None:
         self._url = value
-        self._static_url = (
-            value if value and value.startswith("attachment://") else None
-        )
+        self._static_url = value if value and value.startswith("attachment://") else None
 
     @classmethod
     def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
@@ -1007,9 +977,7 @@ class Thumbnail(Component):
     def __init__(self, data: ThumbnailComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.media: UnfurledMediaItem = (
-            umi := data.get("media")
-        ) and UnfurledMediaItem.from_dict(umi, state=state)
+        self.media: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem.from_dict(umi, state=state)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
@@ -1059,9 +1027,7 @@ class MediaGalleryItem:
 
     @classmethod
     def from_dict(cls, data: MediaGalleryItemPayload, state=None) -> MediaGalleryItem:
-        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(
-            umi, state=state
-        )
+        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(umi, state=state)
         description = data.get("description")
         spoiler = data.get("spoiler", False)
 
@@ -1110,9 +1076,7 @@ class MediaGallery(Component):
     def __init__(self, data: MediaGalleryComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.items: list[MediaGalleryItem] = [
-            MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])
-        ]
+        self.items: list[MediaGalleryItem] = [MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])]
 
     def to_dict(self) -> MediaGalleryComponentPayload:
         return {
@@ -1162,9 +1126,7 @@ class FileComponent(Component):
         self.id: int = data.get("id")
         self.name: str | None = data.get("name")
         self.size: int | None = data.get("size")
-        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(
-            data.get("file", {}), state=state
-        )
+        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(data.get("file", {}), state=state)
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> FileComponentPayload:
@@ -1207,9 +1169,7 @@ class Separator(Component):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.divider: bool = data.get("divider")
-        self.spacing: SeparatorSpacingSize = try_enum(
-            SeparatorSpacingSize, data.get("spacing", 1)
-        )
+        self.spacing: SeparatorSpacingSize = try_enum(SeparatorSpacingSize, data.get("spacing", 1))
 
     def to_dict(self) -> SeparatorComponentPayload:
         return {
@@ -1267,9 +1227,7 @@ class Container(Component):
             c
         )  # at this point, not adding alternative spelling
         self.spoiler: bool | None = data.get("spoiler")
-        self.components: list[Component] = [
-            _component_factory(d, state=state) for d in data.get("components", [])
-        ]
+        self.components: list[Component] = [_component_factory(d, state=state) for d in data.get("components", [])]
 
     def to_dict(self) -> ContainerComponentPayload:
         payload = {

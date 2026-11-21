@@ -39,11 +39,7 @@ def test_client_warns_once_when_voice_dependencies_are_missing(caplog):
         discord.Client()
         discord.Client()
 
-    warnings = [
-        record.getMessage()
-        for record in caplog.records
-        if record.name == "discord.utils"
-    ]
+    warnings = [record.getMessage() for record in caplog.records if record.name == "discord.utils"]
     assert len(warnings) == 1
     assert warnings[0].endswith("voice will NOT be supported")
     for dependency in discord.utils.get_missing_voice_dependencies():

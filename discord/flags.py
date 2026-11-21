@@ -595,11 +595,7 @@ class PublicUserFlags(BaseFlags):
 
     def all(self) -> list[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
-        return [
-            public_flag
-            for public_flag in UserFlags
-            if self._has_flag(public_flag.value)
-        ]
+        return [public_flag for public_flag in UserFlags if self._has_flag(public_flag.value)]
 
 
 @fill_with_flags()

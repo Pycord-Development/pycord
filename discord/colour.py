@@ -75,9 +75,7 @@ class Colour:
 
     def __init__(self, value: int):
         if not isinstance(value, int):
-            raise TypeError(
-                f"Expected int parameter, received {value.__class__.__name__} instead."
-            )
+            raise TypeError(f"Expected int parameter, received {value.__class__.__name__} instead.")
 
         self.value: int = value
 
@@ -130,8 +128,7 @@ class Colour:
             return cls(value=value)
         else:
             raise TypeError(
-                "Expected discord.Colour, int, or None but received"
-                f" {value.__class__.__name__} instead."
+                "Expected discord.Colour, int, or None but received" f" {value.__class__.__name__} instead."
             )
 
     @classmethod

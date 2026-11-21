@@ -189,10 +189,7 @@ class GuildEmoji(BaseEmoji):
         super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
-        return (
-            "<GuildEmoji"
-            f" id={self.id} name={self.name!r} animated={self.animated} managed={self.managed}>"
-        )
+        return "<GuildEmoji" f" id={self.id} name={self.name!r} animated={self.animated} managed={self.managed}>"
 
     @property
     def roles(self) -> list[Role]:
@@ -244,9 +241,7 @@ class GuildEmoji(BaseEmoji):
             An error occurred deleting the emoji.
         """
 
-        await self._state.http.delete_custom_emoji(
-            self.guild.id, self.id, reason=reason
-        )
+        await self._state.http.delete_custom_emoji(self.guild.id, self.id, reason=reason)
 
     async def edit(
         self,
@@ -293,9 +288,7 @@ class GuildEmoji(BaseEmoji):
         if roles is not MISSING:
             payload["roles"] = [role.id for role in roles]
 
-        data = await self._state.http.edit_custom_emoji(
-            self.guild.id, self.id, payload=payload, reason=reason
-        )
+        data = await self._state.http.edit_custom_emoji(self.guild.id, self.id, payload=payload, reason=reason)
         return GuildEmoji(guild=self.guild, data=data, state=self._state)
 
 
@@ -355,9 +348,7 @@ class AppEmoji(BaseEmoji):
 
     __slots__: tuple[str, ...] = ("application_id",)
 
-    def __init__(
-        self, *, application_id: int, state: ConnectionState, data: EmojiPayload
-    ):
+    def __init__(self, *, application_id: int, state: ConnectionState, data: EmojiPayload):
         self.application_id: int = application_id
         super().__init__(state=state, data=data)
 
@@ -430,7 +421,5 @@ class AppEmoji(BaseEmoji):
         if name is not MISSING:
             payload["name"] = name
 
-        data = await self._state.http.edit_application_emoji(
-            self.application_id, self.id, payload=payload
-        )
+        data = await self._state.http.edit_application_emoji(self.application_id, self.id, payload=payload)
         return self._state.maybe_store_app_emoji(self.application_id, data)

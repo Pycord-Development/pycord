@@ -39,13 +39,9 @@ def parse_args() -> argparse.Namespace:
         required=False,
         help="Previous final (non-rc) tag; used for final release compare links",
     )
-    parser.add_argument(
-        "--branch", required=True, help="Branch name for Unreleased copy"
-    )
+    parser.add_argument("--branch", required=True, help="Branch name for Unreleased copy")
     parser.add_argument("--repository", required=True, help="owner/repo for links")
-    parser.add_argument(
-        "--date", default=None, help="Release date (YYYY-MM-DD); defaults to today"
-    )
+    parser.add_argument("--date", default=None, help="Release date (YYYY-MM-DD); defaults to today")
     return parser.parse_args()
 
 
@@ -131,24 +127,18 @@ def update_links(
     repository: str,
     previous_final_tag: str | None,
 ) -> str:
-    unreleased_link = (
-        f"[unreleased]: https://github.com/{repository}/compare/v{version}...HEAD"
-    )
+    unreleased_link = f"[unreleased]: https://github.com/{repository}/compare/v{version}...HEAD"
 
     base_tag = previous_tag
     if "rc" not in version:
         base_tag = previous_final_tag or previous_tag
 
-    release_link = (
-        f"[{version}]: https://github.com/{repository}/compare/{base_tag}...v{version}"
-    )
+    release_link = f"[{version}]: https://github.com/{repository}/compare/{base_tag}...v{version}"
 
     updated = re.sub(r"^\[unreleased\]: .*", unreleased_link, text, flags=re.M)
 
     if re.search(rf"^\[{re.escape(version)}\]: ", updated, flags=re.M):
-        updated = re.sub(
-            rf"^\[{re.escape(version)}\]: .*", release_link, updated, flags=re.M
-        )
+        updated = re.sub(rf"^\[{re.escape(version)}\]: .*", release_link, updated, flags=re.M)
     else:
 
         def insert_after_unreleased(match: re.Match) -> str:
