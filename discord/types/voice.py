@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .snowflake import Snowflake
 
-SupportedModes = Literal[
+TransportEncryptionMode = Literal[
     "aead_aes256_gcm_rtpsize",
     "aead_xchacha20_poly1305_rtpsize",
 ]
@@ -101,7 +101,7 @@ class VoiceReady(TypedDict):
     ssrc: int
     ip: str
     port: int
-    modes: list[SupportedModes]
+    modes: list[TransportEncryptionMode]
 
 
 class VoiceHello(TypedDict):

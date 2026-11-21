@@ -48,7 +48,7 @@ if HAS_NACL:
 if TYPE_CHECKING:
     from discord.member import Member
     from discord.sinks import Sink
-    from discord.types.voice import SupportedModes
+    from discord.types.voice import TransportEncryptionMode
 
     from ..client import VoiceClient
     from ..packets import RTPPacket
@@ -248,7 +248,7 @@ class AudioReader:
 
 
 class PacketDecryptor:
-    supported_modes: list[SupportedModes] = [
+    supported_modes: list[TransportEncryptionMode] = [
         "aead_xchacha20_poly1305_rtpsize",
         "xsalsa20_poly1305",
         "xsalsa20_poly1305_lite",
@@ -256,9 +256,9 @@ class PacketDecryptor:
     ]
 
     def __init__(
-        self, mode: SupportedModes, secret_key: bytes, client: VoiceClient
+        self, mode: TransportEncryptionMode, secret_key: bytes, client: VoiceClient
     ) -> None:
-        self.mode: SupportedModes = mode
+        self.mode: TransportEncryptionMode = mode
         self.client: VoiceClient = client
 
         try:
