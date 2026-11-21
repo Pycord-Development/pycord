@@ -56,14 +56,35 @@ AutoModKeywordPresetType = Literal[
 ]
 
 
-class AutoModTriggerMetadata(TypedDict):
-    # Which fields are sent depends on the trigger type
-    keyword_filter: NotRequired[list[str]]
-    regex_patterns: NotRequired[list[str]]
-    presets: NotRequired[list[AutoModKeywordPresetType]]
-    allow_list: NotRequired[list[str]]
-    mention_total_limit: NotRequired[int]
-    mention_raid_protection_enabled: NotRequired[bool]
+class KeywordAutoModTriggerMetadata(TypedDict):
+    keyword_filter: list[str]
+    regex_patterns: list[str]
+    allow_list: list[str]
+
+
+class KeywordPresetAutoModTriggerMetadata(TypedDict):
+    presets: list[AutoModKeywordPresetType]
+    allow_list: list[str]
+
+
+class MemberProfileAutoModTriggerMetadata(TypedDict):
+    keyword_filter: list[str]
+    regex_patterns: list[str]
+    allow_list: list[str]
+
+
+class MentionSpamAutoModTriggerMetadata(TypedDict):
+    mention_total_limit: int
+    mention_raid_protection_enabled: bool
+
+
+# The combined fields for all trigger types, see https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata
+AutoModTriggerMetadata = (
+    KeywordAutoModTriggerMetadata
+    | KeywordPresetAutoModTriggerMetadata
+    | MemberProfileAutoModTriggerMetadata
+    | MentionSpamAutoModTriggerMetadata
+)
 
 
 class AutoModActionMetadata(TypedDict):
