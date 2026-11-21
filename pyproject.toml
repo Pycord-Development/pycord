@@ -77,9 +77,9 @@ dev = [
     { include-group = "tox" },
 ]
 tox = [
-    "tox~=4.65",
-    "tox-gh>=1.8.0,<2",
-    "tox-uv>=1.36.0,<2",
+    "tox~=4.67",
+    "tox-gh>=1.9.3,<2",
+    "tox-uv>=1.37.7,<2",
 ]
 test = [
     "pytest~=9.2.0",
