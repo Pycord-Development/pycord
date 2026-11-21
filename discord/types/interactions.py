@@ -27,8 +27,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, TypedDict
 
-from discord.message import PartialMessage
-
 from .snowflake import Snowflake
 
 if TYPE_CHECKING:
@@ -38,12 +36,11 @@ if TYPE_CHECKING:
     from .embed import Embed
     from .guild import Guild
     from .member import Member, PartialMember
-    from .message import Attachment
+    from .message import Attachment, PartialMessage
     from .monetization import Entitlement
-    from .poll import Poll, CreatePoll
+    from .poll import CreatePoll
     from .role import Role
     from .user import User
-    from ..permissions import Permissions
     from .message import AllowedMentions, Message
 
 from typing_extensions import NotRequired
@@ -216,7 +213,9 @@ class ApplicationCommandInteractionDataResolved(TypedDict):
     members: NotRequired[dict[Snowflake, PartialMember]]
     roles: NotRequired[dict[Snowflake, Role]]
     channels: NotRequired[dict[Snowflake, ApplicationCommandResolvedPartialChannel]]
-    messages: NotRequired[dict[Snowflake, PartialMessage]]
+    messages: NotRequired[
+        dict[Snowflake, Message]
+    ]  # Partial message, not further documented
     attachments: NotRequired[dict[Snowflake, Attachment]]
 
 

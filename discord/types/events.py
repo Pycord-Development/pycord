@@ -52,6 +52,7 @@ from .message import Message
 from .monetization import Entitlement, Subscription
 from .scheduled_events import ScheduledEvent
 from .soundboard import SoundboardSound
+from .thread import ThreadMember
 from .user import User
 from .voice import PartialVoiceState, VoiceState
 from .welcome_screen import WelcomeScreen
@@ -69,7 +70,7 @@ if TYPE_CHECKING:
     from .role import Role
     from .snowflake import Snowflake
     from .sticker import Sticker
-    from .thread import ThreadMember, ThreadType
+    from .thread import ThreadType
     from .user import PartialUser
 
 # MISC
