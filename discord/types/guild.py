@@ -180,7 +180,7 @@ class Guild(UnavailableGuild):
     welcome_screen: NotRequired[WelcomeScreen]
     nsfw_level: AgeRestrictionLevel
     stickers: NotRequired[list[Sticker]]
-    premium_progress_bar_enabled: NotRequired[bool]
+    premium_progress_bar_enabled: bool
     safety_alerts_channel_id: Snowflake | None
     incidents_data: IncidentsData | None
     presences: NotRequired[list[PresenceUpdateEvent]]
@@ -269,17 +269,17 @@ class ModifyGuild(TypedDict):
     default_message_notifications: NotRequired[DefaultMessageNotificationLevel | None]
     explicit_content_filter: NotRequired[ExplicitContentFilterLevel | None]
     afk_channel_id: NotRequired[Snowflake | None]
-    afk_timeout: NotRequired[int | None]
+    afk_timeout: NotRequired[int]
     icon: NotRequired[str | None]
     splash: NotRequired[str | None]
     discovery_splash: NotRequired[str | None]
     banner: NotRequired[str | None]
     system_channel_id: NotRequired[Snowflake | None]
-    system_channel_flags: NotRequired[int | None]
+    system_channel_flags: NotRequired[int]
     rules_channel_id: NotRequired[Snowflake | None]
     public_updates_channel_id: NotRequired[Snowflake | None]
     preferred_locale: NotRequired[str | None]
     features: NotRequired[list[MutableGuildFeature]]
     description: NotRequired[str | None]
-    premium_progress_bar_enabled: NotRequired[bool | None]
+    premium_progress_bar_enabled: NotRequired[bool]
     safety_alerts_channel_id: NotRequired[Snowflake | None]

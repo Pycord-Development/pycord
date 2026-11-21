@@ -121,7 +121,7 @@ class ScheduledEvent(TypedDict):
     creator: NotRequired[User]
     user_count: NotRequired[int]
     image: NotRequired[str | None]
-    recurrence_rule: NotRequired[ScheduledEventRecurrenceRule]
+    recurrence_rule: ScheduledEventRecurrenceRule | None
 
 
 class ScheduledEventSubscriber(TypedDict):

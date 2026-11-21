@@ -29,10 +29,23 @@ from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
+from .appinfo import ApplicationInfo
 from .audit_log import AuditLogEntry
 from .automod import AutoModRule
 from .channel import Channel, StageInstance, Thread
-from .guild import Guild, UnavailableGuild
+from .guild import (
+    AgeRestrictionLevel,
+    DefaultMessageNotificationLevel,
+    ExplicitContentFilterLevel,
+    Guild,
+    GuildFeature,
+    IncidentsData,
+    MFALevel,
+    PremiumTier,
+    UnavailableGuild,
+    VerificationLevel,
+)
+from .integration import IntegrationAccount, IntegrationExpireBehavior, IntegrationType
 from .interactions import ApplicationCommandPermissions, Interaction
 from .member import Member
 from .message import Message
@@ -40,7 +53,8 @@ from .monetization import Entitlement, Subscription
 from .scheduled_events import ScheduledEvent
 from .soundboard import SoundboardSound
 from .user import User
-from .voice import VoiceState
+from .voice import PartialVoiceState, VoiceState
+from .welcome_screen import WelcomeScreen
 
 if TYPE_CHECKING:
     from .activity import Activity, ClientStatus, StatusType
@@ -55,7 +69,7 @@ if TYPE_CHECKING:
     from .role import Role
     from .snowflake import Snowflake
     from .sticker import Sticker
-    from .thread import ThreadMember
+    from .thread import ThreadMember, ThreadType
     from .user import PartialUser
 
 # MISC
@@ -134,17 +148,21 @@ class VoiceChannelStartTimeUpdateEvent(TypedDict):
     voice_start_time: NotRequired[int | None]
 
 
-ThreadCreateEvent = Thread
+class ThreadCreateEvent(Thread):
+    """One of these will be present, see https://docs.discord.com/developers/events/gateway-events#thread-create"""
+
+    newly_created: NotRequired[bool]
+    member: NotRequired[ThreadMember]
 
 
 ThreadUpdateEvent = Thread
 
 
-class ThreadDeleteEvent(TypedDict, total=False):
-    thread_id: Snowflake
-    thread_type: int
+class ThreadDeleteEvent(TypedDict):
+    id: Snowflake
     guild_id: Snowflake
     parent_id: Snowflake
+    type: ThreadType
 
 
 class ThreadListSyncEvent(TypedDict):
@@ -154,7 +172,7 @@ class ThreadListSyncEvent(TypedDict):
     members: list[ThreadMember]
 
 
-class ThreadMemberUpdateEvent(TypedDict):
+class ThreadMemberUpdateEvent(ThreadMember):
     guild_id: Snowflake
 
 
@@ -183,7 +201,65 @@ EntitlementDeleteEvent = Entitlement
 
 # GUILD EVENTS
 
-GuildCreateEvent = Guild | UnavailableGuild
+
+class _GuildCreateGuild(TypedDict):
+    """The full version of the guild object sent during GUILD_CREATE, including extra fields"""
+
+    name: str
+    icon: str | None
+    icon_hash: NotRequired[str | None]
+    splash: str | None
+    discovery_splash: str | None
+    owner: NotRequired[bool]
+    owner_id: Snowflake
+    permissions: NotRequired[str]
+    afk_channel_id: Snowflake | None
+    afk_timeout: int
+    widget_enabled: NotRequired[bool]
+    widget_channel_id: NotRequired[Snowflake | None]
+    verification_level: VerificationLevel
+    default_message_notifications: DefaultMessageNotificationLevel
+    explicit_content_filter: ExplicitContentFilterLevel
+    roles: list[Role]
+    emojis: list[Emoji]
+    features: list[GuildFeature]
+    mfa_level: MFALevel
+    application_id: Snowflake | None
+    system_channel_id: Snowflake | None
+    system_channel_flags: int
+    rules_channel_id: Snowflake | None
+    max_presences: NotRequired[int | None]
+    max_members: NotRequired[int]
+    vanity_url_code: str | None
+    description: str | None
+    banner: str | None
+    premium_tier: PremiumTier
+    premium_subscription_count: NotRequired[int]
+    preferred_locale: str
+    public_updates_channel_id: Snowflake | None
+    max_video_channel_users: NotRequired[int]
+    max_stage_video_channel_users: NotRequired[int]
+    welcome_screen: NotRequired[WelcomeScreen]
+    nsfw_level: AgeRestrictionLevel
+    stickers: NotRequired[list[Sticker]]
+    premium_progress_bar_enabled: NotRequired[bool]
+    safety_alerts_channel_id: Snowflake | None
+    incidents_data: IncidentsData | None
+    guild_scheduled_events: NotRequired[list[ScheduledEvent]]
+    # extra fields for this event below. Duplicated because of redefining required fields
+
+    joined_at: str
+    large: bool
+    unavailable: NotRequired[bool]
+    member_count: int
+    voice_states: list[PartialVoiceState]
+    members: list[Member]
+    channels: list[Channel]
+    threads: list[Thread]
+    presences: list[PresenceUpdateEvent]
+
+
+GuildCreateEvent = _GuildCreateGuild | UnavailableGuild
 
 GuildUpdateEvent = Guild
 
@@ -312,11 +388,25 @@ class SoundboardSoundsEvent(TypedDict):
 
 
 class IntegrationCreateEvent(TypedDict):
+    id: Snowflake
+    name: str
+    type: IntegrationType
+    enabled: bool
+    syncing: NotRequired[bool]
+    role_id: NotRequired[Snowflake]
+    enable_emoticons: NotRequired[bool]
+    expire_behavior: NotRequired[IntegrationExpireBehavior]
+    expire_grace_period: NotRequired[int]
+    account: IntegrationAccount
+    synced_at: NotRequired[str]
+    subscriber_count: NotRequired[int]
+    revoked: NotRequired[bool]
+    application: NotRequired[ApplicationInfo]
+    # extra field for this event
     guild_id: Snowflake
 
 
-class IntegrationUpdateEvent(TypedDict):
-    guild_id: Snowflake
+IntegrationUpdateEvent = IntegrationCreateEvent
 
 
 class IntegrationDeleteEvent(TypedDict):
@@ -363,10 +453,7 @@ class MessageCreateEvent(Message):
     channel_type: NotRequired[ChannelType]
 
 
-class MessageUpdateEvent(Message):
-    id: Snowflake
-    channel_id: Snowflake
-    guild_id: NotRequired[Snowflake]
+MessageUpdateEvent = MessageCreateEvent
 
 
 class MessageDeleteEvent(TypedDict):
@@ -500,7 +587,7 @@ class MessagePollVoteAddEvent(TypedDict):
     channel_id: Snowflake
     message_id: Snowflake
     guild_id: NotRequired[Snowflake]
-    answer_id: Snowflake
+    answer_id: int
 
 
 class MessagePollVoteRemoveEvent(TypedDict):
@@ -508,7 +595,7 @@ class MessagePollVoteRemoveEvent(TypedDict):
     channel_id: Snowflake
     message_id: Snowflake
     guild_id: NotRequired[Snowflake]
-    answer_id: Snowflake
+    answer_id: int
 
 
 MessagePollVoteEvent = MessagePollVoteAddEvent | MessagePollVoteRemoveEvent

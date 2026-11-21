@@ -27,6 +27,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, TypedDict
 
+from discord.message import PartialMessage
+
 from .snowflake import Snowflake
 
 if TYPE_CHECKING:
@@ -38,7 +40,7 @@ if TYPE_CHECKING:
     from .member import Member, PartialMember
     from .message import Attachment
     from .monetization import Entitlement
-    from .poll import Poll
+    from .poll import Poll, CreatePoll
     from .role import Role
     from .user import User
     from ..permissions import Permissions
@@ -80,7 +82,7 @@ class ApplicationCommand(TypedDict):
     default_permission: NotRequired[bool | None]  # Soon to be deprecated
     nsfw: NotRequired[bool]
     integration_types: NotRequired[list[ApplicationIntegrationType]]
-    contexts: NotRequired[list[InteractionContextType]]
+    contexts: NotRequired[list[InteractionContextType] | None]
     version: Snowflake
     handler: NotRequired[CommandHandlerType]
 
@@ -214,6 +216,7 @@ class ApplicationCommandInteractionDataResolved(TypedDict):
     members: NotRequired[dict[Snowflake, PartialMember]]
     roles: NotRequired[dict[Snowflake, Role]]
     channels: NotRequired[dict[Snowflake, ApplicationCommandResolvedPartialChannel]]
+    messages: NotRequired[dict[Snowflake, PartialMessage]]
     attachments: NotRequired[dict[Snowflake, Attachment]]
 
 
@@ -227,9 +230,10 @@ class ApplicationCommandInteractionData(TypedDict):
 
 
 class MessageComponentInteractionData(TypedDict):
-    values: NotRequired[list[str]]
     custom_id: str
     component_type: ComponentType
+    values: NotRequired[list[str]]
+    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
 
 
 class ModalSubmitInteractionData(TypedDict):
@@ -262,7 +266,7 @@ class UserSelectInteractionResponse(TypedDict):
     component_type: NotRequired[Literal[5]]
     id: int
     custom_id: str
-    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    resolved: ApplicationCommandInteractionDataResolved
     values: list[Snowflake]
 
 
@@ -273,7 +277,7 @@ class RoleSelectInteractionResponse(TypedDict):
     component_type: NotRequired[Literal[6]]
     id: int
     custom_id: str
-    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    resolved: ApplicationCommandInteractionDataResolved
     values: list[Snowflake]
 
 
@@ -284,7 +288,7 @@ class MentionableSelectInteractionResponse(TypedDict):
     component_type: NotRequired[Literal[7]]
     id: int
     custom_id: str
-    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    resolved: ApplicationCommandInteractionDataResolved
     values: list[Snowflake]
 
 
@@ -295,12 +299,12 @@ class ChannelSelectInteractionResponse(TypedDict):
     component_type: NotRequired[Literal[8]]
     id: int
     custom_id: str
-    resolved: NotRequired[ApplicationCommandInteractionDataResolved]
+    resolved: ApplicationCommandInteractionDataResolved
     values: list[Snowflake]
 
 
 class FileUploadInteractionResponse(TypedDict):
-    type: NotRequired[Literal[19]]
+    type: Literal[19]
     id: int
     custom_id: str
     values: list[Snowflake]
@@ -327,6 +331,17 @@ class CheckBoxInteractionResponse(TypedDict):
     value: bool
 
 
+class TextDisplayInteractionResponse(TypedDict):
+    type: Literal[10]
+    id: int
+
+
+class LabelInteractionResponse(TypedDict):
+    type: Literal[11]
+    id: int
+    component: list[Component]
+
+
 ComponentInteractionResponse = (
     StringSelectInteractionResponse
     | TextInputInteractionResponse
@@ -338,6 +353,7 @@ ComponentInteractionResponse = (
     | RadioGroupInteractionResponse
     | CheckBoxGroupInteractionResponse
     | CheckBoxInteractionResponse
+    | TextDisplayInteractionResponse
 )
 
 InteractionData = (
@@ -375,7 +391,7 @@ class Interaction(TypedDict):
     entitlements: list[Entitlement]
     authorizing_integration_owners: AuthorizingIntegrationOwners
     context: NotRequired[InteractionContextType]
-    attachment_size_limit: NotRequired[int]
+    attachment_size_limit: int
 
 
 class _BaseInteractionMetadata(TypedDict):
@@ -398,9 +414,9 @@ class MessageComponentInteractionMetadata(_BaseInteractionMetadata):
 
 
 class ModalSubmitInteractionMetadata(_BaseInteractionMetadata):
-    triggering_interaction_metadata: NotRequired[
+    triggering_interaction_metadata: (
         ApplicationCommandInteractionMetadata | MessageComponentInteractionMetadata
-    ]
+    )
 
 
 InteractionMetadata = (
@@ -418,7 +434,7 @@ class InteractionApplicationCommandCallbackData(TypedDict):
     flags: NotRequired[int]
     components: NotRequired[list[Component]]
     attachments: NotRequired[list[Attachment]]  # Partial attachments
-    poll: NotRequired[Poll]
+    poll: NotRequired[CreatePoll]
 
 
 InteractionCallbackType = Literal[
@@ -447,7 +463,7 @@ class MessageInteraction(TypedDict):
     member: NotRequired[PartialMember]
 
 
-class EditApplicationCommand(TypedDict):
+class ModifyApplicationCommand(TypedDict):
     """The allowed fields for editing an application command."""
 
     name: NotRequired[str]

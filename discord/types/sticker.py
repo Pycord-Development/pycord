@@ -91,7 +91,7 @@ class CreateGuildSticker(TypedDict):
     tags: str
 
 
-class EditGuildSticker(TypedDict):
+class ModifyGuildSticker(TypedDict):
     """Allowed fields when editing a guild sticker"""
 
     name: NotRequired[str]

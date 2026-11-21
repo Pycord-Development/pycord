@@ -55,4 +55,4 @@ class Team(TypedDict):
     id: Snowflake
     members: list[TeamMember]
     name: str
-    owner_id: Snowflake
+    owner_user_id: Snowflake

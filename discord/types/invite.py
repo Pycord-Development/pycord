@@ -34,7 +34,7 @@ from .guild import GuildPreview, InviteGuild
 if TYPE_CHECKING:
     from .appinfo import PartialApplicationInfo
     from .channel import PartialChannel
-    from .role import Role
+    from .role import PartialRole, Role
     from .scheduled_events import ScheduledEvent
     from .user import PartialUser, User
 
@@ -75,7 +75,7 @@ class Invite(IncompleteInvite):
     target_type: NotRequired[InviteTargetType]
     target_application: NotRequired[PartialApplicationInfo]
     flags: NotRequired[int]
-    roles: NotRequired[list[Role]]  # Partial role
+    roles: NotRequired[list[PartialRole]]
 
 
 class InviteWithCounts(Invite, GuildPreview):

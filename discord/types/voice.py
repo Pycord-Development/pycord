@@ -41,6 +41,23 @@ SupportedModes = Literal[
 ]
 
 
+class PartialVoiceState(TypedDict):
+    """Partial voice state sent as part of the GUILD_CREATE event"""
+
+    channel_id: Snowflake | None
+    user_id: Snowflake
+    member: NotRequired[Member]
+    session_id: str
+    deaf: bool
+    mute: bool
+    self_deaf: bool
+    self_mute: bool
+    self_stream: NotRequired[bool]
+    self_video: bool
+    suppress: bool
+    request_to_speak_timestamp: str | None
+
+
 class VoiceState(TypedDict):
     guild_id: NotRequired[Snowflake]
     channel_id: Snowflake | None

@@ -1804,7 +1804,7 @@ class HTTPClient:
         self,
         guild_id: Snowflake,
         sticker_id: Snowflake,
-        payload: sticker.EditGuildSticker,
+        payload: sticker.ModifyGuildSticker,
         reason: str | None,
     ) -> Response[sticker.GuildSticker]:
         return self.request(
@@ -2617,7 +2617,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         command_id: Snowflake,
-        payload: interactions.EditApplicationCommand,
+        payload: interactions.ModifyApplicationCommand,
     ) -> Response[interactions.ApplicationCommand]:
         valid_keys = (
             "name",
@@ -2686,7 +2686,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: interactions.EditApplicationCommand,
+        payload: interactions.ModifyApplicationCommand,
     ) -> Response[interactions.ApplicationCommand]:
         r = Route(
             "POST",
@@ -2701,7 +2701,7 @@ class HTTPClient:
         application_id: Snowflake,
         guild_id: Snowflake,
         command_id: Snowflake,
-        payload: interactions.EditApplicationCommand,
+        payload: interactions.ModifyApplicationCommand,
     ) -> Response[interactions.ApplicationCommand]:
         valid_keys = (
             "name",
@@ -2737,7 +2737,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: list[interactions.EditApplicationCommand],
+        payload: list[interactions.ModifyApplicationCommand],
     ) -> Response[list[interactions.ApplicationCommand]]:
         r = Route(
             "PUT",
@@ -2790,7 +2790,7 @@ class HTTPClient:
         self,
         guild_id: Snowflake,
         rule_id: Snowflake,
-        payload: automod.EditAutoModRule,
+        payload: automod.ModifyAutoModRule,
         reason: str | None = None,
     ) -> Response[automod.AutoModRule]:
         r = Route(

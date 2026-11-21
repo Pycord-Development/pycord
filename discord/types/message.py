@@ -37,7 +37,6 @@ if TYPE_CHECKING:
     from .emoji import PartialEmoji
     from .interactions import (
         InteractionMetadata,
-        MessageComponentInteractionMetadata,
         MessageInteraction,
     )
     from .member import PartialMember, UserWithMember
@@ -71,7 +70,6 @@ class Reaction(TypedDict):
     count: int
     count_details: ReactionCountDetails
     me: bool
-    burst: bool
     me_burst: bool
     emoji: PartialEmoji
     burst_colors: list[str]

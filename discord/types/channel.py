@@ -234,7 +234,7 @@ class GroupDMChannel(_BasePrivateChannel):
     icon: str | None
     owner_id: Snowflake
     name: str | None
-    application_id: NotRequired[Snowflake]
+    application_id: NotRequired[Snowflake | None]
     managed: NotRequired[bool]
 
 

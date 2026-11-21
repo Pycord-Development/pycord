@@ -68,13 +68,16 @@ class SKU(TypedDict):
     flags: int
 
 
-class Entitlement(TypedDict):
+class TestEntitlement(TypedDict):
     id: Snowflake
     sku_id: Snowflake
     application_id: Snowflake
     user_id: NotRequired[Snowflake]
     type: EntitlementType
     deleted: bool
+
+
+class Entitlement(TestEntitlement):
     starts_at: str | None
     ends_at: str | None
     guild_id: NotRequired[Snowflake]

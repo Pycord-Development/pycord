@@ -105,13 +105,13 @@ class CreateAutoModRule(TypedDict):
     exempt_channels: NotRequired[list[Snowflake]]
 
 
-class EditAutoModRule(TypedDict):
-    """Payload sent when editing an automod rule"""
+class ModifyAutoModRule(TypedDict):
+    """Allowed fields when editing an automod rule"""
 
-    name: str
-    event_type: AutoModEventType
+    name: NotRequired[str]
+    event_type: NotRequired[AutoModEventType]
     trigger_metadata: NotRequired[AutoModTriggerMetadata]
-    actions: list[AutoModAction]
-    enabled: bool
-    exempt_roles: list[Snowflake]
-    exempt_channels: list[Snowflake]
+    actions: NotRequired[list[AutoModAction]]
+    enabled: NotRequired[bool]
+    exempt_roles: NotRequired[list[Snowflake]]
+    exempt_channels: NotRequired[list[Snowflake]]

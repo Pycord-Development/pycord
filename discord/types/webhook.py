@@ -82,7 +82,7 @@ class CreateWebhook(TypedDict):
     avatar: NotRequired[str | None]
 
 
-class EditWebhook(TypedDict):
+class ModifyWebhook(TypedDict):
     """Fields to send when editing a webhook"""
 
     name: NotRequired[str]

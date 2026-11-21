@@ -45,8 +45,8 @@ class PartialMember(TypedDict):
     roles: list[Snowflake]
     joined_at: str | None
     premium_since: NotRequired[str | None]
-    deaf: NotRequired[bool]  # Required for a fully resolved member
-    mute: NotRequired[bool]  # Required for a fully resolved member
+    deaf: NotRequired[bool]
+    mute: NotRequired[bool]
     flags: int
     pending: NotRequired[bool]
     permissions: NotRequired[str]
@@ -55,8 +55,22 @@ class PartialMember(TypedDict):
     collectibles: NotRequired[Collectibles | None]
 
 
-class Member(PartialMember):
+class Member(TypedDict):
     user: User
+    nick: NotRequired[str | None]
+    avatar: NotRequired[str | None]
+    banner: NotRequired[str | None]
+    roles: list[Snowflake]
+    joined_at: str | None
+    premium_since: NotRequired[str | None]
+    deaf: bool
+    mute: bool
+    flags: int
+    pending: NotRequired[bool]
+    permissions: NotRequired[str]
+    communication_disabled_until: NotRequired[str | None]
+    avatar_decoration_data: NotRequired[AvatarDecoration | None]
+    collectibles: NotRequired[Collectibles | None]
 
 
 class UserWithMember(User):
