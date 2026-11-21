@@ -1101,7 +1101,11 @@ class BaseWebhook(Hashable):
 
         self.source_guild: PartialWebhookGuild | None = source_guild
 
-    def is_partial(self) -> bool:
+    def is_partial(
+        self,
+    ) -> (
+        bool
+    ):  # TODO: Deprecate and replace with property when Webhook.partial is removed
         """Whether the webhook is a "partial" webhook.
 
         .. versionadded:: 2.0
@@ -1112,7 +1116,15 @@ class BaseWebhook(Hashable):
         """Whether the webhook is authenticated with a bot token.
 
         .. versionadded:: 2.0
+
+        .. deprecated:: 2.9
+            Use :attr:`authenticated` instead.
         """
+        return self.authenticated
+
+    @property
+    def authenticated(self) -> bool:
+        """Whether the webhook is authenticated with a bot token."""
         return self.auth_token is not None
 
     @property
@@ -1263,6 +1275,55 @@ class Webhook(BaseWebhook):
 
     @classmethod
     def partial(
+        cls,
+        id: int,
+        token: str,
+        *,
+        session: aiohttp.ClientSession,
+        proxy: str | None = None,
+        proxy_auth: aiohttp.BasicAuth | None = None,
+        bot_token: str | None = None,
+    ) -> Webhook:
+        """Creates a partial :class:`Webhook`.
+
+        .. deprecated:: 2.9
+            Use :meth:`as_partial` instead.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the webhook.
+        token: :class:`str`
+            The authentication token of the webhook.
+        session: :class:`aiohttp.ClientSession`
+            The session to use to send requests with. Note
+            that the library does not manage the session and
+            will not close it.
+
+            .. versionadded:: 2.0
+        bot_token: Optional[:class:`str`]
+            The bot authentication token for authenticated requests
+            involving the webhook.
+
+            .. versionadded:: 2.0
+
+        Returns
+        -------
+        :class:`Webhook`
+            A partial :class:`Webhook`.
+            A partial webhook is just a webhook object with an ID and a token.
+        """
+        warn_deprecated("partial()", "as_partial()", "2.9")
+        data: WebhookPayload = {
+            "id": id,
+            "type": 1,
+            "token": token,
+        }
+
+        return cls(data, session, proxy=proxy, proxy_auth=proxy_auth, token=bot_token)
+
+    @classmethod
+    def as_partial(
         cls,
         id: int,
         token: str,
