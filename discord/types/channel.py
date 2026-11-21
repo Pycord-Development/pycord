@@ -61,6 +61,10 @@ ChannelType = Literal[
     14,  # GUILD_DIRECTORY
     15,  # GUILD_FORUM
     16,  # GUILD_MEDIA
+    # Fields below are undocumented but Lala said so
+    17,  # LOBBY
+    18,  # DM_SDK
+    21,  # APPLICATION (in testing / unreleased)
 ]
 
 
@@ -75,7 +79,7 @@ class _BaseGuildChannel(_BaseChannel):
     permission_overwrites: list[PermissionOverwrite]
     name: str
     nsfw: bool
-    parent_id: Snowflake | None  # Always None for categories
+    parent_id: Snowflake | None
 
 
 class PartialChannel(_BaseChannel):
@@ -188,12 +192,14 @@ class VoiceChannel(_BaseVoiceChannel):
     type: Literal[2]
 
 
+class ApplicationChannel(_BaseGuildChannel, _MessageableChannel):
+    type: Literal[21]
+    application_id: Snowflake
+
+
 class StageChannel(_BaseVoiceChannel):
     topic: str | None
     type: Literal[13]
-
-
-PrivacyLevel = Literal[2]  # GUILD_ONLY
 
 
 class StageInstance(TypedDict):
@@ -201,7 +207,6 @@ class StageInstance(TypedDict):
     guild_id: Snowflake
     channel_id: Snowflake
     topic: str
-    privacy_level: PrivacyLevel
     guild_scheduled_event_id: Snowflake | None
 
 
@@ -214,6 +219,7 @@ GuildChannel = (
     | Thread
     | ForumChannel
     | MediaChannel
+    | ApplicationChannel
 )
 
 

@@ -42,6 +42,7 @@ class ClientStatus(TypedDict):
     mobile: NotRequired[str]
     web: NotRequired[str]
     vr: NotRequired[str]
+    embedded: NotRequired[str]  # Consoles
 
 
 class ActivityTimestamps(TypedDict):
@@ -103,6 +104,11 @@ class SendableActivity(TypedDict):
     type: ActivityType
     url: NotRequired[str | None]
     state: NotRequired[str | None]
+
+
+class GameActivity(TypedDict):
+    activity_level: int
+    activity_score: int
 
 
 class Activity(SendableActivity):

@@ -33,8 +33,10 @@ if TYPE_CHECKING:
     from .snowflake import Snowflake
 
 SKUType = Literal[
+    1,  # APPLICATION
     2,  # DURABLE
     3,  # CONSUMABLE
+    4,  # BUNDLE
     5,  # SUBSCRIPTION
     6,  # SUBSCRIPTION_GROUP
 ]
@@ -47,6 +49,11 @@ EntitlementType = Literal[
     6,  # USER_GIFT
     7,  # PREMIUM_PURCHASE
     8,  # APPLICATION_SUBSCRIPTION
+    9,  # FREE_STAFF_PURCHASE
+    10,  # QUEST_REWARD,
+    11,  # FRACTIONAL_REDEMPTION
+    12,  # VIRTUAL_CURRENCY_REDEMPTION
+    13,  # GUILD_POWERUP
 ]
 OwnerType = Literal[
     1,  # Guild subscription

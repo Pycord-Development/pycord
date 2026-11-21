@@ -122,6 +122,23 @@ MutableGuildFeature = Literal[  # All guild features that can be modified
 ]
 
 
+class GuildTrait(TypedDict):
+    """A trait shown on an guild's invite popup"""
+
+    emoji_id: Snowflake | None
+    emoji_name: str | None
+    emoji_animated: bool
+    label: str
+    position: int
+
+
+GuildVisibilityLevel = Literal[
+    1,  # PUBLIC
+    2,  # RESTRICTED
+    3,  # PUBLIC_WITH_RECRUITMENT
+]
+
+
 class UnavailableGuild(TypedDict):
     """A partial guild object for an offline guild, or a guild whose info wasn't passed through the gateway during gateway connection"""
 

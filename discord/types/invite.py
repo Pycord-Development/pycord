@@ -29,12 +29,21 @@ from typing import TYPE_CHECKING, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-from .guild import GuildPreview, InviteGuild
+from .guild import (
+    GuildFeature,
+    GuildPreview,
+    GuildTrait,
+    GuildVisibilityLevel,
+    InviteGuild,
+    PremiumTier,
+)
+from .snowflake import Snowflake
 
 if TYPE_CHECKING:
+    from .activity import GameActivity
     from .appinfo import PartialApplicationInfo
     from .channel import PartialChannel
-    from .role import PartialRole, Role
+    from .role import PartialRole
     from .scheduled_events import ScheduledEvent
     from .user import PartialUser, User
 
@@ -66,6 +75,24 @@ InviteType = Literal[
 ]
 
 
+class GuildInviteProfile(TypedDict):
+    id: Snowflake
+    name: str
+    icon_hash: str | None
+    member_count: int
+    online_count: int
+    description: str | None
+    brand_color_primary: NotRequired[int]
+    game_application_ids: list[Snowflake]
+    game_activity: dict[Snowflake, GameActivity]
+    tag: str | None
+    badge: int
+    badge_color_primary: int
+    badge_color_secondary: int
+    badge_hash_: str | None
+    traits: list[GuildTrait]
+
+
 class Invite(IncompleteInvite):
     type: InviteType
     guild: NotRequired[InviteGuild]
@@ -76,6 +103,11 @@ class Invite(IncompleteInvite):
     target_application: NotRequired[PartialApplicationInfo]
     flags: NotRequired[int]
     roles: NotRequired[list[PartialRole]]
+    features: list[GuildFeature]
+    visibility: GuildVisibilityLevel
+    custom_banner_hash: str | None
+    premium_subscription_count: int
+    premium_tier: PremiumTier
 
 
 class InviteWithCounts(Invite, GuildPreview):
