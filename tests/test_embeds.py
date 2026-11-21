@@ -344,8 +344,8 @@ def test_remove_field_out_of_range_is_silent():
 
 def test_add_field_coerces_to_str():
     embed = discord.Embed().add_field(
-        name=1, value=2
-    )  # pyright: ignore[reportArgumentType]
+        name=1, value=2  # pyright: ignore[reportArgumentType]
+    )
     assert (embed.fields[0].name, embed.fields[0].value) == ("1", "2")
 
 
@@ -361,11 +361,13 @@ def test_fields_setter_and_append_field():
     assert _fields(embed)[-1] == ("c", "3", False)
     embed_dict = embed.to_dict()
     assert embed_dict.get("fields") is not None
-    assert embed_dict["fields"][-1] == {
+    assert embed_dict["fields"][  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        -1
+    ] == {
         "name": "c",
         "value": "3",
         "inline": False,
-    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    }
 
 
 # --- len / serialisation ---------------------------------------------------------------
@@ -387,28 +389,32 @@ def test_to_dict():
     assert data["type"] == "rich"  # pyright: ignore[reportTypedDictNotRequiredAccess]
     assert data["title"] == TITLE  # pyright: ignore[reportTypedDictNotRequiredAccess]
     assert (
-        data["description"] == DESCRIPTION
-    )  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        data["description"]  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        == DESCRIPTION
+    )
     assert data["url"] == URL  # pyright: ignore[reportTypedDictNotRequiredAccess]
     assert data["color"] == COLOUR  # pyright: ignore[reportTypedDictNotRequiredAccess]
     assert (
-        datetime.datetime.fromisoformat(data["timestamp"]) == TIMESTAMP
-    )  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        datetime.datetime.fromisoformat(
+            data["timestamp"]  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        )
+        == TIMESTAMP
+    )
     assert data["author"] == {  # pyright: ignore[reportTypedDictNotRequiredAccess]
         "name": AUTHOR_NAME,
         "url": AUTHOR_URL,
         "icon_url": AUTHOR_ICON,
     }
-    assert data["footer"] == {
+    assert data["footer"] == {  # pyright: ignore[reportTypedDictNotRequiredAccess]
         "text": FOOTER_TEXT,
         "icon_url": FOOTER_ICON,
-    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
-    assert data["image"] == {
+    }
+    assert data["image"] == {  # pyright: ignore[reportTypedDictNotRequiredAccess]
         "url": IMAGE_URL
-    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
-    assert data["thumbnail"] == {
+    }
+    assert data["thumbnail"] == {  # pyright: ignore[reportTypedDictNotRequiredAccess]
         "url": THUMBNAIL_URL
-    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    }
     assert data["fields"] == [  # pyright: ignore[reportTypedDictNotRequiredAccess]
         {"name": n, "value": v, "inline": i} for n, v, i in FIELDS
     ]
