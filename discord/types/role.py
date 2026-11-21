@@ -38,15 +38,18 @@ class RoleColours(TypedDict):
     secondary_color: int | None
     tertiary_color: int | None
 
-class PartialRole(TypedDict)
+
+class PartialRole(TypedDict):
     """Partial role object received as part of an invite object"""
+
     id: Snowflake
     name: str
     position: int
-    color: int # Prefer colors field
+    color: int  # Prefer colors field
     colors: RoleColours
     icon: NotRequired[str | None]
     unicode_emoji: NotRequired[str | None]
+
 
 class Role(TypedDict):
     id: Snowflake
