@@ -3399,7 +3399,7 @@ class Guild(Hashable):
             fields["colors"] = actual_colours._to_dict()
         else:
             raise InvalidArgument(
-                "colours parameter must be of type RoleColours, not {0.__class__.__name__}".format(actual_colours)
+                f"colours parameter must be of type RoleColours, not {actual_colours.__class__.__name__}"
             )
 
         if hoist is not MISSING:
