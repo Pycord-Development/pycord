@@ -132,9 +132,11 @@ include = [
 
 [tool.black]
 target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
+line-length = 120
 
 [tool.isort]
 profile = "black"
+line_length = 120
 
 [tool.pylint.main]
 extension-pkg-whitelist = [
@@ -197,3 +199,9 @@ typeCheckingMode = "all"
 reportPrivateUsage = false
 reportUnusedCallResult = false
 include = ["discord", "tests"]
+
+[[tool.basedpyright.executionEnvironments]]
+root = "tests"
+reportTypedDictNotRequiredAccess = false
+reportOptionalMemberAccess = false
+reportAny = false
