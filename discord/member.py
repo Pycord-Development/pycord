@@ -64,10 +64,10 @@ if TYPE_CHECKING:
     from .message import Message
     from .role import Role
     from .state import ConnectionState
-    from .types.activity import PartialPresenceUpdate
+    from .types.events import PresenceUpdateEvent
     from .types.member import Member as MemberPayload
     from .types.member import MemberUpdateEvent as MemberUpdateEventPayload
-    from .types.member import MemberWithUser as MemberWithUserPayload
+    from .types.member import PartialMember as PartialMemberPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
     from .types.voice import VoiceState as GuildVoiceStatePayload
@@ -334,9 +334,7 @@ class Member(discord.abc.Messageable, _UserTag):
         collectibles: Collectibles | None
         avatar_decoration: Asset | None
 
-    def __init__(
-        self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
-    ):
+    def __init__(self, *, data: MemberPayload, guild: Guild, state: ConnectionState):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
         self.guild: Guild = guild
@@ -418,7 +416,7 @@ class Member(discord.abc.Messageable, _UserTag):
             return state.create_user(data)
         else:
             member_data["user"] = data  # type: ignore
-            return cls(data=member_data, guild=guild, state=state)  # type: ignore
+            return cls(data=member_data, guild=guild, state=state)
 
     @classmethod
     def _copy(cls: type[M], member: M) -> M:
@@ -472,7 +470,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._avatar_decoration = data.get("avatar_decoration_data")
 
     def _presence_update(
-        self, data: PartialPresenceUpdate, user: UserPayload
+        self, data: PresenceUpdateEvent, user: UserPayload
     ) -> tuple[User, User] | None:
         self.activities = tuple(map(create_activity, data["activities"]))
         self._client_status = {

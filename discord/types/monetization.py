@@ -25,16 +25,46 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
 
-SKUType = Literal[2, 3, 5, 6]
-EntitlementType = Literal[1, 2, 3, 4, 5, 6, 7, 8]
-OwnerType = Literal[1, 2]
-SubscriptionStatus = Literal[1, 2, 3]
+SKUType = Literal[
+    1,  # APPLICATION, undocumented
+    2,  # DURABLE
+    3,  # CONSUMABLE
+    4,  # BUNDLE, undocumented
+    5,  # SUBSCRIPTION
+    6,  # SUBSCRIPTION_GROUP
+]
+EntitlementType = Literal[
+    1,  # PURCHASE
+    2,  # PREMIUM_SUBSCRIPTION
+    3,  # DEVELOPER_GIFT
+    4,  # TEST_MODE_PURCHASE
+    5,  # FREE_PURCHASE
+    6,  # USER_GIFT
+    7,  # PREMIUM_PURCHASE
+    8,  # APPLICATION_SUBSCRIPTION
+    # Fields below are undocumented
+    9,  # FREE_STAFF_PURCHASE
+    10,  # QUEST_REWARD,
+    11,  # FRACTIONAL_REDEMPTION
+    12,  # VIRTUAL_CURRENCY_REDEMPTION
+    13,  # GUILD_POWERUP
+]
+OwnerType = Literal[
+    1,  # Guild subscription
+    2,  # User subscription
+]
+SubscriptionStatus = Literal[
+    0,  # ACTIVE
+    1,  # INACTIVE
+    2,  # ENDING
+]
 
 
 class SKU(TypedDict):
@@ -46,20 +76,23 @@ class SKU(TypedDict):
     flags: int
 
 
-class Entitlement(TypedDict):
+class TestEntitlement(TypedDict):
     id: Snowflake
     sku_id: Snowflake
     application_id: Snowflake
     user_id: NotRequired[Snowflake]
     type: EntitlementType
     deleted: bool
-    starts_at: NotRequired[str]
-    ends_at: NotRequired[str]
+
+
+class Entitlement(TestEntitlement):
+    starts_at: str | None
+    ends_at: str | None
     guild_id: NotRequired[Snowflake]
     consumed: NotRequired[bool]
 
 
-class CreateTestEntitlementPayload(TypedDict):
+class CreateTestEntitlement(TypedDict):
     sku_id: Snowflake
     owner_id: Snowflake
     owner_type: OwnerType
@@ -70,7 +103,7 @@ class Subscription(TypedDict):
     user_id: Snowflake
     sku_ids: list[Snowflake]
     entitlement_ids: list[Snowflake]
-    renewal_sku_ids: list[Snowflake]
+    renewal_sku_ids: list[Snowflake] | None
     current_period_start: str
     current_period_end: str
     status: SubscriptionStatus

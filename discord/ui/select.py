@@ -65,7 +65,7 @@ __all__ = (
 if TYPE_CHECKING:
     from ..abc import GuildChannel, Snowflake
     from ..types.components import SelectMenu as SelectMenuPayload
-    from ..types.interactions import ComponentInteractionData
+    from ..types.interactions import MessageComponentInteractionData
     from .modal import DesignerModal
     from .view import BaseView
 
@@ -801,7 +801,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         self.underlying = component
 
     def refresh_state(self, interaction: Interaction | dict) -> None:
-        data: ComponentInteractionData = (
+        data: MessageComponentInteractionData = (
             interaction.data if isinstance(interaction, Interaction) else interaction  # type: ignore
         )
         self._selected_values = data.get("values", [])

@@ -25,19 +25,32 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .appinfo import PartialAppInfo
-from .channel import PartialChannel
-from .guild import InviteGuild, _GuildPreviewUnique
-from .role import Role
-from .scheduled_events import ScheduledEvent
+from .guild import (
+    GuildFeature,
+    GuildPreview,
+    GuildTrait,
+    GuildVisibilityLevel,
+    InviteGuild,
+    PremiumTier,
+)
 from .snowflake import Snowflake
-from .user import PartialUser
 
-InviteTargetType = Literal[1, 2]
+if TYPE_CHECKING:
+    from .activity import GameActivity
+    from .appinfo import PartialApplicationInfo
+    from .channel import PartialChannel
+    from .role import PartialRole
+    from .scheduled_events import ScheduledEvent
+    from .user import PartialUser, User
+
+InviteTargetType = Literal[
+    1,  # STREAM
+    2,  # EMBEDDED_APPLICATION
+]
 
 
 class VanityInvite(TypedDict):
@@ -52,51 +65,71 @@ class IncompleteInvite(TypedDict):
     max_uses: NotRequired[int]
     max_age: NotRequired[int]
     temporary: NotRequired[bool]
-    created_at: NotRequired[str]
-    expires_at: NotRequired[str | None]
+    expires_at: str | None
+
+
+InviteType = Literal[
+    0,  # GUILD
+    1,  # GROUP_DM
+    2,  # FRIEND
+]
+
+
+class GuildInviteProfile(TypedDict):
+    """Undocumented guild invite profile for use in objects"""
+
+    id: Snowflake
+    name: str
+    icon_hash: str | None
+    member_count: int
+    online_count: int
+    description: str | None
+    brand_color_primary: NotRequired[int]
+    game_application_ids: list[Snowflake]
+    game_activity: dict[Snowflake, GameActivity]
+    tag: str | None
+    badge: int
+    badge_color_primary: int
+    badge_color_secondary: int
+    badge_hash_: str | None
+    traits: list[GuildTrait]
 
 
 class Invite(IncompleteInvite):
+    type: InviteType
     guild: NotRequired[InviteGuild]
-    inviter: NotRequired[PartialUser]
+    inviter: NotRequired[User]
     scheduled_event: NotRequired[ScheduledEvent]
     target_user: NotRequired[PartialUser]
     target_type: NotRequired[InviteTargetType]
-    target_application: NotRequired[PartialAppInfo]
-    roles: NotRequired[list[Role]]
+    target_application: NotRequired[PartialApplicationInfo]
+    flags: NotRequired[int]
+    roles: NotRequired[list[PartialRole]]
+    # Following fields are undocumented
+    features: list[GuildFeature]
+    visibility: GuildVisibilityLevel
+    custom_banner_hash: str | None
+    premium_subscription_count: int
+    premium_tier: PremiumTier
+    profile: GuildInviteProfile
 
 
-class InviteWithCounts(Invite, _GuildPreviewUnique):
+class InviteWithCounts(Invite, GuildPreview):
     pass
 
 
-class GatewayInviteCreate(TypedDict):
-    guild_id: NotRequired[Snowflake]
-    inviter: NotRequired[PartialUser]
-    target_type: NotRequired[InviteTargetType]
-    target_user: NotRequired[PartialUser]
-    target_application: NotRequired[PartialAppInfo]
-    channel_id: Snowflake
-    code: str
-    created_at: str
-    max_age: int
-    max_uses: int
-    temporary: bool
-    uses: bool
-    role_ids: list[Snowflake]
-
-
-class GatewayInviteDelete(TypedDict):
-    guild_id: NotRequired[Snowflake]
-    channel_id: Snowflake
-    code: str
-
-
-GatewayInvite = GatewayInviteCreate | GatewayInviteDelete
+TargetUsersJobStatus = Literal[
+    0,  # UNSPECIFIED
+    1,  # PROCESSING
+    2,  # COMPLETED
+    3,  # FAILED
+]
 
 
 class InviteTargetUsersJobStatus(TypedDict):
-    status: Literal[0, 1, 2, 3]
+    """The object returned when getting the process of processing invite target users"""
+
+    status: TargetUsersJobStatus
     total_users: int
     processed_users: int
     created_at: NotRequired[str]

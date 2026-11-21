@@ -25,11 +25,15 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from .activity import Activity
-from .snowflake import Snowflake
+from typing_extensions import NotRequired
+
 from .user import User
+
+if TYPE_CHECKING:
+    from .activity import Activity
+    from .snowflake import Snowflake
 
 
 class WidgetChannel(TypedDict):
@@ -51,12 +55,12 @@ class WidgetMember(User, total=False):
 
 
 class Widget(TypedDict):
-    channels: NotRequired[list[WidgetChannel]]
-    members: NotRequired[list[WidgetMember]]
-    presence_count: NotRequired[int]
     id: Snowflake
     name: str
-    instant_invite: str
+    instant_invite: str | None
+    channels: NotRequired[list[WidgetChannel]]
+    members: NotRequired[list[WidgetMember]]
+    presence_count: int
 
 
 class WidgetSettings(TypedDict):

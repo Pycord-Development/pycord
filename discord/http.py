@@ -84,7 +84,7 @@ if TYPE_CHECKING:
         shared_client_theme,
         sticker,
         template,
-        threads,
+        thread,
         user,
         webhook,
         welcome_screen,
@@ -93,7 +93,7 @@ if TYPE_CHECKING:
     from .types.invite import (
         InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
-    from .types.snowflake import Snowflake, SnowflakeList
+    from .types.snowflake import Snowflake
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
     from .types.voice import VoiceRegion as VoiceRegionPayload
 
@@ -505,7 +505,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-        poll: poll.Poll | None = None,
+        poll: poll.CreatePoll | None = None,
         shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
@@ -573,7 +573,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-        poll: poll.Poll | None = None,
+        poll: poll.CreatePoll | None = None,
         shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         form = []
@@ -647,7 +647,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-        poll: poll.Poll | None = None,
+        poll: poll.CreatePoll | None = None,
         shared_client_theme: shared_client_theme.SharedClientTheme | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
@@ -757,7 +757,7 @@ class HTTPClient:
     def delete_messages(
         self,
         channel_id: Snowflake,
-        message_ids: SnowflakeList,
+        message_ids: list[Snowflake],
         *,
         reason: str | None = None,
     ) -> Response[None]:
@@ -1006,7 +1006,7 @@ class HTTPClient:
         guild_id: Snowflake,
         delete_message_seconds: int = None,
         reason: str | None = None,
-    ) -> Response[guild.GuildBulkBan]:
+    ) -> Response[guild.GuildBulkBanResponse]:
         r = Route(
             "POST",
             "/guilds/{guild_id}/bulk-ban",
@@ -1093,7 +1093,7 @@ class HTTPClient:
         *,
         reason: str | None = None,
         **fields: Any,
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         r = Route(
             "PATCH",
             "/guilds/{guild_id}/members/{user_id}",
@@ -1206,10 +1206,10 @@ class HTTPClient:
         message_id: Snowflake,
         *,
         name: str,
-        auto_archive_duration: threads.ThreadArchiveDuration,
+        auto_archive_duration: thread.ThreadArchiveDuration,
         rate_limit_per_user: int,
         reason: str | None = None,
-    ) -> Response[threads.Thread]:
+    ) -> Response[channel.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
@@ -1229,12 +1229,12 @@ class HTTPClient:
         channel_id: Snowflake,
         *,
         name: str,
-        auto_archive_duration: threads.ThreadArchiveDuration,
-        type: threads.ThreadType,
+        auto_archive_duration: thread.ThreadArchiveDuration,
+        type: thread.ThreadType,
         rate_limit_per_user: int,
         invitable: bool,
         reason: str | None = None,
-    ) -> Response[threads.Thread]:
+    ) -> Response[channel.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
@@ -1252,10 +1252,10 @@ class HTTPClient:
         content: str | None,
         *,
         name: str,
-        auto_archive_duration: threads.ThreadArchiveDuration,
+        auto_archive_duration: thread.ThreadArchiveDuration,
         rate_limit_per_user: int,
         invitable: bool = True,
-        applied_tags: SnowflakeList | None = None,
+        applied_tags: list[Snowflake] | None = None,
         reason: str | None = None,
         files: Sequence[File] | None = None,
         embed: embed.Embed | None = None,
@@ -1265,7 +1265,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
-    ) -> Response[threads.Thread]:
+    ) -> Response[channel.Thread]:
         payload: dict[str, Any] = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
@@ -1382,7 +1382,7 @@ class HTTPClient:
 
     def get_public_archived_threads(
         self, channel_id: Snowflake, before: Snowflake | None = None, limit: int = 50
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[thread.ThreadPaginationPayload]:
         route = Route(
             "GET",
             "/channels/{channel_id}/threads/archived/public",
@@ -1397,7 +1397,7 @@ class HTTPClient:
 
     def get_private_archived_threads(
         self, channel_id: Snowflake, before: Snowflake | None = None, limit: int = 50
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[thread.ThreadPaginationPayload]:
         route = Route(
             "GET",
             "/channels/{channel_id}/threads/archived/private",
@@ -1412,7 +1412,7 @@ class HTTPClient:
 
     def get_joined_private_archived_threads(
         self, channel_id: Snowflake, before: Snowflake | None = None, limit: int = 50
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[thread.ThreadPaginationPayload]:
         route = Route(
             "GET",
             "/channels/{channel_id}/users/@me/threads/archived/private",
@@ -1426,13 +1426,13 @@ class HTTPClient:
 
     def get_active_threads(
         self, guild_id: Snowflake
-    ) -> Response[threads.ThreadPaginationPayload]:
+    ) -> Response[thread.ThreadPaginationPayload]:
         route = Route("GET", "/guilds/{guild_id}/threads/active", guild_id=guild_id)
         return self.request(route)
 
     def get_thread_members(
         self, channel_id: Snowflake
-    ) -> Response[list[threads.ThreadMember]]:
+    ) -> Response[list[thread.ThreadMember]]:
         route = Route(
             "GET", "/channels/{channel_id}/thread-members", channel_id=channel_id
         )
@@ -1649,14 +1649,14 @@ class HTTPClient:
 
     def get_all_guild_channels(
         self, guild_id: Snowflake
-    ) -> Response[list[guild.GuildChannel]]:
+    ) -> Response[list[channel.GuildChannel]]:
         return self.request(
             Route("GET", "/guilds/{guild_id}/channels", guild_id=guild_id)
         )
 
     def get_members(
         self, guild_id: Snowflake, limit: int, after: Snowflake | None
-    ) -> Response[list[member.MemberWithUser]]:
+    ) -> Response[list[member.Member]]:
         params: dict[str, Any] = {
             "limit": limit,
         }
@@ -1671,7 +1671,7 @@ class HTTPClient:
         guild_id: Snowflake,
         query: str,
         limit: int,
-    ) -> Response[list[member.MemberWithUser]]:
+    ) -> Response[list[member.Member]]:
         params: dict[str, Any] = {
             "query": query,
             "limit": limit,
@@ -1682,7 +1682,7 @@ class HTTPClient:
 
     def get_member(
         self, guild_id: Snowflake, member_id: Snowflake
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         return self.request(
             Route(
                 "GET",
@@ -1700,7 +1700,7 @@ class HTTPClient:
         roles: list[str],
         *,
         reason: str | None = None,
-    ) -> Response[guild.GuildPrune]:
+    ) -> Response[guild.GuildPruneCount]:
         payload: dict[str, Any] = {
             "days": days,
             "compute_prune_count": "true" if compute_prune_count else "false",
@@ -1719,7 +1719,7 @@ class HTTPClient:
         guild_id: Snowflake,
         days: int,
         roles: list[str],
-    ) -> Response[guild.GuildPrune]:
+    ) -> Response[guild.GuildPruneCount]:
         params: dict[str, Any] = {
             "days": days,
         }
@@ -1804,7 +1804,7 @@ class HTTPClient:
         self,
         guild_id: Snowflake,
         sticker_id: Snowflake,
-        payload: sticker.EditGuildSticker,
+        payload: sticker.ModifyGuildSticker,
         reason: str | None,
     ) -> Response[sticker.GuildSticker]:
         return self.request(
@@ -1854,7 +1854,7 @@ class HTTPClient:
         name: str,
         image: bytes,
         *,
-        roles: SnowflakeList | None = None,
+        roles: list[Snowflake] | None = None,
         reason: str | None = None,
     ) -> Response[emoji.Emoji]:
         payload = {
@@ -2257,7 +2257,7 @@ class HTTPClient:
         role_ids: list[int],
         *,
         reason: str | None = None,
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         return self.edit_member(
             guild_id=guild_id, user_id=user_id, roles=role_ids, reason=reason
         )
@@ -2379,7 +2379,7 @@ class HTTPClient:
         channel_id: Snowflake,
         *,
         reason: str | None = None,
-    ) -> Response[member.MemberWithUser]:
+    ) -> Response[member.Member]:
         return self.edit_member(
             guild_id=guild_id, user_id=user_id, channel_id=channel_id, reason=reason
         )
@@ -2617,7 +2617,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         command_id: Snowflake,
-        payload: interactions.EditApplicationCommand,
+        payload: interactions.ModifyApplicationCommand,
     ) -> Response[interactions.ApplicationCommand]:
         valid_keys = (
             "name",
@@ -2686,7 +2686,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: interactions.EditApplicationCommand,
+        payload: interactions.ModifyApplicationCommand,
     ) -> Response[interactions.ApplicationCommand]:
         r = Route(
             "POST",
@@ -2701,7 +2701,7 @@ class HTTPClient:
         application_id: Snowflake,
         guild_id: Snowflake,
         command_id: Snowflake,
-        payload: interactions.EditApplicationCommand,
+        payload: interactions.ModifyApplicationCommand,
     ) -> Response[interactions.ApplicationCommand]:
         valid_keys = (
             "name",
@@ -2737,7 +2737,7 @@ class HTTPClient:
         self,
         application_id: Snowflake,
         guild_id: Snowflake,
-        payload: list[interactions.EditApplicationCommand],
+        payload: list[interactions.ModifyApplicationCommand],
     ) -> Response[list[interactions.ApplicationCommand]]:
         r = Route(
             "PUT",
@@ -2790,7 +2790,7 @@ class HTTPClient:
         self,
         guild_id: Snowflake,
         rule_id: Snowflake,
-        payload: automod.EditAutoModRule,
+        payload: automod.ModifyAutoModRule,
         reason: str | None = None,
     ) -> Response[automod.AutoModRule]:
         r = Route(
@@ -3133,7 +3133,7 @@ class HTTPClient:
     def create_test_entitlement(
         self,
         application_id: Snowflake,
-        payload: monetization.CreateTestEntitlementPayload,
+        payload: monetization.CreateTestEntitlement,
     ) -> Response[monetization.Entitlement]:
         r = Route(
             "POST",
@@ -3267,17 +3267,17 @@ class HTTPClient:
 
     # Misc
 
-    def application_info(self) -> Response[appinfo.AppInfo]:
+    def application_info(self) -> Response[appinfo.ApplicationInfo]:
         return self.request(Route("GET", "/oauth2/applications/@me"))
 
     def edit_current_application_info(
         self, payload: dict[str, Any]
-    ) -> Response[appinfo.AppInfo]:
+    ) -> Response[appinfo.ApplicationInfo]:
         return self.request(Route("PATCH", "/applications/@me"), json=payload)
 
     def get_application(
         self, application_id: Snowflake, /
-    ) -> Response[appinfo.PartialAppInfo]:
+    ) -> Response[appinfo.PartialApplicationInfo]:
         return self.request(
             Route(
                 "GET",

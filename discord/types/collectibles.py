@@ -24,22 +24,40 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from .snowflake import Snowflake
+from typing_extensions import NotRequired
+
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
 
 
 class Collectibles(TypedDict):
-    nameplate: Nameplate
+    nameplate: NotRequired[Nameplate]
+
+
+NamePlatePalette = Literal[
+    "crimson",
+    "berry",
+    "sky",
+    "teal",
+    "forest",
+    "bubble_gum",
+    "violet",
+    "cobalt",
+    "clover",
+    "lemon",
+    "white",
+]
 
 
 class Nameplate(TypedDict):
     sku_id: Snowflake
     asset: str
     label: str
-    palette: str
+    palette: NamePlatePalette
 
 
 class AvatarDecoration(TypedDict):
-    sku_id: Snowflake
     asset: str
+    sku_id: Snowflake

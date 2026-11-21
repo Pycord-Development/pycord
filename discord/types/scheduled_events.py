@@ -24,42 +24,107 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from .member import Member
-from .snowflake import Snowflake
-from .user import User
+from typing_extensions import NotRequired
 
-ScheduledEventStatus = Literal[1, 2, 3, 4]
-ScheduledEventLocationType = Literal[1, 2, 3]
-ScheduledEventPrivacyLevel = Literal[2]
+if TYPE_CHECKING:
+    from .member import Member
+    from .snowflake import Snowflake
+    from .user import User
+
+ScheduledEventStatus = Literal[
+    1,  # SCHEDULED
+    2,  # ACTIVE
+    3,  # COMPLETED
+    4,  # CANCELED
+]
+ScheduledEventEntityType = Literal[
+    1,  # STAGE_INSTANCE
+    2,  # VOICE
+    3,  # EXTERNAL
+]
+ScheduledEventPrivacyLevel = Literal[2,]  # GUILD_ONLY
+
+
+class ScheduledEventEntityMetadata(TypedDict):
+    location: str  # Technically optional, but this is only sent on EXTERNAL, and then, location is always set
+
+
+ScheduledEventRecurrenceRuleFrequency = Literal[
+    0,  # YEARLY
+    1,  # MONTHLY
+    2,  # WEEKLY
+    3,  # DAILY
+]
+
+ScheduledEventRecurrenceRuleWeekday = Literal[
+    0,  # MONDAY
+    1,  # TUESDAY
+    2,  # WEDNESDAY
+    3,  # THURSDAY
+    4,  # FRIDAY
+    5,  # SATURDAY
+    6,  # SUNDAY
+]
+
+ScheduledEventRecurrenceRuleMonth = Literal[
+    1,  # JANUARY
+    2,  # FEBRUARY
+    3,  # MARCH
+    4,  # APRIL
+    5,  # MAY
+    6,  # JUNE
+    7,  # JULY
+    8,  # AUGUST
+    9,  # SEPTEMBER
+    10,  # OCTOBER
+    11,  # NOVEMBER
+    12,  # DECEMBER
+]
+
+
+class ScheduledEventRecurrenceRuleNWeekday(TypedDict):
+    n: int
+    day: ScheduledEventRecurrenceRuleWeekday
+
+
+class ScheduledEventRecurrenceRule(TypedDict):
+    start: str
+    end: str | None
+    frequency: ScheduledEventRecurrenceRuleFrequency
+    interval: int
+    by_weekday: list[ScheduledEventRecurrenceRuleWeekday] | None
+    by_n_weekday: list[ScheduledEventRecurrenceRuleNWeekday] | None
+    by_month: list[ScheduledEventRecurrenceRuleMonth] | None
+    by_month_day: list[int] | None
+    by_year_day: list[int] | None
+    count: int | None
 
 
 class ScheduledEvent(TypedDict):
     id: Snowflake
     guild_id: Snowflake
-    channel_id: Snowflake
-    creator_id: Snowflake
+    channel_id: Snowflake | None
+    creator_id: NotRequired[
+        Snowflake | None
+    ]  # Will be set for events made after Oct 2021
     name: str
-    description: str
-    image: str | None
+    description: NotRequired[str | None]
     scheduled_start_time: str
-    scheduled_end_time: str | None
+    scheduled_end_time: str | None  # Required if the type is external
     privacy_level: ScheduledEventPrivacyLevel
     status: ScheduledEventStatus
-    entity_type: ScheduledEventLocationType
-    entity_id: Snowflake
-    entity_metadata: ScheduledEventEntityMetadata
-    creator: User
-    user_count: int | None
-
-
-class ScheduledEventEntityMetadata(TypedDict):
-    location: str
+    entity_type: ScheduledEventEntityType
+    entity_id: Snowflake | None
+    entity_metadata: ScheduledEventEntityMetadata | None
+    creator: NotRequired[User]
+    user_count: NotRequired[int]
+    image: NotRequired[str | None]
+    recurrence_rule: ScheduledEventRecurrenceRule | None
 
 
 class ScheduledEventSubscriber(TypedDict):
     guild_scheduled_event_id: Snowflake
-    user_id: Snowflake
     user: User
-    member: Member | None
+    member: NotRequired[Member]

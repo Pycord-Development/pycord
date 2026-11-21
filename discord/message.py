@@ -88,9 +88,7 @@ if TYPE_CHECKING:
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
-    from .types.shared_client_theme import SharedClientTheme as SharedClientThemePayload
-    from .types.snowflake import SnowflakeList
-    from .types.threads import ThreadArchiveDuration
+    from .types.thread import ThreadArchiveDuration
     from .types.user import User as UserPayload
     from .ui.view import BaseView
     from .user import User
@@ -704,7 +702,7 @@ class MessageCall:
 
     def __init__(self, state: ConnectionState, data: MessageCallPayload):
         self._state: ConnectionState = state
-        self._participants: SnowflakeList = data.get("participants", [])
+        self._participants: list[Snowflake] = data.get("participants", [])
         self._ended_timestamp: datetime.datetime | None = utils.parse_time(
             data["ended_timestamp"]
         )

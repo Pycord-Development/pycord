@@ -25,16 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from .guild import Guild
-from .snowflake import Snowflake
-from .user import User
+from typing_extensions import NotRequired
 
-
-class CreateTemplate(TypedDict):
-    name: str
-    icon: bytes | None
+if TYPE_CHECKING:
+    from .guild import Guild
+    from .snowflake import Snowflake
+    from .user import User
 
 
 class Template(TypedDict):
@@ -49,3 +47,17 @@ class Template(TypedDict):
     source_guild_id: Snowflake
     serialized_source_guild: Guild
     is_dirty: bool | None
+
+
+class CreateTemplate(TypedDict):
+    """Allowed fields when creating a guild template"""
+
+    name: str
+    description: NotRequired[str | None]
+
+
+class ModifyTemplate(TypedDict):
+    """Allowed fields when modifying a guild template"""
+
+    name: NotRequired[str]
+    description: NotRequired[str | None]

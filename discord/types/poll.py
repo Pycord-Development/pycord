@@ -24,17 +24,18 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-from .emoji import Emoji
+if TYPE_CHECKING:
+    from .emoji import Emoji
 
-PollLayoutType = Literal[1]
+PollLayoutType = Literal[1,]  # DEFAULT
 
 
 class PollMedia(TypedDict):
-    text: str
+    text: NotRequired[str]
     emoji: NotRequired[Emoji]
 
 
@@ -57,8 +58,17 @@ class PollAnswerCount(TypedDict):
 class Poll(TypedDict):
     question: PollMedia
     answers: list[PollAnswer]
-    duration: NotRequired[int]
-    expiry: NotRequired[str]
+    expiry: str | None
     allow_multiselect: bool
-    layout_type: NotRequired[PollLayoutType]
+    layout_type: PollLayoutType
     results: NotRequired[PollResults]
+
+
+class CreatePoll(TypedDict):
+    """The allowed fields when creating a poll"""
+
+    question: PollMedia
+    answers: list[PollAnswer]
+    duration: NotRequired[int]
+    allow_multiselect: NotRequired[bool]
+    layout_type: NotRequired[PollLayoutType]

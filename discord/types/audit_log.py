@@ -25,83 +25,113 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .automod import AutoModRule
-from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
-from .guild import (
-    DefaultMessageNotificationLevel,
-    ExplicitContentFilterLevel,
-    MFALevel,
-    VerificationLevel,
-)
-from .integration import IntegrationExpireBehavior, PartialIntegration
-from .role import Role
-from .scheduled_events import ScheduledEvent
-from .snowflake import Snowflake
-from .threads import Thread
-from .user import User
-from .webhook import Webhook
+if TYPE_CHECKING:
+    from .automod import AutoModRule
+    from .channel import ChannelType, PermissionOverwrite, Thread, VideoQualityMode
+    from .guild import (
+        DefaultMessageNotificationLevel,
+        ExplicitContentFilterLevel,
+        MFALevel,
+        VerificationLevel,
+    )
+    from .integration import IntegrationExpireBehavior, PartialIntegration
+    from .interactions import ApplicationCommand
+    from .role import Role
+    from .scheduled_events import ScheduledEvent
+    from .snowflake import Snowflake
+    from .user import User
+    from .webhook import Webhook
 
 AuditLogEvent = Literal[
-    1,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    27,
-    28,
-    30,
-    31,
-    32,
-    40,
-    41,
-    42,
-    50,
-    51,
-    52,
-    60,
-    61,
-    62,
-    72,
-    73,
-    74,
-    75,
-    80,
-    81,
-    82,
-    83,
-    84,
-    85,
-    90,
-    91,
-    92,
-    100,
-    101,
-    102,
-    110,
-    111,
-    112,
-    121,
-    140,
-    141,
-    142,
-    143,
+    1,  # GUILD_UPDATE
+    10,  # CHANNEL_CREATE
+    11,  # CHANNEL_UPDATE
+    12,  # CHANNEL_DELETE
+    13,  # CHANNEL_OVERWRITE_CREATE
+    14,  # CHANNEL_OVERWRITE_UPDATE
+    15,  # CHANNEL_OVERWRITE_DELETE
+    16,  # CHANNEL_POSITION_UPDATE
+    20,  # MEMBER_KICK
+    21,  # MEMBER_PRUNE
+    22,  # MEMBER_BAN_ADD
+    23,  # MEMBER_BAN_REMOVE
+    24,  # MEMBER_UPDATE
+    25,  # MEMBER_ROLE_UPDATE
+    26,  # MEMBER_MOVE
+    27,  # MEMBER_DISCONNECT
+    28,  # BOT_ADD
+    30,  # ROLE_CREATE
+    31,  # ROLE_UPDATE
+    32,  # ROLE_DELETE
+    33,  # ROLE_POSITION_UPDATE
+    40,  # INVITE_CREATE
+    41,  # INVITE_UPDATE
+    42,  # INVITE_DELETE
+    50,  # WEBHOOK_CREATE
+    51,  # WEBHOOK_UPDATE
+    52,  # WEBHOOK_DELETE
+    60,  # EMOJI_CREATE
+    61,  # EMOJI_UPDATE
+    62,  # EMOJI_DELETE
+    72,  # MESSAGE_DELETE
+    73,  # MESSAGE_BULK_DELETE
+    74,  # MESSAGE_PIN
+    75,  # MESSAGE_UNPIN
+    80,  # INTEGRATION_CREATE
+    81,  # INTEGRATION_UPDATE
+    82,  # INTEGRATION_DELETE
+    83,  # STAGE_INSTANCE_CREATE
+    84,  # STAGE_INSTANCE_UPDATE
+    85,  # STAGE_INSTANCE_DELETE
+    90,  # STICKER_CREATE
+    91,  # STICKER_UPDATE
+    92,  # STICKER_DELETE
+    100,  # GUILD_SCHEDULED_EVENT_CREATE
+    101,  # GUILD_SCHEDULED_EVENT_UPDATE
+    102,  # GUILD_SCHEDULED_EVENT_DELETE
+    110,  # THREAD_CREATE
+    111,  # THREAD_UPDATE
+    112,  # THREAD_DELETE
+    121,  # APPLICATION_COMMAND_PERMISSION_UPDATE
+    130,  # SOUNDBOARD_SOUND_CREATE
+    131,  # SOUNDBOARD_SOUND_UPDATE
+    132,  # SOUNDBOARD_SOUND_DELETE
+    140,  # AUTO_MODERATION_RULE_CREATE
+    141,  # AUTO_MODERATION_RULE_UPDATE
+    142,  # AUTO_MODERATION_RULE_DELETE
+    143,  # AUTO_MODERATION_BLOCK_MESSAGE
+    144,  # AUTO_MODERATION_FLAG_TO_CHANNEL
+    145,  # AUTO_MODERATION_USER_COMMUNICATION_DISABLED
+    146,  # AUTO_MODERATION_QUARANTINE_USER
+    150,  # CREATOR_MONETIZATION_REQUEST_CREATED
+    151,  # CREATOR_MONETIZATION_TERMS_ACCEPTED
+    163,  # ONBOARDING_PROMPT_CREATE
+    164,  # ONBOARDING_PROMPT_UPDATE
+    165,  # ONBOARDING_PROMPT_DELETE
+    166,  # ONBOARDING_CREATE
+    167,  # ONBOARDING_UPDATE
+    190,  # HOME_SETTINGS_CREATE
+    191,  # HOME_SETTINGS_UPDATE
+    192,  # VOICE_CHANNEL_STATUS_CREATE
+    193,  # VOICE_CHANNEL_STATUS_DELETE
+    # Fields below are undocumented
+    200,  # GUILD_SCHEDULED_EVENT_EXCEPTION_CREATE
+    201,  # GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATE
+    202,  # GUILD_SCHEDULED_EVENT_EXCEPTION_DELETE
+    210,  # GUILD_MEMBER_VERIFICATION_UPDATE
+    211,  # GUILD_PROFILE_UPDATE
+    212,  # GUILD_MIGRATE_PIN_PERMISSION
+    213,  # GUILD_MIGRATE_SLOWMODE_PERMISSION
 ]
 
 
-class _AuditLogChange_Str(TypedDict):
+class _AuditLogChangeStr(TypedDict):
+    new_value: NotRequired[str]
+    old_value: NotRequired[str]
     key: Literal[
         "name",
         "description",
@@ -115,11 +145,11 @@ class _AuditLogChange_Str(TypedDict):
         "tags",
         "status",
     ]
-    new_value: str
-    old_value: str
 
 
-class _AuditLogChange_AssetHash(TypedDict):
+class _AuditLogChangeAssetHash(TypedDict):
+    new_value: NotRequired[str]
+    old_value: NotRequired[str]
     key: Literal[
         "icon_hash",
         "splash_hash",
@@ -128,11 +158,11 @@ class _AuditLogChange_AssetHash(TypedDict):
         "avatar_hash",
         "asset",
     ]
-    new_value: str
-    old_value: str
 
 
-class _AuditLogChange_Snowflake(TypedDict):
+class _AuditLogChangeSnowflake(TypedDict):
+    new_value: NotRequired[Snowflake]
+    old_value: NotRequired[Snowflake]
     key: Literal[
         "id",
         "owner_id",
@@ -146,11 +176,11 @@ class _AuditLogChange_Snowflake(TypedDict):
         "inviter_id",
         "guild_id",
     ]
-    new_value: Snowflake
-    old_value: Snowflake
 
 
-class _AuditLogChange_Bool(TypedDict):
+class _AuditLogChangeBool(TypedDict):
+    new_value: NotRequired[bool]
+    old_value: NotRequired[bool]
     key: Literal[
         "widget_enabled",
         "nsfw",
@@ -166,11 +196,11 @@ class _AuditLogChange_Bool(TypedDict):
         "archived",
         "locked",
     ]
-    new_value: bool
-    old_value: bool
 
 
-class _AuditLogChange_Int(TypedDict):
+class _AuditLogChangeInt(TypedDict):
+    new_value: NotRequired[int]
+    old_value: NotRequired[int]
     key: Literal[
         "afk_timeout",
         "prune_delete_days",
@@ -184,113 +214,112 @@ class _AuditLogChange_Int(TypedDict):
         "auto_archive_duration",
         "default_auto_archive_duration",
     ]
-    new_value: int
-    old_value: int
 
 
-class _AuditLogChange_ListRole(TypedDict):
+class _AuditLogChangeListRole(TypedDict):
+    new_value: NotRequired[list[Role]]
+    old_value: NotRequired[list[Role]]
     key: Literal["$add", "$remove"]
-    new_value: list[Role]
-    old_value: list[Role]
 
 
-class _AuditLogChange_MFALevel(TypedDict):
+class _AuditLogChangeMFALevel(TypedDict):
+    new_value: NotRequired[MFALevel]
+    old_value: NotRequired[MFALevel]
     key: Literal["mfa_level"]
-    new_value: MFALevel
-    old_value: MFALevel
 
 
-class _AuditLogChange_VerificationLevel(TypedDict):
+class _AuditLogChangeVerificationLevel(TypedDict):
+    new_value: NotRequired[VerificationLevel]
+    old_value: NotRequired[VerificationLevel]
     key: Literal["verification_level"]
-    new_value: VerificationLevel
-    old_value: VerificationLevel
 
 
-class _AuditLogChange_ExplicitContentFilter(TypedDict):
+class _AuditLogChangeExplicitContentFilter(TypedDict):
+    new_value: NotRequired[ExplicitContentFilterLevel]
+    old_value: NotRequired[ExplicitContentFilterLevel]
     key: Literal["explicit_content_filter"]
-    new_value: ExplicitContentFilterLevel
-    old_value: ExplicitContentFilterLevel
 
 
-class _AuditLogChange_DefaultMessageNotificationLevel(TypedDict):
+class _AuditLogChangeDefaultMessageNotificationLevel(TypedDict):
+    new_value: NotRequired[DefaultMessageNotificationLevel]
+    old_value: NotRequired[DefaultMessageNotificationLevel]
     key: Literal["default_message_notifications"]
-    new_value: DefaultMessageNotificationLevel
-    old_value: DefaultMessageNotificationLevel
 
 
-class _AuditLogChange_ChannelType(TypedDict):
+class _AuditLogChangeChannelType(TypedDict):
+    new_value: NotRequired[ChannelType]
+    old_value: NotRequired[ChannelType]
     key: Literal["type"]
-    new_value: ChannelType
-    old_value: ChannelType
 
 
-class _AuditLogChange_IntegrationExpireBehaviour(TypedDict):
+class _AuditLogChangeIntegrationExpireBehaviour(TypedDict):
+    new_value: NotRequired[IntegrationExpireBehavior]
+    old_value: NotRequired[IntegrationExpireBehavior]
     key: Literal["expire_behavior"]
-    new_value: IntegrationExpireBehavior
-    old_value: IntegrationExpireBehavior
 
 
-class _AuditLogChange_VideoQualityMode(TypedDict):
+class _AuditLogChangeVideoQualityMode(TypedDict):
+    new_value: NotRequired[VideoQualityMode]
+    old_value: NotRequired[VideoQualityMode]
     key: Literal["video_quality_mode"]
-    new_value: VideoQualityMode
-    old_value: VideoQualityMode
 
 
-class _AuditLogChange_Overwrites(TypedDict):
+class _AuditLogChangeOverwrites(TypedDict):
+    new_value: NotRequired[list[PermissionOverwrite]]
+    old_value: NotRequired[list[PermissionOverwrite]]
     key: Literal["permission_overwrites"]
-    new_value: list[PermissionOverwrite]
-    old_value: list[PermissionOverwrite]
 
 
 AuditLogChange = (
-    _AuditLogChange_Str
-    | _AuditLogChange_AssetHash
-    | _AuditLogChange_Snowflake
-    | _AuditLogChange_Int
-    | _AuditLogChange_Bool
-    | _AuditLogChange_ListRole
-    | _AuditLogChange_MFALevel
-    | _AuditLogChange_VerificationLevel
-    | _AuditLogChange_ExplicitContentFilter
-    | _AuditLogChange_DefaultMessageNotificationLevel
-    | _AuditLogChange_ChannelType
-    | _AuditLogChange_IntegrationExpireBehaviour
-    | _AuditLogChange_VideoQualityMode
-    | _AuditLogChange_Overwrites
+    _AuditLogChangeStr
+    | _AuditLogChangeAssetHash
+    | _AuditLogChangeSnowflake
+    | _AuditLogChangeInt
+    | _AuditLogChangeBool
+    | _AuditLogChangeListRole
+    | _AuditLogChangeMFALevel
+    | _AuditLogChangeVerificationLevel
+    | _AuditLogChangeExplicitContentFilter
+    | _AuditLogChangeDefaultMessageNotificationLevel
+    | _AuditLogChangeChannelType
+    | _AuditLogChangeIntegrationExpireBehaviour
+    | _AuditLogChangeVideoQualityMode
+    | _AuditLogChangeOverwrites
 )
 
 
 class AuditEntryInfo(TypedDict):
-    delete_member_days: str
-    members_removed: str
-    channel_id: Snowflake
-    message_id: Snowflake
-    count: str
-    id: Snowflake
-    type: Literal["0", "1"]
-    role_name: str
     application_id: Snowflake
     auto_moderation_rule_name: str
     auto_moderation_rule_trigger_type: str
-    # TODO: add integration_type
+    channel_id: Snowflake
+    count: str
+    delete_member_days: str
+    id: Snowflake
+    members_removed: str
+    message_id: Snowflake
+    role_name: str
+    type: Literal["0", "1"]
+    integration_type: str
     status: str
 
 
 class AuditLogEntry(TypedDict):
-    changes: NotRequired[list[AuditLogChange]]
-    options: NotRequired[AuditEntryInfo]
-    reason: NotRequired[str]
     target_id: str | None
+    changes: NotRequired[list[AuditLogChange]]
     user_id: Snowflake | None
     id: Snowflake
     action_type: AuditLogEvent
+    options: NotRequired[AuditEntryInfo]
+    reason: NotRequired[str]
 
 
 class AuditLog(TypedDict):
-    webhooks: list[Webhook]
-    users: list[User]
+    application_commands: list[ApplicationCommand]
     audit_log_entries: list[AuditLogEntry]
+    auto_moderation_rules: list[AutoModRule]
+    guild_scheduled_events: list[ScheduledEvent]
     integrations: list[PartialIntegration]
     threads: list[Thread]
-    scheduled_events: list[ScheduledEvent]
-    auto_moderation_rules: list[AutoModRule]
+    users: list[User]
+    webhooks: list[Webhook]

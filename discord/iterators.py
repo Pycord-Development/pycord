@@ -64,12 +64,12 @@ if TYPE_CHECKING:
     from .scheduled_events import ScheduledEvent
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
+    from .types.channel import Thread as ThreadPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
     from .types.message import MessagePin as MessagePinPayload
     from .types.monetization import Entitlement as EntitlementPayload
     from .types.monetization import Subscription as SubscriptionPayload
-    from .types.threads import Thread as ThreadPayload
     from .types.user import PartialUser as PartialUserPayload
     from .user import User
 

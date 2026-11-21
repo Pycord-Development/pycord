@@ -95,6 +95,7 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .sticker import GuildSticker, StickerItem
+    from .types import snowflake
     from .types.channel import CategoryChannel as CategoryChannelPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.channel import ForumChannel as ForumChannelPayload
@@ -103,9 +104,8 @@ if TYPE_CHECKING:
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
-    from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
-    from .types.snowflake import SnowflakeList
-    from .types.threads import ThreadArchiveDuration
+    from .types.events import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.thread import ThreadArchiveDuration
     from .ui.view import BaseView
     from .user import BaseUser, ClientUser, User
     from .webhook import Webhook
@@ -410,7 +410,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         if len(messages) > 100:
             raise ClientException("Can only bulk delete messages up to 100 messages")
 
-        message_ids: SnowflakeList = [m.id for m in messages]
+        message_ids: list[snowflake.Snowflake] = [m.id for m in messages]
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
@@ -1935,7 +1935,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         if len(messages) > 100:
             raise ClientException("Can only bulk delete messages up to 100 messages")
 
-        message_ids: SnowflakeList = [m.id for m in messages]
+        message_ids: list[snowflake.Snowflake] = [m.id for m in messages]
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(
@@ -2538,7 +2538,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         if len(messages) > 100:
             raise ClientException("Can only bulk delete messages up to 100 messages")
 
-        message_ids: SnowflakeList = [m.id for m in messages]
+        message_ids: list[snowflake.Snowflake] = [m.id for m in messages]
         await self._state.http.delete_messages(self.id, message_ids, reason=reason)
 
     async def purge(

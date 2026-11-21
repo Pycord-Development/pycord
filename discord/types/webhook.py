@@ -25,13 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .channel import PartialChannel
-from .snowflake import Snowflake
-from .user import User
+if TYPE_CHECKING:
+    from .channel import PartialChannel
+    from .snowflake import Snowflake
+    from .user import User
 
 
 class SourceGuild(TypedDict):
@@ -40,26 +41,50 @@ class SourceGuild(TypedDict):
     icon: str
 
 
-WebhookType = Literal[1, 2, 3]
+WebhookType = Literal[
+    1,  # Incoming
+    2,  # Channel Follower
+    3,  # Application
+]
 
 
 class PartialWebhook(TypedDict):
-    guild_id: NotRequired[Snowflake]
-    user: NotRequired[User]
-    token: NotRequired[str]
     id: Snowflake
     type: WebhookType
+    guild_id: NotRequired[Snowflake | None]
+    user: NotRequired[User]
+    token: NotRequired[str]
 
 
 class FollowerWebhook(PartialWebhook):
-    source_channel: NotRequired[PartialChannel]
-    source_guild: NotRequired[SourceGuild]
     channel_id: Snowflake
+    source_guild: NotRequired[
+        SourceGuild
+    ]  # Only missing if the source guild can't be accessed anymore
+    source_channel: NotRequired[
+        PartialChannel
+    ]  # Only missing if the source guild can't be accessed anymore
     webhook_id: Snowflake
 
 
 class Webhook(PartialWebhook):
-    name: NotRequired[str | None]
+    name: str | None
+    avatar: str | None
+    channel_id: Snowflake | None
+    application_id: Snowflake | None
+    url: NotRequired[str]
+
+
+class CreateWebhook(TypedDict):
+    """Fields to send when creating a webhook"""
+
+    name: str
+    avatar: NotRequired[str | None]
+
+
+class ModifyWebhook(TypedDict):
+    """Fields to send when editing a webhook"""
+
+    name: NotRequired[str]
     avatar: NotRequired[str | None]
     channel_id: NotRequired[Snowflake]
-    application_id: NotRequired[Snowflake | None]

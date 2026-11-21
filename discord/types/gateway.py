@@ -34,9 +34,13 @@ class SessionStartLimit(TypedDict):
 
 
 class Gateway(TypedDict):
+    """The gateway url returned by the /gateway endpoint"""
+
     url: str
 
 
 class GatewayBot(Gateway):
+    """The gateway info returned by the /gateway/bot endpoint"""
+
     shards: int
     session_start_limit: SessionStartLimit

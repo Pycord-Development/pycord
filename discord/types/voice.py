@@ -25,12 +25,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .member import MemberWithUser
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .member import Member
+    from .snowflake import Snowflake
 
 SupportedModes = Literal[
     "xsalsa20_poly1305_lite",
@@ -40,20 +41,39 @@ SupportedModes = Literal[
 ]
 
 
-class VoiceState(TypedDict):
-    member: NotRequired[MemberWithUser]
-    self_stream: NotRequired[bool]
+class PartialVoiceState(TypedDict):
+    """Partial voice state sent as part of the GUILD_CREATE event"""
+
+    channel_id: Snowflake | None
     user_id: Snowflake
+    member: NotRequired[Member]
     session_id: str
     deaf: bool
     mute: bool
     self_deaf: bool
     self_mute: bool
+    self_stream: NotRequired[bool]
     self_video: bool
     suppress: bool
     request_to_speak_timestamp: str | None
-    channel_id: Snowflake | None
+
+
+class VoiceState(TypedDict):
     guild_id: NotRequired[Snowflake]
+    channel_id: Snowflake | None
+    user_id: Snowflake
+    member: NotRequired[Member]
+    session_id: str
+    deaf: bool
+    mute: bool
+    self_deaf: bool
+    self_mute: bool
+    self_stream: NotRequired[bool]
+    self_video: bool
+    suppress: bool
+    request_to_speak_timestamp: str | None
+    connected_at: NotRequired[Snowflake | None]  # Undocumented
+    discoverable: NotRequired[bool]  # Undocumented
 
 
 GuildVoiceState = VoiceState
@@ -67,22 +87,38 @@ class VoiceRegion(TypedDict):
     custom: bool
 
 
-class VoiceServerUpdate(TypedDict):
-    token: str
-    guild_id: Snowflake
-    endpoint: str | None
-
-
 class VoiceIdentify(TypedDict):
+    """Fields to send when establishing a voice websocket connection"""
+
     server_id: Snowflake
     user_id: Snowflake
     session_id: str
     token: str
+    max_dave_protocol_version: int
 
 
 class VoiceReady(TypedDict):
+    """Fields received when the voice websocket connection is ready"""
+
     ssrc: int
     ip: str
     port: int
     modes: list[SupportedModes]
+
+
+class VoiceHello(TypedDict):
     heartbeat_interval: int
+    v: int  # Voice gateway version
+
+
+class VoiceHeartbeat(TypedDict):
+    """Heartbeat payload to send at the interval specified in the Voice Hello event, starting from voice version 8"""
+
+    t: int
+    seq_ack: int
+
+
+class VoiceHeartbeatAck(TypedDict):
+    """Heartbeat ACK payload received, starting from voice version 8"""
+
+    t: int

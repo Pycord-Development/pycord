@@ -28,65 +28,69 @@ from typing import TypedDict
 from typing_extensions import NotRequired
 
 from .collectibles import AvatarDecoration, Collectibles
-from .snowflake import Snowflake, SnowflakeList
+from .snowflake import Snowflake
 from .user import User
 
 
-class Nickname(TypedDict):
-    nick: str
-
-
 class PartialMember(TypedDict):
-    roles: SnowflakeList
-    joined_at: str
+    """A guild member without ``user``.
+
+    Sent as ``member`` and ``mentions[].member`` in MESSAGE_CREATE / MESSAGE_UPDATE,
+    and in interaction ``resolved.members`` (which also omits ``deaf`` and ``mute``).
+    """
+
+    nick: NotRequired[str | None]
+    avatar: NotRequired[str | None]
+    banner: NotRequired[str | None]
+    roles: list[Snowflake]
+    joined_at: str | None
+    premium_since: NotRequired[str | None]
+    deaf: NotRequired[bool]
+    mute: NotRequired[bool]
+    flags: int
+    pending: NotRequired[bool]
+    permissions: NotRequired[str]
+    communication_disabled_until: NotRequired[str | None]
+    avatar_decoration_data: NotRequired[AvatarDecoration | None]
+    collectibles: NotRequired[Collectibles | None]
+
+
+class Member(TypedDict):
+    user: User
+    nick: NotRequired[str | None]
+    avatar: NotRequired[str | None]
+    banner: NotRequired[str | None]
+    roles: list[Snowflake]
+    joined_at: str | None
+    premium_since: NotRequired[str | None]
     deaf: bool
     mute: bool
-
-
-class Member(PartialMember, total=False):
-    avatar: str
-    banner: str
-    user: User
-    nick: str
-    premium_since: str
-    pending: bool
-    permissions: str
-    communication_disabled_until: str
     flags: int
-    collectibles: Collectibles
-    avatar_decoration_data: AvatarDecoration
+    pending: NotRequired[bool]
+    permissions: NotRequired[str]
+    communication_disabled_until: NotRequired[str | None]
+    avatar_decoration_data: NotRequired[AvatarDecoration | None]
+    collectibles: NotRequired[Collectibles | None]
 
 
-class _OptionalMemberWithUser(PartialMember, total=False):
-    avatar: str
-    nick: str
-    premium_since: str
-    pending: bool
-    permissions: str
-    avatar_decoration_data: AvatarDecoration
+class UserWithMember(User):
+    """A user with a partial ``member`` attached, such as in message ``mentions``."""
 
-
-class MemberWithUser(_OptionalMemberWithUser):
-    user: User
-
-
-class UserWithMember(User, total=False):
-    member: _OptionalMemberWithUser
+    member: NotRequired[PartialMember]
 
 
 class MemberUpdateEvent(TypedDict):
     guild_id: Snowflake
-    user: User
     roles: list[Snowflake]
+    user: User
     nick: NotRequired[str | None]
-    avatar: NotRequired[str | None]
-    banner: NotRequired[str | None]
-    joined_at: NotRequired[str | None]
+    avatar: str | None
+    banner: str | None
+    joined_at: str | None
     premium_since: NotRequired[str | None]
-    deaf: NotRequired[bool | None]
-    mute: NotRequired[bool | None]
-    pending: NotRequired[bool | None]
+    deaf: NotRequired[bool]
+    mute: NotRequired[bool]
+    pending: NotRequired[bool]
     communication_disabled_until: NotRequired[str | None]
-    flags: NotRequired[int | None]
     avatar_decoration_data: NotRequired[AvatarDecoration | None]
-    # collectibles: Collectibles
+    collectibles: NotRequired[Collectibles | None]
