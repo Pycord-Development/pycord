@@ -101,7 +101,7 @@ docs = [
 ]
 release = [
     "build>=1.2.1,<2",
-    "twine>=5.1.1,<6",
+    "twine>=7,<8",
 ]
 
 [tool.uv.dependency-groups]
