@@ -1176,6 +1176,7 @@ class HTTPClient:
             "video_quality_mode",
             "auto_archive_duration",
             "default_reaction_emoji",
+            "flags",
         )
         payload.update(
             {k: v for k, v in options.items() if k in valid_keys and v is not None}

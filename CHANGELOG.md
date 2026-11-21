@@ -36,6 +36,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3352](https://github.com/Pycord-Development/pycord/pull/3352))
 - Added `Embed.components` and `DesignerView.from_embed`.
   ([#3443](https://github.com/Pycord-Development/pycord/pull/3443))
+- Added support for spoiler channels.
+  ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
 
 ### Changed
 
