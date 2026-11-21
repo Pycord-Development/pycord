@@ -57,7 +57,7 @@ class ApplicationInfo(TypedDict):
     rpc_origins: NotRequired[list[str]]
     bot_public: bool
     bot_require_code_grant: bool
-    hook: bool  # Whether the Discord client is allowed to hook into the application's game directly
+    hook: bool  # Whether the Discord client is allowed to hook into the application's game directly. Undocumented
     bot: NotRequired[PartialUser]
     terms_of_service_url: NotRequired[str]
     privacy_policy_url: NotRequired[str]
@@ -110,7 +110,7 @@ class PartialApplicationInfo(TypedDict):
     rpc_origins: NotRequired[list[str]]
     bot_public: NotRequired[bool]
     bot_require_code_grant: NotRequired[bool]
-    hook: bool  # Whether the Discord client is allowed to hook into the application's game directly
+    hook: bool  # Whether the Discord client is allowed to hook into the application's game directly. Undocumented
     bot: NotRequired[PartialUser]
     terms_of_service_url: NotRequired[str]
     privacy_policy_url: NotRequired[str]

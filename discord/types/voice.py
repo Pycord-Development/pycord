@@ -72,8 +72,8 @@ class VoiceState(TypedDict):
     self_video: bool
     suppress: bool
     request_to_speak_timestamp: str | None
-    connected_at: NotRequired[Snowflake]
-    discoverable: NotRequired[bool]
+    connected_at: NotRequired[Snowflake | None]  # Undocumented
+    discoverable: NotRequired[bool]  # Undocumented
 
 
 GuildVoiceState = VoiceState

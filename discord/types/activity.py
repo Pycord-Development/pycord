@@ -42,7 +42,7 @@ class ClientStatus(TypedDict):
     mobile: NotRequired[str]
     web: NotRequired[str]
     vr: NotRequired[str]
-    embedded: NotRequired[str]  # Consoles
+    embedded: NotRequired[str]  # Consoles, undocumented
 
 
 class ActivityTimestamps(TypedDict):
@@ -107,6 +107,8 @@ class SendableActivity(TypedDict):
 
 
 class GameActivity(TypedDict):
+    """Undocumented game activity object used in guild profiles"""
+
     activity_level: int
     activity_score: int
 

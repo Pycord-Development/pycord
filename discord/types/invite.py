@@ -76,6 +76,8 @@ InviteType = Literal[
 
 
 class GuildInviteProfile(TypedDict):
+    """Undocumented guild invite profile for use in objects"""
+
     id: Snowflake
     name: str
     icon_hash: str | None
@@ -103,11 +105,13 @@ class Invite(IncompleteInvite):
     target_application: NotRequired[PartialApplicationInfo]
     flags: NotRequired[int]
     roles: NotRequired[list[PartialRole]]
+    # Following fields are undocumented
     features: list[GuildFeature]
     visibility: GuildVisibilityLevel
     custom_banner_hash: str | None
     premium_subscription_count: int
     premium_tier: PremiumTier
+    profile: GuildInviteProfile
 
 
 class InviteWithCounts(Invite, GuildPreview):

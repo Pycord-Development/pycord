@@ -80,14 +80,14 @@ opcodes = Literal[
     2,  # IDENTIFY
     3,  # PRESENCE UPDATE
     4,  # VOICE STATE UPDATE
-    5,  # VOICE_SERVER_PING
+    5,  # VOICE_SERVER_PING, undocumented
     6,  # RESUME
     7,  # RECONNECT
     8,  # REQUEST GUILD MEMBERS
     9,  # INVALID SESSION
     10,  # HELLO
     11,  # HEARTBEAT ACK
-    12,  # REQUEST GUILD SYNC
+    12,  # REQUEST GUILD SYNC, undocumented
     31,  # REQUEST SOUNDBOARD SOUNDS
     43,  # REQUEST CHANNEL INFO
 ]

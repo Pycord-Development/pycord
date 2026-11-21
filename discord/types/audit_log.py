@@ -118,7 +118,7 @@ AuditLogEvent = Literal[
     191,  # HOME_SETTINGS_UPDATE
     192,  # VOICE_CHANNEL_STATUS_CREATE
     193,  # VOICE_CHANNEL_STATUS_DELETE
-    # Fields below are undocumented but Lala said so
+    # Fields below are undocumented
     200,  # GUILD_SCHEDULED_EVENT_EXCEPTION_CREATE
     201,  # GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATE
     202,  # GUILD_SCHEDULED_EVENT_EXCEPTION_DELETE

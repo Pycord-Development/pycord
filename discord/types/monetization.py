@@ -33,10 +33,10 @@ if TYPE_CHECKING:
     from .snowflake import Snowflake
 
 SKUType = Literal[
-    1,  # APPLICATION
+    1,  # APPLICATION, undocumented
     2,  # DURABLE
     3,  # CONSUMABLE
-    4,  # BUNDLE
+    4,  # BUNDLE, undocumented
     5,  # SUBSCRIPTION
     6,  # SUBSCRIPTION_GROUP
 ]
@@ -49,6 +49,7 @@ EntitlementType = Literal[
     6,  # USER_GIFT
     7,  # PREMIUM_PURCHASE
     8,  # APPLICATION_SUBSCRIPTION
+    # Fields below are undocumented
     9,  # FREE_STAFF_PURCHASE
     10,  # QUEST_REWARD,
     11,  # FRACTIONAL_REDEMPTION

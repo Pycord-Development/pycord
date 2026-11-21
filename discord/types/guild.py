@@ -123,7 +123,7 @@ MutableGuildFeature = Literal[  # All guild features that can be modified
 
 
 class GuildTrait(TypedDict):
-    """A trait shown on an guild's invite popup"""
+    """A trait shown on an guild's invite popup, undocumented"""
 
     emoji_id: Snowflake | None
     emoji_name: str | None
@@ -132,6 +132,7 @@ class GuildTrait(TypedDict):
     position: int
 
 
+# Undocumented
 GuildVisibilityLevel = Literal[
     1,  # PUBLIC
     2,  # RESTRICTED

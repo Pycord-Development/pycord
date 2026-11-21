@@ -61,7 +61,7 @@ ChannelType = Literal[
     14,  # GUILD_DIRECTORY
     15,  # GUILD_FORUM
     16,  # GUILD_MEDIA
-    # Fields below are undocumented but Lala said so
+    # Fields below are undocumented
     17,  # LOBBY
     18,  # DM_SDK
     21,  # APPLICATION (in testing / unreleased)
@@ -193,6 +193,8 @@ class VoiceChannel(_BaseVoiceChannel):
 
 
 class ApplicationChannel(_BaseGuildChannel, _MessageableChannel):
+    """Undocumented experimental channel type"""
+
     type: Literal[21]
     application_id: Snowflake
 
