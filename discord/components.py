@@ -46,6 +46,7 @@ from .utils import MISSING, find, get_slots
 if TYPE_CHECKING:
     from . import abc
     from .emoji import AppEmoji, GuildEmoji
+    from .state import ConnectionState
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import CheckboxComponent as CheckboxComponentPayload
@@ -152,7 +153,7 @@ class Component:
                 setattr(self, slot, value)
         return self
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> ComponentPayload:
         raise NotImplementedError
 
     def is_v2(self) -> bool:
@@ -830,7 +831,9 @@ class Section(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: SectionComponentPayload, state=None):
+    def __init__(
+        self, data: SectionComponentPayload, state: ConnectionState | None = None
+    ):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.components: list[Component] = [
@@ -1260,7 +1263,9 @@ class Container(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ContainerComponentPayload, state=None):
+    def __init__(
+        self, data: ContainerComponentPayload, state: ConnectionState | None = None
+    ):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
@@ -1812,7 +1817,9 @@ COMPONENT_MAPPINGS = {
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
 
 
-def _component_factory(data: ComponentPayload, state=None) -> Component:
+def _component_factory(
+    data: ComponentPayload, state: ConnectionState | None = None
+) -> Component:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
         if issubclass(cls, STATE_COMPONENTS):
