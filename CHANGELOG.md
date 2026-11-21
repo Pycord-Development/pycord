@@ -34,6 +34,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `ChannelFlags.channel_obfuscated` and `GuildChannel.obfuscated`
   ([#3134](https://github.com/Pycord-Development/pycord/pull/3134))
   ([#3352](https://github.com/Pycord-Development/pycord/pull/3352))
+- Added `UnfurledMediaItemFlags`, `ContentScanningMetadataFlags`, `EmbedFlags`, `EmbedMediaFlags`,
+  and new flags to `AttachmentFlags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Added `UnfurledMediaItem.placeholder`, `UnfurledMediaItem.placeholder_version`,
+  `UnfurledMediaItem.content_scan_metadata`, and `Embed.flags`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Added `content_type`, `placeholder`, `placeholder_version`, `description`, and `flags` to
+  `EmbedMedia`. ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 - Added `Embed.components` and `DesignerView.from_embed`.
   ([#3443](https://github.com/Pycord-Development/pycord/pull/3443))
 
@@ -83,6 +91,10 @@ These changes are available on the `master` branch, but have not yet been releas
   operands in reverse order. ([#3473](https://github.com/Pycord-Development/pycord/pull/3473))
 - Fixed an issue where stopped views would not be cleaned up.
   ([#3360](https://github.com/Pycord-Development/pycord/pull/3360))
+- Fix the type of `UnfurledMediaItem.attachment_id` possibly being `str`.
+  ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
+- Fixed the type of `UnfurledMediaItem.flags` being `AttachmentFlags`, it is now
+  `UnfurledMediaItemFlags`. ([#3438](https://github.com/Pycord-Development/pycord/pull/3438))
 - Fix `ctx.command.qualified_name` returning only the parent `SlashCommandGroup` name instead of the
   full subcommand path when accessed inside `cog_check`.
   ([#3363](https://github.com/Pycord-Development/pycord/pull/3363))
