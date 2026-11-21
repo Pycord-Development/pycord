@@ -74,7 +74,7 @@ class MediaGallery(ViewItem[V]):
         return MediaGalleryComponent._raw_construct(
             type=ComponentType.media_gallery,
             id=id or self.id,
-            items=[i for i in items] if items else [i for i in self.items or []],
+            items=[*items] if items else [*self.items or []],
         )
 
     @property
