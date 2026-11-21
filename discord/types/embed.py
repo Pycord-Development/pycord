@@ -33,15 +33,15 @@ from .components import Component
 
 
 class EmbedFooter(TypedDict):
+    text: str
     icon_url: NotRequired[str]
     proxy_icon_url: NotRequired[str]
-    text: str
 
 
 class EmbedField(TypedDict):
-    inline: NotRequired[bool]
     name: str
     value: str
+    inline: NotRequired[bool]
 
 
 class EmbedVideo(TypedDict):
