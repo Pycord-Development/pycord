@@ -24,9 +24,7 @@ async def add_private_emoji(
 
     image_file = await image.read()  # Reading attachment's content to get bytes
 
-    await ctx.guild.create_custom_emoji(
-        name=name, image=image_file, roles=[role]
-    )  # Image argument only takes bytes!
+    await ctx.guild.create_custom_emoji(name=name, image=image_file, roles=[role])  # Image argument only takes bytes!
     await ctx.respond(content="Private emoji is successfully created!")
 
 

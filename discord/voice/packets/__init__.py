@@ -51,9 +51,7 @@ class VoiceData:
         The PCM bytes of this source.
     """
 
-    def __init__(
-        self, packet: Packet, source: User | Member | None, *, pcm: bytes | None = None
-    ) -> None:
+    def __init__(self, packet: Packet, source: User | Member | None, *, pcm: bytes | None = None) -> None:
         self.packet: Packet = packet
         self.source: User | Member | None = source
         self.pcm: bytes = pcm if pcm else b""

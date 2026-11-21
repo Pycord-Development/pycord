@@ -112,9 +112,7 @@ class InputText(ModalItem):
         if placeholder and len(str(placeholder)) > 100:
             raise ValueError("placeholder must be 100 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._input_value = False
         self.row = row
@@ -166,9 +164,7 @@ class InputText(ModalItem):
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(
-                f"style must be of type InputTextStyle not {value.__class__.__name__}"
-            )
+            raise TypeError(f"style must be of type InputTextStyle not {value.__class__.__name__}")
         self.underlying.style = value
 
     @property
@@ -273,15 +269,11 @@ class InputText(ModalItem):
     def refresh_state(self, data) -> None:
         self._input_value = data.get("value", None)
 
-    def refresh_from_modal(
-        self, interaction: Interaction, data: InputTextComponentPayload
-    ) -> None:
+    def refresh_from_modal(self, interaction: Interaction, data: InputTextComponentPayload) -> None:
         return self.refresh_state(data)
 
     @classmethod
-    def from_component(
-        cls: type[InputText], component: InputTextComponent
-    ) -> InputText:
+    def from_component(cls: type[InputText], component: InputTextComponent) -> InputText:
 
         return cls(
             style=component.style,

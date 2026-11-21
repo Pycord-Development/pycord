@@ -129,9 +129,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
     ):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self.help_command = (
-            DefaultHelpCommand() if help_command is MISSING else help_command
-        )
+        self.help_command = DefaultHelpCommand() if help_command is MISSING else help_command
         self.strip_after_prefix = options.get("strip_after_prefix", False)
 
     @discord.utils.copy_doc(discord.Client.close)
@@ -150,9 +148,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
 
         await super().close()  # type: ignore
 
-    async def on_command_error(
-        self, context: Context, exception: errors.CommandError
-    ) -> None:
+    async def on_command_error(self, context: Context, exception: errors.CommandError) -> None:
         """|coro|
 
         The default command error handler provided by the bot.
@@ -174,9 +170,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
             return
 
         print(f"Ignoring exception in command {context.command}:", file=sys.stderr)
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
 
     async def can_run(self, ctx: Context, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks
@@ -246,9 +240,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 )
 
             if not ret:
-                raise ValueError(
-                    "Iterable command_prefix must contain at least one prefix"
-                )
+                raise ValueError("Iterable command_prefix must contain at least one prefix")
 
         return ret
 

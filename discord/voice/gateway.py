@@ -81,12 +81,8 @@ class KeepAliveHandler(KeepAliveHandlerBase):
         )
 
         self.msg: str = "Keeping shard ID %s voice websocket alive with timestamp %s."
-        self.block_msg: str = (
-            "Shard ID %s voice heartbeat blocked for more than %s seconds."
-        )
-        self.behing_msg: str = (
-            "High socket latency, shard ID %s heartbeat is %.1fs behind."
-        )
+        self.block_msg: str = "Shard ID %s voice heartbeat blocked for more than %s seconds."
+        self.behing_msg: str = "High socket latency, shard ID %s heartbeat is %.1fs behind."
         self.recent_ack_latencies: deque[float] = deque(maxlen=20)
 
     def get_payload(self) -> dict[str, Any]:
@@ -153,9 +149,7 @@ class VoiceWebSocket(DiscordWebSocket):
 
     async def send_as_bytes(self, op: ConvertibleToInt, data: bytes) -> None:
         packet = bytes([int(op)]) + data
-        _log.debug(
-            "Sending voice websocket binary frame: op: %s size: %d", op, len(data)
-        )
+        _log.debug("Sending voice websocket binary frame: op: %s size: %d", op, len(data))
         await self.ws.send_bytes(packet)
 
     async def send_as_json(self, data: Any) -> None:
@@ -230,9 +224,7 @@ class VoiceWebSocket(DiscordWebSocket):
                         state.dave_session.set_passthrough_mode(True, 10)
                     await self.send_dave_transition_ready(transition_id)
             elif op == OpCodes.dave_execute_transition:
-                _log.info(
-                    "Upgrading to DAVE connection for channel %s", state.channel_id
-                )
+                _log.info("Upgrading to DAVE connection for channel %s", state.channel_id)
                 await state.execute_dave_transition(data["transition_id"])
             elif op == OpCodes.dave_prepare_epoch:
                 epoch = data["epoch"]
@@ -275,20 +267,12 @@ class VoiceWebSocket(DiscordWebSocket):
         elif op == OpCodes.mls_proposals:
             op_type = msg[3]
             result = state.dave_session.process_proposals(
-                (
-                    davey.ProposalsOperationType.append
-                    if op_type == 0
-                    else davey.ProposalsOperationType.revoke
-                ),
+                (davey.ProposalsOperationType.append if op_type == 0 else davey.ProposalsOperationType.revoke),
                 msg[4:],
             )
 
             if isinstance(result, davey.CommitWelcome):
-                data = (
-                    (result.commit + result.welcome)
-                    if result.welcome
-                    else result.commit
-                )
+                data = (result.commit + result.welcome) if result.welcome else result.commit
                 _log.debug("Sending MLS key package with data: %s", data)
                 await self.send_as_bytes(
                     OpCodes.mls_commit_welcome,
@@ -390,9 +374,7 @@ class VoiceWebSocket(DiscordWebSocket):
         struct.pack_into(">H", packet, 2, 70)  # 70 = Length
         struct.pack_into(">I", packet, 4, state.ssrc)
 
-        _log.debug(
-            f"Sending IP discovery packet for voice in channel {state.channel_id} (guild {state.guild_id})"
-        )
+        _log.debug(f"Sending IP discovery packet for voice in channel {state.channel_id} (guild {state.guild_id})")
         await self.loop.sock_sendall(state.socket, packet)
 
         fut: asyncio.Future[bytes] = self.loop.create_future()

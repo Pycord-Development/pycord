@@ -33,9 +33,7 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23
-]
+ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
@@ -238,19 +236,9 @@ AllowedSectionAccessories = ThumbnailComponent | ButtonComponent
 AllowedSectionComponents = TextDisplayComponent
 
 AllowedContainerComponents = (
-    ActionRow
-    | TextDisplayComponent
-    | MediaGalleryComponent
-    | FileComponent
-    | SeparatorComponent
-    | SectionComponent
+    ActionRow | TextDisplayComponent | MediaGalleryComponent | FileComponent | SeparatorComponent | SectionComponent
 )
 
 AllowedLabelComponents = (
-    SelectMenu
-    | InputText
-    | FileUploadComponent
-    | RadioGroupComponent
-    | CheckboxComponent
-    | CheckboxGroupComponent
+    SelectMenu | InputText | FileUploadComponent | RadioGroupComponent | CheckboxComponent | CheckboxGroupComponent
 )

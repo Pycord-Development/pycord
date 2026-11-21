@@ -255,12 +255,8 @@ class Client:
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self.loop: asyncio.AbstractEventLoop = (
-            _get_event_loop() if loop is None else loop
-        )
-        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
-            {}
-        )
+        self.loop: asyncio.AbstractEventLoop = _get_event_loop() if loop is None else loop
+        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = {}
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
@@ -278,9 +274,7 @@ class Client:
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
 
-        self._hooks: dict[str, Callable] = {
-            "before_identify": self._call_before_identify_hook
-        }
+        self._hooks: dict[str, Callable] = {"before_identify": self._call_before_identify_hook}
 
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
@@ -317,9 +311,7 @@ class Client:
 
     # internals
 
-    def _get_websocket(
-        self, guild_id: int | None = None, *, shard_id: int | None = None
-    ) -> DiscordWebSocket:
+    def _get_websocket(self, guild_id: int | None = None, *, shard_id: int | None = None) -> DiscordWebSocket:
         return self.ws
 
     def _get_state(self, **options: Any) -> ConnectionState:
@@ -568,9 +560,7 @@ class Client:
         print(f"Ignoring exception in {event_method}", file=sys.stderr)
         traceback.print_exc()
 
-    async def on_view_error(
-        self, error: Exception, item: ViewItem, interaction: Interaction
-    ) -> None:
+    async def on_view_error(self, error: Exception, item: ViewItem, interaction: Interaction) -> None:
         """|coro|
 
         The default view error handler provided by the client.
@@ -591,9 +581,7 @@ class Client:
             f"Ignoring exception in view {interaction.view} for item {item}:",
             file=sys.stderr,
         )
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
     async def on_modal_error(self, error: Exception, interaction: Interaction) -> None:
         """|coro|
@@ -612,23 +600,17 @@ class Client:
         """
 
         print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
     # hooks
 
-    async def _call_before_identify_hook(
-        self, shard_id: int | None, *, initial: bool = False
-    ) -> None:
+    async def _call_before_identify_hook(self, shard_id: int | None, *, initial: bool = False) -> None:
         # This hook is an internal hook that actually calls the public one.
         # It allows the library to have its own hook without stepping on the
         # toes of those who need to override their own hook.
         await self.before_identify_hook(shard_id, initial=initial)
 
-    async def before_identify_hook(
-        self, shard_id: int | None, *, initial: bool = False
-    ) -> None:
+    async def before_identify_hook(self, shard_id: int | None, *, initial: bool = False) -> None:
         """|coro|
 
         A hook that is called before IDENTIFYing a session. This is useful
@@ -675,9 +657,7 @@ class Client:
             passing status code.
         """
         if not isinstance(token, str):
-            raise TypeError(
-                f"token must be of type str, not {token.__class__.__name__}"
-            )
+            raise TypeError(f"token must be of type str, not {token.__class__.__name__}")
 
         _log.info("logging in using static token")
 
@@ -778,9 +758,7 @@ class Client:
                 # This is apparently what the official Discord client does.
                 if self.ws is None:
                     continue
-                ws_params.update(
-                    sequence=self.ws.sequence, resume=True, session=self.ws.session_id
-                )
+                ws_params.update(sequence=self.ws.sequence, resume=True, session=self.ws.session_id)
 
     async def close(self) -> None:
         """|coro|
@@ -948,9 +926,7 @@ class Client:
         if value is None or isinstance(value, AllowedMentions):
             self._connection.allowed_mentions = value
         else:
-            raise TypeError(
-                f"allowed_mentions must be AllowedMentions not {value.__class__!r}"
-            )
+            raise TypeError(f"allowed_mentions must be AllowedMentions not {value.__class__!r}")
 
     @property
     def intents(self) -> Intents:
@@ -1024,9 +1000,7 @@ class Client:
         """
         return self._connection._get_message(id)
 
-    def get_partial_messageable(
-        self, id: int, *, type: ChannelType | None = None
-    ) -> PartialMessageable:
+    def get_partial_messageable(self, id: int, *, type: ChannelType | None = None) -> PartialMessageable:
         """Returns a partial messageable with the given channel ID.
 
         This is useful if you have a channel_id but don't want to do an API call
@@ -1642,9 +1616,7 @@ class Client:
 
         All parameters are optional.
         """
-        return GuildIterator(
-            self, limit=limit, before=before, after=after, with_counts=with_counts
-        )
+        return GuildIterator(self, limit=limit, before=before, after=after, with_counts=with_counts)
 
     async def fetch_template(self, code: Template | str) -> Template:
         """|coro|
@@ -1912,9 +1884,7 @@ class Client:
         data = await self.http.get_user(user_id)
         return User(state=self._connection, data=data)
 
-    async def fetch_channel(
-        self, channel_id: int, /
-    ) -> GuildChannel | PrivateChannel | Thread:
+    async def fetch_channel(self, channel_id: int, /) -> GuildChannel | PrivateChannel | Thread:
         """|coro|
 
         Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or :class:`.Thread` with the specified ID.
@@ -1945,9 +1915,7 @@ class Client:
 
         factory, ch_type = _threaded_channel_factory(data["type"])
         if factory is None:
-            raise InvalidData(
-                "Unknown channel type {type} for channel ID {id}.".format_map(data)
-            )
+            raise InvalidData("Unknown channel type {type} for channel ID {id}.".format_map(data))
 
         if ch_type in (ChannelType.group, ChannelType.private):
             # the factory will be a DMChannel or GroupChannel here
@@ -2021,10 +1989,7 @@ class Client:
             Retrieving the sticker packs failed.
         """
         data = await self.http.list_premium_sticker_packs()
-        return [
-            StickerPack(state=self._connection, data=pack)
-            for pack in data["sticker_packs"]
-        ]
+        return [StickerPack(state=self._connection, data=pack) for pack in data["sticker_packs"]]
 
     async def create_dm(self, user: Snowflake) -> DMChannel:
         """|coro|
@@ -2085,8 +2050,7 @@ class Client:
 
         if not view.is_persistent():
             raise ValueError(
-                "View is not persistent. Items need to have a custom_id set and View"
-                " must have no timeout"
+                "View is not persistent. Items need to have a custom_id set and View" " must have no timeout"
             )
 
         self._connection.store_view(view, message_id)
@@ -2113,9 +2077,7 @@ class Client:
         List[:class:`.ApplicationRoleConnectionMetadata`]
             The bot's role connection metadata records.
         """
-        data = await self._connection.http.get_application_role_connection_metadata_records(
-            self.application_id
-        )
+        data = await self._connection.http.get_application_role_connection_metadata_records(self.application_id)
         return [ApplicationRoleConnectionMetadata.from_dict(r) for r in data]
 
     async def update_role_connection_metadata_records(
@@ -2254,13 +2216,8 @@ class Client:
         List[:class:`AppEmoji`]
             The retrieved emojis.
         """
-        data = await self._connection.http.get_all_application_emojis(
-            self.application_id
-        )
-        return [
-            self._connection.maybe_store_app_emoji(self.application_id, d)
-            for d in data["items"]
-        ]
+        data = await self._connection.http.get_all_application_emojis(self.application_id)
+        return [self._connection.maybe_store_app_emoji(self.application_id, d) for d in data["items"]]
 
     async def fetch_emoji(self, emoji_id: int, /) -> AppEmoji:
         """|coro|
@@ -2284,9 +2241,7 @@ class Client:
         HTTPException
             An error occurred fetching the emoji.
         """
-        data = await self._connection.http.get_application_emoji(
-            self.application_id, emoji_id
-        )
+        data = await self._connection.http.get_application_emoji(self.application_id, emoji_id)
         return self._connection.maybe_store_app_emoji(self.application_id, data)
 
     async def create_emoji(
@@ -2321,9 +2276,7 @@ class Client:
         """
 
         img = utils._bytes_to_base64_data(image)
-        data = await self._connection.http.create_application_emoji(
-            self.application_id, name, img
-        )
+        data = await self._connection.http.create_application_emoji(self.application_id, name, img)
         return self._connection.maybe_store_app_emoji(self.application_id, data)
 
     async def delete_emoji(self, emoji: Snowflake) -> None:
@@ -2342,9 +2295,7 @@ class Client:
             An error occurred deleting the emoji.
         """
 
-        await self._connection.http.delete_application_emoji(
-            self.application_id, emoji.id
-        )
+        await self._connection.http.delete_application_emoji(self.application_id, emoji.id)
         if self._connection.cache_app_emojis and self._connection.get_emoji(emoji.id):
             self._connection.remove_emoji(emoji)
 
@@ -2386,7 +2337,4 @@ class Client:
             The bot's default sounds.
         """
         data = await self._connection.http.get_default_sounds()
-        return [
-            SoundboardSound(http=self.http, state=self._connection, data=s)
-            for s in data
-        ]
+        return [SoundboardSound(http=self.http, state=self._connection, data=s) for s in data]

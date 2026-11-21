@@ -67,9 +67,7 @@ class BridgeContext(ABC):
     """
 
     @abstractmethod
-    async def _respond(
-        self, *args, **kwargs
-    ) -> Interaction | WebhookMessage | Message: ...
+    async def _respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message: ...
 
     @abstractmethod
     async def _defer(self, *args, **kwargs) -> None: ...
@@ -78,9 +76,7 @@ class BridgeContext(ABC):
     async def _edit(self, *args, **kwargs) -> InteractionMessage | Message: ...
 
     @overload
-    async def invoke(
-        self, command: BridgeSlashCommand | BridgeExtCommand, *args, **kwargs
-    ) -> None: ...
+    async def invoke(self, command: BridgeSlashCommand | BridgeExtCommand, *args, **kwargs) -> None: ...
 
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
         """|coro|
@@ -178,9 +174,7 @@ class BridgeExtContext(BridgeContext, Context):
         if self._original_response_message:
             return await self._original_response_message.edit(*args, **kwargs)
 
-    async def delete(
-        self, *, delay: float | None = None, reason: str | None = None
-    ) -> None:
+    async def delete(self, *, delay: float | None = None, reason: str | None = None) -> None:
         """|coro|
 
         Deletes the original response message, if it exists.

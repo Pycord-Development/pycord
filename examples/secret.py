@@ -39,15 +39,11 @@ def create_overwrites(ctx: commands.Context, *objects: discord.Role | discord.Me
 
     # A dict comprehension is being utilised here to set the same permission overwrites
     # for each `discord.Role` or `discord.Member`.
-    overwrites = {
-        obj: discord.PermissionOverwrite(view_channel=True) for obj in objects
-    }
+    overwrites = {obj: discord.PermissionOverwrite(view_channel=True) for obj in objects}
 
     # Prevents the default role (@everyone) from viewing the channel
     # if it isn't already allowed to view the channel.
-    overwrites.setdefault(
-        ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False)
-    )
+    overwrites.setdefault(ctx.guild.default_role, discord.PermissionOverwrite(view_channel=False))
 
     # Makes sure the client is always allowed to view the channel.
     overwrites[ctx.guild.me] = discord.PermissionOverwrite(view_channel=True)
@@ -74,10 +70,7 @@ async def text(
     await ctx.guild.create_text_channel(
         name,
         overwrites=overwrites,
-        topic=(
-            "Top secret text channel. Any leakage of this channel may result in serious"
-            " trouble."
-        ),
+        topic=("Top secret text channel. Any leakage of this channel may result in serious" " trouble."),
         reason="Very secret business.",
     )
 
@@ -96,16 +89,12 @@ async def voice(
 
     overwrites = create_overwrites(ctx, *objects)
 
-    await ctx.guild.create_voice_channel(
-        name, overwrites=overwrites, reason="Very secret business."
-    )
+    await ctx.guild.create_voice_channel(name, overwrites=overwrites, reason="Very secret business.")
 
 
 @secret.command(name="emoji")
 @commands.guild_only()
-async def clone_emoji(
-    ctx: commands.Context, emoji: discord.PartialEmoji, *roles: discord.Role
-):
+async def clone_emoji(ctx: commands.Context, emoji: discord.PartialEmoji, *roles: discord.Role):
     """
     This clones a specified emoji that only
     specified roles are allowed to use.

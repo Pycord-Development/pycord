@@ -241,24 +241,18 @@ class Interaction:
         self.application_id: int = int(data["application_id"])
         self.locale: str | None = data.get("locale")
         self.guild_locale: str | None = data.get("guild_locale")
-        self.custom_id: str | None = (
-            self.data.get("custom_id") if self.data is not None else None
-        )
+        self.custom_id: str | None = self.data.get("custom_id") if self.data is not None else None
         self._app_permissions: int = int(data.get("app_permissions", 0))
         self.entitlements: list[Entitlement] = [
             Entitlement(data=e, state=self._state) for e in data.get("entitlements", [])
         ]
         self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
-            AuthorizingIntegrationOwners(
-                data=data["authorizing_integration_owners"], state=self._state
-            )
+            AuthorizingIntegrationOwners(data=data["authorizing_integration_owners"], state=self._state)
             if "authorizing_integration_owners" in data
             else AuthorizingIntegrationOwners(data={}, state=self._state)
         )
         self.context: InteractionContextType | None = (
-            try_enum(InteractionContextType, data["context"])
-            if "context" in data
-            else None
+            try_enum(InteractionContextType, data["context"]) if "context" in data else None
         )
 
         self.command: ApplicationCommand | None = None
@@ -279,11 +273,7 @@ class Interaction:
 
         # TODO: there's a potential data loss here
         if self.guild_id:
-            guild = (
-                self.guild
-                or self._state._get_guild(self.guild_id)
-                or Object(id=self.guild_id)
-            )
+            guild = self.guild or self._state._get_guild(self.guild_id) or Object(id=self.guild_id)
             try:
                 member = data["member"]  # type: ignore
             except KeyError:
@@ -292,9 +282,7 @@ class Interaction:
                 self._permissions = int(member.get("permissions", 0))
                 if not isinstance(guild, Object):
                     cache_flag = self._state.member_cache_flags.interaction
-                    self.user = guild._get_and_update_member(
-                        member, int(member["user"]["id"]), cache_flag
-                    )
+                    self.user = guild._get_and_update_member(member, int(member["user"]["id"]), cache_flag)
                 else:
                     self.user = Member(state=self._state, data=member, guild=guild)
         else:
@@ -314,27 +302,17 @@ class Interaction:
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
-            if (
-                self.channel is None or getattr(self.channel, "obfuscated", False)
-            ) and factory is not None:
-                self.channel = factory(
-                    state=self._state, data=channel, guild=self.guild
-                )
+            if (self.channel is None or getattr(self.channel, "obfuscated", False)) and factory is not None:
+                self.channel = factory(state=self._state, data=channel, guild=self.guild)
 
         if self.channel is None and self.channel_id is not None:
-            ch_type = (
-                ChannelType.text if self.guild_id is not None else ChannelType.private
-            )
-            self.channel = PartialMessageable(
-                state=self._state, id=self.channel_id, type=ch_type
-            )
+            ch_type = ChannelType.text if self.guild_id is not None else ChannelType.private
+            self.channel = PartialMessageable(state=self._state, id=self.channel_id, type=ch_type)
 
         self._channel_data = channel
 
         if message_data := data.get("message"):
-            self.message = Message(
-                state=self._state, channel=self.channel, data=message_data
-            )
+            self.message = Message(state=self._state, channel=self.channel, data=message_data)
 
         self._message_data = message_data
 
@@ -380,11 +358,7 @@ class Interaction:
         channel = guild and guild._resolve_channel(self.channel_id)
         if channel is None:
             if self.channel_id is not None:
-                type = (
-                    ChannelType.text
-                    if self.guild_id is not None
-                    else ChannelType.private
-                )
+                type = ChannelType.text if self.guild_id is not None else ChannelType.private
                 r = PartialMessageable(state=self._state, id=self.channel_id, type=type)
         else:
             r = channel
@@ -865,13 +839,9 @@ class Interaction:
         if self.data is not None:
             data["data"] = self.data
             if (resolved := self.data.get("resolved")) and self.user is not None:
-                if (users := resolved.get("users")) and (
-                    user := users.get(self.user.id)
-                ):
+                if (users := resolved.get("users")) and (user := users.get(self.user.id)):
                     data["user"] = user
-                if (members := resolved.get("members")) and (
-                    member := members.get(self.user.id)
-                ):
+                if (members := resolved.get("members")) and (member := members.get(self.user.id)):
                     data["member"] = member
 
         if self.guild_id is not None:
@@ -963,10 +933,7 @@ class InteractionResponse:
         defer_type: int = 0
         data: dict[str, Any] | None = None
         parent = self._parent
-        if (
-            parent.type is InteractionType.component
-            or parent.type is InteractionType.modal_submit
-        ):
+        if parent.type is InteractionType.component or parent.type is InteractionType.modal_submit:
             defer_type = (
                 InteractionResponseType.deferred_message_update.value
                 if invisible
@@ -982,17 +949,15 @@ class InteractionResponse:
         if defer_type:
             adapter = async_context.get()
             http = parent._state.http
-            callback_response: InteractionCallbackResponse = (
-                await self._locked_response(
-                    adapter.create_interaction_response(
-                        parent.id,
-                        parent.token,
-                        session=parent._session,
-                        type=defer_type,
-                        data=data,
-                        proxy=http.proxy,
-                        proxy_auth=http.proxy_auth,
-                    )
+            callback_response: InteractionCallbackResponse = await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=defer_type,
+                    data=data,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
                 )
             )
             self._responded = True
@@ -1019,24 +984,20 @@ class InteractionResponse:
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
             http = parent._state.http
-            callback_response: InteractionCallbackResponse = (
-                await self._locked_response(
-                    adapter.create_interaction_response(
-                        parent.id,
-                        parent.token,
-                        session=parent._session,
-                        proxy=http.proxy,
-                        proxy_auth=http.proxy_auth,
-                        type=InteractionResponseType.pong.value,
-                    )
+            callback_response: InteractionCallbackResponse = await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
+                    type=InteractionResponseType.pong.value,
                 )
             )
             self._responded = True
             await self._process_callback_response(callback_response)
 
-    async def _process_callback_response(
-        self, callback_response: InteractionCallbackResponse
-    ):
+    async def _process_callback_response(self, callback_response: InteractionCallbackResponse):
         if callback_response.get("resource", {}).get("message"):
             # TODO: fix later to not raise?
             channel = self._parent.channel
@@ -1163,9 +1124,7 @@ class InteractionResponse:
             payload["components"] = view.to_components()
             if view.is_components_v2():
                 if embeds or content:
-                    raise TypeError(
-                        "cannot send embeds or content with a view using v2 component logic"
-                    )
+                    raise TypeError("cannot send embeds or content with a view using v2 component logic")
                 flags.is_components_v2 = True
 
         if poll is not None:
@@ -1174,14 +1133,10 @@ class InteractionResponse:
         state = self._parent._state
 
         if allowed_mentions is None:
-            payload["allowed_mentions"] = (
-                state.allowed_mentions and state.allowed_mentions.to_dict()
-            )
+            payload["allowed_mentions"] = state.allowed_mentions and state.allowed_mentions.to_dict()
 
         elif state.allowed_mentions is not None:
-            payload["allowed_mentions"] = state.allowed_mentions.merge(
-                allowed_mentions
-            ).to_dict()
+            payload["allowed_mentions"] = state.allowed_mentions.merge(allowed_mentions).to_dict()
         else:
             payload["allowed_mentions"] = allowed_mentions.to_dict()
         if file is not None and files is not None:
@@ -1195,9 +1150,7 @@ class InteractionResponse:
 
         if files is not None:
             if len(files) > 10:
-                raise InvalidArgument(
-                    "files parameter must be a list of up to 10 elements"
-                )
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
@@ -1210,18 +1163,16 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            callback_response: InteractionCallbackResponse = (
-                await self._locked_response(
-                    adapter.create_interaction_response(
-                        parent.id,
-                        parent.token,
-                        session=parent._session,
-                        type=InteractionResponseType.channel_message.value,
-                        proxy=http.proxy,
-                        proxy_auth=http.proxy_auth,
-                        data=payload,
-                        files=files,
-                    )
+            callback_response: InteractionCallbackResponse = await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.channel_message.value,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
+                    data=payload,
+                    files=files,
                 )
             )
         finally:
@@ -1341,9 +1292,7 @@ class InteractionResponse:
                 is_cv2 = True
 
         if file is not MISSING and files is not MISSING:
-            raise InvalidArgument(
-                "cannot pass both file and files parameter to edit_message()"
-            )
+            raise InvalidArgument("cannot pass both file and files parameter to edit_message()")
 
         if file is not MISSING:
             if not isinstance(file, File):
@@ -1356,9 +1305,7 @@ class InteractionResponse:
 
         if files is not MISSING:
             if len(files) > 10:
-                raise InvalidArgument(
-                    "files parameter must be a list of up to 10 elements"
-                )
+                raise InvalidArgument("files parameter must be a list of up to 10 elements")
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
             if "attachments" not in payload:
@@ -1374,32 +1321,26 @@ class InteractionResponse:
             payload["flags"] = flags.value
 
         if allowed_mentions is None:
-            payload["allowed_mentions"] = (
-                state.allowed_mentions and state.allowed_mentions.to_dict()
-            )
+            payload["allowed_mentions"] = state.allowed_mentions and state.allowed_mentions.to_dict()
 
         elif state.allowed_mentions is not None:
-            payload["allowed_mentions"] = state.allowed_mentions.merge(
-                allowed_mentions
-            ).to_dict()
+            payload["allowed_mentions"] = state.allowed_mentions.merge(allowed_mentions).to_dict()
         else:
             payload["allowed_mentions"] = allowed_mentions.to_dict()
 
         adapter = async_context.get()
         http = parent._state.http
         try:
-            callback_response: InteractionCallbackResponse = (
-                await self._locked_response(
-                    adapter.create_interaction_response(
-                        parent.id,
-                        parent.token,
-                        session=parent._session,
-                        type=InteractionResponseType.message_update.value,
-                        proxy=http.proxy,
-                        proxy_auth=http.proxy_auth,
-                        data=payload,
-                        files=files,
-                    )
+            callback_response: InteractionCallbackResponse = await self._locked_response(
+                adapter.create_interaction_response(
+                    parent.id,
+                    parent.token,
+                    session=parent._session,
+                    type=InteractionResponseType.message_update.value,
+                    proxy=http.proxy,
+                    proxy_auth=http.proxy_auth,
+                    data=payload,
+                    files=files,
                 )
             )
         finally:
@@ -1816,25 +1757,17 @@ class InteractionMetadata:
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
         self.user: User = User(state=state, data=data["user"])
-        self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
-            AuthorizingIntegrationOwners(data["authorizing_integration_owners"], state)
+        self.authorizing_integration_owners: AuthorizingIntegrationOwners = AuthorizingIntegrationOwners(
+            data["authorizing_integration_owners"], state
         )
-        self.original_response_message_id: int | None = utils._get_as_snowflake(
-            data, "original_response_message_id"
-        )
-        self.interacted_message_id: int | None = utils._get_as_snowflake(
-            data, "interacted_message_id"
-        )
+        self.original_response_message_id: int | None = utils._get_as_snowflake(data, "original_response_message_id")
+        self.interacted_message_id: int | None = utils._get_as_snowflake(data, "interacted_message_id")
         self.triggering_interaction_metadata: InteractionMetadata | None = None
         if tim := data.get("triggering_interaction_metadata"):
-            self.triggering_interaction_metadata = InteractionMetadata(
-                data=tim, state=state
-            )
+            self.triggering_interaction_metadata = InteractionMetadata(data=tim, state=state)
 
     def __repr__(self):
-        return (
-            f"<InteractionMetadata id={self.id} type={self.type!r} user={self.user!r}>"
-        )
+        return f"<InteractionMetadata id={self.id} type={self.type!r} user={self.user!r}>"
 
     @utils.cached_slot_property("_cs_original_response_message")
     def original_response_message(self) -> Message | None:
@@ -1876,9 +1809,7 @@ class AuthorizingIntegrationOwners:
         self._state = state
         # keys are Application Integration Types as strings
         self.user_id = int(uid) if (uid := data.get("1")) is not None else None
-        self.guild_id = (
-            int(guild_id) if (guild_id := data.get("0", None)) is not None else None
-        )
+        self.guild_id = int(guild_id) if (guild_id := data.get("0", None)) is not None else None
 
     def __repr__(self):
         return f"<AuthorizingIntegrationOwners user_id={self.user_id} guild_id={self.guild_id}>"
@@ -1919,12 +1850,8 @@ class InteractionCallback:
     """
 
     def __init__(self, data: InteractionCallbackPayload):
-        self._response_message_loading: bool = data.get(
-            "response_message_loading", False
-        )
-        self._response_message_ephemeral: bool = data.get(
-            "response_message_ephemeral", False
-        )
+        self._response_message_loading: bool = data.get("response_message_loading", False)
+        self._response_message_ephemeral: bool = data.get("response_message_ephemeral", False)
 
     def __repr__(self):
         return (

@@ -83,9 +83,7 @@ class FileUpload(ModalItem):
         if max_values and (max_values < 1 or max_values > 10):
             raise ValueError("max_values must be between 1 and 10")
         if custom_id is not None and not isinstance(custom_id, str):
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")
@@ -187,9 +185,7 @@ class FileUpload(ModalItem):
         ]
 
     @classmethod
-    def from_component(
-        cls: type[FileUpload], component: FileUploadComponent
-    ) -> FileUpload:
+    def from_component(cls: type[FileUpload], component: FileUploadComponent) -> FileUpload:
 
         return cls(
             custom_id=component.custom_id,

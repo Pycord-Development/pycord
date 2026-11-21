@@ -32,9 +32,7 @@ from typing_extensions import override
 from .asset import Asset
 from .emoji import PartialEmoji, _EmojiTag
 from .mixins import Hashable
-from .types.channel import (
-    VoiceChannelEffectSendEvent as VoiceChannelEffectSendEventPayload,
-)
+from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSendEventPayload
 from .types.soundboard import SoundboardSound as SoundboardSoundPayload
 from .utils import cached_slot_property
 
@@ -76,38 +74,26 @@ class PartialSoundboardSound(Hashable):
         self._state = state
         self._from_data(data)
 
-    def _from_data(
-        self, data: SoundboardSoundPayload | VoiceChannelEffectSendEventPayload
-    ) -> None:
+    def _from_data(self, data: SoundboardSoundPayload | VoiceChannelEffectSendEventPayload) -> None:
         self.id = int(data.get("sound_id", 0))
-        self.volume = (
-            float(data.get("volume", 0) or data.get("sound_volume", 0)) or None
-        )
+        self.volume = float(data.get("volume", 0) or data.get("sound_volume", 0)) or None
         self.emoji = None
-        if raw_emoji := data.get(
-            "emoji"
-        ):  # From gateway event (VoiceChannelEffectSendEventPayload)
+        if raw_emoji := data.get("emoji"):  # From gateway event (VoiceChannelEffectSendEventPayload)
             self.emoji = PartialEmoji.from_dict(raw_emoji)
-        elif data.get("emoji_name") or data.get(
-            "emoji_id"
-        ):  # From HTTP response (SoundboardSoundPayload)
+        elif data.get("emoji_name") or data.get("emoji_id"):  # From HTTP response (SoundboardSoundPayload)
             self.emoji = PartialEmoji(
                 name=data.get("emoji_name"),
                 id=int(data.get("emoji_id", 0) or 0) or None,
             )
 
     @override
-    def __eq__(
-        self, other: PartialSoundboardSound
-    ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def __eq__(self, other: PartialSoundboardSound) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         if isinstance(other, __class__):
             return self.id == other.id
         return NotImplemented
 
     @override
-    def __ne__(
-        self, other: PartialSoundboardSound
-    ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def __ne__(self, other: PartialSoundboardSound) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         return not self.__eq__(other)
 
     @property
@@ -162,9 +148,7 @@ class SoundboardSound(PartialSoundboardSound):
         super().__init__(data, state, http)
 
     @override
-    def _from_data(
-        self, data: SoundboardSoundPayload
-    ) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def _from_data(self, data: SoundboardSoundPayload) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
         super()._from_data(data)
         self.name = data["name"]
         self.available: bool = data["available"]
@@ -178,9 +162,7 @@ class SoundboardSound(PartialSoundboardSound):
         return self._state._get_guild(self.guild_id) if self.guild_id else None
 
     @override
-    def __eq__(
-        self, other: SoundboardSound
-    ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def __eq__(self, other: SoundboardSound) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         return isinstance(other, SoundboardSound) and self.__dict__ == other.__dict__
 
     @property
@@ -242,9 +224,7 @@ class SoundboardSound(PartialSoundboardSound):
             else:
                 payload["emoji_id"] = partial_emoji.id
 
-        return self._http.edit_guild_sound(
-            self.guild_id, self.id, reason=reason, **payload
-        )
+        return self._http.edit_guild_sound(self.guild_id, self.id, reason=reason, **payload)
 
     def delete(self, *, reason: str | None = None) -> Coroutine[Any, Any, None]:
         """Deletes the sound.

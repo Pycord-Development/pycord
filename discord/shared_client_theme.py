@@ -90,9 +90,7 @@ class SharedClientTheme:
         if not 0 <= base_mix <= 100:
             raise ValueError("base_mix must be between 0 and 100")
 
-        if base_theme is not None and not isinstance(
-            base_theme, SharedClientThemeBaseType
-        ):
+        if base_theme is not None and not isinstance(base_theme, SharedClientThemeBaseType):
             raise TypeError("base_theme must be a SharedClientThemeBaseType or None")
 
         self.gradient_angle = gradient_angle
@@ -127,8 +125,6 @@ class SharedClientTheme:
             gradient_angle=data["gradient_angle"],
             base_mix=data["base_mix"],
             base_theme=(
-                try_enum(SharedClientThemeBaseType, base_theme_value)
-                if base_theme_value is not None
-                else None
+                try_enum(SharedClientThemeBaseType, base_theme_value) if base_theme_value is not None else None
             ),
         )

@@ -229,12 +229,8 @@ class Entitlement(Hashable):
         self.user_id: int | MISSING = _get_as_snowflake(data, "user_id") or MISSING
         self.type: EntitlementType = try_enum(EntitlementType, data["type"])
         self.deleted: bool = data["deleted"]
-        self.starts_at: datetime | MISSING = (
-            parse_time(data.get("starts_at")) or MISSING
-        )
-        self.ends_at: datetime | MISSING | None = (
-            parse_time(ea) if (ea := data.get("ends_at")) is not None else MISSING
-        )
+        self.starts_at: datetime | MISSING = parse_time(data.get("starts_at")) or MISSING
+        self.ends_at: datetime | MISSING | None = parse_time(ea) if (ea := data.get("ends_at")) is not None else MISSING
         self.guild_id: int | MISSING = _get_as_snowflake(data, "guild_id") or MISSING
         self.consumed: bool = data.get("consumed", False)
 
@@ -332,14 +328,10 @@ class Subscription(Hashable):
         self.current_period_end: datetime = parse_time(data["current_period_end"])
         self.status: SubscriptionStatus = try_enum(SubscriptionStatus, data["status"])
         self.canceled_at: datetime | None = parse_time(data.get("canceled_at"))
-        self.country: str | None = data.get(
-            "country"
-        )  # Not documented, it is only available with oauth2, not bots
+        self.country: str | None = data.get("country")  # Not documented, it is only available with oauth2, not bots
 
     def __repr__(self) -> str:
-        return (
-            f"<Subscription id={self.id} user_id={self.user_id} status={self.status}>"
-        )
+        return f"<Subscription id={self.id} user_id={self.user_id} status={self.status}>"
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and other.id == self.id

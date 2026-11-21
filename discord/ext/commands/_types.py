@@ -39,15 +39,9 @@ Coro = Coroutine[Any, Any, T]
 MaybeCoro = T | Coro[T]
 CoroFunc = Callable[..., Coro[Any]]
 
-Check = (
-    Callable[["Cog", "Context[Any]"], MaybeCoro[bool]]
-    | Callable[["Context[Any]"], MaybeCoro[bool]]
-)
-Hook = (
-    Callable[["Cog", "Context[Any]"], Coro[Any]] | Callable[["Context[Any]"], Coro[Any]]
-)
+Check = Callable[["Cog", "Context[Any]"], MaybeCoro[bool]] | Callable[["Context[Any]"], MaybeCoro[bool]]
+Hook = Callable[["Cog", "Context[Any]"], Coro[Any]] | Callable[["Context[Any]"], Coro[Any]]
 
 Error = (
-    Callable[["Cog", "Context[Any]", "CommandError"], Coro[Any]]
-    | Callable[["Context[Any]", "CommandError"], Coro[Any]]
+    Callable[["Cog", "Context[Any]", "CommandError"], Coro[Any]] | Callable[["Context[Any]", "CommandError"], Coro[Any]]
 )

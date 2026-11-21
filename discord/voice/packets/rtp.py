@@ -243,9 +243,7 @@ class SenderReportPacket(RTCPPacket):
     _report_fmt = struct.Struct(">IB3x4I")
     _24bit_int_fmt = struct.Struct(">4xI")
     _info = namedtuple("RRSenderInfo", "ntp_ts rtp_ts packet_count octet_count")
-    _report = namedtuple(
-        "RReport", "ssrc perc_loss total_lost last_seq jitter lsr dlsr"
-    )
+    _report = namedtuple("RReport", "ssrc perc_loss total_lost last_seq jitter lsr dlsr")
     type = 200
 
     if TYPE_CHECKING:
@@ -282,9 +280,7 @@ class SenderReportPacket(RTCPPacket):
 class ReceiverReportPacket(RTCPPacket):
     _report_fmt = struct.Struct(">IB3x4I")
     _24bit_int_fmt = struct.Struct(">4xI")
-    _report = namedtuple(
-        "RReport", "ssrc perc_loss total_loss last_seq jitter lsr dlsr"
-    )
+    _report = namedtuple("RReport", "ssrc perc_loss total_loss last_seq jitter lsr dlsr")
     type = 201
 
     reports: tuple[_report, ...]

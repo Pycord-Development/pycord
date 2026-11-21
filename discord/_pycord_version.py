@@ -85,37 +85,27 @@ class VersionInfo(NamedTuple):
         _advanced = value
 
     @property
-    @deprecated(
-        "VersionInfo.release_level is deprecated since version 2.4, consider using releaselevel instead."
-    )
+    @deprecated("VersionInfo.release_level is deprecated since version 2.4, consider using releaselevel instead.")
     def release_level(self) -> Literal["alpha", "beta", "candidate", "final"]:
         return self.releaselevel
 
     @property
-    @deprecated(
-        'VersionInfo.serial is deprecated since version 2.4, consider using .advanced["serial"] instead.'
-    )
+    @deprecated('VersionInfo.serial is deprecated since version 2.4, consider using .advanced["serial"] instead.')
     def serial(self) -> int:
         return self.advanced["serial"]
 
     @property
-    @deprecated(
-        'VersionInfo.build is deprecated since version 2.4, consider using .advanced["build"] instead.'
-    )
+    @deprecated('VersionInfo.build is deprecated since version 2.4, consider using .advanced["build"] instead.')
     def build(self) -> int | None:
         return self.advanced["build"]
 
     @property
-    @deprecated(
-        'VersionInfo.commit is deprecated since version 2.4, consider using .advanced["commit"] instead.'
-    )
+    @deprecated('VersionInfo.commit is deprecated since version 2.4, consider using .advanced["commit"] instead.')
     def commit(self) -> str | None:
         return self.advanced["commit"]
 
     @property
-    @deprecated(
-        'VersionInfo.date is deprecated since version 2.4, consider using .advanced["date"] instead.'
-    )
+    @deprecated('VersionInfo.date is deprecated since version 2.4, consider using .advanced["date"] instead.')
     def date(self) -> datetime.date | None:
         return self.advanced["date"]
 

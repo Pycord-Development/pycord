@@ -275,9 +275,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
         if channel_types and select_type is not ComponentType.channel_select:
-            raise InvalidArgument(
-                "channel_types parameter is only valid for channel selects"
-            )
+            raise InvalidArgument("channel_types parameter is only valid for channel selects")
         if required and min_values < 1:
             raise ValueError("min_values must be greater than 0 when required=True")
         super().__init__()
@@ -290,9 +288,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if placeholder and len(placeholder) > 150:
             raise ValueError("placeholder must be 150 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
@@ -334,9 +330,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             max_values=max_values if max_values is not None else self.max_values,
             disabled=disabled if disabled is not None else self.disabled,
             options=options if options is not None else self.options,
-            channel_types=(
-                channel_types if channel_types is not None else self.channel_types
-            ),
+            channel_types=(channel_types if channel_types is not None else self.channel_types),
             id=id or self.id,
             required=required if required is not None else self.required,
             default_values=default_values or self.default_values or [],
@@ -367,9 +361,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
                 try:
                     valid_types = valid_default_types[select_type]
                 except KeyError:
-                    raise TypeError(
-                        f"select default values are not allowed for this select type ({select_type.name})"
-                    )
+                    raise TypeError(f"select default values are not allowed for this select type ({select_type.name})")
 
                 if dv.type not in valid_types:
                     raise TypeError(
@@ -491,9 +483,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         return self.underlying.default_values
 
     @default_values.setter
-    def default_values(
-        self, values: Sequence[SelectDefaultValue | Snowflake] | None
-    ) -> None:
+    def default_values(self, values: Sequence[SelectDefaultValue | Snowflake] | None) -> None:
         default_values = self._handle_default_values(values, self.type)
         self.underlying.default_values = default_values
 
@@ -527,9 +517,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             The number of default select values exceeds 25.
         """
         if type is MISSING and self.type is ComponentType.mentionable_select:
-            raise TypeError(
-                "type is required when select is of type mentionable_select"
-            )
+            raise TypeError("type is required when select is of type mentionable_select")
 
         types = {
             ComponentType.user_select: SelectDefaultValueType.user,
@@ -600,9 +588,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             value = SelectDefaultValue._handle_model(value)
 
         if not isinstance(value, SelectDefaultValue):
-            raise TypeError(
-                f"expected a SelectDefaultValue object, got {value.__class__.__name__}"
-            )
+            raise TypeError(f"expected a SelectDefaultValue object, got {value.__class__.__name__}")
 
         self.underlying.default_values.append(value)
         return self
@@ -703,17 +689,10 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             for channel_id, _data in resolved_data.get("channels", {}).items():
                 if channel_id not in selected_values:
                     continue
-                if (
-                    int(channel_id) in guild._channels
-                    or int(channel_id) in guild._threads
-                ):
+                if int(channel_id) in guild._channels or int(channel_id) in guild._threads:
                     result = guild.get_channel_or_thread(int(channel_id))
                     _data["_invoke_flag"] = True
-                    (
-                        result._update(_data)
-                        if isinstance(result, Thread)
-                        else result._update(guild, _data)
-                    )
+                    (result._update(_data) if isinstance(result, Thread) else result._update(guild, _data))
                 else:
                     # NOTE:
                     # This is a fallback in case the channel/thread is not found in the
@@ -740,9 +719,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
                         member = dict(_member_data)
                         member["user"] = _data
                         _data = member
-                        result = guild._get_and_update_member(
-                            _data, int(_id), cache_flag
-                        )
+                        result = guild._get_and_update_member(_data, int(_id), cache_flag)
                     else:
                         result = User(state=state, data=_data)
                     resolved.append(result)
@@ -807,9 +784,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
-    def refresh_from_modal(
-        self, interaction: Interaction | dict, data: SelectMenuPayload
-    ) -> None:
+    def refresh_from_modal(self, interaction: Interaction | dict, data: SelectMenuPayload) -> None:
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
@@ -831,9 +806,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         )  # type: ignore
 
     def is_dispatchable(self) -> bool:
-        return (bool(self.view._store) if self.view else True) and (
-            bool(self.modal._store) if self.modal else True
-        )
+        return (bool(self.view._store) if self.view else True) and (bool(self.modal._store) if self.modal else True)
 
     def is_storable(self) -> bool:
         return self.is_dispatchable()
@@ -871,15 +844,11 @@ if TYPE_CHECKING:
     parameter as a :attr:`discord.ComponentType.channel_select`.
     """
 else:
-    StringSelect: Select[V, str] = partial(
-        Select, select_type=ComponentType.string_select
-    )
+    StringSelect: Select[V, str] = partial(Select, select_type=ComponentType.string_select)
     """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.string_select`
     as its default ``select_type``.
     """
-    UserSelect: Select[V, User | Member] = partial(
-        Select, select_type=ComponentType.user_select
-    )
+    UserSelect: Select[V, User | Member] = partial(Select, select_type=ComponentType.user_select)
     """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.user_select`
     as its default ``select_type``.
     """
@@ -887,15 +856,11 @@ else:
     """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.role_select`
     as its default ``select_type``.
     """
-    MentionableSelect: Select[V, Role | User | Member] = partial(
-        Select, select_type=ComponentType.mentionable_select
-    )
+    MentionableSelect: Select[V, Role | User | Member] = partial(Select, select_type=ComponentType.mentionable_select)
     """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.mentionable_select`
     as its default ``select_type``.
     """
-    ChannelSelect: Select[V, GuildChannel | Thread] = partial(
-        Select, select_type=ComponentType.channel_select
-    )
+    ChannelSelect: Select[V, GuildChannel | Thread] = partial(Select, select_type=ComponentType.channel_select)
     """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.channel_select`
     as its default ``select_type``.
     """
@@ -1005,9 +970,7 @@ def select(
         .. versionadded:: 2.7
     """
     if select_type not in _select_types:
-        raise ValueError(
-            "select_type must be one of " + ", ".join([i.name for i in _select_types])
-        )
+        raise ValueError("select_type must be one of " + ", ".join([i.name for i in _select_types]))
 
     if options is not MISSING and select_type not in (
         ComponentType.select,
@@ -1019,9 +982,7 @@ def select(
         raise TypeError("channel_types may only be specified for channel selects")
 
     if default_values is not None and select_type is ComponentType.string_select:
-        raise TypeError(
-            "default_values may only be specified for selects other than string selects"
-        )
+        raise TypeError("default_values may only be specified for selects other than string selects")
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
         if not inspect.iscoroutinefunction(func):

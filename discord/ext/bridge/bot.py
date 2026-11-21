@@ -77,9 +77,7 @@ class BotBase(ABC):
             if isinstance(cmd, BridgeCommandGroup):
                 yield from cmd.walk_commands()
 
-    async def get_application_context(
-        self, interaction: Interaction, cls=None
-    ) -> BridgeApplicationContext:
+    async def get_application_context(self, interaction: Interaction, cls=None) -> BridgeApplicationContext:
         cls = cls if cls is not None else BridgeApplicationContext
         # Ignore the type hinting error here. BridgeApplicationContext is a subclass of ApplicationContext, and since
         # we gave it cls, it will be used instead.
@@ -156,9 +154,7 @@ class BotBase(ABC):
             if isinstance(ctx.command, BridgeExtCommand):
                 self.dispatch("bridge_command_error", ctx, exc)
 
-    async def invoke_application_command(
-        self, ctx: ApplicationContext | BridgeApplicationContext
-    ) -> None:
+    async def invoke_application_command(self, ctx: ApplicationContext | BridgeApplicationContext) -> None:
         """|coro|
 
         Invokes the application command given under the invocation

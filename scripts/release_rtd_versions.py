@@ -46,9 +46,7 @@ def sync_versions(project: str, token: str) -> None:
     )
     with urllib.request.urlopen(req) as resp:  # nosec - not applicable
         if resp.status >= 300:
-            raise RuntimeError(
-                f"Sync versions failed for {project} with status {resp.status}"
-            )
+            raise RuntimeError(f"Sync versions failed for {project} with status {resp.status}")
 
 
 def activate_version(project: str, docs_version: str, hidden: bool, token: str) -> None:
@@ -65,15 +63,11 @@ def activate_version(project: str, docs_version: str, hidden: bool, token: str) 
     )
     with urllib.request.urlopen(req) as resp:  # nosec - not applicable
         if resp.status >= 300:
-            raise RuntimeError(
-                f"Activating version {docs_version} for {project} failed with status {resp.status}"
-            )
+            raise RuntimeError(f"Activating version {docs_version} for {project} failed with status {resp.status}")
 
 
 def determine_docs_version(version: str) -> tuple[str, bool]:
-    match = re.match(
-        r"^(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?P<suffix>rc\d+)?$", version
-    )
+    match = re.match(r"^(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(?P<suffix>rc\d+)?$", version)
     if not match:
         raise ValueError(f"Version '{version}' is not in the expected format")
     major = match.group("major")
@@ -88,19 +82,11 @@ def determine_docs_version(version: str) -> tuple[str, bool]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Manage Read the Docs version activation."
-    )
-    parser.add_argument(
-        "--project", default="pycord", help="RTD project slug (default: pycord)"
-    )
-    parser.add_argument(
-        "--version", required=True, help="Release version (e.g., 2.6.0 or 2.6.0rc1)"
-    )
+    parser = argparse.ArgumentParser(description="Manage Read the Docs version activation.")
+    parser.add_argument("--project", default="pycord", help="RTD project slug (default: pycord)")
+    parser.add_argument("--version", required=True, help="Release version (e.g., 2.6.0 or 2.6.0rc1)")
     parser.add_argument("--token", help="RTD token (overrides READTHEDOCS_TOKEN env)")
-    parser.add_argument(
-        "--sync", action="store_true", help="Sync versions before activating"
-    )
+    parser.add_argument("--sync", action="store_true", help="Sync versions before activating")
     parser.add_argument(
         "--dry-run",
         action="store_true",

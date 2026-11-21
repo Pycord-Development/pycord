@@ -154,19 +154,11 @@ class RoleTags:
     def __init__(self, data: RoleTagPayload):
         self._data: RoleTagPayload = data
         self.integration_id: int | None = _parse_tag_int(data, "integration_id")
-        self.subscription_listing_id: int | None = _parse_tag_int(
-            data, "subscription_listing_id"
-        )
+        self.subscription_listing_id: int | None = _parse_tag_int(data, "subscription_listing_id")
         self.bot_id: int | None = _parse_tag_int(data, "bot_id")
-        self._guild_connections: bool | None = _parse_tag_bool(
-            data, "guild_connections"
-        )
-        self._premium_subscriber: bool | None = _parse_tag_bool(
-            data, "premium_subscriber"
-        )
-        self._available_for_purchase: bool | None = _parse_tag_bool(
-            data, "available_for_purchase"
-        )
+        self._guild_connections: bool | None = _parse_tag_bool(data, "guild_connections")
+        self._premium_subscriber: bool | None = _parse_tag_bool(data, "premium_subscriber")
+        self._available_for_purchase: bool | None = _parse_tag_bool(data, "available_for_purchase")
         # here discord did things in a normal and logical way for once so we don't have to use _parse_tag_bool
         self._is_guild_product_role: bool | None = data.get("is_guild_product_role")
 
@@ -347,12 +339,8 @@ class RoleColours:
     @classmethod
     def _from_payload(cls, data: RoleColoursPayload) -> Self:
         primary = Colour(data["primary_color"])
-        secondary = (
-            Colour(data["secondary_color"]) if data.get("secondary_color") else None
-        )
-        tertiary = (
-            Colour(data["tertiary_color"]) if data.get("tertiary_color") else None
-        )
+        secondary = Colour(data["secondary_color"]) if data.get("secondary_color") else None
+        tertiary = Colour(data["tertiary_color"]) if data.get("tertiary_color") else None
         return cls(primary, secondary, tertiary)
 
     def _to_dict(self) -> RoleColoursPayload:
@@ -395,11 +383,7 @@ class RoleColours:
         )
 
     def __repr__(self) -> str:
-        return (
-            f"<RoleColours primary={self.primary!r} "
-            f"secondary={self.secondary!r} "
-            f"tertiary={self.tertiary!r}>"
-        )
+        return f"<RoleColours primary={self.primary!r} " f"secondary={self.secondary!r} " f"tertiary={self.tertiary!r}>"
 
 
 class Role(Hashable):
@@ -577,9 +561,7 @@ class Role(Hashable):
         """Checks if the role is the default role."""
         return self.guild.id == self.id
 
-    @deprecated(
-        "Role.is_bot_managed is deprecated since version 2.8, consider using Role.type instead."
-    )
+    @deprecated("Role.is_bot_managed is deprecated since version 2.8, consider using Role.type instead.")
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot.
 
@@ -590,9 +572,7 @@ class Role(Hashable):
         """
         return self.type is RoleType.APPLICATION
 
-    @deprecated(
-        "Role.is_premium_subscriber is deprecated since version 2.8, consider using Role.type instead."
-    )
+    @deprecated("Role.is_premium_subscriber is deprecated since version 2.8, consider using Role.type instead.")
     def is_premium_subscriber(self) -> bool:
         """Whether the role is the premium subscriber, AKA "boost", role for the guild.
 
@@ -603,9 +583,7 @@ class Role(Hashable):
         """
         return self.type is RoleType.BOOSTER
 
-    @deprecated(
-        "Role.is_integration is deprecated since version 2.8, consider using Role.type instead."
-    )
+    @deprecated("Role.is_integration is deprecated since version 2.8, consider using Role.type instead.")
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
@@ -637,16 +615,9 @@ class Role(Hashable):
             Added check for :attr:`~Permissions.manage_roles` permission
         """
         me = self.guild.me
-        return (
-            not self.is_default()
-            and not self.managed
-            and me.guild_permissions.manage_roles
-            and me.top_role > self
-        )
+        return not self.is_default() and not self.managed and me.guild_permissions.manage_roles and me.top_role > self
 
-    @deprecated(
-        "Role.is_available_for_purchase is deprecated since version 2.8, consider using Role.type instead."
-    )
+    @deprecated("Role.is_available_for_purchase is deprecated since version 2.8, consider using Role.type instead.")
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
 
@@ -661,9 +632,7 @@ class Role(Hashable):
         """
         return self.type is RoleType.PREMIUM_SUBSCRIPTION_TIER
 
-    @deprecated(
-        "Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead."
-    )
+    @deprecated("Role.is_guild_connections_role is deprecated since version 2.8, consider using Role.type instead.")
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
@@ -680,9 +649,7 @@ class Role(Hashable):
         return Permissions(self._permissions)
 
     @property
-    @deprecated(
-        "Role.colour is deprecated since version 2.7, consider using colours.primary instead."
-    )
+    @deprecated("Role.colour is deprecated since version 2.7, consider using colours.primary instead.")
     def colour(self) -> Colour:
         """Returns the role colour. Equivalent to :attr:`colours.primary`.
         An alias exists under ``color``.
@@ -692,9 +659,7 @@ class Role(Hashable):
         return self.colours.primary
 
     @property
-    @deprecated(
-        "Role.color is deprecated since version 2.7, consider using colors.primary instead."
-    )
+    @deprecated("Role.color is deprecated since version 2.7, consider using colors.primary instead.")
     def color(self) -> Colour:
         """Returns the role's primary color. Equivalent to :attr:`colors.primary`.
         An alias exists under ``colour``.
@@ -764,23 +729,15 @@ class Role(Hashable):
 
         http = self._state.http
 
-        change_range = range(
-            min(self.position, position), max(self.position, position) + 1
-        )
-        roles = [
-            r.id
-            for r in self.guild.roles[1:]
-            if r.position in change_range and r.id != self.id
-        ]
+        change_range = range(min(self.position, position), max(self.position, position) + 1)
+        roles = [r.id for r in self.guild.roles[1:] if r.position in change_range and r.id != self.id]
 
         if self.position > position:
             roles.insert(0, self.id)
         else:
             roles.append(self.id)
 
-        payload: list[RolePositionUpdate] = [
-            {"id": z[0], "position": z[1]} for z in zip(roles, change_range)
-        ]
+        payload: list[RolePositionUpdate] = [{"id": z[0], "position": z[1]} for z in zip(roles, change_range)]
         await http.move_role_position(self.guild.id, payload, reason=reason)
 
     async def edit(
@@ -906,9 +863,7 @@ class Role(Hashable):
             payload["unicode_emoji"] = unicode_emoji
             payload["icon"] = None
 
-        data = await self._state.http.edit_role(
-            self.guild.id, self.id, reason=reason, **payload
-        )
+        data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
         return Role(guild=self.guild, data=data, state=self._state)
 
     async def delete(self, *, reason: str | None = None) -> None:

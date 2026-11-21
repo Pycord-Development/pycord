@@ -103,8 +103,8 @@ class Reaction:
         emoji: PartialEmoji | GuildEmoji | AppEmoji | str | None = None,
     ):
         self.message: Message = message
-        self.emoji: PartialEmoji | GuildEmoji | AppEmoji | str = (
-            emoji or message._state.get_reaction_emoji(data["emoji"])
+        self.emoji: PartialEmoji | GuildEmoji | AppEmoji | str = emoji or message._state.get_reaction_emoji(
+            data["emoji"]
         )
         self.count: int = data.get("count", 1)
         self._count_details: ReactionCountDetailsPayload = data.get("count_details", {})

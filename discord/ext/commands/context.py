@@ -151,9 +151,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         self.current_parameter: inspect.Parameter | None = current_parameter
         self._state: ConnectionState = self.message._state
 
-    async def invoke(
-        self, command: Command[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs
-    ) -> T:
+    async def invoke(self, command: Command[CogT, P, T], /, *args: P.args, **kwargs: P.kwargs) -> T:
         r"""|coro|
 
         Calls a command with the arguments given.
@@ -308,11 +306,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         message contexts, or when :meth:`Intents.guilds` is absent.
         """
         # bot.user will never be None at this point.
-        return (
-            self.guild.me
-            if self.guild is not None and self.guild.me is not None
-            else self.bot.user
-        )  # type: ignore
+        return self.guild.me if self.guild is not None and self.guild.me is not None else self.bot.user  # type: ignore
 
     @property
     def voice_client(self) -> VoiceProtocol | None:
@@ -406,7 +400,5 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         return await self.message.reply(content, **kwargs)
 
     @discord.utils.copy_doc(Message.forward_to)
-    async def forward_to(
-        self, channel: discord.abc.Messageable, **kwargs: Any
-    ) -> Message:
+    async def forward_to(self, channel: discord.abc.Messageable, **kwargs: Any) -> Message:
         return await self.message.forward_to(channel, **kwargs)
