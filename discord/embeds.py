@@ -560,7 +560,7 @@ class Embed:
 
     @property
     def color(self) -> Colour | None:
-        return self.color
+        return self.colour
 
     @color.setter
     def color(
