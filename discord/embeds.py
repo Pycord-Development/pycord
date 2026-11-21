@@ -558,7 +558,15 @@ class Embed:
     ) -> None:
         self._colour = Colour.resolve_value(value)
 
-    color: property = colour
+    @property
+    def color(self) -> Colour | None:
+        return self.color
+
+    @color.setter
+    def color(
+        self, value: int | Colour | None  # pyright: ignore[reportPropertyTypeMismatch]
+    ) -> None:
+        self.colour = value
 
     @property
     def timestamp(self) -> datetime.datetime | None:

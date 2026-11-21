@@ -118,11 +118,11 @@ def _full_embed() -> discord.Embed:
     return embed
 
 
-def _fields(embed: discord.Embed) -> list[tuple]:
+def _fields(embed: discord.Embed) -> list[tuple[str, str, bool]]:
     return [(f.name, f.value, f.inline) for f in embed.fields]
 
 
-def _unset(obj, attr: str) -> bool:
+def _unset(obj: object, attr: str) -> bool:
     return obj is None or getattr(obj, attr, None) is None
 
 
@@ -139,13 +139,16 @@ def test_constructor_scalars():
     assert isinstance(embed.colour, discord.Colour)
     assert embed.colour.value == COLOUR
     assert embed.color == embed.colour
+    assert embed.color is not None
     assert embed.timestamp == TIMESTAMP
     assert embed.type == "rich"
     assert embed
 
 
 def test_constructor_color_alias():
-    assert discord.Embed(color=0x123456).colour.value == 0x123456
+    embed = discord.Embed(color=0x123456)
+    assert embed.colour is not None
+    assert embed.colour.value == 0x123456
 
 
 def test_constructor_object_kwargs():
@@ -157,11 +160,15 @@ def test_constructor_object_kwargs():
         thumbnail=THUMBNAIL_URL,
     )
     assert _fields(embed) == [("a", "1", False)]
+    assert embed.author is not None
     assert (embed.author.name, embed.author.url, embed.author.icon_url) == (
         "A",
         AUTHOR_URL,
         AUTHOR_ICON,
     )
+    assert embed.footer is not None
+    assert embed.image is not None
+    assert embed.thumbnail is not None
     assert (embed.footer.text, embed.footer.icon_url) == ("F", FOOTER_ICON)
     assert embed.image.url == IMAGE_URL
     assert embed.thumbnail.url == THUMBNAIL_URL
@@ -205,7 +212,8 @@ def test_scalar_setters():
 def test_colour_setter(value: discord.Colour | int, expected: int):
     embed = discord.Embed()
     embed.colour = value
-    assert embed.colour.value == expected
+    assert embed.colour is not None
+    assert embed.colour.value == expected  # pyright: ignore[reportOptionalMemberAccess]
     assert embed.color == embed.colour
 
 
@@ -214,7 +222,7 @@ def test_colour_setter_none_and_invalid():
     embed.colour = None
     assert embed.colour is None
     with pytest.raises(TypeError):
-        embed.colour = "red"  # type: ignore[assignment]
+        embed.colour = "red"  # pyright: ignore[reportAttributeAccessIssue]
 
 
 def test_timestamp_setter():
@@ -229,7 +237,7 @@ def test_timestamp_setter():
     assert embed.timestamp is None
 
     with pytest.raises(TypeError):
-        embed.timestamp = "2026-01-01"  # type: ignore[assignment]
+        embed.timestamp = "2026-01-01"  # pyright: ignore[reportAttributeAccessIssue]
 
 
 # --- author / footer / media -----------------------------------------------------------
@@ -238,6 +246,7 @@ def test_timestamp_setter():
 def test_author():
     embed = discord.Embed()
     assert embed.set_author(name="A", url=AUTHOR_URL, icon_url=AUTHOR_ICON) is embed
+    assert embed.author is not None
     assert (embed.author.name, embed.author.url, embed.author.icon_url) == (
         "A",
         AUTHOR_URL,
@@ -257,9 +266,11 @@ def test_author():
 def test_footer():
     embed = discord.Embed()
     assert embed.set_footer(text="F", icon_url=FOOTER_ICON) is embed
+    assert embed.footer is not None
     assert (embed.footer.text, embed.footer.icon_url) == ("F", FOOTER_ICON)
 
     embed.set_footer(text="Only text")
+    assert embed.footer is not None
     assert embed.footer.text == "Only text"
     assert embed.footer.icon_url is None
 
@@ -332,7 +343,9 @@ def test_remove_field_out_of_range_is_silent():
 
 
 def test_add_field_coerces_to_str():
-    embed = discord.Embed().add_field(name=1, value=2)  # type: ignore[arg-type]
+    embed = discord.Embed().add_field(
+        name=1, value=2
+    )  # pyright: ignore[reportArgumentType]
     assert (embed.fields[0].name, embed.fields[0].value) == ("1", "2")
 
 
@@ -346,7 +359,13 @@ def test_fields_setter_and_append_field():
 
     embed.append_field(discord.EmbedField(name="c", value="3", inline=False))
     assert _fields(embed)[-1] == ("c", "3", False)
-    assert embed.to_dict()["fields"][-1] == {"name": "c", "value": "3", "inline": False}
+    embed_dict = embed.to_dict()
+    assert embed_dict.get("fields") is not None
+    assert embed_dict["fields"][-1] == {
+        "name": "c",
+        "value": "3",
+        "inline": False,
+    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
 
 
 # --- len / serialisation ---------------------------------------------------------------
@@ -365,21 +384,32 @@ def test_len():
 
 def test_to_dict():
     data = _full_embed().to_dict()
-    assert data["type"] == "rich"
-    assert data["title"] == TITLE
-    assert data["description"] == DESCRIPTION
-    assert data["url"] == URL
-    assert data["color"] == COLOUR
-    assert datetime.datetime.fromisoformat(data["timestamp"]) == TIMESTAMP
-    assert data["author"] == {
+    assert data["type"] == "rich"  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert data["title"] == TITLE  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert (
+        data["description"] == DESCRIPTION
+    )  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert data["url"] == URL  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert data["color"] == COLOUR  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert (
+        datetime.datetime.fromisoformat(data["timestamp"]) == TIMESTAMP
+    )  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert data["author"] == {  # pyright: ignore[reportTypedDictNotRequiredAccess]
         "name": AUTHOR_NAME,
         "url": AUTHOR_URL,
         "icon_url": AUTHOR_ICON,
     }
-    assert data["footer"] == {"text": FOOTER_TEXT, "icon_url": FOOTER_ICON}
-    assert data["image"] == {"url": IMAGE_URL}
-    assert data["thumbnail"] == {"url": THUMBNAIL_URL}
-    assert data["fields"] == [
+    assert data["footer"] == {
+        "text": FOOTER_TEXT,
+        "icon_url": FOOTER_ICON,
+    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert data["image"] == {
+        "url": IMAGE_URL
+    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert data["thumbnail"] == {
+        "url": THUMBNAIL_URL
+    }  # pyright: ignore[reportTypedDictNotRequiredAccess]
+    assert data["fields"] == [  # pyright: ignore[reportTypedDictNotRequiredAccess]
         {"name": n, "value": v, "inline": i} for n, v, i in FIELDS
     ]
 
@@ -403,6 +433,9 @@ def test_from_api_payload():
 
     assert embed.type == "rich"
     assert (embed.title, embed.description, embed.url) == (TITLE, DESCRIPTION, URL)
+    assert embed.author is not None
+    assert embed.footer is not None
+    assert embed.colour is not None
     assert embed.colour.value == COLOUR
     assert embed.timestamp == TIMESTAMP
     assert embed.author.name == AUTHOR_NAME
@@ -432,6 +465,9 @@ def test_api_payload_roundtrip_is_stable():
 def test_from_video_payload():
     embed = discord.Embed.from_dict(copy.deepcopy(VIDEO_PAYLOAD))
     assert embed.type == "video"
+    assert embed.provider is not None
+    assert embed.video is not None
+    assert embed.thumbnail is not None
     assert embed.provider.name == "YouTube"
     assert embed.provider.url == "https://www.youtube.com"
     assert embed.video.url == VIDEO_PAYLOAD["video"]["url"]
@@ -452,6 +488,9 @@ def test_copy_is_independent():
     clone.timestamp = None
 
     assert _fields(original) == FIELDS
+    assert original.author is not None
+    assert original.footer is not None
+    assert original.colour is not None
     assert original.author.name == AUTHOR_NAME
     assert original.footer.text == FOOTER_TEXT
     assert original.colour.value == COLOUR
