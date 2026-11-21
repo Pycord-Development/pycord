@@ -162,7 +162,7 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 
 [tool.tox]
-requires = ["tox~=4.65", "tox-uv>=1.36.0,<2"]
+requires = [{ replace = "ref", of = ["dependency-groups", "tox"], extend = true }]
 env_list = ["3.14", "3.13", "3.12", "3.11", "3.10", "3.14-novoice"]
 
 [tool.tox.env_run_base]
