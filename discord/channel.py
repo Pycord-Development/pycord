@@ -1665,7 +1665,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         self, *, status: str | None = MISSING, voice_start_time: int | None = MISSING
     ):
         if status is not MISSING:
-            self.status = status
+            self.status: str | None = status
         if voice_start_time is not MISSING:
             self._voice_start_time = voice_start_time
 

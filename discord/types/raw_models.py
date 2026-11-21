@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired, Required, TypedDict
 
 from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
@@ -97,7 +97,7 @@ ThreadUpdateEvent = Thread
 class ThreadDeleteEvent(TypedDict, total=False):
     thread_id: Snowflake
     thread_type: int
-    guild_id: Snowflake
+    guild_id: Required[Snowflake]
     parent_id: Snowflake
 
 
