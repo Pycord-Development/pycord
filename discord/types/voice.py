@@ -34,9 +34,7 @@ if TYPE_CHECKING:
     from .snowflake import Snowflake
 
 SupportedModes = Literal[
-    "xsalsa20_poly1305_lite",
-    "xsalsa20_poly1305_suffix",
-    "xsalsa20_poly1305",
+    "aead_aes256_gcm_rtpsize",
     "aead_xchacha20_poly1305_rtpsize",
 ]
 
