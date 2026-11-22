@@ -39,6 +39,13 @@ class RoleColours(TypedDict):
     tertiary_color: int | None
 
 
+class AuditLogPartialRole(TypedDict):
+    """Very limited partial role object that appears only in audit log changes."""
+
+    id: Snowflake
+    name: str
+
+
 class PartialRole(TypedDict):
     """Partial role object received as part of an invite object"""
 

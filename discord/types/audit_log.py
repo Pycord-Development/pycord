@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     )
     from .integration import IntegrationExpireBehavior, PartialIntegration
     from .interactions import ApplicationCommand
-    from .role import Role
+    from .role import AuditLogPartialRole, Role
     from .scheduled_events import ScheduledEvent
     from .snowflake import Snowflake
     from .user import User
@@ -217,7 +217,7 @@ class _AuditLogChangeInt(TypedDict):
 
 
 class _AuditLogChangeListRole(TypedDict):
-    new_value: NotRequired[list[Role]]
+    new_value: NotRequired[list[AuditLogPartialRole]]
     old_value: NotRequired[list[Role]]
     key: Literal["$add", "$remove"]
 
