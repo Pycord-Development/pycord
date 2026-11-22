@@ -56,7 +56,7 @@ class PartialMember(TypedDict):
 
 
 class Member(TypedDict):
-    user: User
+    user: NotRequired[User]
     nick: NotRequired[str | None]
     avatar: NotRequired[str | None]
     banner: NotRequired[str | None]

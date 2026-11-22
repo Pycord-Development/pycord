@@ -29,7 +29,6 @@ from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-from .appinfo import ApplicationInfo
 from .audit_log import AuditLogEntry
 from .automod import AutoModRule
 from .channel import Channel, StageInstance, Thread
@@ -45,8 +44,16 @@ from .guild import (
     UnavailableGuild,
     VerificationLevel,
 )
-from .integration import IntegrationAccount, IntegrationExpireBehavior, IntegrationType
-from .interactions import ApplicationCommandPermissions, Interaction
+from .integration import (
+    IntegrationAccount,
+    IntegrationApplication,
+    IntegrationExpireBehavior,
+    IntegrationType,
+)
+from .interactions import (
+    GuildApplicationCommandPermissions,
+    Interaction,
+)
 from .member import Member
 from .message import Message
 from .monetization import Entitlement, Subscription
@@ -94,7 +101,7 @@ opcodes = Literal[
 
 # APPLICATION COMMAND EVENTS
 
-ApplicationCommandPermissionsUpdate = ApplicationCommandPermissions
+ApplicationCommandPermissionsUpdate = GuildApplicationCommandPermissions
 
 # AUTO MODERATION UPDATES
 
@@ -404,7 +411,8 @@ class IntegrationCreateEvent(TypedDict):
     synced_at: NotRequired[str]
     subscriber_count: NotRequired[int]
     revoked: NotRequired[bool]
-    application: NotRequired[ApplicationInfo]
+    application: NotRequired[IntegrationApplication]
+    scopes: NotRequired[str]
     # extra field for this event
     guild_id: Snowflake
 

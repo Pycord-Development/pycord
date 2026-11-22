@@ -99,7 +99,7 @@ class Invite(IncompleteInvite):
     type: InviteType
     guild: NotRequired[InviteGuild]
     inviter: NotRequired[User]
-    scheduled_event: NotRequired[ScheduledEvent]
+    guild_scheduled_event: NotRequired[ScheduledEvent]
     target_user: NotRequired[PartialUser]
     target_type: NotRequired[InviteTargetType]
     target_application: NotRequired[PartialApplicationInfo]

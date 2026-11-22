@@ -336,9 +336,9 @@ class TextDisplayInteractionResponse(TypedDict):
 
 
 class LabelInteractionResponse(TypedDict):
-    type: Literal[11]
+    type: Literal[18]
     id: int
-    component: list[Component]
+    component: Component
 
 
 ComponentInteractionResponse = (
@@ -353,6 +353,7 @@ ComponentInteractionResponse = (
     | CheckBoxGroupInteractionResponse
     | CheckBoxInteractionResponse
     | TextDisplayInteractionResponse
+    | LabelInteractionResponse
 )
 
 InteractionData = (

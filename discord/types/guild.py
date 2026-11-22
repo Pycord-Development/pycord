@@ -213,7 +213,7 @@ class GuildWithCounts(Guild):
     approximate_presence_count: int
 
 
-class InviteGuild(Guild):
+class InviteGuild(GuildPreview):
     welcome_screen: NotRequired[WelcomeScreen]
 
 
@@ -249,7 +249,7 @@ class GuildBulkBan(TypedDict):
     """The allowed fields for the POST request to make bulk guild bans"""
 
     user_ids: list[Snowflake]  # Max 200
-    deleted_message_seconds: NotRequired[int]  # Defaults to 0
+    delete_message_seconds: NotRequired[int]  # Defaults to 0
 
 
 class GuildBulkBanResponse(TypedDict):
