@@ -289,19 +289,19 @@ AuditLogChange = (
 
 
 class AuditEntryInfo(TypedDict):
-    application_id: Snowflake
-    auto_moderation_rule_name: str
-    auto_moderation_rule_trigger_type: str
-    channel_id: Snowflake
-    count: str
-    delete_member_days: str
-    id: Snowflake
-    members_removed: str
-    message_id: Snowflake
-    role_name: str
-    type: Literal["0", "1"]
-    integration_type: str
-    status: str
+    application_id: NotRequired[Snowflake]
+    auto_moderation_rule_name: NotRequired[str]
+    auto_moderation_rule_trigger_type: NotRequired[str]
+    channel_id: NotRequired[Snowflake]
+    count: NotRequired[str]
+    delete_member_days: NotRequired[str]
+    id: NotRequired[Snowflake]
+    members_removed: NotRequired[str]
+    message_id: NotRequired[Snowflake]
+    role_name: NotRequired[str]
+    type: NotRequired[Literal["0", "1"]]
+    integration_type: NotRequired[str]
+    status: NotRequired[str]
 
 
 class AuditLogEntry(TypedDict):
