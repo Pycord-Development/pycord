@@ -541,11 +541,11 @@ class ApplicationCommandMixin(ABC):
                         guild_id,
                     )
                 elif method == "upsert":
-                    _log.debug("Creating command %s for guild %s", cmd_name, guild_id)  # type: ignore
+                    _log.debug("Creating command %s for guild %s", cmd_name, guild_id)
                 elif method == "edit":
-                    _log.debug("Editing command %s for guild %s", cmd_name, guild_id)  # type: ignore
+                    _log.debug("Editing command %s for guild %s", cmd_name, guild_id)
                 elif method == "delete":
-                    _log.debug("Deleting command %s for guild %s", cmd_name, guild_id)  # type: ignore
+                    _log.debug("Deleting command %s for guild %s", cmd_name, guild_id)
             return _register(method, *args, **kwargs)
 
         pending_actions: list[_CommandSyncAction] = []
