@@ -197,3 +197,8 @@ typeCheckingMode = "all"
 reportPrivateUsage = false
 reportUnusedCallResult = false
 include = ["discord", "tests"]
+
+
+[[tool.basedpyright.executionEnvironments]]
+root = "discord/types"
+reportImportCycles = false
