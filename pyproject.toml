@@ -137,10 +137,6 @@ target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
 profile = "black"
 
 [tool.pylint.main]
-extension-pkg-whitelist = [
-    "pydantic",
-    "ujson"
-]
 py-version = "3.10"
 ignore-patterns = ["_version\\.py"]
 load-plugins = [
