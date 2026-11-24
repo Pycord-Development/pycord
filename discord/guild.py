@@ -105,8 +105,6 @@ __all__ = ("BanEntry", "Guild", "GuildRoleCounts", "VoiceServerRegion")
 MISSING = utils.MISSING
 
 if TYPE_CHECKING:
-    import datetime
-
     from .abc import Snowflake, SnowflakeTime
     from .channel import (
         CategoryChannel,

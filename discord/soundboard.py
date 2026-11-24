@@ -149,7 +149,6 @@ class SoundboardSound(PartialSoundboardSound):
         "guild_id",
         "user",
         "_cs_guild",
-        "_state",
     )
 
     def __init__(

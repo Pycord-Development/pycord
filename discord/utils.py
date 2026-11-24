@@ -800,7 +800,7 @@ def _all_subclasses(cls: type) -> set[type]:
 
 
 def _unique(iterable: Iterable[T]) -> list[T]:
-    return [x for x in dict.fromkeys(iterable)]
+    return list(dict.fromkeys(iterable))
 
 
 def _get_as_snowflake(data: Any, key: str) -> int | None:
@@ -1244,13 +1244,13 @@ def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
 async def _atake(it: AsyncIterator[T], n: int) -> AsyncIterator[T]:
     for _ in range(n):
         try:
-            yield await it.__anext__()
+            yield await anext(it)
         except StopAsyncIteration:
             return
 
 
 async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
-    it = iterator.__aiter__()
+    it = aiter(iterator)
     while chunk := [x async for x in _atake(it, max_size)]:
         yield chunk
 
@@ -1313,7 +1313,7 @@ def evaluate_annotation(
     if implicit_str and isinstance(tp, str):
         if tp in cache:
             return cache[tp]
-        evaluated = eval(tp, globals, locals)
+        evaluated = eval(tp, globals, locals)  # pylint: disable=eval-used
         cache[tp] = evaluated
         return evaluate_annotation(evaluated, globals, locals, cache)
 

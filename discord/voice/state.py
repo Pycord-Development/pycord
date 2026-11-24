@@ -527,9 +527,8 @@ class VoiceConnectionState:
                     await self.disconnect(cleanup=False)
                     await asyncio.sleep(wait)
                     continue
-                else:
-                    await self.disconnect()
-                    raise
+                await self.disconnect()
+                raise
 
     async def _connect(
         self,
@@ -539,7 +538,7 @@ class VoiceConnectionState:
         self_mute: bool,
         resume: bool,
     ) -> None:
-        _log.info(f"Connecting to voice {self.client.channel.id}")
+        _log.info("Connecting to voice %s", self.client.channel.id)
 
         await asyncio.wait_for(
             self._inner_connect(
@@ -780,7 +779,7 @@ class VoiceConnectionState:
                             )
                             await self.disconnect()
                         break
-                    elif exc.code in (4014, 4022):
+                    if exc.code in (4014, 4022):
                         if self._disconnected.is_set():
                             _log.info(
                                 "Disconnecting from voice by Discord, close code %d",
@@ -800,17 +799,16 @@ class VoiceConnectionState:
                             if self.state is not ConnectionFlowState.disconnected:
                                 await self.disconnect()
                             break
-                        else:
-                            # we have successfully resumed so just keep polling events
-                            continue
-                    elif exc.code == 4021:
+                        # we have successfully resumed so just keep polling events
+                        continue
+                    if exc.code == 4021:
                         _log.warning(
                             "We are being rate limited while attempting to connect to voice. Disconnecting...",
                         )
                         if self.state is not ConnectionFlowState.disconnected:
                             await self.disconnect()
                         break
-                    elif exc.code == 4015:
+                    if exc.code == 4015:
                         _log.info(
                             "Disconnected from voice due to a Discord-side issue, attempting to reconnect and resume...",
                         )

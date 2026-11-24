@@ -179,7 +179,7 @@ class ActionRow(Component):
 
     __slots__: tuple[str, ...] = ("children",)
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("children",)
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ComponentPayload):
@@ -233,7 +233,7 @@ class ActionRow(Component):
     @classmethod
     def with_components(cls, *components, id=None):
         return cls._raw_construct(
-            type=ComponentType.action_row, id=id, children=[c for c in components]
+            type=ComponentType.action_row, id=id, children=list(components)
         )
 
 
@@ -265,6 +265,17 @@ class InputText(Component):
     """
 
     __slots__: tuple[str, ...] = (
+        "style",
+        "custom_id",
+        "label",
+        "placeholder",
+        "min_length",
+        "max_length",
+        "required",
+        "value",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = (
         "type",
         "style",
         "custom_id",
@@ -276,8 +287,6 @@ class InputText(Component):
         "value",
         "id",
     )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: InputTextComponentPayload):
@@ -362,7 +371,15 @@ class Button(Component):
         "sku_id",
     )
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "style",
+        "custom_id",
+        "url",
+        "disabled",
+        "label",
+        "emoji",
+        "sku_id",
+    )
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ButtonComponentPayload):
@@ -464,7 +481,17 @@ class SelectMenu(Component):
         "default_values",
     )
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = (
+        "custom_id",
+        "placeholder",
+        "min_values",
+        "max_values",
+        "options",
+        "channel_types",
+        "disabled",
+        "required",
+        "default_values",
+    )
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: SelectMenuPayload):
@@ -827,7 +854,7 @@ class Section(Component):
 
     __slots__: tuple[str, ...] = ("components", "accessory")
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("components", "accessory")
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: SectionComponentPayload, state=None):
@@ -899,7 +926,7 @@ class TextDisplay(Component):
 
     __slots__: tuple[str, ...] = ("content",)
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("content",)
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: TextDisplayComponentPayload):
@@ -1001,7 +1028,7 @@ class Thumbnail(Component):
         "spoiler",
     )
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("media", "description", "spoiler")
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: ThumbnailComponentPayload, state=None):
@@ -1104,7 +1131,7 @@ class MediaGallery(Component):
 
     __slots__: tuple[str, ...] = ("items",)
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("items",)
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: MediaGalleryComponentPayload, state=None):
@@ -1154,7 +1181,7 @@ class FileComponent(Component):
         "size",
     )
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("file", "spoiler", "name", "size")
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: FileComponentPayload, state=None):
@@ -1200,7 +1227,7 @@ class Separator(Component):
         "spacing",
     )
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("divider", "spacing")
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: SeparatorComponentPayload):
@@ -1257,7 +1284,7 @@ class Container(Component):
         "components",
     )
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("accent_color", "spoiler", "components")
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: ContainerComponentPayload, state=None):
@@ -1342,7 +1369,7 @@ class Label(Component):
 
     __slots__: tuple[str, ...] = ("component", "label", "description")
 
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    __repr_info__: ClassVar[tuple[str, ...]] = ("component", "label", "description")
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: LabelComponentPayload):
@@ -1392,6 +1419,13 @@ class FileUpload(Component):
     """
 
     __slots__: tuple[str, ...] = (
+        "custom_id",
+        "min_values",
+        "max_values",
+        "required",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = (
         "type",
         "custom_id",
         "min_values",
@@ -1399,8 +1433,6 @@ class FileUpload(Component):
         "required",
         "id",
     )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: FileUploadComponentPayload):
@@ -1455,14 +1487,18 @@ class RadioGroup(Component):
     """
 
     __slots__: tuple[str, ...] = (
+        "custom_id",
+        "options",
+        "required",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = (
         "type",
         "custom_id",
         "options",
         "required",
         "id",
     )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: RadioGroupComponentPayload):
@@ -1605,6 +1641,14 @@ class CheckboxGroup(Component):
     """
 
     __slots__: tuple[str, ...] = (
+        "custom_id",
+        "options",
+        "min_values",
+        "max_values",
+        "required",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = (
         "type",
         "custom_id",
         "options",
@@ -1613,8 +1657,6 @@ class CheckboxGroup(Component):
         "required",
         "id",
     )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: CheckboxGroupComponentPayload):
@@ -1757,13 +1799,16 @@ class Checkbox(Component):
     """
 
     __slots__: tuple[str, ...] = (
+        "custom_id",
+        "default",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = (
         "type",
         "custom_id",
         "default",
         "id",
     )
-
-    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: CheckboxComponentPayload):

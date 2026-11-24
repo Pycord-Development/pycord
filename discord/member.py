@@ -811,7 +811,8 @@ class Member(discord.abc.Messageable, _UserTag):
         for r in self.roles:
             base.value |= r.permissions.value
 
-        if base.administrator:
+        # Pylint doesn't know how to interpret flag_value.__get__
+        if base.administrator:  # pylint: disable=using-constant-test
             return Permissions.all()
 
         return base

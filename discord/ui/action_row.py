@@ -153,7 +153,7 @@ class ActionRow(ViewItem[V]):
         if item.row:
             raise ValueError(f"{item.__class__!r}.row is not supported in ActionRow")
         if self.width + item.width > 5:
-            raise ValueError(f"Not enough space left on this ActionRow")
+            raise ValueError("Not enough space left on this ActionRow")
 
         item.parent = self
 

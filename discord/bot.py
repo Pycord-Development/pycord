@@ -313,7 +313,7 @@ class ApplicationCommandMixin(ABC):
                     "integration_types": None,
                 }
                 for check, value in to_check.items():
-                    if type(to_check[check]) == list:
+                    if isinstance(to_check[check], list):
                         # We need to do some falsy conversion here
                         # The API considers False (autocomplete) and [] (choices) to be falsy values
                         falsy_vals = (False, [])
@@ -340,7 +340,7 @@ class ApplicationCommandMixin(ABC):
                         if "localizations" in check and bool(attr) == bool(found):
                             # unlike other attrs, localizations are MISSING by default
                             continue
-                        elif (
+                        if (
                             check == "default_permission"
                             and attr is True
                             and found is None
@@ -536,15 +536,16 @@ class ApplicationCommandMixin(ABC):
             if kwargs.pop("_log", True):
                 if method == "bulk":
                     _log.debug(
-                        f"Bulk updating commands {[c['name'] for c in args[0]]} for"
-                        f" guild {guild_id}"
+                        "Bulk updating commands %s for guild %s",
+                        [c["name"] for c in args[0]],
+                        guild_id,
                     )
                 elif method == "upsert":
-                    _log.debug(f"Creating command {cmd_name} for guild {guild_id}")  # type: ignore
+                    _log.debug("Creating command %s for guild %s", cmd_name, guild_id)
                 elif method == "edit":
-                    _log.debug(f"Editing command {cmd_name} for guild {guild_id}")  # type: ignore
+                    _log.debug("Editing command %s for guild %s", cmd_name, guild_id)
                 elif method == "delete":
-                    _log.debug(f"Deleting command {cmd_name} for guild {guild_id}")  # type: ignore
+                    _log.debug("Deleting command %s for guild %s", cmd_name, guild_id)
             return _register(method, *args, **kwargs)
 
         pending_actions: list[_CommandSyncAction] = []
@@ -695,8 +696,10 @@ class ApplicationCommandMixin(ABC):
             )
             if not cmd:
                 _log.warning(
-                    f"Registered command {i['name']}, type {i.get('type')} not found in"
-                    " pending commands. It's interactions will be ignored."
+                    "Registered command %s, type %s not found in"
+                    + " pending commands. It's interactions will be ignored.",
+                    i["name"],
+                    i.get("type"),
                 )
                 continue
             cmd.id = i["id"]
@@ -711,7 +714,7 @@ class ApplicationCommandMixin(ABC):
         force: bool = False,
         guild_ids: list[int] | None = None,
         register_guild_commands: bool = True,
-        check_guilds: list[int] | None = [],
+        check_guilds: list[int] | None = None,
         delete_existing: bool = True,
     ) -> None:
         """|coro|
