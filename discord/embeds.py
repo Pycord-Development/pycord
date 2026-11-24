@@ -438,66 +438,59 @@ class Embed:
         :class:`Embed`
             The converted embed object.
         """
-        # we are bypassing __init__ here since it doesn't apply here
-        self: Self = cls.__new__(cls)
+        # feed the basic fields right to the constructor rather than setting them manually
+        title = data.get("title", None)
+        type = data.get("type", "rich")
+        description = data.get("description", None)
+        url = data.get("url", None)
 
-        self._footer = None
-        self._image = None
-        self._thumbnail = None
-        self._video = None
-        self._provider = None
-        self._author = None
-        self._colour = None
-        self._timestamp = None
+        if title:
+            title = str(title)
 
-        # fill in the basic fields
+        if description:
+            description = str(description)
 
-        self.title = data.get("title", None)
-        self.type = data.get("type", "rich")
-        self.description = data.get("description", None)
-        self.url = data.get("url", None)
+        if url:
+            url = str(url)
 
-        if self.title:
-            self.title = str(self.title)
-
-        if self.description:
-            self.description = str(self.description)
-
-        if self.url:
-            self.url = str(self.url)
+        self = cls(
+            title=title,
+            type=type,
+            url=url,
+            description=description,
+        )
 
         # try to fill in the more rich fields
         if "color" in data:
-            self._colour = Colour(value=data["color"])
+            self.colour = Colour(value=data["color"])
 
         if "timestamp" in data:
-            self._timestamp = utils.parse_time(data["timestamp"])
+            self.timestamp = utils.parse_time(data["timestamp"])
 
-        self.components = None
         if (components := data.get("components")) is not None:
             self.components = [_component_factory(item) for item in components]
 
-        for attr in (
-            "thumbnail",
-            "video",
-            "provider",
-            "author",
-            "fields",
-            "image",
-            "footer",
-        ):
-            if attr == "fields":
-                value = data.get(attr, [])
-                self._fields = [EmbedField.from_dict(d) for d in value] if value else []
-            else:
-                try:
-                    value = data[
-                        attr
-                    ]  # pyright: ignore[reportTypedDictNotRequiredAccess]
-                except KeyError:
-                    continue
-                else:
-                    setattr(self, f"_{attr}", value)
+        if "thumbnail" in data:
+            self._thumbnail = data["thumbnail"]
+
+        if "video" in data:
+            self._video = data["video"]
+
+        if "provider" in data:
+            self._provider = data["provider"]
+
+        if "author" in data:
+            self._author = data["author"]
+
+        if "image" in data:
+            self._image = data["image"]
+
+        if "footer" in data:
+            self._footer = data["footer"]
+
+        if "fields" in data:
+            value = data.get("fields", [])
+            self._fields = [EmbedField.from_dict(d) for d in value] if value else []
 
         return self
 
