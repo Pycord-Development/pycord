@@ -26,7 +26,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator
-from typing import Any, ClassVar, TypeVar, overload
+from typing import ClassVar, Generic, TypeVar, cast, overload
+
+from typing_extensions import Self, override
 
 from .enums import UserFlags
 
@@ -45,42 +47,43 @@ __all__ = (
     "MemberFlags",
 )
 
-FV = TypeVar("FV", bound="flag_value")
 BF = TypeVar("BF", bound="BaseFlags")
 
 
-class flag_value:
-    def __init__(self, func: Callable[[Any], int]):
-        self.flag = func(None)
+class flag_value(Generic[BF]):
+
+    def __init__(self, func: Callable[[BF], int]):
+        self.flag: int = cast("Callable[[None], int]", func)(None)
         self.__doc__ = func.__doc__
 
     @overload
-    def __get__(self: FV, instance: None, owner: type[BF]) -> FV: ...
+    def __get__(self: Self, instance: None, owner: type[BF]) -> Self: ...
 
     @overload
     def __get__(self, instance: BF, owner: type[BF]) -> bool: ...
 
-    def __get__(self, instance: BF | None, owner: type[BF]) -> Any:
+    def __get__(self, instance: BF | None, owner: type[BF]) -> Self | bool:
         if instance is None:
             return self
         return instance._has_flag(self.flag)
 
-    def __set__(self, instance: BF, value: bool) -> None:
+    def __set__(self, instance: BaseFlags, value: bool) -> None:
         instance._set_flag(self.flag, value)
 
+    @override
     def __repr__(self):
         return f"<flag_value flag={self.flag!r}>"
 
 
-class alias_flag_value(flag_value):
+class alias_flag_value(flag_value[BF], Generic[BF]):
     pass
 
 
-def fill_with_flags(*, inverted: bool = False):
-    def decorator(cls: type[BF]):
+def fill_with_flags(*, inverted: bool = False) -> Callable[[type[BF]], type[BF]]:
+    def decorator(cls: type[BF]) -> type[BF]:
         cls.VALID_FLAGS = {
             name: value.flag
-            for name, value in cls.__dict__.items()
+            for name, value in cls.__dict__.items()  # pyright: ignore[reportAny] We are instance checking below
             if isinstance(value, flag_value)
         }
 
@@ -100,85 +103,92 @@ class BaseFlags:
     VALID_FLAGS: ClassVar[dict[str, int]]
     DEFAULT_VALUE: ClassVar[int]
 
-    value: int
-
-    __slots__ = ("value",)
+    __slots__: tuple[str, ...] = ("value",)
 
     def __init__(self, **kwargs: bool):
-        self.value = self.DEFAULT_VALUE
+        self.value: int = self.DEFAULT_VALUE
         for key, value in kwargs.items():
             if key not in self.VALID_FLAGS:
                 raise TypeError(f"{key!r} is not a valid flag name.")
             setattr(self, key, value)
 
     @classmethod
-    def _from_value(cls, value):
+    def _from_value(cls, value: int) -> Self:
         self = cls.__new__(cls)
         self.value = value
         return self
 
-    def __eq__(self, other: Any) -> bool:
+    @override
+    def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and self.value == other.value
 
+    @override
     def __hash__(self) -> int:
         return hash(self.value)
 
+    @override
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} value={self.value}>"
 
     def __iter__(self) -> Iterator[tuple[str, bool]]:
-        for name, value in self.__class__.__dict__.items():
+        for (
+            name,
+            value,  # pyright: ignore[reportAny] We are instance checking below
+        ) in self.__class__.__dict__.items():
             if isinstance(value, alias_flag_value):
                 continue
 
             if isinstance(value, flag_value):
                 yield name, self._has_flag(value.flag)
 
-    def __and__(self, other):
+    def __and__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
             return self.__class__._from_value(self.value & other.value)
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & other.flag)
         else:
-            raise TypeError(
-                f"'&' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
 
-    def __or__(self, other):
+    def __or__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
             return self.__class__._from_value(self.value | other.value)
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value | other.flag)
         else:
-            raise TypeError(
-                f"'|' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
 
-    def __add__(self, other):
+    def __add__(self, other: object) -> Self:
         try:
             return self | other
         except TypeError:
-            raise TypeError(
-                f"'+' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
 
-    def __sub__(self, other):
+    def __sub__(self, other: object) -> Self:
         if isinstance(other, self.__class__):
             return self.__class__._from_value(self.value & ~other.value)
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & ~other.flag)
         else:
-            raise TypeError(
-                f"'-' not supported between instances of {type(self)} and {type(other)}"
-            )
+            return NotImplemented
+
+    # Reflected operators need to call the dunders directly and not via the operator,
+    # otherwise NotImplemented would bounce between two flag types forever.
+    def __rand__(self, other: object) -> Self:
+        return self.__and__(other)
+
+    def __ror__(self, other: object) -> Self:
+        return self.__or__(other)
+
+    def __radd__(self, other: object) -> Self:
+        return self.__or__(other)
+
+    def __rsub__(self, other: object) -> Self:
+        if isinstance(other, flag_value):
+            return self.__class__._from_value(other.flag & ~self.value)
+        return NotImplemented
 
     def __invert__(self):
         return self.__class__._from_value(~self.value)
-
-    __rand__: Callable[[BaseFlags | flag_value], bool] = __and__
-    __ror__: Callable[[BaseFlags | flag_value], bool] = __or__
-    __radd__: Callable[[BaseFlags | flag_value], bool] = __add__
-    __rsub__: Callable[[BaseFlags | flag_value], bool] = __sub__
 
     def _has_flag(self, o: int) -> bool:
         return (self.value & o) == o
@@ -240,18 +250,21 @@ class SystemChannelFlags(BaseFlags):
         flags via the properties rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     # For some reason the flags for system channels are "inverted"
     # ergo, if they're set then it means "suppress" (off in the GUI toggle)
     # Since this is counter-intuitive from an API perspective and annoying
     # these will be inverted automatically
 
+    @override
     def _has_flag(self, o: int) -> bool:
         return (self.value & o) != o
 
+    @override
     def _set_flag(self, o: int, toggle: bool) -> None:
         if toggle:
+            self.value: int
             self.value &= ~o
         else:
             self.value |= o
@@ -330,7 +343,7 @@ class MessageFlags(BaseFlags):
         flags via the properties rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     @flag_value
     def crossposted(self):
@@ -476,7 +489,7 @@ class PublicUserFlags(BaseFlags):
         flags via the properties rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     @flag_value
     def staff(self):
@@ -602,7 +615,7 @@ class GatewayCapabilities(BaseFlags):
         The raw capability value. Prefer toggling via the provided attributes.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     @classmethod
     def none(cls) -> GatewayCapabilities:
@@ -674,14 +687,7 @@ class Intents(BaseFlags):
         rather than using this raw value.
     """
 
-    __slots__ = ()
-
-    def __init__(self, **kwargs: bool):
-        self.value = self.DEFAULT_VALUE
-        for key, value in kwargs.items():
-            if key not in self.VALID_FLAGS:
-                raise TypeError(f"{key!r} is not a valid flag name.")
-            setattr(self, key, value)
+    __slots__: tuple[str, ...] = ()
 
     @classmethod
     def all(cls: type[Intents]) -> Intents:
@@ -1319,11 +1325,12 @@ class MemberCacheFlags(BaseFlags):
         rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     def __init__(self, **kwargs: bool):
+        super().__init__()
         bits = max(self.VALID_FLAGS.values()).bit_length()
-        self.value = (1 << bits) - 1
+        self.value: int = (1 << bits) - 1
         for key, value in kwargs.items():
             if key not in self.VALID_FLAGS:
                 raise TypeError(f"{key!r} is not a valid flag name.")
@@ -1682,7 +1689,7 @@ class AttachmentFlags(BaseFlags):
         rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     @flag_value
     def is_clip(self):
@@ -1745,7 +1752,7 @@ class SKUFlags(BaseFlags):
         rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     @flag_value
     def available(self):
@@ -1808,7 +1815,7 @@ class MemberFlags(BaseFlags):
         rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     @flag_value
     def did_rejoin(self):
@@ -1882,7 +1889,7 @@ class RoleFlags(BaseFlags):
         flags via the properties rather than using this raw value.
     """
 
-    __slots__ = ()
+    __slots__: tuple[str, ...] = ()
 
     @flag_value
     def in_prompt(self):

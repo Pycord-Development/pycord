@@ -65,21 +65,5 @@
       ],
       "groupName": "mdformat"
     }
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "tox `requires` in pyproject.toml [tool.tox]",
-      "managerFilePatterns": [
-        "/(^|/)pyproject\\.toml$/"
-      ],
-      "matchStrings": [
-        "\\[tool\\.tox\\][^\\[]*?requires\\s*=\\s*\\[[^\\]]*\\]",
-        "\"(?<depName>[A-Za-z0-9][A-Za-z0-9._-]*)(?<currentValue>[^\"]*)\""
-      ],
-      "matchStringsStrategy": "recursive",
-      "datasourceTemplate": "pypi",
-      "versioningTemplate": "pep440"
-    }
   ]
 }
