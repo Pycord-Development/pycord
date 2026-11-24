@@ -197,3 +197,9 @@ typeCheckingMode = "all"
 reportPrivateUsage = false
 reportUnusedCallResult = false
 include = ["discord", "tests"]
+
+[[tool.basedpyright.executionEnvironments]]
+root = "tests"
+reportTypedDictNotRequiredAccess = false
+reportOptionalMemberAccess = false
+reportAny = false
