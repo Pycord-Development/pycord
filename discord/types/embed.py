@@ -44,18 +44,16 @@ class EmbedField(TypedDict):
     value: str
 
 
-class EmbedThumbnail(TypedDict, total=False):
-    url: str
-    proxy_url: str
-    height: int
-    width: int
-
-
 class EmbedVideo(TypedDict, total=False):
     url: str
     proxy_url: str
     height: int
     width: int
+    content_type: str
+    placeholder: str
+    placeholder_version: int
+    description: str
+    flags: int
 
 
 class EmbedImage(TypedDict, total=False):
@@ -63,6 +61,11 @@ class EmbedImage(TypedDict, total=False):
     proxy_url: str
     height: int
     width: int
+    content_type: str
+    placeholder: str
+    placeholder_version: int
+    description: str
+    flags: int
 
 
 class EmbedProvider(TypedDict, total=False):
@@ -99,9 +102,10 @@ class Embed(TypedDict, total=False):
     color: int
     footer: EmbedFooter
     image: EmbedImage
-    thumbnail: EmbedThumbnail
+    thumbnail: EmbedImage
     video: EmbedVideo
     provider: EmbedProvider
     author: EmbedAuthor
     fields: list[EmbedField]
     components: list[Component]
+    flags: int
