@@ -22,38 +22,81 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
 
-AutoModTriggerType = Literal[1, 2, 3, 4, 5]
+AutoModTriggerType = Literal[
+    1,  # KEYWORD
+    3,  # SPAM
+    4,  # KEYWORD_PRESET
+    5,  # MENTION_SPAM
+    6,  # MEMBER_PROFILE
+]
 
-AutoModEventType = Literal[1]
+AutoModEventType = Literal[
+    1,  # MESSAGE_SEND
+    2,  # MEMBER_UPDATE
+]
 
-AutoModActionType = Literal[1, 2, 3]
+AutoModActionType = Literal[
+    1,  # BLOCK_MESSAGE
+    2,  # SEND_ALERT_MESSAGE
+    3,  # TIMEOUT
+    4,  # BLOCK_MEMBER_INTERACTION
+]
 
-AutoModKeywordPresetType = Literal[1, 2, 3]
+AutoModKeywordPresetType = Literal[
+    1,  # PROFANITY
+    2,  # SEXUAL_CONTENT
+    3,  # SLURS
+]
 
 
-class AutoModTriggerMetadata(TypedDict, total=False):
+class KeywordAutoModTriggerMetadata(TypedDict):
     keyword_filter: list[str]
     regex_patterns: list[str]
+    allow_list: list[str]
+
+
+class KeywordPresetAutoModTriggerMetadata(TypedDict):
     presets: list[AutoModKeywordPresetType]
     allow_list: list[str]
+
+
+class MemberProfileAutoModTriggerMetadata(TypedDict):
+    keyword_filter: list[str]
+    regex_patterns: list[str]
+    allow_list: list[str]
+
+
+class MentionSpamAutoModTriggerMetadata(TypedDict):
     mention_total_limit: int
+    mention_raid_protection_enabled: bool
 
 
-class AutoModActionMetadata(TypedDict, total=False):
-    channel_id: Snowflake
-    duration_seconds: int
-    custom_message: str
+# The combined fields for all trigger types, see https://docs.discord.com/developers/resources/auto-moderation#auto-moderation-rule-object-trigger-metadata
+AutoModTriggerMetadata = (
+    KeywordAutoModTriggerMetadata
+    | KeywordPresetAutoModTriggerMetadata
+    | MemberProfileAutoModTriggerMetadata
+    | MentionSpamAutoModTriggerMetadata
+)
+
+
+class AutoModActionMetadata(TypedDict):
+    # Which fields are sent depends on the action type
+    channel_id: NotRequired[Snowflake]
+    duration_seconds: NotRequired[int]
+    custom_message: NotRequired[str | None]
 
 
 class AutoModAction(TypedDict):
     type: AutoModActionType
-    metadata: AutoModActionMetadata
+    metadata: NotRequired[AutoModActionMetadata]
 
 
 class AutoModRule(TypedDict):
@@ -71,21 +114,25 @@ class AutoModRule(TypedDict):
 
 
 class CreateAutoModRule(TypedDict):
-    enabled: NotRequired[bool]
-    exempt_roles: NotRequired[list[Snowflake]]
-    exempt_channels: NotRequired[list[Snowflake]]
+    """Payload sent when creating an automod rule"""
+
     name: str
     event_type: AutoModEventType
     trigger_type: AutoModTriggerType
-    trigger_metadata: AutoModTriggerMetadata
+    trigger_metadata: NotRequired[AutoModTriggerMetadata]
     actions: list[AutoModAction]
+    enabled: NotRequired[bool]
+    exempt_roles: NotRequired[list[Snowflake]]
+    exempt_channels: NotRequired[list[Snowflake]]
 
 
-class EditAutoModRule(TypedDict, total=False):
-    name: str
-    event_type: AutoModEventType
-    trigger_metadata: AutoModTriggerMetadata
-    actions: list[AutoModAction]
-    enabled: bool
-    exempt_roles: list[Snowflake]
-    exempt_channels: list[Snowflake]
+class ModifyAutoModRule(TypedDict):
+    """Allowed fields when editing an automod rule"""
+
+    name: NotRequired[str]
+    event_type: NotRequired[AutoModEventType]
+    trigger_metadata: NotRequired[AutoModTriggerMetadata]
+    actions: NotRequired[list[AutoModAction]]
+    enabled: NotRequired[bool]
+    exempt_roles: NotRequired[list[Snowflake]]
+    exempt_channels: NotRequired[list[Snowflake]]

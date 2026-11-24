@@ -25,88 +25,111 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
-from .user import PartialUser
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
 
 StatusType = Literal["idle", "dnd", "online", "offline"]
 
 
-class PartialPresenceUpdate(TypedDict):
-    user: PartialUser
-    guild_id: Snowflake
-    status: StatusType
-    activities: list[Activity]
-    client_status: ClientStatus
+class ClientStatus(TypedDict):
+    """Received from the gateway"""
+
+    desktop: NotRequired[str]
+    mobile: NotRequired[str]
+    web: NotRequired[str]
+    vr: NotRequired[str]
+    embedded: NotRequired[str]  # Consoles, undocumented
 
 
-class ClientStatus(TypedDict, total=False):
-    desktop: str
-    mobile: str
-    web: str
-    vr: str
+class ActivityTimestamps(TypedDict):
+    """Received from the gateway as part of an activity object"""
+
+    start: NotRequired[int]
+    end: NotRequired[int]
 
 
-class ActivityTimestamps(TypedDict, total=False):
-    start: int
-    end: int
+class ActivityParty(TypedDict):
+    """Received from the gateway as part of an activity object"""
+
+    id: NotRequired[str]
+    size: NotRequired[list[int]]
 
 
-class ActivityParty(TypedDict, total=False):
-    id: str
-    size: list[int]
+class ActivityAssets(TypedDict):
+    """Received from the gateway as part of an activity object"""
+
+    large_image: NotRequired[str]
+    large_text: NotRequired[str]
+    large_url: NotRequired[str]
+    small_image: NotRequired[str]
+    small_text: NotRequired[str]
+    small_url: NotRequired[str]
+    invite_cover_image: NotRequired[str]
 
 
-class ActivityAssets(TypedDict, total=False):
-    large_image: str
-    large_text: str
-    small_image: str
-    small_text: str
+class ActivitySecrets(TypedDict):
+    """Received from the gateway as part of an activity object"""
 
-
-class ActivitySecrets(TypedDict, total=False):
-    join: str
-    spectate: str
-    match: str
+    join: NotRequired[str]
+    spectate: NotRequired[str]
+    match: NotRequired[str]
 
 
 class ActivityEmoji(TypedDict):
+    """Received from the gateway as part of an activity object"""
+
     id: NotRequired[Snowflake]
     animated: NotRequired[bool]
     name: str
 
 
 class ActivityButton(TypedDict):
+    """Received from the gateway as part of an activity object"""
+
     label: str
     url: str
 
 
-ActivityType = Literal[0, 1, 2, 4, 5]
+ActivityType = Literal[0, 1, 2, 3, 4, 5]
 
 
 class SendableActivity(TypedDict):
-    url: NotRequired[str | None]
+    """A partial activity object that can be sent to the gateway, bot users can only set these fields"""
+
     name: str
     type: ActivityType
+    url: NotRequired[str | None]
+    state: NotRequired[str | None]
 
 
-class _BaseActivity(SendableActivity):
+class GameActivity(TypedDict):
+    """Undocumented game activity object used in guild profiles"""
+
+    activity_level: int
+    activity_score: int
+
+
+class Activity(SendableActivity):
+    """A full activity object received from the gateway"""
+
     created_at: int
-
-
-class Activity(_BaseActivity, total=False):
-    state: str | None
-    details: str | None
-    timestamps: ActivityTimestamps
-    assets: ActivityAssets
-    party: ActivityParty
-    application_id: Snowflake
-    flags: int
-    emoji: ActivityEmoji | None
-    secrets: ActivitySecrets
-    session_id: str | None
-    instance: bool
-    buttons: list[str]
+    timestamps: NotRequired[ActivityTimestamps]
+    application_id: NotRequired[Snowflake]
+    status_display_type: NotRequired[int | None]
+    details: NotRequired[str | None]
+    details_url: NotRequired[str | None]
+    state: NotRequired[str | None]
+    state_url: NotRequired[str | None]
+    emoji: NotRequired[ActivityEmoji | None]
+    party: NotRequired[ActivityParty]
+    assets: NotRequired[ActivityAssets]
+    secrets: NotRequired[ActivitySecrets]
+    instance: NotRequired[bool]
+    flags: NotRequired[int]
+    buttons: NotRequired[
+        list[str]
+    ]  # Technically an activity button object. Over the gateway, these are sent as strings

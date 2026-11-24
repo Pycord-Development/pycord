@@ -47,7 +47,7 @@ if TYPE_CHECKING:
     from discord.member import VoiceState
     from discord.raw_models import RawVoiceServerUpdateEvent, RawVoiceStateUpdateEvent
     from discord.state import ConnectionState
-    from discord.types.voice import SupportedModes
+    from discord.types.voice import TransportEncryptionMode
     from discord.user import ClientUser
 
     from .client import VoiceClient
@@ -242,7 +242,7 @@ class VoiceConnectionState:
         self.voice_port: int | None = None
         self.secret_key: list[int] = MISSING
         self.ssrc: int = MISSING
-        self.mode: SupportedModes = MISSING
+        self.mode: TransportEncryptionMode = MISSING
         self.socket: socket.socket = MISSING
         self.ws: VoiceWebSocket = MISSING
         self.session_id: str | None = None
@@ -320,7 +320,7 @@ class VoiceConnectionState:
         return self.guild.id
 
     @property
-    def supported_modes(self) -> tuple[SupportedModes, ...]:
+    def supported_modes(self) -> tuple[TransportEncryptionMode, ...]:
         return self.client.supported_modes
 
     @property

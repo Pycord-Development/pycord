@@ -45,7 +45,7 @@ from ._types import VoiceProtocol
 from .enums import OpCodes
 from .receive import AudioReader
 from .state import VoiceConnectionState
-from .utils.dependencies import HAS_DAVEY, HAS_NACL
+from .utils.dependencies import HAS_NACL
 
 if HAS_NACL:
     import nacl.secret
@@ -64,7 +64,7 @@ if TYPE_CHECKING:
         RawVoiceStateUpdateEvent,
     )
     from discord.state import ConnectionState
-    from discord.types.voice import SupportedModes
+    from discord.types.voice import TransportEncryptionMode
     from discord.user import ClientUser, User
 
     from .gateway import VoiceWebSocket
@@ -140,7 +140,7 @@ class VoiceClient(VoiceProtocol):
         if not future.done():
             future.set_result(result)
 
-    supported_modes: tuple[SupportedModes, ...] = (
+    supported_modes: tuple[TransportEncryptionMode, ...] = (
         "aead_xchacha20_poly1305_rtpsize",
         "xsalsa20_poly1305_lite",
         "xsalsa20_poly1305_suffix",
@@ -179,7 +179,7 @@ class VoiceClient(VoiceProtocol):
         return self._connection.ssrc
 
     @property
-    def mode(self) -> SupportedModes:
+    def mode(self) -> TransportEncryptionMode:
         """The encryption / decryption mode the voice client is currently using."""
         return self._connection.mode
 

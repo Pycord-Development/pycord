@@ -26,11 +26,17 @@ from typing import Literal, TypedDict
 
 from typing_extensions import NotRequired
 
-SharedClientThemeBaseType = Literal[0, 1, 2, 3, 4]
+SharedClientThemeBaseType = Literal[
+    0,  # UNSET (equivalent to DARK)
+    1,  # DARK
+    2,  # LIGHT
+    3,  # DARKER
+    4,  # MIDNIGHT
+]
 
 
 class SharedClientTheme(TypedDict):
     colors: list[str]
     gradient_angle: int
     base_mix: int
-    base_theme: NotRequired[SharedClientThemeBaseType]
+    base_theme: NotRequired[SharedClientThemeBaseType | None]

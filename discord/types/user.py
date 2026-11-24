@@ -25,11 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from .collectibles import Collectibles
-from .primary_guild import PrimaryGuild
-from .snowflake import Snowflake
+from typing_extensions import NotRequired
+
+if TYPE_CHECKING:
+    from .collectibles import AvatarDecoration, Collectibles
+    from .primary_guild import PrimaryGuild
+    from .snowflake import Snowflake
 
 
 class PartialUser(TypedDict):
@@ -43,15 +46,18 @@ class PartialUser(TypedDict):
 PremiumType = Literal[0, 1, 2, 3]
 
 
-class User(PartialUser, total=False):
-    bot: bool
-    system: bool
-    mfa_enabled: bool
-    local: str
-    verified: bool
-    email: str | None
-    flags: int
-    premium_type: PremiumType
-    public_flags: int
-    primary_guild: PrimaryGuild
-    collectibles: Collectibles
+class User(PartialUser):
+    bot: NotRequired[bool]
+    system: NotRequired[bool]
+    mfa_enabled: NotRequired[bool]
+    banner: NotRequired[str | None]
+    accent_color: NotRequired[int | None]
+    locale: NotRequired[str]
+    verified: NotRequired[bool]
+    email: NotRequired[str | None]
+    flags: NotRequired[int]
+    premium_type: NotRequired[PremiumType]
+    public_flags: NotRequired[int]
+    avatar_decoration_data: NotRequired[AvatarDecoration | None]
+    collectibles: NotRequired[Collectibles | None]
+    primary_guild: NotRequired[PrimaryGuild | None]

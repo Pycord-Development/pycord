@@ -61,7 +61,7 @@ if TYPE_CHECKING:
     from .scheduled_events import ScheduledEvent
     from .state import ConnectionState
     from .types.channel import PartialChannel as InviteChannelPayload
-    from .types.invite import GatewayInvite as GatewayInvitePayload
+    from .types.events import GatewayInviteEvent as GatewayInvitePayload
     from .types.invite import IncompleteInvite as IncompleteInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload

@@ -25,14 +25,30 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .channel import Thread
+    from .member import Member
+    from .snowflake import Snowflake
 
-ThreadType = Literal[10, 11, 12]
+ThreadType = Literal[
+    10,  # ANNOUNCEMENT_THREAD
+    11,  # PUBLIC_THREAD
+    12,  # PRIVATE_THREAD
+]
 ThreadArchiveDuration = Literal[60, 1440, 4320, 10080]
+
+
+class PartialThreadMember(TypedDict):
+    """Partial thread member information received on the GUILD_CREATE event"""
+
+    id: NotRequired[Snowflake]
+    user_id: NotRequired[Snowflake]
+    join_timestamp: str
+    flags: int
 
 
 class ThreadMember(TypedDict):
@@ -40,36 +56,21 @@ class ThreadMember(TypedDict):
     user_id: Snowflake
     join_timestamp: str
     flags: int
+    member: NotRequired[Member]  # Only present when `with_member` is True
 
 
 class ThreadMetadata(TypedDict):
-    invitable: NotRequired[bool]
-    create_timestamp: NotRequired[str]
     archived: bool
     auto_archive_duration: ThreadArchiveDuration
     archive_timestamp: str
     locked: bool
-
-
-class Thread(TypedDict):
-    member: NotRequired[ThreadMember]
-    last_message_id: NotRequired[Snowflake | None]
-    last_pin_timestamp: NotRequired[Snowflake | None]
-    id: Snowflake
-    guild_id: Snowflake
-    parent_id: Snowflake
-    owner_id: Snowflake
-    name: str
-    type: ThreadType
-    member_count: int
-    message_count: int
-    rate_limit_per_user: int
-    thread_metadata: ThreadMetadata
-    flags: int
-    total_message_sent: int
+    invitable: NotRequired[bool]
+    create_timestamp: NotRequired[str | None]
 
 
 class ThreadPaginationPayload(TypedDict):
+    """Fields received when paginating through threads"""
+
     threads: list[Thread]
     members: list[ThreadMember]
     has_more: bool

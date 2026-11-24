@@ -25,11 +25,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired
 
-from .snowflake import Snowflake
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
 
 
 class RoleColours(TypedDict):
@@ -38,25 +39,46 @@ class RoleColours(TypedDict):
     tertiary_color: int | None
 
 
-class Role(TypedDict):
-    tags: NotRequired[RoleTags]
+class AuditLogPartialRole(TypedDict):
+    """Very limited partial role object that appears only in audit log changes."""
+
     id: Snowflake
     name: str
-    color: int
+
+
+class PartialRole(TypedDict):
+    """Partial role object received as part of an invite object"""
+
+    id: Snowflake
+    name: str
+    position: int
+    color: int  # Prefer colors field
+    colors: RoleColours
+    icon: NotRequired[str | None]
+    unicode_emoji: NotRequired[str | None]
+
+
+class Role(TypedDict):
+    id: Snowflake
+    name: str
+    color: int  # Prefer colors field
     colors: RoleColours
     hoist: bool
+    icon: NotRequired[str | None]
+    unicode_emoji: NotRequired[str | None]
     position: int
     permissions: str
     managed: bool
     mentionable: bool
+    tags: NotRequired[RoleTags]
     flags: int
 
 
-class RoleTags(TypedDict, total=False):
+class RoleTags(TypedDict):
     bot_id: NotRequired[Snowflake]
     integration_id: NotRequired[Snowflake]
     subscription_listing_id: NotRequired[Snowflake]
-    # Here a key being present and `None` means `True`, and it being missing means `False`
+    # Here, a key being present and `None` means `True`, and it being missing means `False`
     premium_subscriber: NotRequired[Literal[None]]
     available_for_purchase: NotRequired[Literal[None]]
     guild_connections: NotRequired[Literal[None]]

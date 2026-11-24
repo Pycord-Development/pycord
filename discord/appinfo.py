@@ -36,9 +36,9 @@ from .permissions import Permissions
 if TYPE_CHECKING:
     from .guild import Guild
     from .state import ConnectionState
-    from .types.appinfo import AppInfo as AppInfoPayload
-    from .types.appinfo import AppInstallParams as AppInstallParamsPayload
-    from .types.appinfo import PartialAppInfo as PartialAppInfoPayload
+    from .types.appinfo import ApplicationInfo as AppInfoPayload
+    from .types.appinfo import ApplicationInstallParams as AppInstallParamsPayload
+    from .types.appinfo import PartialApplicationInfo as PartialAppInfoPayload
     from .types.appinfo import Team as TeamPayload
     from .user import User
 
@@ -510,9 +510,9 @@ class PartialAppInfo:
     def __init__(self, *, state: ConnectionState, data: PartialAppInfoPayload):
         self._state: ConnectionState = state
         self.id: int = int(data["id"])
-        self.name: str = data["name"]
+        self.name: str = data.get("name", "")
         self._icon: str | None = data.get("icon")
-        self.description: str = data["description"]
+        self.description: str = data.get("description", "")
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]

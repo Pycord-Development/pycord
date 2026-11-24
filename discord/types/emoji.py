@@ -25,26 +25,54 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
 
-from .snowflake import Snowflake, SnowflakeList
-from .user import User
+from typing_extensions import NotRequired
+
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
+    from .user import User
 
 
 class PartialEmoji(TypedDict):
+    """A partial emoji object received e.g. as part of a reaction object"""
+
     id: Snowflake | None
     name: str | None
 
 
-class Emoji(PartialEmoji, total=False):
-    roles: SnowflakeList
-    user: User
-    require_colons: bool
-    managed: bool
-    animated: bool
-    available: bool
+class Emoji(PartialEmoji):
+    roles: NotRequired[list[Snowflake]]
+    user: NotRequired[User]
+    require_colons: NotRequired[bool]
+    managed: NotRequired[bool]
+    animated: NotRequired[bool]
+    available: NotRequired[bool]
 
 
-class EditEmoji(TypedDict):
+class CreateGuildEmoji(TypedDict):
+    """The allowed fields when creating a guild emoji"""
+
     name: str
-    roles: SnowflakeList | None
+    image: str
+    roles: list[Snowflake]
+
+
+class ModifyGuildEmoji(TypedDict):
+    """The allowed fields when editing a guild emoji"""
+
+    name: NotRequired[str]
+    roles: NotRequired[list[Snowflake] | None]
+
+
+class CreateAppEmoji(TypedDict):
+    """The allowed fields when creating an app emoji"""
+
+    name: str
+    image: str
+
+
+class ModifyAppEmoji(TypedDict):
+    """The allowed fields when editing an app emoji"""
+
+    name: str

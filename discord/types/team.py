@@ -25,22 +25,34 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 
-from .snowflake import Snowflake
-from .user import PartialUser
+if TYPE_CHECKING:
+    from .snowflake import Snowflake
+    from .user import User
+
+TeamMembershipState = Literal[
+    1,  # INVITED
+    2,  # ACCEPTED
+]
+
+TeamMemberRole = Literal[
+    "admin",
+    "developer",
+    "read_only",
+]
 
 
 class TeamMember(TypedDict):
-    user: PartialUser
-    membership_state: int
-    role: str
+    membership_state: TeamMembershipState
     team_id: Snowflake
+    user: User
+    role: TeamMemberRole
 
 
 class Team(TypedDict):
-    id: Snowflake
-    name: str
-    owner_id: Snowflake
-    members: list[TeamMember]
     icon: str | None
+    id: Snowflake
+    members: list[TeamMember]
+    name: str
+    owner_user_id: Snowflake

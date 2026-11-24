@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
     from discord.abc import GuildChannel
     from discord.threads import Thread
-    from discord.types.snowflake import Snowflake, SnowflakeList
+    from discord.types.snowflake import Snowflake
 
     from .context import Context
     from .converter import Converter
@@ -654,8 +654,8 @@ class MissingAnyRole(CheckFailure):
         These are the parameters passed to :func:`~.commands.has_any_role`.
     """
 
-    def __init__(self, missing_roles: SnowflakeList) -> None:
-        self.missing_roles: SnowflakeList = missing_roles
+    def __init__(self, missing_roles: list[Snowflake]) -> None:
+        self.missing_roles: list[Snowflake] = missing_roles
 
         missing = [f"'{role}'" for role in missing_roles]
 
@@ -683,8 +683,8 @@ class BotMissingAnyRole(CheckFailure):
         These are the parameters passed to :func:`~.commands.has_any_role`.
     """
 
-    def __init__(self, missing_roles: SnowflakeList) -> None:
-        self.missing_roles: SnowflakeList = missing_roles
+    def __init__(self, missing_roles: list[Snowflake]) -> None:
+        self.missing_roles: list[Snowflake] = missing_roles
 
         missing = [f"'{role}'" for role in missing_roles]
 

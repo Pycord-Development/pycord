@@ -47,9 +47,9 @@ if TYPE_CHECKING:
 
     from .guild import Guild
     from .state import ConnectionState
-    from .types.sticker import EditGuildSticker
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.sticker import ListPremiumStickerPacks as ListPremiumStickerPacksPayload
+    from .types.sticker import ModifyGuildSticker
     from .types.sticker import StandardSticker as StandardStickerPayload
     from .types.sticker import Sticker as StickerPayload
     from .types.sticker import StickerItem as StickerItemPayload
@@ -496,7 +496,7 @@ class GuildSticker(Sticker):
         HTTPException
             An error occurred editing the sticker.
         """
-        payload: EditGuildSticker = {}
+        payload: ModifyGuildSticker = {}
 
         if name is not MISSING:
             payload["name"] = name
