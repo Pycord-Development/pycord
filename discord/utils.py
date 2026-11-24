@@ -800,7 +800,7 @@ def _all_subclasses(cls: type) -> set[type]:
 
 
 def _unique(iterable: Iterable[T]) -> list[T]:
-    return [x for x in dict.fromkeys(iterable)]
+    return [*dict.fromkeys(iterable)]
 
 
 def _get_as_snowflake(data: Any, key: str) -> int | None:
