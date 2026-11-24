@@ -535,10 +535,12 @@ class Guild(Hashable):
         return f"<Guild {inner}>"
 
     def _update_voice_state(
-        self, data: GuildVoiceState, channel_id: int
+        self, data: GuildVoiceState, channel_id: int | None
     ) -> tuple[Member | None, VoiceState, VoiceState]:
         user_id = int(data["user_id"])
-        channel = self.get_channel(channel_id)
+        channel = None
+        if channel_id is not None:
+            channel = self.get_channel(channel_id)
         try:
             # check if we should remove the voice state from cache
             if channel is None:
