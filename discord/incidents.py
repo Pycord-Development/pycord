@@ -58,30 +58,18 @@ class IncidentsData:
     )
 
     def __init__(self, data: IncidentsDataPayload):
-        self.invites_disabled_until: datetime.datetime | None = parse_time(
-            data.get("invites_disabled_until")
-        )
+        self.invites_disabled_until: datetime.datetime | None = parse_time(data.get("invites_disabled_until"))
 
-        self.dms_disabled_until: datetime.datetime | None = parse_time(
-            data.get("dms_disabled_until")
-        )
+        self.dms_disabled_until: datetime.datetime | None = parse_time(data.get("dms_disabled_until"))
 
-        self.dm_spam_detected_at: datetime.datetime | None = parse_time(
-            data.get("dm_spam_detected_at")
-        )
+        self.dm_spam_detected_at: datetime.datetime | None = parse_time(data.get("dm_spam_detected_at"))
 
-        self.raid_detected_at: datetime.datetime | None = parse_time(
-            data.get("raid_detected_at")
-        )
+        self.raid_detected_at: datetime.datetime | None = parse_time(data.get("raid_detected_at"))
 
     def to_dict(self) -> IncidentsDataPayload:
         return {
-            "invites_disabled_until": self.invites_disabled_until
-            and self.invites_disabled_until.isoformat(),
-            "dms_disabled_until": self.dms_disabled_until
-            and self.dms_disabled_until.isoformat(),
-            "dm_spam_detected_at": self.dm_spam_detected_at
-            and self.dm_spam_detected_at.isoformat(),
-            "raid_detected_at": self.raid_detected_at
-            and self.raid_detected_at.isoformat(),
+            "invites_disabled_until": self.invites_disabled_until and self.invites_disabled_until.isoformat(),
+            "dms_disabled_until": self.dms_disabled_until and self.dms_disabled_until.isoformat(),
+            "dm_spam_detected_at": self.dm_spam_detected_at and self.dm_spam_detected_at.isoformat(),
+            "raid_detected_at": self.raid_detected_at and self.raid_detected_at.isoformat(),
         }

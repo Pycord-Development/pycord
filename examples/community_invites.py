@@ -23,9 +23,7 @@ async def create_custom_invite(ctx: discord.ApplicationContext, user_ids: str):
 
 
 @bot.slash_command()
-async def create_custom_invite_from_file(
-    ctx: discord.ApplicationContext, target_users: discord.Attachment
-):
+async def create_custom_invite_from_file(ctx: discord.ApplicationContext, target_users: discord.Attachment):
     await ctx.defer()
     target_users_file = await target_users.to_file()
     invite = await ctx.channel.create_invite(
@@ -38,9 +36,7 @@ async def create_custom_invite_from_file(
 
 
 @bot.slash_command()
-async def update_custom_invite(
-    ctx: discord.ApplicationContext, invite_code: str, target_users: discord.Attachment
-):
+async def update_custom_invite(ctx: discord.ApplicationContext, invite_code: str, target_users: discord.Attachment):
     await ctx.defer()
     invite = await bot.fetch_invite(invite_code)
 
@@ -58,9 +54,7 @@ async def get_invite_target_users(ctx: discord.ApplicationContext, code: str):
     await ctx.defer()
     invite = await bot.fetch_invite(code)
     if invite.guild.id != ctx.guild.id:
-        return await ctx.respond(
-            "You can only get target users from invites from this server."
-        )
+        return await ctx.respond("You can only get target users from invites from this server.")
     user_ids = await invite.target_users.as_user_ids()
     await ctx.respond(f"Target user IDs: {user_ids}")
 

@@ -71,9 +71,7 @@ class Team:
         self.name: str = data["name"]
         self._icon: str | None = data["icon"]
         self.owner_id: int | None = utils._get_as_snowflake(data, "owner_user_id")
-        self.members: list[TeamMember] = [
-            TeamMember(self, self._state, member) for member in data["members"]
-        ]
+        self.members: list[TeamMember] = [TeamMember(self, self._state, member) for member in data["members"]]
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
@@ -146,13 +144,9 @@ class TeamMember(BaseUser):
 
     def __init__(self, team: Team, state: ConnectionState, data: TeamMemberPayload):
         self.team: Team = team
-        self.membership_state: TeamMembershipState = try_enum(
-            TeamMembershipState, data["membership_state"]
-        )
+        self.membership_state: TeamMembershipState = try_enum(TeamMembershipState, data["membership_state"])
         self.role: TeamRole = (
-            TeamRole.owner
-            if team.owner_id == int(data["user"]["id"])
-            else try_enum(TeamRole, data["role"])
+            TeamRole.owner if team.owner_id == int(data["user"]["id"]) else try_enum(TeamRole, data["role"])
         )
         super().__init__(state=state, data=data["user"])
 
@@ -173,8 +167,6 @@ class TeamMember(BaseUser):
         )
 
     @property
-    @deprecated(
-        "TeamMember.permissions is deprecated and will return an empty list. Use TeamMember.role instead."
-    )
+    @deprecated("TeamMember.permissions is deprecated and will return an empty list. Use TeamMember.role instead.")
     def permissions(self) -> list[str]:
         return []

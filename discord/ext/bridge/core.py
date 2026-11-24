@@ -86,9 +86,7 @@ class BridgeSlashCommand(SlashCommand):
         self.brief = kwargs.pop("brief", None)
         super().__init__(func, **kwargs)
 
-    async def dispatch_error(
-        self, ctx: BridgeApplicationContext, error: Exception
-    ) -> None:
+    async def dispatch_error(self, ctx: BridgeApplicationContext, error: Exception) -> None:
         await super().dispatch_error(ctx, error)
         ctx.bot.dispatch("bridge_command_error", ctx, error)
 
@@ -100,9 +98,7 @@ class BridgeExtCommand(Command):
         super().__init__(func, **kwargs)
 
         for option in self.params.values():
-            if isinstance(option.annotation, Option) and not isinstance(
-                option.annotation, BridgeOption
-            ):
+            if isinstance(option.annotation, Option) and not isinstance(option.annotation, BridgeOption):
                 raise TypeError(
                     f"{option.annotation.__class__.__name__} is not supported in bridge commands. Use BridgeOption instead."
                 )
@@ -177,12 +173,10 @@ class BridgeCommand:
 
     def __init__(self, callback, **kwargs):
         self.parent = kwargs.pop("parent", None)
-        self.slash_variant: BridgeSlashCommand = kwargs.pop(
-            "slash_variant", None
-        ) or BridgeSlashCommand(callback, **kwargs)
-        self.ext_variant: BridgeExtCommand = kwargs.pop(
-            "ext_variant", None
-        ) or BridgeExtCommand(callback, **kwargs)
+        self.slash_variant: BridgeSlashCommand = kwargs.pop("slash_variant", None) or BridgeSlashCommand(
+            callback, **kwargs
+        )
+        self.ext_variant: BridgeExtCommand = kwargs.pop("ext_variant", None) or BridgeExtCommand(callback, **kwargs)
 
     @property
     def name_localizations(self) -> dict[str, str] | None:
@@ -236,9 +230,7 @@ class BridgeCommand:
                     return getattr(self.ext_variant, name)
                 return result
             except AttributeError:
-                raise AttributeError(
-                    f"'{self.__class__.__name__}' object has no attribute '{name}'"
-                )
+                raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
     def __setattr__(self, name, value) -> None:
         if name not in self.__special_attrs__:
@@ -258,9 +250,7 @@ class BridgeCommand:
         bot.add_application_command(self.slash_variant)
         bot.add_command(self.ext_variant)
 
-    async def invoke(
-        self, ctx: BridgeExtContext | BridgeApplicationContext, /, *args, **kwargs
-    ):
+    async def invoke(self, ctx: BridgeExtContext | BridgeApplicationContext, /, *args, **kwargs):
         if ctx.is_app:
             return await self.slash_variant.invoke(ctx)
         return await self.ext_variant.invoke(ctx)
@@ -421,9 +411,7 @@ class BridgeCommandGroup(BridgeCommand):
                 **kwargs,
                 cls=BridgeExtCommand,
             )(callback)
-            command = BridgeCommand(
-                callback, parent=self, slash_variant=slash, ext_variant=ext
-            )
+            command = BridgeCommand(callback, parent=self, slash_variant=slash, ext_variant=ext)
             self.subcommands.append(command)
             return command
 
@@ -644,19 +632,14 @@ class BridgeOption(Option, Converter):
                     raise TypeError(f"Invalid converter: {converter}")
 
             if self.choices:
-                choices_names: list[str | int | float] = [
-                    choice.name for choice in self.choices
-                ]
-                if converted in choices_names and (
-                    choice := get(self.choices, name=converted)
-                ):
+                choices_names: list[str | int | float] = [choice.name for choice in self.choices]
+                if converted in choices_names and (choice := get(self.choices, name=converted)):
                     converted = choice.value
                 else:
                     choices = [choice.value for choice in self.choices]
                     if converted not in choices:
                         raise ValueError(
-                            f"{argument} is not a valid choice. Valid choices:"
-                            f" {list(set(choices_names + choices))}"
+                            f"{argument} is not a valid choice. Valid choices:" f" {list(set(choices_names + choices))}"
                         )
 
             return converted
@@ -678,11 +661,7 @@ def bridge_option(name, input_type=None, **kwargs):
 
     def decorator(func):
         resolved_name = kwargs.pop("parameter_name", None) or name
-        itype = (
-            kwargs.pop("type", None)
-            or input_type
-            or func.__annotations__.get(resolved_name, str)
-        )
+        itype = kwargs.pop("type", None) or input_type or func.__annotations__.get(resolved_name, str)
         func.__annotations__[resolved_name] = BridgeOption(itype, name=name, **kwargs)
         return func
 

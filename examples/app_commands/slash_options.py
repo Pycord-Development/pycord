@@ -31,9 +31,7 @@ async def hello(
     pokemon: str,
     age: int,
 ):
-    await ctx.respond(
-        f"Hello {name}! Your starter Pokémon is {pokemon} and you are {age} years old."
-    )
+    await ctx.respond(f"Hello {name}! Your starter Pokémon is {pokemon} and you are {age} years old.")
 
 
 @bot.slash_command(name="channel")

@@ -78,9 +78,7 @@ class AudioReader:
         start: bool = False,
     ) -> None:
         if after is not None and not callable(after):
-            raise TypeError(
-                f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead"
-            )
+            raise TypeError(f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead")
 
         self.sink: Sink = sink
         self.client: VoiceClient = client
@@ -92,9 +90,7 @@ class AudioReader:
         self.error: Exception | None = None
         self.packet_router: PacketRouter = PacketRouter(self.sink, self)
         self.event_router: SinkEventRouter = SinkEventRouter(self.sink, self)
-        self.decryptor: PacketDecryptor = PacketDecryptor(
-            client.mode, bytes(client.secret_key), client
-        )
+        self.decryptor: PacketDecryptor = PacketDecryptor(client.mode, bytes(client.secret_key), client)
         self.speaking_timer: SpeakingTimer = SpeakingTimer(self)
         self.keep_alive: UDPKeepAlive = UDPKeepAlive(client)
 
@@ -150,9 +146,7 @@ class AudioReader:
             try:
                 self.after(self.error)
             except Exception:
-                _log.exception(
-                    "An error occurred while calling the after callback on audio reader"
-                )
+                _log.exception("An error occurred while calling the after callback on audio reader")
 
         """for sink in self.sink.root.walk_children(with_self=True):
             try:
@@ -194,9 +188,7 @@ class AudioReader:
             if self._is_ip_discovery_packet(packet_data):
                 _log.debug("Received an IP Discovery Packet, ignoring...")
                 return
-            _log.exception(
-                "An exception occurred while decoding voice packets", exc_info=exc
-            )
+            _log.exception("An exception occurred while decoding voice packets", exc_info=exc)
         except BaseException as exc:
             pending_exc = exc
 
@@ -216,9 +208,7 @@ class AudioReader:
             self.packet_router.feed_rtcp(rtcp_packet)  # type: ignore
         elif rtp_packet:
             if not rtp_packet.decrypted_data:
-                _log.debug(
-                    "No decrypted data for RTP packet, this should be safe to ignore."
-                )
+                _log.debug("No decrypted data for RTP packet, this should be safe to ignore.")
                 return
 
             ssrc = rtp_packet.ssrc
@@ -227,12 +217,8 @@ class AudioReader:
                 if rtp_packet.is_silence():
                     return
                 else:
-                    _log.info(
-                        "Received a packet for unknown SSRC %s: %s", ssrc, rtp_packet
-                    )
-                    _log.debug(
-                        "Current SSRCs: %s", self.client._connection.ssrc_user_map
-                    )
+                    _log.info("Received a packet for unknown SSRC %s: %s", ssrc, rtp_packet)
+                    _log.debug("Current SSRCs: %s", self.client._connection.ssrc_user_map)
 
             self.speaking_timer.notify(ssrc)
 
@@ -240,9 +226,7 @@ class AudioReader:
                 _log.debug("Feeding packet to packet router")
                 self.packet_router.feed_rtp(rtp_packet)  # type: ignore
             except Exception as exc:
-                _log.exception(
-                    "An error occurred while processing RTP packet %s", rtp_packet
-                )
+                _log.exception("An error occurred while processing RTP packet %s", rtp_packet)
                 self.error = exc
                 self.stop()
 
@@ -255,9 +239,7 @@ class PacketDecryptor:
         "xsalsa20_poly1305_suffix",
     ]
 
-    def __init__(
-        self, mode: SupportedModes, secret_key: bytes, client: VoiceClient
-    ) -> None:
+    def __init__(self, mode: SupportedModes, secret_key: bytes, client: VoiceClient) -> None:
         self.mode: SupportedModes = mode
         self.client: VoiceClient = client
 
@@ -313,9 +295,7 @@ class PacketDecryptor:
                     else:
                         packet.decrypted_data = decrypted_audio
                 except Exception as exc:
-                    _log.debug(
-                        "Ignoring exception while decoding DAVE packet", exc_info=exc
-                    )
+                    _log.debug("Ignoring exception while decoding DAVE packet", exc_info=exc)
                     packet.decrypted_data = OPUS_SILENCE
 
         return packet.decrypted_data
@@ -558,9 +538,7 @@ class UDPKeepAlive(threading.Thread):
                 continue
 
             try:
-                vc._connection.socket.sendto(
-                    packet, (vc._connection.endpoint_ip, vc._connection.voice_port)
-                )
+                vc._connection.socket.sendto(packet, (vc._connection.endpoint_ip, vc._connection.voice_port))
             except Exception as exc:
                 _log.debug(
                     "Error while sending udp keep alive to socket %s at %s:%s",

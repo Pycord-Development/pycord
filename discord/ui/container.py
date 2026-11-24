@@ -165,9 +165,7 @@ class Container(ViewItem[V]):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
 
         if isinstance(item, (Button, Select)):
-            raise TypeError(
-                f"{item.__class__!r} cannot be added directly. Use ActionRow instead."
-            )
+            raise TypeError(f"{item.__class__!r} cannot be added directly. Use ActionRow instead.")
 
         item.parent = self
 
@@ -395,9 +393,7 @@ class Container(ViewItem[V]):
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
-            if hasattr(item, "disabled") and (
-                exclusions is None or item not in exclusions
-            ):
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
                 item.disabled = True
         return self
 
@@ -411,9 +407,7 @@ class Container(ViewItem[V]):
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():
-            if hasattr(item, "disabled") and (
-                exclusions is None or item not in exclusions
-            ):
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
                 item.disabled = False
         return self
 

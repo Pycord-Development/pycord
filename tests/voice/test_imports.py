@@ -38,11 +38,7 @@ def test_client_does_not_warn_when_voice_dependencies_are_available(caplog):
     with caplog.at_level(logging.WARNING, logger="discord.client"):
         discord.Client()
 
-    warnings = [
-        record.getMessage()
-        for record in caplog.records
-        if record.name == "discord.client"
-    ]
+    warnings = [record.getMessage() for record in caplog.records if record.name == "discord.client"]
     assert warnings == []
 
 

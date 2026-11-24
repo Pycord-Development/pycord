@@ -129,11 +129,7 @@ _log = logging.getLogger(__name__)
 DISCORD_EPOCH = 1420070400000
 
 try:
-    with (
-        importlib.resources.files(__package__)
-        .joinpath("emojis.json")
-        .open(encoding="utf-8") as f
-    ):
+    with importlib.resources.files(__package__).joinpath("emojis.json").open(encoding="utf-8") as f:
         EMOJIS_MAP = json.load(f)
 except FileNotFoundError:
     _log.debug(
@@ -188,9 +184,7 @@ class CachedSlotProperty(Generic[T, T_co]):
         self.__doc__ = getattr(function, "__doc__")
 
     @overload
-    def __get__(
-        self, instance: None, owner: type[T]
-    ) -> CachedSlotProperty[T, T_co]: ...
+    def __get__(self, instance: None, owner: type[T]) -> CachedSlotProperty[T, T_co]: ...
 
     @overload
     def __get__(self, instance: T, owner: type[T]) -> T_co: ...
@@ -337,9 +331,7 @@ def warn_deprecated(
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
 
 
-@ext_deprecated(
-    "deprecated is deprecated since version 2.8, consider using warnings.deprecated instead."
-)
+@ext_deprecated("deprecated is deprecated since version 2.8, consider using warnings.deprecated instead.")
 def deprecated(
     instead: str | None = None,
     since: str | None = None,
@@ -559,9 +551,7 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
         Keyword arguments that denote attributes to search with.
     """
 
-    converted = [
-        (attrgetter(attr.replace("__", ".")), value) for attr, value in attrs.items()
-    ]
+    converted = [(attrgetter(attr.replace("__", ".")), value) for attr, value in attrs.items()]
 
     for elem in iterable:
         for pred, value in converted:
@@ -855,9 +845,7 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
         return float(reset_after)
     utc = datetime.timezone.utc
     now = datetime.datetime.now(utc)
-    reset = datetime.datetime.fromtimestamp(
-        float(request.headers["X-Ratelimit-Reset"]), utc
-    )
+    reset = datetime.datetime.fromtimestamp(float(request.headers["X-Ratelimit-Reset"]), utc)
     return (reset - now).total_seconds()
 
 
@@ -880,9 +868,7 @@ async def async_all(gen, *, check=_isawaitable):
 
 async def sane_wait_for(futures, *, timeout):
     ensured = [asyncio.ensure_future(fut) for fut in futures]
-    done, pending = await asyncio.wait(
-        ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED
-    )
+    done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
 
     if len(pending) != 0:
         raise asyncio.TimeoutError()
@@ -1047,9 +1033,7 @@ def resolve_template(code: Template | str) -> str:
     return code
 
 
-_MARKDOWN_ESCAPE_SUBREGEX = "|".join(
-    r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|")
-)
+_MARKDOWN_ESCAPE_SUBREGEX = "|".join(r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|"))
 
 # regular expression for finding and escaping links in markdown
 # note: technically, brackets are allowed in link text.
@@ -1110,9 +1094,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE)
 
 
-def escape_markdown(
-    text: str, *, as_needed: bool = False, ignore_links: bool = True
-) -> str:
+def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = True) -> str:
     r"""A helper function that escapes Discord's markdown.
 
     Parameters
@@ -1338,16 +1320,11 @@ def evaluate_annotation(
             is_literal = True
 
         evaluated_args = tuple(
-            evaluate_annotation(arg, globals, locals, cache, implicit_str=implicit_str)
-            for arg in args
+            evaluate_annotation(arg, globals, locals, cache, implicit_str=implicit_str) for arg in args
         )
 
-        if is_literal and not all(
-            isinstance(x, (str, int, bool, type(None))) for x in evaluated_args
-        ):
-            raise TypeError(
-                "Literal arguments must be of type str, int, bool, or NoneType."
-            )
+        if is_literal and not all(isinstance(x, (str, int, bool, type(None))) for x in evaluated_args):
+            raise TypeError("Literal arguments must be of type str, int, bool, or NoneType.")
 
         if evaluated_args == args:
             return tp
@@ -1380,9 +1357,7 @@ def resolve_annotation(
 TimestampStyle = Literal["f", "F", "d", "D", "t", "T", "R"]
 
 
-def format_dt(
-    dt: datetime.datetime | datetime.time, /, style: TimestampStyle | None = None
-) -> str:
+def format_dt(dt: datetime.datetime | datetime.time, /, style: TimestampStyle | None = None) -> str:
     """A helper function to format a :class:`datetime.datetime` for presentation within Discord.
 
     This allows for a locale-independent way of presenting data using Discord specific Markdown.
@@ -1456,9 +1431,7 @@ AutocompleteFunc = Callable[[AutocompleteContext], AV]
 FilterFunc = Callable[[AutocompleteContext, Any], bool | Awaitable[bool]]
 
 
-def basic_autocomplete(
-    values: Values, *, filter: FilterFunc | None = None
-) -> AutocompleteFunc:
+def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
     callable, it will be called with the AutocompleteContext.

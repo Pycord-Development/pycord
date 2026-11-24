@@ -126,9 +126,7 @@ class Button(ViewItem[V]):
             raise TypeError("cannot mix both sku_id and custom_id with Button")
 
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         self._provided_custom_id = custom_id is not None
         if url is None and custom_id is None and sku_id is None:
@@ -146,8 +144,7 @@ class Button(ViewItem[V]):
                 emoji = emoji._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not"
-                    f" {emoji.__class__}"
+                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not" f" {emoji.__class__}"
                 )
 
         self.row = row
@@ -258,8 +255,7 @@ class Button(ViewItem[V]):
             self.underlying.emoji = value._to_partial()
         else:
             raise TypeError(
-                "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received"
-                f" {value.__class__} instead"
+                "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received" f" {value.__class__} instead"
             )
 
     @property
@@ -335,9 +331,7 @@ class Button(ViewItem[V]):
         return super().to_component_dict()
 
     def is_dispatchable(self) -> bool:
-        return (self.custom_id is not None) and (
-            bool(self.view._store) if self.view else True
-        )
+        return (self.custom_id is not None) and (bool(self.view._store) if self.view else True)
 
     def is_storable(self) -> bool:
         return self.is_dispatchable()

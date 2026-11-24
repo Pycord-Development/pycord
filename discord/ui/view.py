@@ -192,8 +192,7 @@ class _ViewWeights:
         for index, weight in enumerate(self.weights):
             # check if open space AND (next row has no items OR this is the last row)
             if (weight + item.width <= 5) and (
-                (index < len(self.weights) - 1 and self.weights[index + 1] == 0)
-                or index == len(self.weights) - 1
+                (index < len(self.weights) - 1 and self.weights[index + 1] == 0) or index == len(self.weights) - 1
             ):
                 return index
 
@@ -203,9 +202,7 @@ class _ViewWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(
-                    f"item would not fit at row {item.row} ({total} > 5 width)"
-                )
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:
@@ -368,9 +365,7 @@ class BaseView(ItemInterface):
             The interaction that occurred.
         """
 
-    async def on_error(
-        self, error: Exception, item: ViewItem[V], interaction: Interaction
-    ) -> None:
+    async def on_error(self, error: Exception, item: ViewItem[V], interaction: Interaction) -> None:
         """|coro|
 
         A callback that is called when an item's callback or :meth:`interaction_check`
@@ -424,9 +419,7 @@ class BaseView(ItemInterface):
             return
 
         self._stopped.set_result(True)
-        asyncio.create_task(
-            self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}"
-        )
+        asyncio.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}")
 
     def _dispatch_item(self, item: ViewItem[V], interaction: Interaction):
         if self._stopped.done():
@@ -457,9 +450,7 @@ class BaseView(ItemInterface):
         A persistent view has all their components with a set ``custom_id`` and
         a :attr:`timeout` set to ``None``.
         """
-        return self.timeout is None and all(
-            item.is_persistent() for item in self.children
-        )
+        return self.timeout is None and all(item.is_persistent() for item in self.children)
 
     def stop(self) -> None:
         """Stops listening to interaction events from this view.
@@ -502,9 +493,7 @@ class BaseView(ItemInterface):
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
-            if hasattr(child, "disabled") and (
-                exclusions is None or child not in exclusions
-            ):
+            if hasattr(child, "disabled") and (exclusions is None or child not in exclusions):
                 child.disabled = True
             if hasattr(child, "disable_all_items"):
                 child.disable_all_items(exclusions=exclusions)
@@ -520,9 +509,7 @@ class BaseView(ItemInterface):
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
-            if hasattr(child, "disabled") and (
-                exclusions is None or child not in exclusions
-            ):
+            if hasattr(child, "disabled") and (exclusions is None or child not in exclusions):
                 child.disabled = False
             if hasattr(child, "enable_all_items"):
                 child.enable_all_items(exclusions=exclusions)
@@ -610,14 +597,10 @@ class View(BaseView):
         disable_on_timeout: bool = False,
         store: bool = True,
     ):
-        super().__init__(
-            timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
-        )
+        super().__init__(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
 
         for func in self.__view_children_items__:
-            item: ViewItem[V] = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
+            item: ViewItem[V] = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
             item.callback = partial(func, self, item)
             item.parent = self
             setattr(self, func.__name__, item)
@@ -649,9 +632,7 @@ class View(BaseView):
         return components
 
     @classmethod
-    def from_message(
-        cls, message: Message, /, *, timeout: float | None = 180.0
-    ) -> View:
+    def from_message(cls, message: Message, /, *, timeout: float | None = 180.0) -> View:
         """Converts a message's components into a :class:`View`.
 
         The :attr:`.Message.components` of a message are read-only
@@ -724,9 +705,7 @@ class View(BaseView):
         """
 
         if item.underlying.is_v2():
-            raise ValueError(
-                "cannot use V2 components in View. Use DesignerView instead."
-            )
+            raise ValueError("cannot use V2 components in View. Use DesignerView instead.")
         if isinstance(item.underlying, ActionRowComponent):
             for i in item.children:
                 self.add_item(i)
@@ -762,13 +741,9 @@ class View(BaseView):
     def _refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], ViewItem[V]] = {
-            (item.type.value, item.custom_id): item
-            for item in self.children
-            if item.is_dispatchable()  # type: ignore
+            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
         }
-        children: list[ViewItem[V]] = [
-            item for item in self.children if not item.is_dispatchable()
-        ]
+        children: list[ViewItem[V]] = [item for item in self.children if not item.is_dispatchable()]
         for component in _walk_all_components(components):
             try:
                 older = old_state[(component.type.value, component.custom_id)]  # type: ignore
@@ -844,9 +819,7 @@ class DesignerView(BaseView):
         disable_on_timeout: bool = False,
         store: bool = True,
     ):
-        super().__init__(
-            *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
-        )
+        super().__init__(*items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
 
     @property
     def items(self) -> list[ViewItem[V]]:
@@ -857,9 +830,7 @@ class DesignerView(BaseView):
         self.children = value
 
     @classmethod
-    def from_message(
-        cls, message: Message, /, *, timeout: float | None = 180.0
-    ) -> View:
+    def from_message(cls, message: Message, /, *, timeout: float | None = 180.0) -> View:
         """Converts a message's components into a :class:`DesignerView`.
 
         The :attr:`.Message.components` of a message are read-only
@@ -961,9 +932,7 @@ class DesignerView(BaseView):
         """
 
         if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
-            raise ValueError(
-                f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
-            )
+            raise ValueError(f"cannot add Select or Button to DesignerView directly. Use ActionRow instead.")
 
         super().add_item(item)
         return self
@@ -991,20 +960,14 @@ class DesignerView(BaseView):
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (BaseView, ViewItem)
-        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = (
-            {}
-        )
+        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = {}
         # message_id: View
         self._synced_message_views: dict[int, BaseView] = {}
         self._state: ConnectionState = state
 
     @property
     def persistent_views(self) -> Sequence[BaseView]:
-        views = {
-            view.id: view
-            for (_, (view, _)) in self._views.items()
-            if view.is_persistent()
-        }
+        views = {view.id: view for (_, (view, _)) in self._views.items() if view.is_persistent()}
         return list(views.values())
 
     def __verify_integrity(self):
@@ -1033,9 +996,7 @@ class ViewStore:
             self._synced_message_views[message_id] = view
 
     def remove_view(self, view: BaseView):
-        keys_to_remove = [
-            key for key, (stored_view, _) in self._views.items() if stored_view is view
-        ]
+        keys_to_remove = [key for key, (stored_view, _) in self._views.items() if stored_view is view]
         for key in keys_to_remove:
             del self._views[key]
 
@@ -1053,9 +1014,7 @@ class ViewStore:
         key = (component_type, message_id, custom_id)
         # Fallback to None message_id searches in case a persistent view
         # was added without an associated message_id
-        value = self._views.get(key) or self._views.get(
-            (component_type, None, custom_id)
-        )
+        value = self._views.get(key) or self._views.get((component_type, None, custom_id))
         if value is None:
             return
 

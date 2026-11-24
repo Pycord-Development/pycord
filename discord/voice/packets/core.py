@@ -62,27 +62,21 @@ class Packet:
         if not isinstance(other, self.__class__):
             return NotImplemented
         if self.ssrc != other.ssrc:
-            raise TypeError(
-                f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})"
-            )
+            raise TypeError(f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})")
         return self.sequence == other.sequence and self.timestamp == other.timestamp
 
     def __gt__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
         if self.ssrc != other.ssrc:
-            raise TypeError(
-                f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})"
-            )
+            raise TypeError(f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})")
         return self.sequence > other.sequence and self.timestamp > other.timestamp
 
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
         if self.ssrc != other.ssrc:
-            raise TypeError(
-                f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})"
-            )
+            raise TypeError(f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})")
         return self.sequence < other.sequence and self.timestamp < other.timestamp
 
     def is_silence(self) -> bool:

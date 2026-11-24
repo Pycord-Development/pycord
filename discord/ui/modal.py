@@ -81,9 +81,7 @@ class BaseModal(ItemInterface):
         store: bool = True,
     ) -> None:
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         self._custom_id: str | None = custom_id or os.urandom(16).hex()
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
@@ -95,9 +93,7 @@ class BaseModal(ItemInterface):
         self.loop = _get_event_loop()
 
     def __repr__(self) -> str:
-        attrs = " ".join(
-            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
-        )
+        attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__)
         return f"<{self.__class__.__name__} {attrs}>"
 
     def _start_listening_from_store(self, store: ModalStore) -> None:
@@ -115,9 +111,7 @@ class BaseModal(ItemInterface):
             return
 
         self._stopped.set_result(True)
-        self.loop.create_task(
-            self.on_timeout(), name=f"discord-ui-view-timeout-{self.custom_id}"
-        )
+        self.loop.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.custom_id}")
 
     @property
     def title(self) -> str:
@@ -141,10 +135,7 @@ class BaseModal(ItemInterface):
     def children(self, value: list[ModalItem]):
         for item in value:
             if not isinstance(item, ModalItem):
-                raise TypeError(
-                    "all BaseModal children must be ModalItem, not"
-                    f" {item.__class__.__name__}"
-                )
+                raise TypeError("all BaseModal children must be ModalItem, not" f" {item.__class__.__name__}")
         self._children = value
 
     @property
@@ -155,9 +146,7 @@ class BaseModal(ItemInterface):
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f"expected custom_id to be str, not {value.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {value.__class__.__name__}")
         if len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._custom_id = value
@@ -293,9 +282,7 @@ class Modal(BaseModal):
         timeout: float | None = None,
         store: bool = True,
     ) -> None:
-        super().__init__(
-            *children, title=title, custom_id=custom_id, timeout=timeout, store=store
-        )
+        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout, store=store)
         self._weights = _ModalWeights(self._children)
 
     @property
@@ -306,10 +293,7 @@ class Modal(BaseModal):
     def children(self, value: list[InputText]):
         for item in value:
             if not isinstance(item, InputText):
-                raise TypeError(
-                    "all Modal children must be InputText, not"
-                    f" {item.__class__.__name__}"
-                )
+                raise TypeError("all Modal children must be InputText, not" f" {item.__class__.__name__}")
         self._weights = _ModalWeights(self._children)
         self._children = value
 
@@ -366,11 +350,7 @@ class Modal(BaseModal):
         return self
 
     def _refresh(self, interaction: Interaction, data: list[ComponentPayload]):
-        components = [
-            component
-            for parent_component in data
-            for component in parent_component["components"]
-        ]
+        components = [component for parent_component in data for component in parent_component["components"]]
         for component in components:
             for child in self.children:
                 if child.custom_id == component["custom_id"]:  # type: ignore
@@ -410,9 +390,7 @@ class DesignerModal(BaseModal):
         timeout: float | None = None,
         store: bool = True,
     ) -> None:
-        super().__init__(
-            *children, title=title, custom_id=custom_id, timeout=timeout, store=store
-        )
+        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout, store=store)
 
     @property
     def children(self) -> list[ModalItem]:
@@ -422,14 +400,9 @@ class DesignerModal(BaseModal):
     def children(self, value: list[ModalItem]):
         for item in value:
             if not isinstance(item, ModalItem):
-                raise TypeError(
-                    "all DesignerModal children must be ModalItem, not"
-                    f" {item.__class__.__name__}"
-                )
+                raise TypeError("all DesignerModal children must be ModalItem, not" f" {item.__class__.__name__}")
             if isinstance(item, (InputText,)):
-                raise TypeError(
-                    f"DesignerModal does not accept InputText directly. Use Label instead."
-                )
+                raise TypeError(f"DesignerModal does not accept InputText directly. Use Label instead.")
         self._children = value
 
     def add_item(self, item: ModalItem) -> Self:
@@ -442,9 +415,7 @@ class DesignerModal(BaseModal):
         """
 
         if isinstance(item, (InputText,)):
-            raise TypeError(
-                f"DesignerModal does not accept InputText directly. Use Label instead."
-            )
+            raise TypeError(f"DesignerModal does not accept InputText directly. Use Label instead.")
 
         super().add_item(item)
         return self
@@ -477,9 +448,7 @@ class _ModalWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(
-                    f"item would not fit at row {item.row} ({total} > 5 width)"
-                )
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:

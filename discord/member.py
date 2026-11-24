@@ -153,9 +153,7 @@ class VoiceState:
         self.mute: bool = data.get("mute", False)
         self.deaf: bool = data.get("deaf", False)
         self.suppress: bool = data.get("suppress", False)
-        self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(
-            data.get("request_to_speak_timestamp")
-        )
+        self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(data.get("request_to_speak_timestamp"))
         self.channel: VocalGuildChannel | None = channel
 
     def __repr__(self) -> str:
@@ -186,9 +184,7 @@ class VoiceState:
 
 
 def flatten_user(cls):
-    for attr, value in itertools.chain(
-        BaseUser.__dict__.items(), User.__dict__.items()
-    ):
+    for attr, value in itertools.chain(BaseUser.__dict__.items(), User.__dict__.items()):
         # ignore private/special methods
         if attr.startswith("_"):
             continue
@@ -201,9 +197,7 @@ def flatten_user(cls):
         # slotted members are implemented as member_descriptors in Type.__dict__
         if not hasattr(value, "__annotations__"):
             getter = attrgetter(f"_user.{attr}")
-            setattr(
-                cls, attr, property(getter, doc=f"Equivalent to :attr:`User.{attr}`")
-            )
+            setattr(cls, attr, property(getter, doc=f"Equivalent to :attr:`User.{attr}`"))
         else:
             # Technically, this can also use attrgetter
             # However I'm not sure how I feel about "functions" returning properties
@@ -334,18 +328,12 @@ class Member(discord.abc.Messageable, _UserTag):
         collectibles: Collectibles | None
         avatar_decoration: Asset | None
 
-    def __init__(
-        self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
-    ):
+    def __init__(self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
         self.guild: Guild = guild
-        self.joined_at: datetime.datetime | None = utils.parse_time(
-            data.get("joined_at")
-        )
-        self.premium_since: datetime.datetime | None = utils.parse_time(
-            data.get("premium_since")
-        )
+        self.joined_at: datetime.datetime | None = utils.parse_time(data.get("joined_at"))
+        self.premium_since: datetime.datetime | None = utils.parse_time(data.get("premium_since"))
         self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
         self._client_status: dict[str | None, str] = {None: "offline"}
         self.activities: tuple[ActivityTypes, ...] = ()
@@ -357,9 +345,7 @@ class Member(discord.abc.Messageable, _UserTag):
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
-        self._avatar_decoration: AvatarDecoration | None = data.get(
-            "avatar_decoration_data"
-        )
+        self._avatar_decoration: AvatarDecoration | None = data.get("avatar_decoration_data")
 
     def __str__(self) -> str:
         return str(self._user)
@@ -465,19 +451,14 @@ class Member(discord.abc.Messageable, _UserTag):
         self._roles = utils.SnowflakeList(map(int, data["roles"]))  # type: ignore # the API is the same
         self._avatar = data.get("avatar")
         self._banner = data.get("banner")
-        self.communication_disabled_until = utils.parse_time(
-            data.get("communication_disabled_until")
-        )
+        self.communication_disabled_until = utils.parse_time(data.get("communication_disabled_until"))
         self.flags = MemberFlags._from_value(data.get("flags") or 0)
         self._avatar_decoration = data.get("avatar_decoration_data")
 
-    def _presence_update(
-        self, data: PartialPresenceUpdate, user: UserPayload
-    ) -> tuple[User, User] | None:
+    def _presence_update(self, data: PartialPresenceUpdate, user: UserPayload) -> tuple[User, User] | None:
         self.activities = tuple(map(create_activity, data["activities"]))
         self._client_status = {
-            sys.intern(key): sys.intern(value)
-            for key, value in data.get("client_status", {}).items()  # type: ignore
+            sys.intern(key): sys.intern(value) for key, value in data.get("client_status", {}).items()  # type: ignore
         }
         self._client_status[None] = sys.intern(data["status"])
 
@@ -498,12 +479,8 @@ class Member(discord.abc.Messageable, _UserTag):
             u._avatar_decoration,
         )
         # These keys seem to always be available
-        if (
-            new_primary_guild_data := user.get("primary_guild")
-        ) and new_primary_guild_data.get("identity_enabled"):
-            new_primary_guild: PrimaryGuild | None = PrimaryGuild(
-                new_primary_guild_data, state=self._state
-            )
+        if (new_primary_guild_data := user.get("primary_guild")) and new_primary_guild_data.get("identity_enabled"):
+            new_primary_guild: PrimaryGuild | None = PrimaryGuild(new_primary_guild_data, state=self._state)
         else:
             new_primary_guild = None
         modified = (
@@ -687,9 +664,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         if self._avatar is None:
             return None
-        return Asset._from_guild_avatar(
-            self._state, self.guild.id, self.id, self._avatar
-        )
+        return Asset._from_guild_avatar(self._state, self.guild.id, self.id, self._avatar)
 
     @property
     def display_avatar_decoration(self) -> Asset | None:
@@ -711,9 +686,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         if self._avatar_decoration is None:
             return None
-        return Asset._from_avatar_decoration(
-            self._state, self.id, self._avatar_decoration.get("asset")
-        )
+        return Asset._from_avatar_decoration(self._state, self.id, self._avatar_decoration.get("asset"))
 
     @property
     def display_banner(self) -> Asset | None:
@@ -735,9 +708,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         if self._banner is None:
             return None
-        return Asset._from_guild_banner(
-            self._state, self.guild.id, self.id, self._banner
-        )
+        return Asset._from_guild_banner(self._state, self.guild.id, self.id, self._banner)
 
     @property
     def activity(self) -> ActivityTypes | None:
@@ -827,10 +798,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         .. versionadded:: 2.0
         """
-        return (
-            self.communication_disabled_until is not None
-            and self.communication_disabled_until > utcnow()
-        )
+        return self.communication_disabled_until is not None and self.communication_disabled_until > utcnow()
 
     async def ban(
         self,
@@ -1025,9 +993,7 @@ class Member(discord.abc.Messageable, _UserTag):
                 await http.edit_my_voice_state(guild_id, voice_state_payload)
             else:
                 if not suppress:
-                    voice_state_payload["request_to_speak_timestamp"] = (
-                        utcnow().isoformat()
-                    )
+                    voice_state_payload["request_to_speak_timestamp"] = utcnow().isoformat()
 
                 await http.edit_voice_state(guild_id, self.id, voice_state_payload)
 
@@ -1039,9 +1005,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         if communication_disabled_until is not MISSING:
             if communication_disabled_until is not None:
-                payload["communication_disabled_until"] = (
-                    communication_disabled_until.isoformat()
-                )
+                payload["communication_disabled_until"] = communication_disabled_until.isoformat()
             else:
                 payload["communication_disabled_until"] = communication_disabled_until
 
@@ -1066,9 +1030,7 @@ class Member(discord.abc.Messageable, _UserTag):
             bot_payload["bio"] = bio or ""
 
         if bot_payload and not me:
-            raise InvalidArgument(
-                "Can only edit avatar, banner, or bio for the bot's member."
-            )
+            raise InvalidArgument("Can only edit avatar, banner, or bio for the bot's member.")
 
         if payload:
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
@@ -1079,9 +1041,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         return Member(data=data, guild=self.guild, state=self._state)
 
-    async def timeout(
-        self, until: datetime.datetime | None, *, reason: str | None = None
-    ) -> None:
+    async def timeout(self, until: datetime.datetime | None, *, reason: str | None = None) -> None:
         """|coro|
 
         Applies a timeout to a member in the guild until a set datetime.
@@ -1104,9 +1064,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         await self.edit(communication_disabled_until=until, reason=reason)
 
-    async def timeout_for(
-        self, duration: datetime.timedelta, *, reason: str | None = None
-    ) -> None:
+    async def timeout_for(self, duration: datetime.timedelta, *, reason: str | None = None) -> None:
         """|coro|
 
         Applies a timeout to a member in the guild for a set duration. A shortcut method for :meth:`~.timeout`, and
@@ -1187,9 +1145,7 @@ class Member(discord.abc.Messageable, _UserTag):
         else:
             await self._state.http.edit_my_voice_state(self.guild.id, payload)
 
-    async def move_to(
-        self, channel: VocalGuildChannel | None, *, reason: str | None = None
-    ) -> None:
+    async def move_to(self, channel: VocalGuildChannel | None, *, reason: str | None = None) -> None:
         """|coro|
 
         Moves a member to a new voice channel (they must be connected first).
@@ -1212,9 +1168,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         await self.edit(voice_channel=channel, reason=reason)
 
-    async def add_roles(
-        self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
-    ) -> None:
+    async def add_roles(self, *roles: Snowflake, reason: str | None = None, atomic: bool = True) -> None:
         r"""|coro|
 
         Gives the member a number of :class:`Role`\s.
@@ -1244,9 +1198,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
 
         if not atomic:
-            new_roles = utils._unique(
-                Object(id=r.id) for s in (self.roles[1:], roles) for r in s
-            )
+            new_roles = utils._unique(Object(id=r.id) for s in (self.roles[1:], roles) for r in s)
             await self.edit(roles=new_roles, reason=reason)
         else:
             req = self._state.http.add_role
@@ -1255,9 +1207,7 @@ class Member(discord.abc.Messageable, _UserTag):
             for role in roles:
                 await req(guild_id, user_id, role.id, reason=reason)
 
-    async def remove_roles(
-        self, *roles: Snowflake, reason: str | None = None, atomic: bool = True
-    ) -> None:
+    async def remove_roles(self, *roles: Snowflake, reason: str | None = None, atomic: bool = True) -> None:
         r"""|coro|
 
         Removes :class:`Role`\s from this member.

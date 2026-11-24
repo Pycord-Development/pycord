@@ -35,9 +35,7 @@ for py_dir, _, py_files in os.walk(cur_path):
             total_path = os.path.join(py_dir, py_file)
             try:
                 with open(total_path, encoding="utf-8") as file:
-                    loc_list.append(
-                        (len(file.read().splitlines()), total_path.split(cur_path)[1])
-                    )
+                    loc_list.append((len(file.read().splitlines()), total_path.split(cur_path)[1]))
             except UnicodeDecodeError as e:
                 print(f"Skipping file {total_path} due to encoding error: {e}")
 

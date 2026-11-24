@@ -137,9 +137,7 @@ class PacketRouter(threading.Thread):
 
 class SinkEventRouter(threading.Thread):
     def __init__(self, sink: Sink, reader: AudioReader) -> None:
-        super().__init__(
-            daemon=True, name=f"voice-receiver-sink-event-router:{id(self):#x}"
-        )
+        super().__init__(daemon=True, name=f"voice-receiver-sink-event-router:{id(self):#x}")
 
         self.sink: Sink = sink
         self.reader: AudioReader = reader

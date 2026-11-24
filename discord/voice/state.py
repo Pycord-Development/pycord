@@ -109,9 +109,7 @@ class SocketReader(threading.Thread):
         self._running.clear()
 
     def is_paused(self) -> bool:
-        return self._idle_paused or (
-            not self._running.is_set() and not self._end.is_set()
-        )
+        return self._idle_paused or (not self._running.is_set() and not self._end.is_set())
 
     def resume(self, *, force: bool = False) -> None:
         if self._running.is_set():
@@ -154,9 +152,7 @@ class SocketReader(threading.Thread):
         while not self._end.is_set():
             if not self._running.is_set():
                 if not self._warned_wait:
-                    _log.warning(
-                        "Socket reader %s is waiting to be set as running", self.name
-                    )
+                    _log.warning("Socket reader %s is waiting to be set as running", self.name)
                     self._warned_wait = True
                 self._running.wait()
                 continue
@@ -190,9 +186,7 @@ class SocketReader(threading.Thread):
                 for cb in self._callbacks:
                     try:
                         task = asyncio.ensure_future(
-                            self.state.loop.create_task(
-                                utils.maybe_coroutine(cb, data)
-                            ),
+                            self.state.loop.create_task(utils.maybe_coroutine(cb, data)),
                             loop=self.state.loop,
                         )
                         self.state._dispatch_task_set.add(task)
@@ -206,9 +200,7 @@ class SocketReader(threading.Thread):
 
 
 class SocketEventReader(SocketReader):
-    def __init__(
-        self, state: VoiceConnectionState, *, start_paused: bool = True
-    ) -> None:
+    def __init__(self, state: VoiceConnectionState, *, start_paused: bool = True) -> None:
         super().__init__(
             state,
             f"voice-socket-event-reader:{id(self):#x}",
@@ -222,9 +214,7 @@ class VoiceConnectionState:
         self,
         client: VoiceClient,
         *,
-        hook: (
-            Callable[[VoiceWebSocket, dict[str, Any]], Coroutine[Any, Any, Any]] | None
-        ) = None,
+        hook: Callable[[VoiceWebSocket, dict[str, Any]], Coroutine[Any, Any, Any]] | None = None,
     ) -> None:
         self.client: VoiceClient = client
         self.hook = hook
@@ -258,9 +248,7 @@ class VoiceConnectionState:
         self._connector: asyncio.Task[None] | None = None
         self._socket_reader = SocketEventReader(self)
         self._socket_reader.start()
-        self.recording_done_callbacks: list[
-            tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]
-        ] = []
+        self.recording_done_callbacks: list[tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]] = []
         self._dispatch_task_set: set[asyncio.Task] = set()
 
         if not self._connection.self_id:
@@ -370,9 +358,7 @@ class VoiceConnectionState:
                 _log.info("We were moved from the channel while connecting...")
 
                 self._update_voice_channel(channel_id)
-                await self.soft_disconnect(
-                    with_state=ConnectionFlowState.got_voice_state_update
-                )
+                await self.soft_disconnect(with_state=ConnectionFlowState.got_voice_state_update)
                 await self.connect(
                     reconnect=self.reconnect,
                     timeout=self.timeout,
@@ -430,9 +416,7 @@ class VoiceConnectionState:
 
             _log.debug("Unexpected VOICE_SERVER_UPDATE event received, handling...")
 
-            await self.soft_disconnect(
-                with_state=ConnectionFlowState.got_voice_server_update
-            )
+            await self.soft_disconnect(with_state=ConnectionFlowState.got_voice_server_update)
             await self.connect(
                 reconnect=self.reconnect,
                 timeout=self.timeout,
@@ -500,9 +484,7 @@ class VoiceConnectionState:
             await self.disconnect()
             raise
 
-    async def _inner_connect(
-        self, reconnect: bool, self_deaf: bool, self_mute: bool, resume: bool
-    ) -> None:
+    async def _inner_connect(self, reconnect: bool, self_deaf: bool, self_mute: bool, resume: bool) -> None:
         for i in range(5):
             _log.info("Starting voice handshake (connection attempt %s)", i + 1)
 
@@ -521,9 +503,7 @@ class VoiceConnectionState:
             except ConnectionClosed:
                 if reconnect:
                     wait = 1 + i * 2
-                    _log.exception(
-                        "Failed to connect to voice... Retrying in %s seconds", wait
-                    )
+                    _log.exception("Failed to connect to voice... Retrying in %s seconds", wait)
                     await self.disconnect(cleanup=False)
                     await asyncio.sleep(wait)
                     continue
@@ -558,9 +538,7 @@ class VoiceConnectionState:
                 name=f"voice-ws-poller:{id(self):#x}",
             )
 
-    async def disconnect(
-        self, *, force: bool = True, cleanup: bool = True, wait: bool = False
-    ) -> None:
+    async def disconnect(self, *, force: bool = True, cleanup: bool = True, wait: bool = False) -> None:
         if not force and not self.is_connected():
             return
 
@@ -574,9 +552,7 @@ class VoiceConnectionState:
             if self.ws:
                 await self.ws.close()
         except Exception:
-            _log.debug(
-                "Ignoring exception while disconnecting from voice", exc_info=True
-            )
+            _log.debug("Ignoring exception while disconnecting from voice", exc_info=True)
         finally:
             self.state = ConnectionFlowState.disconnected
             self._socket_reader.pause()
@@ -596,9 +572,7 @@ class VoiceConnectionState:
 
             if wait and not self._inside_runner():
                 try:
-                    await asyncio.wait_for(
-                        self._disconnected.wait(), timeout=self.timeout
-                    )
+                    await asyncio.wait_for(self._disconnected.wait(), timeout=self.timeout)
                 except TimeoutError:
                     _log.debug("Timed out waiting for voice disconnect confirmation")
                 except asyncio.CancelledError:
@@ -622,9 +596,7 @@ class VoiceConnectionState:
             if self.ws:
                 await self.ws.close()
         except Exception:
-            _log.debug(
-                "Ignoring exception while soft disconnecting from voice", exc_info=True
-            )
+            _log.debug("Ignoring exception while soft disconnecting from voice", exc_info=True)
         finally:
             self.state = with_state
             self._socket_reader.pause()
@@ -635,9 +607,7 @@ class VoiceConnectionState:
             self.ip = MISSING
             self.port = MISSING
 
-    async def move_to(
-        self, channel: abc.Snowflake | None, timeout: float | None
-    ) -> None:
+    async def move_to(self, channel: abc.Snowflake | None, timeout: float | None) -> None:
         if channel is None:
             await self.disconnect(wait=True)
             return
@@ -709,13 +679,9 @@ class VoiceConnectionState:
                 # has timed out, so just raise the exception
                 raise asyncio.TimeoutError
 
-    async def _voice_connect(
-        self, *, self_deaf: bool = False, self_mute: bool = False
-    ) -> None:
+    async def _voice_connect(self, *, self_deaf: bool = False, self_mute: bool = False) -> None:
         channel = self.client.channel
-        await channel.guild.change_voice_state(
-            channel=channel, self_deaf=self_deaf, self_mute=self_mute
-        )
+        await channel.guild.change_voice_state(channel=channel, self_deaf=self_deaf, self_mute=self_mute)
 
     async def _voice_disconnect(self) -> None:
         _log.info(
@@ -725,9 +691,7 @@ class VoiceConnectionState:
         )
 
         self.state = ConnectionFlowState.disconnected
-        await self.client.channel.guild.change_voice_state(
-            channel=None
-        )  # pyright: ignore[reportAttributeAccessIssue]
+        await self.client.channel.guild.change_voice_state(channel=None)  # pyright: ignore[reportAttributeAccessIssue]
         self._expecting_disconnect = True
         self._disconnected.clear()
 
@@ -735,9 +699,7 @@ class VoiceConnectionState:
         seq_ack = -1
         if self.ws is not MISSING:
             seq_ack = self.ws.seq_ack
-        ws = await VoiceWebSocket.from_state(
-            self, resume=resume, hook=self.hook, seq_ack=seq_ack
-        )
+        ws = await VoiceWebSocket.from_state(self, resume=resume, hook=self.hook, seq_ack=seq_ack)
         self.state = ConnectionFlowState.websocket_connected
         return ws
 
@@ -789,14 +751,10 @@ class VoiceConnectionState:
                             await self.disconnect()
                             break
 
-                        _log.info(
-                            "Disconnecting from voice by force... potentially reconnecting..."
-                        )
+                        _log.info("Disconnecting from voice by force... potentially reconnecting...")
                         successful = await self._potential_reconnect()
                         if not successful:
-                            _log.info(
-                                "Reconnect was unsuccessful, disconnecting from voice normally"
-                            )
+                            _log.info("Reconnect was unsuccessful, disconnecting from voice normally")
                             if self.state is not ConnectionFlowState.disconnected:
                                 await self.disconnect()
                             break
@@ -824,9 +782,7 @@ class VoiceConnectionState:
                                 resume=True,
                             )
                         except asyncio.TimeoutError:
-                            _log.info(
-                                "Could not resume the voice connection... Disconnecting..."
-                            )
+                            _log.info("Could not resume the voice connection... Disconnecting...")
                             if self.state is not ConnectionFlowState.disconnected:
                                 await self.disconnect()
                             break
@@ -839,9 +795,7 @@ class VoiceConnectionState:
                                 await self.disconnect()
                             break
                         else:
-                            _log.info(
-                                "Successfully reconnected and resumed the voice connection"
-                            )
+                            _log.info("Successfully reconnected and resumed the voice connection")
                             continue
                     else:
                         _log.debug(
@@ -914,9 +868,7 @@ class VoiceConnectionState:
 
         if self.dave_protocol_version > 0:
             if self.dave_session:
-                self.dave_session.reinit(
-                    self.dave_protocol_version, self.user.id, self.channel_id
-                )
+                self.dave_session.reinit(self.dave_protocol_version, self.user.id, self.channel_id)
             else:
                 self.dave_session = davey.DaveSession(
                     self.dave_protocol_version,
@@ -960,13 +912,8 @@ class VoiceConnectionState:
             old_version = self.dave_protocol_version
             self.dave_protocol_version = pending_proto
 
-            if (
-                old_version != self.dave_protocol_version
-                and self.dave_protocol_version == 0
-            ):
-                _log.warning(
-                    "DAVE was downgraded, voice client non-e2ee session has been deprecated since 2.7"
-                )
+            if old_version != self.dave_protocol_version and self.dave_protocol_version == 0:
+                _log.warning("DAVE was downgraded, voice client non-e2ee session has been deprecated since 2.7")
                 self.downgraded_dave = True
             elif transition > 0 and self.downgraded_dave:
                 self.downgraded_dave = False

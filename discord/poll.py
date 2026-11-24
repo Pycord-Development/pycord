@@ -66,9 +66,7 @@ class PollMedia:
         The answer's emoji.
     """
 
-    def __init__(
-        self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
-    ):
+    def __init__(self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None):
         self.text: str = text
         self.emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = emoji
 
@@ -92,9 +90,7 @@ class PollMedia:
         return dict_
 
     @classmethod
-    def from_dict(
-        cls, data: PollMediaPayload, message: Message | PartialMessage | None = None
-    ) -> PollMedia:
+    def from_dict(cls, data: PollMediaPayload, message: Message | PartialMessage | None = None) -> PollMedia:
 
         _emoji: dict[str, Any] = data.get("emoji") or {}
         if isinstance(_emoji, dict) and _emoji.get("name"):
@@ -126,9 +122,7 @@ class PollAnswer:
         The relevant media for this answer.
     """
 
-    def __init__(
-        self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
-    ):
+    def __init__(self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None):
         self.media = PollMedia(text, emoji)
         self.id = None
         self._poll = None
@@ -150,9 +144,7 @@ class PollAnswer:
             return None
         if self._poll.results is None:
             return None  # Unknown vote count.
-        _count = self._poll.results and utils.get(
-            self._poll.results.answer_counts, id=self.id
-        )
+        _count = self._poll.results and utils.get(self._poll.results.answer_counts, id=self.id)
         if _count:
             return _count.count
         return 0  # If an answer isn't in answer_counts, it has 0 votes.
@@ -184,9 +176,7 @@ class PollAnswer:
     def __repr__(self) -> str:
         return f"<PollAnswer id={self.id!r} text={self.text!r} emoji={self.emoji!r}>"
 
-    def voters(
-        self, *, limit: int | None = None, after: Snowflake | None = None
-    ) -> VoteIterator:
+    def voters(self, *, limit: int | None = None, after: Snowflake | None = None) -> VoteIterator:
         """Returns an :class:`AsyncIterator` representing the users that have voted with this answer.
         Only works if this poll was received from Discord.
 
@@ -234,9 +224,7 @@ class PollAnswer:
         """
 
         if not self._poll or not self._poll._message:
-            raise RuntimeError(
-                "Users can only be fetched from an existing message poll."
-            )
+            raise RuntimeError("Users can only be fetched from an existing message poll.")
 
         if limit is None:
             limit = self.count or 100  # Ambiguous
@@ -288,9 +276,7 @@ class PollResults:
 
     def __init__(self, data: PollResultsPayload):
         self.is_finalized = data.get("is_finalized")
-        self._answer_counts = {
-            a["id"]: PollAnswerCount(a) for a in data.get("answer_counts", [])
-        }
+        self._answer_counts = {a["id"]: PollAnswerCount(a) for a in data.get("answer_counts", [])}
 
     def to_dict(self) -> PollResultsPayload:
         return {
@@ -347,9 +333,7 @@ class Poll:
         allow_multiselect: bool | None = False,
         layout_type: PollLayoutType | None = PollLayoutType.default,
     ):
-        self.question = (
-            question if isinstance(question, PollMedia) else PollMedia(question)
-        )
+        self.question = question if isinstance(question, PollMedia) else PollMedia(question)
         self.answers: list[PollAnswer] = answers or []
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
@@ -378,17 +362,12 @@ class Poll:
         return dict_
 
     @classmethod
-    def from_dict(
-        cls, data: PollPayload, message: Message | PartialMessage | None = None
-    ) -> Poll:
+    def from_dict(cls, data: PollPayload, message: Message | PartialMessage | None = None) -> Poll:
         if not data:
             return None
         poll = cls(
             question=PollMedia.from_dict(data["question"], message=message),
-            answers=[
-                PollAnswer.from_dict(a, message=message)
-                for a in data.get("answers", [])
-            ],
+            answers=[PollAnswer.from_dict(a, message=message) for a in data.get("answers", [])],
             duration=data.get("duration"),
             allow_multiselect=data.get("allow_multiselect"),
             layout_type=try_enum(PollLayoutType, data.get("layout_type", 1)),

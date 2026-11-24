@@ -167,9 +167,7 @@ class AllowedMentions:
             everyone=_override_unless_unset(self._everyone, other._everyone),
             users=_override_unless_unset(self._users, other._users),
             roles=_override_unless_unset(self._roles, other._roles),
-            replied_user=_override_unless_unset(
-                self._replied_user, other._replied_user
-            ),
+            replied_user=_override_unless_unset(self._replied_user, other._replied_user),
         )
 
     @override
