@@ -444,7 +444,7 @@ class ActionRow(ViewItem[V]):
         """Return the sum of the items' widths."""
         t = 0
         for item in self.children:
-            t += 1 if item.underlying.type is ComponentType.button else 5
+            t += item.width
         return t
 
     def walk_items(self) -> Iterator[ViewItem]:
