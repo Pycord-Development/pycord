@@ -799,6 +799,8 @@ class ComponentType(Enum):
     radio_group = 21
     checkbox_group = 22
     checkbox = 23
+    overflow_menu = 25
+    menu_action_item = 26
 
     def __int__(self):
         return self.value

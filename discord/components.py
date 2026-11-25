@@ -28,6 +28,8 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
 
+from typing_extensions import Self
+
 from .asset import AssetMixin
 from .colour import Colour
 from .enums import (
@@ -35,6 +37,7 @@ from .enums import (
     ChannelType,
     ComponentType,
     InputTextStyle,
+    MenuActionItemStyle,
     SelectDefaultValueType,
     SeparatorSpacingSize,
     try_enum,
@@ -61,6 +64,11 @@ if TYPE_CHECKING:
     from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
+    from .types.components import (
+        MenuActionItemComponent as MenuActionItemComponentPayload,
+    )
+    from .types.components import OverflowMenuComponent as OverflowMenuComponentPayload
+    from .types.components import OverflowMenuGroup as OverflowMenuGroupPayload
     from .types.components import RadioGroupComponent as RadioGroupComponentPayload
     from .types.components import RadioGroupOption as RadioGroupOptionPayload
     from .types.components import SectionComponent as SectionComponentPayload
@@ -96,6 +104,9 @@ __all__ = (
     "CheckboxGroup",
     "CheckboxGroupOption",
     "Checkbox",
+    "OverflowMenu",
+    "OverflowMenuGroup",
+    "MenuActionItem",
 )
 
 C = TypeVar("C", bound="Component")
@@ -1786,6 +1797,185 @@ class Checkbox(Component):
         return payload
 
 
+
+class OverflowMenuGroup:
+    """Represents a :class:`discord.OverflowMenu`'s group.
+
+    These can be created by users.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    label: :class:`str` | :obj:`None`
+        The label of the group. This is displayed to users.
+    components: list[:class:`MenuActionItemComponent`]
+        The components in this group.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "label",
+        "components",
+    )
+
+    def __init__(
+        self,
+        *,
+        label: str | None = None,
+        components: list[MenuActionItemComponent] | None = None
+    ) -> None:
+        self.label = label
+        self.components = components or []
+
+    def __repr__(self) -> str:
+        return (
+            "<OverflowMenuGroup"
+            f" label={self.label!r} components={self.components!r}>"
+        )
+
+    @classmethod
+    def from_dict(cls, data: OverflowMenuGroupPayload) -> Self:
+        return cls(
+            label=data["label"],
+            components=[] # TODO
+        )
+
+    def to_dict(self) -> OverflowMenuGroupPayload:
+        payload: OverflowMenuGroupPayload = {
+            "components": [c.to_dict() for c in self.components]
+        }
+
+        if self.label:
+            payload["label"] = self.label
+
+        return payload
+
+
+class OverflowMenu(Component):
+    """Represents an Overflow Menu component from the Discord Bot UI Kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.OverflowMenu` instead.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`int` | :obj:`None`
+        The overflow menu's ID.
+    groups: list[:class:`OverflowMenuGroup`]
+        The list of groups in this overflow menu.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "type",
+        "id",
+        "groups"
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: OverflowMenuComponentPayload):
+        self.type = ComponentType.overflow_menu
+        self.id: int | None = data.get("id")
+        self.groups: bool = data.get("default", False)
+
+    def to_dict(self) -> OverflowMenuComponentPayload:
+        payload: OverflowMenuComponentPayload = {
+            "type": self.type.value,
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+
+        if self.default is not None:
+            payload["default"] = self.default
+
+        return payload
+
+
+class MenuActionItem(Component):
+    """Represents an overflow menu's action item component from the Discord Bot UI kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.MenuActionItem` instead.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`int` | :obj:`None`
+        The menu action item's ID.
+    custom_id: :class:`str`
+        The custom ID of the menu action item that gets received during an interaction.
+    label: :class:`str`
+        The label for the menu action item.
+    style: :class:`MenuActionItemStyle`
+        The style of this menu action item.
+    description: :class:`str` | :obj:`None`
+        The description for the menu action item.
+    url: :class:`str` | :obj:`None`
+        The URL that this menu action item points to. 
+        Only present when ``style`` is :attr:`MenuActionItemStyle.url`.
+    emoji: :class:`PartialEmoji` | :obj:`None`
+        The emoji shown on tis menu action item.
+    """
+    
+
+    __slots__: tuple[str, ...] = (
+        "type",
+        "id",
+        "custom_id",
+        "label",
+        "style",
+        "description",
+        "url",
+        "emoji",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: MenuActionItemComponentPayload):
+        self.type = ComponentType.menu_action_item
+        self.id: int | None = data.get("id")
+        self.custom_id: str = data.get("custom_id")
+        self.label: str = data["label"]
+        self.style: MenuActionItemStyle = try_enum(MenuActionItemStyle, data["style"])
+        self.description: str | None = data.get("description")
+        self.url: str | None = data.get("url")
+        self.emoji: PartialEmoji | None = PartialEmoji.from_dict(e) if (e := data.get("emoji")) else None
+
+    def to_dict(self) -> MenuActionItemComponentPayload:
+        payload: MenuActionItemComponentPayload = {
+            "type": self.type.value,
+            "custom_id": self.custom_id,
+            "label": self.label,
+            "style": self.style.value,
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+            
+        if self.description is not None:
+            payload["description"] = self.description
+
+        if self.url is not None:
+            payload["url"] = self.url
+
+        if self.emoji is not None:
+            payload["emoji"] = self.emoji.to_dict()
+
+        return payload
+
+
+
+
 COMPONENT_MAPPINGS = {
     1: ActionRow,
     2: Button,
@@ -1807,6 +1997,8 @@ COMPONENT_MAPPINGS = {
     21: RadioGroup,
     22: CheckboxGroup,
     23: Checkbox,
+    25: OverflowMenu,
+    26: MenuActionItem,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)

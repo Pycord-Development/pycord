@@ -544,6 +544,12 @@ of :class:`enum.Enum`.
     .. attribute:: checkbox
 
         Represents a checkbox component.
+    .. attribute:: overflow_menu
+
+        Represents an overflow menu component.
+    .. attribute:: menu_action_item
+
+        Represents an overflow menu action item component.
 
 .. class:: ButtonStyle
 
