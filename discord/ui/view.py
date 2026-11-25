@@ -54,6 +54,9 @@ from ..components import FileUpload as FileUploadComponent
 from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
+from ..components import OverflowMenu as OverflowMenuComponent
+from ..components import OverflowMenuGroup as OverflowMenuGroupComponent
+from ..components import MenuActionItem as MenuActionItemComponent
 from ..components import RadioGroup as RadioGroupComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
@@ -173,6 +176,14 @@ def _component_to_item(component: Component) -> ViewItem[V] | ModalItem | Item:
         from .checkbox import Checkbox
 
         return Checkbox.from_component(component)
+    if isinstance(component, OverflowMenuComponent):
+        from .overflow import OverflowMenu
+
+        return OverflowMenu.from_component(component)
+    if isinstance(component, MenuActionItemComponent):
+        from .overflow import MenuActionItem
+
+        return MenuActionItem.from_component(component)
     return Item.from_component(component)
 
 

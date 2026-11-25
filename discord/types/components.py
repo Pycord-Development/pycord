@@ -29,8 +29,6 @@ from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
-from examples.basic_bot import description
-
 from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake

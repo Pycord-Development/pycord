@@ -196,9 +196,7 @@ class OverflowMenu(ViewItem[V_co]):
 
     @classmethod
     def from_component(cls, component: OverflowMenuComponent) -> Self:
-        from .view import _component_to_item
-
-        groups: list[OverflowMenuGroup] = [_component_to_item(g) for g in component.groups]
+        groups: list[OverflowMenuGroup] = [OverflowMenuGroup.from_component(g) for g in component.groups]
         return cls(
             *groups,
             id=component.id,
@@ -378,9 +376,7 @@ class OverflowMenuGroup:
 
     @classmethod
     def from_component(cls, component: OverflowMenuGroupComponent) -> Self:
-        from .view import _component_to_item
-
-        components = [_component_to_item(c) for c in component.components]
+        components = [MenuActionItem.from_component(c) for c in component.components]
         return cls(
             *components,
             label=component.label,
