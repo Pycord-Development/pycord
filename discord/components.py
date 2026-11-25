@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload, override, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar, overload, override
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -1826,7 +1826,9 @@ class OverflowMenuGroup:
 
     def __init__(self, data: OverflowMenuGroupPayload) -> None:
         self.label: str | None = data.get("label", None)
-        self.components: list[MenuActionItem] = [MenuActionItem(c) for c in data["components"]]
+        self.components: list[MenuActionItem] = [
+            MenuActionItem(c) for c in data["components"]
+        ]
 
     @override
     def __repr__(self) -> str:
@@ -1934,7 +1936,9 @@ class MenuActionItem(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: MenuActionItemComponentPayload):
-        self.type: Literal[ComponentType.menu_action_item] = ComponentType.menu_action_item
+        self.type: Literal[ComponentType.menu_action_item] = (
+            ComponentType.menu_action_item
+        )
         self.id: int | None = data.get("id")
         self.custom_id: str = data.get("custom_id")
         self.label: str = data["label"]
