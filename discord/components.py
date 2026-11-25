@@ -247,7 +247,6 @@ class ActionRow(Component):
             type=ComponentType.action_row, id=id, children=[c for c in components]
         )
 
-    
     def is_v2(self) -> bool:
         for child in self.children:
             if child.is_v2():

@@ -150,7 +150,9 @@ class ActionRow(ViewItem[V]):
         """
 
         if not isinstance(item, (Select, Button, OverflowMenu)):
-            raise TypeError(f"expected Select, Button, or OverflowMenu, not {item.__class__!r}")
+            raise TypeError(
+                f"expected Select, Button, or OverflowMenu, not {item.__class__!r}"
+            )
         if item.row:
             raise ValueError(f"{item.__class__!r}.row is not supported in ActionRow")
         if self.width + item.width > 5:
