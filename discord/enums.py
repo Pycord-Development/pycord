@@ -103,6 +103,7 @@ __all__ = (
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
     "SharedClientThemeBaseType",
+    "MenuActionItemStyle",
 )
 
 
@@ -1266,6 +1267,12 @@ class SharedClientThemeBaseType(Enum):
     light = 2
     darker = 3
     midnight = 4
+
+
+class MenuActionItemStyle(Enum):
+    default = 1
+    danger = 2
+    link = 3
 
 
 T = TypeVar("T")

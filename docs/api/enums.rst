@@ -2697,3 +2697,20 @@ of :class:`enum.Enum`.
     .. attribute:: read_only
 
         Represents the team read only role.
+
+.. class:: MenuActionItemStyle
+    Represents a menu action item's style.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: default
+
+        Represents the default style.
+
+    .. attribute:: danger
+
+        Represents the danger style.
+
+    .. attribute:: link
+
+        Represents the link style.
