@@ -51,7 +51,9 @@ def make_item(i: int = 0, **kwargs) -> MenuActionItem:
     return MenuActionItem(**kwargs)
 
 
-def make_group(n: int = 1, label: str | None = None, start: int = 0) -> OverflowMenuGroup:
+def make_group(
+    n: int = 1, label: str | None = None, start: int = 0
+) -> OverflowMenuGroup:
     return OverflowMenuGroup(*(make_item(start + i) for i in range(n)), label=label)
 
 
@@ -103,7 +105,11 @@ class TestMenuActionItem:
 
     def test_to_dict(self):
         item = MenuActionItem(
-            label="Hi", custom_id="hi", style=discord.MenuActionItemStyle.danger, id=0, disabled=False, 
+            label="Hi",
+            custom_id="hi",
+            style=discord.MenuActionItemStyle.danger,
+            id=0,
+            disabled=False,
         )
         payload = item.to_component_dict()
         assert payload["label"] == "Hi"
@@ -249,15 +255,19 @@ class TestOverflowMenuGroup:
         assert not any(i.disabled for i in group.components)
 
         group.disable_all_items(exclusions=[item])
-        assert all(((not i.disabled) if i.custom_id == "item_1" else i.disabled) for i in group.components)
+        assert all(
+            ((not i.disabled) if i.custom_id == "item_1" else i.disabled)
+            for i in group.components
+        )
         assert not item.disabled
 
         item.disabled = True
         assert all(i.disabled for i in group.components)
         group.enable_all_items(exclusions=[item])
-        assert not any(((not i.disabled) if i.custom_id == "item_1" else i.disabled) for i in group.components)
-
-
+        assert not any(
+            ((not i.disabled) if i.custom_id == "item_1" else i.disabled)
+            for i in group.components
+        )
 
 
 class TestOverflowMenu:
@@ -291,7 +301,7 @@ class TestOverflowMenu:
 
     def test_add_group(self):
         menu = OverflowMenu()
-        items =[make_item(i) for i in range(3)]
+        items = [make_item(i) for i in range(3)]
         menu.add_group(*items, label="Hi")
         assert len(menu.groups) == 1
         assert len(menu.groups[0].components) == 3
@@ -310,7 +320,6 @@ class TestOverflowMenu:
         menu.enable_all_items()
         assert not any(i.disabled for i in menu.walk_items())
 
-
     def test_disable_all_items_with_exclusions(self):
         menu = OverflowMenu(make_group(2, start=0), make_group(2, start=10))
         item = menu.get_item("item_1")
@@ -318,16 +327,24 @@ class TestOverflowMenu:
         assert not any(i.disabled for i in menu.walk_items())
 
         menu.disable_all_items(exclusions=[item])
-        assert all(((not i.disabled) if i.custom_id == "item_1" else i.disabled) for i in menu.walk_items())
+        assert all(
+            ((not i.disabled) if i.custom_id == "item_1" else i.disabled)
+            for i in menu.walk_items()
+        )
         assert not item.disabled
 
         item.disabled = True
         assert all(i.disabled for i in menu.walk_items())
         menu.enable_all_items(exclusions=[item])
-        assert not any(((not i.disabled) if i.custom_id == "item_1" else i.disabled) for i in menu.walk_items())
+        assert not any(
+            ((not i.disabled) if i.custom_id == "item_1" else i.disabled)
+            for i in menu.walk_items()
+        )
 
     async def test_to_dict(self):
-        payload = OverflowMenu(make_group(2, label="A"), make_group(1, start=5)).to_component_dict()
+        payload = OverflowMenu(
+            make_group(2, label="A"), make_group(1, start=5)
+        ).to_component_dict()
         assert payload["type"] == discord.ComponentType.overflow_menu.value
         assert len(payload["groups"]) == 2
         assert payload["groups"][0]["label"] == "A"
@@ -350,7 +367,9 @@ class TestDesignerViewIntegration:
 
     async def test_as_section_accessory(self):
         view = DesignerView(timeout=None)
-        view.add_item(Section(TextDisplay("Test"), accessory=OverflowMenu(make_group(1))))
+        view.add_item(
+            Section(TextDisplay("Test"), accessory=OverflowMenu(make_group(1)))
+        )
         assert view.is_components_v2()
         assert view.is_dispatchable()
         assert view.is_persistent()
@@ -360,7 +379,9 @@ class TestDesignerViewIntegration:
         view.add_item(
             discord.ui.Container(
                 ActionRow(OverflowMenu(make_group(1))),
-                Section(TextDisplay("x"), accessory=OverflowMenu(make_group(1, start=5))),
+                Section(
+                    TextDisplay("x"), accessory=OverflowMenu(make_group(1, start=5))
+                ),
             )
         )
         assert view.is_components_v2()
@@ -381,7 +402,9 @@ class TestDesignerViewIntegration:
         view = DesignerView(timeout=None)
         view.add_item(
             discord.ui.Container(
-                Section(TextDisplay("x"), accessory=OverflowMenu(make_group(1, start=7)))
+                Section(
+                    TextDisplay("x"), accessory=OverflowMenu(make_group(1, start=7))
+                )
             )
         )
         assert view.get_item("item_7") is not None
@@ -403,7 +426,6 @@ class TestDesignerViewIntegration:
         assert menu["groups"][0]["label"] == "L"
 
 
-
 class TestComponentModels:
     PAYLOAD: ClassVar[OverflowMenuComponentPayload] = {
         "type": discord.ComponentType.overflow_menu.value,
@@ -412,16 +434,40 @@ class TestComponentModels:
             {
                 "label": "Group",
                 "components": [
-                    {"type": discord.ComponentType.menu_action_item.value, "label": "A", "custom_id": "a", "style": discord.MenuActionItemStyle.default.value, "disabled": False},
-                    {"type": discord.ComponentType.menu_action_item.value, "label": "GH", "url": "https://github.com", "style": discord.MenuActionItemStyle.link.value, "disabled": False},
+                    {
+                        "type": discord.ComponentType.menu_action_item.value,
+                        "label": "A",
+                        "custom_id": "a",
+                        "style": discord.MenuActionItemStyle.default.value,
+                        "disabled": False,
+                    },
+                    {
+                        "type": discord.ComponentType.menu_action_item.value,
+                        "label": "GH",
+                        "url": "https://github.com",
+                        "style": discord.MenuActionItemStyle.link.value,
+                        "disabled": False,
+                    },
                 ],
             },
             {
                 "components": [
-                    {"type": discord.ComponentType.menu_action_item.value, "label": "B", "custom_id": "b", "style": discord.MenuActionItemStyle.danger.value, "disabled": True},
-                    {"type": discord.ComponentType.menu_action_item.value, "label": "GH", "url": "https://github.com", "style": discord.MenuActionItemStyle.link.value, "disabled": True},
+                    {
+                        "type": discord.ComponentType.menu_action_item.value,
+                        "label": "B",
+                        "custom_id": "b",
+                        "style": discord.MenuActionItemStyle.danger.value,
+                        "disabled": True,
+                    },
+                    {
+                        "type": discord.ComponentType.menu_action_item.value,
+                        "label": "GH",
+                        "url": "https://github.com",
+                        "style": discord.MenuActionItemStyle.link.value,
+                        "disabled": True,
+                    },
                 ],
-            }
+            },
         ],
     }
 
