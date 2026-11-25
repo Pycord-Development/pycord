@@ -1914,7 +1914,7 @@ class MenuActionItem(Component):
         The URL that this menu action item points to. 
         Only present when ``style`` is :attr:`MenuActionItemStyle.url`.
     emoji: :class:`PartialEmoji` | :obj:`None`
-        The emoji shown on tis menu action item.
+        The emoji shown on this menu action item.
     """
     
 
