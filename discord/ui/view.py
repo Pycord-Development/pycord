@@ -54,9 +54,9 @@ from ..components import FileUpload as FileUploadComponent
 from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
+from ..components import MenuActionItem as MenuActionItemComponent
 from ..components import OverflowMenu as OverflowMenuComponent
 from ..components import OverflowMenuGroup as OverflowMenuGroupComponent
-from ..components import MenuActionItem as MenuActionItemComponent
 from ..components import RadioGroup as RadioGroupComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
