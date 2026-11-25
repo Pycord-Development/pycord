@@ -518,6 +518,12 @@ UI Components
     :members:
     :inherited-members:
 
+.. attributetable:: OverflowMenuGroup
+
+.. autoclass:: OverflowMenuGroup()
+    :members:
+    :inherited-members:
+
 .. attributetable:: MenuActionItem
 
 .. autoclass:: MenuActionItem()
