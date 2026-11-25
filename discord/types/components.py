@@ -222,7 +222,7 @@ MenuActionItemStyle = Literal[1, 2, 3]
 
 class MenuActionItemComponent(BaseComponent):
     type: Literal[26]
-    custom_id: str
+    custom_id: NotRequired[str]
     label: str
     style: MenuActionItemStyle
     description: NotRequired[str]

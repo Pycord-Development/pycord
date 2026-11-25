@@ -2684,6 +2684,7 @@ of :class:`enum.Enum`.
         The application webhook is disabled by Discord.
 
 .. class:: TeamRole
+    
     Represents a app team role.
 
     .. versionadded:: 2.8
@@ -2705,6 +2706,7 @@ of :class:`enum.Enum`.
         Represents the team read only role.
 
 .. class:: MenuActionItemStyle
+
     Represents a menu action item's style.
 
     .. versionadded:: 2.9

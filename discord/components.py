@@ -1970,7 +1970,7 @@ class MenuActionItem(Component):
             ComponentType.menu_action_item
         )
         self.id: int | None = data.get("id")
-        self.custom_id: str = data.get("custom_id")
+        self.custom_id: str | None = data.get("custom_id")
         self.label: str = data["label"]
         self.style: MenuActionItemStyle = try_enum(MenuActionItemStyle, data["style"])
         self.description: str | None = data.get("description")
@@ -1984,10 +1984,12 @@ class MenuActionItem(Component):
     def to_dict(self) -> MenuActionItemComponentPayload:
         payload: MenuActionItemComponentPayload = {
             "type": self.type.value,
-            "custom_id": self.custom_id,
             "label": self.label,
             "style": self.style.value,
         }
+        if self.custom_id is not None:
+            payload["custom_id"] = self.custom_id
+
         if self.id is not None:
             payload["id"] = self.id
 

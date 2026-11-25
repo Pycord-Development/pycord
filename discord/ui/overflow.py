@@ -95,7 +95,7 @@ class OverflowMenu(ViewItem[V_co]):
         super()._generate_underlying(OverflowMenuComponent)
         overflow = OverflowMenuComponent._raw_construct(
             type=ComponentType.overflow_menu,
-            id=id or self.id,
+            id=id if id is not None else self.id,
             groups=[],
         )
         for group in self.groups:
@@ -172,7 +172,7 @@ class OverflowMenu(ViewItem[V_co]):
             pass
         return self
 
-    def get_item(self, id: str | int) -> OverflowMenuGroup | MenuActionItem | None:
+    def get_item(self, id: str | int) -> MenuActionItem | None:
         """Get an item from this overflow. Roughly equivalent to `utils.get(overflow.groups, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
@@ -184,20 +184,18 @@ class OverflowMenu(ViewItem[V_co]):
 
         Returns
         -------
-        :class:`discord.ui.OverflowMenuGroup` | :class:`discord.ui.MenuActionItem` | :obj:`None`
+        :class:`discord.ui.MenuActionItem` | :obj:`None`
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
             return None
-        attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.groups)
-        if not child:
-            for g in self.groups:
-                if child := g.get_item(id):
-                    return child
+        # groups do not have ids, so we do not search them
+        for g in self.groups:
+            if child := g.get_item(id):
+                return child
         return child
 
-    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+    def disable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
         """
         Disables all items in the menu.
 
@@ -211,7 +209,7 @@ class OverflowMenu(ViewItem[V_co]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+    def enable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
         """
         Enables all items in the menu.
 
@@ -237,7 +235,7 @@ class OverflowMenu(ViewItem[V_co]):
             x = self.groups[i]
             x.refresh_component(y)
 
-    def walk_items(self) -> Iterator[OverflowMenuGroup | MenuActionItem]:
+    def walk_items(self) -> Iterator[MenuActionItem]:
         for group in self.groups:
             yield from group.walk_items()
 
@@ -388,13 +386,13 @@ class OverflowMenuGroup:
         child = find(lambda i: getattr(i, attr, None) == id, self.components)
         return child
 
-    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+    def disable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
         """
         Disables all items in the group.
 
         Parameters
         ----------
-        exclusions: List[:class:`ViewItem`] | :obj:`None`
+        exclusions: List[:class:`MenuActionItem`] | :obj:`None`
             A list of items in `self.groups` to not disable.
         """
         for item in self.walk_items():
@@ -402,13 +400,13 @@ class OverflowMenuGroup:
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+    def enable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
         """
         Enables all items in the group.
 
         Parameters
         ----------
-        exclusions: List[:class:`ViewItem`] | :obj:`None`
+        exclusions: List[:class:`MenuActionItem`] | :obj:`None`
             A list of items in `self.groups` to not enable.
         """
         for item in self.walk_items():
@@ -548,7 +546,7 @@ class MenuActionItem(ViewItem[V_co]):
         if custom_id is not None and len(str(custom_id)) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         if custom_id is not None and url is not None:
-            raise TypeError("cannot mix both url and custom_id with Button")
+            raise TypeError("cannot mix both url and custom_id with MenuActionItem")
 
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
@@ -601,7 +599,7 @@ class MenuActionItem(ViewItem[V_co]):
             label=label or self.label,
             style=style or self.style,
             emoji=emoji or self.emoji,
-            id=id or self.id,
+            id=id if id is not None else self.id,
             disabled=disabled if disabled is not None else self.disabled,
         )
 
@@ -676,7 +674,7 @@ class MenuActionItem(ViewItem[V_co]):
         return self.underlying.disabled
 
     @disabled.setter
-    def disabled(self, value: MenuActionItemStyle):
+    def disabled(self, value: bool):
         self.underlying.disabled = value
 
     @classmethod
@@ -739,10 +737,10 @@ def action_item(
     custom_id: :class:`str` | :obj:`None`
         The ID of the item that gets received during an interaction.
         It is recommended not to set this parameter to prevent conflicts.
-    style: :class:`.MenuActionItemStyle`
+    style: :class:`discord.MenuActionItemStyle`
         The style of the item. Defaults to :attr:`.MenuActionItemStyle.default`.
     emoji: :class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji` | :obj:`None`
-        The emoji of the item. This can be in string form or a :class:`.PartialEmoji`
+        The emoji of the item. This can be in string fuv run pytestorm or a :class:`.PartialEmoji`
         or a full :class:`GuildEmoji` or :class:`AppEmoji`.
     disabled: :class:`bool`
         If the item is disabled or not. Defaults to ``False``.
