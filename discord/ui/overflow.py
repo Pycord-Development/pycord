@@ -128,7 +128,7 @@ class OverflowMenu(ViewItem[V_co]):
             raise TypeError(f"expected OverflowMenuGroup not {group.__class__!r}")
 
         if len(self.groups) >= 8:
-            raise ValueError("cannot have more than 8 groups")
+            raise ValueError("OverflowMenu cannot have more than 8 groups")
 
         group.parent = self
 
@@ -315,7 +315,7 @@ class OverflowMenuGroup:
             raise TypeError(f"expected MenuActionItem not {item.__class__!r}")
 
         if len(self.components) >= 8:
-            raise ValueError("cannot have more than 8 components")
+            raise ValueError("OverflowMenuGroup cannot have more than 8 components")
 
         item.parent = self
 
@@ -511,7 +511,7 @@ class MenuActionItem(ViewItem[V_co]):
                 emoji = emoji._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not"
+                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not" +
                     f" {emoji.__class__}"
                 )
 
@@ -605,7 +605,7 @@ class MenuActionItem(ViewItem[V_co]):
             self.underlying.emoji = value._to_partial()
         else:
             raise TypeError(
-                "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received"
+                "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received" +
                 f" {value.__class__} instead"
             )
 

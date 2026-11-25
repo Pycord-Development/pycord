@@ -785,8 +785,7 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not"
-                    f" {value.__class__}"
+                    f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not {value.__class__}"
                 )
 
         self._emoji = value

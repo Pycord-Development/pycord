@@ -59,8 +59,13 @@ class ActionRow(ViewItem[V]):
 
     - :class:`discord.ui.Select`
     - :class:`discord.ui.Button`
+    - :class:`discord.ui.OverflowMenu`
 
     .. versionadded:: 2.7
+
+    .. versionchanges:: 2.9
+
+        Added support for :class:`discord.ui.OverflowMenu`.
 
     Parameters
     ----------
@@ -202,9 +207,8 @@ class ActionRow(ViewItem[V]):
         child = find(lambda i: getattr(i, attr, None) == id, self.children)
         if not child:
             for i in self.children:
-                if hasattr(i, "get_item"):
-                    if child := i.get_item(id):
-                        return child
+                if hasattr(i, "get_item") and (child := i.get_item(id)):
+                    return child
         return child
 
     def add_button(
@@ -383,6 +387,8 @@ class ActionRow(ViewItem[V]):
 
         To append a pre-existing :class:`OverflowMenu`, use the
         :meth:`add_item` method instead.
+
+        .. versionadded:: 2.9
 
         Parameters
         ----------
