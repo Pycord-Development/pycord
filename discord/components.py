@@ -1797,7 +1797,6 @@ class Checkbox(Component):
         return payload
 
 
-
 class OverflowMenuGroup:
     """Represents a :class:`discord.OverflowMenu`'s group.
 
@@ -1820,9 +1819,7 @@ class OverflowMenuGroup:
         "label",
     )
 
-    def __init__(
-        self, data: OverflowMenuGroupPayload
-    ) -> None:
+    def __init__(self, data: OverflowMenuGroupPayload) -> None:
         self.label = data["label"]
         self.components = [MenuActionItem(c) for c in data["components"]]
 
@@ -1862,11 +1859,7 @@ class OverflowMenu(Component):
         The list of groups in this overflow menu.
     """
 
-    __slots__: tuple[str, ...] = (
-        "type",
-        "id",
-        "groups"
-    )
+    __slots__: tuple[str, ...] = ("type", "id", "groups")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
@@ -1874,12 +1867,14 @@ class OverflowMenu(Component):
     def __init__(self, data: OverflowMenuComponentPayload):
         self.type = ComponentType.overflow_menu
         self.id: int | None = data.get("id")
-        self.groups: list[OverflowMenuGroup] = [OverflowMenuGroup(g) for g in data["groups"]]
+        self.groups: list[OverflowMenuGroup] = [
+            OverflowMenuGroup(g) for g in data["groups"]
+        ]
 
     def to_dict(self) -> OverflowMenuComponentPayload:
         payload: OverflowMenuComponentPayload = {
             "type": self.type.value,
-            "groups": [g.to_dict() for g in self.groups]
+            "groups": [g.to_dict() for g in self.groups],
         }
         if self.id is not None:
             payload["id"] = self.id
@@ -1911,12 +1906,11 @@ class MenuActionItem(Component):
     description: :class:`str` | :obj:`None`
         The description for the menu action item.
     url: :class:`str` | :obj:`None`
-        The URL that this menu action item points to. 
+        The URL that this menu action item points to.
         Only present when ``style`` is :attr:`MenuActionItemStyle.url`.
     emoji: :class:`PartialEmoji` | :obj:`None`
         The emoji shown on this menu action item.
     """
-    
 
     __slots__: tuple[str, ...] = (
         "custom_id",
@@ -1940,7 +1934,9 @@ class MenuActionItem(Component):
         self.style: MenuActionItemStyle = try_enum(MenuActionItemStyle, data["style"])
         self.description: str | None = data.get("description")
         self.url: str | None = data.get("url")
-        self.emoji: PartialEmoji | None = PartialEmoji.from_dict(e) if (e := data.get("emoji")) else None
+        self.emoji: PartialEmoji | None = (
+            PartialEmoji.from_dict(e) if (e := data.get("emoji")) else None
+        )
 
     def to_dict(self) -> MenuActionItemComponentPayload:
         payload: MenuActionItemComponentPayload = {
@@ -1951,7 +1947,7 @@ class MenuActionItem(Component):
         }
         if self.id is not None:
             payload["id"] = self.id
-            
+
         if self.description is not None:
             payload["description"] = self.description
 
@@ -1962,8 +1958,6 @@ class MenuActionItem(Component):
             payload["emoji"] = self.emoji.to_dict()
 
         return payload
-
-
 
 
 COMPONENT_MAPPINGS = {
