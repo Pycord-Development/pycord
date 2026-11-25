@@ -89,7 +89,7 @@ class OverflowMenu(ViewItem[V_co]):
 
         self._underlying: OverflowMenuComponent = self._generate_underlying(id=id)
         for g in groups:
-            self.add_group(g)
+            self.add_item(g)
 
     def _generate_underlying(self, id: int | None = None) -> OverflowMenuComponent:
         super()._generate_underlying(OverflowMenuComponent)
@@ -110,7 +110,7 @@ class OverflowMenu(ViewItem[V_co]):
         for group in groups:
             self._add_group_from_item(group)
 
-    def add_group(self, group: OverflowMenuGroup) -> Self:
+    def add_item(self, group: OverflowMenuGroup) -> Self:
         """Adds an :class:`~discord.ui.OverflowMenuGroup` to the overflow menu.
 
         Parameters
@@ -135,6 +135,21 @@ class OverflowMenu(ViewItem[V_co]):
         self.groups.append(group)
         self._add_group_from_item(group)
         return self
+
+    def add_group(self, *components: MenuActionItem, label: str | None = None) -> Self:
+        """Adds a :class:`OverflowMenuGroup` to the menu.
+
+        To append a pre-existing :class:`OverflowMenuGroup`, use the
+        :meth:`add_item` method instead.
+
+        Parameters
+        ----------
+        *components: :class:`MenuActionItem`
+            The components of this group.
+        label: :class:`str` | :obj:`None`
+            The group's label.
+        """
+        return self.add_item(OverflowMenuGroup(*components, label=label))
 
     def remove_item(self, item: OverflowMenuGroup | MenuActionItem | str | int) -> Self:
         """Removes an item from the overflow. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.

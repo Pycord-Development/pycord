@@ -29,13 +29,12 @@ from functools import partial
 from typing import TYPE_CHECKING, ClassVar, Literal, TypeVar, overload
 
 from ..components import ActionRow as ActionRowComponent
-from ..components import SelectDefaultValue, SelectOption, _component_factory
+from ..components import SelectDefaultValue, SelectOption
 from ..enums import ButtonStyle, ChannelType, ComponentType
-from ..utils import find, get
+from ..utils import find
 from .button import Button
-from .file import File
 from .item import ItemCallbackType, ViewItem
-from .overflow import OverflowMenu
+from .overflow import OverflowMenu, OverflowMenuGroup
 from .select import Select
 
 __all__ = ("ActionRow",)
@@ -44,7 +43,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..emoji import AppEmoji, GuildEmoji
-    from ..partial_emoji import PartialEmoji, _EmojiTag
+    from ..partial_emoji import PartialEmoji
     from ..types.components import ActionRow as ActionRowPayload
     from .view import DesignerView
 
@@ -372,6 +371,25 @@ class ActionRow(ViewItem[V]):
         )
 
         return self.add_item(select)
+
+    def add_overflow_menu(
+        self,
+        *groups: OverflowMenuGroup,
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`OverflowMenu` to the action row.
+
+        To append a pre-existing :class:`OverflowMenu`, use the
+        :meth:`add_item` method instead.
+
+        Parameters
+        ----------
+        *groups: :class:`OverflowMenuGroup`
+            The groups of this overflow menu.
+        id: :class:`int` | :obj:`None`
+            The overflow menu's ID.
+        """
+        return self.add_item(OverflowMenu(*groups, id=id))
 
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.children)

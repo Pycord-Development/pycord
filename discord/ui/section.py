@@ -29,11 +29,11 @@ from functools import partial
 from typing import TYPE_CHECKING, ClassVar, TypeVar
 
 from ..components import Section as SectionComponent
-from ..components import _component_factory
 from ..enums import ComponentType
-from ..utils import find, get
+from ..utils import find
 from .button import Button
 from .item import ItemCallbackType, ViewItem
+from .overflow import OverflowMenu, OverflowMenuGroup
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
 
@@ -283,6 +283,25 @@ class Section(ViewItem[V]):
         thumbnail = Thumbnail(url, description=description, spoiler=spoiler, id=id)
 
         return self.set_accessory(thumbnail)
+
+    def set_overflow_menu(
+        self,
+        *groups: OverflowMenuGroup,
+        id: int | None = None,
+    ) -> Self:
+        """Sets a :class:`OverflowMenu` as the section's :attr:`accessory`.
+
+        To use a pre-existing :class:`OverflowMenu`, use the
+        :meth:`set_accessory` method instead.
+
+        Parameters
+        ----------
+        *groups: :class:`OverflowMenuGroup`
+            The groups of this overflow menu.
+        id: :class:`int` | :obj:`None`
+            The overflow menu's ID.
+        """
+        return self.set_accessory(OverflowMenu(*groups, id=id))
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
