@@ -26,9 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
-
-from typing_extensions import Self
+from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload, override, Literal
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -247,6 +245,7 @@ class ActionRow(Component):
             type=ComponentType.action_row, id=id, children=[c for c in components]
         )
 
+    @override
     def is_v2(self) -> bool:
         for child in self.children:
             if child.is_v2():
@@ -1827,8 +1826,9 @@ class OverflowMenuGroup:
 
     def __init__(self, data: OverflowMenuGroupPayload) -> None:
         self.label: str | None = data.get("label", None)
-        self.components = [MenuActionItem(c) for c in data["components"]]
+        self.components: list[MenuActionItem] = [MenuActionItem(c) for c in data["components"]]
 
+    @override
     def __repr__(self) -> str:
         return (
             "<OverflowMenuGroup"
@@ -1871,12 +1871,13 @@ class OverflowMenu(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: OverflowMenuComponentPayload):
-        self.type = ComponentType.overflow_menu
+        self.type: Literal[ComponentType.overflow_menu] = ComponentType.overflow_menu
         self.id: int | None = data.get("id")
         self.groups: list[OverflowMenuGroup] = [
             OverflowMenuGroup(g) for g in data["groups"]
         ]
 
+    @override
     def to_dict(self) -> OverflowMenuComponentPayload:
         payload: OverflowMenuComponentPayload = {
             "type": self.type.value,
@@ -1933,7 +1934,7 @@ class MenuActionItem(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: MenuActionItemComponentPayload):
-        self.type = ComponentType.menu_action_item
+        self.type: Literal[ComponentType.menu_action_item] = ComponentType.menu_action_item
         self.id: int | None = data.get("id")
         self.custom_id: str = data.get("custom_id")
         self.label: str = data["label"]
@@ -1944,8 +1945,8 @@ class MenuActionItem(Component):
             PartialEmoji.from_dict(e) if (e := data.get("emoji")) else None
         )
 
-    def to_dict(self) -> MenuActionItemComponentPayload:
-        payload: MenuActionItemComponentPayload = {
+    def to_dict(self) -> dict[str, Any]:
+        payload: dict[str, Any] = {
             "type": self.type.value,
             "custom_id": self.custom_id,
             "label": self.label,
