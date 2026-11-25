@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+from examples.basic_bot import description
 
 from typing import Literal
 
@@ -212,6 +213,26 @@ class CheckboxComponent(BaseComponent):
     default: NotRequired[bool]
 
 
+class OverflowMenuComponent(BaseComponent):
+    type: Literal[25]
+    groups: list[OverflowMenuGroup]
+
+MenuActionItemStyle = Literal[1, 2, 3]
+
+class MenuActionItemComponent(BaseComponent):
+    type: Literal[26]
+    custom_id: str
+    label: str
+    style: MenuActionItemStyle
+    description: NotRequired[str]
+    url: NotRequired[str]
+    emoji: NotRequired[PartialEmoji]
+
+class OverflowMenuGroup(TypedDict):
+    label: NotRequired[str]
+    components: MenuActionItemComponent
+
+
 Component = (
     ActionRow
     | ButtonComponent
@@ -229,11 +250,13 @@ Component = (
     | RadioGroupComponent
     | CheckboxGroupComponent
     | CheckboxComponent
+    | OverflowMenuComponent
+    | MenuActionItemComponent
 )
 
-AllowedActionRowComponents = ButtonComponent | InputText | SelectMenu
+AllowedActionRowComponents = ButtonComponent | InputText | SelectMenu | OverflowMenuComponent
 
-AllowedSectionAccessories = ThumbnailComponent | ButtonComponent
+AllowedSectionAccessories = ThumbnailComponent | ButtonComponent | OverflowMenuComponent
 
 AllowedSectionComponents = TextDisplayComponent
 
