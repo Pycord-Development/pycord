@@ -785,7 +785,7 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not {value.__class__}"
+                    f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not {value.__class__}"  # pyright: ignore[reportUnknownMemberType]
                 )
 
         self._emoji = value
@@ -1874,14 +1874,14 @@ class OverflowMenu(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: OverflowMenuComponentPayload):
-        self.type: Literal[ComponentType.overflow_menu] = ComponentType.overflow_menu
+        self.type: Literal[ComponentType.overflow_menu] = ComponentType.overflow_menu   # pyright: ignore[reportIncompatibleVariableOverride] # Remove this in PR#3444 
         self.id: int | None = data.get("id")
         self.groups: list[OverflowMenuGroup] = [
             OverflowMenuGroup(g) for g in data["groups"]
         ]
 
     @override
-    def to_dict(self) -> OverflowMenuComponentPayload:
+    def to_dict(self) -> OverflowMenuComponentPayload:  # pyright: ignore[reportIncompatibleMethodOverride]
         payload: OverflowMenuComponentPayload = {
             "type": self.type.value,
             "groups": [g.to_dict() for g in self.groups],
@@ -1914,7 +1914,7 @@ class OverflowMenu(Component):
         attr = "id" if isinstance(id, int) else "custom_id"
         result = None
         for group in self.groups:
-            result = find(lambda i: getattr(i, attr, None) == id, group.components)
+            result = find(lambda i: bool(getattr(i, attr, None) == id), group.components)
             if result is not None:
                 return result
         return result
@@ -1966,7 +1966,7 @@ class MenuActionItem(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: MenuActionItemComponentPayload):
-        self.type: Literal[ComponentType.menu_action_item] = (
+        self.type: Literal[ComponentType.menu_action_item] = (  # pyright: ignore[reportIncompatibleVariableOverride] # Remove in PR#3444
             ComponentType.menu_action_item
         )
         self.id: int | None = data.get("id")
@@ -1981,11 +1981,12 @@ class MenuActionItem(Component):
         self.disabled: bool = data.get("disabled", False)
 
     @override
-    def to_dict(self) -> MenuActionItemComponentPayload:
+    def to_dict(self) -> MenuActionItemComponentPayload:  # pyright: ignore[reportIncompatibleMethodOverride]
         payload: MenuActionItemComponentPayload = {
             "type": self.type.value,
             "label": self.label,
             "style": self.style.value,
+            "disabled": self.disabled,
         }
         if self.custom_id is not None:
             payload["custom_id"] = self.custom_id
@@ -2000,10 +2001,7 @@ class MenuActionItem(Component):
             payload["url"] = self.url
 
         if self.emoji is not None:
-            payload["emoji"] = self.emoji.to_dict()  # type: ignore # PartialEmoji returns dict[str, Any]
-
-        if self.disabled is not None:
-            payload["disabled"] = self.disabled
+            payload["emoji"] = self.emoji.to_dict()  # type: ignore # pyright: ignore[reportGeneralTypeIssues] # PartialEmoji returns dict[str, Any]
 
         return payload
 
@@ -2044,5 +2042,5 @@ def _component_factory(data: ComponentPayload, state=None) -> Component:
         else:
             return cls(data)
     else:
-        as_enum = try_enum(ComponentType, component_type)
+        as_enum = try_enum(ComponentType, component_type)  # pyright: ignore[reportArgumentType]
         return Component._raw_construct(type=as_enum)
