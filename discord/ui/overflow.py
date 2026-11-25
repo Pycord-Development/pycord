@@ -511,8 +511,8 @@ class MenuActionItem(ViewItem[V_co]):
                 emoji = emoji._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not" +
-                    f" {emoji.__class__}"
+                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not"
+                    + f" {emoji.__class__}"
                 )
 
         self._underlying = self._generate_underlying(
@@ -605,8 +605,8 @@ class MenuActionItem(ViewItem[V_co]):
             self.underlying.emoji = value._to_partial()
         else:
             raise TypeError(
-                "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received" +
-                f" {value.__class__} instead"
+                "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received"
+                + f" {value.__class__} instead"
             )
 
     @classmethod
