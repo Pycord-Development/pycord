@@ -24,11 +24,12 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from examples.basic_bot import description
 
 from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
+
+from examples.basic_bot import description
 
 from .channel import ChannelType
 from .emoji import PartialEmoji
@@ -217,7 +218,9 @@ class OverflowMenuComponent(BaseComponent):
     type: Literal[25]
     groups: list[OverflowMenuGroup]
 
+
 MenuActionItemStyle = Literal[1, 2, 3]
+
 
 class MenuActionItemComponent(BaseComponent):
     type: Literal[26]
@@ -227,6 +230,7 @@ class MenuActionItemComponent(BaseComponent):
     description: NotRequired[str]
     url: NotRequired[str]
     emoji: NotRequired[PartialEmoji]
+
 
 class OverflowMenuGroup(TypedDict):
     label: NotRequired[str]
@@ -254,7 +258,9 @@ Component = (
     | MenuActionItemComponent
 )
 
-AllowedActionRowComponents = ButtonComponent | InputText | SelectMenu | OverflowMenuComponent
+AllowedActionRowComponents = (
+    ButtonComponent | InputText | SelectMenu | OverflowMenuComponent
+)
 
 AllowedSectionAccessories = ThumbnailComponent | ButtonComponent | OverflowMenuComponent
 
