@@ -1801,7 +1801,9 @@ class Checkbox(Component):
 class OverflowMenuGroup:
     """Represents a :class:`discord.OverflowMenu`'s group.
 
-    These can be created by users.
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.OverflowMenuGroup` instead.
 
     .. versionadded:: 2.9
 
@@ -1814,30 +1816,20 @@ class OverflowMenuGroup:
     """
 
     __slots__: tuple[str, ...] = (
-        "label",
         "components",
+        "label",
     )
 
     def __init__(
-        self,
-        *,
-        label: str | None = None,
-        components: list[MenuActionItemComponent] | None = None
+        self, data: OverflowMenuGroupPayload
     ) -> None:
-        self.label = label
-        self.components = components or []
+        self.label = data["label"]
+        self.components = [MenuActionItem(c) for c in data["components"]]
 
     def __repr__(self) -> str:
         return (
             "<OverflowMenuGroup"
             f" label={self.label!r} components={self.components!r}>"
-        )
-
-    @classmethod
-    def from_dict(cls, data: OverflowMenuGroupPayload) -> Self:
-        return cls(
-            label=data["label"],
-            components=[] # TODO
         )
 
     def to_dict(self) -> OverflowMenuGroupPayload:
@@ -1882,17 +1874,15 @@ class OverflowMenu(Component):
     def __init__(self, data: OverflowMenuComponentPayload):
         self.type = ComponentType.overflow_menu
         self.id: int | None = data.get("id")
-        self.groups: bool = data.get("default", False)
+        self.groups: list[OverflowMenuGroup] = [OverflowMenuGroup(g) for g in data["groups"]]
 
     def to_dict(self) -> OverflowMenuComponentPayload:
         payload: OverflowMenuComponentPayload = {
             "type": self.type.value,
+            "groups": [g.to_dict() for g in self.groups]
         }
         if self.id is not None:
             payload["id"] = self.id
-
-        if self.default is not None:
-            payload["default"] = self.default
 
         return payload
 
@@ -1929,14 +1919,14 @@ class MenuActionItem(Component):
     
 
     __slots__: tuple[str, ...] = (
-        "type",
-        "id",
         "custom_id",
+        "description",
+        "emoji",
+        "id",
         "label",
         "style",
-        "description",
+        "type",
         "url",
-        "emoji",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__

@@ -230,7 +230,7 @@ class MenuActionItemComponent(BaseComponent):
 
 class OverflowMenuGroup(TypedDict):
     label: NotRequired[str]
-    components: MenuActionItemComponent
+    components: list[MenuActionItemComponent]
 
 
 Component = (
