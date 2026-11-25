@@ -1986,7 +1986,7 @@ class MenuActionItem(Component):
             "custom_id": self.custom_id,
             "label": self.label,
             "style": self.style.value,
-        }   
+        }
         if self.id is not None:
             payload["id"] = self.id
 
