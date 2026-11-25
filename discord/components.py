@@ -26,7 +26,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar, overload, override
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar, overload
+
+from typing_extensions import override
 
 from .asset import AssetMixin
 from .colour import Colour
