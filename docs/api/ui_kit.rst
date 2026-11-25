@@ -30,6 +30,9 @@ Shortcut decorators
 .. autofunction:: discord.ui.channel_select
     :decorator:
 
+.. autofunction:: discord.ui.action_item
+    :decorator:
+
 Objects
 -------
 
@@ -199,5 +202,23 @@ Objects
 .. attributetable:: discord.ui.Checkbox
 
 .. autoclass:: discord.ui.Checkbox
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.OverflowMenu
+
+.. autoclass:: discord.ui.OverflowMenu
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.OverflowMenuGroup
+
+.. autoclass:: discord.ui.CheckbOverflowMenuGroupox
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.MenuActionItem
+
+.. autoclass:: discord.ui.MenuActionItem
     :members:
     :inherited-members:
