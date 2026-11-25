@@ -59,10 +59,10 @@ V_co = TypeVar("V_co", bound="DesignerView", covariant=True)
 
 
 class OverflowMenu(ViewItem[V_co]):
-    """Represents a UI Overflow Menu. 
-    
+    """Represents a UI Overflow Menu.
+
     .. note::
-    
+
         Overflow menus only allow for 8 :class:`MenuActionItem`s across all groups.
 
     .. versionadded:: 2.9
@@ -367,7 +367,11 @@ class OverflowMenuGroup:
         for component in self.components:
             components.append(component._generate_underlying())
         group = OverflowMenuGroupComponent(
-            {"label": label or (self.label if hasattr(self, "_underlying") else None), "components": []}
+            {
+                "label": label
+                or (self.label if hasattr(self, "_underlying") else None),
+                "components": [],
+            }
         )
         group.components = components
         return group
