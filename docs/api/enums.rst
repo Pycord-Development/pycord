@@ -2684,7 +2684,7 @@ of :class:`enum.Enum`.
         The application webhook is disabled by Discord.
 
 .. class:: TeamRole
-    
+
     Represents a app team role.
 
     .. versionadded:: 2.8

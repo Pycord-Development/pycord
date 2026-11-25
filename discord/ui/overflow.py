@@ -195,7 +195,9 @@ class OverflowMenu(ViewItem[V_co]):
                 return child
         return child
 
-    def disable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
+    def disable_all_items(
+        self, *, exclusions: list[MenuActionItem] | None = None
+    ) -> Self:
         """
         Disables all items in the menu.
 
@@ -209,7 +211,9 @@ class OverflowMenu(ViewItem[V_co]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
+    def enable_all_items(
+        self, *, exclusions: list[MenuActionItem] | None = None
+    ) -> Self:
         """
         Enables all items in the menu.
 
@@ -386,7 +390,9 @@ class OverflowMenuGroup:
         child = find(lambda i: getattr(i, attr, None) == id, self.components)
         return child
 
-    def disable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
+    def disable_all_items(
+        self, *, exclusions: list[MenuActionItem] | None = None
+    ) -> Self:
         """
         Disables all items in the group.
 
@@ -400,7 +406,9 @@ class OverflowMenuGroup:
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[MenuActionItem] | None = None) -> Self:
+    def enable_all_items(
+        self, *, exclusions: list[MenuActionItem] | None = None
+    ) -> Self:
         """
         Enables all items in the group.
 
