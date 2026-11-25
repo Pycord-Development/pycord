@@ -1953,6 +1953,7 @@ class MenuActionItem(Component):
     __slots__: tuple[str, ...] = (
         "custom_id",
         "description",
+        "disabled",
         "emoji",
         "id",
         "label",
@@ -1977,6 +1978,7 @@ class MenuActionItem(Component):
         self.emoji: PartialEmoji | None = (
             PartialEmoji.from_dict(e) if (e := data.get("emoji")) else None
         )
+        self.disabled: bool = data.get("disabled", False)
 
     @override
     def to_dict(self) -> MenuActionItemComponentPayload:
@@ -1997,6 +1999,9 @@ class MenuActionItem(Component):
 
         if self.emoji is not None:
             payload["emoji"] = self.emoji.to_dict()  # type: ignore # PartialEmoji returns dict[str, Any]
+
+        if self.disabled is not None:
+            payload["disabled"] = self.disabled
 
         return payload
 

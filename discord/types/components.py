@@ -228,6 +228,7 @@ class MenuActionItemComponent(BaseComponent):
     description: NotRequired[str]
     url: NotRequired[str]
     emoji: NotRequired[PartialEmoji]
+    disabled: NotRequired[bool]
 
 
 class OverflowMenuGroup(TypedDict):

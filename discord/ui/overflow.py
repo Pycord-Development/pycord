@@ -197,6 +197,34 @@ class OverflowMenu(ViewItem[V_co]):
                     return child
         return child
 
+    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+        """
+        Disables all items in the menu.
+
+        Parameters
+        ----------
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
+            A list of items in `self.groups` to not disable.
+        """
+        for item in self.walk_items():
+            if exclusions is None or item not in exclusions:
+                item.disabled = True
+        return self
+
+    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+        """
+        Enables all items in the menu.
+
+        Parameters
+        ----------
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
+            A list of items in `self.groups` to not enable.
+        """
+        for item in self.walk_items():
+            if exclusions is None or item not in exclusions:
+                item.disabled = False
+        return self
+
     def is_dispatchable(self) -> bool:
         return any(group.is_dispatchable() for group in self.groups)
 
@@ -360,6 +388,34 @@ class OverflowMenuGroup:
         child = find(lambda i: getattr(i, attr, None) == id, self.components)
         return child
 
+    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+        """
+        Disables all items in the group.
+
+        Parameters
+        ----------
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
+            A list of items in `self.groups` to not disable.
+        """
+        for item in self.walk_items():
+            if exclusions is None or item not in exclusions:
+                item.disabled = True
+        return self
+
+    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
+        """
+        Enables all items in the group.
+
+        Parameters
+        ----------
+        exclusions: List[:class:`ViewItem`] | :obj:`None`
+            A list of items in `self.groups` to not enable.
+        """
+        for item in self.walk_items():
+            if exclusions is None or item not in exclusions:
+                item.disabled = False
+        return self
+
     def _generate_underlying(
         self, label: str | None = None
     ) -> OverflowMenuGroupComponent:
@@ -468,6 +524,7 @@ class MenuActionItem(ViewItem[V_co]):
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
+        "disabled",
         "style",
         "url",
         "label",
@@ -485,6 +542,7 @@ class MenuActionItem(ViewItem[V_co]):
         url: str | None = None,
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         id: int | None = None,
+        disabled: bool = False,
     ):
         super().__init__()
         if custom_id is not None and len(str(custom_id)) > 100:
@@ -522,6 +580,7 @@ class MenuActionItem(ViewItem[V_co]):
             style=style,
             emoji=emoji,
             id=id,
+            disabled=disabled,
         )
 
     def _generate_underlying(
@@ -532,6 +591,7 @@ class MenuActionItem(ViewItem[V_co]):
         url: str | None = None,
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         id: int | None = None,
+        disabled: bool | None = None,
     ) -> MenuActionItemComponent:
         super()._generate_underlying(MenuActionItemComponent)
         return MenuActionItemComponent._raw_construct(
@@ -542,6 +602,7 @@ class MenuActionItem(ViewItem[V_co]):
             style=style or self.style,
             emoji=emoji or self.emoji,
             id=id or self.id,
+            disabled=disabled if disabled is not None else self.disabled,
         )
 
     @property
@@ -609,6 +670,15 @@ class MenuActionItem(ViewItem[V_co]):
                 + f" {value.__class__} instead"
             )
 
+    @property
+    def disabled(self) -> bool:
+        """If the item is currently disabled."""
+        return self.underlying.disabled
+
+    @disabled.setter
+    def disabled(self, value: MenuActionItemStyle):
+        self.underlying.disabled = value
+
     @classmethod
     def from_component(cls, item: MenuActionItemComponent) -> Self:
         return cls(
@@ -647,6 +717,7 @@ def action_item(
     style: MenuActionItemStyle = MenuActionItemStyle.default,
     emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
     id: int | None = None,
+    disabled: bool = False,
 ) -> Callable[[ItemCallbackType[MenuActionItem[V_co]]], MenuActionItem[V_co]]:
     """A decorator that attaches an item to a overflow menu group.
 
@@ -668,11 +739,13 @@ def action_item(
     custom_id: :class:`str` | :obj:`None`
         The ID of the item that gets received during an interaction.
         It is recommended not to set this parameter to prevent conflicts.
-    style: :class:`.ButtonStyle`
-        The style of the item. Defaults to :attr:`.ButtonStyle.grey`.
+    style: :class:`.MenuActionItemStyle`
+        The style of the item. Defaults to :attr:`.MenuActionItemStyle.default`.
     emoji: :class:`str` | :class:`GuildEmoji` | :class:`AppEmoji` | :class:`.PartialEmoji` | :obj:`None`
         The emoji of the item. This can be in string form or a :class:`.PartialEmoji`
         or a full :class:`GuildEmoji` or :class:`AppEmoji`.
+    disabled: :class:`bool`
+        If the item is disabled or not. Defaults to ``False``.
     """
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
@@ -687,6 +760,7 @@ def action_item(
             "label": label,
             "emoji": emoji,
             "id": id,
+            "disabled": disabled,
         }
         return func
 
