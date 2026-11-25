@@ -207,6 +207,8 @@ class Section(ViewItem[V]):
         if self.accessory and id == getattr(self.accessory, attr, None):
             return self.accessory
         child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        if child is None and hasattr(self.accessory, "get_item"):
+            return self.accessory.get_item(id)
         return child
 
     def add_text(self, content: str, *, id: int | None = None) -> Self:
@@ -340,6 +342,8 @@ class Section(ViewItem[V]):
     def walk_items(self) -> Iterator[ViewItem]:
         r = self.items
         if self.accessory:
+            if hasattr(self.accessory, "walk_items"):
+                yield from r + list(self.accessory.walk_items())
             yield from r + [self.accessory]
         else:
             yield from r

@@ -59,7 +59,11 @@ V_co = TypeVar("V_co", bound="DesignerView", covariant=True)
 
 
 class OverflowMenu(ViewItem[V_co]):
-    """Represents a UI Overflow Menu.
+    """Represents a UI Overflow Menu. 
+    
+    .. note::
+    
+        Overflow menus only allow for 8 :class:`MenuActionItem`s across all groups.
 
     .. versionadded:: 2.9
 
@@ -77,6 +81,8 @@ class OverflowMenu(ViewItem[V_co]):
     )
 
     def __init__(self, *groups: OverflowMenuGroup, id: int | None = None):
+        if len(groups) > 8:
+            raise ValueError("cannot have more than 8 groups")
         super().__init__()
 
         self.groups: list[OverflowMenuGroup] = []
@@ -90,6 +96,7 @@ class OverflowMenu(ViewItem[V_co]):
         overflow = OverflowMenuComponent._raw_construct(
             type=ComponentType.overflow_menu,
             id=id or self.id,
+            groups=[],
         )
         for group in self.groups:
             overflow.groups.append(group._generate_underlying())
@@ -119,6 +126,9 @@ class OverflowMenu(ViewItem[V_co]):
 
         if not isinstance(group, OverflowMenuGroup):
             raise TypeError(f"expected OverflowMenuGroup not {group.__class__!r}")
+
+        if len(self.groups) >= 8:
+            raise ValueError("cannot have more than 8 groups")
 
         group.parent = self
 
@@ -234,14 +244,17 @@ class OverflowMenuGroup:
         cls.__row_children_items__ = children
 
     def __init__(self, *components: MenuActionItem, label: str | None = None):
+        if len(self.__row_children_items__) + len(components) > 8:
+            raise ValueError("cannot have more than 8 components")
         super().__init__()
 
         self.components: list[MenuActionItem] = []
-        self.parent: OverflowMenu | None = None
+        self.parent: OverflowMenu | DesignerView | None = None
 
         self._underlying: OverflowMenuGroupComponent = self._generate_underlying(
             label=label
         )
+
         for func in self.__row_children_items__:
             item: MenuActionItem = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
@@ -284,6 +297,9 @@ class OverflowMenuGroup:
         if not isinstance(item, MenuActionItem):
             raise TypeError(f"expected MenuActionItem not {item.__class__!r}")
 
+        if len(self.components) >= 8:
+            raise ValueError("cannot have more than 8 components")
+
         item.parent = self
 
         self.components.append(item)
@@ -324,7 +340,7 @@ class OverflowMenuGroup:
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.groups)
+        child = find(lambda i: getattr(i, attr, None) == id, self.components)
         return child
 
     def _generate_underlying(
@@ -333,9 +349,11 @@ class OverflowMenuGroup:
         components = []
         for component in self.components:
             components.append(component._generate_underlying())
-        return OverflowMenuGroupComponent(
-            {"label": label or self.label, "components": components}
+        group = OverflowMenuGroupComponent(
+            {"label": label or (self.label if hasattr(self, "_underlying") else None), "components": []}
         )
+        group.components = components
+        return group
 
     def _add_component_from_item(self, item: MenuActionItem):
         self.underlying.components.append(item._generate_underlying())
@@ -344,6 +362,26 @@ class OverflowMenuGroup:
         self.underlying.components.clear()
         for component in components:
             self._add_component_from_item(item=component)
+
+    @property
+    def view(self) -> V_co | None:
+        """Gets the parent view associated with this item.
+
+        The view refers to the structure that holds this item. This is typically set
+        automatically when the item is added to a view.
+
+        Returns
+        -------
+        :class:`BaseView` | :obj:`None`
+            The parent view of this item, or ``None`` if the item is not attached to any view.
+        """
+        if self.parent:
+            from .view import BaseView
+
+            if isinstance(self.parent, BaseView):
+                return self.parent
+            return self.parent.view
+        return None
 
     @property
     def underlying(self) -> OverflowMenuGroupComponent:

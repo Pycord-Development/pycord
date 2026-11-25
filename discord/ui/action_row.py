@@ -35,6 +35,7 @@ from ..utils import find, get
 from .button import Button
 from .file import File
 from .item import ItemCallbackType, ViewItem
+from .overflow import OverflowMenu
 from .select import Select
 
 __all__ = ("ActionRow",)
@@ -148,8 +149,8 @@ class ActionRow(ViewItem[V]):
             A :class:`ViewItem` was not passed.
         """
 
-        if not isinstance(item, (Select, Button)):
-            raise TypeError(f"expected Select or Button, not {item.__class__!r}")
+        if not isinstance(item, (Select, Button, OverflowMenu)):
+            raise TypeError(f"expected Select, Button, or OverflowMenu, not {item.__class__!r}")
         if item.row:
             raise ValueError(f"{item.__class__!r}.row is not supported in ActionRow")
         if self.width + item.width > 5:
@@ -182,6 +183,7 @@ class ActionRow(ViewItem[V]):
     def get_item(self, id: str | int) -> ViewItem | None:
         """Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
+        This method will also search nested items.
 
         Parameters
         ----------
@@ -197,6 +199,11 @@ class ActionRow(ViewItem[V]):
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
         child = find(lambda i: getattr(i, attr, None) == id, self.children)
+        if not child:
+            for i in self.children:
+                if hasattr(i, "get_item"):
+                    if child := i.get_item(id):
+                        return child
         return child
 
     def add_button(
@@ -415,7 +422,11 @@ class ActionRow(ViewItem[V]):
         return t
 
     def walk_items(self) -> Iterator[ViewItem]:
-        yield from self.children
+        for child in self.children:
+            if not hasattr(child, "walk_items"):
+                yield child
+            else:
+                yield from child.walk_items()
 
     def to_component_dict(self) -> ActionRowPayload:
         self._underlying = self._generate_underlying()

@@ -247,6 +247,13 @@ class ActionRow(Component):
             type=ComponentType.action_row, id=id, children=[c for c in components]
         )
 
+    
+    def is_v2(self) -> bool:
+        for child in self.children:
+            if child.is_v2():
+                return True
+        return False
+
 
 class InputText(Component):
     """Represents an Input Text field from the Discord Bot UI Kit.
@@ -1820,7 +1827,7 @@ class OverflowMenuGroup:
     )
 
     def __init__(self, data: OverflowMenuGroupPayload) -> None:
-        self.label = data["label"]
+        self.label: str | None = data.get("label", None)
         self.components = [MenuActionItem(c) for c in data["components"]]
 
     def __repr__(self) -> str:
