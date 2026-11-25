@@ -85,11 +85,9 @@ class OverflowMenu(ViewItem[V_co]):
         for g in groups:
             self.add_group(g)
 
-    def _generate_underlying(
-        self, id: int | None = None
-    ) -> OverflowMenuComponent:
+    def _generate_underlying(self, id: int | None = None) -> OverflowMenuComponent:
         super()._generate_underlying(OverflowMenuComponent)
-        overflow =  OverflowMenuComponent._raw_construct(
+        overflow = OverflowMenuComponent._raw_construct(
             type=ComponentType.overflow_menu,
             id=id or self.id,
         )
@@ -235,14 +233,15 @@ class OverflowMenuGroup:
 
         cls.__row_children_items__ = children
 
-
     def __init__(self, *components: MenuActionItem, label: str | None = None):
         super().__init__()
 
         self.components: list[MenuActionItem] = []
         self.parent: OverflowMenu | None = None
 
-        self._underlying: OverflowMenuGroupComponent = self._generate_underlying(label=label)
+        self._underlying: OverflowMenuGroupComponent = self._generate_underlying(
+            label=label
+        )
         for func in self.__row_children_items__:
             item: MenuActionItem = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
@@ -334,7 +333,9 @@ class OverflowMenuGroup:
         components = []
         for component in self.components:
             components.append(component._generate_underlying())
-        return OverflowMenuGroupComponent({"label": label or self.label, "components": components})
+        return OverflowMenuGroupComponent(
+            {"label": label or self.label, "components": components}
+        )
 
     def _add_component_from_item(self, item: MenuActionItem):
         self.underlying.components.append(item._generate_underlying())
@@ -343,7 +344,7 @@ class OverflowMenuGroup:
         self.underlying.components.clear()
         for component in components:
             self._add_component_from_item(item=component)
-        
+
     @property
     def underlying(self) -> OverflowMenuGroupComponent:
         return self._underlying
@@ -431,7 +432,7 @@ class MenuActionItem(ViewItem[V_co]):
             raise ValueError("custom_id must be 100 characters or fewer")
         if custom_id is not None and url is not None:
             raise TypeError("cannot mix both url and custom_id with Button")
-            
+
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -631,4 +632,3 @@ def action_item(
         return func
 
     return decorator  # type: ignore # lie to the type checkers, because after a View is instated, the button callback is converted into a Button instance
-
