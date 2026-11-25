@@ -213,7 +213,7 @@ Objects
 
 .. attributetable:: discord.ui.OverflowMenuGroup
 
-.. autoclass:: discord.ui.CheckbOverflowMenuGroupox
+.. autoclass:: discord.ui.OverflowMenuGroup
     :members:
     :inherited-members:
 

@@ -1892,6 +1892,34 @@ class OverflowMenu(Component):
 
         return payload
 
+    def walk_components(self) -> Iterator[Component]:
+        for group in self.groups:
+            yield from group.components
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this overflow menu.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: :class:`str` | :class:`int`
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        :class:`Component` | :obj:`None`
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        result = None
+        for group in self.groups:
+            result = find(lambda i: getattr(i, attr, None) == id, group.components)
+            if result is not None:
+                return result
+        return result
+
 
 class MenuActionItem(Component):
     """Represents an overflow menu's action item component from the Discord Bot UI kit.
@@ -1951,13 +1979,14 @@ class MenuActionItem(Component):
             PartialEmoji.from_dict(e) if (e := data.get("emoji")) else None
         )
 
-    def to_dict(self) -> dict[str, Any]:
-        payload: dict[str, Any] = {
+    @override
+    def to_dict(self) -> MenuActionItemComponentPayload:
+        payload: MenuActionItemComponentPayload = {
             "type": self.type.value,
             "custom_id": self.custom_id,
             "label": self.label,
             "style": self.style.value,
-        }
+        }   
         if self.id is not None:
             payload["id"] = self.id
 
@@ -1968,7 +1997,7 @@ class MenuActionItem(Component):
             payload["url"] = self.url
 
         if self.emoji is not None:
-            payload["emoji"] = self.emoji.to_dict()
+            payload["emoji"] = self.emoji.to_dict()  # type: ignore # PartialEmoji returns dict[str, Any]
 
         return payload
 
