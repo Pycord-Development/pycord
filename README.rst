@@ -1,5 +1,5 @@
 .. image:: https://raw.githubusercontent.com/Pycord-Development/pycord/master/pycord.png
-   :alt: Pycord v3
+   :alt: Pycord
 
 Pycord is a modern, easy to use, feature-rich, and async-ready API wrapper for Discord written in Python.
 
@@ -150,3 +150,6 @@ Translations
 
 .. image:: https://badges.awesome-crowdin.com/translation-200034237-5.png
    :alt: Translation Status
+.. image:: https://badges.crowdin.net/badge/dark/crowdin-on-light.png
+   :target: https://translations.pycord.dev/documentation/?utm_source=badge&utm_medium=referral&utm_campaign=badge-add-on
+   :alt: Crowdin | Agile localization for tech companies
