@@ -3,8 +3,6 @@
 
 Pycord is a modern, easy to use, feature-rich, and async-ready API wrapper for Discord written in Python.
 
-======
-
 .. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
@@ -24,8 +22,6 @@ Pycord is a modern, easy to use, feature-rich, and async-ready API wrapper for D
    :target: https://github.com/sponsors/Pycord-Development
    :alt: GitHub Sponsors
 
-======
-
 Key Features
 ------------
 
@@ -37,7 +33,7 @@ Key Features
 Installing
 ----------
 
-**Pycord supports Python ``3.10`` - ``3.14``.**
+**Pycord supports Python 3.10 - 3.14.**
 
 To install the base library, run the following command:
 
@@ -62,36 +58,38 @@ run the following command(s):
     $ py -3 -m pip install -U py-cord[voice]
     $ py -3 -m pip install -U py-cord[speed]
 
-To install the development version, do the following:
+To clone and install the development version, do the following:
 
 .. code:: sh
 
-    # Cloning for local installation
     $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
     $ python3 -m pip install -U .
 
-    # OR direct installation
+Or, to install the development version directly from the repository:
+
+.. code:: sh
+
     # Linux/macOS
     $ python3 -m pip install git+https://github.com/Pycord-Development/pycord
 
     # Windows
     $ py -3 -m pip install git+https://github.com/Pycord-Development/pycord
 
-Pycord is managed with `uv <https://docs.astral.sh/uv/>`__. If you want to contribute to Pycord, you
-can find more information about this in `CONTRIBUTING.md <https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md>`__.
+Pycord is managed with `uv <https://docs.astral.sh/uv/>`__. If you want to contribute to Pycord, refer to
+`CONTRIBUTING.md <https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md>`__ for more information.
 
 Optional Packages
 ~~~~~~~~~~~~~~~~~
 
-* `davey <https://pypi.org/project/davey/>`__, `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
-* `aiodns <https://pypi.org/project/aiodns/>`__, `brotlipy <https://pypi.org/project/brotlipy/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (for aiohttp speedup)
-* `msgspec <https://pypi.org/project/msgspec/>`__ (for json speedup)
+- `davey <https://pypi.org/project/davey/>`__, `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
+- `aiodns <https://pypi.org/project/aiodns/>`__, `brotlipy <https://pypi.org/project/brotlipy/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (for aiohttp speedup)
+- `msgspec <https://pypi.org/project/msgspec/>`__ (for json speedup)
 
 Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
-* libffi-dev (or ``libffi-devel`` on some systems)
-* python-dev (e.g. ``python3.10-dev`` for Python 3.10)
+- libffi-dev (or ``libffi-devel`` on some systems)
+- python-dev (e.g. ``python3.14-dev`` for Python 3.14)
 
 Quick Examples
 --------------
@@ -110,11 +108,11 @@ Application Commands
         name = name or ctx.author.name
         await ctx.respond(f"Hello {name}!")
 
-    @bot.user_command(name="Say Hello")
+    @bot.user_command(name="Say Hi")
     async def hi(ctx, user: discord.User):
-        await ctx.respond(f"{ctx.author.mention} says hello to {user.name}!")
+        await ctx.respond(f"{ctx.author.mention} says hi to {user.name}!")
 
-    bot.run("token")
+    bot.run(TOKEN)
 
 Prefix Commands
 ~~~~~~~~~~~~~~~
@@ -132,7 +130,7 @@ Prefix Commands
     async def ping(ctx):
         await ctx.send("pong")
 
-    bot.run("token")
+    bot.run(TOKEN)
 
 You can find more code examples in the [examples directory](examples/).
 
