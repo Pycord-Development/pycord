@@ -47,27 +47,23 @@ from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
 from ..components import Checkbox as CheckboxComponent
 from ..components import CheckboxGroup as CheckboxGroupComponent
-from ..components import Component
+from ..components import Component, FileComponent, _component_factory
 from ..components import Container as ContainerComponent
-from ..components import FileComponent
 from ..components import FileUpload as FileUploadComponent
 from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import MenuActionItem as MenuActionItemComponent
 from ..components import OverflowMenu as OverflowMenuComponent
-from ..components import OverflowMenuGroup as OverflowMenuGroupComponent
 from ..components import RadioGroup as RadioGroupComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import _component_factory
 from ..embeds import Embed
-from ..enums import ChannelType, SeparatorSpacingSize
+from ..enums import ChannelType
 from ..errors import Forbidden, InvalidArgument, NotFound
-from ..utils import find
 from .core import ItemInterface
 from .item import Item, ItemCallbackType, ModalItem, ViewItem
 
@@ -179,11 +175,11 @@ def _component_to_item(component: Component) -> ViewItem[V] | ModalItem | Item:
     if isinstance(component, OverflowMenuComponent):
         from .overflow import OverflowMenu
 
-        return OverflowMenu.from_component(component)
+        return OverflowMenu.from_component(component)  # pyright: ignore[reportUnknownVariableType]
     if isinstance(component, MenuActionItemComponent):
         from .overflow import MenuActionItem
 
-        return MenuActionItem.from_component(component)
+        return MenuActionItem.from_component(component)  # pyright: ignore[reportUnknownVariableType]
     return Item.from_component(component)
 
 

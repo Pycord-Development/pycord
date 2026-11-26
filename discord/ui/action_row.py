@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator, Sequence
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Literal, TypeVar, overload
+from typing import TYPE_CHECKING, ClassVar, Literal, TypeVar, cast, overload
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import SelectDefaultValue, SelectOption
@@ -93,17 +93,17 @@ class ActionRow(ViewItem[V]):
 
     def __init__(
         self,
-        *items: ViewItem,
+        *items: ViewItem[V],
         id: int | None = None,
     ):
         super().__init__()
 
-        self.children: list[ViewItem] = []
+        self.children: list[ViewItem[V]] = []
 
         self._underlying = self._generate_underlying(id=id)
 
         for func in self.__row_children_items__:
-            item: ViewItem = func.__discord_ui_model_type__(
+            item: ViewItem[V] = func.__discord_ui_model_type__(  # pyright: ignore[reportFunctionMemberAccess,reportAny]
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
@@ -139,7 +139,7 @@ class ActionRow(ViewItem[V]):
             row.children.append(i._generate_underlying())
         return row
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the action row.
 
         Parameters
@@ -155,12 +155,13 @@ class ActionRow(ViewItem[V]):
 
         if not isinstance(item, (Select, Button, OverflowMenu)):
             raise TypeError(
-                f"expected Select, Button, or OverflowMenu, not {item.__class__!r}"
+                f"expected Select, Button, or OverflowMenu, not {type(item)!r}"
             )
+        item = cast("ViewItem[V]", item)
         if item.row:
-            raise ValueError(f"{item.__class__!r}.row is not supported in ActionRow")
+            raise ValueError(f"{type(item)!r}.row is not supported in ActionRow")
         if self.width + item.width > 5:
-            raise ValueError(f"Not enough space left on this ActionRow")
+            raise ValueError("Not enough space left on this ActionRow")
 
         item.parent = self
 
@@ -204,11 +205,11 @@ class ActionRow(ViewItem[V]):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.children)
+        child: ViewItem[V] | None = find(lambda i: getattr(i, attr, None) == id, self.children)  # pyright: ignore[reportAny]
         if not child:
             for i in self.children:
-                if hasattr(i, "get_item") and (child := i.get_item(id)):
-                    return child
+                if hasattr(i, "get_item") and (child := i.get_item(id)): # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue,reportUnknownVariableType]
+                    return child  # pyright: ignore[reportUnknownVariableType]
         return child
 
     def add_button(
@@ -249,7 +250,7 @@ class ActionRow(ViewItem[V]):
             The button's ID.
         """
 
-        button = Button(
+        button: Button[V] = Button(
             style=style,
             label=label,
             disabled=disabled,
@@ -362,8 +363,7 @@ class ActionRow(ViewItem[V]):
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
             instances.
         """
-
-        select = Select(
+        return self.add_item(Select(
             select_type=select_type,
             custom_id=custom_id,
             placeholder=placeholder,
@@ -374,9 +374,7 @@ class ActionRow(ViewItem[V]):
             disabled=disabled,
             id=id,
             default_values=default_values,
-        )
-
-        return self.add_item(select)
+        ))
 
     def add_overflow_menu(
         self,
@@ -447,12 +445,12 @@ class ActionRow(ViewItem[V]):
             t += item.width
         return t
 
-    def walk_items(self) -> Iterator[ViewItem]:
+    def walk_items(self) -> Iterator[ViewItem[V]]:
         for child in self.children:
             if not hasattr(child, "walk_items"):
                 yield child
             else:
-                yield from child.walk_items()
+                yield from child.walk_items()  # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue]
 
     def to_component_dict(self) -> ActionRowPayload:
         self._underlying = self._generate_underlying()

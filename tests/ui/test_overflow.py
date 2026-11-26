@@ -1,3 +1,4 @@
+# pyright: basic
 """
 The MIT License (MIT)
 
@@ -44,7 +45,7 @@ from discord.ui import (
 )
 
 
-def make_item(i: int = 0, **kwargs) -> MenuActionItem:
+def make_item(i: int = 0, **kwargs) -> MenuActionItem[DesignerView]:
     kwargs.setdefault("label", f"Item {i}")
     if "url" not in kwargs:
         kwargs.setdefault("custom_id", f"item_{i}")
@@ -95,7 +96,7 @@ class TestMenuActionItem:
 
     def test_invalid_emoji_type(self):
         with pytest.raises(TypeError, match="emoji"):
-            MenuActionItem(emoji=123)  # type: ignore
+            MenuActionItem(emoji=123)  # type: ignore # pyright: ignore[reportArgumentType]
 
     def test_disabled_flag(self):
         item = MenuActionItem(disabled=True)
@@ -113,16 +114,16 @@ class TestMenuActionItem:
         )
         payload = item.to_component_dict()
         assert payload["label"] == "Hi"
-        assert payload["custom_id"] == "hi"
+        assert payload["custom_id"] == "hi" # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert payload["style"] == discord.MenuActionItemStyle.danger.value
-        assert payload["id"] == 0
-        assert payload["disabled"] is False
+        assert payload["id"] == 0  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        assert payload["disabled"] is False  # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert "url" not in payload
         assert payload["type"] == discord.ComponentType.menu_action_item.value
 
     def test_to_dict_url_item(self):
         payload = MenuActionItem(url="https://github.com").to_component_dict()
-        assert payload["url"] == "https://github.com"
+        assert payload["url"] == "https://github.com"  # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert payload["style"] == discord.MenuActionItemStyle.link.value
         assert "custom_id" not in payload
 
@@ -135,13 +136,9 @@ class TestMenuActionItem:
 
         item = Custom(label="x", custom_id="x")
         sentinel = object()
-        await item.callback(sentinel)
+        await item.callback(sentinel)  # pyright: ignore[reportArgumentType]
         assert calls == [sentinel]
 
-
-# --------------------------------------------------------------------------- #
-# OverflowMenuGroup
-# --------------------------------------------------------------------------- #
 
 
 class TestOverflowMenuGroup:
@@ -156,7 +153,7 @@ class TestOverflowMenuGroup:
 
     def test_group_rejects_wrong_type(self):
         with pytest.raises(TypeError, match="MenuActionItem"):
-            OverflowMenuGroup(discord.ui.Button(label="no"))  # type: ignore
+            OverflowMenuGroup(discord.ui.Button(label="no"))  # type: ignore # pyright: ignore[reportArgumentType]
 
     def test_group_max_8_items(self):
         group = make_group(8)
@@ -183,7 +180,7 @@ class TestOverflowMenuGroup:
 
     def test_to_dict(self):
         payload = make_group(2, label="Menu").to_component_dict()
-        assert payload["label"] == "Menu"
+        assert payload["label"] == "Menu"  # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert len(payload["components"]) == 2
 
     def test_to_dict_without_label(self):
@@ -224,8 +221,9 @@ class TestOverflowMenuGroup:
 
         group = MyGroup()
         item = group.get_item("x")
+        assert item is not None
         sentinel = object()
-        await item.callback(sentinel)  # type: ignore
+        await item.callback(sentinel)  # type: ignore  # pyright: ignore[reportArgumentType]
         assert received["interaction"] is sentinel
         assert received["item"] is item
 
@@ -280,7 +278,7 @@ class TestOverflowMenu:
 
     def test_rejects_wrong_type(self):
         with pytest.raises(TypeError, match="OverflowMenuGroup"):
-            OverflowMenu(make_item(1))  # type: ignore
+            OverflowMenu(make_item(1))  # type: ignore  # pyright: ignore[reportArgumentType]
 
     def test_max_8_groups(self):
         menu = OverflowMenu(*(make_group(1, start=i) for i in range(8)))
@@ -347,7 +345,7 @@ class TestOverflowMenu:
         ).to_component_dict()
         assert payload["type"] == discord.ComponentType.overflow_menu.value
         assert len(payload["groups"]) == 2
-        assert payload["groups"][0]["label"] == "A"
+        assert payload["groups"][0]["label"] == "A"  # pyright: ignore[reportTypedDictNotRequiredAccess]
 
     async def test_subclass_pattern(self):
         class BasicOverflow(OverflowMenu):

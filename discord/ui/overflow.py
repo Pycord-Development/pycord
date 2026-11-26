@@ -30,6 +30,8 @@ from collections.abc import Callable, Iterator
 from functools import partial
 from typing import TYPE_CHECKING, ClassVar, TypeVar
 
+from typing_extensions import override, cast
+
 from discord.utils import find
 
 from ..components import MenuActionItem as MenuActionItemComponent
@@ -80,6 +82,8 @@ class OverflowMenu(ViewItem[V_co]):
         "id",
     )
 
+    underlying: OverflowMenuComponent  # pyright: ignore[reportRedeclaration]
+
     def __init__(self, *groups: OverflowMenuGroup, id: int | None = None):
         if len(groups) > 8:
             raise ValueError("cannot have more than 8 groups")
@@ -91,7 +95,8 @@ class OverflowMenu(ViewItem[V_co]):
         for g in groups:
             self.add_item(g)
 
-    def _generate_underlying(self, id: int | None = None) -> OverflowMenuComponent:
+    @override
+    def _generate_underlying(self, id: int | None = None) -> OverflowMenuComponent:  # pyright: ignore[reportIncompatibleMethodOverride]
         super()._generate_underlying(OverflowMenuComponent)
         overflow = OverflowMenuComponent._raw_construct(
             type=ComponentType.overflow_menu,
@@ -124,8 +129,8 @@ class OverflowMenu(ViewItem[V_co]):
             A :class:`~discord.ui.OverflowMenuGroup` was not passed.
         """
 
-        if not isinstance(group, OverflowMenuGroup):
-            raise TypeError(f"expected OverflowMenuGroup not {group.__class__!r}")
+        if not isinstance(group, OverflowMenuGroup):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError(f"expected OverflowMenuGroup not {group.__class__!r}") # pyright: ignore[reportUnreachable]
 
         if len(self.groups) >= 8:
             raise ValueError("OverflowMenu cannot have more than 8 groups")
@@ -136,7 +141,7 @@ class OverflowMenu(ViewItem[V_co]):
         self._add_group_from_item(group)
         return self
 
-    def add_group(self, *components: MenuActionItem, label: str | None = None) -> Self:
+    def add_group(self, *components: MenuActionItem[DesignerView], label: str | None = None) -> Self:
         """Adds a :class:`OverflowMenuGroup` to the menu.
 
         To append a pre-existing :class:`OverflowMenuGroup`, use the
@@ -151,7 +156,7 @@ class OverflowMenu(ViewItem[V_co]):
         """
         return self.add_item(OverflowMenuGroup(*components, label=label))
 
-    def remove_item(self, item: OverflowMenuGroup | MenuActionItem | str | int) -> Self:
+    def remove_item(self, item: OverflowMenuGroup | MenuActionItem[DesignerView] | str | int) -> Self:  # pyright: ignore[reportRedeclaration]
         """Removes an item from the overflow. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
@@ -161,18 +166,20 @@ class OverflowMenu(ViewItem[V_co]):
         """
 
         if isinstance(item, (str, int)):
-            item = self.get_item(item)
+            item: OverflowMenuGroup | MenuActionItem[V_co | DesignerView] | None = self.get_item(item)
+            if item is None:
+                return self
         try:
-            if item.parent is self:
-                self.groups.remove(item)
-                item.parent = None
+            if item.parent is self:  # pyright: ignore[reportUnknownMemberType]
+                self.groups.remove(item)  # pyright: ignore[reportArgumentType]
+                item.parent = None 
             else:
-                item.parent.remove_item(item)
+                item.parent.remove_item(item)  # pyright: ignore[reportAttributeAccessIssue,reportOptionalMemberAccess,reportArgumentType,reportUnknownMemberType]
         except ValueError:
             pass
         return self
 
-    def get_item(self, id: str | int) -> MenuActionItem | None:
+    def get_item(self, id: str | int) -> MenuActionItem[V_co] | None:
         """Get an item from this overflow. Roughly equivalent to `utils.get(overflow.groups, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
@@ -192,11 +199,11 @@ class OverflowMenu(ViewItem[V_co]):
         # groups do not have ids, so we do not search them
         for g in self.groups:
             if child := g.get_item(id):
-                return child
-        return child
+                return child  # pyright: ignore[reportReturnType]
+        return None
 
     def disable_all_items(
-        self, *, exclusions: list[MenuActionItem] | None = None
+        self, *, exclusions: list[MenuActionItem[DesignerView]] | None = None
     ) -> Self:
         """
         Disables all items in the menu.
@@ -212,7 +219,7 @@ class OverflowMenu(ViewItem[V_co]):
         return self
 
     def enable_all_items(
-        self, *, exclusions: list[MenuActionItem] | None = None
+        self, *, exclusions: list[MenuActionItem[DesignerView]] | None = None
     ) -> Self:
         """
         Enables all items in the menu.
@@ -227,28 +234,33 @@ class OverflowMenu(ViewItem[V_co]):
                 item.disabled = False
         return self
 
+    @override
     def is_dispatchable(self) -> bool:
         return any(group.is_dispatchable() for group in self.groups)
 
+    @override
     def is_persistent(self) -> bool:
         return all(group.is_persistent() for group in self.groups)
 
-    def refresh_component(self, component: OverflowMenuComponent) -> None:
-        self.underlying = component
+    @override
+    def refresh_component(self, component: OverflowMenuComponent) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
+        self.underlying: OverflowMenuComponent = component  # pyright: ignore[reportIncompatibleMethodOverride]
         for i, y in enumerate(component.groups):
             x = self.groups[i]
             x.refresh_component(y)
 
-    def walk_items(self) -> Iterator[MenuActionItem]:
+    def walk_items(self) -> Iterator[MenuActionItem[DesignerView]]:
         for group in self.groups:
             yield from group.walk_items()
 
-    def to_component_dict(self) -> OverflowMenuComponentPayload:
-        self._underlying = self._generate_underlying()
-        return super().to_component_dict()
+    @override
+    def to_component_dict(self) -> OverflowMenuComponentPayload:  # pyright: ignore[reportIncompatibleMethodOverride]
+        self._underlying = self._generate_underlying()  # pyright: ignore[reportIncompatibleVariableOverride]
+        return cast("OverflowMenuComponentPayload", cast("object", super().to_component_dict()))
 
+    @override
     @classmethod
-    def from_component(cls, component: OverflowMenuComponent) -> Self:
+    def from_component(cls, component: OverflowMenuComponent) -> Self:  # pyright: ignore[reportIncompatibleMethodOverride]
         groups: list[OverflowMenuGroup] = [
             OverflowMenuGroup.from_component(g) for g in component.groups
         ]
@@ -257,7 +269,7 @@ class OverflowMenu(ViewItem[V_co]):
             id=component.id,
         )
 
-    callback = None
+    callback: None = None  # pyright: ignore[reportIncompatibleMethodOverride]
 
 
 # this is not an actual component (it has no type), but stores actual components with callbacks
@@ -279,39 +291,40 @@ class OverflowMenuGroup:
         "components",
         "label",
     )
-    __row_children_items__: ClassVar[list[ItemCallbackType]] = []
+    __row_children_items__: ClassVar[list[ItemCallbackType[MenuActionItem[DesignerView]]]] = []
 
     def __init_subclass__(cls) -> None:
-        children: list[ItemCallbackType] = []
+        children: list[ItemCallbackType[MenuActionItem[DesignerView]]] = []
         for base in reversed(cls.__mro__):
-            for member in base.__dict__.values():
-                if hasattr(member, "__discord_ui_model_type__"):
-                    children.append(member)
+            for member in base.__dict__.values():  # pyright: ignore[reportAny]
+                if hasattr(member, "__discord_ui_model_type__"):  # pyright: ignore[reportAny]
+                    children.append(member)  # pyright: ignore[reportAny]
 
         cls.__row_children_items__ = children
 
-    def __init__(self, *components: MenuActionItem, label: str | None = None):
+    def __init__(self, *components: MenuActionItem[DesignerView], label: str | None = None):
         if len(self.__row_children_items__) + len(components) > 8:
             raise ValueError("cannot have more than 8 components")
         super().__init__()
 
-        self.components: list[MenuActionItem] = []
-        self.parent: OverflowMenu | DesignerView | None = None
+        self.components: list[MenuActionItem[DesignerView]] = []
+        self.parent: OverflowMenu[DesignerView] | DesignerView | None = None
 
         self._underlying: OverflowMenuGroupComponent = self._generate_underlying(
             label=label
         )
 
         for func in self.__row_children_items__:
-            item: MenuActionItem = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
+            item: MenuActionItem[DesignerView] = func.__discord_ui_model_type__(  # pyright: ignore[reportAny,reportFunctionMemberAccess]
+                **func.__discord_ui_model_kwargs__  # pyright: ignore[reportAny,reportFunctionMemberAccess]
             )
-            item.callback = partial(func, self, item)
+            item.callback = partial(func, self, item)  # pyright: ignore[reportAttributeAccessIssue]
             self.add_item(item)
             setattr(self, func.__name__, item)
         for c in components:
             self.add_item(c)
 
+    @override
     def __repr__(self) -> str:
         attrs = " ".join(
             f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
@@ -327,7 +340,7 @@ class OverflowMenuGroup:
     def label(self, value: str | None):
         self.underlying.label = str(value) if value is not None else value
 
-    def add_item(self, item: MenuActionItem) -> Self:
+    def add_item(self, item: MenuActionItem[DesignerView]) -> Self:
         """Adds an :class:`~discord.ui.MenuActionItem` to the overflow group.
 
         Parameters
@@ -341,19 +354,19 @@ class OverflowMenuGroup:
             A :class:`~discord.ui.MenuActionItem` was not passed.
         """
 
-        if not isinstance(item, MenuActionItem):
-            raise TypeError(f"expected MenuActionItem not {item.__class__!r}")
+        if not isinstance(item, MenuActionItem):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError(f"expected MenuActionItem not {item.__class__!r}")  # pyright: ignore[reportUnreachable]
 
         if len(self.components) >= 8:
             raise ValueError("OverflowMenuGroup cannot have more than 8 components")
 
-        item.parent = self
+        item.parent = self  # pyright: ignore[reportAttributeAccessIssue]
 
         self.components.append(item)
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: MenuActionItem | str | int) -> Self:
+    def remove_item(self, item: MenuActionItem[DesignerView] | str | int) -> Self:
         """Removes an item from the group. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
@@ -363,14 +376,17 @@ class OverflowMenuGroup:
         """
 
         if isinstance(item, (str, int)):
-            item = self.get_item(item)
+            if (i := self.get_item(item)) is not None:
+                item = i
+            else:
+                return self
         try:
             self.components.remove(item)
         except ValueError:
             pass
         return self
 
-    def get_item(self, id: str | int) -> MenuActionItem | None:
+    def get_item(self, id: str | int) -> MenuActionItem[DesignerView] | None:
         """Get an item from this group. Roughly equivalent to `utils.get(group.components, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -386,12 +402,10 @@ class OverflowMenuGroup:
         """
         if not id:
             return None
-        attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.components)
-        return child
+        return find(lambda i: (i.id if isinstance(id, int) else i.custom_id) == id, self.components)
 
     def disable_all_items(
-        self, *, exclusions: list[MenuActionItem] | None = None
+        self, *, exclusions: list[MenuActionItem[DesignerView]] | None = None
     ) -> Self:
         """
         Disables all items in the group.
@@ -407,7 +421,7 @@ class OverflowMenuGroup:
         return self
 
     def enable_all_items(
-        self, *, exclusions: list[MenuActionItem] | None = None
+        self, *, exclusions: list[MenuActionItem[DesignerView]] | None = None
     ) -> Self:
         """
         Enables all items in the group.
@@ -425,29 +439,30 @@ class OverflowMenuGroup:
     def _generate_underlying(
         self, label: str | None = None
     ) -> OverflowMenuGroupComponent:
-        components = []
+        components: list[MenuActionItemComponent] = []
         for component in self.components:
             components.append(component._generate_underlying())
-        group = OverflowMenuGroupComponent(
-            {
-                "label": label
-                or (self.label if hasattr(self, "_underlying") else None),
-                "components": [],
-            }
-        )
+        payload: OverflowMenuGroupComponentPayload = {
+            "components": [],
+        }
+        if label:
+            payload["label"] = label
+        elif hasattr(self, "_underlying") and self.label:
+            payload["label"] = self.label
+        group = OverflowMenuGroupComponent(payload)
         group.components = components
         return group
 
-    def _add_component_from_item(self, item: MenuActionItem):
+    def _add_component_from_item(self, item: MenuActionItem[DesignerView]):
         self.underlying.components.append(item._generate_underlying())
 
-    def _set_components(self, components: list[MenuActionItem]):
+    def _set_components(self, components: list[MenuActionItem[DesignerView]]):
         self.underlying.components.clear()
         for component in components:
             self._add_component_from_item(item=component)
 
     @property
-    def view(self) -> V_co | None:
+    def view(self) -> DesignerView | None:
         """Gets the parent view associated with this item.
 
         The view refers to the structure that holds this item. This is typically set
@@ -489,7 +504,7 @@ class OverflowMenuGroup:
             x = self.components[i]
             x.refresh_component(y)
 
-    def walk_items(self) -> Iterator[MenuActionItem]:
+    def walk_items(self) -> Iterator[MenuActionItem[DesignerView]]:
         yield from self.components
 
     def to_component_dict(self) -> OverflowMenuGroupComponentPayload:
@@ -498,13 +513,13 @@ class OverflowMenuGroup:
 
     @classmethod
     def from_component(cls, component: OverflowMenuGroupComponent) -> Self:
-        components = [MenuActionItem.from_component(c) for c in component.components]
+        components: list[MenuActionItem[DesignerView]] = [MenuActionItem.from_component(c) for c in component.components]
         return cls(
             *components,
             label=component.label,
         )
 
-    callback = None
+    callback: None = None
 
 
 class MenuActionItem(ViewItem[V_co]):
@@ -557,11 +572,11 @@ class MenuActionItem(ViewItem[V_co]):
             raise TypeError("cannot mix both url and custom_id with MenuActionItem")
 
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
+            raise TypeError(  # pyright: ignore[reportUnreachable]
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
 
-        self._provided_custom_id = custom_id is not None
+        self._provided_custom_id: bool = custom_id is not None
         if url is None and custom_id is None:
             custom_id = os.urandom(16).hex()
 
@@ -571,15 +586,15 @@ class MenuActionItem(ViewItem[V_co]):
         if emoji is not None:
             if isinstance(emoji, str):
                 emoji = PartialEmoji.from_str(emoji)
-            elif isinstance(emoji, _EmojiTag):
+            elif isinstance(emoji, _EmojiTag):  # pyright: ignore[reportUnnecessaryIsInstance]
                 emoji = emoji._to_partial()
             else:
-                raise TypeError(
+                raise TypeError(  # pyright: ignore[reportUnreachable]
                     "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not"
                     + f" {emoji.__class__}"
                 )
 
-        self._underlying = self._generate_underlying(
+        self._underlying: MenuActionItemComponent = self._generate_underlying(  # pyright: ignore[reportIncompatibleVariableOverride]
             custom_id=custom_id,
             url=url,
             label=label,
@@ -589,7 +604,8 @@ class MenuActionItem(ViewItem[V_co]):
             disabled=disabled,
         )
 
-    def _generate_underlying(
+    @override
+    def _generate_underlying(  # pyright: ignore[reportIncompatibleMethodOverride]
         self,
         style: MenuActionItemStyle | None = None,
         label: str | None = None,
@@ -630,11 +646,11 @@ class MenuActionItem(ViewItem[V_co]):
 
     @custom_id.setter
     def custom_id(self, value: str | None):
-        if value is not None and not isinstance(value, str):
-            raise TypeError("custom_id must be None or str")
+        if value is not None and not isinstance(value, str):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError("custom_id must be None or str")  # pyright: ignore[reportUnreachable]
         if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
-        self.underlying.custom_id = value
+        self.underlying.custom_id = value 
         self._provided_custom_id = value is not None
 
     @property
@@ -644,8 +660,8 @@ class MenuActionItem(ViewItem[V_co]):
 
     @url.setter
     def url(self, value: str | None):
-        if value is not None and not isinstance(value, str):
-            raise TypeError("url must be None or str")
+        if value is not None and not isinstance(value, str):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError("url must be None or str")  # pyright: ignore[reportUnreachable]
         self.underlying.url = value
 
     @property
@@ -655,7 +671,7 @@ class MenuActionItem(ViewItem[V_co]):
 
     @label.setter
     def label(self, value: str | None):
-        self.underlying.label = str(value) if value is not None else value
+        self.underlying.label = str(value) if value is not None else value  # pyright: ignore[reportAttributeAccessIssue]
 
     @property
     def emoji(self) -> PartialEmoji | None:
@@ -663,15 +679,15 @@ class MenuActionItem(ViewItem[V_co]):
         return self.underlying.emoji
 
     @emoji.setter
-    def emoji(self, value: str | GuildEmoji | AppEmoji | PartialEmoji | None):  # type: ignore
+    def emoji(self, value: str | GuildEmoji | AppEmoji | PartialEmoji | None):  # pyright: ignore[reportPropertyTypeMismatch]
         if value is None:
-            self.underlying.emoji = None
+            self.underlying.emoji = None 
         elif isinstance(value, str):
-            self.underlying.emoji = PartialEmoji.from_str(value)
-        elif isinstance(value, _EmojiTag):
-            self.underlying.emoji = value._to_partial()
+            self.underlying.emoji = PartialEmoji.from_str(value) 
+        elif isinstance(value, _EmojiTag):  # pyright: ignore[reportUnnecessaryIsInstance]
+            self.underlying.emoji = value._to_partial() 
         else:
-            raise TypeError(
+            raise TypeError(  # pyright: ignore[reportUnreachable]
                 "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received"
                 + f" {value.__class__} instead"
             )
@@ -683,10 +699,11 @@ class MenuActionItem(ViewItem[V_co]):
 
     @disabled.setter
     def disabled(self, value: bool):
-        self.underlying.disabled = value
+        self.underlying.disabled = value 
 
+    @override
     @classmethod
-    def from_component(cls, item: MenuActionItemComponent) -> Self:
+    def from_component(cls, item: MenuActionItemComponent) -> Self:  # pyright: ignore[reportIncompatibleMethodOverride]
         return cls(
             style=item.style,
             label=item.label,
@@ -696,24 +713,29 @@ class MenuActionItem(ViewItem[V_co]):
             id=item.id,
         )
 
-    def to_component_dict(self) -> MenuActionItemComponentPayload:
-        return super().to_component_dict()
+    @override
+    def to_component_dict(self) -> MenuActionItemComponentPayload:  # pyright: ignore[reportIncompatibleMethodOverride]
+        return cast("MenuActionItemComponentPayload", cast("object", super().to_component_dict()))
 
+    @override
     def is_dispatchable(self) -> bool:
         return (self.custom_id is not None) and (
             bool(self.view._store) if self.view else True
         )
 
+    @override
     def is_storable(self) -> bool:
         return self.is_dispatchable()
 
+    @override
     def is_persistent(self) -> bool:
         if self.style is MenuActionItemStyle.link:
             return self.url is not None
         return super().is_persistent()
 
-    def refresh_component(self, item: MenuActionItemComponent) -> None:
-        self.underlying = item
+    @override
+    def refresh_component(self, item: MenuActionItemComponent) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
+        self.underlying: MenuActionItemComponent = item
 
 
 def action_item(
@@ -724,7 +746,7 @@ def action_item(
     emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
     id: int | None = None,
     disabled: bool = False,
-) -> Callable[[ItemCallbackType[MenuActionItem[V_co]]], MenuActionItem[V_co]]:
+) -> Callable[[ItemCallbackType[MenuActionItem[DesignerView]]], MenuActionItem[DesignerView]]:
     """A decorator that attaches an item to a overflow menu group.
 
     The function being decorated should have three parameters, ``self`` representing
@@ -754,12 +776,12 @@ def action_item(
         If the item is disabled or not. Defaults to ``False``.
     """
 
-    def decorator(func: ItemCallbackType) -> ItemCallbackType:
+    def decorator(func: ItemCallbackType[MenuActionItem[DesignerView]]) -> ItemCallbackType[MenuActionItem[DesignerView]]:
         if not inspect.iscoroutinefunction(func):
             raise TypeError("item function must be a coroutine function")
 
-        func.__discord_ui_model_type__ = MenuActionItem
-        func.__discord_ui_model_kwargs__ = {
+        func.__discord_ui_model_type__ = MenuActionItem  # pyright: ignore[reportFunctionMemberAccess]
+        func.__discord_ui_model_kwargs__ = {  # pyright: ignore[reportFunctionMemberAccess]
             "style": style,
             "custom_id": custom_id,
             "url": None,
@@ -770,4 +792,4 @@ def action_item(
         }
         return func
 
-    return decorator  # type: ignore # lie to the type checkers, because after a View is instated, the button callback is converted into a Button instance
+    return decorator  # type: ignore # pyright: ignore [reportReturnType] # lie to the type checkers, because after a View is instated, the callback is converted into a MenuActionItem instance

@@ -43,7 +43,6 @@ SelectDefaultValueType = Literal["channel", "role", "user"]
 
 
 class BaseComponent(TypedDict):
-    type: ComponentType
     id: NotRequired[int]
 
 

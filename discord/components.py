@@ -28,7 +28,7 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar, overload
 
-from typing_extensions import override
+from typing_extensions import Self, override
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -49,6 +49,7 @@ from .utils import MISSING, find, get_slots
 if TYPE_CHECKING:
     from . import abc
     from .emoji import AppEmoji, GuildEmoji
+    from .state import ConnectionState
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import CheckboxComponent as CheckboxComponentPayload
@@ -152,8 +153,8 @@ class Component:
         return f"<{self.__class__.__name__} {attrs}>"
 
     @classmethod
-    def _raw_construct(cls: type[C], **kwargs) -> C:
-        self: C = cls.__new__(cls)
+    def _raw_construct(cls, **kwargs: object) -> Self:
+        self: Self = cls.__new__(cls)
         for slot in get_slots(cls):
             try:
                 value = kwargs[slot]
@@ -242,7 +243,7 @@ class ActionRow(Component):
         return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     @classmethod
-    def with_components(cls, *components, id=None):
+    def with_components(cls, *components: Component, id: int | None = None):
         return cls._raw_construct(
             type=ComponentType.action_row, id=id, children=[c for c in components]
         )
@@ -847,7 +848,7 @@ class Section(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: SectionComponentPayload, state=None):
+    def __init__(self, data: SectionComponentPayload, state: ConnectionState | None = None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.components: list[Component] = [
@@ -1277,7 +1278,7 @@ class Container(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ContainerComponentPayload, state=None):
+    def __init__(self, data: ContainerComponentPayload, state: ConnectionState | None = None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
@@ -1911,10 +1912,9 @@ class OverflowMenu(Component):
         """
         if not id:
             return None
-        attr = "id" if isinstance(id, int) else "custom_id"
         result = None
         for group in self.groups:
-            result = find(lambda i: bool(getattr(i, attr, None) == id), group.components)
+            result = find(lambda i: (i.id if isinstance(id, int) else i.custom_id) == id, group.components)
             if result is not None:
                 return result
         return result
@@ -2034,13 +2034,13 @@ COMPONENT_MAPPINGS = {
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
 
 
-def _component_factory(data: ComponentPayload, state=None) -> Component:
+def _component_factory(data: ComponentPayload, state: ConnectionState | None = None) -> Component:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
         if issubclass(cls, STATE_COMPONENTS):
             return cls(data, state=state)
         else:
-            return cls(data)
+            return cls(data)  # pyright: ignore[reportArgumentType]
     else:
-        as_enum = try_enum(ComponentType, component_type)  # pyright: ignore[reportArgumentType]
+        as_enum = try_enum(ComponentType, component_type)
         return Component._raw_construct(type=as_enum)
