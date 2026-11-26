@@ -30,8 +30,6 @@ from typing import ClassVar, Generic, TypeVar, cast, overload
 
 from typing_extensions import Self, override
 
-from typing_extensions import Self
-
 from .enums import UserFlags
 
 __all__ = (
