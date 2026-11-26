@@ -1,9 +1,7 @@
 .. image:: https://raw.githubusercontent.com/Pycord-Development/pycord/master/pycord.png
-   :alt: Pycord v3
+   :alt: Pycord
 
-Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
-
-======
+Pycord is a modern, easy to use, feature-rich, and async-ready API wrapper for Discord written in Python.
 
 .. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
@@ -23,16 +21,6 @@ Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for D
 .. image:: https://img.shields.io/github/sponsors/Pycord-Development?style=for-the-badge
    :target: https://github.com/sponsors/Pycord-Development
    :alt: GitHub Sponsors
-.. image:: https://badges.crowdin.net/badge/dark/crowdin-on-light.png
-   :target: https://translations.pycord.dev/documentation/?utm_source=badge&utm_medium=referral&utm_campaign=badge-add-on
-   :alt: Crowdin | Agile localization for tech companies
-
-======
-
-Note
-----
-
-Pycord supports Python ``3.10`` - ``3.14``
 
 Key Features
 ------------
@@ -45,73 +33,69 @@ Key Features
 Installing
 ----------
 
-**Python 3.10 or higher is required**
+**Pycord supports Python 3.10 - 3.14.**
 
-To install the library without full voice support, run the following command:
-
-.. code:: sh
-
-    # Linux/macOS
-    python3 -m pip install -U py-cord
-
-    # Windows
-    py -3 -m pip install -U py-cord
-
-Otherwise, to get full voice support, run the following command:
+To install the base library, run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[voice]"
+    $ python3 -m pip install -U py-cord
 
     # Windows
-    py -3 -m pip install -U py-cord[voice]
+    $ py -3 -m pip install -U py-cord
 
-To install additional packages for speedup, run the following command:
+Otherwise, to install optional packages for full voice support or speedup,
+run the following command(s):
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "py-cord[speed]"
+    $ python3 -m pip install -U "py-cord[voice]"
+    $ python3 -m pip install -U "py-cord[speed]"
+
     # Windows
-    py -3 -m pip install -U py-cord[speed]
+    $ py -3 -m pip install -U py-cord[voice]
+    $ py -3 -m pip install -U py-cord[speed]
 
-
-To install the development version, do the following:
+To clone and install the development version, do the following:
 
 .. code:: sh
 
     $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
-    $ python3 -m pip install -U .[voice]
+    $ python3 -m pip install -U .
 
-or if you do not want to clone the repository:
+Or, to install the development version directly from the repository:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install git+https://github.com/Pycord-Development/pycord
+    $ python3 -m pip install "py-cord @ git+https://github.com/Pycord-Development/pycord"
+
     # Windows
-    py -3 -m pip install git+https://github.com/Pycord-Development/pycord
+    $ py -3 -m pip install "py-cord @ git+https://github.com/Pycord-Development/pycord"
 
-If you want to contribute to Pycord, the project is managed with `uv <https://docs.astral.sh/uv/>`_. You
-can find more information about this in the `CONTRIBUTING.md <https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md>`_ file.
-
+Pycord is managed with `uv <https://docs.astral.sh/uv/>`__. If you want to contribute to Pycord, refer to
+`CONTRIBUTING.md <https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md>`__ for more information.
 
 Optional Packages
 ~~~~~~~~~~~~~~~~~
 
-* `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
-* `aiodns <https://pypi.org/project/aiodns/>`__, `brotlipy <https://pypi.org/project/brotlipy/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (for aiohttp speedup)
-* `msgspec <https://pypi.org/project/msgspec/>`__ (for json speedup)
+- `davey <https://pypi.org/project/davey/>`__, `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
+- `aiodns <https://pypi.org/project/aiodns/>`__, `brotli <https://pypi.org/project/brotli/>`__ (for aiohttp speedup)
+- `msgspec <https://pypi.org/project/msgspec/>`__ (for json speedup)
 
 Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
-* libffi-dev (or ``libffi-devel`` on some systems)
-* python-dev (e.g. ``python3.10-dev`` for Python 3.10)
+- libffi-dev (or ``libffi-devel`` on some systems)
+- python-dev (e.g. ``python3.14-dev`` for Python 3.14)
 
-Quick Example
--------------
+Quick Examples
+--------------
+
+Application Commands
+~~~~~~~~~~~~~~~~~~~~
 
 .. code:: py
 
@@ -120,18 +104,18 @@ Quick Example
     bot = discord.Bot()
 
     @bot.slash_command()
-    async def hello(ctx, name: str = None):
+    async def hello(ctx, name: str | None = None):
         name = name or ctx.author.name
         await ctx.respond(f"Hello {name}!")
 
-    @bot.user_command(name="Say Hello")
-    async def hi(ctx, user):
-        await ctx.respond(f"{ctx.author.mention} says hello to {user.name}!")
+    @bot.user_command(name="Say Hi")
+    async def hi(ctx, user: discord.User):
+        await ctx.respond(f"{ctx.author.mention} says hi to {user.name}!")
 
-    bot.run("token")
+    bot.run(TOKEN)
 
-Traditional Commands Example
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Prefix Commands
+~~~~~~~~~~~~~~~
 
 .. code:: py
 
@@ -146,23 +130,28 @@ Traditional Commands Example
     async def ping(ctx):
         await ctx.send("pong")
 
-    bot.run("token")
+    bot.run(TOKEN)
 
-You can find more code examples in the ``examples`` directory.
+You can find more code examples in the `examples directory <examples/>`__.
 
-Note: Make sure you do not reveal your bot token to anyone, as it can grant access to your bot.
++-----------------------------------------------------------------------------------------------------------+
+| **⚠️ Warning:** Make sure you do not reveal your bot token to anyone, as it can grant access to your bot. |
++-----------------------------------------------------------------------------------------------------------+
 
 Useful Links
 ------------
 
-- `Documentation <https://docs.pycord.dev/en/master/index.html>`_
-- `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
-- `Our Official Discord Server <https://pycord.dev/discord>`_
-- `Official Discord Developers Server <https://discord.gg/discord-developers>`_
-- `SonoLink, a high-performance Lavalink v4 wrapper for Python <https://github.com/sonolink/sonolink>`_
+- `Documentation <https://docs.pycord.dev/en/master/index.html>`__
+- `Official Guide <https://guide.pycord.dev>`__
+- `Our Official Discord Server <https://pycord.dev/discord>`__
+- `Official Discord Developers Server <https://discord.gg/discord-developers>`__
+- `SonoLink, a high-performance Lavalink v4 wrapper for Python <https://github.com/sonolink/sonolink>`__
 
 Translations
 ------------
 
 .. image:: https://badges.awesome-crowdin.com/translation-200034237-5.png
    :alt: Translation Status
+.. image:: https://badges.crowdin.net/badge/dark/crowdin-on-light.png
+   :target: https://translations.pycord.dev/documentation/?utm_source=badge&utm_medium=referral&utm_campaign=badge-add-on
+   :alt: Crowdin | Agile localization for tech companies
