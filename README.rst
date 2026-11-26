@@ -71,10 +71,10 @@ Or, to install the development version directly from the repository:
 .. code:: sh
 
     # Linux/macOS
-    $ python3 -m pip install git+https://github.com/Pycord-Development/pycord
+    $ python3 -m pip install "py-cord @ git+https://github.com/Pycord-Development/pycord"
 
     # Windows
-    $ py -3 -m pip install git+https://github.com/Pycord-Development/pycord
+    $ py -3 -m pip install "py-cord @ git+https://github.com/Pycord-Development/pycord"
 
 Pycord is managed with `uv <https://docs.astral.sh/uv/>`__. If you want to contribute to Pycord, refer to
 `CONTRIBUTING.md <https://github.com/Pycord-Development/pycord/blob/master/CONTRIBUTING.md>`__ for more information.
@@ -132,9 +132,11 @@ Prefix Commands
 
     bot.run(TOKEN)
 
-You can find more code examples in the [examples directory](examples/).
+You can find more code examples in the `examples directory <examples/>`__.
 
-**Warning: Make sure you do not reveal your bot token to anyone, as it can grant access to your bot.**
++-----------------------------------------------------------------------------------------------------------+
+| **⚠️ Warning:** Make sure you do not reveal your bot token to anyone, as it can grant access to your bot. |
++-----------------------------------------------------------------------------------------------------------+
 
 Useful Links
 ------------
