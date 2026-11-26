@@ -40,7 +40,7 @@ from typing import (
     runtime_checkable,
 )
 
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -56,7 +56,7 @@ from .enums import (
 )
 from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, find, get_slots
+from .utils import MISSING, find, get_slots  # pyright: ignore[reportAny]
 
 if TYPE_CHECKING:
     from . import abc
@@ -79,6 +79,11 @@ if TYPE_CHECKING:
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
     from .types.components import MentionableSelectMenu as MentionableSelectMenuPayload
+    from .types.components import (
+        MenuActionItemComponent as MenuActionItemComponentPayload,
+    )
+    from .types.components import OverflowMenuComponent as OverflowMenuComponentPayload
+    from .types.components import OverflowMenuGroup as OverflowMenuGroupPayload
     from .types.components import RadioGroupComponent as RadioGroupComponentPayload
     from .types.components import RadioGroupOption as RadioGroupOptionPayload
     from .types.components import RoleSelectMenu as RoleSelectMenuPayload
@@ -120,12 +125,13 @@ __all__ = (
 )
 
 T = TypeVar("T", bound="ComponentType")
+Y_co = TypeVar("Y_co", bound="Component[Any]", covariant=True)  # pyright: ignore[reportExplicitAny]
 
 
 @runtime_checkable
-class _HasSubComponents(Protocol):
-    def walk_components(self) -> Iterator[Component[Any]]: ...
-    def get_component(self, id: str | int) -> Component[Any] | None: ...
+class _HasSubComponents(Protocol, Generic[Y_co]):
+    def walk_components(self) -> Iterator[Y_co]: ...
+    def get_component(self, id: str | int) -> Y_co | None: ...
 
 
 class Component(ABC, Generic[T]):
@@ -156,24 +162,25 @@ class Component(ABC, Generic[T]):
         The component's ID. If not provided by the user, it is set sequentially by Discord.
         The ID `0` is treated as if no ID was provided.
     """
-
-    __slots__: tuple[str, ...] = ("id", "type")
+    
+    __slots__: tuple[str, ...] = ("id", "type")  # pyright: ignore[reportIncompatibleUnannotatedOverride]
 
     __repr_info__: ClassVar[tuple[str, ...]]
     id: int | None
     type: T
     versions: tuple[int, ...]
 
+    @override
     def __repr__(self) -> str:
         attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__repr_info__)
         return f"<{self.__class__.__name__} {attrs}>"
 
     @classmethod
-    def _raw_construct(cls, **kwargs: Any) -> Self:
+    def _raw_construct(cls, **kwargs: Any) -> Self:  # pyright: ignore[reportAny,reportExplicitAny]
         self: Self = cls.__new__(cls)
         for slot in get_slots(cls):
             try:
-                value = kwargs[slot]
+                value = kwargs[slot]  # pyright: ignore[reportAny]
             except KeyError:
                 setattr(self, slot, None)
             else:
@@ -188,7 +195,7 @@ class Component(ABC, Generic[T]):
         return bool(self.versions) and 1 not in self.versions
 
 
-class ActionRow(Component[Literal[ComponentType.action_row]], _HasSubComponents):
+class ActionRow(Component[Literal[ComponentType.action_row]], _HasSubComponents["Button | SelectMenu | OverflowMenu | MenuActionItem"]):
     """Represents a Discord Bot UI Kit Action Row.
 
     This is a component that holds up to 5 children components in a row.
@@ -211,9 +218,9 @@ class ActionRow(Component[Literal[ComponentType.action_row]], _HasSubComponents)
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ActionRowPayload):
-        self.type = ComponentType.action_row
+        self.type: Literal[ComponentType.action_row] = ComponentType.action_row
         self.id: int | None = data.get("id")
-        self.children: list[Button | InputText | SelectMenu] = [
+        self.children: list[Button | SelectMenu | OverflowMenu] = [
             _component_factory(d) for d in data.get("components", [])
         ]
 
@@ -225,6 +232,7 @@ class ActionRow(Component[Literal[ComponentType.action_row]], _HasSubComponents)
             t += 1 if item.type is ComponentType.button else 5
         return t
 
+    @override
     def to_dict(self) -> ActionRowPayload:
         payload: ActionRowPayload = {
             "type": self.type.value,
@@ -234,14 +242,20 @@ class ActionRow(Component[Literal[ComponentType.action_row]], _HasSubComponents)
             payload["id"] = self.id
         return payload
 
-    def walk_components(self) -> Iterator[Button | InputText | SelectMenu]:
-        yield from self.children
+    @override
+    def walk_components(self) -> Iterator[Button | SelectMenu | MenuActionItem]:
+        for child in self.children:
+            if isinstance(child, _HasSubComponents):
+                yield from child.walk_components()
+            else:
+                yield child
 
     @property
-    def components(self) -> list[Button | InputText | SelectMenu]:
+    def components(self) -> list[Button | SelectMenu | OverflowMenu]:
         return self.children
 
-    def get_component(self, id: str | int) -> Button | InputText | SelectMenu | None:
+    @override
+    def get_component(self, id: str | int) -> Button | SelectMenu | OverflowMenu | MenuActionItem | None:
         """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -258,7 +272,14 @@ class ActionRow(Component[Literal[ComponentType.action_row]], _HasSubComponents)
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        return find(lambda i: getattr(i, attr, None) == id, self.children)
+        for child in self.children:
+            if getattr(child, attr, None) == id:
+                return child
+            if isinstance(child, _HasSubComponents):
+                subchild = child.get_component(id)
+                if subchild is not None:
+                    return subchild
+        return None
 
     @classmethod
     def with_components(
@@ -320,7 +341,7 @@ class Button(Component[Literal[ComponentType.button]]):
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ButtonComponentPayload):
-        self.type = ComponentType.button
+        self.type: Literal[ComponentType.button] = ComponentType.button
         self.id: int | None = data.get("id")
         self.style: ButtonStyle = try_enum(ButtonStyle, data["style"])
         self.label: str | None = data.get("label")
@@ -336,6 +357,7 @@ class Button(Component[Literal[ComponentType.button]]):
         self.url: str | None = data.get("url")
         self.disabled: bool = data.get("disabled", False)
 
+    @override
     def to_dict(self) -> ButtonComponentPayload:
         payload: ButtonComponentPayload = {
             "type": self.type.value,
@@ -431,7 +453,7 @@ class SelectMenu(Component[SelectMenuTypes]):
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: SelectMenuPayload):
-        self.type = cast(SelectMenuTypes, try_enum(ComponentType, data["type"]))
+        self.type: SelectMenuTypes = cast(SelectMenuTypes, try_enum(ComponentType, data["type"]))
         self.id: int | None = data.get("id")
         self.custom_id: str = data["custom_id"]
         self.placeholder: str | None = data.get("placeholder")
@@ -449,8 +471,9 @@ class SelectMenu(Component[SelectMenuTypes]):
             data.get("default_values")
         )
 
+    @override
     def to_dict(self) -> SelectMenuPayload:
-        payload: Any = {
+        payload: Any = {  # pyright: ignore[reportExplicitAny]
             "type": self.type.value,
             "custom_id": self.custom_id,
             "min_values": self.min_values,
@@ -517,9 +540,9 @@ class InputText(Component[Literal[ComponentType.input_text]]):
     versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: InputTextComponentPayload):
-        self.type = ComponentType.input_text
+        self.type: Literal[ComponentType.input_text] = ComponentType.input_text
         self.id: int | None = data.get("id")
-        self.custom_id = data["custom_id"]
+        self.custom_id: str = data["custom_id"]
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.min_length: int | None = data.get("min_length", None)
         self.max_length: int | None = data.get("max_length", None)
@@ -528,6 +551,7 @@ class InputText(Component[Literal[ComponentType.input_text]]):
         self.placeholder: str | None = data.get("placeholder", None)
         self.label: str | None = data.get("label", None)
 
+    @override
     def to_dict(self) -> InputTextComponentPayload:
         payload: InputTextComponentPayload = {
             "type": self.type.value,
@@ -598,7 +622,7 @@ class SelectDefaultValue:
         You did not provide any parameter, you provided all parameters, or you provided ``id`` but not ``type``.
     """
 
-    __slots__ = ("id", "type")
+    __slots__: tuple[str, ...] = ("id", "type")
 
     @overload
     def __init__(
@@ -636,6 +660,7 @@ class SelectDefaultValue:
         else:
             raise TypeError("you must provide an object model, or an id and type")
 
+    @override
     def __repr__(self) -> str:
         return f"<SelectDefaultValue id={self.id} type={self.type}>"
 
@@ -775,13 +800,13 @@ class SelectOption:
         if description is not None and len(description) > 100:
             raise ValueError("description must be 100 characters or fewer")
 
-        self.label = label
-        self.value = label if value is MISSING else value
-        self.description = description
-        self._emoji = None
-        self.emoji = emoji
-        self.default = default
+        self.label: str = label
+        self.value: str = label if value is MISSING else value
+        self.description: str | None = description
+        self._emoji: PartialEmoji | None = None if emoji is None else self._coerce_emoji(emoji)
+        self.default: bool = default
 
+    @override
     def __repr__(self) -> str:
         return (
             "<SelectOption"
@@ -789,16 +814,12 @@ class SelectOption:
             f"emoji={self.emoji!r} default={self.default!r}>"
         )
 
+    @override
     def __str__(self) -> str:
         base = f"{self.emoji} {self.label}" if self.emoji else self.label
         if self.description:
             return f"{base}\n{self.description}"
         return base
-
-    @property
-    def emoji(self) -> str | GuildEmoji | AppEmoji | PartialEmoji | None:
-        """The emoji of the option, if available."""
-        return self._emoji
 
     @staticmethod
     def _coerce_emoji(value: object) -> PartialEmoji:
@@ -812,8 +833,13 @@ class SelectOption:
             f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not {type(value).__name__}"
         )
 
+    @property
+    def emoji(self) -> PartialEmoji | None:
+        """The emoji of the option, if available."""
+        return self._emoji
+
     @emoji.setter
-    def emoji(self, value: str | GuildEmoji | AppEmoji | PartialEmoji | None) -> None:
+    def emoji(self, value: str | GuildEmoji | AppEmoji | PartialEmoji | None) -> None:  # pyright: ignore[reportPropertyTypeMismatch]
         self._emoji = None if value is None else self._coerce_emoji(value)
 
     @classmethod
@@ -847,7 +873,7 @@ class SelectOption:
         return payload
 
 
-class Section(Component[Literal[ComponentType.section]], _HasSubComponents):
+class Section(Component[Literal[ComponentType.section]], _HasSubComponents["TextDisplay | Thumbnail | Button | OverflowMenu"]):
     """Represents a Section from Components V2.
 
     This is a component that groups other components together with an additional component to the right as the accessory.
@@ -876,13 +902,14 @@ class Section(Component[Literal[ComponentType.section]], _HasSubComponents):
     def __init__(
         self, data: SectionComponentPayload, state: ConnectionState | None = None
     ):
-        self.type = ComponentType.section
+        self.type: Literal[ComponentType.section] = ComponentType.section
         self.id: int | None = data.get("id")
-        self.components = [
+        self.components: list[TextDisplay] = [
             _component_factory(d, state=state) for d in data.get("components", [])
         ]
-        self.accessory = _component_factory(data["accessory"], state=state)
+        self.accessory: Thumbnail | Button | OverflowMenu = _component_factory(data["accessory"], state=state)
 
+    @override
     def to_dict(self) -> SectionComponentPayload:
         payload: SectionComponentPayload = {
             "type": self.type.value,
@@ -893,12 +920,14 @@ class Section(Component[Literal[ComponentType.section]], _HasSubComponents):
             payload["id"] = self.id
         return payload
 
-    def walk_components(self) -> Iterator[TextDisplay | Button | Thumbnail]:
+    @override
+    def walk_components(self) -> Iterator[TextDisplay | Button | Thumbnail | OverflowMenu]:
         yield from self.components
         if self.accessory:
             yield self.accessory
 
-    def get_component(self, id: str | int) -> TextDisplay | Button | Thumbnail | None:
+    @override
+    def get_component(self, id: str | int) -> TextDisplay | Button | Thumbnail | OverflowMenu | None:
         """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -917,7 +946,7 @@ class Section(Component[Literal[ComponentType.section]], _HasSubComponents):
         attr = "id" if isinstance(id, int) else "custom_id"
         if self.accessory and id == getattr(self.accessory, attr, None):
             return self.accessory
-        component = find(lambda i: getattr(i, attr, None) == id, self.components)
+        component = find(lambda i: cast("bool", getattr(i, attr, None) == id), self.components)
         return component
 
 
@@ -946,10 +975,11 @@ class TextDisplay(Component[Literal[ComponentType.text_display]]):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: TextDisplayComponentPayload):
-        self.type = ComponentType.text_display
+        self.type: Literal[ComponentType.text_display] = ComponentType.text_display
         self.id: int | None = data.get("id")
         self.content: str = data.get("content")
 
+    @override
     def to_dict(self) -> TextDisplayComponentPayload:
         payload: TextDisplayComponentPayload = {
             "type": self.type.value,
@@ -974,7 +1004,7 @@ class UnfurledMediaItem(AssetMixin):
     """
 
     def __init__(self, url: str):
-        self._state = None
+        self._state: ConnectionState | None = None
         self._url: str = url
         self._static_url: str | None = (
             url if url and url.startswith("attachment://") else None
@@ -986,22 +1016,24 @@ class UnfurledMediaItem(AssetMixin):
         self.flags: AttachmentFlags | None = None
         self.attachment_id: int | None = None
 
+    @override
     def __repr__(self) -> str:
         return (
             f"<UnfurledMediaItem url={self.url!r} attachment_id={self.attachment_id}>"
         )
 
+    @override
     def __str__(self) -> str:
         return self.url or self.__repr__()
 
     @property
-    def url(self) -> str:
+    def url(self) -> str:  # pyright: ignore[reportImplicitOverride]
         return self._url
 
     @url.setter
-    def url(
+    def url(  # pyright: ignore[reportIncompatibleVariableOverride]
         self, value: str
-    ) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
+    ) -> None:
         self._url = value
         self._static_url = (
             value if value and value.startswith("attachment://") else None
@@ -1060,7 +1092,7 @@ class Thumbnail(Component[Literal[ComponentType.thumbnail]]):
     def __init__(
         self, data: ThumbnailComponentPayload, state: ConnectionState | None = None
     ):
-        self.type = ComponentType.thumbnail
+        self.type: Literal[ComponentType.thumbnail] = ComponentType.thumbnail
         self.id: int | None = data.get("id")
         self.media: UnfurledMediaItem = (
             umi := data.get("media")
@@ -1073,6 +1105,7 @@ class Thumbnail(Component[Literal[ComponentType.thumbnail]]):
         """Returns the URL of this thumbnail's underlying media item."""
         return self.media.url
 
+    @override
     def to_dict(self) -> ThumbnailComponentPayload:
         payload: ThumbnailComponentPayload = {
             "type": self.type.value,
@@ -1116,7 +1149,7 @@ class MediaGalleryItem:
     def __init__(
         self, url: str, *, description: str | None = None, spoiler: bool = False
     ):
-        self._state = None
+        self._state: ConnectionState | None = None
         self.media: UnfurledMediaItem = UnfurledMediaItem(url)
         self.description: str | None = description
         self.spoiler: bool | None = spoiler
@@ -1183,12 +1216,13 @@ class MediaGallery(Component[Literal[ComponentType.media_gallery]]):
     def __init__(
         self, data: MediaGalleryComponentPayload, state: ConnectionState | None = None
     ):
-        self.type = ComponentType.media_gallery
+        self.type: Literal[ComponentType.media_gallery] = ComponentType.media_gallery
         self.id: int | None = data.get("id")
         self.items: list[MediaGalleryItem] = [
             MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])
         ]
 
+    @override
     def to_dict(self) -> MediaGalleryComponentPayload:
         payload: MediaGalleryComponentPayload = {
             "type": self.type.value,
@@ -1237,7 +1271,7 @@ class FileComponent(Component[Literal[ComponentType.file]]):
     def __init__(
         self, data: FileComponentPayload, state: ConnectionState | None = None
     ):
-        self.type = ComponentType.file
+        self.type: Literal[ComponentType.file] = ComponentType.file
         self.id: int | None = data.get("id")
         self.name: str | None = data.get("name")
         self.size: int | None = data.get("size")
@@ -1246,6 +1280,7 @@ class FileComponent(Component[Literal[ComponentType.file]]):
         )
         self.spoiler: bool | None = data.get("spoiler")
 
+    @override
     def to_dict(self) -> FileComponentPayload:
         payload: FileComponentPayload = {
             "type": self.type.value,
@@ -1288,13 +1323,14 @@ class Separator(Component[Literal[ComponentType.separator]]):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: SeparatorComponentPayload):
-        self.type = ComponentType.separator
+        self.type: Literal[ComponentType.separator] = ComponentType.separator
         self.id: int | None = data.get("id")
         self.divider: bool = data.get("divider", True)
         self.spacing: SeparatorSpacingSize = try_enum(
             SeparatorSpacingSize, data.get("spacing", 1)
         )
 
+    @override
     def to_dict(self) -> SeparatorComponentPayload:
         payload: SeparatorComponentPayload = {
             "type": self.type.value,
@@ -1316,7 +1352,7 @@ ContainerTypes = Literal[
 ]
 
 
-class Container(Component[Literal[ComponentType.container]], _HasSubComponents):
+class Container(Component[Literal[ComponentType.container]], _HasSubComponents["ActionRow | TextDisplay | Section | MediaGallery | Separator | FileComponent | Button | SelectMenu | OverflowMenu | Thumbnail | MenuActionItem"]):
     """Represents a Container from Components V2.
 
     This is a component that contains different :class:`Component` objects.
@@ -1359,13 +1395,13 @@ class Container(Component[Literal[ComponentType.container]], _HasSubComponents):
     def __init__(
         self, data: ContainerComponentPayload, state: ConnectionState | None = None
     ):
-        self.type = ComponentType.container
+        self.type: Literal[ComponentType.container] = ComponentType.container
         self.id: int | None = data.get("id")
         self.accent_color: Colour | None = (
             Colour(c) if (c := data.get("accent_color")) else None
         )
         self.spoiler: bool | None = data.get("spoiler")
-        self.components = [
+        self.components: list[ActionRow | TextDisplay | Section | MediaGallery | Separator | FileComponent] = [
             _component_factory(d, state=state) for d in data.get("components", [])
         ]
 
@@ -1374,6 +1410,7 @@ class Container(Component[Literal[ComponentType.container]], _HasSubComponents):
         """Alias for :attr:`accent_color`."""
         return self.accent_color
 
+    @override
     def to_dict(self) -> ContainerComponentPayload:
         payload: ComponentPayload = {
             "type": self.type.value,
@@ -1387,14 +1424,16 @@ class Container(Component[Literal[ComponentType.container]], _HasSubComponents):
             payload["spoiler"] = self.spoiler
         return payload
 
-    def walk_components(self) -> Iterator[Component[Any]]:
+    @override
+    def walk_components(self) -> Iterator[ActionRow | TextDisplay | Section | MediaGallery | Separator | FileComponent | Button | SelectMenu | OverflowMenu | Thumbnail | MenuActionItem]:
         for c in self.components:
             if isinstance(c, _HasSubComponents):
                 yield from c.walk_components()
             else:
                 yield c
 
-    def get_component(self, id: str | int) -> Component[Any] | None:
+    @override
+    def get_component(self, id: str | int) -> ActionRow | TextDisplay | Section | MediaGallery | Separator | FileComponent | Button | SelectMenu | OverflowMenu | Thumbnail | MenuActionItem | None:
         """Get a component from this container. Roughly equivalent to `utils.get(container.components, ...)`.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested components.
@@ -1420,7 +1459,7 @@ class Container(Component[Literal[ComponentType.container]], _HasSubComponents):
         return None
 
 
-class Label(Component[Literal[ComponentType.label]]):
+class Label(Component[Literal[ComponentType.label]], _HasSubComponents["InputText | SelectMenu | FileUpload | RadioGroup | Checkbox | CheckboxGroup"]):
     """Represents a Label used in modals as the top-level component.
 
     This is a component that allows you to add additional text to another component.
@@ -1449,12 +1488,13 @@ class Label(Component[Literal[ComponentType.label]]):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: LabelComponentPayload):
-        self.type = ComponentType.label
+        self.type: Literal[ComponentType.label] = ComponentType.label
         self.id: int | None = data.get("id")
-        self.component = _component_factory(data["component"])
+        self.component: SelectMenu | InputText | FileUpload | RadioGroup | Checkbox | CheckboxGroup = _component_factory(data["component"])
         self.label: str = data["label"]
         self.description: str | None = data.get("description")
 
+    @override
     def to_dict(self) -> LabelComponentPayload:
         payload: LabelComponentPayload = {
             "type": self.type.value,
@@ -1467,6 +1507,7 @@ class Label(Component[Literal[ComponentType.label]]):
             payload["description"] = self.description
         return payload
 
+    @override
     def walk_components(
         self,
     ) -> Iterator[
@@ -1474,6 +1515,26 @@ class Label(Component[Literal[ComponentType.label]]):
     ]:
         yield from [self.component]
 
+    @override
+    def get_component(self, id: str | int) -> SelectMenu | InputText | FileUpload | RadioGroup | Checkbox | CheckboxGroup | None:
+        """Get a component from this label..
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: :class:`str` | :class:`int`
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        :class:`Component` | :obj:`None`
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        if isinstance(id, int):
+            return self.component if self.component.id == id else None
+        return self.component if self.component.custom_id == id else None
 
 class FileUpload(Component[Literal[ComponentType.file_upload]]):
     """Represents an File Upload component from the Discord Bot UI Kit.
@@ -1516,14 +1577,15 @@ class FileUpload(Component[Literal[ComponentType.file_upload]]):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: FileUploadComponentPayload):
-        self.type = ComponentType.file_upload
+        self.type: Literal[ComponentType.file_upload] = ComponentType.file_upload
         self.id: int | None = data.get("id")
-        self.custom_id = data["custom_id"]
+        self.custom_id: str = data["custom_id"]
         self.min_values: int | None = data.get("min_values", None)
         self.max_values: int | None = data.get("max_values", None)
         self.required: bool | None = data.get("required", True)
         self.file_types: list[str] | None = data.get("file_types")
 
+    @override
     def to_dict(self) -> FileUploadComponentPayload:
         payload: FileUploadComponentPayload = {
             "type": self.type.value,
@@ -1577,14 +1639,15 @@ class RadioGroup(Component[Literal[ComponentType.radio_group]]):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: RadioGroupComponentPayload):
-        self.type = ComponentType.radio_group
+        self.type: Literal[ComponentType.radio_group] = ComponentType.radio_group
         self.id: int | None = data.get("id")
-        self.custom_id = data.get("custom_id")
+        self.custom_id: str = data.get("custom_id")
         self.options: list[RadioGroupOption] = [
             RadioGroupOption.from_dict(option) for option in data.get("options", [])
         ]
         self.required: bool | None = data.get("required", True)
 
+    @override
     def to_dict(self) -> RadioGroupComponentPayload:
         payload: RadioGroupComponentPayload = {
             "type": self.type.value,
@@ -1645,11 +1708,12 @@ class RadioGroupOption:
         if description is not None and len(description) > 100:
             raise ValueError("description must be 100 characters or fewer")
 
-        self.label = label
-        self.value = label if value is MISSING else value
-        self.description = description
-        self.default = default
+        self.label: str = label
+        self.value: str = label if value is MISSING else value
+        self.description: str | None = description
+        self.default: bool = default
 
+    @override
     def __repr__(self) -> str:
         return (
             "<RadioGroupOption"
@@ -1657,6 +1721,7 @@ class RadioGroupOption:
             f"default={self.default!r}>"
         )
 
+    @override
     def __str__(self) -> str:
         if self.description:
             return f"{self.label}\n{self.description}"
@@ -1727,9 +1792,9 @@ class CheckboxGroup(Component[Literal[ComponentType.checkbox_group]]):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: CheckboxGroupComponentPayload):
-        self.type = ComponentType.checkbox_group
+        self.type: Literal[ComponentType.checkbox_group] = ComponentType.checkbox_group
         self.id: int | None = data.get("id")
-        self.custom_id = data.get("custom_id")
+        self.custom_id: str = data.get("custom_id")
         self.options: list[CheckboxGroupOption] = [
             CheckboxGroupOption.from_dict(option) for option in data.get("options", [])
         ]
@@ -1737,6 +1802,7 @@ class CheckboxGroup(Component[Literal[ComponentType.checkbox_group]]):
         self.max_values: int | None = data.get("max_values", None)
         self.required: bool | None = data.get("required", True)
 
+    @override
     def to_dict(self) -> CheckboxGroupComponentPayload:
         payload: CheckboxGroupComponentPayload = {
             "type": 22,
@@ -1805,11 +1871,12 @@ class CheckboxGroupOption:
         if description is not None and len(description) > 100:
             raise ValueError("description must be 100 characters or fewer")
 
-        self.label = label
-        self.value = label if value is MISSING else value
-        self.description = description
-        self.default = default
+        self.label: str = label
+        self.value: str = label if value is MISSING else value
+        self.description: str | None = description
+        self.default: bool = default
 
+    @override
     def __repr__(self) -> str:
         return (
             "<CheckboxGroupOption"
@@ -1817,6 +1884,7 @@ class CheckboxGroupOption:
             f"default={self.default!r}>"
         )
 
+    @override
     def __str__(self) -> str:
         if self.description:
             return f"{self.label}\n{self.description}"
@@ -1876,11 +1944,12 @@ class Checkbox(Component[Literal[ComponentType.checkbox]]):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: CheckboxComponentPayload):
-        self.type = ComponentType.checkbox
+        self.type: Literal[ComponentType.checkbox] = ComponentType.checkbox
         self.id: int | None = data.get("id")
-        self.custom_id = data.get("custom_id")
+        self.custom_id: str = data.get("custom_id")
         self.default: bool | None = data.get("default", False)
 
+    @override
     def to_dict(self) -> CheckboxComponentPayload:
         payload: CheckboxComponentPayload = {
             "type": self.type.value,
@@ -1895,7 +1964,7 @@ class Checkbox(Component[Literal[ComponentType.checkbox]]):
         return payload
 
 
-class OverflowMenuGroup:
+class OverflowMenuGroup(_HasSubComponents["MenuActionItem"]):
     """Represents a :class:`discord.OverflowMenu`'s group.
 
     .. note::
@@ -1940,8 +2009,33 @@ class OverflowMenuGroup:
 
         return payload
 
+    @override
+    def walk_components(self) -> Iterator[MenuActionItem]: 
+        yield from self.components
 
-class OverflowMenu(Component):
+    @override
+    def get_component(self, id: str | int) -> MenuActionItem | None: 
+        """Get a component from this overflow group.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: :class:`str` | :class:`int`
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        :class:`Component` | :obj:`None`
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        return find(
+            lambda i: (i.id if isinstance(id, int) else i.custom_id) == id,
+            self.components,
+        )
+
+
+
+class OverflowMenu(Component[Literal[ComponentType.overflow_menu]], _HasSubComponents["MenuActionItem"]):
     """Represents an Overflow Menu component from the Discord Bot UI Kit.
 
     This inherits from :class:`Component`.
@@ -1960,26 +2054,20 @@ class OverflowMenu(Component):
         The list of groups in this overflow menu.
     """
 
-    __slots__: tuple[str, ...] = ("type", "id", "groups")
+    __slots__: tuple[str, ...] = ("groups", "id", "type")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: OverflowMenuComponentPayload):
-        self.type: Literal[ComponentType.overflow_menu] = (
-            ComponentType.overflow_menu
-        )  # pyright: ignore[reportIncompatibleVariableOverride] # Remove this in PR#3444
+        self.type: Literal[ComponentType.overflow_menu] = ComponentType.overflow_menu
         self.id: int | None = data.get("id")
         self.groups: list[OverflowMenuGroup] = [
             OverflowMenuGroup(g) for g in data["groups"]
         ]
 
     @override
-    def to_dict(
-        self,
-    ) -> (
-        OverflowMenuComponentPayload
-    ):  # pyright: ignore[reportIncompatibleMethodOverride]
+    def to_dict(self,) -> OverflowMenuComponentPayload:
         payload: OverflowMenuComponentPayload = {
             "type": self.type.value,
             "groups": [g.to_dict() for g in self.groups],
@@ -1989,11 +2077,13 @@ class OverflowMenu(Component):
 
         return payload
 
-    def walk_components(self) -> Iterator[Component]:
+    @override
+    def walk_components(self) -> Iterator[MenuActionItem]:
         for group in self.groups:
             yield from group.components
 
-    def get_component(self, id: str | int) -> Component | None:
+    @override
+    def get_component(self, id: str | int) -> MenuActionItem | None:
         """Get a component from this overflow menu.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -2020,7 +2110,7 @@ class OverflowMenu(Component):
         return result
 
 
-class MenuActionItem(Component):
+class MenuActionItem(Component[Literal[ComponentType.menu_action_item]]):
     """Represents an overflow menu's action item component from the Discord Bot UI kit.
 
     This inherits from :class:`Component`.
@@ -2066,11 +2156,7 @@ class MenuActionItem(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: MenuActionItemComponentPayload):
-        self.type: Literal[
-            ComponentType.menu_action_item
-        ] = (  # pyright: ignore[reportIncompatibleVariableOverride] # Remove in PR#3444
-            ComponentType.menu_action_item
-        )
+        self.type: Literal[ComponentType.menu_action_item] = ComponentType.menu_action_item
         self.id: int | None = data.get("id")
         self.custom_id: str | None = data.get("custom_id")
         self.label: str = data["label"]
@@ -2083,11 +2169,7 @@ class MenuActionItem(Component):
         self.disabled: bool = data.get("disabled", False)
 
     @override
-    def to_dict(
-        self,
-    ) -> (
-        MenuActionItemComponentPayload
-    ):  # pyright: ignore[reportIncompatibleMethodOverride]
+    def to_dict(self) -> MenuActionItemComponentPayload:
         payload: MenuActionItemComponentPayload = {
             "type": self.type.value,
             "label": self.label,
@@ -2107,7 +2189,7 @@ class MenuActionItem(Component):
             payload["url"] = self.url
 
         if self.emoji is not None:
-            payload["emoji"] = self.emoji.to_dict()  # type: ignore # pyright: ignore[reportGeneralTypeIssues] # PartialEmoji returns dict[str, Any]
+            payload["emoji"] = self.emoji.to_dict()
 
         return payload
 
@@ -2137,7 +2219,7 @@ COMPONENT_MAPPINGS = {
     26: MenuActionItem,
 }
 
-STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
+STATE_COMPONENTS = (Section, Thumbnail, MediaGallery, FileComponent, Container)
 
 
 @overload
@@ -2211,15 +2293,23 @@ def _component_factory(
 def _component_factory(
     data: CheckboxComponentPayload, state: ConnectionState | None = None
 ) -> Checkbox: ...
+@overload
+def _component_factory(
+    data: OverflowMenuComponentPayload, state: ConnectionState | None = None
+) -> OverflowMenu: ...
+@overload
+def _component_factory(
+    data: MenuActionItemComponentPayload, state: ConnectionState | None = None
+) -> MenuActionItem: ...
 def _component_factory(
     data: ComponentPayload, state: ConnectionState | None = None
-) -> Component[Any]:
+) -> Component[Any]:  # pyright: ignore[reportExplicitAny]
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
         if issubclass(cls, STATE_COMPONENTS):
-            return cls(cast(Any, data), state=state)
+            return cls(cast(Any, data), state=state)  # pyright: ignore[reportExplicitAny,reportAny]
         else:
-            return cls(cast(Any, data))
+            return cls(cast(Any, data))  # pyright: ignore[reportExplicitAny,reportAny]
     else:
         as_enum = try_enum(ComponentType, component_type)
-        return Component[Any]._raw_construct(type=as_enum)
+        return Component[Any]._raw_construct(type=as_enum)  # pyright: ignore[reportExplicitAny]

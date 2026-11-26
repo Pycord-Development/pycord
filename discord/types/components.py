@@ -294,12 +294,12 @@ Component = (
 
 AllowedActionRowComponents = (
     ButtonComponent
-    | InputText
     | StringSelectMenu
     | UserSelectMenu
     | RoleSelectMenu
     | MentionableSelectMenu
     | ChannelSelectMenu
+    | OverflowMenuComponent
 )
 
 AllowedSectionAccessories = ThumbnailComponent | ButtonComponent | OverflowMenuComponent

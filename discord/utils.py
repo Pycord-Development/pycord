@@ -155,7 +155,7 @@ class _MissingSentinel:
         return "..."
 
 
-MISSING: Any = _MissingSentinel()
+MISSING: Any = _MissingSentinel()  # pyright: ignore[reportAny]
 
 if TYPE_CHECKING:
     from typing import ParamSpec
