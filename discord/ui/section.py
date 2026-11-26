@@ -63,7 +63,7 @@ class Section(ViewItem[V]):
         Sections must have at least 1 item before being sent.
     accessory: :class:`ViewItem` | :obj:`None`
         The section's accessory. This is displayed in the top right of the section.
-        Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        Currently only supports :class:`~discord.ui.Button`, :class:`~discord.ui.OverflowMenu`, and :class:`~discord.ui.Thumbnail`.
         Sections must have an accessory attached before being sent.
     id: :class:`int` | :obj:`None`
         The section's ID.
