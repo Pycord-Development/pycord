@@ -848,7 +848,9 @@ class Section(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: SectionComponentPayload, state: ConnectionState | None = None):
+    def __init__(
+        self, data: SectionComponentPayload, state: ConnectionState | None = None
+    ):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.components: list[Component] = [
@@ -1278,7 +1280,9 @@ class Container(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ContainerComponentPayload, state: ConnectionState | None = None):
+    def __init__(
+        self, data: ContainerComponentPayload, state: ConnectionState | None = None
+    ):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
@@ -1875,14 +1879,20 @@ class OverflowMenu(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: OverflowMenuComponentPayload):
-        self.type: Literal[ComponentType.overflow_menu] = ComponentType.overflow_menu   # pyright: ignore[reportIncompatibleVariableOverride] # Remove this in PR#3444 
+        self.type: Literal[ComponentType.overflow_menu] = (
+            ComponentType.overflow_menu
+        )  # pyright: ignore[reportIncompatibleVariableOverride] # Remove this in PR#3444
         self.id: int | None = data.get("id")
         self.groups: list[OverflowMenuGroup] = [
             OverflowMenuGroup(g) for g in data["groups"]
         ]
 
     @override
-    def to_dict(self) -> OverflowMenuComponentPayload:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def to_dict(
+        self,
+    ) -> (
+        OverflowMenuComponentPayload
+    ):  # pyright: ignore[reportIncompatibleMethodOverride]
         payload: OverflowMenuComponentPayload = {
             "type": self.type.value,
             "groups": [g.to_dict() for g in self.groups],
@@ -1914,7 +1924,10 @@ class OverflowMenu(Component):
             return None
         result = None
         for group in self.groups:
-            result = find(lambda i: (i.id if isinstance(id, int) else i.custom_id) == id, group.components)
+            result = find(
+                lambda i: (i.id if isinstance(id, int) else i.custom_id) == id,
+                group.components,
+            )
             if result is not None:
                 return result
         return result
@@ -1966,7 +1979,9 @@ class MenuActionItem(Component):
     versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: MenuActionItemComponentPayload):
-        self.type: Literal[ComponentType.menu_action_item] = (  # pyright: ignore[reportIncompatibleVariableOverride] # Remove in PR#3444
+        self.type: Literal[
+            ComponentType.menu_action_item
+        ] = (  # pyright: ignore[reportIncompatibleVariableOverride] # Remove in PR#3444
             ComponentType.menu_action_item
         )
         self.id: int | None = data.get("id")
@@ -1981,7 +1996,11 @@ class MenuActionItem(Component):
         self.disabled: bool = data.get("disabled", False)
 
     @override
-    def to_dict(self) -> MenuActionItemComponentPayload:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def to_dict(
+        self,
+    ) -> (
+        MenuActionItemComponentPayload
+    ):  # pyright: ignore[reportIncompatibleMethodOverride]
         payload: MenuActionItemComponentPayload = {
             "type": self.type.value,
             "label": self.label,
@@ -2034,7 +2053,9 @@ COMPONENT_MAPPINGS = {
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
 
 
-def _component_factory(data: ComponentPayload, state: ConnectionState | None = None) -> Component:
+def _component_factory(
+    data: ComponentPayload, state: ConnectionState | None = None
+) -> Component:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
         if issubclass(cls, STATE_COMPONENTS):

@@ -94,7 +94,10 @@ class Section(ViewItem[V]):
         cls.__section_accessory_item__ = accessory
 
     def __init__(
-        self, *items: ViewItem[V], accessory: ViewItem[V] | None = None, id: int | None = None
+        self,
+        *items: ViewItem[V],
+        accessory: ViewItem[V] | None = None,
+        id: int | None = None,
     ):
         super().__init__()
 
@@ -207,8 +210,14 @@ class Section(ViewItem[V]):
         if self.accessory and id == getattr(self.accessory, attr, None):
             return self.accessory
         child = find(lambda i: getattr(i, attr, None) == id, self.items)
-        if child is None and self.accessory is not None and hasattr(self.accessory, "get_item"):
-            return self.accessory.get_item(id)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportAttributeAccessIssue]
+        if (
+            child is None
+            and self.accessory is not None
+            and hasattr(self.accessory, "get_item")
+        ):
+            return self.accessory.get_item(
+                id
+            )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportAttributeAccessIssue]
         return child
 
     def add_text(self, content: str, *, id: int | None = None) -> Self:
@@ -230,7 +239,9 @@ class Section(ViewItem[V]):
         if len(self.items) >= 3:
             raise ValueError("maximum number of children exceeded")
 
-        return self.add_item(TextDisplay(content, id=id))  # pyright: ignore[reportUnknownArgumentType]
+        return self.add_item(
+            TextDisplay(content, id=id)
+        )  # pyright: ignore[reportUnknownArgumentType]
 
     def set_accessory(self, item: ViewItem) -> Self:
         """Set an item as the section's :attr:`accessory`.
@@ -299,7 +310,9 @@ class Section(ViewItem[V]):
         id: :class:`int` | :obj:`None`
             The overflow menu's ID.
         """
-        return self.set_accessory(OverflowMenu(*groups, id=id))  # pyright: ignore[reportUnknownMemberType]
+        return self.set_accessory(
+            OverflowMenu(*groups, id=id)
+        )  # pyright: ignore[reportUnknownMemberType]
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
@@ -360,7 +373,9 @@ class Section(ViewItem[V]):
         r = self.items
         if self.accessory:
             if hasattr(self.accessory, "walk_items"):
-                yield from r + list(self.accessory.walk_items())  # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue,reportUnknownArgumentType]
+                yield from r + list(
+                    self.accessory.walk_items()
+                )  # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue,reportUnknownArgumentType]
             yield from r + [self.accessory]
         else:
             yield from r

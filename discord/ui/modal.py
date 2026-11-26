@@ -369,7 +369,9 @@ class Modal(BaseModal):
         components = [
             component
             for parent_component in data
-            for component in parent_component["components"]  # pyright: ignore[reportGeneralTypeIssues]
+            for component in parent_component[
+                "components"
+            ]  # pyright: ignore[reportGeneralTypeIssues]
         ]
         for component in components:
             for child in self.children:

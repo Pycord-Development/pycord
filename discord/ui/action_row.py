@@ -103,8 +103,10 @@ class ActionRow(ViewItem[V]):
         self._underlying = self._generate_underlying(id=id)
 
         for func in self.__row_children_items__:
-            item: ViewItem[V] = func.__discord_ui_model_type__(  # pyright: ignore[reportFunctionMemberAccess,reportAny]
-                **func.__discord_ui_model_kwargs__
+            item: ViewItem[V] = (
+                func.__discord_ui_model_type__(  # pyright: ignore[reportFunctionMemberAccess,reportAny]
+                    **func.__discord_ui_model_kwargs__
+                )
             )
             item.callback = partial(func, self, item)
             self.add_item(item)
@@ -205,10 +207,14 @@ class ActionRow(ViewItem[V]):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child: ViewItem[V] | None = find(lambda i: getattr(i, attr, None) == id, self.children)  # pyright: ignore[reportAny]
+        child: ViewItem[V] | None = find(
+            lambda i: getattr(i, attr, None) == id, self.children
+        )  # pyright: ignore[reportAny]
         if not child:
             for i in self.children:
-                if hasattr(i, "get_item") and (child := i.get_item(id)): # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue,reportUnknownVariableType]
+                if hasattr(i, "get_item") and (
+                    child := i.get_item(id)
+                ):  # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue,reportUnknownVariableType]
                     return child  # pyright: ignore[reportUnknownVariableType]
         return child
 
@@ -363,18 +369,20 @@ class ActionRow(ViewItem[V]):
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
             instances.
         """
-        return self.add_item(Select(
-            select_type=select_type,
-            custom_id=custom_id,
-            placeholder=placeholder,
-            min_values=min_values,
-            max_values=max_values,
-            options=options or [],
-            channel_types=channel_types or [],
-            disabled=disabled,
-            id=id,
-            default_values=default_values,
-        ))
+        return self.add_item(
+            Select(
+                select_type=select_type,
+                custom_id=custom_id,
+                placeholder=placeholder,
+                min_values=min_values,
+                max_values=max_values,
+                options=options or [],
+                channel_types=channel_types or [],
+                disabled=disabled,
+                id=id,
+                default_values=default_values,
+            )
+        )
 
     def add_overflow_menu(
         self,
