@@ -114,16 +114,22 @@ class TestMenuActionItem:
         )
         payload = item.to_component_dict()
         assert payload["label"] == "Hi"
-        assert payload["custom_id"] == "hi" # pyright: ignore[reportTypedDictNotRequiredAccess]
+        assert (
+            payload["custom_id"] == "hi"
+        )  # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert payload["style"] == discord.MenuActionItemStyle.danger.value
         assert payload["id"] == 0  # pyright: ignore[reportTypedDictNotRequiredAccess]
-        assert payload["disabled"] is False  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        assert (
+            payload["disabled"] is False
+        )  # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert "url" not in payload
         assert payload["type"] == discord.ComponentType.menu_action_item.value
 
     def test_to_dict_url_item(self):
         payload = MenuActionItem(url="https://github.com").to_component_dict()
-        assert payload["url"] == "https://github.com"  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        assert (
+            payload["url"] == "https://github.com"
+        )  # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert payload["style"] == discord.MenuActionItemStyle.link.value
         assert "custom_id" not in payload
 
@@ -138,7 +144,6 @@ class TestMenuActionItem:
         sentinel = object()
         await item.callback(sentinel)  # pyright: ignore[reportArgumentType]
         assert calls == [sentinel]
-
 
 
 class TestOverflowMenuGroup:
@@ -180,7 +185,9 @@ class TestOverflowMenuGroup:
 
     def test_to_dict(self):
         payload = make_group(2, label="Menu").to_component_dict()
-        assert payload["label"] == "Menu"  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        assert (
+            payload["label"] == "Menu"
+        )  # pyright: ignore[reportTypedDictNotRequiredAccess]
         assert len(payload["components"]) == 2
 
     def test_to_dict_without_label(self):
@@ -345,7 +352,9 @@ class TestOverflowMenu:
         ).to_component_dict()
         assert payload["type"] == discord.ComponentType.overflow_menu.value
         assert len(payload["groups"]) == 2
-        assert payload["groups"][0]["label"] == "A"  # pyright: ignore[reportTypedDictNotRequiredAccess]
+        assert (
+            payload["groups"][0]["label"] == "A"
+        )  # pyright: ignore[reportTypedDictNotRequiredAccess]
 
     async def test_subclass_pattern(self):
         class BasicOverflow(OverflowMenu):
