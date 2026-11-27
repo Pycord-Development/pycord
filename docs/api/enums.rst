@@ -2706,6 +2706,7 @@ of :class:`enum.Enum`.
         Represents the team read only role.
 
 .. class:: MenuActionItemStyle
+    :canonical: discord.enums.MenuActionItemStyle
 
     Represents a menu action item's style.
 

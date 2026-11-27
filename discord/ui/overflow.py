@@ -576,7 +576,7 @@ class MenuActionItem(ViewItem[V_co]):
 
     Parameters
     ----------
-    style: :class:`discord.MenuActionItemStyle`
+    style: :class:`MenuActionItemStyle`
         The style of the item.
     custom_id: :class:`str` | :obj:`None`
         The ID of the item that gets received during an interaction.

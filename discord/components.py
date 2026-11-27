@@ -1821,7 +1821,7 @@ class OverflowMenuGroup:
     ----------
     label: :class:`str` | :obj:`None`
         The label of the group. This is displayed to users.
-    components: list[:class:`MenuActionItemComponent`]
+    components: list[:class:`MenuActionItem`]
         The components in this group.
     """
 
@@ -1958,7 +1958,7 @@ class MenuActionItem(Component):
         The description for the menu action item.
     url: :class:`str` | :obj:`None`
         The URL that this menu action item points to.
-        Only present when ``style`` is :attr:`MenuActionItemStyle.url`.
+        Only present when ``style`` is :attr:`~discord.MenuActionItemStyle.link`.
     emoji: :class:`PartialEmoji` | :obj:`None`
         The emoji shown on this menu action item.
     """
