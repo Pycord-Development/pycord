@@ -196,7 +196,7 @@ class Container(ViewItem[V]):
             pass
         return self
 
-    def get_item(self, id: str | int) -> ViewItem | None:
+    def get_item(self, id: str | int) -> ViewItem[V] | None:
         """Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
@@ -224,7 +224,7 @@ class Container(ViewItem[V]):
 
     def add_row(
         self,
-        *items: ViewItem,
+        *items: ViewItem[DesignerView],
         id: int | None = None,
     ) -> Self:
         """Adds an :class:`ActionRow` to the container.
@@ -238,15 +238,12 @@ class Container(ViewItem[V]):
         id: :class:`int` | :obj:`None`
             The action row's ID.
         """
-
-        row = ActionRow(*items, id=id)
-
-        return self.add_item(row)
+        return self.add_item(ActionRow(*items, id=id))
 
     def add_section(
         self,
-        *items: ViewItem,
-        accessory: ViewItem,
+        *items: ViewItem[DesignerView],
+        accessory: ViewItem[DesignerView],
         id: int | None = None,
     ) -> Self:
         """Adds a :class:`Section` to the container.

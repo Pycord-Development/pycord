@@ -26,15 +26,15 @@ from __future__ import annotations
 
 from collections.abc import Iterator, Sequence
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Literal, TypeVar, overload
+from typing import TYPE_CHECKING, ClassVar, Literal, TypeVar, cast, overload
 
 from ..components import ActionRow as ActionRowComponent
-from ..components import SelectDefaultValue, SelectOption, _component_factory
+from ..components import SelectDefaultValue, SelectOption
 from ..enums import ButtonStyle, ChannelType, ComponentType
-from ..utils import find, get
+from ..utils import find
 from .button import Button
-from .file import File
 from .item import ItemCallbackType, ViewItem
+from .overflow import OverflowMenu, OverflowMenuGroup
 from .select import Select
 
 __all__ = ("ActionRow",)
@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..emoji import AppEmoji, GuildEmoji
-    from ..partial_emoji import PartialEmoji, _EmojiTag
+    from ..partial_emoji import PartialEmoji
     from ..types.components import ActionRow as ActionRowPayload
     from .view import DesignerView
 
@@ -59,8 +59,13 @@ class ActionRow(ViewItem[V]):
 
     - :class:`discord.ui.Select`
     - :class:`discord.ui.Button`
+    - :class:`discord.ui.OverflowMenu`
 
     .. versionadded:: 2.7
+
+    .. versionchanged:: 2.9
+
+        Added support for :class:`discord.ui.OverflowMenu`.
 
     Parameters
     ----------
@@ -88,18 +93,20 @@ class ActionRow(ViewItem[V]):
 
     def __init__(
         self,
-        *items: ViewItem,
+        *items: ViewItem[V],
         id: int | None = None,
     ):
         super().__init__()
 
-        self.children: list[ViewItem] = []
+        self.children: list[ViewItem[V]] = []
 
         self._underlying = self._generate_underlying(id=id)
 
         for func in self.__row_children_items__:
-            item: ViewItem = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
+            item: ViewItem[V] = (
+                func.__discord_ui_model_type__(  # pyright: ignore[reportFunctionMemberAccess,reportAny]
+                    **func.__discord_ui_model_kwargs__
+                )
             )
             item.callback = partial(func, self, item)
             self.add_item(item)
@@ -134,7 +141,7 @@ class ActionRow(ViewItem[V]):
             row.children.append(i._generate_underlying())
         return row
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the action row.
 
         Parameters
@@ -148,12 +155,15 @@ class ActionRow(ViewItem[V]):
             A :class:`ViewItem` was not passed.
         """
 
-        if not isinstance(item, (Select, Button)):
-            raise TypeError(f"expected Select or Button, not {item.__class__!r}")
+        if not isinstance(item, (Select, Button, OverflowMenu)):
+            raise TypeError(
+                f"expected Select, Button, or OverflowMenu, not {type(item)!r}"
+            )
+        item = cast("ViewItem[V]", item)
         if item.row:
-            raise ValueError(f"{item.__class__!r}.row is not supported in ActionRow")
+            raise ValueError(f"{type(item)!r}.row is not supported in ActionRow")
         if self.width + item.width > 5:
-            raise ValueError(f"Not enough space left on this ActionRow")
+            raise ValueError("Not enough space left on this ActionRow")
 
         item.parent = self
 
@@ -182,6 +192,7 @@ class ActionRow(ViewItem[V]):
     def get_item(self, id: str | int) -> ViewItem | None:
         """Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
+        This method will also search nested items.
 
         Parameters
         ----------
@@ -196,7 +207,15 @@ class ActionRow(ViewItem[V]):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.children)
+        child: ViewItem[V] | None = find(
+            lambda i: getattr(i, attr, None) == id, self.children
+        )  # pyright: ignore[reportAny]
+        if not child:
+            for i in self.children:
+                if hasattr(i, "get_item") and (
+                    child := i.get_item(id)
+                ):  # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue,reportUnknownVariableType]
+                    return child  # pyright: ignore[reportUnknownVariableType]
         return child
 
     def add_button(
@@ -237,7 +256,7 @@ class ActionRow(ViewItem[V]):
             The button's ID.
         """
 
-        button = Button(
+        button: Button[V] = Button(
             style=style,
             label=label,
             disabled=disabled,
@@ -350,21 +369,41 @@ class ActionRow(ViewItem[V]):
             These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
             instances.
         """
-
-        select = Select(
-            select_type=select_type,
-            custom_id=custom_id,
-            placeholder=placeholder,
-            min_values=min_values,
-            max_values=max_values,
-            options=options or [],
-            channel_types=channel_types or [],
-            disabled=disabled,
-            id=id,
-            default_values=default_values,
+        return self.add_item(
+            Select(
+                select_type=select_type,
+                custom_id=custom_id,
+                placeholder=placeholder,
+                min_values=min_values,
+                max_values=max_values,
+                options=options or [],
+                channel_types=channel_types or [],
+                disabled=disabled,
+                id=id,
+                default_values=default_values,
+            )
         )
 
-        return self.add_item(select)
+    def add_overflow_menu(
+        self,
+        *groups: OverflowMenuGroup,
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`OverflowMenu` to the action row.
+
+        To append a pre-existing :class:`OverflowMenu`, use the
+        :meth:`add_item` method instead.
+
+        .. versionadded:: 2.9
+
+        Parameters
+        ----------
+        *groups: :class:`OverflowMenuGroup`
+            The groups of this overflow menu.
+        id: :class:`int` | :obj:`None`
+            The overflow menu's ID.
+        """
+        return self.add_item(OverflowMenu(*groups, id=id))
 
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.children)
@@ -411,11 +450,15 @@ class ActionRow(ViewItem[V]):
         """Return the sum of the items' widths."""
         t = 0
         for item in self.children:
-            t += 1 if item.underlying.type is ComponentType.button else 5
+            t += item.width
         return t
 
-    def walk_items(self) -> Iterator[ViewItem]:
-        yield from self.children
+    def walk_items(self) -> Iterator[ViewItem[V]]:
+        for child in self.children:
+            if not hasattr(child, "walk_items"):
+                yield child
+            else:
+                yield from child.walk_items()  # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue]
 
     def to_component_dict(self) -> ActionRowPayload:
         self._underlying = self._generate_underlying()

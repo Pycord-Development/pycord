@@ -544,6 +544,12 @@ of :class:`enum.Enum`.
     .. attribute:: checkbox
 
         Represents a checkbox component.
+    .. attribute:: overflow_menu
+
+        Represents an overflow menu component.
+    .. attribute:: menu_action_item
+
+        Represents an overflow menu action item component.
 
 .. class:: ButtonStyle
 
@@ -2678,6 +2684,7 @@ of :class:`enum.Enum`.
         The application webhook is disabled by Discord.
 
 .. class:: TeamRole
+
     Represents a app team role.
 
     .. versionadded:: 2.8
@@ -2697,3 +2704,21 @@ of :class:`enum.Enum`.
     .. attribute:: read_only
 
         Represents the team read only role.
+
+.. class:: MenuActionItemStyle
+
+    Represents a menu action item's style.
+
+    .. versionadded:: 2.9
+
+    .. attribute:: default
+
+        Represents the default style.
+
+    .. attribute:: danger
+
+        Represents the danger style.
+
+    .. attribute:: link
+
+        Represents the link style.

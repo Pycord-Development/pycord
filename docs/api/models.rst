@@ -512,6 +512,24 @@ UI Components
     :members:
     :inherited-members:
 
+.. attributetable:: OverflowMenu
+
+.. autoclass:: OverflowMenu()
+    :members:
+    :inherited-members:
+
+.. attributetable:: OverflowMenuGroup
+
+.. autoclass:: OverflowMenuGroup()
+    :members:
+    :inherited-members:
+
+.. attributetable:: MenuActionItem
+
+.. autoclass:: MenuActionItem()
+    :members:
+    :inherited-members:
+
 Emoji
 -----
 

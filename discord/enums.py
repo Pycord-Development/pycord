@@ -103,6 +103,7 @@ __all__ = (
     "ApplicationEventWebhookStatus",
     "InviteTargetUsersJobStatusCode",
     "SharedClientThemeBaseType",
+    "MenuActionItemStyle",
 )
 
 
@@ -798,6 +799,8 @@ class ComponentType(Enum):
     radio_group = 21
     checkbox_group = 22
     checkbox = 23
+    overflow_menu = 25
+    menu_action_item = 26
 
     def __int__(self):
         return self.value
@@ -1266,6 +1269,12 @@ class SharedClientThemeBaseType(Enum):
     light = 2
     darker = 3
     midnight = 4
+
+
+class MenuActionItemStyle(Enum):
+    default = 1
+    danger = 2
+    link = 3
 
 
 T = TypeVar("T")
