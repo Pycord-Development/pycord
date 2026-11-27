@@ -65,7 +65,7 @@ class OverflowMenu(ViewItem[V_co]):
 
     .. note::
 
-        Overflow menus only allow for 8 :class:`MenuActionItem`s across all groups.
+        Overflow menus only allow for 8 :class:`MenuActionItem` instances across all groups.
 
     .. versionadded:: 2.9
 
