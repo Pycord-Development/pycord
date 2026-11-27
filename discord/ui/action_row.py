@@ -63,7 +63,7 @@ class ActionRow(ViewItem[V]):
 
     .. versionadded:: 2.7
 
-    .. versionchanges:: 2.9
+    .. versionchanged:: 2.9
 
         Added support for :class:`discord.ui.OverflowMenu`.
 
