@@ -43,7 +43,6 @@ SelectDefaultValueType = Literal["channel", "role", "user"]
 
 
 class BaseComponent(TypedDict):
-    type: ComponentType
     id: NotRequired[int]
 
 
@@ -212,6 +211,30 @@ class CheckboxComponent(BaseComponent):
     default: NotRequired[bool]
 
 
+class OverflowMenuComponent(BaseComponent):
+    type: Literal[25]
+    groups: list[OverflowMenuGroup]
+
+
+MenuActionItemStyle = Literal[1, 2, 3]
+
+
+class MenuActionItemComponent(BaseComponent):
+    type: Literal[26]
+    custom_id: NotRequired[str]
+    label: str
+    style: MenuActionItemStyle
+    description: NotRequired[str]
+    url: NotRequired[str]
+    emoji: NotRequired[PartialEmoji]
+    disabled: NotRequired[bool]
+
+
+class OverflowMenuGroup(TypedDict):
+    label: NotRequired[str]
+    components: list[MenuActionItemComponent]
+
+
 Component = (
     ActionRow
     | ButtonComponent
@@ -229,11 +252,15 @@ Component = (
     | RadioGroupComponent
     | CheckboxGroupComponent
     | CheckboxComponent
+    | OverflowMenuComponent
+    | MenuActionItemComponent
 )
 
-AllowedActionRowComponents = ButtonComponent | InputText | SelectMenu
+AllowedActionRowComponents = (
+    ButtonComponent | InputText | SelectMenu | OverflowMenuComponent
+)
 
-AllowedSectionAccessories = ThumbnailComponent | ButtonComponent
+AllowedSectionAccessories = ThumbnailComponent | ButtonComponent | OverflowMenuComponent
 
 AllowedSectionComponents = TextDisplayComponent
 

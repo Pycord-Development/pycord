@@ -26,7 +26,9 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, overload
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar, overload
+
+from typing_extensions import Self, override
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -35,6 +37,7 @@ from .enums import (
     ChannelType,
     ComponentType,
     InputTextStyle,
+    MenuActionItemStyle,
     SelectDefaultValueType,
     SeparatorSpacingSize,
     try_enum,
@@ -46,6 +49,7 @@ from .utils import MISSING, find, get_slots
 if TYPE_CHECKING:
     from . import abc
     from .emoji import AppEmoji, GuildEmoji
+    from .state import ConnectionState
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import CheckboxComponent as CheckboxComponentPayload
@@ -61,6 +65,11 @@ if TYPE_CHECKING:
     from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
+    from .types.components import (
+        MenuActionItemComponent as MenuActionItemComponentPayload,
+    )
+    from .types.components import OverflowMenuComponent as OverflowMenuComponentPayload
+    from .types.components import OverflowMenuGroup as OverflowMenuGroupPayload
     from .types.components import RadioGroupComponent as RadioGroupComponentPayload
     from .types.components import RadioGroupOption as RadioGroupOptionPayload
     from .types.components import SectionComponent as SectionComponentPayload
@@ -96,6 +105,9 @@ __all__ = (
     "CheckboxGroup",
     "CheckboxGroupOption",
     "Checkbox",
+    "OverflowMenu",
+    "OverflowMenuGroup",
+    "MenuActionItem",
 )
 
 C = TypeVar("C", bound="Component")
@@ -141,8 +153,8 @@ class Component:
         return f"<{self.__class__.__name__} {attrs}>"
 
     @classmethod
-    def _raw_construct(cls: type[C], **kwargs) -> C:
-        self: C = cls.__new__(cls)
+    def _raw_construct(cls, **kwargs: object) -> Self:
+        self: Self = cls.__new__(cls)
         for slot in get_slots(cls):
             try:
                 value = kwargs[slot]
@@ -231,10 +243,17 @@ class ActionRow(Component):
         return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     @classmethod
-    def with_components(cls, *components, id=None):
+    def with_components(cls, *components: Component, id: int | None = None):
         return cls._raw_construct(
             type=ComponentType.action_row, id=id, children=[c for c in components]
         )
+
+    @override
+    def is_v2(self) -> bool:
+        for child in self.children:
+            if child.is_v2():
+                return True
+        return False
 
 
 class InputText(Component):
@@ -767,8 +786,7 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not"
-                    f" {value.__class__}"
+                    f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not {value.__class__}"  # pyright: ignore[reportUnknownMemberType]
                 )
 
         self._emoji = value
@@ -830,7 +848,9 @@ class Section(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: SectionComponentPayload, state=None):
+    def __init__(
+        self, data: SectionComponentPayload, state: ConnectionState | None = None
+    ):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.components: list[Component] = [
@@ -1260,7 +1280,9 @@ class Container(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ContainerComponentPayload, state=None):
+    def __init__(
+        self, data: ContainerComponentPayload, state: ConnectionState | None = None
+    ):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
@@ -1786,6 +1808,223 @@ class Checkbox(Component):
         return payload
 
 
+class OverflowMenuGroup:
+    """Represents a :class:`discord.OverflowMenu`'s group.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.OverflowMenuGroup` instead.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    label: :class:`str` | :obj:`None`
+        The label of the group. This is displayed to users.
+    components: list[:class:`MenuActionItem`]
+        The components in this group.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "components",
+        "label",
+    )
+
+    def __init__(self, data: OverflowMenuGroupPayload) -> None:
+        self.label: str | None = data.get("label", None)
+        self.components: list[MenuActionItem] = [
+            MenuActionItem(c) for c in data["components"]
+        ]
+
+    @override
+    def __repr__(self) -> str:
+        return (
+            "<OverflowMenuGroup"
+            f" label={self.label!r} components={self.components!r}>"
+        )
+
+    def to_dict(self) -> OverflowMenuGroupPayload:
+        payload: OverflowMenuGroupPayload = {
+            "components": [c.to_dict() for c in self.components]
+        }
+
+        if self.label:
+            payload["label"] = self.label
+
+        return payload
+
+
+class OverflowMenu(Component):
+    """Represents an Overflow Menu component from the Discord Bot UI Kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.OverflowMenu` instead.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`int` | :obj:`None`
+        The overflow menu's ID.
+    groups: list[:class:`OverflowMenuGroup`]
+        The list of groups in this overflow menu.
+    """
+
+    __slots__: tuple[str, ...] = ("type", "id", "groups")
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: OverflowMenuComponentPayload):
+        self.type: Literal[ComponentType.overflow_menu] = (
+            ComponentType.overflow_menu
+        )  # pyright: ignore[reportIncompatibleVariableOverride] # Remove this in PR#3444
+        self.id: int | None = data.get("id")
+        self.groups: list[OverflowMenuGroup] = [
+            OverflowMenuGroup(g) for g in data["groups"]
+        ]
+
+    @override
+    def to_dict(
+        self,
+    ) -> (
+        OverflowMenuComponentPayload
+    ):  # pyright: ignore[reportIncompatibleMethodOverride]
+        payload: OverflowMenuComponentPayload = {
+            "type": self.type.value,
+            "groups": [g.to_dict() for g in self.groups],
+        }
+        if self.id is not None:
+            payload["id"] = self.id
+
+        return payload
+
+    def walk_components(self) -> Iterator[Component]:
+        for group in self.groups:
+            yield from group.components
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this overflow menu.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: :class:`str` | :class:`int`
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        :class:`Component` | :obj:`None`
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        result = None
+        for group in self.groups:
+            result = find(
+                lambda i: (i.id if isinstance(id, int) else i.custom_id) == id,
+                group.components,
+            )
+            if result is not None:
+                return result
+        return result
+
+
+class MenuActionItem(Component):
+    """Represents an overflow menu's action item component from the Discord Bot UI kit.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.MenuActionItem` instead.
+
+    .. versionadded:: 2.9
+
+    Attributes
+    ----------
+    id: :class:`int` | :obj:`None`
+        The menu action item's ID.
+    custom_id: :class:`str`
+        The custom ID of the menu action item that gets received during an interaction.
+    label: :class:`str`
+        The label for the menu action item.
+    style: :class:`MenuActionItemStyle`
+        The style of this menu action item.
+    description: :class:`str` | :obj:`None`
+        The description for the menu action item.
+    url: :class:`str` | :obj:`None`
+        The URL that this menu action item points to.
+        Only present when ``style`` is :attr:`~discord.MenuActionItemStyle.link`.
+    emoji: :class:`PartialEmoji` | :obj:`None`
+        The emoji shown on this menu action item.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "custom_id",
+        "description",
+        "disabled",
+        "emoji",
+        "id",
+        "label",
+        "style",
+        "type",
+        "url",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: MenuActionItemComponentPayload):
+        self.type: Literal[
+            ComponentType.menu_action_item
+        ] = (  # pyright: ignore[reportIncompatibleVariableOverride] # Remove in PR#3444
+            ComponentType.menu_action_item
+        )
+        self.id: int | None = data.get("id")
+        self.custom_id: str | None = data.get("custom_id")
+        self.label: str = data["label"]
+        self.style: MenuActionItemStyle = try_enum(MenuActionItemStyle, data["style"])
+        self.description: str | None = data.get("description")
+        self.url: str | None = data.get("url")
+        self.emoji: PartialEmoji | None = (
+            PartialEmoji.from_dict(e) if (e := data.get("emoji")) else None
+        )
+        self.disabled: bool = data.get("disabled", False)
+
+    @override
+    def to_dict(
+        self,
+    ) -> (
+        MenuActionItemComponentPayload
+    ):  # pyright: ignore[reportIncompatibleMethodOverride]
+        payload: MenuActionItemComponentPayload = {
+            "type": self.type.value,
+            "label": self.label,
+            "style": self.style.value,
+            "disabled": self.disabled,
+        }
+        if self.custom_id is not None:
+            payload["custom_id"] = self.custom_id
+
+        if self.id is not None:
+            payload["id"] = self.id
+
+        if self.description is not None:
+            payload["description"] = self.description
+
+        if self.url is not None:
+            payload["url"] = self.url
+
+        if self.emoji is not None:
+            payload["emoji"] = self.emoji.to_dict()  # type: ignore # pyright: ignore[reportGeneralTypeIssues] # PartialEmoji returns dict[str, Any]
+
+        return payload
+
+
 COMPONENT_MAPPINGS = {
     1: ActionRow,
     2: Button,
@@ -1807,18 +2046,22 @@ COMPONENT_MAPPINGS = {
     21: RadioGroup,
     22: CheckboxGroup,
     23: Checkbox,
+    25: OverflowMenu,
+    26: MenuActionItem,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
 
 
-def _component_factory(data: ComponentPayload, state=None) -> Component:
+def _component_factory(
+    data: ComponentPayload, state: ConnectionState | None = None
+) -> Component:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
         if issubclass(cls, STATE_COMPONENTS):
             return cls(data, state=state)
         else:
-            return cls(data)
+            return cls(data)  # pyright: ignore[reportArgumentType]
     else:
         as_enum = try_enum(ComponentType, component_type)
         return Component._raw_construct(type=as_enum)

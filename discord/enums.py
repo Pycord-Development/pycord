@@ -45,64 +45,65 @@ else:
 
 
 __all__ = (
-    "Enum",
-    "ChannelType",
-    "MessageType",
-    "VoiceRegion",
-    "SpeakingState",
-    "VerificationLevel",
-    "ContentFilter",
-    "Status",
+    "ActivityType",
+    "ApplicationEventWebhookStatus",
+    "ApplicationRoleConnectionMetadataType",
     "AuditLogAction",
     "AuditLogActionCategory",
-    "UserFlags",
-    "ActivityType",
-    "NotificationLevel",
-    "TeamMembershipState",
-    "TeamRole",
-    "WebhookType",
-    "ExpireBehaviour",
-    "ExpireBehavior",
-    "StickerType",
-    "StickerFormatType",
-    "InviteTarget",
-    "VideoQualityMode",
-    "ComponentType",
-    "ButtonStyle",
-    "StagePrivacyLevel",
-    "InteractionType",
-    "InteractionResponseType",
-    "NSFWLevel",
-    "EmbeddedActivity",
-    "ScheduledEventStatus",
-    "ScheduledEventPrivacyLevel",
-    "ScheduledEventLocationType",
-    "InputTextStyle",
-    "SlashCommandOptionType",
-    "AutoModTriggerType",
-    "AutoModEventType",
     "AutoModActionType",
+    "AutoModEventType",
     "AutoModKeywordPresetType",
-    "ApplicationRoleConnectionMetadataType",
-    "PromptType",
-    "OnboardingMode",
-    "ReactionType",
-    "VoiceChannelEffectAnimationType",
-    "SKUType",
-    "EntitlementType",
+    "AutoModTriggerType",
+    "ButtonStyle",
+    "ChannelType",
+    "ComponentType",
+    "ContentFilter",
+    "EmbeddedActivity",
     "EntitlementOwnerType",
+    "EntitlementType",
+    "Enum",
+    "ExpireBehavior",
+    "ExpireBehaviour",
+    "InputTextStyle",
     "IntegrationType",
     "InteractionContextType",
-    "PollLayoutType",
-    "MessageReferenceType",
-    "ThreadArchiveDuration",
-    "RoleType",
-    "SubscriptionStatus",
-    "SeparatorSpacingSize",
-    "SelectDefaultValueType",
-    "ApplicationEventWebhookStatus",
+    "InteractionResponseType",
+    "InteractionType",
+    "InviteTarget",
     "InviteTargetUsersJobStatusCode",
+    "MenuActionItemStyle",
+    "MessageReferenceType",
+    "MessageType",
+    "NSFWLevel",
+    "NotificationLevel",
+    "OnboardingMode",
+    "PollLayoutType",
+    "PromptType",
+    "ReactionType",
+    "RoleType",
+    "SKUType",
+    "ScheduledEventLocationType",
+    "ScheduledEventPrivacyLevel",
+    "ScheduledEventStatus",
+    "SelectDefaultValueType",
+    "SeparatorSpacingSize",
     "SharedClientThemeBaseType",
+    "SlashCommandOptionType",
+    "SpeakingState",
+    "StagePrivacyLevel",
+    "Status",
+    "StickerFormatType",
+    "StickerType",
+    "SubscriptionStatus",
+    "TeamMembershipState",
+    "TeamRole",
+    "ThreadArchiveDuration",
+    "UserFlags",
+    "VerificationLevel",
+    "VideoQualityMode",
+    "VoiceChannelEffectAnimationType",
+    "VoiceRegion",
+    "WebhookType",
 )
 
 
@@ -798,6 +799,8 @@ class ComponentType(Enum):
     radio_group = 21
     checkbox_group = 22
     checkbox = 23
+    overflow_menu = 25
+    menu_action_item = 26
 
     def __int__(self):
         return self.value
@@ -1266,6 +1269,12 @@ class SharedClientThemeBaseType(Enum):
     light = 2
     darker = 3
     midnight = 4
+
+
+class MenuActionItemStyle(Enum):
+    default = 1
+    danger = 2
+    link = 3
 
 
 T = TypeVar("T")

@@ -29,11 +29,11 @@ from functools import partial
 from typing import TYPE_CHECKING, ClassVar, TypeVar
 
 from ..components import Section as SectionComponent
-from ..components import _component_factory
 from ..enums import ComponentType
-from ..utils import find, get
+from ..utils import find
 from .button import Button
 from .item import ItemCallbackType, ViewItem
+from .overflow import OverflowMenu, OverflowMenuGroup
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
 
@@ -47,7 +47,7 @@ if TYPE_CHECKING:
 
 
 S = TypeVar("S", bound="Section")
-V = TypeVar("V", bound="DesignerView", covariant=True)
+V = TypeVar("V", bound="DesignerView")
 
 
 class Section(ViewItem[V]):
@@ -63,7 +63,7 @@ class Section(ViewItem[V]):
         Sections must have at least 1 item before being sent.
     accessory: :class:`ViewItem` | :obj:`None`
         The section's accessory. This is displayed in the top right of the section.
-        Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        Currently only supports :class:`~discord.ui.Button`, :class:`~discord.ui.OverflowMenu`, and :class:`~discord.ui.Thumbnail`.
         Sections must have an accessory attached before being sent.
     id: :class:`int` | :obj:`None`
         The section's ID.
@@ -94,12 +94,15 @@ class Section(ViewItem[V]):
         cls.__section_accessory_item__ = accessory
 
     def __init__(
-        self, *items: ViewItem, accessory: ViewItem = None, id: int | None = None
+        self,
+        *items: ViewItem[V],
+        accessory: ViewItem[V] | None = None,
+        id: int | None = None,
     ):
         super().__init__()
 
-        self.items: list[ViewItem] = []
-        self.accessory: ViewItem | None = None
+        self.items: list[ViewItem[V]] = []
+        self.accessory: ViewItem[V] | None = None
 
         self._underlying = self._generate_underlying(
             id=id,
@@ -138,7 +141,7 @@ class Section(ViewItem[V]):
             section.accessory = self.accessory._generate_underlying()
         return section
 
-    def add_item(self, item: ViewItem) -> Self:
+    def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the section.
 
         Parameters
@@ -207,6 +210,14 @@ class Section(ViewItem[V]):
         if self.accessory and id == getattr(self.accessory, attr, None):
             return self.accessory
         child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        if (
+            child is None
+            and self.accessory is not None
+            and hasattr(self.accessory, "get_item")
+        ):
+            return self.accessory.get_item(
+                id
+            )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportAttributeAccessIssue]
         return child
 
     def add_text(self, content: str, *, id: int | None = None) -> Self:
@@ -228,9 +239,9 @@ class Section(ViewItem[V]):
         if len(self.items) >= 3:
             raise ValueError("maximum number of children exceeded")
 
-        text = TextDisplay(content, id=id)
-
-        return self.add_item(text)
+        return self.add_item(
+            TextDisplay(content, id=id)
+        )  # pyright: ignore[reportUnknownArgumentType]
 
     def set_accessory(self, item: ViewItem) -> Self:
         """Set an item as the section's :attr:`accessory`.
@@ -281,6 +292,27 @@ class Section(ViewItem[V]):
         thumbnail = Thumbnail(url, description=description, spoiler=spoiler, id=id)
 
         return self.set_accessory(thumbnail)
+
+    def set_overflow_menu(
+        self,
+        *groups: OverflowMenuGroup,
+        id: int | None = None,
+    ) -> Self:
+        """Sets a :class:`OverflowMenu` as the section's :attr:`accessory`.
+
+        To use a pre-existing :class:`OverflowMenu`, use the
+        :meth:`set_accessory` method instead.
+
+        Parameters
+        ----------
+        *groups: :class:`OverflowMenuGroup`
+            The groups of this overflow menu.
+        id: :class:`int` | :obj:`None`
+            The overflow menu's ID.
+        """
+        return self.set_accessory(
+            OverflowMenu(*groups, id=id)
+        )  # pyright: ignore[reportUnknownMemberType]
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
@@ -340,6 +372,10 @@ class Section(ViewItem[V]):
     def walk_items(self) -> Iterator[ViewItem]:
         r = self.items
         if self.accessory:
+            if hasattr(self.accessory, "walk_items"):
+                yield from r + list(
+                    self.accessory.walk_items()
+                )  # pyright: ignore[reportUnknownMemberType,reportAttributeAccessIssue,reportUnknownArgumentType]
             yield from r + [self.accessory]
         else:
             yield from r

@@ -400,7 +400,7 @@ def button(
             This parameter does not work in :class:`ActionRow`.
     """
 
-    def decorator(func: ItemCallbackType) -> ItemCallbackType:
+    def decorator(func: ItemCallbackType[Button[V]]) -> ItemCallbackType[Button[V]]:
         if not inspect.iscoroutinefunction(func):
             raise TypeError("button function must be a coroutine function")
 

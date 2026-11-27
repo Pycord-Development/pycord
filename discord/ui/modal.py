@@ -369,11 +369,13 @@ class Modal(BaseModal):
         components = [
             component
             for parent_component in data
-            for component in parent_component["components"]
+            for component in parent_component[
+                "components"
+            ]  # pyright: ignore[reportGeneralTypeIssues]
         ]
         for component in components:
             for child in self.children:
-                if child.custom_id == component["custom_id"]:  # type: ignore
+                if child.custom_id == component["custom_id"]:  # type: ignore # pyright: ignore[reportGeneralTypeIssues]
                     child.refresh_from_modal(interaction, component)
                     break
 

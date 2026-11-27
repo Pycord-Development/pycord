@@ -38,6 +38,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3443](https://github.com/Pycord-Development/pycord/pull/3443))
 - Added support for spoiler channels.
   ([#3252](https://github.com/Pycord-Development/pycord/pull/3252))
+- Added `OverflowMenu`, `OverflowMenuGroup`, and `MenuActionItem`, as well as their `ui`
+  counterparts and related methods.
+  ([#3489](https://github.com/Pycord-Development/pycord/pull/3489))
 
 ### Changed
 
