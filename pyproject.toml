@@ -48,7 +48,7 @@ speed = [
 ]
 voice = [
     "PyNaCl>=1.6.2,<1.7",
-    "davey>=0.1.4,<0.2.0",
+    "davey>=0.2.0,<0.3.0",
 ]
 
 [project.urls]
@@ -93,7 +93,7 @@ docs = [
     "sphinxext-opengraph==0.13.0",
     "sphinx-copybutton==0.5.2",
     "furo==2025.12.19",
-    "sphinx-autodoc-typehints==3.17.5",
+    "sphinx-autodoc-typehints==3.17.7",
     "sphinx-intl==2.4.0",
     "typing_extensions==4.16.0",
     # used by scripts/docs_json_exporter.py to parse the built HTML
